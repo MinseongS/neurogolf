@@ -27,19 +27,19 @@ def identity_network():
     return _model([node], [])
 
 
-def memorizer_network(Z, R, O, k_proj):
+def memorizer_network(Z, R, O, k_proj, G=None):
     """Exact-match lookup network.
 
     Pipeline (all integer-valued float math, exact in float32):
       input one-hot -> base-11 cell codes packed 4/cell (Conv stride 4)
       -> random +-1 projection to k dims -> mismatch-count vs stored Z [N,k]
       -> one-hot row selector -> MatMul with stored outputs O [N,180]
-      (base-11^5 packed) -> arithmetic unpack -> Equal-decode to one-hot.
+      (base-11^6 packed) -> arithmetic unpack -> Equal-decode to one-hot.
 
     Z: float [N, k] projected stored inputs; R: float [240, k] +-1 projection;
-    O: float [N, 180] packed stored outputs.
+    O: float [N, 150] packed stored outputs. With G [N, U] (0/1 input-row ->
+    output-group map), O is [U, 150] deduplicated outputs instead.
     """
-    N = Z.shape[0]
     nodes, inits = [], []
 
     def init(name, arr, dtype=np.float32):
@@ -80,25 +80,29 @@ def memorizer_network(Z, R, O, k_proj):
     n("Transpose", ["sel"], "selr", perm=[1, 0])  # [1,N]
 
     # --- select stored output and unpack base-11^5 digits ---
+    sel_name = "selr"
+    if G is not None:
+        init("G", G)
+        sel_name = n("MatMul", ["selr", "G"], "selg")  # [1,U]
     init("O", O)
-    n("MatMul", ["selr", "O"], "yp")           # [1,180]
-    init("shape_grid", np.array([1, 1, 30, 6], np.int64), np.int64)
-    n("Reshape", ["yp", "shape_grid"], "y")    # [1,1,30,6]
+    n("MatMul", [sel_name, "O"], "yp")         # [1,150]
+    init("shape_grid", np.array([1, 1, 30, 5], np.int64), np.int64)
+    n("Reshape", ["yp", "shape_grid"], "y")    # [1,1,30,5]
     rem = "y"
     digits = []
-    for j in range(4):
-        p = 11 ** (4 - j)
+    for j in range(5):
+        p = 11 ** (5 - j)
         scalar(f"pw{j}", float(p))
         n("Div", [rem, f"pw{j}"], f"q{j}_raw")
         n("Floor", [f"q{j}_raw"], f"q{j}")
         digits.append(f"q{j}")
         n("Mul", [f"q{j}", f"pw{j}"], f"qm{j}")
         rem = n("Sub", [rem, f"qm{j}"], f"r{j}")
-    digits.append(rem)                          # last digit, [1,1,30,6]
+    digits.append(rem)                          # last digit, [1,1,30,5]
     for d in digits:
         n("Unsqueeze", [d], f"{d}_u", axes=[4])
     nodes.append(onnx.helper.make_node(
-        "Concat", [f"{d}_u" for d in digits], ["dig"], axis=4))  # [1,1,30,6,5]
+        "Concat", [f"{d}_u" for d in digits], ["dig"], axis=4))  # [1,1,30,5,6]
     init("shape_code", np.array([1, 1, 30, 30], np.int64), np.int64)
     n("Reshape", ["dig", "shape_code"], "code")
 
@@ -119,9 +123,10 @@ def pack4_codes(grid_canvas):
     return (padded.reshape(30, 8, 4) * w).sum(axis=2).reshape(-1)  # [240]
 
 
-def pack5_codes(grid_canvas):
-    w = 11 ** np.arange(4, -1, -1)
-    return (grid_canvas.reshape(30, 6, 5) * w).sum(axis=2).reshape(-1)  # [180]
+def pack6_codes(grid_canvas):
+    """11^6 - 1 = 1.77M < 2^24, so 6 cells/float still keeps float32 exact."""
+    w = 11 ** np.arange(5, -1, -1)
+    return (grid_canvas.reshape(30, 5, 6) * w).sum(axis=2).reshape(-1)  # [150]
 
 
 def conv_network(weights, kh, kw, bias=None):

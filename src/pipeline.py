@@ -69,7 +69,7 @@ def write_scoreboard(manifest):
     total = sum(v["points"] for v in solved.values())
     by_method = {}
     for v in solved.values():
-        m = v.get("method") or "?"
+        m = (v.get("method") or "?").split("(")[0]
         by_method.setdefault(m, [0, 0.0])
         by_method[m][0] += 1
         by_method[m][1] += v["points"]

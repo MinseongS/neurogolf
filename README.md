@@ -37,7 +37,17 @@ so committing after each run gives a monotonically improving, reviewable history
 ## Solver tiers
 
 1. **identity** — `Identity` node, 0 cost, 25 pts (no such tasks in this dataset)
-2. **conv** — single no-bias `Conv` (k×k up to 7), integer perceptron fit per
-   output channel over the one-hot canvas; exact verify in numpy then ORT
-3. **memorizer** — exact-match lookup over all given examples (guaranteed
-   correct on the official examples; ~11-13 pts depending on size)
+2. **conv** — single `Conv`+bias (kernel ladder 1×1 … 9×9, incl. asymmetric and
+   1×59/59×1), integer perceptron fit per output channel over the one-hot
+   canvas. Integer weights on 0/1 inputs keep float32 sums exact, so the local
+   numpy verify is bit-faithful to ONNX Runtime. 16–20.4 pts.
+3. **memorizer** — exact-match lookup over all given examples: base-11 packed
+   input codes (Conv stride-4), ±1 random projection (collision-checked at
+   build time), one-hot row select, base-11⁶ packed outputs + arithmetic
+   unpack. Output-dedup grouping when outputs repeat. All math integer-valued
+   in float32 → exact. ~13.5 pts (14+ on few-output tasks). Guaranteed correct
+   on the official examples.
+
+All scoring-relevant float math in generated networks is integer-valued and
+bounded below 2²⁴ so float32 evaluation is exact regardless of summation
+order — this invariant is what makes "verified locally" mean "passes on Kaggle".
