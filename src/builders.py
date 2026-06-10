@@ -129,19 +129,23 @@ def pack6_codes(grid_canvas):
     return (grid_canvas.reshape(30, 5, 6) * w).sum(axis=2).reshape(-1)  # [150]
 
 
-def conv_network(weights, kh, kw, bias=None):
-    """Single Conv straight to 'output'. params = 100*kh*kw (+10 bias), 0 memory.
+def conv_network(weights, kh, kw, bias=None, groups=1):
+    """Single Conv straight to 'output'. 0 memory.
 
-    weights: float array of shape [10, 10, kh, kw]; bias: optional [10].
+    weights: float array of shape [10, 10//groups, kh, kw]; bias: optional [10].
+    groups=10 (depthwise) cuts params 10x when each output channel only needs
+    its own input channel.
     """
+    weights = np.asarray(weights, dtype=np.float32)
     w = onnx.helper.make_tensor(
-        "W", DATA_TYPE, [10, 10, kh, kw], np.asarray(weights, dtype=np.float32).flatten())
+        "W", DATA_TYPE, list(weights.shape), weights.flatten())
     inits, inputs = [w], ["input", "W"]
     if bias is not None:
         inits.append(onnx.helper.make_tensor(
             "B", DATA_TYPE, [10], np.asarray(bias, dtype=np.float32).flatten()))
         inputs.append("B")
     pads = [kh // 2, kw // 2, kh // 2, kw // 2]
+    kwargs = {"group": groups} if groups != 1 else {}
     node = onnx.helper.make_node(
-        "Conv", inputs, ["output"], kernel_shape=[kh, kw], pads=pads)
+        "Conv", inputs, ["output"], kernel_shape=[kh, kw], pads=pads, **kwargs)
     return _model([node], inits)

@@ -18,18 +18,19 @@ from . import builders
 from .analyze import usable_examples
 from .harness import CHANNELS, HEIGHT, WIDTH, convert_to_numpy
 
-# ordered by params (= 100 * kh * kw); smaller kernel -> higher score
-KERNEL_LADDER = [
-    (1, 1),
-    (1, 3), (3, 1),
-    (1, 5), (5, 1),
-    (3, 3), (1, 9), (9, 1),
-    (3, 5), (5, 3),
-    (5, 5), (3, 9), (9, 3),
-    (7, 7),
-    (5, 9), (9, 5), (1, 59), (59, 1),
-    (9, 9),
+_DENSE = [
+    (1, 1), (1, 3), (3, 1), (1, 5), (5, 1), (3, 3), (1, 9), (9, 1),
+    (3, 5), (5, 3), (5, 5), (3, 9), (9, 3), (7, 7), (5, 9), (9, 5),
+    (1, 59), (59, 1), (9, 9),
 ]
+_DW = [
+    (1, 3), (3, 1), (1, 5), (5, 1), (3, 3), (1, 9), (9, 1), (3, 5),
+    (5, 3), (5, 5), (3, 9), (9, 3), (7, 7), (1, 59), (59, 1), (9, 9),
+]
+# (params, kind, kh, kw) sorted cheapest-first; depthwise = 10*k params vs 100*k
+KERNEL_LADDER = sorted(
+    [(10 * kh * kw, "dw", kh, kw) for kh, kw in _DW]
+    + [(100 * kh * kw, "dense", kh, kw) for kh, kw in _DENSE])
 MAX_UPDATES = 60_000
 
 
@@ -42,24 +43,30 @@ def canvases(task):
 
 
 def neighborhood_features(x, kh, kw):
-    """x: bool [10,30,30] -> bool [900, 10*kh*kw] of per-cell neighborhoods."""
+    """x: bool [C,30,30] -> bool [900, C*kh*kw] of per-cell neighborhoods."""
     ph, pw = kh // 2, kw // 2
     xp = np.pad(x, ((0, 0), (ph, ph), (pw, pw)))
     win = np.lib.stride_tricks.sliding_window_view(xp, (kh, kw), axis=(1, 2))
-    # win: [10, 30, 30, kh, kw] -> [30, 30, 10, kh, kw] -> [900, D]
-    return win.transpose(1, 2, 0, 3, 4).reshape(HEIGHT * WIDTH, CHANNELS * kh * kw)
+    # win: [C, 30, 30, kh, kw] -> [30, 30, C, kh, kw] -> [900, D]
+    return win.transpose(1, 2, 0, 3, 4).reshape(HEIGHT * WIDTH, x.shape[0] * kh * kw)
 
 
-def collect_patterns(pairs, kh, kw):
+def collect_patterns(pairs, kh, kw, channel=None):
     """Unique (neighborhood pattern -> target colors) over all canvas cells.
 
-    Returns (X bool [U, D+1] with bias column, Y bool [U, 10]) or None on
-    conflict (same pattern, different target = infeasible for ANY KxK conv).
+    With channel=c, features are restricted to input channel c and targets to
+    output channel c (depthwise fitting). Returns (X bool [U, D+1] with bias
+    column, Y bool [U, n_targets]) or None on conflict (same pattern,
+    different target = infeasible for ANY conv of this shape).
     """
     feats, targets = [], []
     for x, y in pairs:
-        f = neighborhood_features(x, kh, kw)
-        t = y.transpose(1, 2, 0).reshape(HEIGHT * WIDTH, CHANNELS)
+        if channel is None:
+            f = neighborhood_features(x, kh, kw)
+            t = y.transpose(1, 2, 0).reshape(HEIGHT * WIDTH, CHANNELS)
+        else:
+            f = neighborhood_features(x[channel:channel + 1], kh, kw)
+            t = y[channel].reshape(HEIGHT * WIDTH, 1)
         keep = f.any(axis=1) | t.any(axis=1)
         feats.append(f[keep])
         targets.append(t[keep])
@@ -75,7 +82,7 @@ def collect_patterns(pairs, kh, kw):
     Y = t[idx]
     # explicit all-zero pattern: empty neighborhoods must stay empty (bias <= 0)
     X = np.vstack([X, np.zeros((1, X.shape[1]), bool)])
-    Y = np.vstack([Y, np.zeros((1, CHANNELS), bool)])
+    Y = np.vstack([Y, np.zeros((1, Y.shape[1]), bool)])
     X = np.hstack([X, np.ones((X.shape[0], 1), bool)])  # bias column
     return X, Y
 
@@ -177,37 +184,76 @@ def solve_memorizer(task, k_proj=4):
     return None
 
 
-def solve_conv(task, task_budget=90.0, channel_budget=6.0):
-    """Try the kernel ladder; return (model, meta) for the smallest success."""
+def _fit_dense(pairs, kh, kw, channel_budget, task_deadline):
+    pat = collect_patterns(pairs, kh, kw)
+    if pat is None:
+        return None
+    X, Y = pat
+    D = CHANNELS * kh * kw
+    ws = np.zeros((CHANNELS, D + 1), dtype=np.int64)
+    for o in range(CHANNELS):
+        deadline = min(time.monotonic() + channel_budget, task_deadline)
+        w = perceptron(X, Y[:, o], deadline)
+        if w is None:
+            return None
+        ws[o] = w
+    return ws[:, :D].reshape(CHANNELS, CHANNELS, kh, kw), ws[:, D]
+
+
+def _fit_depthwise(pairs, kh, kw, channel_budget, task_deadline):
+    D = kh * kw
+    W = np.zeros((CHANNELS, 1, kh, kw), dtype=np.int64)
+    B = np.zeros(CHANNELS, dtype=np.int64)
+    for c in range(CHANNELS):
+        pat = collect_patterns(pairs, kh, kw, channel=c)
+        if pat is None:
+            return None
+        X, Y = pat
+        deadline = min(time.monotonic() + channel_budget, task_deadline)
+        w = perceptron(X, Y[:, 0], deadline)
+        if w is None:
+            return None
+        W[c, 0] = w[:D].reshape(kh, kw)
+        B[c] = w[D]
+    return W, B
+
+
+def solve_conv(task, task_budget=120.0, channel_budget=6.0, beat=0.0):
+    """Try the kernel ladder; return (model, meta) for the smallest success.
+
+    beat: current best points for this task — ladder steps whose best possible
+    score (25 - ln(params)) can't exceed it are skipped.
+    """
+    import math
     pairs = canvases(task)
     if not pairs:
         return None
     task_deadline = time.monotonic() + task_budget
-    for kh, kw in KERNEL_LADDER:
+    for nparams, kind, kh, kw in KERNEL_LADDER:
+        if 25.0 - math.log(nparams) <= beat + 1e-9:
+            return None  # ladder is params-sorted; nothing further can win
         if time.monotonic() > task_deadline:
             return None
-        pat = collect_patterns(pairs, kh, kw)
-        if pat is None:
+        if kind == "dw":
+            fit = _fit_depthwise(pairs, kh, kw, channel_budget, task_deadline)
+        else:
+            fit = _fit_dense(pairs, kh, kw, channel_budget, task_deadline)
+        if fit is None:
             continue
-        X, Y = pat
-        D = CHANNELS * kh * kw
-        ws = np.zeros((CHANNELS, D + 1), dtype=np.int64)
-        ok = True
-        for o in range(CHANNELS):
-            deadline = min(time.monotonic() + channel_budget, task_deadline)
-            w = perceptron(X, Y[:, o], deadline)
-            if w is None:
-                ok = False
-                break
-            ws[o] = w
-        if not ok:
-            continue
-        W = ws[:, :D].reshape(CHANNELS, CHANNELS, kh, kw)
-        B = ws[:, D]
-        if not verify_conv_numpy(pairs, W, B, kh, kw):
+        W, B = fit
+        # expand depthwise to dense for the exact numpy check
+        W_full = W
+        if kind == "dw":
+            W_full = np.zeros((CHANNELS, CHANNELS, kh, kw), dtype=np.int64)
+            for c in range(CHANNELS):
+                W_full[c, c] = W[c, 0]
+        if not verify_conv_numpy(pairs, W_full, B, kh, kw):
             continue
         use_bias = bool(B.any())
-        model = builders.conv_network(W, kh, kw, bias=B if use_bias else None)
-        meta = {"method": f"conv{kh}x{kw}" + ("+b" if use_bias else "")}
+        groups = 10 if kind == "dw" else 1
+        model = builders.conv_network(
+            W, kh, kw, bias=B if use_bias else None, groups=groups)
+        tag = ("dwconv" if kind == "dw" else "conv") + f"{kh}x{kw}"
+        meta = {"method": tag + ("+b" if use_bias else "")}
         return model, meta
     return None

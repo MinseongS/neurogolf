@@ -1,28 +1,28 @@
 {
  "tasks": {
   "1": {
-   "points": 13.507420109695202,
-   "memory": 55688,
-   "params": 42298,
-   "method": "memorizer(n=268,k=4)"
+   "points": 17.047384888349,
+   "memory": 2819,
+   "params": 24,
+   "method": "ext:kojimar6275"
   },
   "2": {
-   "points": 13.507420109695202,
-   "memory": 55688,
-   "params": 42298,
-   "method": "memorizer(n=268,k=4)"
+   "points": 13.514517676859928,
+   "memory": 97200,
+   "params": 93,
+   "method": "ext:kojimar6275"
   },
   "3": {
-   "points": 16.315598889599855,
-   "memory": 0,
-   "params": 5910,
-   "method": "conv59x1+b"
+   "points": 17.918291413894426,
+   "memory": 1172,
+   "params": 18,
+   "method": "ext:kojimar6275"
   },
   "4": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 14.084547965521434,
+   "memory": 54000,
+   "params": 1020,
+   "method": "ext:kojimar6275"
   },
   "5": {
    "points": 13.511879653948743,
@@ -37,34 +37,34 @@
    "method": "conv1x9+b"
   },
   "7": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 16.108350887349943,
+   "memory": 7240,
+   "params": 31,
+   "method": "ext:kojimar6275"
   },
   "8": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.94430651457454,
+   "memory": 23228,
+   "params": 60,
+   "method": "ext:kojimar6275"
   },
   "9": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 13.69482467517415,
+   "memory": 77400,
+   "params": 3841,
+   "method": "ext:kojimar6275"
   },
   "10": {
-   "points": 13.372960443948932,
-   "memory": 68232,
-   "params": 43856,
-   "method": "memorizer(n=265,k=8)"
+   "points": 16.479811299603966,
+   "memory": 4939,
+   "params": 76,
+   "method": "ext:kojimar6275"
   },
   "11": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 13.898854540195707,
+   "memory": 63916,
+   "params": 2331,
+   "method": "ext:kojimar6275"
   },
   "12": {
    "points": 17.17196196787417,
@@ -79,28 +79,28 @@
    "method": "memorizer(n=267,k=4)"
   },
   "14": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.427427453254685,
+   "memory": 38399,
+   "params": 650,
+   "method": "ext:kojimar6275"
   },
   "15": {
-   "points": 18.186555400489105,
+   "points": 18.197605236675688,
    "memory": 0,
-   "params": 910,
-   "method": "conv3x3+b"
+   "params": 900,
+   "method": "ext:kojimar6275"
   },
   "16": {
-   "points": 20.394829814011906,
+   "points": 22.697414907005953,
    "memory": 0,
-   "params": 100,
-   "method": "conv1x1"
+   "params": 10,
+   "method": "ext:kojimar6275"
   },
   "17": {
-   "points": 13.54248154230151,
-   "memory": 55912,
-   "params": 38698,
-   "method": "memorizer(n=266,k=4,u=88)"
+   "points": 14.57157683937954,
+   "memory": 33625,
+   "params": 182,
+   "method": "ext:galaxy_v1"
   },
   "18": {
    "points": 13.511879653948743,
@@ -109,40 +109,40 @@
    "method": "memorizer(n=266,k=4)"
   },
   "19": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 13.69353305881371,
+   "memory": 81276,
+   "params": 70,
+   "method": "ext:kojimar6275"
   },
   "20": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.83389816291813,
+   "memory": 70603,
+   "params": 90,
+   "method": "ext:kojimar6275"
   },
   "21": {
-   "points": 14.060697973619803,
-   "memory": 43464,
-   "params": 12884,
-   "method": "memorizer(n=77,k=4)"
+   "points": 14.226412261696133,
+   "memory": 47622,
+   "params": 121,
+   "method": "ext:kojimar6275"
   },
   "22": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.542024067963268,
+   "memory": 34628,
+   "params": 193,
+   "method": "ext:kojimar6275"
   },
   "23": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.863194455943471,
+   "memory": 68607,
+   "params": 45,
+   "method": "ext:kojimar6275"
   },
   "24": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.88617052840466,
+   "memory": 8820,
+   "params": 260,
+   "method": "ext:kojimar6275"
   },
   "25": {
    "points": 13.511879653948743,
@@ -151,52 +151,52 @@
    "method": "memorizer(n=266,k=4)"
   },
   "26": {
-   "points": 18.186555400489105,
-   "memory": 0,
-   "params": 910,
-   "method": "conv1x9+b"
+   "points": 18.415208607614282,
+   "memory": 690,
+   "params": 34,
+   "method": "ext:kojimar6275"
   },
   "27": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 16.331975918881177,
+   "memory": 5777,
+   "params": 37,
+   "method": "ext:kojimar6275"
   },
   "28": {
-   "points": 13.622539223839048,
-   "memory": 55780,
-   "params": 31551,
-   "method": "memorizer(n=265,k=4,u=71)"
+   "points": 16.51553663320668,
+   "memory": 4510,
+   "params": 329,
+   "method": "ext:kojimar6275"
   },
   "29": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.516328283804857,
+   "memory": 96947,
+   "params": 170,
+   "method": "ext:kojimar6275"
   },
   "30": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.69453128293224,
+   "memory": 10828,
+   "params": 170,
+   "method": "ext:kojimar6275"
   },
   "31": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.168223295017873,
+   "memory": 18558,
+   "params": 58,
+   "method": "ext:kojimar6275"
   },
   "32": {
-   "points": 16.585947567503275,
-   "memory": 0,
-   "params": 4510,
-   "method": "conv9x5+b"
+   "points": 16.86699978141639,
+   "memory": 3336,
+   "params": 69,
+   "method": "ext:kojimar6275"
   },
   "33": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 14.081988539178049,
+   "memory": 55112,
+   "params": 49,
+   "method": "ext:kojimar6275"
   },
   "34": {
    "points": 13.509647395882164,
@@ -205,118 +205,118 @@
    "method": "memorizer(n=267,k=4)"
   },
   "35": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.36028269986934,
+   "memory": 15312,
+   "params": 51,
+   "method": "ext:kojimar6275"
   },
   "36": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 13.710918331458375,
+   "memory": 79832,
+   "params": 112,
+   "method": "ext:kojimar6275"
   },
   "37": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.937652078450405,
+   "memory": 55400,
+   "params": 8326,
+   "method": "ext:kojimar6275"
   },
   "38": {
-   "points": 14.002075530206243,
-   "memory": 55580,
-   "params": 4170,
-   "method": "memorizer(n=266,k=4,u=5)"
+   "points": 17.315675932318847,
+   "memory": 2136,
+   "params": 38,
+   "method": "ext:kojimar6275"
   },
   "39": {
-   "points": 13.516359174857266,
-   "memory": 55432,
-   "params": 41682,
-   "method": "memorizer(n=264,k=4)"
+   "points": 16.04171718950267,
+   "memory": 7744,
+   "params": 28,
+   "method": "ext:kojimar6275"
   },
   "40": {
-   "points": 15.999146852890542,
-   "memory": 0,
-   "params": 8110,
-   "method": "conv9x9+b"
+   "points": 16.02944082049105,
+   "memory": 7806,
+   "params": 62,
+   "method": "ext:kojimar6275"
   },
   "41": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.626775765122337,
+   "memory": 11740,
+   "params": 29,
+   "method": "ext:kojimar6275"
   },
   "42": {
-   "points": 13.38021314624571,
-   "memory": 67896,
-   "params": 43382,
-   "method": "memorizer(n=262,k=8)"
+   "points": 15.95018055485892,
+   "memory": 7790,
+   "params": 727,
+   "method": "ext:kojimar6275"
   },
   "43": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 16.158118010502886,
+   "memory": 6780,
+   "params": 138,
+   "method": "ext:kojimar6275"
   },
   "44": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.368698174995625,
+   "memory": 41224,
+   "params": 187,
+   "method": "ext:galaxy_v1"
   },
   "45": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 16.0873920363291,
+   "memory": 7400,
+   "params": 25,
+   "method": "ext:kojimar6275"
   },
   "46": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 14.58291068075113,
+   "memory": 32560,
+   "params": 866,
+   "method": "ext:kojimar6275"
   },
   "47": {
-   "points": 13.375372171467353,
-   "memory": 68120,
-   "params": 43698,
-   "method": "memorizer(n=264,k=8)"
+   "points": 16.985664262700574,
+   "memory": 2988,
+   "params": 36,
+   "method": "ext:kojimar6275"
   },
   "48": {
-   "points": 14.018613200393304,
-   "memory": 55824,
-   "params": 2946,
-   "method": "memorizer(n=270,k=4,u=2)"
+   "points": 16.367872270491663,
+   "memory": 5543,
+   "params": 66,
+   "method": "ext:kojimar6275"
   },
   "49": {
-   "points": 13.507420109695202,
-   "memory": 55688,
-   "params": 42298,
-   "method": "memorizer(n=268,k=4)"
+   "points": 14.674878758194124,
+   "memory": 30339,
+   "params": 150,
+   "method": "ext:kojimar6275"
   },
   "50": {
-   "points": 13.500767862161775,
-   "memory": 55880,
-   "params": 42760,
-   "method": "memorizer(n=271,k=4)"
+   "points": 15.843587970049374,
+   "memory": 9225,
+   "params": 250,
+   "method": "ext:kojimar6275"
   },
   "51": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 13.866448009633856,
+   "memory": 68359,
+   "params": 70,
+   "method": "ext:kojimar6275"
   },
   "52": {
-   "points": 13.99384173866826,
-   "memory": 55648,
-   "params": 4596,
-   "method": "memorizer(n=267,k=4,u=6)"
+   "points": 17.886857891292912,
+   "memory": 1185,
+   "params": 43,
+   "method": "ext:kojimar6275"
   },
   "53": {
-   "points": 19.263427702520808,
+   "points": 21.598802618337846,
    "memory": 0,
-   "params": 310,
-   "method": "conv3x1+b"
+   "params": 30,
+   "method": "ext:kojimar6275"
   },
   "54": {
    "points": 13.511879653948743,
@@ -325,58 +325,58 @@
    "method": "memorizer(n=266,k=4)"
   },
   "55": {
-   "points": 13.518606482642934,
-   "memory": 55368,
-   "params": 41528,
-   "method": "memorizer(n=263,k=4)"
+   "points": 14.820017720652668,
+   "memory": 25376,
+   "params": 994,
+   "method": "ext:kojimar6275"
   },
   "56": {
-   "points": 18.186555400489105,
-   "memory": 0,
-   "params": 910,
-   "method": "conv3x3+b"
+   "points": 19.638707834290575,
+   "memory": 136,
+   "params": 77,
+   "method": "ext:kojimar6275"
   },
   "57": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 14.71452069554135,
+   "memory": 29284,
+   "params": 20,
+   "method": "ext:kojimar6275"
   },
   "58": {
-   "points": 14.329882490144124,
-   "memory": 39560,
-   "params": 3490,
-   "method": "memorizer(n=16,k=4)"
+   "points": 15.314295392535985,
+   "memory": 9660,
+   "params": 6426,
+   "method": "ext:kojimar6275"
   },
   "59": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.077347278202861,
+   "memory": 17840,
+   "params": 2547,
+   "method": "ext:kojimar6275"
   },
   "60": {
-   "points": 16.315598889599855,
-   "memory": 0,
-   "params": 5910,
-   "method": "conv1x59+b"
+   "points": 16.372876749211567,
+   "memory": 5400,
+   "params": 181,
+   "method": "ext:kojimar6275"
   },
   "61": {
-   "points": 13.99384173866826,
-   "memory": 55648,
-   "params": 4596,
-   "method": "memorizer(n=267,k=4,u=6)"
+   "points": 15.152342332424542,
+   "memory": 16942,
+   "params": 1972,
+   "method": "ext:kojimar6275"
   },
   "62": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 14.810807327896311,
+   "memory": 25680,
+   "params": 934,
+   "method": "ext:kojimar6275"
   },
   "63": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.666940264012474,
+   "memory": 30700,
+   "params": 32,
+   "method": "ext:kojimar6275"
   },
   "64": {
    "points": 13.509647395882164,
@@ -385,10 +385,10 @@
    "method": "memorizer(n=267,k=4)"
   },
   "65": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.534186050835478,
+   "memory": 35032,
+   "params": 63,
+   "method": "ext:kojimar6275"
   },
   "66": {
    "points": 13.511879653948743,
@@ -397,28 +397,28 @@
    "method": "memorizer(n=266,k=4)"
   },
   "67": {
-   "points": 16.315598889599855,
-   "memory": 0,
-   "params": 5910,
-   "method": "conv1x59+b"
+   "points": 19.247427361174367,
+   "memory": 282,
+   "params": 33,
+   "method": "ext:kojimar6275"
   },
   "68": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.55942130423374,
+   "memory": 12562,
+   "params": 27,
+   "method": "ext:kojimar6275"
   },
   "69": {
-   "points": 13.516359174857266,
-   "memory": 55432,
-   "params": 41682,
-   "method": "memorizer(n=264,k=4)"
+   "points": 13.658456151785392,
+   "memory": 82858,
+   "params": 1392,
+   "method": "ext:kojimar6275"
   },
   "70": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.90050125280863,
+   "memory": 66060,
+   "params": 78,
+   "method": "ext:kojimar6275"
   },
   "71": {
    "points": 13.514116906141656,
@@ -427,10 +427,10 @@
    "method": "memorizer(n=265,k=4)"
   },
   "72": {
-   "points": 13.507420109695202,
-   "memory": 55688,
-   "params": 42298,
-   "method": "memorizer(n=268,k=4)"
+   "points": 17.8229812340901,
+   "memory": 1260,
+   "params": 49,
+   "method": "ext:kojimar6275"
   },
   "73": {
    "points": 19.263427702520808,
@@ -439,16 +439,16 @@
    "method": "conv3x1+b"
   },
   "74": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 15.009188619292196,
+   "memory": 21780,
+   "params": 45,
+   "method": "ext:kojimar6275"
   },
   "75": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 14.742796878157792,
+   "memory": 28430,
+   "params": 57,
+   "method": "ext:kojimar6275"
   },
   "76": {
    "points": 13.511879653948743,
@@ -469,40 +469,40 @@
    "method": "conv59x1+b"
   },
   "79": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.029648507210364,
+   "memory": 21138,
+   "params": 245,
+   "method": "ext:kojimar6275"
   },
   "80": {
-   "points": 13.593324334872483,
-   "memory": 53320,
-   "params": 36600,
-   "method": "memorizer(n=231,k=4)"
+   "points": 14.353266435603462,
+   "memory": 41838,
+   "params": 217,
+   "method": "ext:kojimar6275"
   },
   "81": {
-   "points": 16.585947567503275,
-   "memory": 0,
-   "params": 4510,
-   "method": "conv5x9+b"
+   "points": 17.256296741826247,
+   "memory": 2198,
+   "params": 109,
+   "method": "ext:kojimar6275"
   },
   "82": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 15.818470709877937,
+   "memory": 9660,
+   "params": 56,
+   "method": "ext:kojimar6275"
   },
   "83": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 17.504458056115745,
+   "memory": 0,
+   "params": 1800,
+   "method": "ext:kojimar6275"
   },
   "84": {
-   "points": 13.750519383117506,
-   "memory": 49480,
-   "params": 27360,
-   "method": "memorizer(n=171,k=4)"
+   "points": 15.121163810905001,
+   "memory": 19400,
+   "params": 113,
+   "method": "ext:kojimar6275"
   },
   "85": {
    "points": 13.514116906141656,
@@ -511,58 +511,58 @@
    "method": "memorizer(n=265,k=4)"
   },
   "86": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.83966336368449,
+   "memory": 25632,
+   "params": 225,
+   "method": "ext:kojimar6275"
   },
   "87": {
-   "points": 17.17196196787417,
-   "memory": 0,
-   "params": 2510,
-   "method": "conv5x5+b"
+   "points": 19.09191706183107,
+   "memory": 360,
+   "params": 8,
+   "method": "ext:kojimar6275"
   },
   "88": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 13.80499590787612,
+   "memory": 72646,
+   "params": 120,
+   "method": "ext:kojimar6275"
   },
   "89": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 14.186179427563964,
+   "memory": 49605,
+   "params": 98,
+   "method": "ext:kojimar6275"
   },
   "90": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 13.94350667496543,
+   "memory": 63250,
+   "params": 104,
+   "method": "ext:kojimar6275"
   },
   "91": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.151323325547068,
+   "memory": 51388,
+   "params": 78,
+   "method": "ext:kojimar6275"
   },
   "92": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 14.25734036914603,
+   "memory": 46260,
+   "params": 29,
+   "method": "ext:kojimar6275"
   },
   "93": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 15.354118052333183,
+   "memory": 15400,
+   "params": 58,
+   "method": "ext:kojimar6275"
   },
   "94": {
-   "points": 13.516359174857266,
-   "memory": 55432,
-   "params": 41682,
-   "method": "memorizer(n=264,k=4)"
+   "points": 15.745451373359497,
+   "memory": 10340,
+   "params": 112,
+   "method": "ext:kojimar6275"
   },
   "95": {
    "points": 18.186555400489105,
@@ -595,10 +595,10 @@
    "method": "conv7x7+b"
   },
   "100": {
-   "points": 13.974346405842027,
-   "memory": 55596,
-   "params": 5834,
-   "method": "memorizer(n=266,k=4,u=9)"
+   "points": 16.21491936346016,
+   "memory": 6493,
+   "params": 43,
+   "method": "ext:kojimar6275"
   },
   "101": {
    "points": 13.511879653948743,
@@ -607,52 +607,52 @@
    "method": "memorizer(n=266,k=4)"
   },
   "102": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 15.558071829926945,
+   "memory": 12075,
+   "params": 531,
+   "method": "ext:kojimar6275"
   },
   "103": {
-   "points": 14.086367140118092,
-   "memory": 52304,
-   "params": 2616,
-   "method": "memorizer(n=215,k=4,u=2)"
+   "points": 19.737309811095116,
+   "memory": 159,
+   "params": 34,
+   "method": "ext:kojimar6275"
   },
   "104": {
-   "points": 14.392573705825727,
-   "memory": 38792,
-   "params": 1642,
-   "method": "memorizer(n=4,k=4)"
+   "points": 16.788788638206977,
+   "memory": 2692,
+   "params": 990,
+   "method": "ext:kojimar6275"
   },
   "105": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 16.138508135713085,
+   "memory": 6987,
+   "params": 68,
+   "method": "ext:kojimar6275"
   },
   "106": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 17.940382371708615,
+   "memory": 1039,
+   "params": 125,
+   "method": "ext:kojimar6275"
   },
   "107": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.799992367549814,
+   "memory": 59450,
+   "params": 13681,
+   "method": "ext:kojimar6275"
   },
   "108": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 17.504458056115745,
+   "memory": 0,
+   "params": 1800,
+   "method": "ext:kojimar6275"
   },
   "109": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.539652865248629,
+   "memory": 93924,
+   "params": 954,
+   "method": "ext:kojimar6275"
   },
   "110": {
    "points": 13.529251613928958,
@@ -661,46 +661,46 @@
    "method": "memorizer(n=266,k=4,u=91)"
   },
   "111": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 18.319145321209785,
+   "memory": 772,
+   "params": 25,
+   "method": "ext:kojimar6275"
   },
   "112": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.010141445218116,
+   "memory": 59164,
+   "params": 106,
+   "method": "ext:kojimar6275"
   },
   "113": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 21.598802618337846,
+   "memory": 0,
+   "params": 30,
+   "method": "ext:kojimar6275"
   },
   "114": {
-   "points": 17.17196196787417,
-   "memory": 0,
-   "params": 2510,
-   "method": "conv5x5+b"
+   "points": 17.869901489874422,
+   "memory": 1091,
+   "params": 158,
+   "method": "ext:kojimar6275"
   },
   "115": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 16.67663430556392,
+   "memory": 4042,
+   "params": 77,
+   "method": "ext:kojimar6275"
   },
   "116": {
-   "points": 18.186555400489105,
+   "points": 21.598802618337846,
    "memory": 0,
-   "params": 910,
-   "method": "conv9x1+b"
+   "params": 30,
+   "method": "ext:kojimar6275"
   },
   "117": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 15.202317506360849,
+   "memory": 17835,
+   "params": 157,
+   "method": "ext:kojimar6275"
   },
   "118": {
    "points": 13.509647395882164,
@@ -709,10 +709,10 @@
    "method": "memorizer(n=267,k=4)"
   },
   "119": {
-   "points": 13.518606482642934,
-   "memory": 55368,
-   "params": 41528,
-   "method": "memorizer(n=263,k=4)"
+   "points": 15.306739773511536,
+   "memory": 16108,
+   "params": 100,
+   "method": "ext:kojimar6275"
   },
   "120": {
    "points": 18.186555400489105,
@@ -721,10 +721,10 @@
    "method": "conv3x3+b"
   },
   "121": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 16.215837777729526,
+   "memory": 6484,
+   "params": 46,
+   "method": "ext:kojimar6275"
   },
   "122": {
    "points": 17.17196196787417,
@@ -733,34 +733,34 @@
    "method": "conv5x5+b"
   },
   "123": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 16.680526307557813,
+   "memory": 3155,
+   "params": 948,
+   "method": "ext:kojimar6275"
   },
   "124": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.634966238347337,
+   "memory": 11320,
+   "params": 353,
+   "method": "ext:kojimar6275"
   },
   "125": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 15.495796696496955,
+   "memory": 13170,
+   "params": 246,
+   "method": "ext:kojimar6275"
   },
   "126": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 13.64699683868028,
+   "memory": 85174,
+   "params": 47,
+   "method": "ext:kojimar6275"
   },
   "127": {
-   "points": 18.186555400489105,
+   "points": 18.197605236675688,
    "memory": 0,
-   "params": 910,
-   "method": "conv3x3+b"
+   "params": 900,
+   "method": "ext:kojimar6275"
   },
   "128": {
    "points": 16.315598889599855,
@@ -769,28 +769,28 @@
    "method": "conv59x1+b"
   },
   "129": {
-   "points": 17.17196196787417,
-   "memory": 0,
-   "params": 2510,
-   "method": "conv5x5+b"
+   "points": 18.306676331730053,
+   "memory": 778,
+   "params": 29,
+   "method": "ext:kojimar6275"
   },
   "130": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 15.326051405866941,
+   "memory": 15840,
+   "params": 58,
+   "method": "ext:kojimar6275"
   },
   "131": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.295632567101045,
+   "memory": 43599,
+   "params": 951,
+   "method": "ext:kojimar6275"
   },
   "132": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 14.709279200950512,
+   "memory": 29394,
+   "params": 64,
+   "method": "ext:kojimar6275"
   },
   "133": {
    "points": 13.509647395882164,
@@ -799,82 +799,82 @@
    "method": "memorizer(n=267,k=4)"
   },
   "134": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.576162453761413,
+   "memory": 12300,
+   "params": 80,
+   "method": "ext:kojimar6275"
   },
   "135": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 19.113895968549844,
+   "memory": 360,
+   "params": 0,
+   "method": "ext:kojimar6275"
   },
   "136": {
-   "points": 13.37055451886904,
-   "memory": 68344,
-   "params": 44014,
-   "method": "memorizer(n=266,k=8)"
+   "points": 16.516156788265317,
+   "memory": 4700,
+   "params": 136,
+   "method": "ext:kojimar6275"
   },
   "137": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.821401075304742,
+   "memory": 71506,
+   "params": 76,
+   "method": "ext:kojimar6275"
   },
   "138": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.211361567031112,
+   "memory": 48342,
+   "params": 125,
+   "method": "ext:kojimar6275"
   },
   "139": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 16.803012072741105,
+   "memory": 3456,
+   "params": 174,
+   "method": "ext:kojimar6275"
   },
   "140": {
-   "points": 17.17196196787417,
-   "memory": 0,
-   "params": 2510,
-   "method": "conv5x5+b"
+   "points": 19.09191706183107,
+   "memory": 360,
+   "params": 8,
+   "method": "ext:kojimar6275"
   },
   "141": {
-   "points": 13.372960443948932,
-   "memory": 68232,
-   "params": 43856,
-   "method": "memorizer(n=265,k=8)"
+   "points": 15.33103297180142,
+   "memory": 15750,
+   "params": 69,
+   "method": "ext:kojimar6275"
   },
   "142": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 17.504458056115745,
+   "memory": 0,
+   "params": 1800,
+   "method": "ext:kojimar6275"
   },
   "143": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.12486048297936,
+   "memory": 19384,
+   "params": 57,
+   "method": "ext:kojimar6275"
   },
   "144": {
-   "points": 16.315598889599855,
-   "memory": 0,
-   "params": 5910,
-   "method": "conv59x1+b"
+   "points": 18.93621479131239,
+   "memory": 384,
+   "params": 46,
+   "method": "ext:kojimar6275"
   },
   "145": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 13.847226946929018,
+   "memory": 68824,
+   "params": 933,
+   "method": "ext:kojimar6275"
   },
   "146": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 17.27865138738205,
+   "memory": 2232,
+   "params": 24,
+   "method": "ext:kojimar6275"
   },
   "147": {
    "points": 18.186555400489105,
@@ -883,22 +883,22 @@
    "method": "conv3x3+b"
   },
   "148": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.99988495388028,
+   "memory": 21676,
+   "params": 353,
+   "method": "ext:kojimar6275"
   },
   "149": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 19.54041448585584,
+   "memory": 144,
+   "params": 91,
+   "method": "ext:kojimar6275"
   },
   "150": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 18.44322164384196,
+   "memory": 668,
+   "params": 36,
+   "method": "ext:kojimar6275"
   },
   "151": {
    "points": 18.186555400489105,
@@ -907,40 +907,40 @@
    "method": "conv3x3+b"
   },
   "152": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 17.504458056115745,
+   "memory": 0,
+   "params": 1800,
+   "method": "ext:kojimar6275"
   },
   "153": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 15.056186575992307,
+   "memory": 20731,
+   "params": 92,
+   "method": "ext:multisrc"
   },
   "154": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.596525348878876,
+   "memory": 31984,
+   "params": 990,
+   "method": "ext:kojimar6275"
   },
   "155": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 18.44322164384196,
+   "memory": 668,
+   "params": 36,
+   "method": "ext:kojimar6275"
   },
   "156": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 14.82454063746774,
+   "memory": 24352,
+   "params": 1899,
+   "method": "ext:kojimar6275"
   },
   "157": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 13.736703242080278,
+   "memory": 77431,
+   "params": 478,
+   "method": "ext:kojimar6275"
   },
   "158": {
    "points": 13.511879653948743,
@@ -949,76 +949,76 @@
    "method": "memorizer(n=266,k=4)"
   },
   "159": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 13.600008098407727,
+   "memory": 85216,
+   "params": 4105,
+   "method": "ext:kojimar6275"
   },
   "160": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 16.569454615309432,
+   "memory": 4520,
+   "params": 65,
+   "method": "ext:kojimar6275"
   },
   "161": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.923426777221719,
+   "memory": 64611,
+   "params": 28,
+   "method": "ext:kojimar6275"
   },
   "162": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.944501582071068,
+   "memory": 63248,
+   "params": 43,
+   "method": "ext:kojimar6275"
   },
   "163": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 14.911070763333674,
+   "memory": 22430,
+   "params": 1645,
+   "method": "ext:kojimar6275"
   },
   "164": {
-   "points": 16.315598889599855,
+   "points": 21.598802618337846,
    "memory": 0,
-   "params": 5910,
-   "method": "conv1x59+b"
+   "params": 30,
+   "method": "ext:kojimar6275"
   },
   "165": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 13.892729661190222,
+   "memory": 65660,
+   "params": 994,
+   "method": "ext:kojimar6275"
   },
   "166": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.881844714630706,
+   "memory": 24752,
+   "params": 37,
+   "method": "ext:kojimar6275"
   },
   "167": {
-   "points": 14.01743982067038,
-   "memory": 55508,
-   "params": 3331,
-   "method": "memorizer(n=265,k=4,u=3)"
+   "points": 18.470581161737776,
+   "memory": 391,
+   "params": 294,
+   "method": "ext:kojimar6275"
   },
   "168": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 15.076562772156251,
+   "memory": 20218,
+   "params": 185,
+   "method": "ext:kojimar6275"
   },
   "169": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.929812271572874,
+   "memory": 22973,
+   "params": 655,
+   "method": "ext:kojimar6275"
   },
   "170": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.728331141770909,
+   "memory": 78315,
+   "params": 249,
+   "method": "ext:kojimar6275"
   },
   "171": {
    "points": 18.186555400489105,
@@ -1027,10 +1027,10 @@
    "method": "conv3x3+b"
   },
   "172": {
-   "points": 16.315598889599855,
+   "points": 21.598802618337846,
    "memory": 0,
-   "params": 5910,
-   "method": "conv59x1+b"
+   "params": 30,
+   "method": "ext:kojimar6275"
   },
   "173": {
    "points": 13.511879653948743,
@@ -1039,10 +1039,10 @@
    "method": "memorizer(n=266,k=4)"
   },
   "174": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.140635684557754,
+   "memory": 51945,
+   "params": 74,
+   "method": "ext:kojimar6275"
   },
   "175": {
    "points": 13.90183269004953,
@@ -1057,70 +1057,70 @@
    "method": "conv1x59+b"
   },
   "177": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 13.978195575521427,
+   "memory": 61092,
+   "params": 102,
+   "method": "ext:kojimar6275"
   },
   "178": {
-   "points": 13.507420109695202,
-   "memory": 55688,
-   "params": 42298,
-   "method": "memorizer(n=268,k=4)"
+   "points": 15.478065735525723,
+   "memory": 13569,
+   "params": 87,
+   "method": "ext:kojimar6275"
   },
   "179": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 25.0,
+   "memory": 0,
+   "params": 0,
+   "method": "ext:kojimar6275"
   },
   "180": {
-   "points": 15.999146852890542,
-   "memory": 0,
-   "params": 8110,
-   "method": "conv9x9+b"
+   "points": 16.084030688626395,
+   "memory": 6528,
+   "params": 922,
+   "method": "ext:kojimar6275"
   },
   "181": {
-   "points": 13.518606482642934,
-   "memory": 55368,
-   "params": 41528,
-   "method": "memorizer(n=263,k=4)"
+   "points": 17.91493570604745,
+   "memory": 1108,
+   "params": 86,
+   "method": "ext:kojimar6275"
   },
   "182": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 14.22901287975965,
+   "memory": 46580,
+   "params": 1039,
+   "method": "ext:kojimar6275"
   },
   "183": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 14.878662884610772,
+   "memory": 24840,
+   "params": 28,
+   "method": "ext:kojimar6275"
   },
   "184": {
-   "points": 13.756209670194975,
-   "memory": 49352,
-   "params": 27052,
-   "method": "memorizer(n=169,k=4)"
+   "points": 14.432407952356657,
+   "memory": 28880,
+   "params": 9975,
+   "method": "ext:kojimar6275"
   },
   "185": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 14.00485763936326,
+   "memory": 59517,
+   "params": 67,
+   "method": "ext:kojimar6275"
   },
   "186": {
-   "points": 17.17196196787417,
-   "memory": 0,
-   "params": 2510,
-   "method": "conv5x5+b"
+   "points": 19.10284613236326,
+   "memory": 318,
+   "params": 46,
+   "method": "ext:kojimar6275"
   },
   "187": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.654168620492959,
+   "memory": 83700,
+   "params": 912,
+   "method": "ext:kojimar6275"
   },
   "188": {
    "points": 16.500970779211436,
@@ -1129,16 +1129,16 @@
    "method": "conv7x7+b"
   },
   "189": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.887914167591697,
+   "memory": 24380,
+   "params": 259,
+   "method": "ext:kojimar6275"
   },
   "190": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.675973863620001,
+   "memory": 11026,
+   "params": 178,
+   "method": "ext:kojimar6275"
   },
   "191": {
    "points": 13.509647395882164,
@@ -1159,28 +1159,28 @@
    "method": "conv3x3+b"
   },
   "194": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 17.504458056115745,
+   "memory": 0,
+   "params": 1800,
+   "method": "ext:kojimar6275"
   },
   "195": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 15.436962585454308,
+   "memory": 12310,
+   "params": 1919,
+   "method": "ext:kojimar6275"
   },
   "196": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.619005786490737,
+   "memory": 32175,
+   "params": 66,
+   "method": "ext:kojimar6275"
   },
   "197": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 14.166555524825903,
+   "memory": 50672,
+   "params": 16,
+   "method": "ext:kojimar6275"
   },
   "198": {
    "points": 13.511879653948743,
@@ -1189,22 +1189,22 @@
    "method": "memorizer(n=266,k=4)"
   },
   "199": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 15.30989132872317,
+   "memory": 16103,
+   "params": 54,
+   "method": "ext:kojimar6275"
   },
   "200": {
-   "points": 14.049158366079574,
-   "memory": 43656,
-   "params": 13346,
-   "method": "memorizer(n=80,k=4)"
+   "points": 16.912052445357332,
+   "memory": 3192,
+   "params": 63,
+   "method": "ext:galaxy_v1"
   },
   "201": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.562876248446054,
+   "memory": 92392,
+   "params": 308,
+   "method": "ext:kojimar6275"
   },
   "202": {
    "points": 13.595751655657642,
@@ -1213,10 +1213,10 @@
    "method": "memorizer(n=230,k=4)"
   },
   "203": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 13.645578007863532,
+   "memory": 85264,
+   "params": 78,
+   "method": "ext:kojimar6275"
   },
   "204": {
    "points": 13.507420109695202,
@@ -1231,22 +1231,22 @@
    "method": "memorizer(n=266,k=4)"
   },
   "206": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.975062924893004,
+   "memory": 61296,
+   "params": 90,
+   "method": "ext:kojimar6275"
   },
   "207": {
-   "points": 13.55022735003504,
-   "memory": 55780,
-   "params": 38100,
-   "method": "memorizer(n=264,k=4,u=87)"
+   "points": 17.463636061595487,
+   "memory": 1840,
+   "params": 35,
+   "method": "ext:kojimar6275"
   },
   "208": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.56749314667969,
+   "memory": 91751,
+   "params": 522,
+   "method": "ext:kojimar6275"
   },
   "209": {
    "points": 13.511879653948743,
@@ -1255,34 +1255,34 @@
    "method": "memorizer(n=266,k=4)"
   },
   "210": {
-   "points": 16.315598889599855,
+   "points": 21.598802618337846,
    "memory": 0,
-   "params": 5910,
-   "method": "conv59x1+b"
+   "params": 30,
+   "method": "ext:kojimar6275"
   },
   "211": {
-   "points": 13.516359174857266,
-   "memory": 55432,
-   "params": 41682,
-   "method": "memorizer(n=264,k=4)"
+   "points": 17.504458056115745,
+   "memory": 0,
+   "params": 1800,
+   "method": "ext:kojimar6275"
   },
   "212": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 15.972381264839111,
+   "memory": 8192,
+   "params": 138,
+   "method": "ext:kojimar6275"
   },
   "213": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 14.177325912477691,
+   "memory": 50005,
+   "params": 140,
+   "method": "ext:kojimar6275"
   },
   "214": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 17.504458056115745,
+   "memory": 0,
+   "params": 1800,
+   "method": "ext:kojimar6275"
   },
   "215": {
    "points": 16.315598889599855,
@@ -1297,52 +1297,52 @@
    "method": "memorizer(n=266,k=4)"
   },
   "217": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 15.206104124093967,
+   "memory": 17901,
+   "params": 23,
+   "method": "ext:kojimar6275"
   },
   "218": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.948006239164648,
+   "memory": 23158,
+   "params": 44,
+   "method": "ext:kojimar6275"
   },
   "219": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 13.652810398019943,
+   "memory": 84630,
+   "params": 97,
+   "method": "ext:kojimar6275"
   },
   "220": {
-   "points": 18.186555400489105,
+   "points": 18.197605236675688,
    "memory": 0,
-   "params": 910,
-   "method": "conv3x3+b"
+   "params": 900,
+   "method": "ext:kojimar6275"
   },
   "221": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 14.069235056400384,
+   "memory": 50841,
+   "params": 5028,
+   "method": "ext:kojimar6275"
   },
   "222": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.031198444197276,
+   "memory": 57948,
+   "params": 87,
+   "method": "ext:kojimar6275"
   },
   "223": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 17.504458056115745,
+   "memory": 0,
+   "params": 1800,
+   "method": "ext:kojimar6275"
   },
   "224": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.275455898281896,
+   "memory": 45276,
+   "params": 182,
+   "method": "ext:kojimar6275"
   },
   "225": {
    "points": 16.500970779211436,
@@ -1351,10 +1351,10 @@
    "method": "conv7x7+b"
   },
   "226": {
-   "points": 13.874179231806004,
-   "memory": 46856,
-   "params": 21046,
-   "method": "memorizer(n=130,k=4)"
+   "points": 16.53220715887889,
+   "memory": 4608,
+   "params": 151,
+   "method": "ext:kojimar6275"
   },
   "227": {
    "points": 18.186555400489105,
@@ -1363,22 +1363,22 @@
    "method": "conv9x1+b"
   },
   "228": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.86993479941538,
+   "memory": 25008,
+   "params": 78,
+   "method": "ext:kojimar6275"
   },
   "229": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 17.74936448810132,
+   "memory": 1364,
+   "params": 45,
+   "method": "ext:kojimar6275"
   },
   "230": {
-   "points": 18.186555400489105,
+   "points": 18.197605236675688,
    "memory": 0,
-   "params": 910,
-   "method": "conv3x3+b"
+   "params": 900,
+   "method": "ext:kojimar6275"
   },
   "231": {
    "points": 16.315598889599855,
@@ -1399,58 +1399,58 @@
    "method": "memorizer(n=266,k=4)"
   },
   "234": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.689154000119816,
+   "memory": 81621,
+   "params": 82,
+   "method": "ext:kojimar6275"
   },
   "235": {
-   "points": 14.112301419105737,
-   "memory": 42632,
-   "params": 10882,
-   "method": "memorizer(n=64,k=4)"
+   "points": 17.801068759311825,
+   "memory": 1224,
+   "params": 114,
+   "method": "ext:kojimar6275"
   },
   "236": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 18.53697054307933,
+   "memory": 640,
+   "params": 1,
+   "method": "ext:galaxy_v1"
   },
   "237": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.430308268881676,
+   "memory": 14283,
+   "params": 41,
+   "method": "ext:kojimar6275"
   },
   "238": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.927876707427622,
+   "memory": 62905,
+   "params": 1447,
+   "method": "ext:kojimar6275"
   },
   "239": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 13.54388830238479,
+   "memory": 94091,
+   "params": 386,
+   "method": "ext:kojimar6275"
   },
   "240": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.765519480374964,
+   "memory": 14112,
+   "params": 13735,
+   "method": "ext:kojimar6275"
   },
   "241": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 25.0,
+   "memory": 0,
+   "params": 0,
+   "method": "ext:kojimar6275"
   },
   "242": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.090580078810763,
+   "memory": 20074,
+   "params": 45,
+   "method": "ext:kojimar6275"
   },
   "243": {
    "points": 13.514116906141656,
@@ -1459,46 +1459,46 @@
    "method": "memorizer(n=265,k=4)"
   },
   "244": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.633344629227418,
+   "memory": 31697,
+   "params": 85,
+   "method": "ext:kojimar6275"
   },
   "245": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 14.724535183516696,
+   "memory": 28916,
+   "params": 96,
+   "method": "ext:kojimar6275"
   },
   "246": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.497661881504435,
+   "memory": 12960,
+   "params": 431,
+   "method": "ext:kojimar6275"
   },
   "247": {
-   "points": 13.505197773289462,
-   "memory": 55752,
-   "params": 42452,
-   "method": "memorizer(n=269,k=4)"
+   "points": 16.272870084756832,
+   "memory": 6142,
+   "params": 26,
+   "method": "ext:kojimar6275"
   },
   "248": {
-   "points": 14.365973147686864,
-   "memory": 39112,
-   "params": 2412,
-   "method": "memorizer(n=9,k=4)"
+   "points": 16.218905264797385,
+   "memory": 4698,
+   "params": 1812,
+   "method": "ext:kojimar6275"
   },
   "249": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 15.895242390598883,
+   "memory": 8676,
+   "params": 322,
+   "method": "ext:kojimar6275"
   },
   "250": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 15.59573893538651,
+   "memory": 12072,
+   "params": 68,
+   "method": "ext:kojimar6275"
   },
   "251": {
    "points": 13.511879653948743,
@@ -1507,22 +1507,22 @@
    "method": "memorizer(n=266,k=4)"
   },
   "252": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 14.453028311923028,
+   "memory": 37800,
+   "params": 262,
+   "method": "ext:kojimar6275"
   },
   "253": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 14.215455188361384,
+   "memory": 47830,
+   "params": 439,
+   "method": "ext:kojimar6275"
   },
   "254": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 16.018318360026136,
+   "memory": 7798,
+   "params": 158,
+   "method": "ext:kojimar6275"
   },
   "255": {
    "points": 13.514116906141656,
@@ -1531,52 +1531,52 @@
    "method": "memorizer(n=265,k=4)"
   },
   "256": {
-   "points": 13.518606482642934,
-   "memory": 55368,
-   "params": 41528,
-   "method": "memorizer(n=263,k=4)"
+   "points": 15.197383057848846,
+   "memory": 18022,
+   "params": 59,
+   "method": "ext:kojimar6275"
   },
   "257": {
-   "points": 13.505197773289462,
-   "memory": 55752,
-   "params": 42452,
-   "method": "memorizer(n=269,k=4)"
+   "points": 18.01806532284361,
+   "memory": 1024,
+   "params": 53,
+   "method": "ext:kojimar6275"
   },
   "258": {
-   "points": 19.263427702520808,
+   "points": 19.924826184766175,
    "memory": 0,
-   "params": 310,
-   "method": "conv1x3+b"
+   "params": 160,
+   "method": "ext:kojimar6275"
   },
   "259": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 16.169018489047502,
+   "memory": 6793,
+   "params": 50,
+   "method": "ext:kojimar6275"
   },
   "260": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 15.568678412874291,
+   "memory": 12332,
+   "params": 141,
+   "method": "ext:kojimar6275"
   },
   "261": {
-   "points": 19.263427702520808,
+   "points": 19.701682633451963,
    "memory": 0,
-   "params": 310,
-   "method": "conv3x1+b"
+   "params": 200,
+   "method": "ext:kojimar6275"
   },
   "262": {
-   "points": 14.365973147686864,
-   "memory": 39112,
-   "params": 2412,
-   "method": "memorizer(n=9,k=4)"
+   "points": 16.765169719557946,
+   "memory": 3744,
+   "params": 26,
+   "method": "ext:kojimar6275"
   },
   "263": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 16.006075858588602,
+   "memory": 8002,
+   "params": 52,
+   "method": "ext:kojimar6275"
   },
   "264": {
    "points": 13.514116906141656,
@@ -1585,10 +1585,10 @@
    "method": "memorizer(n=265,k=4)"
   },
   "265": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.424537832136728,
+   "memory": 39033,
+   "params": 129,
+   "method": "ext:kojimar6275"
   },
   "266": {
    "points": 18.186555400489105,
@@ -1597,46 +1597,46 @@
    "method": "conv3x3+b"
   },
   "267": {
-   "points": 13.516359174857266,
-   "memory": 55432,
-   "params": 41682,
-   "method": "memorizer(n=264,k=4)"
+   "points": 17.904106778902467,
+   "memory": 1160,
+   "params": 47,
+   "method": "ext:kojimar6275"
   },
   "268": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 14.983808957550787,
+   "memory": 22288,
+   "params": 98,
+   "method": "ext:kojimar6275"
   },
   "269": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.940249986656319,
+   "memory": 8506,
+   "params": 96,
+   "method": "ext:kojimar6275"
   },
   "270": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.853527053936123,
+   "memory": 24316,
+   "params": 1185,
+   "method": "ext:kojimar6275"
   },
   "271": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 14.725259284025897,
+   "memory": 28928,
+   "params": 63,
+   "method": "ext:kojimar6275"
   },
   "272": {
-   "points": 18.186555400489105,
+   "points": 18.86877351051686,
    "memory": 0,
-   "params": 910,
-   "method": "conv3x3+b"
+   "params": 460,
+   "method": "ext:kojimar6275"
   },
   "273": {
-   "points": 13.372960443948932,
-   "memory": 68232,
-   "params": 43856,
-   "method": "memorizer(n=265,k=8)"
+   "points": 16.311040765729324,
+   "memory": 5900,
+   "params": 37,
+   "method": "ext:kojimar6275"
   },
   "274": {
    "points": 15.999146852890542,
@@ -1645,52 +1645,52 @@
    "method": "conv9x9+b"
   },
   "275": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.662869436848247,
+   "memory": 81106,
+   "params": 2773,
+   "method": "ext:kojimar6275"
   },
   "276": {
-   "points": 20.394829814011906,
+   "points": 22.697414907005953,
    "memory": 0,
-   "params": 100,
-   "method": "conv1x1"
+   "params": 10,
+   "method": "ext:kojimar6275"
   },
   "277": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.410059486110708,
+   "memory": 14367,
+   "params": 250,
+   "method": "ext:kojimar6275"
   },
   "278": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 14.674714778068148,
+   "memory": 30132,
+   "params": 362,
+   "method": "ext:kojimar6275"
   },
   "279": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.821535747509644,
+   "memory": 25144,
+   "params": 1186,
+   "method": "ext:kojimar6275"
   },
   "280": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 13.64132188619622,
+   "memory": 84826,
+   "params": 880,
+   "method": "ext:kojimar6275"
   },
   "281": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.60794357751076,
+   "memory": 87628,
+   "params": 987,
+   "method": "ext:kojimar6275"
   },
   "282": {
-   "points": 18.186555400489105,
+   "points": 18.197605236675688,
    "memory": 0,
-   "params": 910,
-   "method": "conv3x3+b"
+   "params": 900,
+   "method": "ext:octavi6154"
   },
   "283": {
    "points": 18.186555400489105,
@@ -1699,10 +1699,10 @@
    "method": "conv3x3+b"
   },
   "284": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.951446054423878,
+   "memory": 62617,
+   "params": 236,
+   "method": "ext:kojimar6275"
   },
   "285": {
    "points": 13.514116906141656,
@@ -1717,10 +1717,10 @@
    "method": "memorizer(n=265,k=4)"
   },
   "287": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 14.975800372301608,
+   "memory": 22528,
+   "params": 38,
+   "method": "ext:kojimar6275"
   },
   "288": {
    "points": 15.999146852890542,
@@ -1729,22 +1729,22 @@
    "method": "conv9x9+b"
   },
   "289": {
-   "points": 13.507420109695202,
-   "memory": 55688,
-   "params": 42298,
-   "method": "memorizer(n=268,k=4)"
+   "points": 14.874489523818365,
+   "memory": 24892,
+   "params": 80,
+   "method": "ext:kojimar6275"
   },
   "290": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.631972352188223,
+   "memory": 11614,
+   "params": 94,
+   "method": "ext:kojimar6275"
   },
   "291": {
-   "points": 13.975600651300995,
-   "memory": 55532,
-   "params": 5821,
-   "method": "memorizer(n=265,k=4,u=9)"
+   "points": 16.627370259775116,
+   "memory": 3396,
+   "params": 931,
+   "method": "ext:kojimar6275"
   },
   "292": {
    "points": 16.315598889599855,
@@ -1753,10 +1753,10 @@
    "method": "conv1x59+b"
   },
   "293": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 14.91707003142076,
+   "memory": 23855,
+   "params": 76,
+   "method": "ext:kojimar6275"
   },
   "294": {
    "points": 18.186555400489105,
@@ -1765,106 +1765,106 @@
    "method": "conv3x3+b"
   },
   "295": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 15.591628777524683,
+   "memory": 12125,
+   "params": 65,
+   "method": "ext:kojimar6275"
   },
   "296": {
-   "points": 16.585947567503275,
-   "memory": 0,
-   "params": 4510,
-   "method": "conv5x9+b"
+   "points": 16.67955188604344,
+   "memory": 3762,
+   "params": 345,
+   "method": "ext:kojimar6275"
   },
   "297": {
-   "points": 13.516359174857266,
-   "memory": 55432,
-   "params": 41682,
-   "method": "memorizer(n=264,k=4)"
+   "points": 15.876198389441056,
+   "memory": 9076,
+   "params": 95,
+   "method": "ext:kojimar6275"
   },
   "298": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 15.387667209394625,
+   "memory": 14414,
+   "params": 534,
+   "method": "ext:kojimar6275"
   },
   "299": {
-   "points": 15.999146852890542,
-   "memory": 0,
-   "params": 8110,
-   "method": "conv9x9+b"
+   "points": 17.5510838974558,
+   "memory": 1656,
+   "params": 62,
+   "method": "ext:kojimar6275"
   },
   "300": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 13.741373412351637,
+   "memory": 77438,
+   "params": 108,
+   "method": "ext:kojimar6275"
   },
   "301": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.973077473364416,
+   "memory": 61400,
+   "params": 108,
+   "method": "ext:kojimar6275"
   },
   "302": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 16.03863393937255,
+   "memory": 7776,
+   "params": 20,
+   "method": "ext:kojimar6275"
   },
   "303": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 13.701382237681582,
+   "memory": 80400,
+   "params": 310,
+   "method": "ext:kojimar6275"
   },
   "304": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.708263989819823,
+   "memory": 10813,
+   "params": 35,
+   "method": "ext:kojimar6275"
   },
   "305": {
-   "points": 16.315598889599855,
-   "memory": 0,
-   "params": 5910,
-   "method": "conv1x59+b"
+   "points": 16.71802294113224,
+   "memory": 3668,
+   "params": 284,
+   "method": "ext:kojimar6275"
   },
   "306": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 13.9264791265675,
+   "memory": 64374,
+   "params": 68,
+   "method": "ext:kojimar6275"
   },
   "307": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 17.504458056115745,
+   "memory": 0,
+   "params": 1800,
+   "method": "ext:kojimar6275"
   },
   "308": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.010380623834585,
+   "memory": 21698,
+   "params": 101,
+   "method": "ext:kojimar6275"
   },
   "309": {
-   "points": 20.394829814011906,
+   "points": 22.697414907005953,
    "memory": 0,
-   "params": 100,
-   "method": "conv1x1"
+   "params": 10,
+   "method": "ext:kojimar6275"
   },
   "310": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.844237369643414,
+   "memory": 25573,
+   "params": 166,
+   "method": "ext:kojimar6275"
   },
   "311": {
-   "points": 16.315598889599855,
+   "points": 21.598802618337846,
    "memory": 0,
-   "params": 5910,
-   "method": "conv1x59+b"
+   "params": 30,
+   "method": "ext:kojimar6275"
   },
   "312": {
    "points": 16.315598889599855,
@@ -1873,10 +1873,10 @@
    "method": "conv1x59+b"
   },
   "313": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.836320003141628,
+   "memory": 70325,
+   "params": 197,
+   "method": "ext:kojimar6275"
   },
   "314": {
    "points": 16.500970779211436,
@@ -1885,46 +1885,46 @@
    "method": "conv7x7+b"
   },
   "315": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 16.87230014718223,
+   "memory": 3348,
+   "params": 39,
+   "method": "ext:kojimar6275"
   },
   "316": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 16.730755478816945,
+   "memory": 3748,
+   "params": 154,
+   "method": "ext:kojimar6275"
   },
   "317": {
-   "points": 18.186555400489105,
+   "points": 18.197605236675688,
    "memory": 0,
-   "params": 910,
-   "method": "conv3x3+b"
+   "params": 900,
+   "method": "ext:kojimar6275"
   },
   "318": {
-   "points": 16.315598889599855,
-   "memory": 0,
-   "params": 5910,
-   "method": "conv59x1+b"
+   "points": 18.397412107810663,
+   "memory": 736,
+   "params": 1,
+   "method": "ext:galaxy_v1"
   },
   "319": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 14.580490348791063,
+   "memory": 33406,
+   "params": 101,
+   "method": "ext:kojimar6275"
   },
   "320": {
-   "points": 16.315598889599855,
-   "memory": 0,
-   "params": 5910,
-   "method": "conv59x1+b"
+   "points": 16.445511023840066,
+   "memory": 5049,
+   "params": 141,
+   "method": "ext:kojimar6275"
   },
   "321": {
-   "points": 16.315598889599855,
-   "memory": 0,
-   "params": 5910,
-   "method": "conv1x59+b"
+   "points": 16.403810802357263,
+   "memory": 5376,
+   "params": 35,
+   "method": "ext:kojimar6275"
   },
   "322": {
    "points": 18.76558927428163,
@@ -1933,52 +1933,52 @@
    "method": "conv5x1+b"
   },
   "323": {
-   "points": 13.528605113869943,
-   "memory": 65608,
-   "params": 30324,
-   "method": "memorizer(n=169,k=12)"
+   "points": 16.5810813778521,
+   "memory": 3887,
+   "params": 645,
+   "method": "ext:kojimar6275"
   },
   "324": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.203081009735799,
+   "memory": 47198,
+   "params": 1672,
+   "method": "ext:kojimar6275"
   },
   "325": {
-   "points": 13.995070831785602,
-   "memory": 55584,
-   "params": 4586,
-   "method": "memorizer(n=266,k=4,u=6)"
+   "points": 14.330533108254256,
+   "memory": 41120,
+   "params": 1902,
+   "method": "ext:kojimar6275"
   },
   "326": {
-   "points": 17.17196196787417,
-   "memory": 0,
-   "params": 2510,
-   "method": "conv5x5+b"
+   "points": 19.924826184766175,
+   "memory": 160,
+   "params": 0,
+   "method": "ext:kojimar6275"
   },
   "327": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 16.072287826172918,
+   "memory": 7516,
+   "params": 22,
+   "method": "ext:kojimar6275"
   },
   "328": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 13.886165004389737,
+   "memory": 63207,
+   "params": 3886,
+   "method": "ext:galaxy_v1"
   },
   "329": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.76399188127524,
+   "memory": 10214,
+   "params": 46,
+   "method": "ext:kojimar6275"
   },
   "330": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.216591867794413,
+   "memory": 16604,
+   "params": 1133,
+   "method": "ext:kojimar6275"
   },
   "331": {
    "points": 18.186555400489105,
@@ -1993,70 +1993,70 @@
    "method": "conv1x59+b"
   },
   "333": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 14.877658081568091,
+   "memory": 24840,
+   "params": 53,
+   "method": "ext:kojimar6275"
   },
   "334": {
-   "points": 14.0102258084864,
-   "memory": 55892,
-   "params": 3373,
-   "method": "memorizer(n=271,k=4,u=3)"
+   "points": 18.588181732290103,
+   "memory": 572,
+   "params": 37,
+   "method": "ext:kojimar6275"
   },
   "335": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.258204878914801,
+   "memory": 46156,
+   "params": 93,
+   "method": "ext:kojimar6275"
   },
   "336": {
-   "points": 14.270890682504554,
-   "memory": 40328,
-   "params": 5338,
-   "method": "memorizer(n=28,k=4)"
+   "points": 16.294503180112258,
+   "memory": 5900,
+   "params": 136,
+   "method": "ext:kojimar6275"
   },
   "337": {
-   "points": 20.394829814011906,
+   "points": 22.697414907005953,
    "memory": 0,
-   "params": 100,
-   "method": "conv1x1"
+   "params": 10,
+   "method": "ext:kojimar6275"
   },
   "338": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 14.285226738886886,
+   "memory": 43200,
+   "params": 1816,
+   "method": "ext:kojimar6275"
   },
   "339": {
-   "points": 13.584874812555684,
-   "memory": 55812,
-   "params": 34871,
-   "method": "memorizer(n=265,k=4,u=79)"
+   "points": 18.215542937362358,
+   "memory": 776,
+   "params": 108,
+   "method": "ext:kojimar6275"
   },
   "340": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.83887566105239,
+   "memory": 70180,
+   "params": 162,
+   "method": "ext:kojimar6275"
   },
   "341": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.15493636760159,
+   "memory": 18576,
+   "params": 289,
+   "method": "ext:kojimar6275"
   },
   "342": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.640119560754242,
+   "memory": 11556,
+   "params": 57,
+   "method": "ext:kojimar6275"
   },
   "343": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.775298891803299,
+   "memory": 27208,
+   "params": 368,
+   "method": "ext:kojimar6275"
   },
   "344": {
    "points": 18.186555400489105,
@@ -2065,16 +2065,16 @@
    "method": "conv3x3+b"
   },
   "345": {
-   "points": 13.375372171467353,
-   "memory": 68120,
-   "params": 43698,
-   "method": "memorizer(n=264,k=8)"
+   "points": 15.631289292052376,
+   "memory": 9860,
+   "params": 1856,
+   "method": "ext:kojimar6275"
   },
   "346": {
-   "points": 13.973093731544314,
-   "memory": 55660,
-   "params": 5847,
-   "method": "memorizer(n=267,k=4,u=9)"
+   "points": 15.884849815027566,
+   "memory": 9069,
+   "params": 23,
+   "method": "ext:kojimar6275"
   },
   "347": {
    "points": 18.186555400489105,
@@ -2083,28 +2083,28 @@
    "method": "conv1x9+b"
   },
   "348": {
-   "points": 13.518606482642934,
-   "memory": 55368,
-   "params": 41528,
-   "method": "memorizer(n=263,k=4)"
+   "points": 16.11719194507556,
+   "memory": 7068,
+   "params": 139,
+   "method": "ext:kojimar6275"
   },
   "349": {
-   "points": 13.3681543683742,
-   "memory": 68456,
-   "params": 44172,
-   "method": "memorizer(n=267,k=8)"
+   "points": 14.306261242455944,
+   "memory": 40500,
+   "params": 3579,
+   "method": "ext:kojimar6275"
   },
   "350": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 15.10504877848616,
+   "memory": 19800,
+   "params": 30,
+   "method": "ext:kojimar6275"
   },
   "351": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 14.532506311227156,
+   "memory": 35114,
+   "params": 40,
+   "method": "ext:kojimar6275"
   },
   "352": {
    "points": 18.186555400489105,
@@ -2113,34 +2113,34 @@
    "method": "conv3x3+b"
   },
   "353": {
-   "points": 13.500767862161775,
-   "memory": 55880,
-   "params": 42760,
-   "method": "memorizer(n=271,k=4)"
+   "points": 16.403810802357263,
+   "memory": 5186,
+   "params": 225,
+   "method": "ext:kojimar6275"
   },
   "354": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.258619697007587,
+   "memory": 16860,
+   "params": 147,
+   "method": "ext:kojimar6275"
   },
   "355": {
-   "points": 13.96627230111545,
-   "memory": 55664,
-   "params": 6264,
-   "method": "memorizer(n=267,k=4,u=10)"
+   "points": 15.624569008158225,
+   "memory": 11706,
+   "params": 89,
+   "method": "ext:kojimar6275"
   },
   "356": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 16.482606828581098,
+   "memory": 4880,
+   "params": 121,
+   "method": "ext:kojimar6275"
   },
   "357": {
-   "points": 14.365973147686864,
-   "memory": 39112,
-   "params": 2412,
-   "method": "memorizer(n=9,k=4)"
+   "points": 16.20942652084284,
+   "memory": 6532,
+   "params": 40,
+   "method": "ext:kojimar6275"
   },
   "358": {
    "points": 13.514116906141656,
@@ -2155,40 +2155,40 @@
    "method": "conv7x7+b"
   },
   "360": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.681164031870518,
+   "memory": 11120,
+   "params": 26,
+   "method": "ext:kojimar6275"
   },
   "361": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.324919828453181,
+   "memory": 15641,
+   "params": 275,
+   "method": "ext:kojimar6275"
   },
   "362": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.612434368654611,
+   "memory": 11894,
+   "params": 45,
+   "method": "ext:kojimar6275"
   },
   "363": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 13.625050073974103,
+   "memory": 85482,
+   "params": 1630,
+   "method": "ext:galaxy_v1"
   },
   "364": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.754457371489742,
+   "memory": 75136,
+   "params": 1402,
+   "method": "ext:kojimar6275"
   },
   "365": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.01786479921536,
+   "memory": 58743,
+   "params": 71,
+   "method": "ext:kojimar6275"
   },
   "366": {
    "points": 13.536769108053624,
@@ -2203,16 +2203,16 @@
    "method": "memorizer(n=266,k=4)"
   },
   "368": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 14.615970788806473,
+   "memory": 32264,
+   "params": 75,
+   "method": "ext:kojimar6275"
   },
   "369": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 16.10040564007415,
+   "memory": 7200,
+   "params": 129,
+   "method": "ext:galaxy_v1"
   },
   "370": {
    "points": 13.511879653948743,
@@ -2221,10 +2221,10 @@
    "method": "memorizer(n=266,k=4)"
   },
   "371": {
-   "points": 13.37055451886904,
-   "memory": 68344,
-   "params": 44014,
-   "method": "memorizer(n=266,k=8)"
+   "points": 15.50983333153762,
+   "memory": 12980,
+   "params": 249,
+   "method": "ext:kojimar6275"
   },
   "372": {
    "points": 16.315598889599855,
@@ -2233,64 +2233,64 @@
    "method": "conv59x1+b"
   },
   "373": {
-   "points": 17.095296086126254,
-   "memory": 0,
-   "params": 2710,
-   "method": "conv3x9+b"
+   "points": 18.738508315678956,
+   "memory": 520,
+   "params": 4,
+   "method": "ext:kojimar6275"
   },
   "374": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 15.524146480343099,
+   "memory": 12808,
+   "params": 233,
+   "method": "ext:galaxy_v1"
   },
   "375": {
-   "points": 14.1496537140233,
-   "memory": 42056,
-   "params": 9496,
-   "method": "memorizer(n=55,k=4)"
+   "points": 15.372793097191211,
+   "memory": 15113,
+   "params": 59,
+   "method": "ext:kojimar6275"
   },
   "376": {
-   "points": 14.233411544103836,
-   "memory": 40840,
-   "params": 6570,
-   "method": "memorizer(n=36,k=4)"
+   "points": 14.93899600958889,
+   "memory": 23262,
+   "params": 150,
+   "method": "ext:kojimar6275"
   },
   "377": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.010917855877066,
+   "memory": 58240,
+   "params": 984,
+   "method": "ext:galaxy_v1"
   },
   "378": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 14.428477967719003,
+   "memory": 38932,
+   "params": 76,
+   "method": "ext:kojimar6275"
   },
   "379": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.819767920510943,
+   "memory": 69969,
+   "params": 1730,
+   "method": "ext:kojimar6275"
   },
   "380": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 18.409698951803314,
+   "memory": 720,
+   "params": 8,
+   "method": "ext:kojimar6275"
   },
   "381": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 16.830946850072657,
+   "memory": 3400,
+   "params": 130,
+   "method": "ext:kojimar6275"
   },
   "382": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.541763060380573,
+   "memory": 94296,
+   "params": 382,
+   "method": "ext:kojimar6275"
   },
   "383": {
    "points": 13.511879653948743,
@@ -2299,16 +2299,16 @@
    "method": "memorizer(n=266,k=4)"
   },
   "384": {
-   "points": 13.37055451886904,
-   "memory": 68344,
-   "params": 44014,
-   "method": "memorizer(n=266,k=8)"
+   "points": 13.778470160860206,
+   "memory": 74616,
+   "params": 106,
+   "method": "ext:kojimar6275"
   },
   "385": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 21.598802618337846,
+   "memory": 0,
+   "params": 30,
+   "method": "ext:kojimar6275"
   },
   "386": {
    "points": 18.186555400489105,
@@ -2317,16 +2317,16 @@
    "method": "conv1x9+b"
   },
   "387": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.940291846175448,
+   "memory": 63470,
+   "params": 88,
+   "method": "ext:kojimar6275"
   },
   "388": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 16.225377779303003,
+   "memory": 6282,
+   "params": 186,
+   "method": "ext:kojimar6275"
   },
   "389": {
    "points": 17.680135070191028,
@@ -2335,34 +2335,34 @@
    "method": "conv3x5+b"
   },
   "390": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.885805916253345,
+   "memory": 23724,
+   "params": 967,
+   "method": "ext:kojimar6275"
   },
   "391": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 15.787561829941671,
+   "memory": 9992,
+   "params": 29,
+   "method": "ext:kojimar6275"
   },
   "392": {
-   "points": 13.518606482642934,
-   "memory": 55368,
-   "params": 41528,
-   "method": "memorizer(n=263,k=4)"
+   "points": 14.662816279014882,
+   "memory": 28772,
+   "params": 2087,
+   "method": "ext:kojimar6275"
   },
   "393": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 18.870949789939456,
+   "memory": 450,
+   "params": 9,
+   "method": "ext:kojimar6275"
   },
   "394": {
-   "points": 15.999146852890542,
-   "memory": 0,
-   "params": 8110,
-   "method": "conv9x9+b"
+   "points": 16.53346872338599,
+   "memory": 4718,
+   "params": 35,
+   "method": "ext:kojimar6275"
   },
   "395": {
    "points": 18.186555400489105,
@@ -2377,28 +2377,28 @@
    "method": "memorizer(n=266,k=4)"
   },
   "397": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 15.045771805760689,
+   "memory": 20946,
+   "params": 95,
+   "method": "ext:kojimar6275"
   },
   "398": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.657922169750098,
+   "memory": 83533,
+   "params": 762,
+   "method": "ext:kojimar6275"
   },
   "399": {
-   "points": 13.777319889884717,
-   "memory": 68588,
-   "params": 6220,
-   "method": "memorizer(n=268,k=8,u=5)"
+   "points": 17.48302277539568,
+   "memory": 930,
+   "params": 909,
+   "method": "ext:kojimar6275"
   },
   "400": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 14.532534757896764,
+   "memory": 35114,
+   "params": 39,
+   "method": "ext:kojimar6275"
   }
  }
 }
