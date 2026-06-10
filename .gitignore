@@ -1,0 +1,15 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Competition data (downloaded via kaggle CLI; do not redistribute)
+data/
+
+# ORT profiler traces & scratch
+*.json.trace
+scratch/
+*.prof
+
+# Submission archives are reproducible artifacts
+submission/*.zip
