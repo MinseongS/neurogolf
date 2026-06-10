@@ -144,11 +144,17 @@ def solve_memorizer(task, k_proj=4):
     exs = usable_examples(task)
     if not exs:
         return None
+    # output bounding box across all stored examples
+    rmax = max(len(ex["output"]) for ex in exs)
+    wmax = max(len(ex["output"][0]) for ex in exs)
+    w6 = (wmax + 5) // 6
+    if rmax * w6 * 6 >= 600:
+        rmax, w6 = 30, 5  # near-full bbox: the in-graph Pad costs more than it saves
     seen = {}
     xs, os_ = [], []
     for ex in exs:
         xin = builders.pack4_codes(grid_to_codes(ex["input"]))
-        xout = builders.pack6_codes(grid_to_codes(ex["output"]))
+        xout = builders.pack6_codes(grid_to_codes(ex["output"]), rmax, w6)
         key = xin.tobytes()
         if key in seen:
             if seen[key] != xout.tobytes():
@@ -158,7 +164,7 @@ def solve_memorizer(task, k_proj=4):
         xs.append(xin)
         os_.append(xout)
     X4 = np.array(xs, dtype=np.int64)             # [N,240]
-    O = np.array(os_, dtype=np.float32)           # [N,150]
+    O = np.array(os_, dtype=np.float32)           # [N,rmax*w6]
     N = X4.shape[0]
 
     # dedupe repeated outputs when the grouping matrix is cheaper than the rows
@@ -170,7 +176,7 @@ def solve_memorizer(task, k_proj=4):
         G[np.arange(N), group_idx] = 1.0
         O = uniq
 
-    for k in (k_proj, k_proj + 4, k_proj + 8, k_proj + 16):
+    for k in (k_proj, k_proj + 2, k_proj + 6, k_proj + 14):
         for seed in range(20):
             rng = np.random.default_rng(seed)
             R = rng.choice([-1.0, 1.0], size=(240, k)).astype(np.float32)
@@ -178,8 +184,9 @@ def solve_memorizer(task, k_proj=4):
             if np.abs(Z).max() >= (1 << 24):
                 continue
             if np.unique(Z, axis=0).shape[0] == N:
-                model = builders.memorizer_network(Z, R, O, k, G=G)
-                tag = f"memorizer(n={N},k={k}" + (f",u={U})" if G is not None else ")")
+                model = builders.memorizer_network(Z, R, O, k, G=G, rmax=rmax, w6=w6)
+                tag = f"memorizer(n={N},k={k},bb={rmax}x{w6 * 6}" + \
+                    (f",u={U})" if G is not None else ")")
                 return model, {"method": tag}
     return None
 

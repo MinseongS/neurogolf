@@ -27,18 +27,20 @@ def identity_network():
     return _model([node], [])
 
 
-def memorizer_network(Z, R, O, k_proj, G=None):
+def memorizer_network(Z, R, O, k_proj, G=None, rmax=30, w6=5):
     """Exact-match lookup network.
 
     Pipeline (all integer-valued float math, exact in float32):
       input one-hot -> base-11 cell codes packed 4/cell (Conv stride 4)
       -> random +-1 projection to k dims -> mismatch-count vs stored Z [N,k]
-      -> one-hot row selector -> MatMul with stored outputs O [N,180]
+      -> one-hot row selector -> MatMul with stored outputs O
       (base-11^6 packed) -> arithmetic unpack -> Equal-decode to one-hot.
 
     Z: float [N, k] projected stored inputs; R: float [240, k] +-1 projection;
-    O: float [N, 150] packed stored outputs. With G [N, U] (0/1 input-row ->
-    output-group map), O is [U, 150] deduplicated outputs instead.
+    O: float [N, rmax*w6] packed stored outputs covering only the output
+    bounding box (rmax rows x 6*w6 cols; the rest of the canvas is zero-padded
+    in-graph). With G [N, U] (0/1 input-row -> output-group map), O is
+    [U, rmax*w6] deduplicated outputs instead.
     """
     nodes, inits = [], []
 
@@ -85,9 +87,9 @@ def memorizer_network(Z, R, O, k_proj, G=None):
         init("G", G)
         sel_name = n("MatMul", ["selr", "G"], "selg")  # [1,U]
     init("O", O)
-    n("MatMul", [sel_name, "O"], "yp")         # [1,150]
-    init("shape_grid", np.array([1, 1, 30, 5], np.int64), np.int64)
-    n("Reshape", ["yp", "shape_grid"], "y")    # [1,1,30,5]
+    n("MatMul", [sel_name, "O"], "yp")         # [1, rmax*w6]
+    init("shape_grid", np.array([1, 1, rmax, w6], np.int64), np.int64)
+    n("Reshape", ["yp", "shape_grid"], "y")    # [1,1,rmax,w6]
     rem = "y"
     digits = []
     for j in range(5):
@@ -98,20 +100,25 @@ def memorizer_network(Z, R, O, k_proj, G=None):
         digits.append(f"q{j}")
         n("Mul", [f"q{j}", f"pw{j}"], f"qm{j}")
         rem = n("Sub", [rem, f"qm{j}"], f"r{j}")
-    digits.append(rem)                          # last digit, [1,1,30,5]
+    digits.append(rem)                          # last digit, [1,1,rmax,w6]
     for d in digits:
         n("Unsqueeze", [d], f"{d}_u", axes=[4])
     nodes.append(onnx.helper.make_node(
-        "Concat", [f"{d}_u" for d in digits], ["dig"], axis=4))  # [1,1,30,5,6]
-    init("shape_code", np.array([1, 1, 30, 30], np.int64), np.int64)
+        "Concat", [f"{d}_u" for d in digits], ["dig"], axis=4))  # [1,1,rmax,w6,6]
+    init("shape_code", np.array([1, 1, rmax, 6 * w6], np.int64), np.int64)
     n("Reshape", ["dig", "shape_code"], "code")
 
     # --- decode codes (color c <-> code c+1, empty 0) to one-hot ---
     # Equal doesn't take floats until opset 11, so compare as int32.
     n("Cast", ["code"], "code_i", to=onnx.TensorProto.INT32)
     init("chvec", np.arange(1, 11, dtype=np.int32).reshape(1, 10, 1, 1), np.int32)
-    n("Equal", ["code_i", "chvec"], "eq")      # bool [1,10,30,30]
-    n("Cast", ["eq"], "output", to=DATA_TYPE)
+    n("Equal", ["code_i", "chvec"], "eq")      # bool [1,10,rmax,6*w6]
+    if rmax == 30 and w6 == 5:
+        n("Cast", ["eq"], "output", to=DATA_TYPE)
+    else:
+        n("Cast", ["eq"], "onehot_bbox", to=DATA_TYPE)
+        n("Pad", ["onehot_bbox"], "output", mode="constant", value=0.0,
+          pads=[0, 0, 0, 0, 0, 0, 30 - rmax, 30 - 6 * w6])
     return _model(nodes, inits)
 
 
@@ -123,10 +130,16 @@ def pack4_codes(grid_canvas):
     return (padded.reshape(30, 8, 4) * w).sum(axis=2).reshape(-1)  # [240]
 
 
-def pack6_codes(grid_canvas):
-    """11^6 - 1 = 1.77M < 2^24, so 6 cells/float still keeps float32 exact."""
+def pack6_codes(grid_canvas, rmax=30, w6=5):
+    """11^6 - 1 = 1.77M < 2^24, so 6 cells/float still keeps float32 exact.
+
+    Packs only the top-left rmax x 6*w6 region (the output bounding box).
+    """
+    region = np.zeros((rmax, w6 * 6), np.int64)
+    cols = min(30, w6 * 6)
+    region[:, :cols] = grid_canvas[:rmax, :cols]
     w = 11 ** np.arange(5, -1, -1)
-    return (grid_canvas.reshape(30, 5, 6) * w).sum(axis=2).reshape(-1)  # [150]
+    return (region.reshape(rmax, w6, 6) * w).sum(axis=2).reshape(-1)  # [rmax*w6]
 
 
 def conv_network(weights, kh, kw, bias=None, groups=1):

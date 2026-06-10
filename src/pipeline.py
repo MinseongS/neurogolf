@@ -19,9 +19,23 @@ REPORTS = ROOT / "reports"
 MANIFEST = REPORTS / "manifest.json"
 N_TASKS = 400
 
+def solve_custom(task, task_num=None):
+    """Load src/custom/taskNNN.py if present and build its network."""
+    import importlib
+    try:
+        mod = importlib.import_module(f"src.custom.task{task_num:03d}")
+    except ModuleNotFoundError:
+        return None
+    model = mod.build(task)
+    if model is None:
+        return None
+    return model, {"method": f"custom:task{task_num:03d}"}
+
+
 SOLVER_CHAIN = {
     "conv": solvers.solve_conv,
     "memorizer": solvers.solve_memorizer,
+    "custom": solve_custom,
 }
 
 
@@ -44,7 +58,13 @@ def solve_one(job):
                     "params": ev["params"], "method": None}  # method filled from manifest
     for name in methods:
         try:
-            res = SOLVER_CHAIN[name](task)
+            cur_pts = best["points"] if best else 0.0
+            if name == "conv":
+                res = SOLVER_CHAIN[name](task, beat=cur_pts)
+            elif name == "custom":
+                res = SOLVER_CHAIN[name](task, task_num=task_num)
+            else:
+                res = SOLVER_CHAIN[name](task)
         except Exception as e:
             print(f"task{task_num:03d}: {name} crashed: {e}", flush=True)
             continue
