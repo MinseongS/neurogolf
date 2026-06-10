@@ -1,34 +1,89 @@
 {
  "tasks": {
-  "1": null,
-  "2": null,
+  "1": {
+   "points": 13.182468976032654,
+   "memory": 81208,
+   "params": 54401,
+   "method": "memorizer(n=268,k=12)"
+  },
+  "2": {
+   "points": 13.182468976032654,
+   "memory": 81208,
+   "params": 54401,
+   "method": "memorizer(n=268,k=12)"
+  },
   "3": {
    "points": 16.315598889599855,
    "memory": 0,
    "params": 5910,
    "method": "conv59x1+b"
   },
-  "4": null,
-  "5": null,
+  "4": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "5": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "6": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv1x9+b"
   },
-  "7": null,
-  "8": null,
-  "9": null,
-  "10": null,
-  "11": null,
+  "7": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "8": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "9": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "10": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "11": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
   "12": {
    "points": 17.17196196787417,
    "memory": 0,
    "params": 2510,
    "method": "conv5x5+b"
   },
-  "13": null,
-  "14": null,
+  "13": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "14": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "15": {
    "points": 18.186555400489105,
    "memory": 0,
@@ -41,141 +96,486 @@
    "params": 100,
    "method": "conv1x1"
   },
-  "17": null,
-  "18": null,
-  "19": null,
-  "20": null,
-  "21": null,
-  "22": null,
-  "23": null,
-  "24": null,
-  "25": null,
+  "17": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "18": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "19": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "20": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "21": {
+   "points": 13.867208210246465,
+   "memory": 50648,
+   "params": 17729,
+   "method": "memorizer(n=77,k=12)"
+  },
+  "22": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "23": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "24": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "25": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "26": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv1x9+b"
   },
-  "27": null,
-  "28": null,
-  "29": null,
-  "30": null,
-  "31": null,
+  "27": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "28": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "29": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "30": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "31": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "32": {
    "points": 15.999146852890542,
    "memory": 0,
    "params": 8110,
    "method": "conv9x9+b"
   },
-  "33": null,
-  "34": null,
-  "35": null,
-  "36": null,
-  "37": null,
-  "38": null,
-  "39": null,
+  "33": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "34": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "35": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "36": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "37": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "38": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "39": {
+   "points": 13.192906044943216,
+   "memory": 80568,
+   "params": 53633,
+   "method": "memorizer(n=264,k=12)"
+  },
   "40": {
    "points": 15.999146852890542,
    "memory": 0,
    "params": 8110,
    "method": "conv9x9+b"
   },
-  "41": null,
-  "42": null,
-  "43": null,
-  "44": null,
-  "45": null,
-  "46": null,
-  "47": null,
-  "48": null,
-  "49": null,
-  "50": null,
-  "51": null,
-  "52": null,
+  "41": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "42": {
+   "points": 13.198165715340169,
+   "memory": 80248,
+   "params": 53249,
+   "method": "memorizer(n=262,k=12)"
+  },
+  "43": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "44": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "45": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "46": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "47": {
+   "points": 13.192906044943216,
+   "memory": 80568,
+   "params": 53633,
+   "method": "memorizer(n=264,k=12)"
+  },
+  "48": {
+   "points": 13.17729100902056,
+   "memory": 81528,
+   "params": 54785,
+   "method": "memorizer(n=270,k=12)"
+  },
+  "49": {
+   "points": 13.182468976032654,
+   "memory": 81208,
+   "params": 54401,
+   "method": "memorizer(n=268,k=12)"
+  },
+  "50": {
+   "points": 13.17471204518393,
+   "memory": 81688,
+   "params": 54977,
+   "method": "memorizer(n=271,k=12)"
+  },
+  "51": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "52": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
   "53": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv3x3+b"
   },
-  "54": null,
-  "55": null,
+  "54": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "55": {
+   "points": 13.195532422129093,
+   "memory": 80408,
+   "params": 53441,
+   "method": "memorizer(n=263,k=12)"
+  },
   "56": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv3x3+b"
   },
-  "57": null,
-  "58": null,
-  "59": null,
+  "57": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "58": {
+   "points": 14.244120441439948,
+   "memory": 40888,
+   "params": 6017,
+   "method": "memorizer(n=16,k=12)"
+  },
+  "59": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "60": {
    "points": 16.315598889599855,
    "memory": 0,
    "params": 5910,
    "method": "conv1x59+b"
   },
-  "61": null,
-  "62": null,
-  "63": null,
-  "64": null,
-  "65": null,
-  "66": null,
+  "61": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "62": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "63": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "64": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "65": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "66": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "67": {
    "points": 16.315598889599855,
    "memory": 0,
    "params": 5910,
    "method": "conv1x59+b"
   },
-  "68": null,
-  "69": null,
-  "70": null,
-  "71": null,
-  "72": null,
+  "68": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "69": {
+   "points": 13.192906044943216,
+   "memory": 80568,
+   "params": 53633,
+   "method": "memorizer(n=264,k=12)"
+  },
+  "70": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "71": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "72": {
+   "points": 13.182468976032654,
+   "memory": 81208,
+   "params": 54401,
+   "method": "memorizer(n=268,k=12)"
+  },
   "73": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv3x3+b"
   },
-  "74": null,
-  "75": null,
-  "76": null,
-  "77": null,
+  "74": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "75": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "76": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "77": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "78": {
    "points": 16.315598889599855,
    "memory": 0,
    "params": 5910,
    "method": "conv59x1+b"
   },
-  "79": null,
-  "80": null,
-  "81": null,
-  "82": null,
-  "83": null,
-  "84": null,
-  "85": null,
-  "86": null,
+  "79": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "80": {
+   "points": 13.283440054103787,
+   "memory": 75288,
+   "params": 47297,
+   "method": "memorizer(n=231,k=12)"
+  },
+  "81": {
+   "points": 13.192906044943216,
+   "memory": 80568,
+   "params": 53633,
+   "method": "memorizer(n=264,k=12)"
+  },
+  "82": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "83": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "84": {
+   "points": 13.47253080958893,
+   "memory": 65688,
+   "params": 35777,
+   "method": "memorizer(n=171,k=12)"
+  },
+  "85": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "86": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "87": {
    "points": 17.17196196787417,
    "memory": 0,
    "params": 2510,
    "method": "conv5x5+b"
   },
-  "88": null,
-  "89": null,
-  "90": null,
-  "91": null,
-  "92": null,
-  "93": null,
-  "94": null,
+  "88": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "89": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "90": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "91": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "92": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "93": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "94": {
+   "points": 13.192906044943216,
+   "memory": 80568,
+   "params": 53633,
+   "method": "memorizer(n=264,k=12)"
+  },
   "95": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv3x3+b"
   },
-  "96": null,
+  "96": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "97": {
    "points": 18.186555400489105,
    "memory": 0,
@@ -194,53 +594,168 @@
    "params": 4910,
    "method": "conv7x7+b"
   },
-  "100": null,
-  "101": null,
-  "102": null,
-  "103": null,
-  "104": null,
-  "105": null,
-  "106": null,
-  "107": null,
-  "108": null,
-  "109": null,
-  "110": null,
-  "111": null,
-  "112": null,
-  "113": null,
+  "100": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "101": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "102": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "103": {
+   "points": 13.330472576328653,
+   "memory": 72728,
+   "params": 44225,
+   "method": "memorizer(n=215,k=12)"
+  },
+  "104": {
+   "points": 14.338490864680724,
+   "memory": 38968,
+   "params": 3713,
+   "method": "memorizer(n=4,k=12)"
+  },
+  "105": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "106": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "107": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "108": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "109": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "110": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "111": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "112": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "113": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
   "114": {
    "points": 17.17196196787417,
    "memory": 0,
    "params": 2510,
    "method": "conv5x5+b"
   },
-  "115": null,
+  "115": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "116": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv9x1+b"
   },
-  "117": null,
-  "118": null,
-  "119": null,
+  "117": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "118": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "119": {
+   "points": 13.195532422129093,
+   "memory": 80408,
+   "params": 53441,
+   "method": "memorizer(n=263,k=12)"
+  },
   "120": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv3x3+b"
   },
-  "121": null,
+  "121": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "122": {
    "points": 17.17196196787417,
    "memory": 0,
    "params": 2510,
    "method": "conv5x5+b"
   },
-  "123": null,
-  "124": null,
-  "125": null,
-  "126": null,
+  "123": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "124": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "125": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "126": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
   "127": {
    "points": 18.186555400489105,
    "memory": 0,
@@ -259,72 +774,252 @@
    "params": 2510,
    "method": "conv5x5+b"
   },
-  "130": null,
-  "131": null,
-  "132": null,
-  "133": null,
-  "134": null,
-  "135": null,
-  "136": null,
-  "137": null,
-  "138": null,
-  "139": null,
+  "130": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "131": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "132": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "133": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "134": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "135": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "136": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "137": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "138": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "139": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
   "140": {
    "points": 17.17196196787417,
    "memory": 0,
    "params": 2510,
    "method": "conv5x5+b"
   },
-  "141": null,
-  "142": null,
-  "143": null,
+  "141": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "142": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "143": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "144": {
    "points": 16.315598889599855,
    "memory": 0,
    "params": 5910,
    "method": "conv59x1+b"
   },
-  "145": null,
-  "146": null,
+  "145": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "146": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
   "147": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv3x3+b"
   },
-  "148": null,
-  "149": null,
-  "150": null,
+  "148": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "149": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "150": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "151": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv3x3+b"
   },
-  "152": null,
-  "153": null,
-  "154": null,
-  "155": null,
-  "156": null,
-  "157": null,
-  "158": null,
-  "159": null,
-  "160": null,
-  "161": null,
-  "162": null,
-  "163": null,
+  "152": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "153": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "154": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "155": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "156": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "157": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "158": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "159": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "160": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "161": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "162": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "163": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
   "164": {
    "points": 16.315598889599855,
    "memory": 0,
    "params": 5910,
    "method": "conv1x59+b"
   },
-  "165": null,
-  "166": null,
-  "167": null,
-  "168": null,
-  "169": null,
-  "170": null,
+  "165": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "166": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "167": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "168": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "169": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "170": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "171": {
    "points": 18.186555400489105,
    "memory": 0,
@@ -337,45 +1032,120 @@
    "params": 5910,
    "method": "conv59x1+b"
   },
-  "173": null,
-  "174": null,
-  "175": null,
+  "173": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "174": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "175": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "176": {
    "points": 16.315598889599855,
    "memory": 0,
    "params": 5910,
    "method": "conv1x59+b"
   },
-  "177": null,
-  "178": null,
-  "179": null,
+  "177": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "178": {
+   "points": 13.182468976032654,
+   "memory": 81208,
+   "params": 54401,
+   "method": "memorizer(n=268,k=12)"
+  },
+  "179": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
   "180": {
    "points": 15.999146852890542,
    "memory": 0,
    "params": 8110,
    "method": "conv9x9+b"
   },
-  "181": null,
-  "182": null,
-  "183": null,
-  "184": null,
-  "185": null,
+  "181": {
+   "points": 13.195532422129093,
+   "memory": 80408,
+   "params": 53441,
+   "method": "memorizer(n=263,k=12)"
+  },
+  "182": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "183": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "184": {
+   "points": 13.479493345009459,
+   "memory": 65368,
+   "params": 35393,
+   "method": "memorizer(n=169,k=12)"
+  },
+  "185": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
   "186": {
    "points": 17.17196196787417,
    "memory": 0,
    "params": 2510,
    "method": "conv5x5+b"
   },
-  "187": null,
+  "187": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "188": {
    "points": 16.500970779211436,
    "memory": 0,
    "params": 4910,
    "method": "conv7x7+b"
   },
-  "189": null,
-  "190": null,
-  "191": null,
+  "189": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "190": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "191": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
   "192": {
    "points": 18.186555400489105,
    "memory": 0,
@@ -388,67 +1158,222 @@
    "params": 910,
    "method": "conv3x3+b"
   },
-  "194": null,
-  "195": null,
-  "196": null,
-  "197": null,
-  "198": null,
-  "199": null,
-  "200": null,
-  "201": null,
-  "202": null,
-  "203": null,
-  "204": null,
-  "205": null,
-  "206": null,
-  "207": null,
-  "208": null,
-  "209": null,
+  "194": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "195": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "196": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "197": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "198": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "199": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "200": {
+   "points": 13.851882462198693,
+   "memory": 51128,
+   "params": 18305,
+   "method": "memorizer(n=80,k=12)"
+  },
+  "201": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "202": {
+   "points": 13.286315661637227,
+   "memory": 75128,
+   "params": 47105,
+   "method": "memorizer(n=230,k=12)"
+  },
+  "203": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "204": {
+   "points": 13.182468976032654,
+   "memory": 81208,
+   "params": 54401,
+   "method": "memorizer(n=268,k=12)"
+  },
+  "205": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "206": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "207": {
+   "points": 13.192906044943216,
+   "memory": 80568,
+   "params": 53633,
+   "method": "memorizer(n=264,k=12)"
+  },
+  "208": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "209": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "210": {
    "points": 16.315598889599855,
    "memory": 0,
    "params": 5910,
    "method": "conv59x1+b"
   },
-  "211": null,
-  "212": null,
-  "213": null,
-  "214": null,
+  "211": {
+   "points": 13.192906044943216,
+   "memory": 80568,
+   "params": 53633,
+   "method": "memorizer(n=264,k=12)"
+  },
+  "212": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "213": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "214": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "215": {
    "points": 16.315598889599855,
    "memory": 0,
    "params": 5910,
    "method": "conv59x1+b"
   },
-  "216": null,
-  "217": null,
-  "218": null,
-  "219": null,
+  "216": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "217": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "218": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "219": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
   "220": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv3x3+b"
   },
-  "221": null,
-  "222": null,
-  "223": null,
-  "224": null,
+  "221": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "222": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "223": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "224": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "225": {
    "points": 16.500970779211436,
    "memory": 0,
    "params": 4910,
    "method": "conv7x7+b"
   },
-  "226": null,
+  "226": {
+   "points": 13.625957363938435,
+   "memory": 59128,
+   "params": 27905,
+   "method": "memorizer(n=130,k=12)"
+  },
   "227": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv9x1+b"
   },
-  "228": null,
-  "229": null,
+  "228": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "229": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
   "230": {
    "points": 18.186555400489105,
    "memory": 0,
@@ -467,85 +1392,300 @@
    "params": 5910,
    "method": "conv1x59+b"
   },
-  "233": null,
-  "234": null,
-  "235": null,
-  "236": null,
-  "237": null,
-  "238": null,
-  "239": null,
-  "240": null,
-  "241": null,
-  "242": null,
-  "243": null,
-  "244": null,
-  "245": null,
-  "246": null,
-  "247": null,
-  "248": null,
-  "249": null,
-  "250": null,
-  "251": null,
-  "252": null,
-  "253": null,
-  "254": null,
-  "255": null,
-  "256": null,
-  "257": null,
+  "233": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "234": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "235": {
+   "points": 13.936475856808762,
+   "memory": 48568,
+   "params": 15233,
+   "method": "memorizer(n=64,k=12)"
+  },
+  "236": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "237": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "238": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "239": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "240": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "241": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "242": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "243": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "244": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "245": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "246": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "247": {
+   "points": 13.179876641112553,
+   "memory": 81368,
+   "params": 54593,
+   "method": "memorizer(n=269,k=12)"
+  },
+  "248": {
+   "points": 14.29808225424938,
+   "memory": 39768,
+   "params": 4673,
+   "method": "memorizer(n=9,k=12)"
+  },
+  "249": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "250": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "251": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "252": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "253": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "254": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "255": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "256": {
+   "points": 13.195532422129093,
+   "memory": 80408,
+   "params": 53441,
+   "method": "memorizer(n=263,k=12)"
+  },
+  "257": {
+   "points": 13.179876641112553,
+   "memory": 81368,
+   "params": 54593,
+   "method": "memorizer(n=269,k=12)"
+  },
   "258": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv3x3+b"
   },
-  "259": null,
-  "260": null,
+  "259": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "260": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
   "261": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv3x3+b"
   },
-  "262": null,
-  "263": null,
-  "264": null,
-  "265": null,
+  "262": {
+   "points": 14.29808225424938,
+   "memory": 39768,
+   "params": 4673,
+   "method": "memorizer(n=9,k=12)"
+  },
+  "263": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "264": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "265": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "266": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv3x3+b"
   },
-  "267": null,
-  "268": null,
-  "269": null,
-  "270": null,
-  "271": null,
+  "267": {
+   "points": 13.192906044943216,
+   "memory": 80568,
+   "params": 53633,
+   "method": "memorizer(n=264,k=12)"
+  },
+  "268": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "269": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "270": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "271": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
   "272": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv3x3+b"
   },
-  "273": null,
+  "273": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
   "274": {
    "points": 15.999146852890542,
    "memory": 0,
    "params": 8110,
    "method": "conv9x9+b"
   },
-  "275": null,
+  "275": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "276": {
    "points": 20.394829814011906,
    "memory": 0,
    "params": 100,
    "method": "conv1x1"
   },
-  "277": null,
-  "278": null,
-  "279": null,
-  "280": null,
-  "281": null,
+  "277": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "278": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "279": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "280": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "281": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "282": {
    "points": 18.186555400489105,
    "memory": 0,
@@ -558,68 +1698,168 @@
    "params": 910,
    "method": "conv3x3+b"
   },
-  "284": null,
-  "285": null,
-  "286": null,
-  "287": null,
+  "284": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "285": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "286": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "287": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
   "288": {
    "points": 15.999146852890542,
    "memory": 0,
    "params": 8110,
    "method": "conv9x9+b"
   },
-  "289": null,
-  "290": null,
-  "291": null,
+  "289": {
+   "points": 13.182468976032654,
+   "memory": 81208,
+   "params": 54401,
+   "method": "memorizer(n=268,k=12)"
+  },
+  "290": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "291": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
   "292": {
    "points": 16.315598889599855,
    "memory": 0,
    "params": 5910,
    "method": "conv1x59+b"
   },
-  "293": null,
+  "293": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
   "294": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv3x3+b"
   },
-  "295": null,
+  "295": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
   "296": {
    "points": 15.999146852890542,
    "memory": 0,
    "params": 8110,
    "method": "conv9x9+b"
   },
-  "297": null,
-  "298": null,
+  "297": {
+   "points": 13.192906044943216,
+   "memory": 80568,
+   "params": 53633,
+   "method": "memorizer(n=264,k=12)"
+  },
+  "298": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
   "299": {
    "points": 15.999146852890542,
    "memory": 0,
    "params": 8110,
    "method": "conv9x9+b"
   },
-  "300": null,
-  "301": null,
-  "302": null,
-  "303": null,
-  "304": null,
+  "300": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "301": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "302": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "303": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "304": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "305": {
    "points": 15.999146852890542,
    "memory": 0,
    "params": 8110,
    "method": "conv9x9+b"
   },
-  "306": null,
-  "307": null,
-  "308": null,
+  "306": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "307": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "308": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "309": {
    "points": 20.394829814011906,
    "memory": 0,
    "params": 100,
    "method": "conv1x1"
   },
-  "310": null,
+  "310": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "311": {
    "points": 16.315598889599855,
    "memory": 0,
@@ -632,20 +1872,35 @@
    "params": 5910,
    "method": "conv1x59+b"
   },
-  "313": null,
+  "313": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "314": {
    "points": 16.500970779211436,
    "memory": 0,
    "params": 4910,
    "method": "conv7x7+b"
   },
-  "315": null,
-  "316": null,
+  "315": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "316": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "317": {
-   "points": 18.186555400489105,
-   "memory": 0,
-   "params": 910,
-   "method": "conv3x3+b"
+   "points": 13.192906044943216,
+   "memory": 80568,
+   "params": 53633,
+   "method": "memorizer(n=264,k=12)"
   },
   "318": {
    "points": 16.315598889599855,
@@ -653,7 +1908,12 @@
    "params": 5910,
    "method": "conv59x1+b"
   },
-  "319": null,
+  "319": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
   "320": {
    "points": 16.315598889599855,
    "memory": 0,
@@ -672,19 +1932,54 @@
    "params": 910,
    "method": "conv9x1+b"
   },
-  "323": null,
-  "324": null,
-  "325": null,
+  "323": {
+   "points": 13.479493345009459,
+   "memory": 65368,
+   "params": 35393,
+   "method": "memorizer(n=169,k=12)"
+  },
+  "324": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "325": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "326": {
    "points": 17.17196196787417,
    "memory": 0,
    "params": 2510,
    "method": "conv5x5+b"
   },
-  "327": null,
-  "328": null,
-  "329": null,
-  "330": null,
+  "327": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "328": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "329": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "330": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "331": {
    "points": 18.186555400489105,
    "memory": 0,
@@ -697,70 +1992,240 @@
    "params": 5910,
    "method": "conv1x59+b"
   },
-  "333": null,
-  "334": null,
-  "335": null,
-  "336": null,
+  "333": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "334": {
+   "points": 13.17471204518393,
+   "memory": 81688,
+   "params": 54977,
+   "method": "memorizer(n=271,k=12)"
+  },
+  "335": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "336": {
+   "points": 14.157892870106654,
+   "memory": 42808,
+   "params": 8321,
+   "method": "memorizer(n=28,k=12)"
+  },
   "337": {
    "points": 20.394829814011906,
    "memory": 0,
    "params": 100,
    "method": "conv1x1"
   },
-  "338": null,
-  "339": null,
-  "340": null,
-  "341": null,
-  "342": null,
-  "343": null,
+  "338": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "339": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "340": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "341": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "342": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "343": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "344": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv3x3+b"
   },
-  "345": null,
-  "346": null,
+  "345": {
+   "points": 13.192906044943216,
+   "memory": 80568,
+   "params": 53633,
+   "method": "memorizer(n=264,k=12)"
+  },
+  "346": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
   "347": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv1x9+b"
   },
-  "348": null,
-  "349": null,
-  "350": null,
-  "351": null,
+  "348": {
+   "points": 13.195532422129093,
+   "memory": 80408,
+   "params": 53441,
+   "method": "memorizer(n=263,k=12)"
+  },
+  "349": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "350": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "351": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
   "352": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv3x3+b"
   },
-  "353": null,
-  "354": null,
-  "355": null,
-  "356": null,
-  "357": null,
-  "358": null,
+  "353": {
+   "points": 13.17471204518393,
+   "memory": 81688,
+   "params": 54977,
+   "method": "memorizer(n=271,k=12)"
+  },
+  "354": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "355": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "356": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "357": {
+   "points": 14.29808225424938,
+   "memory": 39768,
+   "params": 4673,
+   "method": "memorizer(n=9,k=12)"
+  },
+  "358": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
   "359": {
    "points": 16.500970779211436,
    "memory": 0,
    "params": 4910,
    "method": "conv7x7+b"
   },
-  "360": null,
-  "361": null,
-  "362": null,
-  "363": null,
-  "364": null,
-  "365": null,
-  "366": null,
-  "367": null,
-  "368": null,
-  "369": null,
-  "370": null,
-  "371": null,
+  "360": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "361": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "362": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "363": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "364": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "365": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "366": {
+   "points": 13.216795521143357,
+   "memory": 79128,
+   "params": 51905,
+   "method": "memorizer(n=255,k=12)"
+  },
+  "367": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "368": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "369": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "370": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "371": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
   "372": {
    "points": 16.315598889599855,
    "memory": 0,
@@ -773,41 +2238,131 @@
    "params": 4910,
    "method": "conv7x7+b"
   },
-  "374": null,
-  "375": null,
-  "376": null,
-  "377": null,
-  "378": null,
-  "379": null,
-  "380": null,
-  "381": null,
-  "382": null,
-  "383": null,
-  "384": null,
-  "385": null,
+  "374": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "375": {
+   "points": 13.987405421703121,
+   "memory": 47128,
+   "params": 13505,
+   "method": "memorizer(n=55,k=12)"
+  },
+  "376": {
+   "points": 14.10427971201456,
+   "memory": 44088,
+   "params": 9857,
+   "method": "memorizer(n=36,k=12)"
+  },
+  "377": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "378": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "379": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "380": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "381": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
+  "382": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "383": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "384": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "385": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
   "386": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
    "method": "conv1x9+b"
   },
-  "387": null,
-  "388": null,
+  "387": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "388": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
   "389": {
    "points": 17.17196196787417,
    "memory": 0,
    "params": 2510,
    "method": "conv5x5+b"
   },
-  "390": null,
-  "391": null,
-  "392": null,
-  "393": null,
+  "390": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "391": {
+   "points": 13.185068048623174,
+   "memory": 81048,
+   "params": 54209,
+   "method": "memorizer(n=267,k=12)"
+  },
+  "392": {
+   "points": 13.195532422129093,
+   "memory": 80408,
+   "params": 53441,
+   "method": "memorizer(n=263,k=12)"
+  },
+  "393": {
+   "points": 13.190286547549476,
+   "memory": 80728,
+   "params": 53825,
+   "method": "memorizer(n=265,k=12)"
+  },
   "394": {
-   "points": 16.500970779211436,
-   "memory": 0,
-   "params": 4910,
-   "method": "conv7x7+b"
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
   },
   "395": {
    "points": 18.186555400489105,
@@ -815,10 +2370,35 @@
    "params": 910,
    "method": "conv9x1+b"
   },
-  "396": null,
-  "397": null,
-  "398": null,
-  "399": null,
-  "400": null
+  "396": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "397": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "398": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  },
+  "399": {
+   "points": 13.182468976032654,
+   "memory": 81208,
+   "params": 54401,
+   "method": "memorizer(n=268,k=12)"
+  },
+  "400": {
+   "points": 13.187673893998808,
+   "memory": 80888,
+   "params": 54017,
+   "method": "memorizer(n=266,k=12)"
+  }
  }
 }
