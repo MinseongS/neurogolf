@@ -72,6 +72,22 @@ Grids larger than 30×30 are skipped by the scorer (already filtered by
 - **counting / thresholds** → Conv with all-ones kernel counts neighbors;
   Greater(int32) thresholds it
 
+## Ground-truth rules (don't guess!)
+
+Every task is an ARC-AGI v1 public training task, and Google's ARC-GEN
+generator source for it is available locally:
+
+```
+.venv/bin/python -m src.show N --gen     # prints the generator (exact rule)
+```
+
+The generator is the code that PRODUCED all the arc-gen examples — read it to
+learn the exact transformation, parameter ranges (grid sizes, color choices),
+and invariants (e.g. "boxes never overlap", "size is 10–20"). Knowing the real
+parameter ranges often makes a compact network feasible (e.g. you only need to
+handle widths the generator can actually produce). The repos live at
+/tmp/arc-gen (generators, common.py helpers) and /tmp/arc_agi.
+
 ## Workflow for one task
 
 ```python

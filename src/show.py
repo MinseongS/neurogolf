@@ -30,7 +30,18 @@ def main():
     parser.add_argument("task_num", type=int)
     parser.add_argument("--arcgen", type=int, default=3,
                         help="how many arc-gen examples to print")
+    parser.add_argument("--gen", action="store_true",
+                        help="print the ARC-GEN generator source (ground-truth rule)")
     args = parser.parse_args()
+    if args.gen:
+        import json
+        import pathlib
+        mapping = json.load(open("reports/arc_mapping.json"))
+        info = mapping[str(args.task_num)]
+        print(f"# task{args.task_num:03d} = ARC-AGI {info['arc_id']}")
+        src = pathlib.Path(info["generator"]).read_text()
+        print(src.split('"""Generator."""')[-1])
+        return
     task = load_task(args.task_num)
     for section in ("train", "test"):
         for i, ex in enumerate(task.get(section, [])):
