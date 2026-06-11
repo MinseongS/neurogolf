@@ -1183,10 +1183,10 @@
    "method": "memorizer(n=267,k=4,bb=14x12)"
   },
   "198": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.830861458866325,
+   "memory": 69002,
+   "params": 1906,
+   "method": "custom:task198"
   },
   "199": {
    "points": 15.30989132872317,
@@ -1219,10 +1219,10 @@
    "method": "memorizer(n=267,k=4,bb=18x18)"
   },
   "204": {
-   "points": 13.69353305881371,
-   "memory": 57808,
-   "params": 23538,
-   "method": "memorizer(n=268,k=4,bb=20x24)"
+   "points": 13.904956413153025,
+   "memory": 64800,
+   "params": 1044,
+   "method": "custom:task204"
   },
   "205": {
    "points": 14.507337857286904,
