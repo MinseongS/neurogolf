@@ -51,6 +51,30 @@ Grids larger than 30×30 are skipped by the scorer (already filtered by
 - packing helpers `pack4_codes` / `pack6_codes` (base-11 cell codes via
   strided Conv; ≤ 6 cells per float stays exact)
 
+## Lesson from pilot solves: MEMORY dominates, count your nodes
+
+Both pilot custom nets (task198, task204) were logically correct but landed at
+only ~13.9 pts because they used 20-40 ops, each producing a canvas-sized
+intermediate: a `[1,1,30,30]` float intermediate costs 3,600 bytes, bool costs
+900, int32 costs 3,600 — and they ADD UP (task198: 69,002 memory vs 1,906
+params). The memorizer baseline is ~40,000-98,000 total, so a sloppy custom
+net barely beats it.
+
+Budget rule of thumb: every halving of `memory + params` = +0.69 pts.
+- < 1,000 total → 18.1+ pts (gold: 1-3 ops, e.g. single Conv/MatMul into output)
+- < 5,000 total → 16.5+ pts (good: ≤ a handful of canvas intermediates)
+- < 20,000 total → 15.1+ pts (acceptable)
+- \> 40,000 → you're barely beating the memorizer; redesign
+
+Concrete tactics:
+- fuse aggressively: combine masks/selects into ONE final Conv/MatMul that
+  writes `output` directly (free tensor)
+- prefer bool (Greater/And/Or, 900B/channel-canvas) over float intermediates
+- keep aggregates 1-D ([1,1,30,1] = 120B float) instead of broadcasting early;
+  broadcast at the last possible op
+- a `[1,10,30,30]` float intermediate is 36,000B — almost never acceptable;
+  slice to the channels you need first
+
 ## Idioms for common ARC patterns
 
 - **per-cell color logic** → 1×1 or k×k Conv (try `solve_conv` first; it
