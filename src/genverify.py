@@ -55,7 +55,9 @@ def main():
     manifest = json.load(open("reports/manifest.json"))["tasks"]
     real = 0.0; generalizes = 0; fails = []
     results = {}
-    with multiprocessing.Pool(8) as pool:
+    # maxtasksperchild=1: fresh process per task so generators (which share the
+    # `common` module and may carry module-level state) can't pollute each other.
+    with multiprocessing.Pool(8, maxtasksperchild=1) as pool:
         for num, ok, run in pool.imap_unordered(_worker, range(1,401)):
             results[num] = (ok, run)
     real_pts = 0.0

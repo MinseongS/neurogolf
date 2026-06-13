@@ -32,10 +32,17 @@ def build(task):
     ring = np.ones((3, 3), dtype=np.float32)
     ring[1, 1] = 0.0  # 8 surrounding cells (dilate minus center)
 
+    # background channel 0 = 1 on grid cells that stay background. Start from
+    # the input background (channel 0, which marks the grid extent) and remove
+    # the ring cells that become halo-colored.
+    W[0, 0, 1, 1] = 1.0
+
     for g, h in halo.items():
         # halo color channel: ring of the source-color input
         W[h, g] = ring
         # center keeps the original color
         W[g, g, 1, 1] = 1.0
+        # ring cells leave the background channel
+        W[0, g] = -ring
 
     return conv_network(W, 3, 3)
