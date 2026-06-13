@@ -86,6 +86,17 @@ Conv/MaxPool (3,600 B float) → tens to hundreds of thousands of bytes → scor
 *below* the ~13.95 memorizer baseline. Confirmed dead on task338 and task286.
 If `--gen` shows flood/connectivity, report infeasible immediately and stop.
 
+**Output-grid-size not recoverable from input → also infeasible.** The scorer
+checks the *whole* 30×30 canvas (incl. channel-0 background over the output
+grid rectangle), so the net must reproduce the exact output H×W. If the grid
+size isn't a computable function of the input — e.g. a small sprite sits in the
+interior with no cell touching the grid border, so nothing signals the bounds —
+then size can only be memorized, which is exactly what the memorizer already
+does optimally. Quick check: do distinct inputs with the same salient features
+map to different output sizes? (task358 had 57/137 feature-keys → multiple
+sizes.) If size is ambiguous, report infeasible. (When the grid is full-canvas
+or size = f(content) like s=Sqrt(count) or s=k·n, you're fine.)
+
 ## Idioms for common ARC patterns
 
 - **per-cell color logic** → 1×1 or k×k Conv (try `solve_conv` first; it

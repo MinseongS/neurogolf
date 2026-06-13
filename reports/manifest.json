@@ -73,10 +73,10 @@
    "method": "dwconv9x9+b"
   },
   "13": {
-   "points": 14.641178392202573,
-   "memory": 30443,
-   "params": 1091,
-   "method": "ext:thbdh6332"
+   "points": 14.985328918503257,
+   "memory": 22133,
+   "params": 219,
+   "method": "custom:task013"
   },
   "14": {
    "points": 14.427427453254685,
@@ -505,10 +505,10 @@
    "method": "custom:task084"
   },
   "85": {
-   "points": 14.191950226468325,
-   "memory": 47317,
-   "params": 2100,
-   "method": "ext:thbdh6332"
+   "points": 14.90078120376,
+   "memory": 22500,
+   "params": 1824,
+   "method": "custom:task085"
   },
   "86": {
    "points": 14.972526467682881,
@@ -1699,10 +1699,10 @@
    "method": "conv3x3+b"
   },
   "284": {
-   "points": 13.951446054423878,
-   "memory": 62617,
-   "params": 236,
-   "method": "ext:kojimar6275"
+   "points": 14.539643285196554,
+   "memory": 34629,
+   "params": 275,
+   "method": "custom:task284"
   },
   "285": {
    "points": 13.953261457177382,

@@ -1,12 +1,12 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-13 16:41_
+_Updated: 2026-06-13 17:02_
 
-**Total: 6503.22 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 6504.86 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
-| ext:kojimar6275 | 131 | 2255.37 |
+| ext:kojimar6275 | 130 | 2241.42 |
 | memorizer4 | 127 | 1890.67 |
 | ext:biohack_new | 29 | 464.98 |
 | ext:wguesdon6304 | 23 | 406.33 |
@@ -15,9 +15,9 @@ _Updated: 2026-06-13 16:41_
 | ext:thbdh6285 | 7 | 108.81 |
 | ext:galaxy_v1 | 6 | 100.04 |
 | conv1x59+b | 6 | 97.89 |
-| ext:thbdh6332 | 5 | 71.63 |
 | conv59x1+b | 3 | 48.95 |
 | conv9x9+b | 3 | 48.00 |
+| ext:thbdh6332 | 3 | 42.80 |
 | conv7x7+b | 2 | 33.00 |
 | ext:jchan_blend | 2 | 29.63 |
 | dwconv9x1 | 1 | 20.50 |
@@ -52,7 +52,10 @@ _Updated: 2026-06-13 16:41_
 | custom:task199 | 1 | 15.33 |
 | custom:task234 | 1 | 15.10 |
 | custom:task301 | 1 | 15.04 |
+| custom:task013 | 1 | 14.99 |
+| custom:task085 | 1 | 14.90 |
 | custom:task064 | 1 | 14.77 |
+| custom:task284 | 1 | 14.54 |
 | ext:thbdh6285+pruned | 1 | 14.53 |
 | custom:task107 | 1 | 14.10 |
 
@@ -72,7 +75,7 @@ _Updated: 2026-06-13 16:41_
 | 010 | ext:kojimar6275 | 4939 | 76 | 16.48 |
 | 011 | memorizer4(n=267,k=4,b=11,bb=11x12) | 17250 | 4205 | 15.03 |
 | 012 | dwconv9x9+b | 0 | 820 | 18.29 |
-| 013 | ext:thbdh6332 | 30443 | 1091 | 14.64 |
+| 013 | custom:task013 | 22133 | 219 | 14.99 |
 | 014 | ext:kojimar6275 | 38399 | 650 | 14.43 |
 | 015 | ext:kojimar6275 | 0 | 900 | 18.20 |
 | 016 | ext:kojimar6275 | 0 | 10 | 22.70 |
@@ -144,7 +147,7 @@ _Updated: 2026-06-13 16:41_
 | 082 | custom:task082 | 4800 | 363 | 16.45 |
 | 083 | ext:kojimar6275 | 0 | 1800 | 17.50 |
 | 084 | custom:task084 | 4362 | 300 | 16.55 |
-| 085 | ext:thbdh6332 | 47317 | 2100 | 14.19 |
+| 085 | custom:task085 | 22500 | 1824 | 14.90 |
 | 086 | memorizer4(n=266,k=4,b=11,bb=12x12) | 18172 | 4468 | 14.97 |
 | 087 | ext:kojimar6275 | 360 | 8 | 19.09 |
 | 088 | memorizer4(n=267,k=4,b=11,bb=10x12) | 17218 | 4382 | 15.02 |
@@ -343,7 +346,7 @@ _Updated: 2026-06-13 16:41_
 | 281 | memorizer4(n=266,k=4,b=10,bb=13x14) | 21144 | 4799 | 14.84 |
 | 282 | ext:octavi6154 | 0 | 900 | 18.20 |
 | 283 | conv3x3+b | 0 | 910 | 18.19 |
-| 284 | ext:kojimar6275 | 62617 | 236 | 13.95 |
+| 284 | custom:task284 | 34629 | 275 | 14.54 |
 | 285 | memorizer4(n=265,k=4,b=11,bb=30x30) | 40782 | 21957 | 13.95 |
 | 286 | memorizer4(n=265,k=4,b=11,bb=30x30) | 41222 | 21703 | 13.95 |
 | 287 | ext:kojimar6275 | 22528 | 38 | 14.98 |
