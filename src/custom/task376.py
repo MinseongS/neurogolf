@@ -48,10 +48,11 @@ def build(task):
     init("c17", np.array(17.0, dtype=np.float32), np.float32)
 
     # total one-hot count = 17*H  ->  row = H-3 in {0..3}
-    n("ReduceSum", ["input"], "tot", keepdims=0)          # scalar f32
+    n("ReduceSum", ["input"], "tot", keepdims=1)          # [1,1,1,1] f32
     n("Sub", ["tot", "c51"], "t51")                       # 17*(H-3), exact
     n("Div", ["t51", "c17"], "rowf")                      # H-3, exact
-    n("Cast", ["rowf"], "row", to=onnx.TensorProto.INT32)
+    n("Cast", ["rowf"], "row4", to=onnx.TensorProto.INT32)
+    n("Squeeze", ["row4"], "row", axes=[0, 1, 2, 3])      # scalar int32
     n("Gather", ["IDX", "row"], "idx", axis=0)            # [30] int32
     n("Gather", ["input", "idx"], "output", axis=2)
     return _model(nodes, inits)

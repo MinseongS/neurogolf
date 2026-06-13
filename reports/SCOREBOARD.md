@@ -1,14 +1,14 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-13 10:50_
+_Updated: 2026-06-13 13:56_
 
-**Total: 6494.00 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 6500.50 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
-| ext:kojimar6275 | 136 | 2332.32 |
+| ext:kojimar6275 | 135 | 2317.38 |
 | memorizer4 | 132 | 1964.30 |
-| ext:biohack_new | 30 | 479.01 |
+| ext:biohack_new | 29 | 464.98 |
 | ext:wguesdon6304 | 23 | 406.33 |
 | conv3x3+b | 13 | 236.43 |
 | ext:vyank6322 | 8 | 125.95 |
@@ -22,6 +22,7 @@ _Updated: 2026-06-13 10:50_
 | ext:jchan_blend | 2 | 29.63 |
 | dwconv9x1 | 1 | 20.50 |
 | dwconv5x5+b | 1 | 19.44 |
+| custom:task376 | 1 | 19.43 |
 | conv5x1+b | 1 | 18.77 |
 | dwconv59x1+b | 1 | 18.60 |
 | dwconv9x9+b | 1 | 18.29 |
@@ -40,6 +41,7 @@ _Updated: 2026-06-13 10:50_
 | custom:task269 | 1 | 16.40 |
 | custom:task252 | 1 | 16.30 |
 | custom:task398 | 1 | 16.16 |
+| custom:task137 | 1 | 16.04 |
 | custom:task246 | 1 | 16.02 |
 | custom:task335 | 1 | 16.02 |
 | custom:task064 | 1 | 14.77 |
@@ -185,7 +187,7 @@ _Updated: 2026-06-13 10:50_
 | 134 | memorizer4(n=266,k=4,b=11,bb=3x6) | 9224 | 2621 | 15.62 |
 | 135 | ext:kojimar6275 | 360 | 0 | 19.11 |
 | 136 | ext:kojimar6275 | 4700 | 136 | 16.52 |
-| 137 | ext:biohack_new | 57048 | 966 | 14.03 |
+| 137 | custom:task137 | 7106 | 686 | 16.04 |
 | 138 | ext:biohack_new | 47770 | 125 | 14.22 |
 | 139 | ext:kojimar6275 | 3456 | 174 | 16.80 |
 | 140 | ext:kojimar6275 | 360 | 8 | 19.09 |
@@ -424,7 +426,7 @@ _Updated: 2026-06-13 10:50_
 | 373 | ext:wguesdon6304 | 480 | 33 | 18.76 |
 | 374 | ext:galaxy_v1 | 12808 | 233 | 15.52 |
 | 375 | ext:wguesdon6304 | 13104 | 80 | 15.51 |
-| 376 | ext:kojimar6275 | 23262 | 150 | 14.94 |
+| 376 | custom:task376 | 140 | 122 | 19.43 |
 | 377 | memorizer4(n=266,k=4,b=11,bb=9x12) | 16084 | 4480 | 15.07 |
 | 378 | memorizer4(n=267,k=4,b=11,bb=12x12) | 18194 | 4484 | 14.97 |
 | 379 | memorizer4(n=266,k=4,b=5,bb=20x20) | 37884 | 6856 | 14.29 |
