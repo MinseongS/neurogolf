@@ -24,7 +24,7 @@ SOURCES = [
     ("galaxy", "/tmp/ng_public2/galaxy/unpacked"),
     ("biohack_new", "/tmp/ng_public2/biohack_new/submission"),
 ]
-NFRESH = 30
+NFRESH = 60
 
 def load_gen(num):
     path = MAPPING[str(num)]["generator"]
@@ -90,7 +90,7 @@ def main():
     chosen = {}
     total = 0.0
     bylabel = {}
-    with multiprocessing.Pool(8) as pool:
+    with multiprocessing.Pool(8, maxtasksperchild=1) as pool:
         for num, best in pool.imap_unordered(_worker, range(1,401)):
             chosen[num] = best
             if best:
