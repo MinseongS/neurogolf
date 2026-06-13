@@ -122,6 +122,37 @@ map to different output sizes? (task358 had 57/137 feature-keys → multiple
 sizes.) If size is ambiguous, report infeasible. (When the grid is full-canvas
 or size = f(content) like s=Sqrt(count) or s=k·n, you're fine.)
 
+## Extreme squeezing toolkit (push every net to the floor)
+
+Score = `25 - ln(memory + params)`. Halving (memory+params) = +0.69 pts. The
+floor is the identity net (25.0). Squeeze BOTH terms to the extreme:
+
+**params = element COUNT of initializers/Constants (dtype-INDEPENDENT).** To cut:
+- **`ConstantOfShape(shape, value=v)`** (opset 9, allowed): a uniform constant of
+  ANY size costs ~4 params (the shape int64 vector) instead of N. Use for every
+  all-ones / all-zeros / all-k mask or bias plane. Verified accepted by scorer+ORT.
+- store the SMALLEST seed and build structure in-graph (Tile a small tile;
+  broadcast a [1,k] against a [k,1]; derive index planes by Add/Mul of tiny
+  vectors) rather than a big literal initializer.
+- exploit symmetry: store half a symmetric matrix, mirror with a transpose+add.
+
+**memory = sum over intermediates of elements × dtype_bytes** (bool/int8 = 1,
+fp16 = 2, fp32 = 4; `input`/`output` are FREE):
+- never leave an intermediate fp32 if it can be fp16 (Conv/MatMul/MaxPool floats)
+  or — better — **bool / int8 (1 byte)**: comparison results are bool; Gather data
+  and Cast targets can be int8; elementwise Add/Sub/Mul work in int8 (watch the
+  -128..127 wrap — only for small values/masks, never accumulations).
+- **`MatMulInteger` / `ConvInteger`** (opset 10, table-free, no scale/zero-point):
+  int8 operands, int32 output — use when matmul/conv operands are large
+  intermediates you want at 1 byte (the int32 output is 4 bytes, so only wins when
+  the operands dominate).
+- collapse ops so the LAST one writes straight into the free `output`; keep
+  everything before it 1-D ([1,1,30,1]=120B) or bool, broadcasting only at the end.
+
+Target ladder: <1000 total → 18.1+, <300 → ~19.5, <60 → ~21. A net at 5000 vs
+500 is ~2.3 pts — worth the extra engineering on EVERY task. Always re-verify
+exactness (evaluate) AND generalization (fresh_pass) after squeezing.
+
 ## Idioms for common ARC patterns
 
 - **per-cell color logic** → 1×1 or k×k Conv (try `solve_conv` first; it

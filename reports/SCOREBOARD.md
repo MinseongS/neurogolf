@@ -1,8 +1,8 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-14 00:37_
+_Updated: 2026-06-14 01:00_
 
-**Total: 6396.46 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 6398.25 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
@@ -11,7 +11,7 @@ _Updated: 2026-06-14 00:37_
 | ext:biohack_new | 28 | 450.78 |
 | ext:wguesdon6304 | 23 | 406.33 |
 | gen:vyank6322 | 26 | 367.82 |
-| gen:biohack_new | 24 | 340.90 |
+| gen:biohack_new | 22 | 313.70 |
 | conv3x3+b | 10 | 181.87 |
 | ext:vyank6322 | 8 | 125.95 |
 | ext:thbdh6285 | 7 | 108.81 |
@@ -53,6 +53,7 @@ _Updated: 2026-06-14 00:37_
 | custom:task234 | 1 | 15.10 |
 | custom:task301 | 1 | 15.04 |
 | custom:task013 | 1 | 14.99 |
+| custom:task239 | 1 | 14.95 |
 | custom:task085 | 1 | 14.90 |
 | custom:task208 | 1 | 14.86 |
 | custom:task064 | 1 | 14.77 |
@@ -60,6 +61,7 @@ _Updated: 2026-06-14 00:37_
 | ext:thbdh6285+pruned | 1 | 14.53 |
 | custom:task340 | 1 | 14.26 |
 | custom:task107 | 1 | 14.10 |
+| custom:task109 | 1 | 14.06 |
 | custom:task029 | 1 | 14.01 |
 | gen:seddik | 1 | 13.34 |
 
@@ -175,7 +177,7 @@ _Updated: 2026-06-14 00:37_
 | 106 | ext:kojimar6275 | 1039 | 125 | 17.94 |
 | 107 | custom:task107 | 40494 | 13540 | 14.10 |
 | 108 | ext:kojimar6275 | 0 | 1800 | 17.50 |
-| 109 | gen:biohack_new | 82868 | 954 | 13.66 |
+| 109 | custom:task109 | 54573 | 1930 | 14.06 |
 | 110 | gen:vyank6322 | 100033 | 350 | 13.48 |
 | 111 | ext:kojimar6275 | 772 | 25 | 18.32 |
 | 112 | gen:thbdh6332 | 59164 | 106 | 14.01 |
@@ -305,7 +307,7 @@ _Updated: 2026-06-14 00:37_
 | 236 | ext:galaxy_v1 | 640 | 1 | 18.54 |
 | 237 | ext:kojimar6275 | 14283 | 41 | 15.43 |
 | 238 | gen:thbdh6332 | 62905 | 1447 | 13.93 |
-| 239 | gen:biohack_new | 94081 | 386 | 13.54 |
+| 239 | custom:task239 | 21922 | 1272 | 14.95 |
 | 240 | ext:biohack_new | 10872 | 13735 | 14.89 |
 | 241 | ext:kojimar6275 | 0 | 0 | 25.00 |
 | 242 | gen:thbdh6332 | 20074 | 45 | 15.09 |
