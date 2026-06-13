@@ -182,13 +182,11 @@ def memorizer_v4(Z, R, O64, k_proj, codes, G=None, rin=30, w4=8,
     n("Cast", ["z"], "zi", to=onnx.TensorProto.INT32)
     init("Z", Z, np.int32)
     n("Equal", ["Z", "zi"], "em")                # bool [N,k]
-    n("Cast", ["em"], "emf", to=DATA_TYPE)
-    n("ReduceSum", ["emf"], "ms", axes=[1], keepdims=1)   # [N,1]
-    init("kth", np.array(k_proj - 0.5, np.float32))
-    n("Greater", ["ms", "kth"], "gb")            # bool [N,1]
-    sel_name = "gb"
+    n("Cast", ["em"], "emh", to=onnx.TensorProto.FLOAT16)
+    n("ReduceProd", ["emh"], "sel", axes=[1], keepdims=1)  # [N,1], 1 iff all match
+    sel_name = "sel"
     if G is not None:
-        n("Cast", ["gb"], "self", to=DATA_TYPE)
+        n("Cast", ["sel"], "self", to=DATA_TYPE)
         init("G", G.T, np.float32)               # [U,N]
         sel_name = n("MatMul", ["G", "self"], "selg")  # [U,1]
     n("Cast", [sel_name], "seld", to=onnx.TensorProto.DOUBLE)  # [M,1]
@@ -213,7 +211,9 @@ def memorizer_v4(Z, R, O64, k_proj, codes, G=None, rin=30, w4=8,
     init("shape_grid", np.array([1, 1, rmax, wB], np.int64))
     n("Reshape", [src, "shape_grid"], "y")       # [1,1,rmax,wB]
 
-    # --- unpack base^(m-1) digits (v3-style chain) ---
+    # --- unpack base^(m-1) digits (strided packing: digit j of word u is the
+    # cell at column j*wB + u, so digits concat straight into the code canvas
+    # along the width axis -- no Unsqueeze/5-D Concat/Reshape needed) ---
     rem = "y"
     digits = []
     for j in range(m - 1):
@@ -225,13 +225,9 @@ def memorizer_v4(Z, R, O64, k_proj, codes, G=None, rin=30, w4=8,
         n("Mul", [f"q{j}", f"pw{j}"], f"qm{j}")
         rem = n("Sub", [rem, f"qm{j}"], f"r{j}")
     digits.append(rem)
-    for d in digits:
-        n("Unsqueeze", [d], f"{d}_u", axes=[4])
     nodes.append(onnx.helper.make_node(
-        "Concat", [f"{d}_u" for d in digits], ["dig"], axis=4))  # [1,1,rmax,wB,m]
+        "Concat", digits, ["code"], axis=3))     # [1,1,rmax,wB*m]
     cols = wB * m
-    init("shape_code", np.array([1, 1, rmax, cols], np.int64))
-    n("Reshape", ["dig", "shape_code"], "code")
     src = "code"
     if cols > 30:
         init("cs_st", np.array([0], np.int64))
@@ -266,13 +262,17 @@ def pack4_codes_bbox(grid_canvas, rin=30, w4=8):
 
 
 def pack_base_codes(code_canvas, rmax, wB, base):
-    """Pack the top-left rmax x wB*m region into base^m words [rmax*wB]."""
+    """Pack the top-left rmax x wB*m region into base^m words [rmax*wB].
+
+    Strided layout: digit j of word u is the cell at column j*wB + u, so the
+    in-graph digit chain reassembles the canvas with a single width-Concat.
+    """
     m = CELLS_PER_HALF[base]
     region = np.zeros((rmax, wB * m), np.int64)
     cols = min(30, wB * m)
     region[:, :cols] = code_canvas[:rmax, :cols]
     w = base ** np.arange(m - 1, -1, -1, dtype=np.int64)
-    return (region.reshape(rmax, wB, m) * w).sum(axis=2).reshape(-1)
+    return (region.reshape(rmax, m, wB) * w[:, None]).sum(axis=1).reshape(-1)
 
 
 def pack_double(p, H):
