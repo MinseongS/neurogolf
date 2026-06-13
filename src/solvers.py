@@ -191,6 +191,89 @@ def solve_memorizer(task, k_proj=4):
     return None
 
 
+def solve_memorizer_v4(task, k_proj=4):
+    """fp64 double-pack memorizer with output-color base reduction: roughly
+    halves (or better, for few-color tasks) the v3 output-table params, plus a
+    leaner int32 match path and input-bbox-trimmed projection."""
+    exs = usable_examples(task)
+    if not exs:
+        return None
+    # input bbox -> packed dims
+    rin = max(len(ex["input"]) for ex in exs)
+    win = max(len(ex["input"][0]) for ex in exs)
+    w4 = (win + 3) // 4
+    # output color set -> code base
+    used = sorted({c for ex in exs for row in ex["output"] for c in row})
+    codes = {color: i + 1 for i, color in enumerate(used)}
+    base_min = len(used) + 1
+    if base_min < 2:
+        return None
+    # output bbox (block-granular in m); pick the base minimizing the packed
+    # width H (params), then the code-canvas overshoot (memory)
+    rmax = max(len(ex["output"]) for ex in exs)
+    wmax = max(len(ex["output"][0]) for ex in exs)
+    if rmax * ((wmax + 5) // 6) * 6 >= 600:
+        rmax, wmax = 30, 30
+    best = None
+    for b in range(base_min, 12):
+        mb = builders.CELLS_PER_HALF[b]
+        wBb = (wmax + mb - 1) // mb
+        key = ((rmax * wBb + 1) // 2, wBb * mb)
+        if best is None or key < best[0]:
+            best = (key, b, mb, wBb)
+    _, base, m, wB = best
+    L = rmax * wB
+    H = (L + 1) // 2
+
+    def code_canvas(grid):
+        canvas = np.zeros((30, 30), np.int64)
+        for r, row in enumerate(grid):
+            for c, color in enumerate(row):
+                canvas[r, c] = codes[color]
+        return canvas
+
+    seen = {}
+    xs, os_ = [], []
+    for ex in exs:
+        xin = builders.pack4_codes_bbox(grid_to_codes(ex["input"]), rin, w4)
+        p = builders.pack_base_codes(code_canvas(ex["output"]), rmax, wB, base)
+        key = xin.tobytes()
+        if key in seen:
+            if seen[key] != p.tobytes():
+                return None  # contradictory task
+            continue
+        seen[key] = p.tobytes()
+        xs.append(xin)
+        os_.append(builders.pack_double(p, H))
+    X = np.array(xs, dtype=np.int64)              # [N, rin*w4]
+    O = np.array(os_, dtype=np.float64)           # [N, H]
+    N = X.shape[0]
+
+    G = None
+    uniq, group_idx = np.unique(O, axis=0, return_inverse=True)
+    U = uniq.shape[0]
+    if U * (H + N) < H * N:
+        G = np.zeros((N, U), np.float32)
+        G[np.arange(N), group_idx] = 1.0
+        O = uniq
+
+    for k in (k_proj, k_proj + 2, k_proj + 6, k_proj + 14):
+        for seed in range(20):
+            rng = np.random.default_rng(seed)
+            R = rng.choice([-1.0, 1.0], size=(X.shape[1], k)).astype(np.float32)
+            Z = X @ R.astype(np.int64)
+            if np.abs(Z).max() >= (1 << 24):
+                continue
+            if np.unique(Z, axis=0).shape[0] == N:
+                model = builders.memorizer_v4(
+                    Z.astype(np.int32), R, O, k, codes, G=G,
+                    rin=rin, w4=w4, rmax=rmax, wB=wB, base=base)
+                tag = f"memorizer4(n={N},k={k},b={base},bb={rmax}x{wB * m}" + \
+                    (f",u={U})" if G is not None else ")")
+                return model, {"method": tag}
+    return None
+
+
 def _fit_dense(pairs, kh, kw, channel_budget, task_deadline):
     pat = collect_patterns(pairs, kh, kw)
     if pat is None:

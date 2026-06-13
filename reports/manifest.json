@@ -7,10 +7,10 @@
    "method": "ext:biohack_new"
   },
   "2": {
-   "points": 13.69353305881371,
-   "memory": 57808,
-   "params": 23538,
-   "method": "memorizer(n=268,k=4,bb=20x24)"
+   "points": 14.160713249201674,
+   "memory": 44076,
+   "params": 6909,
+   "method": "memorizer4(n=268,k=4,b=5,bb=20x20)"
   },
   "3": {
    "points": 17.918291413894426,
@@ -19,16 +19,16 @@
    "method": "ext:kojimar6275"
   },
   "4": {
-   "points": 14.084547965521434,
-   "memory": 54000,
-   "params": 1020,
-   "method": "ext:kojimar6275"
+   "points": 14.345520977219488,
+   "memory": 34633,
+   "params": 7749,
+   "method": "memorizer4(n=265,k=4,b=11,bb=16x18)"
   },
   "5": {
-   "points": 13.660832861163238,
-   "memory": 59616,
-   "params": 24434,
-   "method": "memorizer(n=266,k=4,bb=21x24)"
+   "points": 13.898613048986322,
+   "memory": 53450,
+   "params": 12813,
+   "method": "memorizer4(n=266,k=4,b=11,bb=21x24)"
   },
   "6": {
    "points": 18.527653705499098,
@@ -61,10 +61,10 @@
    "method": "ext:kojimar6275"
   },
   "11": {
-   "points": 14.464177406300685,
-   "memory": 29672,
-   "params": 7968,
-   "method": "memorizer(n=267,k=4,bb=11x12)"
+   "points": 14.855411106775884,
+   "memory": 21243,
+   "params": 4210,
+   "method": "memorizer4(n=267,k=4,b=11,bb=11x12)"
   },
   "12": {
    "points": 18.2906956597417,
@@ -103,22 +103,22 @@
    "method": "ext:galaxy_v1"
   },
   "18": {
-   "points": 13.559107737929603,
-   "memory": 65424,
-   "params": 27626,
-   "method": "memorizer(n=266,k=4,bb=24x24)"
+   "points": 13.785871482820175,
+   "memory": 59690,
+   "params": 14481,
+   "method": "memorizer4(n=266,k=4,b=11,bb=24x24)"
   },
   "19": {
-   "points": 14.425048661735085,
-   "memory": 30640,
-   "params": 8502,
-   "method": "memorizer(n=267,k=4,bb=12x12)"
+   "points": 14.815703943955263,
+   "memory": 22091,
+   "params": 4393,
+   "method": "memorizer4(n=267,k=4,b=11,bb=12x12)"
   },
   "20": {
-   "points": 14.507337857286904,
-   "memory": 28640,
-   "params": 7410,
-   "method": "memorizer(n=266,k=4,bb=10x12)"
+   "points": 14.910572445147206,
+   "memory": 20170,
+   "params": 3917,
+   "method": "memorizer4(n=266,k=4,b=11,bb=10x12)"
   },
   "21": {
    "points": 15.973702665716113,
@@ -127,16 +127,16 @@
    "method": "ext:wguesdon6304"
   },
   "22": {
-   "points": 15.169674713092856,
-   "memory": 18291,
-   "params": 298,
-   "method": "ext:wguesdon6304"
+   "points": 15.496840771466884,
+   "memory": 11598,
+   "params": 1804,
+   "method": "memorizer4(n=266,k=4,b=11,bb=3x6)"
   },
   "23": {
-   "points": 15.009051171693878,
-   "memory": 21339,
-   "params": 489,
-   "method": "ext:jchan_blend"
+   "points": 15.017978569809765,
+   "memory": 19050,
+   "params": 2584,
+   "method": "memorizer4(n=266,k=4,b=4,bb=9x12)"
   },
   "24": {
    "points": 15.88617052840466,
@@ -145,10 +145,10 @@
    "method": "ext:kojimar6275"
   },
   "25": {
-   "points": 13.735241065999542,
-   "memory": 77960,
-   "params": 63,
-   "method": "ext:thbdh6285"
+   "points": 13.80218261907221,
+   "memory": 50930,
+   "params": 22041,
+   "method": "memorizer4(n=266,k=4,b=11,bb=30x30)"
   },
   "26": {
    "points": 18.415208607614282,
@@ -169,10 +169,10 @@
    "method": "ext:kojimar6275"
   },
   "29": {
-   "points": 13.591879649395898,
-   "memory": 63488,
-   "params": 26562,
-   "method": "memorizer(n=266,k=4,bb=23x24)"
+   "points": 13.81587031121147,
+   "memory": 57906,
+   "params": 14073,
+   "method": "memorizer4(n=266,k=4,b=11,bb=23x24)"
   },
   "30": {
    "points": 16.278397655325804,
@@ -193,16 +193,16 @@
    "method": "ext:kojimar6275"
   },
   "33": {
-   "points": 14.081988539178049,
-   "memory": 55112,
-   "params": 49,
-   "method": "ext:kojimar6275"
+   "points": 14.287294807981405,
+   "memory": 36557,
+   "params": 8366,
+   "method": "memorizer4(n=265,k=4,b=11,bb=17x18)"
   },
   "34": {
-   "points": 14.547351117432308,
-   "memory": 27736,
-   "params": 6900,
-   "method": "memorizer(n=267,k=4,bb=9x12)"
+   "points": 14.964826506638497,
+   "memory": 19163,
+   "params": 3652,
+   "method": "memorizer4(n=267,k=4,b=11,bb=9x12)"
   },
   "35": {
    "points": 15.36028269986934,
@@ -211,16 +211,16 @@
    "method": "ext:kojimar6275"
   },
   "36": {
-   "points": 14.884348956992826,
-   "memory": 21316,
-   "params": 3411,
-   "method": "memorizer(n=265,k=4,bb=5x6)"
+   "points": 15.309087047428848,
+   "memory": 13285,
+   "params": 2885,
+   "method": "memorizer4(n=265,k=4,b=11,bb=5x6)"
   },
   "37": {
-   "points": 14.507337857286904,
-   "memory": 28640,
-   "params": 7410,
-   "method": "memorizer(n=266,k=4,bb=10x12)"
+   "points": 14.910572445147206,
+   "memory": 20170,
+   "params": 3917,
+   "method": "memorizer4(n=266,k=4,b=11,bb=10x12)"
   },
   "38": {
    "points": 17.315675932318847,
@@ -259,10 +259,10 @@
    "method": "ext:kojimar6275"
   },
   "44": {
-   "points": 14.632621210887095,
-   "memory": 20902,
-   "params": 10903,
-   "method": "ext:jchan_blend"
+   "points": 14.910572445147206,
+   "memory": 20170,
+   "params": 3917,
+   "method": "memorizer4(n=266,k=4,b=11,bb=10x12)"
   },
   "45": {
    "points": 16.0873920363291,
@@ -271,10 +271,10 @@
    "method": "ext:kojimar6275"
   },
   "46": {
-   "points": 14.764442744932484,
-   "memory": 23380,
-   "params": 4497,
-   "method": "memorizer(n=267,k=4,bb=3x18)"
+   "points": 15.25328322341382,
+   "memory": 14559,
+   "params": 2539,
+   "method": "memorizer4(n=267,k=4,b=11,bb=3x18)"
   },
   "47": {
    "points": 16.985664262700574,
@@ -319,10 +319,10 @@
    "method": "ext:kojimar6275"
   },
   "54": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.80218261907221,
+   "memory": 50930,
+   "params": 22041,
+   "method": "memorizer4(n=266,k=4,b=11,bb=30x30)"
   },
   "55": {
    "points": 14.825531566735503,
@@ -337,10 +337,10 @@
    "method": "ext:kojimar6275"
   },
   "57": {
-   "points": 14.946843222945168,
-   "memory": 20348,
-   "params": 2881,
-   "method": "memorizer(n=265,k=4,bb=3x6)"
+   "points": 15.51513878584986,
+   "memory": 11429,
+   "params": 1730,
+   "method": "memorizer4(n=265,k=4,b=11,bb=3x6)"
   },
   "58": {
    "points": 15.314792843112095,
@@ -367,10 +367,10 @@
    "method": "ext:kojimar6275"
   },
   "62": {
-   "points": 14.830462675139206,
-   "memory": 25144,
-   "params": 952,
-   "method": "ext:wguesdon6304"
+   "points": 14.908623086366454,
+   "memory": 20203,
+   "params": 3931,
+   "method": "memorizer4(n=267,k=4,b=11,bb=10x12)"
   },
   "63": {
    "points": 14.666940264012474,
@@ -385,10 +385,10 @@
    "method": "custom:task064"
   },
   "65": {
-   "points": 14.64067113203064,
-   "memory": 25736,
-   "params": 5814,
-   "method": "memorizer(n=266,k=4,bb=7x12)"
+   "points": 15.066905102711214,
+   "memory": 17362,
+   "params": 3239,
+   "method": "memorizer4(n=266,k=4,b=11,bb=7x12)"
   },
   "66": {
    "points": 15.028480037072045,
@@ -409,22 +409,22 @@
    "method": "ext:kojimar6275"
   },
   "69": {
-   "points": 14.51223192189104,
-   "memory": 28512,
-   "params": 7362,
-   "method": "memorizer(n=264,k=4,bb=10x12)"
+   "points": 14.914482599879578,
+   "memory": 20104,
+   "params": 3889,
+   "method": "memorizer4(n=264,k=4,b=11,bb=10x12)"
   },
   "70": {
-   "points": 14.009635415014182,
-   "memory": 43644,
-   "params": 15656,
-   "method": "memorizer(n=266,k=4,bb=17x18)"
+   "points": 14.352482056589357,
+   "memory": 36086,
+   "params": 6002,
+   "method": "memorizer4(n=266,k=4,b=6,bb=17x18)"
   },
   "71": {
-   "points": 14.050352018798186,
-   "memory": 42128,
-   "params": 14806,
-   "method": "memorizer(n=265,k=4,bb=16x18)"
+   "points": 14.345520977219488,
+   "memory": 34633,
+   "params": 7749,
+   "method": "memorizer4(n=265,k=4,b=11,bb=16x18)"
   },
   "72": {
    "points": 17.8229812340901,
@@ -451,16 +451,16 @@
    "method": "ext:wguesdon6304"
   },
   "76": {
-   "points": 14.088554527063893,
-   "memory": 40740,
-   "params": 14060,
-   "method": "memorizer(n=266,k=4,bb=15x18)"
+   "points": 14.514883591902482,
+   "memory": 30410,
+   "params": 5369,
+   "method": "memorizer4(n=266,k=4,b=7,bb=15x16)"
   },
   "77": {
-   "points": 13.697178472836178,
-   "memory": 57680,
-   "params": 23370,
-   "method": "memorizer(n=266,k=4,bb=20x24)"
+   "points": 13.939206812456543,
+   "memory": 51370,
+   "params": 12257,
+   "method": "memorizer4(n=266,k=4,b=11,bb=20x24)"
   },
   "78": {
    "points": 16.315598889599855,
@@ -469,10 +469,10 @@
    "method": "conv59x1+b"
   },
   "79": {
-   "points": 15.029648507210364,
-   "memory": 21138,
-   "params": 245,
-   "method": "ext:kojimar6275"
+   "points": 15.476456018341958,
+   "memory": 11782,
+   "params": 1896,
+   "method": "memorizer4(n=266,k=4,b=11,bb=3x6)"
   },
   "80": {
    "points": 14.358033456905844,
@@ -523,28 +523,28 @@
    "method": "ext:kojimar6275"
   },
   "88": {
-   "points": 14.504899777728223,
-   "memory": 28704,
-   "params": 7434,
-   "method": "memorizer(n=267,k=4,bb=10x12)"
+   "points": 14.853487840556513,
+   "memory": 21115,
+   "params": 4387,
+   "method": "memorizer4(n=267,k=4,b=11,bb=10x12)"
   },
   "89": {
-   "points": 14.260261089935476,
-   "memory": 46056,
-   "params": 98,
-   "method": "ext:vyank6322"
+   "points": 14.483843486065492,
+   "memory": 30215,
+   "params": 6692,
+   "method": "memorizer4(n=267,k=4,b=11,bb=13x18)"
   },
   "90": {
-   "points": 14.406043851109688,
-   "memory": 31124,
-   "params": 8769,
-   "method": "memorizer(n=267,k=4,bb=5x30)"
+   "points": 14.82667616815768,
+   "memory": 22751,
+   "params": 3444,
+   "method": "memorizer4(n=267,k=4,b=5,bb=5x30)"
   },
   "91": {
-   "points": 14.152489823851827,
-   "memory": 51328,
-   "params": 78,
-   "method": "ext:biohack_new"
+   "points": 14.630516839615675,
+   "memory": 26770,
+   "params": 5102,
+   "method": "memorizer4(n=266,k=4,b=9,bb=14x14)"
   },
   "92": {
    "points": 14.260542795338498,
@@ -571,10 +571,10 @@
    "method": "ext:wguesdon6304"
   },
   "96": {
-   "points": 14.71233907482333,
-   "memory": 12725,
-   "params": 16643,
-   "method": "ext:jchan_blend"
+   "points": 14.828433772155915,
+   "memory": 21706,
+   "params": 4443,
+   "method": "memorizer4(n=266,k=4,b=11,bb=11x12)"
   },
   "97": {
    "points": 18.186555400489105,
@@ -601,10 +601,10 @@
    "method": "ext:kojimar6275"
   },
   "101": {
-   "points": 13.904424994937168,
-   "memory": 54322,
-   "params": 11557,
-   "method": "ext:jchan_blend"
+   "points": 14.167127816078558,
+   "memory": 44586,
+   "params": 6073,
+   "method": "memorizer4(n=266,k=4,b=4,bb=17x24)"
   },
   "102": {
    "points": 15.672854848481732,
@@ -637,10 +637,10 @@
    "method": "ext:kojimar6275"
   },
   "107": {
-   "points": 13.806577566471388,
-   "memory": 58970,
-   "params": 13681,
-   "method": "ext:biohack_new"
+   "points": 13.827074988494426,
+   "memory": 50050,
+   "params": 21127,
+   "method": "memorizer4(n=266,k=4,b=11,bb=30x30)"
   },
   "108": {
    "points": 17.504458056115745,
@@ -649,16 +649,16 @@
    "method": "ext:kojimar6275"
   },
   "109": {
-   "points": 14.427401844732168,
-   "memory": 30576,
-   "params": 8474,
-   "method": "memorizer(n=266,k=4,bb=12x12)"
+   "points": 14.799560969004942,
+   "memory": 22378,
+   "params": 4537,
+   "method": "memorizer4(n=266,k=4,b=11,bb=12x12)"
   },
   "110": {
-   "points": 13.529251613928958,
-   "memory": 55924,
-   "params": 39946,
-   "method": "memorizer(n=266,k=4,u=91)"
+   "points": 13.790330588119737,
+   "memory": 51826,
+   "params": 22015,
+   "method": "memorizer4(n=266,k=4,b=11,bb=30x30)"
   },
   "111": {
    "points": 18.319145321209785,
@@ -751,10 +751,10 @@
    "method": "ext:kojimar6275"
   },
   "126": {
-   "points": 14.161556990360562,
-   "memory": 38256,
-   "params": 12686,
-   "method": "memorizer(n=265,k=4,bb=10x24)"
+   "points": 14.478897329516364,
+   "memory": 30457,
+   "params": 6633,
+   "method": "memorizer4(n=265,k=4,b=11,bb=10x24)"
   },
   "127": {
    "points": 18.197605236675688,
@@ -781,10 +781,10 @@
    "method": "ext:wguesdon6304"
   },
   "131": {
-   "points": 14.295632567101045,
-   "memory": 43599,
-   "params": 951,
-   "method": "ext:kojimar6275"
+   "points": 14.309829387512762,
+   "memory": 37634,
+   "params": 6288,
+   "method": "memorizer4(n=266,k=4,b=6,bb=18x18)"
   },
   "132": {
    "points": 14.709279200950512,
@@ -793,10 +793,10 @@
    "method": "ext:kojimar6275"
   },
   "133": {
-   "points": 13.509647395882164,
-   "memory": 55624,
-   "params": 42144,
-   "method": "memorizer(n=267,k=4)"
+   "points": 13.800648939447502,
+   "memory": 50963,
+   "params": 22120,
+   "method": "memorizer4(n=267,k=4,b=11,bb=30x30)"
   },
   "134": {
    "points": 15.576162453761413,
@@ -865,10 +865,10 @@
    "method": "ext:kojimar6275"
   },
   "145": {
-   "points": 13.900183785289693,
-   "memory": 65224,
-   "params": 935,
-   "method": "ext:vyank6322"
+   "points": 14.161831850478126,
+   "memory": 44043,
+   "params": 6885,
+   "method": "memorizer4(n=267,k=4,b=5,bb=20x20)"
   },
   "146": {
    "points": 17.27865138738205,
@@ -931,28 +931,28 @@
    "method": "ext:kojimar6275"
   },
   "156": {
-   "points": 14.943662613369662,
-   "memory": 21408,
-   "params": 1895,
-   "method": "ext:vyank6322"
+   "points": 15.051586884110879,
+   "memory": 18337,
+   "params": 2582,
+   "method": "memorizer4(n=265,k=4,b=5,bb=10x10)"
   },
   "157": {
-   "points": 14.32058784044636,
-   "memory": 33416,
-   "params": 10036,
-   "method": "memorizer(n=265,k=4,bb=10x18)"
+   "points": 14.78017003451888,
+   "memory": 23497,
+   "params": 3945,
+   "method": "memorizer4(n=265,k=4,b=7,bb=10x16)"
   },
   "158": {
-   "points": 13.511879653948743,
-   "memory": 55560,
-   "params": 41990,
-   "method": "memorizer(n=266,k=4)"
+   "points": 13.79848934756364,
+   "memory": 51426,
+   "params": 21815,
+   "method": "memorizer4(n=266,k=4,b=11,bb=30x30)"
   },
   "159": {
-   "points": 14.132575062122363,
-   "memory": 39224,
-   "params": 13216,
-   "method": "memorizer(n=265,k=4,bb=14x18)"
+   "points": 14.411271438475024,
+   "memory": 32033,
+   "params": 7652,
+   "method": "memorizer4(n=265,k=4,b=11,bb=14x18)"
   },
   "160": {
    "points": 16.569454615309432,
@@ -985,10 +985,10 @@
    "method": "ext:kojimar6275"
   },
   "165": {
-   "points": 13.892729661190222,
-   "memory": 65660,
-   "params": 994,
-   "method": "ext:kojimar6275"
+   "points": 13.944201426461827,
+   "memory": 51177,
+   "params": 12133,
+   "method": "memorizer4(n=265,k=4,b=11,bb=20x24)"
   },
   "166": {
    "points": 15.01710070803971,
@@ -1015,10 +1015,10 @@
    "method": "ext:vyank6322"
   },
   "170": {
-   "points": 14.912109724466093,
-   "memory": 20896,
-   "params": 3154,
-   "method": "memorizer(n=266,k=4,bb=4x6)"
+   "points": 15.330780143281016,
+   "memory": 13370,
+   "params": 2453,
+   "method": "memorizer4(n=266,k=4,b=11,bb=4x6)"
   },
   "171": {
    "points": 18.186555400489105,
@@ -1033,16 +1033,16 @@
    "method": "ext:kojimar6275"
   },
   "173": {
-   "points": 13.54635755719361,
-   "memory": 92028,
-   "params": 2216,
-   "method": "ext:thbdh6332"
+   "points": 13.799636904350184,
+   "memory": 51370,
+   "params": 21787,
+   "method": "memorizer4(n=266,k=4,b=11,bb=30x30)"
   },
   "174": {
-   "points": 14.881401067846927,
-   "memory": 21380,
-   "params": 3420,
-   "method": "memorizer(n=266,k=4,bb=5x6)"
+   "points": 15.407394913086089,
+   "memory": 12598,
+   "params": 2058,
+   "method": "memorizer4(n=266,k=4,b=11,bb=5x6)"
   },
   "175": {
    "points": 14.60554265240923,
@@ -1057,10 +1057,10 @@
    "method": "conv1x59+b"
   },
   "177": {
-   "points": 14.5967679937087,
-   "memory": 26640,
-   "params": 6326,
-   "method": "memorizer(n=265,k=4,bb=8x12)"
+   "points": 14.986851193254353,
+   "memory": 18665,
+   "params": 3653,
+   "method": "memorizer4(n=265,k=4,b=11,bb=8x12)"
   },
   "178": {
    "points": 15.478065735525723,
@@ -1093,22 +1093,22 @@
    "method": "ext:biohack_new"
   },
   "183": {
-   "points": 14.87922601563406,
-   "memory": 24816,
-   "params": 38,
-   "method": "ext:biohack_new"
+   "points": 15.37933965718947,
+   "memory": 13025,
+   "params": 2048,
+   "method": "memorizer4(n=265,k=4,b=11,bb=6x6)"
   },
   "184": {
-   "points": 15.294171017268065,
-   "memory": 14204,
-   "params": 2209,
-   "method": "memorizer(n=169,k=4,bb=3x6)"
+   "points": 15.6819718226069,
+   "memory": 9093,
+   "params": 2044,
+   "method": "memorizer4(n=169,k=4,b=11,bb=3x6)"
   },
   "185": {
-   "points": 14.940748783480975,
-   "memory": 20476,
-   "params": 2895,
-   "method": "memorizer(n=267,k=4,bb=3x6)"
+   "points": 15.330401020314262,
+   "memory": 13223,
+   "params": 2606,
+   "method": "memorizer4(n=267,k=4,b=11,bb=3x6)"
   },
   "186": {
    "points": 19.113895968549844,
@@ -1117,10 +1117,10 @@
    "method": "ext:biohack_new"
   },
   "187": {
-   "points": 13.654168620492959,
-   "memory": 83700,
-   "params": 912,
-   "method": "ext:kojimar6275"
+   "points": 13.799636904350184,
+   "memory": 51370,
+   "params": 21787,
+   "method": "memorizer4(n=266,k=4,b=11,bb=30x30)"
   },
   "188": {
    "points": 16.500970779211436,
@@ -1129,10 +1129,10 @@
    "method": "conv7x7+b"
   },
   "189": {
-   "points": 14.887914167591697,
-   "memory": 24380,
-   "params": 259,
-   "method": "ext:kojimar6275"
+   "points": 15.37907431722108,
+   "memory": 13034,
+   "params": 2043,
+   "method": "memorizer4(n=266,k=4,b=11,bb=6x6)"
   },
   "190": {
    "points": 15.675973863620001,
@@ -1141,10 +1141,10 @@
    "method": "ext:kojimar6275"
   },
   "191": {
-   "points": 13.590104435349316,
-   "memory": 63552,
-   "params": 26658,
-   "method": "memorizer(n=267,k=4,bb=23x24)"
+   "points": 13.92175735355791,
+   "memory": 56907,
+   "params": 7840,
+   "method": "memorizer4(n=267,k=4,b=4,bb=23x24)"
   },
   "192": {
    "points": 18.186555400489105,
@@ -1177,10 +1177,10 @@
    "method": "ext:kojimar6275"
   },
   "197": {
-   "points": 14.351104940242841,
-   "memory": 32576,
-   "params": 9570,
-   "method": "memorizer(n=267,k=4,bb=14x12)"
+   "points": 14.71090996845196,
+   "memory": 24363,
+   "params": 5047,
+   "method": "memorizer4(n=267,k=4,b=11,bb=14x12)"
   },
   "198": {
    "points": 14.203387993621556,
@@ -1201,10 +1201,10 @@
    "method": "ext:galaxy_v1"
   },
   "201": {
-   "points": 14.64067113203064,
-   "memory": 25736,
-   "params": 5814,
-   "method": "memorizer(n=266,k=4,bb=7x12)"
+   "points": 15.07157596217384,
+   "memory": 17298,
+   "params": 3207,
+   "method": "memorizer4(n=266,k=4,b=11,bb=7x12)"
   },
   "202": {
    "points": 14.529835930957876,
@@ -1213,10 +1213,10 @@
    "method": "ext:vyank6322"
   },
   "203": {
-   "points": 14.118411914023403,
-   "memory": 51344,
-   "params": 1844,
-   "method": "ext:biohack_new"
+   "points": 14.249250302000153,
+   "memory": 37955,
+   "params": 8710,
+   "method": "memorizer4(n=267,k=4,b=11,bb=18x18)"
   },
   "204": {
    "points": 14.236792067078111,
@@ -1225,16 +1225,16 @@
    "method": "ext:vyank6322"
   },
   "205": {
-   "points": 14.507337857286904,
-   "memory": 28640,
-   "params": 7410,
-   "method": "memorizer(n=266,k=4,bb=10x12)"
+   "points": 14.848052088165872,
+   "memory": 20890,
+   "params": 4751,
+   "method": "memorizer4(n=266,k=4,b=11,bb=10x12)"
   },
   "206": {
-   "points": 14.427401844732168,
-   "memory": 30576,
-   "params": 8474,
-   "method": "memorizer(n=266,k=4,bb=12x12)"
+   "points": 14.806720103202732,
+   "memory": 22250,
+   "params": 4473,
+   "method": "memorizer4(n=266,k=4,b=11,bb=12x12)"
   },
   "207": {
    "points": 17.463636061595487,
@@ -1243,16 +1243,16 @@
    "method": "ext:kojimar6275"
   },
   "208": {
-   "points": 13.660832861163238,
-   "memory": 59616,
-   "params": 24434,
-   "method": "memorizer(n=266,k=4,bb=21x24)"
+   "points": 13.898613048986322,
+   "memory": 53450,
+   "params": 12813,
+   "method": "memorizer4(n=266,k=4,b=11,bb=21x24)"
   },
   "209": {
-   "points": 13.857413841162561,
-   "memory": 49936,
-   "params": 19114,
-   "method": "memorizer(n=266,k=4,bb=16x24)"
+   "points": 14.246105140705343,
+   "memory": 38890,
+   "params": 7922,
+   "method": "memorizer4(n=266,k=4,b=9,bb=16x21)"
   },
   "210": {
    "points": 21.598802618337846,
@@ -1273,10 +1273,10 @@
    "method": "ext:kojimar6275"
   },
   "213": {
-   "points": 14.643273564550867,
-   "memory": 25672,
-   "params": 5796,
-   "method": "memorizer(n=265,k=4,bb=7x12)"
+   "points": 15.210353263887631,
+   "memory": 15075,
+   "params": 2773,
+   "method": "memorizer4(n=265,k=4,b=9,bb=7x7)"
   },
   "214": {
    "points": 17.759350305744533,
@@ -1291,10 +1291,10 @@
    "method": "conv59x1+b"
   },
   "216": {
-   "points": 13.9723948683874,
-   "memory": 45096,
-   "params": 16454,
-   "method": "memorizer(n=266,k=4,bb=18x18)"
+   "points": 14.307100996933862,
+   "memory": 37714,
+   "params": 6328,
+   "method": "memorizer4(n=266,k=4,b=6,bb=18x18)"
   },
   "217": {
    "points": 15.206104124093967,
@@ -1303,22 +1303,22 @@
    "method": "ext:kojimar6275"
   },
   "218": {
-   "points": 15.289854507541293,
-   "memory": 16438,
-   "params": 46,
-   "method": "ext:vyank6322"
+   "points": 15.416855462155214,
+   "memory": 12342,
+   "params": 2176,
+   "method": "memorizer4(n=266,k=4,b=11,bb=3x6)"
   },
   "219": {
-   "points": 14.32058784044636,
-   "memory": 33416,
-   "params": 10036,
-   "method": "memorizer(n=265,k=4,bb=15x12)"
+   "points": 14.827822081193691,
+   "memory": 22725,
+   "params": 3440,
+   "method": "memorizer4(n=265,k=4,b=5,bb=15x10)"
   },
   "220": {
-   "points": 18.197605236675688,
-   "memory": 0,
-   "params": 900,
-   "method": "ext:kojimar6275"
+   "points": 14.468170490270042,
+   "memory": 31819,
+   "params": 5671,
+   "method": "memorizer4(n=267,k=4,b=8,bb=16x16)"
   },
   "221": {
    "points": 14.069306655018561,
@@ -1327,10 +1327,10 @@
    "method": "ext:biohack_new"
   },
   "222": {
-   "points": 14.048316644709779,
-   "memory": 42192,
-   "params": 14858,
-   "method": "memorizer(n=266,k=4,bb=16x18)"
+   "points": 14.344082721740202,
+   "memory": 34666,
+   "params": 7777,
+   "method": "memorizer4(n=266,k=4,b=11,bb=16x18)"
   },
   "223": {
    "points": 20.500190329669735,
@@ -1339,10 +1339,10 @@
    "method": "ext:wguesdon6304"
   },
   "224": {
-   "points": 14.275455898281896,
-   "memory": 45276,
-   "params": 182,
-   "method": "ext:kojimar6275"
+   "points": 14.344082721740202,
+   "memory": 34666,
+   "params": 7777,
+   "method": "memorizer4(n=266,k=4,b=11,bb=16x18)"
   },
   "225": {
    "points": 16.500970779211436,
@@ -1363,10 +1363,10 @@
    "method": "conv9x1+b"
   },
   "228": {
-   "points": 14.86993479941538,
-   "memory": 25008,
-   "params": 78,
-   "method": "ext:kojimar6275"
+   "points": 14.910572445147206,
+   "memory": 20170,
+   "params": 3917,
+   "method": "memorizer4(n=266,k=4,b=11,bb=10x12)"
   },
   "229": {
    "points": 17.74936448810132,
@@ -1393,16 +1393,16 @@
    "method": "conv1x59+b"
   },
   "233": {
-   "points": 13.767582403733552,
-   "memory": 61136,
-   "params": 14404,
-   "method": "ext:jchan_blend+pruned"
+   "points": 14.063292377562814,
+   "memory": 46130,
+   "params": 10072,
+   "method": "memorizer4(n=266,k=4,b=10,bb=20x21)"
   },
   "234": {
-   "points": 13.697178472836178,
-   "memory": 57680,
-   "params": 23370,
-   "method": "memorizer(n=266,k=4,bb=20x24)"
+   "points": 13.94298592791837,
+   "memory": 51210,
+   "params": 12177,
+   "method": "memorizer4(n=266,k=4,b=11,bb=20x24)"
   },
   "235": {
    "points": 17.885230551633537,
@@ -1423,16 +1423,16 @@
    "method": "ext:kojimar6275"
   },
   "238": {
-   "points": 14.64067113203064,
-   "memory": 25736,
-   "params": 5814,
-   "method": "memorizer(n=266,k=4,bb=7x12)"
+   "points": 15.064577828933526,
+   "memory": 17394,
+   "params": 3255,
+   "method": "memorizer4(n=266,k=4,b=11,bb=7x12)"
   },
   "239": {
-   "points": 14.686723367875652,
-   "memory": 24832,
-   "params": 5298,
-   "method": "memorizer(n=267,k=4,bb=12x6)"
+   "points": 15.164256099550391,
+   "memory": 15931,
+   "params": 2759,
+   "method": "memorizer4(n=267,k=4,b=11,bb=12x6)"
   },
   "240": {
    "points": 14.8892137657115,
@@ -1447,28 +1447,28 @@
    "method": "ext:kojimar6275"
   },
   "242": {
-   "points": 15.090580078810763,
-   "memory": 20074,
-   "params": 45,
-   "method": "ext:kojimar6275"
+   "points": 15.469461963895357,
+   "memory": 11846,
+   "params": 1928,
+   "method": "memorizer4(n=266,k=4,b=11,bb=3x6)"
   },
   "243": {
-   "points": 13.974378963754416,
-   "memory": 45032,
-   "params": 16396,
-   "method": "memorizer(n=265,k=4,bb=18x18)"
+   "points": 14.251997025900382,
+   "memory": 37889,
+   "params": 8648,
+   "method": "memorizer4(n=265,k=4,b=11,bb=18x18)"
   },
   "244": {
-   "points": 14.912109724466093,
-   "memory": 20896,
-   "params": 3154,
-   "method": "memorizer(n=266,k=4,bb=4x6)"
+   "points": 15.3757634944378,
+   "memory": 12906,
+   "params": 2221,
+   "method": "memorizer4(n=266,k=4,b=11,bb=4x6)"
   },
   "245": {
-   "points": 14.724535183516696,
-   "memory": 28916,
-   "params": 96,
-   "method": "ext:kojimar6275"
+   "points": 15.047579436354694,
+   "memory": 18403,
+   "params": 2600,
+   "method": "memorizer4(n=267,k=4,b=5,bb=10x10)"
   },
   "246": {
    "points": 15.497661881504435,
@@ -1501,10 +1501,10 @@
    "method": "ext:biohack_new"
   },
   "251": {
-   "points": 14.427401844732168,
-   "memory": 30576,
-   "params": 8474,
-   "method": "memorizer(n=266,k=4,bb=12x12)"
+   "points": 14.87573168533885,
+   "memory": 22058,
+   "params": 2883,
+   "method": "memorizer4(n=266,k=4,b=4,bb=12x12)"
   },
   "252": {
    "points": 14.453028311923028,
@@ -1513,10 +1513,10 @@
    "method": "ext:kojimar6275"
   },
   "253": {
-   "points": 14.9151079777324,
-   "memory": 20832,
-   "params": 3146,
-   "method": "memorizer(n=265,k=4,bb=4x6)"
+   "points": 15.449195370133067,
+   "memory": 12185,
+   "params": 1871,
+   "method": "memorizer4(n=265,k=4,b=11,bb=4x6)"
   },
   "254": {
    "points": 16.018318360026136,
@@ -1525,10 +1525,10 @@
    "method": "ext:kojimar6275"
   },
   "255": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 13.803718654483596,
+   "memory": 50897,
+   "params": 21962,
+   "method": "memorizer4(n=265,k=4,b=11,bb=30x30)"
   },
   "256": {
    "points": 15.197383057848846,
@@ -1567,10 +1567,10 @@
    "method": "ext:kojimar6275"
   },
   "262": {
-   "points": 16.765169719557946,
-   "memory": 3744,
-   "params": 26,
-   "method": "ext:kojimar6275"
+   "points": 16.98731907029316,
+   "memory": 2877,
+   "params": 142,
+   "method": "memorizer4(n=9,k=4,b=11,bb=3x6)"
   },
   "263": {
    "points": 16.112347309674412,
@@ -1579,10 +1579,10 @@
    "method": "ext:vyank6322"
   },
   "264": {
-   "points": 14.552329420043884,
-   "memory": 27608,
-   "params": 6856,
-   "method": "memorizer(n=265,k=4,bb=9x12)"
+   "points": 14.94951586872953,
+   "memory": 19393,
+   "params": 3774,
+   "method": "memorizer4(n=265,k=4,b=11,bb=9x12)"
   },
   "265": {
    "points": 14.424537832136728,
@@ -1621,10 +1621,10 @@
    "method": "ext:kojimar6275"
   },
   "271": {
-   "points": 14.940748783480975,
-   "memory": 20476,
-   "params": 2895,
-   "method": "memorizer(n=267,k=4,bb=3x6)"
+   "points": 15.499306127016878,
+   "memory": 11583,
+   "params": 1786,
+   "method": "memorizer4(n=267,k=4,b=11,bb=3x6)"
   },
   "272": {
    "points": 18.86877351051686,
@@ -1645,10 +1645,10 @@
    "method": "conv9x9+b"
   },
   "275": {
-   "points": 14.15589990344465,
-   "memory": 51133,
-   "params": 98,
-   "method": "ext:wguesdon6304"
+   "points": 14.48509063946432,
+   "memory": 31402,
+   "params": 5459,
+   "method": "memorizer4(n=266,k=4,b=7,bb=16x16)"
   },
   "276": {
    "points": 22.697414907005953,
@@ -1675,16 +1675,16 @@
    "method": "ext:kojimar6275"
   },
   "280": {
-   "points": 13.894576716563861,
-   "memory": 65626,
-   "params": 905,
-   "method": "ext:vyank6322"
+   "points": 14.161831850478126,
+   "memory": 44043,
+   "params": 6885,
+   "method": "memorizer4(n=267,k=4,b=5,bb=20x20)"
   },
   "281": {
-   "points": 14.17423964391217,
-   "memory": 37836,
-   "params": 12464,
-   "method": "memorizer(n=266,k=4,bb=13x18)"
+   "points": 14.680107399317373,
+   "memory": 25526,
+   "params": 4804,
+   "method": "memorizer4(n=266,k=4,b=10,bb=13x14)"
   },
   "282": {
    "points": 18.197605236675688,
@@ -1705,16 +1705,16 @@
    "method": "ext:kojimar6275"
   },
   "285": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 13.803718654483596,
+   "memory": 50897,
+   "params": 21962,
+   "method": "memorizer4(n=265,k=4,b=11,bb=30x30)"
   },
   "286": {
-   "points": 13.514116906141656,
-   "memory": 55496,
-   "params": 41836,
-   "method": "memorizer(n=265,k=4)"
+   "points": 13.801169031433385,
+   "memory": 51337,
+   "params": 21708,
+   "method": "memorizer4(n=265,k=4,b=11,bb=30x30)"
   },
   "287": {
    "points": 14.975800372301608,
@@ -1795,16 +1795,16 @@
    "method": "ext:biohack_new"
   },
   "300": {
-   "points": 14.909120433856812,
-   "memory": 20960,
-   "params": 3162,
-   "method": "memorizer(n=267,k=4,bb=4x6)"
+   "points": 15.457338853953656,
+   "memory": 12123,
+   "params": 1819,
+   "method": "memorizer4(n=267,k=4,b=11,bb=4x6)"
   },
   "301": {
-   "points": 14.427401844732168,
-   "memory": 30576,
-   "params": 8474,
-   "method": "memorizer(n=266,k=4,bb=12x12)"
+   "points": 14.806720103202732,
+   "memory": 22250,
+   "params": 4473,
+   "method": "memorizer4(n=266,k=4,b=11,bb=12x12)"
   },
   "302": {
    "points": 16.03863393937255,
@@ -1843,10 +1843,10 @@
    "method": "ext:wguesdon6304"
   },
   "308": {
-   "points": 15.010380623834585,
-   "memory": 21698,
-   "params": 101,
-   "method": "ext:kojimar6275"
+   "points": 15.238018409758052,
+   "memory": 14756,
+   "params": 2605,
+   "method": "memorizer4(n=266,k=4,b=10,bb=7x7)"
   },
   "309": {
    "points": 22.697414907005953,
@@ -1855,10 +1855,10 @@
    "method": "ext:kojimar6275"
   },
   "310": {
-   "points": 14.844237369643414,
-   "memory": 25573,
-   "params": 166,
-   "method": "ext:kojimar6275"
+   "points": 14.953408270495421,
+   "memory": 18858,
+   "params": 4219,
+   "method": "memorizer4(n=266,k=4,b=11,bb=8x12)"
   },
   "311": {
    "points": 21.598802618337846,
@@ -1873,10 +1873,10 @@
    "method": "conv1x59+b"
   },
   "313": {
-   "points": 13.83674549281574,
-   "memory": 70325,
-   "params": 167,
-   "method": "ext:wguesdon6304"
+   "points": 14.076077939859786,
+   "memory": 45970,
+   "params": 9518,
+   "method": "memorizer4(n=266,k=4,b=10,bb=20x21)"
   },
   "314": {
    "points": 18.78539190157781,
@@ -1897,10 +1897,10 @@
    "method": "ext:kojimar6275"
   },
   "317": {
-   "points": 18.197605236675688,
-   "memory": 0,
-   "params": 900,
-   "method": "ext:thbdh6332"
+   "points": 15.130431240667498,
+   "memory": 16770,
+   "params": 2563,
+   "method": "memorizer4(n=264,k=4,b=6,bb=9x9)"
   },
   "318": {
    "points": 18.397412107810663,
@@ -1909,10 +1909,10 @@
    "method": "ext:galaxy_v1"
   },
   "319": {
-   "points": 15.138168122732704,
-   "memory": 11585,
-   "params": 7599,
-   "method": "ext:jchan_blend"
+   "points": 15.352954284179596,
+   "memory": 13151,
+   "params": 2325,
+   "method": "memorizer4(n=267,k=4,b=11,bb=5x6)"
   },
   "320": {
    "points": 16.9893084608697,
@@ -1945,10 +1945,10 @@
    "method": "ext:thbdh6285+pruned"
   },
   "325": {
-   "points": 14.85160740436815,
-   "memory": 21864,
-   "params": 3686,
-   "method": "memorizer(n=266,k=4,bb=6x6)"
+   "points": 15.350050775348816,
+   "memory": 13330,
+   "params": 2191,
+   "method": "memorizer4(n=266,k=4,b=11,bb=6x6)"
   },
   "326": {
    "points": 19.924826184766175,
@@ -1963,10 +1963,10 @@
    "method": "ext:kojimar6275"
   },
   "328": {
-   "points": 13.970414701860902,
-   "memory": 45160,
-   "params": 16512,
-   "method": "memorizer(n=267,k=4,bb=18x18)"
+   "points": 14.249250302000153,
+   "memory": 37955,
+   "params": 8710,
+   "method": "memorizer4(n=267,k=4,b=11,bb=18x18)"
   },
   "329": {
    "points": 15.76399188127524,
@@ -1993,10 +1993,10 @@
    "method": "conv1x59+b"
   },
   "333": {
-   "points": 14.89010822015396,
-   "memory": 24440,
-   "params": 145,
-   "method": "ext:vyank6322"
+   "points": 14.912525611350857,
+   "memory": 20137,
+   "params": 3903,
+   "method": "memorizer4(n=265,k=4,b=11,bb=10x12)"
   },
   "334": {
    "points": 18.588181732290103,
@@ -2053,10 +2053,10 @@
    "method": "ext:kojimar6275"
   },
   "343": {
-   "points": 14.779659997712312,
-   "memory": 27208,
-   "params": 248,
-   "method": "ext:wguesdon6304"
+   "points": 15.048389172282144,
+   "memory": 17638,
+   "params": 3348,
+   "method": "memorizer4(n=266,k=4,b=11,bb=5x18)"
   },
   "344": {
    "points": 18.186555400489105,
@@ -2101,10 +2101,10 @@
    "method": "ext:kojimar6275"
   },
   "351": {
-   "points": 14.884348956992826,
-   "memory": 21316,
-   "params": 3411,
-   "method": "memorizer(n=265,k=4,bb=5x6)"
+   "points": 15.382595798551955,
+   "memory": 12837,
+   "params": 2187,
+   "method": "memorizer4(n=265,k=4,b=11,bb=5x6)"
   },
   "352": {
    "points": 18.186555400489105,
@@ -2173,40 +2173,40 @@
    "method": "ext:kojimar6275"
   },
   "363": {
-   "points": 14.509781895608416,
-   "memory": 28576,
-   "params": 7386,
-   "method": "memorizer(n=265,k=4,bb=10x12)"
+   "points": 15.051586884110879,
+   "memory": 18337,
+   "params": 2582,
+   "method": "memorizer4(n=265,k=4,b=5,bb=10x10)"
   },
   "364": {
-   "points": 13.754457371489742,
-   "memory": 75136,
-   "params": 1402,
-   "method": "ext:kojimar6275"
+   "points": 13.9871415738099,
+   "memory": 51050,
+   "params": 9599,
+   "method": "memorizer4(n=266,k=4,b=7,bb=20x24)"
   },
   "365": {
-   "points": 14.85160740436815,
-   "memory": 21864,
-   "params": 3686,
-   "method": "memorizer(n=266,k=4,bb=6x6)"
+   "points": 15.37668942042988,
+   "memory": 13058,
+   "params": 2055,
+   "method": "memorizer4(n=266,k=4,b=11,bb=6x6)"
   },
   "366": {
-   "points": 14.111498213712835,
-   "memory": 40036,
-   "params": 13521,
-   "method": "memorizer(n=255,k=4,bb=15x18)"
+   "points": 14.370172299548162,
+   "memory": 33435,
+   "params": 7915,
+   "method": "memorizer4(n=255,k=4,b=11,bb=15x18)"
   },
   "367": {
-   "points": 14.083966527900577,
-   "memory": 48646,
-   "params": 6406,
-   "method": "ext:jchan_blend"
+   "points": 14.162951704424763,
+   "memory": 44010,
+   "params": 6861,
+   "method": "memorizer4(n=266,k=4,b=5,bb=20x20)"
   },
   "368": {
-   "points": 14.68998124117371,
-   "memory": 29948,
-   "params": 84,
-   "method": "ext:wguesdon6304"
+   "points": 14.912525611350857,
+   "memory": 20137,
+   "params": 3903,
+   "method": "memorizer4(n=265,k=4,b=11,bb=10x12)"
   },
   "369": {
    "points": 16.10040564007415,
@@ -2215,10 +2215,10 @@
    "method": "ext:galaxy_v1"
   },
   "370": {
-   "points": 13.886671892110053,
-   "memory": 64602,
-   "params": 2457,
-   "method": "ext:thbdh6332"
+   "points": 13.94298592791837,
+   "memory": 51210,
+   "params": 12177,
+   "method": "memorizer4(n=266,k=4,b=11,bb=20x24)"
   },
   "371": {
    "points": 15.50983333153762,
@@ -2257,22 +2257,22 @@
    "method": "ext:kojimar6275"
   },
   "377": {
-   "points": 14.549837170804183,
-   "memory": 27672,
-   "params": 6878,
-   "method": "memorizer(n=266,k=4,bb=9x12)"
+   "points": 14.899343329921898,
+   "memory": 19874,
+   "params": 4485,
+   "method": "memorizer4(n=266,k=4,b=11,bb=9x12)"
   },
   "378": {
-   "points": 14.428477967719003,
-   "memory": 38932,
-   "params": 76,
-   "method": "ext:kojimar6275"
+   "points": 14.804888155779468,
+   "memory": 22283,
+   "params": 4489,
+   "method": "memorizer4(n=267,k=4,b=11,bb=12x12)"
   },
   "379": {
-   "points": 13.819767920510943,
-   "memory": 69969,
-   "params": 1730,
-   "method": "ext:kojimar6275"
+   "points": 14.162951704424763,
+   "memory": 44010,
+   "params": 6861,
+   "method": "memorizer4(n=266,k=4,b=5,bb=20x20)"
   },
   "380": {
    "points": 18.409698951803314,
@@ -2287,10 +2287,10 @@
    "method": "ext:ghiotto_conv4"
   },
   "382": {
-   "points": 13.7085195297084,
-   "memory": 80032,
-   "params": 104,
-   "method": "ext:thbdh6285"
+   "points": 14.162951704424763,
+   "memory": 44010,
+   "params": 6861,
+   "method": "memorizer4(n=266,k=4,b=5,bb=20x20)"
   },
   "383": {
    "points": 14.371236953152405,
@@ -2299,10 +2299,10 @@
    "method": "ext:thbdh6332"
   },
   "384": {
-   "points": 14.392079194886959,
-   "memory": 33096,
-   "params": 7358,
-   "method": "memorizer(n=266,k=6,bb=8x12)"
+   "points": 15.148490186556584,
+   "memory": 16674,
+   "params": 2313,
+   "method": "memorizer4(n=266,k=4,b=5,bb=8x10)"
   },
   "385": {
    "points": 21.598802618337846,
@@ -2347,10 +2347,10 @@
    "method": "ext:kojimar6275"
   },
   "392": {
-   "points": 14.664924855210137,
-   "memory": 28696,
-   "params": 2098,
-   "method": "ext:biohack_new"
+   "points": 14.91644342572321,
+   "memory": 20071,
+   "params": 3875,
+   "method": "memorizer4(n=263,k=4,b=11,bb=10x12)"
   },
   "393": {
    "points": 18.873130815885816,
@@ -2371,10 +2371,10 @@
    "method": "ext:wguesdon6304"
   },
   "396": {
-   "points": 14.594223154720167,
-   "memory": 26704,
-   "params": 6346,
-   "method": "memorizer(n=266,k=4,bb=8x12)"
+   "points": 14.99021736864627,
+   "memory": 18618,
+   "params": 3625,
+   "method": "memorizer4(n=266,k=4,b=11,bb=8x12)"
   },
   "397": {
    "points": 15.084929786220805,
@@ -2383,10 +2383,10 @@
    "method": "ext:biohack_new"
   },
   "398": {
-   "points": 13.658254391724892,
-   "memory": 83505,
-   "params": 762,
-   "method": "ext:biohack_new"
+   "points": 13.828424649175338,
+   "memory": 49986,
+   "params": 21095,
+   "method": "memorizer4(n=266,k=4,b=11,bb=30x30)"
   },
   "399": {
    "points": 17.92334618455605,
@@ -2395,10 +2395,10 @@
    "method": "ext:wguesdon6304"
   },
   "400": {
-   "points": 14.881401067846927,
-   "memory": 21380,
-   "params": 3420,
-   "method": "memorizer(n=266,k=4,bb=5x6)"
+   "points": 15.318157122654346,
+   "memory": 13510,
+   "params": 2514,
+   "method": "memorizer4(n=266,k=4,b=11,bb=5x6)"
   }
  }
 }

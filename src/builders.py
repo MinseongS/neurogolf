@@ -122,6 +122,166 @@ def memorizer_network(Z, R, O, k_proj, G=None, rmax=30, w6=5):
     return _model(nodes, inits)
 
 
+# max cells per 2^24-bounded half-word, per code base (base = #colors used + 1)
+CELLS_PER_HALF = {2: 24, 3: 15, 4: 12, 5: 10, 6: 9, 7: 8, 8: 8, 9: 7, 10: 7, 11: 6}
+
+
+def memorizer_v4(Z, R, O64, k_proj, codes, G=None, rin=30, w4=8,
+                 rmax=30, wB=5, base=11):
+    """v4 lookup: fp64 double-packed storage + int32 match + bbox/base trims.
+
+    Differences vs memorizer_network (v3):
+    - O64 is float64 [M, H]: element i packs TWO base^m words (m =
+      CELLS_PER_HALF[base] output cells each), P[i] + P[i+H] * 2^26, where
+      P = packed vector (length rmax*wB, padded to 2H). float64 keeps all
+      values exact below 2^52, the 2^26 split is exact, and each half is
+      < 2^24 so the cast back to float32 is exact too.
+    - base = (#distinct output colors)+1 instead of always 11: fewer colors
+      -> more cells per word -> proportionally smaller O table. `codes` maps
+      color->code (1..base-1); unused channels decode against -1 (never hit).
+    - match path: Cast projected input codes to int32, Equal vs stored Z
+      (int32), ReduceSum, Greater -> ~2x less match memory than Sub/Abs/Clip.
+    - input codes restricted to the input bounding box (rin rows, w4 packed
+      cols) -> R is [rin*w4, k] instead of [240, k].
+    """
+    nodes, inits = [], []
+    D = rin * w4
+    L = rmax * wB
+    H = O64.shape[1]
+    m = CELLS_PER_HALF[base]
+
+    def init(name, arr, dtype=None):
+        a = np.ascontiguousarray(arr, dtype=dtype) if dtype else np.ascontiguousarray(arr)
+        inits.append(onnx.numpy_helper.from_array(a, name))
+        return name
+
+    def n(op, inputs, out, **attrs):
+        nodes.append(onnx.helper.make_node(op, inputs, [out], **attrs))
+        return out
+
+    # --- encode input to packed base-11 codes (bbox-trimmed) ---
+    w4k = np.zeros((1, 10, 1, 4), np.float32)
+    for c in range(10):
+        for j in range(4):
+            w4k[0, c, 0, j] = (c + 1) * 11 ** (3 - j)
+    init("w4", w4k)
+    n("Conv", ["input", "w4"], "p4", kernel_shape=[1, 4], strides=[1, 4],
+      pads=[0, 0, 0, 2])                         # [1,1,30,8]
+    src = "p4"
+    if (rin, w4) != (30, 8):
+        init("sl_st", np.array([0, 0], np.int64))
+        init("sl_en", np.array([rin, w4], np.int64))
+        init("sl_ax", np.array([2, 3], np.int64))
+        src = n("Slice", ["p4", "sl_st", "sl_en", "sl_ax"], "p4s")
+    init("shape_flat", np.array([1, D], np.int64))
+    n("Reshape", [src, "shape_flat"], "x")       # [1,D]
+
+    # --- match against stored inputs (int32 Equal path) ---
+    init("R", R, np.float32)
+    n("MatMul", ["x", "R"], "z")                 # [1,k]
+    n("Cast", ["z"], "zi", to=onnx.TensorProto.INT32)
+    init("Z", Z, np.int32)
+    n("Equal", ["Z", "zi"], "em")                # bool [N,k]
+    n("Cast", ["em"], "emf", to=DATA_TYPE)
+    n("ReduceSum", ["emf"], "ms", axes=[1], keepdims=1)   # [N,1]
+    init("kth", np.array(k_proj - 0.5, np.float32))
+    n("Greater", ["ms", "kth"], "gb")            # bool [N,1]
+    sel_name = "gb"
+    if G is not None:
+        n("Cast", ["gb"], "self", to=DATA_TYPE)
+        init("G", G.T, np.float32)               # [U,N]
+        sel_name = n("MatMul", ["G", "self"], "selg")  # [U,1]
+    n("Cast", [sel_name], "seld", to=onnx.TensorProto.DOUBLE)  # [M,1]
+
+    # --- select packed row (column vector) and split the fp64 double-pack ---
+    init("O", O64.T.copy(), np.float64)          # [H,M]
+    n("MatMul", ["O", "seld"], "yp")             # [H,1] fp64
+    init("c26", np.array(float(1 << 26), np.float64))
+    n("Div", ["yp", "c26"], "qd")
+    n("Floor", ["qd"], "bd")
+    n("Mul", ["bd", "c26"], "bm")
+    n("Sub", ["yp", "bm"], "ad")
+    n("Cast", ["ad"], "a32", to=DATA_TYPE)       # [H,1] each < 2^24
+    n("Cast", ["bd"], "b32", to=DATA_TYPE)
+    nodes.append(onnx.helper.make_node("Concat", ["a32", "b32"], ["pcat"], axis=0))
+    src = "pcat"
+    if 2 * H != L:
+        init("ps_st", np.array([0], np.int64))
+        init("ps_en", np.array([L], np.int64))
+        init("ps_ax", np.array([0], np.int64))
+        src = n("Slice", ["pcat", "ps_st", "ps_en", "ps_ax"], "pflat")
+    init("shape_grid", np.array([1, 1, rmax, wB], np.int64))
+    n("Reshape", [src, "shape_grid"], "y")       # [1,1,rmax,wB]
+
+    # --- unpack base^(m-1) digits (v3-style chain) ---
+    rem = "y"
+    digits = []
+    for j in range(m - 1):
+        p = base ** (m - 1 - j)
+        init(f"pw{j}", np.array(float(p), np.float32))
+        n("Div", [rem, f"pw{j}"], f"q{j}_raw")
+        n("Floor", [f"q{j}_raw"], f"q{j}")
+        digits.append(f"q{j}")
+        n("Mul", [f"q{j}", f"pw{j}"], f"qm{j}")
+        rem = n("Sub", [rem, f"qm{j}"], f"r{j}")
+    digits.append(rem)
+    for d in digits:
+        n("Unsqueeze", [d], f"{d}_u", axes=[4])
+    nodes.append(onnx.helper.make_node(
+        "Concat", [f"{d}_u" for d in digits], ["dig"], axis=4))  # [1,1,rmax,wB,m]
+    cols = wB * m
+    init("shape_code", np.array([1, 1, rmax, cols], np.int64))
+    n("Reshape", ["dig", "shape_code"], "code")
+    src = "code"
+    if cols > 30:
+        init("cs_st", np.array([0], np.int64))
+        init("cs_en", np.array([30], np.int64))
+        init("cs_ax", np.array([3], np.int64))
+        src = n("Slice", ["code", "cs_st", "cs_en", "cs_ax"], "code_c")
+        cols = 30
+
+    # --- decode to one-hot (unused channels compare against -1: never hit) ---
+    n("Cast", [src], "code_i", to=onnx.TensorProto.INT32)
+    chvec = np.full((1, 10, 1, 1), -1, np.int32)
+    for color, code in codes.items():
+        chvec[0, color, 0, 0] = code
+    init("chvec", chvec)
+    n("Equal", ["code_i", "chvec"], "eq")        # bool [1,10,rmax,cols]
+    if rmax == 30 and cols == 30:
+        n("Cast", ["eq"], "output", to=DATA_TYPE)
+    else:
+        n("Cast", ["eq"], "onehot_bbox", to=DATA_TYPE)
+        n("Pad", ["onehot_bbox"], "output", mode="constant", value=0.0,
+          pads=[0, 0, 0, 0, 0, 0, 30 - rmax, 30 - cols])
+    return _model(nodes, inits)
+
+
+def pack4_codes_bbox(grid_canvas, rin=30, w4=8):
+    """numpy mirror of the v4 in-graph encoder (bbox-trimmed pack4)."""
+    padded = np.zeros((30, 32), np.int64)
+    padded[:, :30] = grid_canvas
+    w = 11 ** np.arange(3, -1, -1)
+    full = (padded.reshape(30, 8, 4) * w).sum(axis=2)  # [30,8]
+    return full[:rin, :w4].reshape(-1)                 # [rin*w4]
+
+
+def pack_base_codes(code_canvas, rmax, wB, base):
+    """Pack the top-left rmax x wB*m region into base^m words [rmax*wB]."""
+    m = CELLS_PER_HALF[base]
+    region = np.zeros((rmax, wB * m), np.int64)
+    cols = min(30, wB * m)
+    region[:, :cols] = code_canvas[:rmax, :cols]
+    w = base ** np.arange(m - 1, -1, -1, dtype=np.int64)
+    return (region.reshape(rmax, wB, m) * w).sum(axis=2).reshape(-1)
+
+
+def pack_double(p, H):
+    """Pack a word vector [L] (each < 2^24) into fp64 pairs [H], H=ceil(L/2)."""
+    q = np.zeros(2 * H, np.float64)
+    q[:p.shape[0]] = p
+    return q[:H] + q[H:] * float(1 << 26)
+
+
 def pack4_codes(grid_canvas):
     """numpy mirror of the in-graph pack4 encoder. grid_canvas: int [30,30] codes 0..10."""
     padded = np.zeros((30, 32), np.int64)

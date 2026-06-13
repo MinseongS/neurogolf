@@ -35,6 +35,7 @@ def solve_custom(task, task_num=None):
 SOLVER_CHAIN = {
     "conv": solvers.solve_conv,
     "memorizer": solvers.solve_memorizer,
+    "memorizer4": solvers.solve_memorizer_v4,
     "custom": solve_custom,
 }
 
