@@ -385,10 +385,10 @@
    "method": "custom:task064"
   },
   "65": {
-   "points": 15.259149030941428,
-   "memory": 13764,
-   "params": 3234,
-   "method": "memorizer4(n=266,k=4,b=11,bb=7x12)"
+   "points": 15.489999578812629,
+   "memory": 13418,
+   "params": 76,
+   "method": "custom:task065"
   },
   "66": {
    "points": 15.028480037072045,
@@ -1801,10 +1801,10 @@
    "method": "memorizer4(n=267,k=4,b=11,bb=4x6)"
   },
   "301": {
-   "points": 14.972526467682881,
-   "memory": 18172,
-   "params": 4468,
-   "method": "memorizer4(n=266,k=4,b=11,bb=12x12)"
+   "points": 15.043493143488236,
+   "memory": 21022,
+   "params": 67,
+   "method": "custom:task301"
   },
   "302": {
    "points": 16.03863393937255,
@@ -2299,10 +2299,10 @@
    "method": "ext:thbdh6332"
   },
   "384": {
-   "points": 15.356838789905797,
-   "memory": 13108,
-   "params": 2308,
-   "method": "memorizer4(n=266,k=4,b=5,bb=8x10)"
+   "points": 15.657141248323672,
+   "memory": 11236,
+   "params": 181,
+   "method": "custom:task384"
   },
   "385": {
    "points": 21.598802618337846,

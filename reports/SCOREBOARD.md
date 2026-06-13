@@ -1,13 +1,13 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-13 13:56_
+_Updated: 2026-06-13 15:54_
 
-**Total: 6500.50 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 6501.10 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
 | ext:kojimar6275 | 135 | 2317.38 |
-| memorizer4 | 132 | 1964.30 |
+| memorizer4 | 129 | 1918.71 |
 | ext:biohack_new | 29 | 464.98 |
 | ext:wguesdon6304 | 23 | 406.33 |
 | conv3x3+b | 13 | 236.43 |
@@ -44,6 +44,9 @@ _Updated: 2026-06-13 13:56_
 | custom:task137 | 1 | 16.04 |
 | custom:task246 | 1 | 16.02 |
 | custom:task335 | 1 | 16.02 |
+| custom:task384 | 1 | 15.66 |
+| custom:task065 | 1 | 15.49 |
+| custom:task301 | 1 | 15.04 |
 | custom:task064 | 1 | 14.77 |
 | ext:thbdh6285+pruned | 1 | 14.53 |
 
@@ -115,7 +118,7 @@ _Updated: 2026-06-13 13:56_
 | 062 | memorizer4(n=267,k=4,b=11,bb=10x12) | 16306 | 3926 | 15.08 |
 | 063 | memorizer4(n=266,k=4,b=9,bb=14x14) | 22244 | 5081 | 14.78 |
 | 064 | custom:task064 | 27744 | 66 | 14.77 |
-| 065 | memorizer4(n=266,k=4,b=11,bb=7x12) | 13764 | 3234 | 15.26 |
+| 065 | custom:task065 | 13418 | 76 | 15.49 |
 | 066 | ext:jchan_blend | 16962 | 4446 | 15.03 |
 | 067 | ext:kojimar6275 | 282 | 33 | 19.25 |
 | 068 | ext:kojimar6275 | 12562 | 27 | 15.56 |
@@ -351,7 +354,7 @@ _Updated: 2026-06-13 13:56_
 | 298 | ext:biohack_new | 14378 | 534 | 15.39 |
 | 299 | ext:biohack_new | 1644 | 62 | 17.56 |
 | 300 | memorizer4(n=267,k=4,b=11,bb=4x6) | 8994 | 1814 | 15.71 |
-| 301 | memorizer4(n=266,k=4,b=11,bb=12x12) | 18172 | 4468 | 14.97 |
+| 301 | custom:task301 | 21022 | 67 | 15.04 |
 | 302 | ext:kojimar6275 | 7776 | 20 | 16.04 |
 | 303 | ext:thbdh6285 | 14700 | 15 | 15.40 |
 | 304 | custom:task304 | 2122 | 92 | 17.30 |
@@ -434,7 +437,7 @@ _Updated: 2026-06-13 13:56_
 | 381 | ext:ghiotto_conv4 | 3350 | 146 | 16.84 |
 | 382 | memorizer4(n=266,k=4,b=5,bb=20x20) | 37884 | 6856 | 14.29 |
 | 383 | ext:thbdh6332 | 40254 | 1052 | 14.37 |
-| 384 | memorizer4(n=266,k=4,b=5,bb=8x10) | 13108 | 2308 | 15.36 |
+| 384 | custom:task384 | 11236 | 181 | 15.66 |
 | 385 | ext:kojimar6275 | 0 | 30 | 21.60 |
 | 386 | ext:wguesdon6304 | 828 | 35 | 18.24 |
 | 387 | ext:thbdh6285 | 34358 | 79 | 14.55 |
