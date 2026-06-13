@@ -27,6 +27,25 @@ it beats that (the pipeline's keep-best enforces this automatically).
   36,000, a bool one 9,000, so avoid canvas-sized intermediates
 - ORT runs with ALL optimizations disabled — graphs are scored as written
 
+## GENERALIZATION discipline (non-negotiable — learned the hard way)
+
+Kaggle scores against **freshly generated arc-gen instances**, NOT the stored
+examples we have locally. `harness.evaluate` only checks stored examples, so a
+net that memorizes them (or a conv that overfits the patterns it saw) passes
+locally but scores **0 on Kaggle**. (A submission of local 6505 scored 4374 on
+the real LB because ~125 exact-match memorizer nets contributed ~0.)
+
+Your custom net MUST implement the TRUE rule and pass fresh instances. Verify:
+```python
+from src.genverify import fresh_pass
+ok, run = fresh_pass(N, n=50)   # generates 50 NEW instances, runs your net
+assert ok == run, f"only {ok}/{run} fresh instances pass — does NOT generalize"
+```
+A net is only worth adopting if BOTH `evaluate(...)['ok']` (stored) AND
+`fresh_pass` (ok==run) hold. If you can't make it pass fresh instances, the rule
+isn't fully captured — keep working or report infeasible. Never ship a net that
+only fits the stored examples.
+
 ## Exactness discipline (non-negotiable)
 
 The checker is `result > 0.0` against a 0/1 one-hot target, evaluated in
