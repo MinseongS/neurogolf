@@ -74,10 +74,11 @@ def main():
     fails.sort(key=lambda x:-x[3])
     bym={}
     for num,ok,run,pts,meth in fails:
-        base=meth.split("(")[0].split(":")[0]
+        base=(meth or "?").split("(")[0].split(":")[0]
         bym.setdefault(base,[0,0.0]); bym[base][0]+=1; bym[base][1]+=pts
     for b,(n,p) in sorted(bym.items(),key=lambda x:-x[1][1]):
         print(f"   {b:12s} {n:3d} nets, {p:.1f} local pts lost")
+    print("non-generalizing tasks:", " ".join(f"{num}({ok}/{run})" for num,ok,run,pts,meth in fails))
     json.dump({str(n):{"ok":o,"run":r} for n,(o,r) in results.items()}, open("reports/genverify.json","w"))
 
 if __name__=="__main__":

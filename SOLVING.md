@@ -46,6 +46,12 @@ A net is only worth adopting if BOTH `evaluate(...)['ok']` (stored) AND
 isn't fully captured — keep working or report infeasible. Never ship a net that
 only fits the stored examples.
 
+**ADOPT with `python -m src.adopt N`, NOT `pipeline --methods custom`.** The raw
+pipeline keep-best compares STORED scores and will pick a non-generalizing net
+that merely has a higher stored number. `src.adopt` gates on fresh-instance
+generalization and only adopts when your custom beats the current net's REAL
+(generalizing) score. It prints ADOPTED / REJECT with the reason.
+
 ## Exactness discipline (non-negotiable)
 
 The checker is `result > 0.0` against a 0/1 one-hot target, evaluated in
