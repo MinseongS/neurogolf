@@ -7,10 +7,10 @@
    "method": "ext:biohack_new"
   },
   "2": {
-   "points": 14.289322550863266,
-   "memory": 37928,
-   "params": 6904,
-   "method": "memorizer4(n=268,k=4,b=5,bb=20x20)"
+   "points": 13.514517676859928,
+   "memory": 97200,
+   "params": 93,
+   "method": "gen:vyank6322"
   },
   "3": {
    "points": 17.918291413894426,
@@ -19,16 +19,16 @@
    "method": "ext:kojimar6275"
   },
   "4": {
-   "points": 14.477065629833884,
-   "memory": 29414,
-   "params": 7744,
-   "method": "memorizer4(n=265,k=4,b=11,bb=16x18)"
+   "points": 14.084547965521434,
+   "memory": 54000,
+   "params": 1020,
+   "method": "gen:thbdh6332"
   },
   "5": {
-   "points": 14.009635415014182,
-   "memory": 46492,
-   "params": 12808,
-   "method": "memorizer4(n=266,k=4,b=11,bb=21x24)"
+   "points": 13.509903135969793,
+   "memory": 94770,
+   "params": 2973,
+   "method": "gen:thbdh6332"
   },
   "6": {
    "points": 18.527653705499098,
@@ -61,16 +61,16 @@
    "method": "ext:kojimar6275"
   },
   "11": {
-   "points": 15.026287002574374,
-   "memory": 17250,
-   "params": 4205,
-   "method": "memorizer4(n=267,k=4,b=11,bb=11x12)"
+   "points": 14.120312643835824,
+   "memory": 50756,
+   "params": 2331,
+   "method": "gen:biohack_new"
   },
   "12": {
-   "points": 18.2906956597417,
-   "memory": 0,
-   "params": 820,
-   "method": "dwconv9x9+b"
+   "points": 15.556090611226026,
+   "memory": 12528,
+   "params": 103,
+   "method": "gen:thbdh6332"
   },
   "13": {
    "points": 14.985328918503257,
@@ -102,23 +102,18 @@
    "params": 182,
    "method": "ext:galaxy_v1"
   },
-  "18": {
-   "points": 13.893059778384824,
-   "memory": 52156,
-   "params": 14476,
-   "method": "memorizer4(n=266,k=4,b=11,bb=24x24)"
-  },
+  "18": null,
   "19": {
-   "points": 14.9836302904072,
-   "memory": 18002,
-   "params": 4388,
-   "method": "memorizer4(n=267,k=4,b=11,bb=12x12)"
+   "points": 13.699649134994747,
+   "memory": 80780,
+   "params": 70,
+   "method": "gen:biohack_new"
   },
   "20": {
-   "points": 15.086760156021194,
-   "memory": 16284,
-   "params": 3912,
-   "method": "memorizer4(n=266,k=4,b=11,bb=10x12)"
+   "points": 14.138235598922657,
+   "memory": 52053,
+   "params": 91,
+   "method": "gen:vyank6322"
   },
   "21": {
    "points": 15.973702665716113,
@@ -127,16 +122,16 @@
    "method": "ext:wguesdon6304"
   },
   "22": {
-   "points": 15.757482896328597,
-   "memory": 8528,
-   "params": 1799,
-   "method": "memorizer4(n=266,k=4,b=11,bb=3x6)"
+   "points": 15.169674713092856,
+   "memory": 18291,
+   "params": 298,
+   "method": "gen:thbdh6332"
   },
   "23": {
-   "points": 15.210857649248732,
-   "memory": 15260,
-   "params": 2579,
-   "method": "memorizer4(n=266,k=4,b=4,bb=9x12)"
+   "points": 13.863194455943471,
+   "memory": 68607,
+   "params": 45,
+   "method": "gen:galaxy"
   },
   "24": {
    "points": 15.88617052840466,
@@ -145,10 +140,10 @@
    "method": "ext:kojimar6275"
   },
   "25": {
-   "points": 13.951652907630443,
-   "memory": 40804,
-   "params": 22036,
-   "method": "memorizer4(n=266,k=4,b=11,bb=30x30)"
+   "points": 13.735241065999542,
+   "memory": 77960,
+   "params": 63,
+   "method": "gen:thbdh6332"
   },
   "26": {
    "points": 18.415208607614282,
@@ -181,10 +176,10 @@
    "method": "ext:vyank6322"
   },
   "31": {
-   "points": 15.27623737841056,
-   "memory": 13572,
-   "params": 3138,
-   "method": "memorizer4(n=266,k=4,b=11,bb=7x12)"
+   "points": 15.168223295017873,
+   "memory": 18558,
+   "params": 58,
+   "method": "gen:vyank6322"
   },
   "32": {
    "points": 16.86699978141639,
@@ -193,16 +188,16 @@
    "method": "ext:kojimar6275"
   },
   "33": {
-   "points": 14.414552612544503,
-   "memory": 31194,
-   "params": 8361,
-   "method": "memorizer4(n=265,k=4,b=11,bb=17x18)"
+   "points": 14.081988539178049,
+   "memory": 55112,
+   "params": 49,
+   "method": "gen:thbdh6332"
   },
   "34": {
-   "points": 15.147332169793847,
-   "memory": 15362,
-   "params": 3647,
-   "method": "memorizer4(n=267,k=4,b=11,bb=9x12)"
+   "points": 13.989551770433591,
+   "memory": 60408,
+   "params": 95,
+   "method": "gen:thbdh6332"
   },
   "35": {
    "points": 15.36028269986934,
@@ -211,16 +206,16 @@
    "method": "ext:kojimar6275"
   },
   "36": {
-   "points": 15.52652642849345,
-   "memory": 10130,
-   "params": 2880,
-   "method": "memorizer4(n=265,k=4,b=11,bb=5x6)"
+   "points": 13.71093084029274,
+   "memory": 79832,
+   "params": 111,
+   "method": "gen:vyank6322"
   },
   "37": {
-   "points": 15.086760156021194,
-   "memory": 16284,
-   "params": 3912,
-   "method": "memorizer4(n=266,k=4,b=11,bb=10x12)"
+   "points": 14.115820703906138,
+   "memory": 45000,
+   "params": 8326,
+   "method": "gen:biohack_new"
   },
   "38": {
    "points": 17.315675932318847,
@@ -259,10 +254,10 @@
    "method": "ext:kojimar6275"
   },
   "44": {
-   "points": 15.086760156021194,
-   "memory": 16284,
-   "params": 3912,
-   "method": "memorizer4(n=266,k=4,b=11,bb=10x12)"
+   "points": 14.438681612031495,
+   "memory": 38424,
+   "params": 188,
+   "method": "gen:vyank6322"
   },
   "45": {
    "points": 16.0873920363291,
@@ -271,10 +266,10 @@
    "method": "ext:kojimar6275"
   },
   "46": {
-   "points": 15.473098596021659,
-   "memory": 11190,
-   "params": 2534,
-   "method": "memorizer4(n=267,k=4,b=11,bb=3x18)"
+   "points": 14.642066717134085,
+   "memory": 30640,
+   "params": 866,
+   "method": "gen:biohack_new"
   },
   "47": {
    "points": 16.985664262700574,
@@ -319,10 +314,10 @@
    "method": "ext:kojimar6275"
   },
   "54": {
-   "points": 13.951652907630443,
-   "memory": 40804,
-   "params": 22036,
-   "method": "memorizer4(n=266,k=4,b=11,bb=30x30)"
+   "points": 13.50268575854399,
+   "memory": 95932,
+   "params": 2519,
+   "method": "gen:thbdh6332"
   },
   "55": {
    "points": 14.825531566735503,
@@ -337,10 +332,10 @@
    "method": "ext:kojimar6275"
   },
   "57": {
-   "points": 15.780204469253063,
-   "memory": 8370,
-   "params": 1725,
-   "method": "memorizer4(n=265,k=4,b=11,bb=3x6)"
+   "points": 14.71452069554135,
+   "memory": 29284,
+   "params": 20,
+   "method": "gen:thbdh6332"
   },
   "58": {
    "points": 15.314792843112095,
@@ -367,16 +362,16 @@
    "method": "ext:kojimar6275"
   },
   "62": {
-   "points": 15.084979211650198,
-   "memory": 16306,
-   "params": 3926,
-   "method": "memorizer4(n=267,k=4,b=11,bb=10x12)"
+   "points": 14.830462675139206,
+   "memory": 25144,
+   "params": 952,
+   "method": "gen:thbdh6332"
   },
   "63": {
-   "points": 14.784442686955261,
-   "memory": 22244,
-   "params": 5081,
-   "method": "memorizer4(n=266,k=4,b=9,bb=14x14)"
+   "points": 14.666940264012474,
+   "memory": 30700,
+   "params": 32,
+   "method": "gen:wguesdon6315"
   },
   "64": {
    "points": 14.76684905277199,
@@ -391,10 +386,10 @@
    "method": "custom:task065"
   },
   "66": {
-   "points": 15.028480037072045,
-   "memory": 16962,
-   "params": 4446,
-   "method": "ext:jchan_blend"
+   "points": 13.506236967294528,
+   "memory": 97964,
+   "params": 138,
+   "method": "gen:biohack_new"
   },
   "67": {
    "points": 19.247427361174367,
@@ -409,22 +404,22 @@
    "method": "ext:kojimar6275"
   },
   "69": {
-   "points": 15.090331588388791,
-   "memory": 16240,
-   "params": 3884,
-   "method": "memorizer4(n=264,k=4,b=11,bb=10x12)"
+   "points": 13.840099007198502,
+   "memory": 68858,
+   "params": 1398,
+   "method": "gen:vyank6322"
   },
   "70": {
-   "points": 14.489222764414064,
-   "memory": 30712,
-   "params": 5997,
-   "method": "memorizer4(n=266,k=4,b=6,bb=17x18)"
+   "points": 13.90050125280863,
+   "memory": 66060,
+   "params": 78,
+   "method": "gen:thbdh6332"
   },
   "71": {
-   "points": 14.477065629833884,
-   "memory": 29414,
-   "params": 7744,
-   "method": "memorizer4(n=265,k=4,b=11,bb=16x18)"
+   "points": 13.790235794330012,
+   "memory": 72704,
+   "params": 1144,
+   "method": "gen:thbdh6332"
   },
   "72": {
    "points": 17.8229812340901,
@@ -451,16 +446,16 @@
    "method": "ext:wguesdon6304"
   },
   "76": {
-   "points": 14.660582798551888,
-   "memory": 25564,
-   "params": 5364,
-   "method": "memorizer4(n=266,k=4,b=7,bb=15x16)"
+   "points": 13.710555643309924,
+   "memory": 77858,
+   "params": 2115,
+   "method": "gen:thbdh6332"
   },
   "77": {
-   "points": 14.05172296549327,
-   "memory": 44604,
-   "params": 12252,
-   "method": "memorizer4(n=266,k=4,b=11,bb=20x24)"
+   "points": 13.477728347030192,
+   "memory": 99840,
+   "params": 1099,
+   "method": "gen:thbdh6332"
   },
   "78": {
    "points": 16.315598889599855,
@@ -469,10 +464,10 @@
    "method": "conv59x1+b"
   },
   "79": {
-   "points": 15.731107741074203,
-   "memory": 8712,
-   "params": 1891,
-   "method": "memorizer4(n=266,k=4,b=11,bb=3x6)"
+   "points": 15.029648507210364,
+   "memory": 21138,
+   "params": 245,
+   "method": "gen:thbdh6332"
   },
   "80": {
    "points": 14.358033456905844,
@@ -511,10 +506,10 @@
    "method": "custom:task085"
   },
   "86": {
-   "points": 14.972526467682881,
-   "memory": 18172,
-   "params": 4468,
-   "method": "memorizer4(n=266,k=4,b=11,bb=12x12)"
+   "points": 14.88523906872015,
+   "memory": 24480,
+   "params": 225,
+   "method": "gen:biohack_new"
   },
   "87": {
    "points": 19.09191706183107,
@@ -523,28 +518,28 @@
    "method": "ext:kojimar6275"
   },
   "88": {
-   "points": 15.019551406327743,
-   "memory": 17218,
-   "params": 4382,
-   "method": "memorizer4(n=267,k=4,b=11,bb=10x12)"
+   "points": 13.846352864838618,
+   "memory": 69698,
+   "params": 120,
+   "method": "gen:biohack_new"
   },
   "89": {
-   "points": 14.623606783198118,
-   "memory": 25406,
-   "params": 6687,
-   "method": "memorizer4(n=267,k=4,b=11,bb=13x18)"
+   "points": 14.260261089935476,
+   "memory": 46056,
+   "params": 98,
+   "method": "gen:vyank6322"
   },
   "90": {
-   "points": 14.998796073957802,
-   "memory": 18614,
-   "params": 3439,
-   "method": "memorizer4(n=267,k=4,b=5,bb=5x30)"
+   "points": 13.974541769218527,
+   "memory": 60840,
+   "params": 578,
+   "method": "gen:thbdh6332"
   },
   "91": {
-   "points": 14.782687594910893,
-   "memory": 22276,
-   "params": 5097,
-   "method": "memorizer4(n=266,k=4,b=9,bb=14x14)"
+   "points": 14.152489823851827,
+   "memory": 51328,
+   "params": 78,
+   "method": "gen:biohack_new"
   },
   "92": {
    "points": 14.260542795338498,
@@ -571,16 +566,16 @@
    "method": "ext:wguesdon6304"
   },
   "96": {
-   "points": 14.993865610503729,
-   "memory": 17724,
-   "params": 4438,
-   "method": "memorizer4(n=266,k=4,b=11,bb=11x12)"
+   "points": 12.970473620407255,
+   "memory": 167523,
+   "params": 109,
+   "method": "gen:thbdh6332"
   },
   "97": {
-   "points": 18.186555400489105,
-   "memory": 0,
-   "params": 910,
-   "method": "conv3x3+b"
+   "points": 14.108719993901007,
+   "memory": 53600,
+   "params": 106,
+   "method": "gen:thbdh6332"
   },
   "98": {
    "points": 18.186555400489105,
@@ -601,10 +596,10 @@
    "method": "ext:kojimar6275"
   },
   "101": {
-   "points": 14.297564848017714,
-   "memory": 38396,
-   "params": 6068,
-   "method": "memorizer4(n=266,k=4,b=4,bb=17x24)"
+   "points": 12.68127747092519,
+   "memory": 220744,
+   "params": 3104,
+   "method": "gen:thbdh6332"
   },
   "102": {
    "points": 15.672854848481732,
@@ -649,16 +644,16 @@
    "method": "ext:kojimar6275"
   },
   "109": {
-   "points": 14.964081660283382,
-   "memory": 18300,
-   "params": 4532,
-   "method": "memorizer4(n=266,k=4,b=11,bb=12x12)"
+   "points": 13.663549218151816,
+   "memory": 82868,
+   "params": 954,
+   "method": "gen:biohack_new"
   },
   "110": {
-   "points": 13.937903184889466,
-   "memory": 41700,
-   "params": 22010,
-   "method": "memorizer4(n=266,k=4,b=11,bb=30x30)"
+   "points": 13.483251850806106,
+   "memory": 100033,
+   "params": 350,
+   "method": "gen:vyank6322"
   },
   "111": {
    "points": 18.319145321209785,
@@ -667,10 +662,10 @@
    "method": "ext:kojimar6275"
   },
   "112": {
-   "points": 14.105040034353665,
-   "memory": 39844,
-   "params": 14060,
-   "method": "memorizer4(n=266,k=4,b=5,bb=30x30)"
+   "points": 14.010141445218116,
+   "memory": 59164,
+   "params": 106,
+   "method": "gen:thbdh6332"
   },
   "113": {
    "points": 21.598802618337846,
@@ -703,10 +698,10 @@
    "method": "ext:biohack_new"
   },
   "118": {
-   "points": 14.100283628773367,
-   "memory": 40306,
-   "params": 13855,
-   "method": "memorizer4(n=267,k=4,b=5,bb=30x30)"
+   "points": 13.336192047071197,
+   "memory": 116144,
+   "params": 142,
+   "method": "gen:seddik"
   },
   "119": {
    "points": 15.371278294649107,
@@ -751,10 +746,10 @@
    "method": "ext:kojimar6275"
   },
   "126": {
-   "points": 14.618726677776081,
-   "memory": 25622,
-   "params": 6628,
-   "method": "memorizer4(n=265,k=4,b=11,bb=10x24)"
+   "points": 13.871487796441324,
+   "memory": 68044,
+   "params": 41,
+   "method": "gen:biohack_new"
   },
   "127": {
    "points": 18.197605236675688,
@@ -781,10 +776,10 @@
    "method": "ext:wguesdon6304"
   },
   "131": {
-   "points": 14.444213303429938,
-   "memory": 32116,
-   "params": 6283,
-   "method": "memorizer4(n=266,k=4,b=6,bb=18x18)"
+   "points": 14.295632567101045,
+   "memory": 43599,
+   "params": 951,
+   "method": "gen:thbdh6332"
   },
   "132": {
    "points": 14.709279200950512,
@@ -793,16 +788,16 @@
    "method": "ext:kojimar6275"
   },
   "133": {
-   "points": 13.950046941360375,
-   "memory": 40826,
-   "params": 22115,
-   "method": "memorizer4(n=267,k=4,b=11,bb=30x30)"
+   "points": 12.83759192695609,
+   "memory": 191249,
+   "params": 206,
+   "method": "gen:thbdh6332"
   },
   "134": {
-   "points": 15.620338883407115,
-   "memory": 9224,
-   "params": 2621,
-   "method": "memorizer4(n=266,k=4,b=11,bb=3x6)"
+   "points": 15.576162453761413,
+   "memory": 12300,
+   "params": 80,
+   "method": "gen:thbdh6332"
   },
   "135": {
    "points": 19.113895968549844,
@@ -865,10 +860,10 @@
    "method": "ext:kojimar6275"
   },
   "145": {
-   "points": 14.290349130435223,
-   "memory": 37906,
-   "params": 6880,
-   "method": "memorizer4(n=267,k=4,b=5,bb=20x20)"
+   "points": 13.900183785289693,
+   "memory": 65224,
+   "params": 935,
+   "method": "gen:vyank6322"
   },
   "146": {
    "points": 17.27865138738205,
@@ -904,7 +899,7 @@
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
-   "method": "conv3x3+b"
+   "method": "gen:thbdh6332"
   },
   "152": {
    "points": 17.672876707740706,
@@ -913,10 +908,10 @@
    "method": "ext:wguesdon6304"
   },
   "153": {
-   "points": 15.763699526354285,
-   "memory": 8482,
-   "params": 1781,
-   "method": "memorizer4(n=265,k=4,b=11,bb=3x6)"
+   "points": 15.067779228641,
+   "memory": 20491,
+   "params": 92,
+   "method": "gen:biohack_new"
   },
   "154": {
    "points": 14.673141935486873,
@@ -931,28 +926,28 @@
    "method": "ext:kojimar6275"
   },
   "156": {
-   "points": 15.247393478423508,
-   "memory": 14622,
-   "params": 2577,
-   "method": "memorizer4(n=265,k=4,b=5,bb=10x10)"
+   "points": 14.943662613369662,
+   "memory": 21408,
+   "params": 1895,
+   "method": "gen:vyank6322"
   },
   "157": {
-   "points": 14.94628373421718,
-   "memory": 19302,
-   "params": 3940,
-   "method": "memorizer4(n=265,k=4,b=7,bb=10x16)"
+   "points": 13.764225587175336,
+   "memory": 75331,
+   "params": 463,
+   "method": "gen:wguesdon6315"
   },
   "158": {
-   "points": 13.947365485421715,
-   "memory": 41300,
-   "params": 21810,
-   "method": "memorizer4(n=266,k=4,b=11,bb=30x30)"
+   "points": 12.846716503933045,
+   "memory": 189350,
+   "params": 366,
+   "method": "gen:biohack_new"
   },
   "159": {
-   "points": 14.544093926399544,
-   "memory": 27102,
-   "params": 7647,
-   "method": "memorizer4(n=265,k=4,b=11,bb=14x18)"
+   "points": 13.600008098407727,
+   "memory": 85216,
+   "params": 4105,
+   "method": "gen:thbdh6332"
   },
   "160": {
    "points": 16.569454615309432,
@@ -967,16 +962,16 @@
    "method": "ext:thbdh6285"
   },
   "162": {
-   "points": 14.05595309024438,
-   "memory": 44444,
-   "params": 12172,
-   "method": "memorizer4(n=266,k=4,b=11,bb=20x24)"
+   "points": 13.944501582071068,
+   "memory": 63248,
+   "params": 43,
+   "method": "gen:thbdh6332"
   },
   "163": {
-   "points": 15.026287002574374,
-   "memory": 17250,
-   "params": 4205,
-   "method": "memorizer4(n=267,k=4,b=11,bb=11x12)"
+   "points": 14.916318151686092,
+   "memory": 22294,
+   "params": 1655,
+   "method": "gen:biohack_new"
   },
   "164": {
    "points": 21.598802618337846,
@@ -985,10 +980,10 @@
    "method": "ext:kojimar6275"
   },
   "165": {
-   "points": 14.057119518455734,
-   "memory": 44422,
-   "params": 12128,
-   "method": "memorizer4(n=265,k=4,b=11,bb=20x24)"
+   "points": 13.892729661190222,
+   "memory": 65660,
+   "params": 994,
+   "method": "gen:thbdh6332"
   },
   "166": {
    "points": 15.01710070803971,
@@ -1003,22 +998,22 @@
    "method": "ext:wguesdon6304"
   },
   "168": {
-   "points": 15.088544277814695,
-   "memory": 16262,
-   "params": 3898,
-   "method": "memorizer4(n=265,k=4,b=11,bb=10x12)"
+   "points": 15.076562772156251,
+   "memory": 20218,
+   "params": 185,
+   "method": "gen:thbdh6332"
   },
   "169": {
-   "points": 15.245592670478025,
-   "memory": 14644,
-   "params": 2586,
-   "method": "memorizer4(n=266,k=4,b=5,bb=10x10)"
+   "points": 15.157537149301646,
+   "memory": 18036,
+   "params": 780,
+   "method": "gen:vyank6322"
   },
   "170": {
-   "points": 15.550642727553317,
-   "memory": 10252,
-   "params": 2448,
-   "method": "memorizer4(n=266,k=4,b=11,bb=4x6)"
+   "points": 13.980469623732878,
+   "memory": 60803,
+   "params": 252,
+   "method": "gen:vyank6322"
   },
   "171": {
    "points": 18.186555400489105,
@@ -1033,22 +1028,22 @@
    "method": "ext:kojimar6275"
   },
   "173": {
-   "points": 13.948697381350199,
-   "memory": 41244,
-   "params": 21782,
-   "method": "memorizer4(n=266,k=4,b=11,bb=30x30)"
+   "points": 13.54635755719361,
+   "memory": 92028,
+   "params": 2216,
+   "method": "gen:thbdh6332"
   },
   "174": {
-   "points": 15.6512028848768,
-   "memory": 9432,
-   "params": 2053,
-   "method": "memorizer4(n=266,k=4,b=11,bb=5x6)"
+   "points": 14.599745180948922,
+   "memory": 32787,
+   "params": 81,
+   "method": "gen:vyank6322"
   },
   "175": {
-   "points": 14.60554265240923,
-   "memory": 32176,
-   "params": 502,
-   "method": "ext:jchan_blend"
+   "points": 13.799746264185158,
+   "memory": 70400,
+   "params": 2749,
+   "method": "gen:biohack_new"
   },
   "176": {
    "points": 16.315598889599855,
@@ -1057,16 +1052,16 @@
    "method": "conv1x59+b"
   },
   "177": {
-   "points": 15.167471536404365,
-   "memory": 14982,
-   "params": 3648,
-   "method": "memorizer4(n=265,k=4,b=11,bb=8x12)"
+   "points": 14.181702811871515,
+   "memory": 49824,
+   "params": 102,
+   "method": "gen:biohack_new"
   },
   "178": {
-   "points": 15.619495001500495,
-   "memory": 9684,
-   "params": 2171,
-   "method": "memorizer4(n=268,k=4,b=11,bb=5x6)"
+   "points": 15.478065735525723,
+   "memory": 13569,
+   "params": 87,
+   "method": "gen:thbdh6332"
   },
   "179": {
    "points": 25.0,
@@ -1093,22 +1088,22 @@
    "method": "ext:biohack_new"
   },
   "183": {
-   "points": 15.618651831130135,
-   "memory": 9822,
-   "params": 2043,
-   "method": "memorizer4(n=265,k=4,b=11,bb=6x6)"
+   "points": 14.87922601563406,
+   "memory": 24816,
+   "params": 38,
+   "method": "gen:biohack_new"
   },
   "184": {
-   "points": 15.880788561434919,
-   "memory": 7090,
-   "params": 2039,
-   "method": "memorizer4(n=169,k=4,b=11,bb=3x6)"
+   "points": 14.432407952356657,
+   "memory": 28880,
+   "params": 9975,
+   "method": "gen:thbdh6332"
   },
   "185": {
-   "points": 15.547262619787722,
-   "memory": 10142,
-   "params": 2601,
-   "method": "memorizer4(n=267,k=4,b=11,bb=3x6)"
+   "points": 14.521811022110409,
+   "memory": 35463,
+   "params": 69,
+   "method": "gen:thbdh6332"
   },
   "186": {
    "points": 19.113895968549844,
@@ -1117,22 +1112,22 @@
    "method": "ext:biohack_new"
   },
   "187": {
-   "points": 13.948697381350199,
-   "memory": 41244,
-   "params": 21782,
-   "method": "memorizer4(n=266,k=4,b=11,bb=30x30)"
+   "points": 13.654168620492959,
+   "memory": 83700,
+   "params": 912,
+   "method": "gen:thbdh6332"
   },
   "188": {
-   "points": 16.500970779211436,
-   "memory": 0,
-   "params": 4910,
-   "method": "conv7x7+b"
+   "points": 15.725371138141455,
+   "memory": 10616,
+   "params": 48,
+   "method": "gen:thbdh6332"
   },
   "189": {
-   "points": 15.619241975732686,
-   "memory": 9820,
-   "params": 2038,
-   "method": "memorizer4(n=266,k=4,b=11,bb=6x6)"
+   "points": 14.887914167591697,
+   "memory": 24380,
+   "params": 259,
+   "method": "gen:thbdh6332"
   },
   "190": {
    "points": 15.700276066889131,
@@ -1140,23 +1135,18 @@
    "params": 575,
    "method": "custom:task190"
   },
-  "191": {
-   "points": 14.042392073687841,
-   "memory": 49554,
-   "params": 7835,
-   "method": "memorizer4(n=267,k=4,b=4,bb=23x24)"
-  },
+  "191": null,
   "192": {
-   "points": 18.186555400489105,
-   "memory": 0,
-   "params": 910,
-   "method": "conv3x3+b"
+   "points": 14.14161657647865,
+   "memory": 51898,
+   "params": 70,
+   "method": "gen:thbdh6332"
   },
   "193": {
-   "points": 19.439318368984473,
-   "memory": 0,
-   "params": 260,
-   "method": "dwconv5x5+b"
+   "points": 14.109558240338645,
+   "memory": 53600,
+   "params": 61,
+   "method": "gen:thbdh6332"
   },
   "194": {
    "points": 17.672876707740706,
@@ -1171,16 +1161,16 @@
    "method": "ext:kojimar6275"
   },
   "196": {
-   "points": 14.660582798551888,
-   "memory": 25564,
-   "params": 5364,
-   "method": "memorizer4(n=266,k=4,b=7,bb=15x16)"
+   "points": 14.619005786490737,
+   "memory": 32175,
+   "params": 66,
+   "method": "gen:thbdh6332"
   },
   "197": {
-   "points": 14.868421156425729,
-   "memory": 20082,
-   "params": 5042,
-   "method": "memorizer4(n=267,k=4,b=11,bb=14x12)"
+   "points": 14.166555524825903,
+   "memory": 50672,
+   "params": 16,
+   "method": "gen:vyank6322"
   },
   "198": {
    "points": 14.203387993621556,
@@ -1201,10 +1191,10 @@
    "method": "ext:galaxy_v1"
   },
   "201": {
-   "points": 15.264812762895572,
-   "memory": 13700,
-   "params": 3202,
-   "method": "memorizer4(n=266,k=4,b=11,bb=7x12)"
+   "points": 13.718880496922635,
+   "memory": 79002,
+   "params": 308,
+   "method": "gen:vyank6322"
   },
   "202": {
    "points": 14.529835930957876,
@@ -1219,22 +1209,22 @@
    "method": "custom:task203"
   },
   "204": {
-   "points": 14.289322550863266,
-   "memory": 37928,
-   "params": 6904,
-   "method": "memorizer4(n=268,k=4,b=5,bb=20x20)"
+   "points": 14.236792067078111,
+   "memory": 45200,
+   "params": 2050,
+   "method": "gen:vyank6322"
   },
   "205": {
-   "points": 15.01263096348317,
-   "memory": 17004,
-   "params": 4746,
-   "method": "memorizer4(n=266,k=4,b=11,bb=10x12)"
+   "points": 13.83389816291813,
+   "memory": 69711,
+   "params": 982,
+   "method": "gen:thbdh6332"
   },
   "206": {
-   "points": 14.972526467682881,
-   "memory": 18172,
-   "params": 4468,
-   "method": "memorizer4(n=266,k=4,b=11,bb=12x12)"
+   "points": 13.975062924893004,
+   "memory": 61296,
+   "params": 90,
+   "method": "gen:thbdh6332"
   },
   "207": {
    "points": 17.463636061595487,
@@ -1249,10 +1239,10 @@
    "method": "custom:task208"
   },
   "209": {
-   "points": 14.373976382010138,
-   "memory": 33276,
-   "params": 7917,
-   "method": "memorizer4(n=266,k=4,b=9,bb=16x21)"
+   "points": 13.357494689493878,
+   "memory": 113691,
+   "params": 144,
+   "method": "gen:wguesdon6315"
   },
   "210": {
    "points": 21.598802618337846,
@@ -1273,10 +1263,10 @@
    "method": "ext:kojimar6275"
   },
   "213": {
-   "points": 15.415616389923994,
-   "memory": 11768,
-   "params": 2768,
-   "method": "memorizer4(n=265,k=4,b=9,bb=7x7)"
+   "points": 14.48941347152938,
+   "memory": 36599,
+   "params": 103,
+   "method": "gen:thbdh6332"
   },
   "214": {
    "points": 17.759350305744533,
@@ -1291,10 +1281,10 @@
    "method": "conv59x1+b"
   },
   "216": {
-   "points": 14.441093094964899,
-   "memory": 32196,
-   "params": 6323,
-   "method": "memorizer4(n=266,k=4,b=6,bb=18x18)"
+   "points": 13.562736020953684,
+   "memory": 92612,
+   "params": 101,
+   "method": "gen:vyank6322"
   },
   "217": {
    "points": 15.479824750930902,
@@ -1303,23 +1293,13 @@
    "method": "custom:task217"
   },
   "218": {
-   "points": 15.654866531682286,
-   "memory": 9272,
-   "params": 2171,
-   "method": "memorizer4(n=266,k=4,b=11,bb=3x6)"
+   "points": 15.289854507541293,
+   "memory": 16438,
+   "params": 46,
+   "method": "gen:vyank6322"
   },
-  "219": {
-   "points": 14.999158902207961,
-   "memory": 18610,
-   "params": 3435,
-   "method": "memorizer4(n=265,k=4,b=5,bb=15x10)"
-  },
-  "220": {
-   "points": 14.611004631682171,
-   "memory": 26834,
-   "params": 5666,
-   "method": "memorizer4(n=267,k=4,b=8,bb=16x16)"
-  },
+  "219": null,
+  "220": null,
   "221": {
    "points": 17.078464367866452,
    "memory": 2638,
@@ -1327,10 +1307,10 @@
    "method": "custom:task221"
   },
   "222": {
-   "points": 14.475720929096067,
-   "memory": 29436,
-   "params": 7772,
-   "method": "memorizer4(n=266,k=4,b=11,bb=16x18)"
+   "points": 14.031198444197276,
+   "memory": 57948,
+   "params": 87,
+   "method": "gen:thbdh6332"
   },
   "223": {
    "points": 20.500190329669735,
@@ -1339,16 +1319,16 @@
    "method": "ext:wguesdon6304"
   },
   "224": {
-   "points": 14.475720929096067,
-   "memory": 29436,
-   "params": 7772,
-   "method": "memorizer4(n=266,k=4,b=11,bb=16x18)"
+   "points": 14.275455898281896,
+   "memory": 45276,
+   "params": 182,
+   "method": "gen:thbdh6332"
   },
   "225": {
-   "points": 16.500970779211436,
-   "memory": 0,
-   "params": 4910,
-   "method": "conv7x7+b"
+   "points": 15.68728356140695,
+   "memory": 10428,
+   "params": 650,
+   "method": "gen:thbdh6332"
   },
   "226": {
    "points": 16.53220715887889,
@@ -1363,10 +1343,10 @@
    "method": "conv9x1+b"
   },
   "228": {
-   "points": 15.086760156021194,
-   "memory": 16284,
-   "params": 3912,
-   "method": "memorizer4(n=266,k=4,b=11,bb=10x12)"
+   "points": 14.86993479941538,
+   "memory": 25008,
+   "params": 78,
+   "method": "gen:thbdh6332"
   },
   "229": {
    "points": 17.74936448810132,
@@ -1374,29 +1354,24 @@
    "params": 45,
    "method": "ext:kojimar6275"
   },
-  "230": {
-   "points": 18.197605236675688,
-   "memory": 0,
-   "params": 900,
-   "method": "ext:kojimar6275"
-  },
+  "230": null,
   "231": {
-   "points": 16.315598889599855,
-   "memory": 0,
-   "params": 5910,
-   "method": "conv1x59+b"
+   "points": 14.5892732472333,
+   "memory": 33113,
+   "params": 101,
+   "method": "gen:biohack_new"
   },
   "232": {
-   "points": 16.315598889599855,
-   "memory": 0,
-   "params": 5910,
-   "method": "conv1x59+b"
+   "points": 14.707956157758622,
+   "memory": 29428,
+   "params": 69,
+   "method": "gen:thbdh6332"
   },
   "233": {
-   "points": 14.182003301672147,
-   "memory": 39844,
-   "params": 10067,
-   "method": "memorizer4(n=266,k=4,b=10,bb=20x21)"
+   "points": 13.251931269136003,
+   "memory": 125010,
+   "params": 1499,
+   "method": "gen:thbdh6332"
   },
   "234": {
    "points": 15.10042007229489,
@@ -1423,16 +1398,16 @@
    "method": "ext:kojimar6275"
   },
   "238": {
-   "points": 15.256329148917757,
-   "memory": 13796,
-   "params": 3250,
-   "method": "memorizer4(n=266,k=4,b=11,bb=7x12)"
+   "points": 13.927876707427622,
+   "memory": 62905,
+   "params": 1447,
+   "method": "gen:thbdh6332"
   },
   "239": {
-   "points": 15.372793097191211,
-   "memory": 12418,
-   "params": 2754,
-   "method": "memorizer4(n=267,k=4,b=11,bb=12x6)"
+   "points": 13.543994153854108,
+   "memory": 94081,
+   "params": 386,
+   "method": "gen:biohack_new"
   },
   "240": {
    "points": 14.8892137657115,
@@ -1447,28 +1422,28 @@
    "method": "ext:kojimar6275"
   },
   "242": {
-   "points": 15.722094441861394,
-   "memory": 8776,
-   "params": 1923,
-   "method": "memorizer4(n=266,k=4,b=11,bb=3x6)"
+   "points": 15.090580078810763,
+   "memory": 20074,
+   "params": 45,
+   "method": "gen:thbdh6332"
   },
   "243": {
-   "points": 14.378063084041708,
-   "memory": 32382,
-   "params": 8643,
-   "method": "memorizer4(n=265,k=4,b=11,bb=18x18)"
+   "points": 13.86223354737423,
+   "memory": 68616,
+   "params": 102,
+   "method": "gen:vyank6322"
   },
   "244": {
-   "points": 15.607004793439742,
-   "memory": 9788,
-   "params": 2216,
-   "method": "memorizer4(n=266,k=4,b=11,bb=4x6)"
+   "points": 14.633722272736438,
+   "memory": 31685,
+   "params": 85,
+   "method": "gen:biohack_new"
   },
   "245": {
-   "points": 15.24379509961331,
-   "memory": 14666,
-   "params": 2595,
-   "method": "memorizer4(n=267,k=4,b=5,bb=10x10)"
+   "points": 14.724535183516696,
+   "memory": 28916,
+   "params": 96,
+   "method": "gen:thbdh6332"
   },
   "246": {
    "points": 16.017815721161572,
@@ -1501,10 +1476,10 @@
    "method": "ext:biohack_new"
   },
   "251": {
-   "points": 15.054507153318841,
-   "memory": 17980,
-   "params": 2878,
-   "method": "memorizer4(n=266,k=4,b=4,bb=12x12)"
+   "points": 13.481291290274044,
+   "memory": 100560,
+   "params": 20,
+   "method": "gen:thbdh6332"
   },
   "252": {
    "points": 16.295166090312208,
@@ -1513,10 +1488,10 @@
    "method": "custom:task252"
   },
   "253": {
-   "points": 15.69945336013767,
-   "memory": 9078,
-   "params": 1866,
-   "method": "memorizer4(n=265,k=4,b=11,bb=4x6)"
+   "points": 14.215455188361384,
+   "memory": 47830,
+   "params": 439,
+   "method": "gen:thbdh6332"
   },
   "254": {
    "points": 16.018318360026136,
@@ -1524,12 +1499,7 @@
    "params": 158,
    "method": "ext:kojimar6275"
   },
-  "255": {
-   "points": 13.953261457177382,
-   "memory": 40782,
-   "params": 21957,
-   "method": "memorizer4(n=265,k=4,b=11,bb=30x30)"
-  },
+  "255": null,
   "256": {
    "points": 15.197383057848846,
    "memory": 18022,
@@ -1578,17 +1548,12 @@
    "params": 52,
    "method": "ext:vyank6322"
   },
-  "264": {
-   "points": 15.127848327773725,
-   "memory": 15614,
-   "params": 3769,
-   "method": "memorizer4(n=265,k=4,b=11,bb=9x12)"
-  },
+  "264": null,
   "265": {
-   "points": 14.444213303429938,
-   "memory": 32116,
-   "params": 6283,
-   "method": "memorizer4(n=266,k=4,b=6,bb=18x18)"
+   "points": 14.424537832136728,
+   "memory": 39033,
+   "params": 129,
+   "method": "gen:thbdh6332"
   },
   "266": {
    "points": 18.186555400489105,
@@ -1621,10 +1586,10 @@
    "method": "ext:kojimar6275"
   },
   "271": {
-   "points": 15.76175267477081,
-   "memory": 8502,
-   "params": 1781,
-   "method": "memorizer4(n=267,k=4,b=11,bb=3x6)"
+   "points": 14.725259284025897,
+   "memory": 28928,
+   "params": 63,
+   "method": "gen:thbdh6332"
   },
   "272": {
    "points": 18.86877351051686,
@@ -1645,10 +1610,10 @@
    "method": "conv9x9+b"
   },
   "275": {
-   "points": 14.630203133806408,
-   "memory": 26428,
-   "params": 5454,
-   "method": "memorizer4(n=266,k=4,b=7,bb=16x16)"
+   "points": 14.15589990344465,
+   "memory": 51133,
+   "params": 98,
+   "method": "gen:thbdh6332"
   },
   "276": {
    "points": 22.697414907005953,
@@ -1675,19 +1640,19 @@
    "method": "ext:kojimar6275"
   },
   "280": {
-   "points": 14.290349130435223,
-   "memory": 37906,
-   "params": 6880,
-   "method": "memorizer4(n=267,k=4,b=5,bb=20x20)"
+   "points": 13.894576716563861,
+   "memory": 65626,
+   "params": 905,
+   "method": "gen:vyank6322"
   },
   "281": {
-   "points": 14.836342897313216,
-   "memory": 21144,
-   "params": 4799,
-   "method": "memorizer4(n=266,k=4,b=10,bb=13x14)"
+   "points": 13.834435842983153,
+   "memory": 69668,
+   "params": 987,
+   "method": "gen:biohack_new"
   },
   "282": {
-   "points": 18.197605236675688,
+   "points": 0.0,
    "memory": 0,
    "params": 900,
    "method": "ext:octavi6154"
@@ -1705,16 +1670,16 @@
    "method": "custom:task284"
   },
   "285": {
-   "points": 13.953261457177382,
-   "memory": 40782,
-   "params": 21957,
-   "method": "memorizer4(n=265,k=4,b=11,bb=30x30)"
+   "points": 13.27370660983049,
+   "memory": 121246,
+   "params": 2538,
+   "method": "gen:thbdh6332"
   },
   "286": {
-   "points": 13.950301179996483,
-   "memory": 41222,
-   "params": 21703,
-   "method": "memorizer4(n=265,k=4,b=11,bb=30x30)"
+   "points": 13.100635955460353,
+   "memory": 145879,
+   "params": 1294,
+   "method": "gen:vyank6322"
   },
   "287": {
    "points": 14.975800372301608,
@@ -1723,10 +1688,10 @@
    "method": "ext:kojimar6275"
   },
   "288": {
-   "points": 15.999146852890542,
-   "memory": 0,
-   "params": 8110,
-   "method": "conv9x9+b"
+   "points": 14.632558329669694,
+   "memory": 31766,
+   "params": 41,
+   "method": "gen:thbdh6332"
   },
   "289": {
    "points": 14.874489523818365,
@@ -1795,10 +1760,10 @@
    "method": "ext:biohack_new"
   },
   "300": {
-   "points": 15.711958120359965,
-   "memory": 8994,
-   "params": 1814,
-   "method": "memorizer4(n=267,k=4,b=11,bb=4x6)"
+   "points": 13.741373412351637,
+   "memory": 77438,
+   "params": 108,
+   "method": "gen:thbdh6332"
   },
   "301": {
    "points": 15.043493143488236,
@@ -1843,10 +1808,10 @@
    "method": "ext:wguesdon6304"
   },
   "308": {
-   "points": 15.450476782709634,
-   "memory": 11438,
-   "params": 2600,
-   "method": "memorizer4(n=266,k=4,b=10,bb=7x7)"
+   "points": 15.010380623834585,
+   "memory": 21698,
+   "params": 101,
+   "method": "gen:thbdh6332"
   },
   "309": {
    "points": 22.697414907005953,
@@ -1855,10 +1820,10 @@
    "method": "ext:kojimar6275"
   },
   "310": {
-   "points": 15.12810631905505,
-   "memory": 15164,
-   "params": 4214,
-   "method": "memorizer4(n=266,k=4,b=11,bb=8x12)"
+   "points": 14.844237369643414,
+   "memory": 25573,
+   "params": 166,
+   "method": "gen:thbdh6332"
   },
   "311": {
    "points": 21.598802618337846,
@@ -1897,10 +1862,10 @@
    "method": "ext:kojimar6275"
   },
   "317": {
-   "points": 15.333754923157583,
-   "memory": 13218,
-   "params": 2558,
-   "method": "memorizer4(n=264,k=4,b=6,bb=9x9)"
+   "points": 0.0,
+   "memory": 0,
+   "params": 900,
+   "method": "gen:thbdh6332"
   },
   "318": {
    "points": 18.397412107810663,
@@ -1909,10 +1874,10 @@
    "method": "ext:galaxy_v1"
   },
   "319": {
-   "points": 15.583133382533045,
-   "memory": 9974,
-   "params": 2320,
-   "method": "memorizer4(n=267,k=4,b=11,bb=5x6)"
+   "points": 14.580490348791063,
+   "memory": 33406,
+   "params": 101,
+   "method": "gen:thbdh6332"
   },
   "320": {
    "points": 16.9893084608697,
@@ -1945,10 +1910,10 @@
    "method": "ext:thbdh6285+pruned"
   },
   "325": {
-   "points": 15.582482870231686,
-   "memory": 10116,
-   "params": 2186,
-   "method": "memorizer4(n=266,k=4,b=11,bb=6x6)"
+   "points": 14.330533108254256,
+   "memory": 41120,
+   "params": 1902,
+   "method": "gen:thbdh6332"
   },
   "326": {
    "points": 19.924826184766175,
@@ -1963,10 +1928,10 @@
    "method": "ext:kojimar6275"
   },
   "328": {
-   "points": 14.375482625917675,
-   "memory": 32426,
-   "params": 8705,
-   "method": "memorizer4(n=267,k=4,b=11,bb=18x18)"
+   "points": 13.886165004389737,
+   "memory": 63207,
+   "params": 3886,
+   "method": "gen:galaxy"
   },
   "329": {
    "points": 15.76399188127524,
@@ -1975,10 +1940,10 @@
    "method": "ext:kojimar6275"
   },
   "330": {
-   "points": 15.245592670478025,
-   "memory": 14644,
-   "params": 2586,
-   "method": "memorizer4(n=266,k=4,b=5,bb=10x10)"
+   "points": 15.216591867794413,
+   "memory": 16604,
+   "params": 1133,
+   "method": "gen:thbdh6332"
   },
   "331": {
    "points": 18.186555400489105,
@@ -1993,10 +1958,10 @@
    "method": "conv1x59+b"
   },
   "333": {
-   "points": 15.088544277814695,
-   "memory": 16262,
-   "params": 3898,
-   "method": "memorizer4(n=265,k=4,b=11,bb=10x12)"
+   "points": 14.89010822015396,
+   "memory": 24440,
+   "params": 145,
+   "method": "gen:vyank6322"
   },
   "334": {
    "points": 18.588181732290103,
@@ -2053,10 +2018,10 @@
    "method": "ext:kojimar6275"
   },
   "343": {
-   "points": 15.239517141880876,
-   "memory": 13992,
-   "params": 3343,
-   "method": "memorizer4(n=266,k=4,b=11,bb=5x18)"
+   "points": 14.779659997712312,
+   "memory": 27208,
+   "params": 248,
+   "method": "gen:thbdh6332"
   },
   "344": {
    "points": 18.186555400489105,
@@ -2071,10 +2036,10 @@
    "method": "ext:kojimar6275"
   },
   "346": {
-   "points": 15.999146852890542,
-   "memory": 0,
-   "params": 8110,
-   "method": "conv9x9+b"
+   "points": 15.884849815027566,
+   "memory": 9069,
+   "params": 23,
+   "method": "gen:thbdh6332"
   },
   "347": {
    "points": 18.527653705499098,
@@ -2101,10 +2066,10 @@
    "method": "ext:kojimar6275"
   },
   "351": {
-   "points": 15.618736116182232,
-   "memory": 9682,
-   "params": 2182,
-   "method": "memorizer4(n=265,k=4,b=11,bb=5x6)"
+   "points": 14.532506311227156,
+   "memory": 35114,
+   "params": 40,
+   "method": "gen:thbdh6332"
   },
   "352": {
    "points": 18.186555400489105,
@@ -2125,10 +2090,10 @@
    "method": "ext:kojimar6275"
   },
   "355": {
-   "points": 15.79326612361793,
-   "memory": 8158,
-   "params": 1806,
-   "method": "memorizer4(n=267,k=4,b=11,bb=1x6)"
+   "points": 15.624569008158225,
+   "memory": 11706,
+   "params": 89,
+   "method": "gen:thbdh6332"
   },
   "356": {
    "points": 16.482606828581098,
@@ -2149,10 +2114,10 @@
    "method": "ext:thbdh6332"
   },
   "359": {
-   "points": 16.585947567503275,
-   "memory": 0,
-   "params": 4510,
-   "method": "conv5x9+b"
+   "points": 14.68066805761084,
+   "memory": 30300,
+   "params": 13,
+   "method": "gen:biohack_new"
   },
   "360": {
    "points": 15.960922557461037,
@@ -2173,40 +2138,40 @@
    "method": "ext:kojimar6275"
   },
   "363": {
-   "points": 15.247393478423508,
-   "memory": 14622,
-   "params": 2577,
-   "method": "memorizer4(n=265,k=4,b=5,bb=10x10)"
+   "points": 13.676227371976744,
+   "memory": 81146,
+   "params": 1620,
+   "method": "gen:biohack_new"
   },
   "364": {
-   "points": 14.105522489689516,
-   "memory": 44284,
-   "params": 9594,
-   "method": "memorizer4(n=266,k=4,b=7,bb=20x24)"
+   "points": 13.754457371489742,
+   "memory": 75136,
+   "params": 1402,
+   "method": "gen:thbdh6332"
   },
   "365": {
-   "points": 15.61621064973346,
-   "memory": 9844,
-   "params": 2050,
-   "method": "memorizer4(n=266,k=4,b=11,bb=6x6)"
+   "points": 14.808293019413474,
+   "memory": 26613,
+   "params": 68,
+   "method": "gen:vyank6322"
   },
   "366": {
-   "points": 14.498225547927886,
-   "memory": 28470,
-   "params": 7910,
-   "method": "memorizer4(n=255,k=4,b=11,bb=15x18)"
+   "points": 13.501477765340516,
+   "memory": 97119,
+   "params": 1451,
+   "method": "gen:vyank6322"
   },
   "367": {
-   "points": 14.29137676495588,
-   "memory": 37884,
-   "params": 6856,
-   "method": "memorizer4(n=266,k=4,b=5,bb=20x20)"
+   "points": 13.140963189954599,
+   "memory": 141212,
+   "params": 144,
+   "method": "gen:vyank6322"
   },
   "368": {
-   "points": 15.088544277814695,
-   "memory": 16262,
-   "params": 3898,
-   "method": "memorizer4(n=265,k=4,b=11,bb=10x12)"
+   "points": 14.68998124117371,
+   "memory": 29948,
+   "params": 84,
+   "method": "gen:thbdh6332"
   },
   "369": {
    "points": 16.10040564007415,
@@ -2215,10 +2180,10 @@
    "method": "ext:galaxy_v1"
   },
   "370": {
-   "points": 14.05595309024438,
-   "memory": 44444,
-   "params": 12172,
-   "method": "memorizer4(n=266,k=4,b=11,bb=20x24)"
+   "points": 13.886671892110053,
+   "memory": 64602,
+   "params": 2457,
+   "method": "gen:thbdh6332"
   },
   "371": {
    "points": 15.50983333153762,
@@ -2227,10 +2192,10 @@
    "method": "ext:kojimar6275"
   },
   "372": {
-   "points": 16.315598889599855,
-   "memory": 0,
-   "params": 5910,
-   "method": "conv59x1+b"
+   "points": 16.02817065646915,
+   "memory": 7865,
+   "params": 13,
+   "method": "gen:galaxy"
   },
   "373": {
    "points": 18.75972415482923,
@@ -2257,22 +2222,22 @@
    "method": "custom:task376"
   },
   "377": {
-   "points": 15.068702746824604,
-   "memory": 16084,
-   "params": 4480,
-   "method": "memorizer4(n=266,k=4,b=11,bb=9x12)"
+   "points": 14.508614677623024,
+   "memory": 35471,
+   "params": 533,
+   "method": "gen:vyank6322"
   },
   "378": {
-   "points": 14.970849429468215,
-   "memory": 18194,
-   "params": 4484,
-   "method": "memorizer4(n=267,k=4,b=11,bb=12x12)"
+   "points": 14.428477967719003,
+   "memory": 38932,
+   "params": 76,
+   "method": "gen:thbdh6332"
   },
   "379": {
-   "points": 14.29137676495588,
-   "memory": 37884,
-   "params": 6856,
-   "method": "memorizer4(n=266,k=4,b=5,bb=20x20)"
+   "points": 13.819767920510943,
+   "memory": 69969,
+   "params": 1730,
+   "method": "gen:thbdh6332"
   },
   "380": {
    "points": 18.409698951803314,
@@ -2287,10 +2252,10 @@
    "method": "ext:ghiotto_conv4"
   },
   "382": {
-   "points": 14.29137676495588,
-   "memory": 37884,
-   "params": 6856,
-   "method": "memorizer4(n=266,k=4,b=5,bb=20x20)"
+   "points": 13.7085195297084,
+   "memory": 80032,
+   "params": 104,
+   "method": "gen:thbdh6332"
   },
   "383": {
    "points": 14.371236953152405,
@@ -2329,10 +2294,10 @@
    "method": "ext:kojimar6275"
   },
   "389": {
-   "points": 17.680135070191028,
-   "memory": 0,
-   "params": 1510,
-   "method": "conv3x5+b"
+   "points": 17.451444020830127,
+   "memory": 1856,
+   "params": 42,
+   "method": "gen:thbdh6332"
   },
   "390": {
    "points": 14.885805916253345,
@@ -2347,10 +2312,10 @@
    "method": "ext:kojimar6275"
   },
   "392": {
-   "points": 15.092122099162578,
-   "memory": 16218,
-   "params": 3870,
-   "method": "memorizer4(n=263,k=4,b=11,bb=10x12)"
+   "points": 14.664924855210137,
+   "memory": 28696,
+   "params": 2098,
+   "method": "gen:biohack_new"
   },
   "393": {
    "points": 18.873130815885816,
@@ -2371,16 +2336,16 @@
    "method": "ext:wguesdon6304"
   },
   "396": {
-   "points": 15.172098434420468,
-   "memory": 14924,
-   "params": 3620,
-   "method": "memorizer4(n=266,k=4,b=11,bb=8x12)"
+   "points": 14.009399355188783,
+   "memory": 58199,
+   "params": 1115,
+   "method": "gen:thbdh6332"
   },
   "397": {
-   "points": 15.086760156021194,
-   "memory": 16284,
-   "params": 3912,
-   "method": "memorizer4(n=266,k=4,b=11,bb=10x12)"
+   "points": 15.084929786220805,
+   "memory": 20146,
+   "params": 87,
+   "method": "gen:biohack_new"
   },
   "398": {
    "points": 16.162609144455303,
@@ -2395,10 +2360,10 @@
    "method": "ext:wguesdon6304"
   },
   "400": {
-   "points": 15.538667473889868,
-   "memory": 10344,
-   "params": 2509,
-   "method": "memorizer4(n=266,k=4,b=11,bb=5x6)"
+   "points": 14.532534757896764,
+   "memory": 35114,
+   "params": 39,
+   "method": "gen:thbdh6332"
   }
  }
 }
