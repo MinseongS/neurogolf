@@ -1,33 +1,34 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-14 01:00_
+_Updated: 2026-06-14 02:10_
 
-**Total: 6398.25 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 6405.22 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
 | ext:kojimar6275 | 129 | 2223.22 |
-| gen:thbdh6332 | 77 | 1112.15 |
+| gen:thbdh6332 | 75 | 1084.61 |
 | ext:biohack_new | 28 | 450.78 |
 | ext:wguesdon6304 | 23 | 406.33 |
-| gen:vyank6322 | 26 | 367.82 |
-| gen:biohack_new | 22 | 313.70 |
-| conv3x3+b | 10 | 181.87 |
+| gen:vyank6322 | 25 | 353.65 |
+| gen:biohack_new | 20 | 286.16 |
+| conv3x3+b | 9 | 163.68 |
 | ext:vyank6322 | 8 | 125.95 |
 | ext:thbdh6285 | 7 | 108.81 |
-| ? | 7 | 104.82 |
 | ext:galaxy_v1 | 6 | 100.04 |
-| conv1x59+b | 4 | 65.26 |
+| ? | 6 | 90.21 |
+| conv1x59+b | 3 | 48.95 |
 | gen:galaxy | 3 | 43.78 |
 | ext:thbdh6332 | 3 | 42.80 |
-| gen:wguesdon6315 | 3 | 41.79 |
-| conv59x1+b | 2 | 32.63 |
+| gen:wguesdon6315 | 2 | 27.12 |
 | dwconv9x1 | 1 | 20.50 |
 | custom:task376 | 1 | 19.43 |
 | conv5x1+b | 1 | 18.77 |
 | dwconv59x1+b | 1 | 18.60 |
+| custom:task220 | 1 | 18.20 |
 | ext:octavi6154 | 1 | 18.20 |
 | conv9x1+b | 1 | 18.19 |
+| custom:task344 | 1 | 18.19 |
 | custom:task304 | 1 | 17.30 |
 | conv5x5+b | 1 | 17.17 |
 | custom:task295 | 1 | 17.11 |
@@ -39,14 +40,19 @@ _Updated: 2026-06-14 01:00_
 | custom:task084 | 1 | 16.55 |
 | custom:task082 | 1 | 16.45 |
 | custom:task269 | 1 | 16.40 |
+| custom:task197 | 1 | 16.36 |
+| custom:task312 | 1 | 16.35 |
+| conv59x1+b | 1 | 16.32 |
 | custom:task252 | 1 | 16.30 |
 | custom:task398 | 1 | 16.16 |
 | custom:task137 | 1 | 16.04 |
 | custom:task246 | 1 | 16.02 |
 | custom:task335 | 1 | 16.02 |
 | conv9x9+b | 1 | 16.00 |
+| custom:task063 | 1 | 15.94 |
 | custom:task190 | 1 | 15.70 |
 | custom:task384 | 1 | 15.66 |
+| custom:task215 | 1 | 15.57 |
 | custom:task065 | 1 | 15.49 |
 | custom:task217 | 1 | 15.48 |
 | custom:task199 | 1 | 15.33 |
@@ -59,10 +65,14 @@ _Updated: 2026-06-14 01:00_
 | custom:task064 | 1 | 14.77 |
 | custom:task284 | 1 | 14.54 |
 | ext:thbdh6285+pruned | 1 | 14.53 |
+| custom:task019 | 1 | 14.31 |
 | custom:task340 | 1 | 14.26 |
+| custom:task281 | 1 | 14.20 |
 | custom:task107 | 1 | 14.10 |
 | custom:task109 | 1 | 14.06 |
 | custom:task029 | 1 | 14.01 |
+| custom:task382 | 1 | 13.79 |
+| custom:task205 | 1 | 13.40 |
 | gen:seddik | 1 | 13.34 |
 
 ## Per task
@@ -87,7 +97,7 @@ _Updated: 2026-06-14 01:00_
 | 016 | ext:kojimar6275 | 0 | 10 | 22.70 |
 | 017 | ext:galaxy_v1 | 33625 | 182 | 14.57 |
 | 018 | ? | 52156 | 14476 | 13.89 |
-| 019 | gen:biohack_new | 80780 | 70 | 13.70 |
+| 019 | custom:task019 | 43800 | 194 | 14.31 |
 | 020 | gen:vyank6322 | 52053 | 91 | 14.14 |
 | 021 | ext:wguesdon6304 | 8238 | 81 | 15.97 |
 | 022 | gen:thbdh6332 | 18291 | 298 | 15.17 |
@@ -131,7 +141,7 @@ _Updated: 2026-06-14 01:00_
 | 060 | ext:kojimar6275 | 5400 | 181 | 16.37 |
 | 061 | ext:kojimar6275 | 16942 | 1972 | 15.15 |
 | 062 | gen:thbdh6332 | 25144 | 952 | 14.83 |
-| 063 | gen:wguesdon6315 | 30700 | 32 | 14.67 |
+| 063 | custom:task063 | 8580 | 24 | 15.94 |
 | 064 | custom:task064 | 27744 | 66 | 14.77 |
 | 065 | custom:task065 | 13418 | 76 | 15.49 |
 | 066 | gen:biohack_new | 97964 | 138 | 13.51 |
@@ -265,7 +275,7 @@ _Updated: 2026-06-14 01:00_
 | 194 | ext:wguesdon6304 | 1440 | 81 | 17.67 |
 | 195 | ext:kojimar6275 | 12310 | 1919 | 15.44 |
 | 196 | gen:thbdh6332 | 32175 | 66 | 14.62 |
-| 197 | gen:vyank6322 | 50672 | 16 | 14.17 |
+| 197 | custom:task197 | 5612 | 38 | 16.36 |
 | 198 | ext:thbdh6332 | 47510 | 1345 | 14.20 |
 | 199 | custom:task199 | 15598 | 199 | 15.33 |
 | 200 | ext:galaxy_v1 | 3192 | 63 | 16.91 |
@@ -273,7 +283,7 @@ _Updated: 2026-06-14 01:00_
 | 202 | ext:vyank6322 | 35226 | 22 | 14.53 |
 | 203 | custom:task203 | 4131 | 122 | 16.64 |
 | 204 | gen:vyank6322 | 45200 | 2050 | 14.24 |
-| 205 | gen:thbdh6332 | 69711 | 982 | 13.83 |
+| 205 | custom:task205 | 106354 | 2882 | 13.40 |
 | 206 | gen:thbdh6332 | 61296 | 90 | 13.98 |
 | 207 | ext:kojimar6275 | 1840 | 35 | 17.46 |
 | 208 | custom:task208 | 25213 | 233 | 14.86 |
@@ -283,12 +293,12 @@ _Updated: 2026-06-14 01:00_
 | 212 | ext:kojimar6275 | 8192 | 138 | 15.97 |
 | 213 | gen:thbdh6332 | 36599 | 103 | 14.49 |
 | 214 | ext:wguesdon6304 | 1320 | 75 | 17.76 |
-| 215 | conv59x1+b | 0 | 5910 | 16.32 |
+| 215 | custom:task215 | 11580 | 906 | 15.57 |
 | 216 | gen:vyank6322 | 92612 | 101 | 13.56 |
 | 217 | custom:task217 | 13608 | 24 | 15.48 |
 | 218 | gen:vyank6322 | 16438 | 46 | 15.29 |
 | 219 | ? | 18610 | 3435 | 15.00 |
-| 220 | ? | 26834 | 5666 | 14.61 |
+| 220 | custom:task220 | 0 | 900 | 18.20 |
 | 221 | custom:task221 | 2638 | 118 | 17.08 |
 | 222 | gen:thbdh6332 | 57948 | 87 | 14.03 |
 | 223 | ext:wguesdon6304 | 0 | 90 | 20.50 |
@@ -349,7 +359,7 @@ _Updated: 2026-06-14 01:00_
 | 278 | ext:kojimar6275 | 30132 | 362 | 14.67 |
 | 279 | ext:kojimar6275 | 25144 | 1186 | 14.82 |
 | 280 | gen:vyank6322 | 65626 | 905 | 13.89 |
-| 281 | gen:biohack_new | 69668 | 987 | 13.83 |
+| 281 | custom:task281 | 48818 | 78 | 14.20 |
 | 282 | ext:octavi6154 | 0 | 900 | 18.20 |
 | 283 | conv3x3+b | 0 | 910 | 18.19 |
 | 284 | custom:task284 | 34629 | 275 | 14.54 |
@@ -380,7 +390,7 @@ _Updated: 2026-06-14 01:00_
 | 309 | ext:kojimar6275 | 0 | 10 | 22.70 |
 | 310 | gen:thbdh6332 | 25573 | 166 | 14.84 |
 | 311 | ext:kojimar6275 | 0 | 30 | 21.60 |
-| 312 | conv1x59+b | 0 | 5910 | 16.32 |
+| 312 | custom:task312 | 5700 | 6 | 16.35 |
 | 313 | custom:task313 | 4516 | 138 | 16.55 |
 | 314 | ext:wguesdon6304 | 0 | 500 | 18.79 |
 | 315 | ext:kojimar6275 | 3348 | 39 | 16.87 |
@@ -412,7 +422,7 @@ _Updated: 2026-06-14 01:00_
 | 341 | ext:biohack_new | 14976 | 289 | 15.37 |
 | 342 | ext:kojimar6275 | 11556 | 57 | 15.64 |
 | 343 | gen:thbdh6332 | 27208 | 248 | 14.78 |
-| 344 | conv3x3+b | 0 | 910 | 18.19 |
+| 344 | custom:task344 | 0 | 910 | 18.19 |
 | 345 | ext:kojimar6275 | 9860 | 1856 | 15.63 |
 | 346 | gen:thbdh6332 | 9069 | 23 | 15.88 |
 | 347 | ext:wguesdon6304 | 612 | 35 | 18.53 |
@@ -450,7 +460,7 @@ _Updated: 2026-06-14 01:00_
 | 379 | gen:thbdh6332 | 69969 | 1730 | 13.82 |
 | 380 | ext:kojimar6275 | 720 | 8 | 18.41 |
 | 381 | ext:ghiotto_conv4 | 3350 | 146 | 16.84 |
-| 382 | gen:thbdh6332 | 80032 | 104 | 13.71 |
+| 382 | custom:task382 | 72542 | 1114 | 13.79 |
 | 383 | ext:thbdh6332 | 40254 | 1052 | 14.37 |
 | 384 | custom:task384 | 11236 | 181 | 15.66 |
 | 385 | ext:kojimar6275 | 0 | 30 | 21.60 |
