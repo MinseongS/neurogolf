@@ -1,13 +1,13 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-13 16:16_
+_Updated: 2026-06-13 16:41_
 
-**Total: 6502.06 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 6503.22 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
 | ext:kojimar6275 | 131 | 2255.37 |
-| memorizer4 | 129 | 1918.71 |
+| memorizer4 | 127 | 1890.67 |
 | ext:biohack_new | 29 | 464.98 |
 | ext:wguesdon6304 | 23 | 406.33 |
 | conv3x3+b | 13 | 236.43 |
@@ -50,9 +50,11 @@ _Updated: 2026-06-13 16:16_
 | custom:task065 | 1 | 15.49 |
 | custom:task217 | 1 | 15.48 |
 | custom:task199 | 1 | 15.33 |
+| custom:task234 | 1 | 15.10 |
 | custom:task301 | 1 | 15.04 |
 | custom:task064 | 1 | 14.77 |
 | ext:thbdh6285+pruned | 1 | 14.53 |
+| custom:task107 | 1 | 14.10 |
 
 ## Per task
 
@@ -164,7 +166,7 @@ _Updated: 2026-06-13 16:16_
 | 104 | ext:kojimar6275 | 2692 | 990 | 16.79 |
 | 105 | ext:kojimar6275 | 6987 | 68 | 16.14 |
 | 106 | ext:kojimar6275 | 1039 | 125 | 17.94 |
-| 107 | memorizer4(n=266,k=4,b=11,bb=30x30) | 39924 | 21122 | 13.98 |
+| 107 | custom:task107 | 40494 | 13540 | 14.10 |
 | 108 | ext:kojimar6275 | 0 | 1800 | 17.50 |
 | 109 | memorizer4(n=266,k=4,b=11,bb=12x12) | 18300 | 4532 | 14.96 |
 | 110 | memorizer4(n=266,k=4,b=11,bb=30x30) | 41700 | 22010 | 13.94 |
@@ -291,7 +293,7 @@ _Updated: 2026-06-13 16:16_
 | 231 | conv1x59+b | 0 | 5910 | 16.32 |
 | 232 | conv1x59+b | 0 | 5910 | 16.32 |
 | 233 | memorizer4(n=266,k=4,b=10,bb=20x21) | 39844 | 10067 | 14.18 |
-| 234 | memorizer4(n=266,k=4,b=11,bb=20x24) | 44444 | 12172 | 14.06 |
+| 234 | custom:task234 | 19812 | 110 | 15.10 |
 | 235 | ext:biohack_new | 1116 | 114 | 17.89 |
 | 236 | ext:galaxy_v1 | 640 | 1 | 18.54 |
 | 237 | ext:kojimar6275 | 14283 | 41 | 15.43 |

@@ -637,10 +637,10 @@
    "method": "ext:kojimar6275"
   },
   "107": {
-   "points": 13.980617042673202,
-   "memory": 39924,
-   "params": 21122,
-   "method": "memorizer4(n=266,k=4,b=11,bb=30x30)"
+   "points": 14.102631242957532,
+   "memory": 40494,
+   "params": 13540,
+   "method": "custom:task107"
   },
   "108": {
    "points": 17.504458056115745,
@@ -1399,10 +1399,10 @@
    "method": "memorizer4(n=266,k=4,b=10,bb=20x21)"
   },
   "234": {
-   "points": 14.05595309024438,
-   "memory": 44444,
-   "params": 12172,
-   "method": "memorizer4(n=266,k=4,b=11,bb=20x24)"
+   "points": 15.10042007229489,
+   "memory": 19812,
+   "params": 110,
+   "method": "custom:task234"
   },
   "235": {
    "points": 17.885230551633537,

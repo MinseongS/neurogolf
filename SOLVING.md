@@ -75,6 +75,17 @@ Concrete tactics:
 - a `[1,10,30,30]` float intermediate is 36,000B — almost never acceptable;
   slice to the channels you need first
 
+## Infeasible class — bail fast (don't burn effort)
+
+**Flood-fill / connectivity / BFS-reachability rules cannot beat the memorizer.**
+Tasks whose rule is "color the open region reachable from a seed", "fill the
+interior enclosed by a wall", maze/path connectivity, or any transitive-closure
+over the grid require iterative frontier propagation whose depth (often 40–80
+steps) must be unrolled (Loop/Scan are banned). Each step is a canvas-sized
+Conv/MaxPool (3,600 B float) → tens to hundreds of thousands of bytes → scores
+*below* the ~13.95 memorizer baseline. Confirmed dead on task338 and task286.
+If `--gen` shows flood/connectivity, report infeasible immediately and stop.
+
 ## Idioms for common ARC patterns
 
 - **per-cell color logic** → 1×1 or k×k Conv (try `solve_conv` first; it
