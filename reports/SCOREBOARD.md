@@ -1,13 +1,13 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-13 10:25_
+_Updated: 2026-06-13 10:36_
 
-**Total: 6477.51 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 6484.67 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
-| ext:kojimar6275 | 141 | 2410.18 |
-| memorizer4 | 136 | 2021.46 |
+| ext:kojimar6275 | 139 | 2378.74 |
+| memorizer4 | 133 | 1978.82 |
 | ext:biohack_new | 31 | 493.08 |
 | ext:wguesdon6304 | 23 | 406.33 |
 | conv3x3+b | 13 | 236.43 |
@@ -30,8 +30,13 @@ _Updated: 2026-06-13 10:25_
 | conv3x5+b | 1 | 17.68 |
 | conv5x5+b | 1 | 17.17 |
 | ext:ghiotto_conv4 | 1 | 16.84 |
+| custom:task203 | 1 | 16.64 |
 | conv5x9+b | 1 | 16.59 |
 | custom:task313 | 1 | 16.55 |
+| custom:task269 | 1 | 16.40 |
+| custom:task398 | 1 | 16.16 |
+| custom:task246 | 1 | 16.02 |
+| custom:task335 | 1 | 16.02 |
 | custom:task064 | 1 | 14.77 |
 | ext:thbdh6285+pruned | 1 | 14.53 |
 
@@ -241,7 +246,7 @@ _Updated: 2026-06-13 10:25_
 | 200 | ext:galaxy_v1 | 3192 | 63 | 16.91 |
 | 201 | memorizer4(n=266,k=4,b=11,bb=7x12) | 13700 | 3202 | 15.26 |
 | 202 | ext:vyank6322 | 35226 | 22 | 14.53 |
-| 203 | memorizer4(n=267,k=4,b=11,bb=18x18) | 32426 | 8705 | 14.38 |
+| 203 | custom:task203 | 4131 | 122 | 16.64 |
 | 204 | memorizer4(n=268,k=4,b=5,bb=20x20) | 37928 | 6904 | 14.29 |
 | 205 | memorizer4(n=266,k=4,b=11,bb=10x12) | 17004 | 4746 | 15.01 |
 | 206 | memorizer4(n=266,k=4,b=11,bb=12x12) | 18172 | 4468 | 14.97 |
@@ -284,7 +289,7 @@ _Updated: 2026-06-13 10:25_
 | 243 | memorizer4(n=265,k=4,b=11,bb=18x18) | 32382 | 8643 | 14.38 |
 | 244 | memorizer4(n=266,k=4,b=11,bb=4x6) | 9788 | 2216 | 15.61 |
 | 245 | memorizer4(n=267,k=4,b=5,bb=10x10) | 14666 | 2595 | 15.24 |
-| 246 | ext:kojimar6275 | 12960 | 431 | 15.50 |
+| 246 | custom:task246 | 7440 | 520 | 16.02 |
 | 247 | ext:kojimar6275 | 6142 | 26 | 16.27 |
 | 248 | ext:kojimar6275 | 4698 | 1812 | 16.22 |
 | 249 | ext:biohack_new | 758 | 34 | 18.33 |
@@ -307,7 +312,7 @@ _Updated: 2026-06-13 10:25_
 | 266 | conv3x3+b | 0 | 910 | 18.19 |
 | 267 | ext:kojimar6275 | 1160 | 47 | 17.90 |
 | 268 | ext:vyank6322 | 18808 | 57 | 15.15 |
-| 269 | ext:kojimar6275 | 8506 | 96 | 15.94 |
+| 269 | custom:task269 | 5366 | 50 | 16.40 |
 | 270 | ext:kojimar6275 | 24316 | 1185 | 14.85 |
 | 271 | memorizer4(n=267,k=4,b=11,bb=3x6) | 8502 | 1781 | 15.76 |
 | 272 | ext:kojimar6275 | 0 | 460 | 18.87 |
@@ -373,7 +378,7 @@ _Updated: 2026-06-13 10:25_
 | 332 | conv1x59+b | 0 | 5910 | 16.32 |
 | 333 | memorizer4(n=265,k=4,b=11,bb=10x12) | 16262 | 3898 | 15.09 |
 | 334 | ext:kojimar6275 | 572 | 37 | 18.59 |
-| 335 | memorizer4(n=266,k=4,b=5,bb=20x20) | 37884 | 6856 | 14.29 |
+| 335 | custom:task335 | 7440 | 520 | 16.02 |
 | 336 | ext:vyank6322 | 4484 | 343 | 16.52 |
 | 337 | ext:kojimar6275 | 0 | 10 | 22.70 |
 | 338 | ext:kojimar6275 | 43200 | 1816 | 14.29 |
@@ -436,6 +441,6 @@ _Updated: 2026-06-13 10:25_
 | 395 | ext:wguesdon6304 | 621 | 35 | 18.51 |
 | 396 | memorizer4(n=266,k=4,b=11,bb=8x12) | 14924 | 3620 | 15.17 |
 | 397 | memorizer4(n=266,k=4,b=11,bb=10x12) | 16284 | 3912 | 15.09 |
-| 398 | memorizer4(n=266,k=4,b=11,bb=30x30) | 39860 | 21090 | 13.98 |
+| 398 | custom:task398 | 4428 | 2459 | 16.16 |
 | 399 | ext:wguesdon6304 | 912 | 272 | 17.92 |
 | 400 | memorizer4(n=266,k=4,b=11,bb=5x6) | 10344 | 2509 | 15.54 |
