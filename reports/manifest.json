@@ -373,10 +373,10 @@
    "method": "gen:thbdh6332"
   },
   "63": {
-   "points": 14.666940264012474,
-   "memory": 30700,
-   "params": 32,
-   "method": "gen:wguesdon6315"
+   "points": 15.94001750961238,
+   "memory": 8580,
+   "params": 24,
+   "method": "custom:task063"
   },
   "64": {
    "points": 14.76684905277199,
@@ -1177,10 +1177,10 @@
    "method": "gen:thbdh6332"
   },
   "197": {
-   "points": 14.166555524825903,
-   "memory": 50672,
-   "params": 16,
-   "method": "gen:vyank6322"
+   "points": 16.360589175859513,
+   "memory": 5612,
+   "params": 38,
+   "method": "custom:task197"
   },
   "198": {
    "points": 14.203387993621556,
@@ -2062,7 +2062,7 @@
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
-   "method": "conv3x3+b"
+   "method": "custom:task344"
   },
   "345": {
    "points": 15.631289292052376,
