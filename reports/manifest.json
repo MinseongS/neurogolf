@@ -169,10 +169,10 @@
    "method": "ext:kojimar6275"
   },
   "29": {
-   "points": 13.923535076840455,
-   "memory": 50564,
-   "params": 14068,
-   "method": "memorizer4(n=266,k=4,b=11,bb=23x24)"
+   "points": 14.012320297707067,
+   "memory": 57214,
+   "params": 1927,
+   "method": "custom:task029"
   },
   "30": {
    "points": 16.278397655325804,
@@ -1243,10 +1243,10 @@
    "method": "ext:kojimar6275"
   },
   "208": {
-   "points": 14.009635415014182,
-   "memory": 46492,
-   "params": 12808,
-   "method": "memorizer4(n=266,k=4,b=11,bb=21x24)"
+   "points": 14.855686161297355,
+   "memory": 25213,
+   "params": 233,
+   "method": "custom:task208"
   },
   "209": {
    "points": 14.373976382010138,
@@ -2035,10 +2035,10 @@
    "method": "ext:kojimar6275"
   },
   "340": {
-   "points": 14.197530654712354,
-   "memory": 48980,
-   "params": 162,
-   "method": "ext:biohack_new"
+   "points": 14.257318765974684,
+   "memory": 44984,
+   "params": 1306,
+   "method": "custom:task340"
   },
   "341": {
    "points": 15.366682094831022,

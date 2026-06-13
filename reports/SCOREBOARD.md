@@ -1,14 +1,14 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-13 17:02_
+_Updated: 2026-06-13 17:23_
 
-**Total: 6504.86 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 6505.86 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
 | ext:kojimar6275 | 130 | 2241.42 |
-| memorizer4 | 127 | 1890.67 |
-| ext:biohack_new | 29 | 464.98 |
+| memorizer4 | 125 | 1862.74 |
+| ext:biohack_new | 28 | 450.78 |
 | ext:wguesdon6304 | 23 | 406.33 |
 | conv3x3+b | 13 | 236.43 |
 | ext:vyank6322 | 8 | 125.95 |
@@ -54,10 +54,13 @@ _Updated: 2026-06-13 17:02_
 | custom:task301 | 1 | 15.04 |
 | custom:task013 | 1 | 14.99 |
 | custom:task085 | 1 | 14.90 |
+| custom:task208 | 1 | 14.86 |
 | custom:task064 | 1 | 14.77 |
 | custom:task284 | 1 | 14.54 |
 | ext:thbdh6285+pruned | 1 | 14.53 |
+| custom:task340 | 1 | 14.26 |
 | custom:task107 | 1 | 14.10 |
+| custom:task029 | 1 | 14.01 |
 
 ## Per task
 
@@ -91,7 +94,7 @@ _Updated: 2026-06-13 17:02_
 | 026 | ext:kojimar6275 | 690 | 34 | 18.42 |
 | 027 | ext:kojimar6275 | 5777 | 37 | 16.33 |
 | 028 | ext:kojimar6275 | 4510 | 329 | 16.52 |
-| 029 | memorizer4(n=266,k=4,b=11,bb=23x24) | 50564 | 14068 | 13.92 |
+| 029 | custom:task029 | 57214 | 1927 | 14.01 |
 | 030 | ext:vyank6322 | 5878 | 256 | 16.28 |
 | 031 | memorizer4(n=266,k=4,b=11,bb=7x12) | 13572 | 3138 | 15.28 |
 | 032 | ext:kojimar6275 | 3336 | 69 | 16.87 |
@@ -270,7 +273,7 @@ _Updated: 2026-06-13 17:02_
 | 205 | memorizer4(n=266,k=4,b=11,bb=10x12) | 17004 | 4746 | 15.01 |
 | 206 | memorizer4(n=266,k=4,b=11,bb=12x12) | 18172 | 4468 | 14.97 |
 | 207 | ext:kojimar6275 | 1840 | 35 | 17.46 |
-| 208 | memorizer4(n=266,k=4,b=11,bb=21x24) | 46492 | 12808 | 14.01 |
+| 208 | custom:task208 | 25213 | 233 | 14.86 |
 | 209 | memorizer4(n=266,k=4,b=9,bb=16x21) | 33276 | 7917 | 14.37 |
 | 210 | ext:kojimar6275 | 0 | 30 | 21.60 |
 | 211 | ext:wguesdon6304 | 1440 | 81 | 17.67 |
@@ -402,7 +405,7 @@ _Updated: 2026-06-13 17:02_
 | 337 | ext:kojimar6275 | 0 | 10 | 22.70 |
 | 338 | ext:kojimar6275 | 43200 | 1816 | 14.29 |
 | 339 | ext:kojimar6275 | 776 | 108 | 18.22 |
-| 340 | ext:biohack_new | 48980 | 162 | 14.20 |
+| 340 | custom:task340 | 44984 | 1306 | 14.26 |
 | 341 | ext:biohack_new | 14976 | 289 | 15.37 |
 | 342 | ext:kojimar6275 | 11556 | 57 | 15.64 |
 | 343 | memorizer4(n=266,k=4,b=11,bb=5x18) | 13992 | 3343 | 15.24 |
