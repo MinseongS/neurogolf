@@ -13,7 +13,7 @@ import onnxruntime as ort
 from src.harness import load_task, evaluate, convert_to_numpy
 from src.genverify import fresh_pass, load_gen
 
-NF = 60
+NF = 120
 
 
 def fresh_ok_path(path, num, gen, n=NF):
