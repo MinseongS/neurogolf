@@ -991,10 +991,10 @@
    "method": "gen:thbdh6332"
   },
   "166": {
-   "points": 15.01710070803971,
-   "memory": 21616,
-   "params": 37,
-   "method": "ext:biohack_new"
+   "points": 16.20184728189281,
+   "memory": 6600,
+   "params": 22,
+   "method": "custom:task166"
   },
   "167": {
    "points": 18.47350514042921,
