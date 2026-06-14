@@ -2,6 +2,56 @@
 
 _Updated 2026-06-14. Real Kaggle LB: **6300.89** (400/400). Deadline 2026-07-15._
 
+## Reality check (2026-06-14 session — read this first)
+
+After Phase 0 recovery + two solve waves, the picture is clearer and **less rosy
+than the original ~7000 target**:
+
+1. **The recover_merge'd base already generalizes almost everywhere.** Audited the
+   entire top feasibility-ranked candidate set (240/119/189/341/51/12/343/156/268/
+   71/62/93/297/375/225/188/256/362/237/288/290/61 …) — **all 60/60 fresh**. There
+   is no pool of real-0 "jackpot" tasks waiting; the public/gen nets already
+   capture the rule on most tasks at stored 14–16.
+2. **Wins are incremental, not transformative.** A custom only helps when it BEATS
+   the current *generalizing* stored score with a MORE COMPACT net. Realistic gain
+   is **+1 to +2 per clean solve** (task159 +0.64, task166 +1.18), not +3–5.
+3. **The sub-16 floor is structurally hard.** The very lowest-stored tasks are
+   dominated by infeasible classes (multi-object reconstruction, template-match-
+   over-rotations, flood/connectivity, sprite-occlusion). Wave-16 was 1/12 feasible.
+4. **Compact 18+ nets need PURE permutation (Gather) or single-Conv per-cell rules
+   — but those are exactly what public nets already do well**, so they're not in
+   the sub-16 band. Most sub-16 feasible tasks need a *size-dependent mask* (e.g.
+   an anti-diagonal needing `size`), which forces ~6–8 canvas-sized intermediates
+   → ~10–14k memory → ~15.5pts, barely above the existing net. Worked example:
+   task375 (diagonal-X) has a correct single-`Where` build but still lands ~15.5
+   ≈ the current net. Not worth adopting.
+
+**Revised realistic ceiling: ~6450–6650**, not 7000. Path is grinding +1–2 wins on
+the ~30–50 genuinely-feasible-and-beatable tasks, plus Phase-3 robustness swaps.
+7000 would require a qualitatively different lever (not yet identified).
+
+## Method that works (proven this session)
+
+- Feasibility-rank candidates by GENERATOR SIGNATURE before spending agent quota
+  (grep for multi-object/creature/rotation-search markers = infeasible; flip/
+  mirror/rotate = clean permutation). The ranking script is in this session's
+  history (scans reports/arc_mapping.json generators).
+- 4 agents/wave, each given a 2–3 task shortlist; **agents build + verify
+  (evaluate + isolated fresh_pass 200/200) + write src/custom/taskNNN.py ONLY**.
+  They must NOT call src.adopt / pipeline / touch manifest / networks / commit
+  (manifest race). The MAIN loop adopts winners serially via `src.adopt N`.
+- Salvage: session-limit-killed agents often leave a valid src/custom file —
+  always re-validate leftovers with evaluate()+fresh_pass and try src.adopt.
+- **Constraint: parallel agent bursts exhaust the 5h rolling Opus cap fast.** Run
+  one 4-agent wave, adopt, commit, then wait for the window to refresh.
+
+## Next-wave ready targets (feasibility-ranked, all currently generalizing)
+
+Cleanest untriaged-feasible (spatial/recolor, no gravity confound): **240, 189,
+117** (117 has a small-sprite center-ID ambiguity — risky for 200/200), **297,
+225, 188** (crop/stamp), **341, 51, 12, 119** (gravity-packed — harder). Skip
+confirmed infeasible: 110 77 54 101 133 219 173 216 5 66 76 148 343(hard).
+
 ## The one thing that matters (learned the hard way)
 
 **Kaggle scores against FRESHLY GENERATED arc-gen instances, not the examples we
