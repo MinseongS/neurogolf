@@ -931,10 +931,10 @@
    "method": "ext:kojimar6275"
   },
   "156": {
-   "points": 14.943662613369662,
-   "memory": 21408,
-   "params": 1895,
-   "method": "gen:vyank6322"
+   "points": 15.564837486331053,
+   "memory": 11507,
+   "params": 1014,
+   "method": "custom:task156"
   },
   "157": {
    "points": 13.764225587175336,
