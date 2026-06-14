@@ -319,10 +319,10 @@
    "method": "ext:kojimar6275"
   },
   "54": {
-   "points": 13.50268575854399,
-   "memory": 95932,
-   "params": 2519,
-   "method": "gen:thbdh6332"
+   "points": 13.591269064047628,
+   "memory": 87646,
+   "params": 2459,
+   "method": "pub:galaxy"
   },
   "55": {
    "points": 14.825531566735503,
@@ -571,10 +571,10 @@
    "method": "ext:wguesdon6304"
   },
   "96": {
-   "points": 12.970473620407255,
-   "memory": 167523,
-   "params": 109,
-   "method": "gen:thbdh6332"
+   "points": 13.029991518560207,
+   "memory": 157839,
+   "params": 107,
+   "method": "pub:galaxy"
   },
   "97": {
    "points": 14.108719993901007,
@@ -964,7 +964,7 @@
    "points": 14.67019950684287,
    "memory": 30554,
    "params": 78,
-   "method": "pub6372:ovr"
+   "method": "pub:thbdh6332"
   },
   "162": {
    "points": 14.136645118473172,
@@ -1396,7 +1396,7 @@
    "points": 13.264715291204286,
    "memory": 123849,
    "params": 1053,
-   "method": "pub6372:ovr"
+   "method": "pub:galaxy"
   },
   "234": {
    "points": 15.10042007229489,
@@ -1660,7 +1660,7 @@
    "points": 15.534010165153349,
    "memory": 12667,
    "params": 246,
-   "method": "ext:biohack_new"
+   "method": "pub:galaxy"
   },
   "278": {
    "points": 14.674714778068148,
@@ -1912,7 +1912,7 @@
    "points": 14.580490348791063,
    "memory": 33406,
    "params": 101,
-   "method": "gen:thbdh6332"
+   "method": "pub:galaxy"
   },
   "320": {
    "points": 16.9893084608697,
@@ -2143,10 +2143,10 @@
    "method": "ext:kojimar6275"
   },
   "358": {
-   "points": 14.223734827921463,
-   "memory": 47649,
-   "params": 222,
-   "method": "ext:thbdh6332"
+   "points": 14.27918054362285,
+   "memory": 45069,
+   "params": 220,
+   "method": "pub:conv4"
   },
   "359": {
    "points": 14.68066805761084,
@@ -2191,10 +2191,10 @@
    "method": "gen:vyank6322"
   },
   "366": {
-   "points": 13.501477765340516,
-   "memory": 97119,
-   "params": 1451,
-   "method": "gen:vyank6322"
+   "points": 13.503834196845112,
+   "memory": 96902,
+   "params": 1436,
+   "method": "pub:conv4"
   },
   "367": {
    "points": 13.140963189954599,
@@ -2257,10 +2257,10 @@
    "method": "custom:task376"
   },
   "377": {
-   "points": 14.508614677623024,
-   "memory": 35471,
+   "points": 14.577718654048704,
+   "memory": 33067,
    "params": 533,
-   "method": "gen:vyank6322"
+   "method": "pub:galaxy"
   },
   "378": {
    "points": 14.428477967719003,
