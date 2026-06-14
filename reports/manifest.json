@@ -19,10 +19,10 @@
    "method": "ext:kojimar6275"
   },
   "4": {
-   "points": 14.084547965521434,
-   "memory": 54000,
-   "params": 1020,
-   "method": "gen:thbdh6332"
+   "points": 14.239441075249688,
+   "memory": 46080,
+   "params": 1045,
+   "method": "pub6372:ovr"
   },
   "5": {
    "points": 13.509903135969793,
@@ -109,10 +109,10 @@
    "method": "gen:thbdh6332"
   },
   "19": {
-   "points": 14.308191460034331,
-   "memory": 43800,
-   "params": 194,
-   "method": "custom:task019"
+   "points": 15.477992510321576,
+   "memory": 13580,
+   "params": 77,
+   "method": "pub6372:ovr"
   },
   "20": {
    "points": 14.138235598922657,
@@ -199,10 +199,10 @@
    "method": "gen:thbdh6332"
   },
   "34": {
-   "points": 13.989551770433591,
-   "memory": 60408,
-   "params": 95,
-   "method": "gen:thbdh6332"
+   "points": 15.649984645951335,
+   "memory": 11421,
+   "params": 78,
+   "method": "pub6372:ovr"
   },
   "35": {
    "points": 15.36028269986934,
@@ -337,10 +337,10 @@
    "method": "ext:kojimar6275"
   },
   "57": {
-   "points": 14.71452069554135,
-   "memory": 29284,
-   "params": 20,
-   "method": "gen:thbdh6332"
+   "points": 16.004091238736006,
+   "memory": 8044,
+   "params": 26,
+   "method": "pub6372:ovr"
   },
   "58": {
    "points": 15.314792843112095,
@@ -391,10 +391,10 @@
    "method": "custom:task065"
   },
   "66": {
-   "points": 13.506236967294528,
-   "memory": 97964,
-   "params": 138,
-   "method": "gen:biohack_new"
+   "points": 13.861957093260212,
+   "memory": 68604,
+   "params": 133,
+   "method": "pub6372:ovr"
   },
   "67": {
    "points": 19.247427361174367,
@@ -415,16 +415,16 @@
    "method": "gen:vyank6322"
   },
   "70": {
-   "points": 13.90050125280863,
-   "memory": 66060,
-   "params": 78,
-   "method": "gen:thbdh6332"
+   "points": 14.4185296674237,
+   "memory": 39304,
+   "params": 94,
+   "method": "pub6372:ovr"
   },
   "71": {
-   "points": 13.790235794330012,
-   "memory": 72704,
-   "params": 1144,
-   "method": "gen:thbdh6332"
+   "points": 13.940307579959818,
+   "memory": 63088,
+   "params": 469,
+   "method": "pub6372:ovr"
   },
   "72": {
    "points": 17.8229812340901,
@@ -523,10 +523,10 @@
    "method": "ext:kojimar6275"
   },
   "88": {
-   "points": 13.846352864838618,
-   "memory": 69698,
-   "params": 120,
-   "method": "gen:biohack_new"
+   "points": 14.021475895324468,
+   "memory": 58478,
+   "params": 124,
+   "method": "pub6372:ovr"
   },
   "89": {
    "points": 14.260261089935476,
@@ -541,10 +541,10 @@
    "method": "gen:thbdh6332"
   },
   "91": {
-   "points": 14.152489823851827,
-   "memory": 51328,
-   "params": 78,
-   "method": "gen:biohack_new"
+   "points": 14.800229964792921,
+   "memory": 26833,
+   "params": 64,
+   "method": "pub6372:ovr"
   },
   "92": {
    "points": 14.260542795338498,
@@ -649,10 +649,10 @@
    "method": "ext:kojimar6275"
   },
   "109": {
-   "points": 14.05795098692995,
-   "memory": 54573,
-   "params": 1930,
-   "method": "custom:task109"
+   "points": 14.756119336099422,
+   "memory": 27888,
+   "params": 222,
+   "method": "pub6372:ovr"
   },
   "110": {
    "points": 13.483251850806106,
@@ -964,13 +964,13 @@
    "points": 14.67019950684287,
    "memory": 30554,
    "params": 78,
-   "method": "ext:thbdh6285"
+   "method": "pub6372:ovr"
   },
   "162": {
-   "points": 13.944501582071068,
-   "memory": 63248,
-   "params": 43,
-   "method": "gen:thbdh6332"
+   "points": 14.136645118473172,
+   "memory": 52168,
+   "params": 59,
+   "method": "pub6372:ovr"
   },
   "163": {
    "points": 14.916318151686092,
@@ -1057,10 +1057,10 @@
    "method": "conv1x59+b"
   },
   "177": {
-   "points": 14.181702811871515,
-   "memory": 49824,
-   "params": 102,
-   "method": "gen:biohack_new"
+   "points": 14.559960599127,
+   "memory": 34104,
+   "params": 98,
+   "method": "pub6372:ovr"
   },
   "178": {
    "points": 15.478065735525723,
@@ -1141,10 +1141,10 @@
    "method": "custom:task190"
   },
   "191": {
-   "points": 14.042392073687841,
-   "memory": 49554,
-   "params": 7835,
-   "method": null
+   "points": 11.527906941253965,
+   "memory": 709177,
+   "params": 165,
+   "method": "pub6372:base"
   },
   "192": {
    "points": 14.14161657647865,
@@ -1219,10 +1219,10 @@
    "method": "custom:task203"
   },
   "204": {
-   "points": 13.904956413153025,
-   "memory": 64800,
-   "params": 1044,
-   "method": "custom:task204"
+   "points": 14.23698256141148,
+   "memory": 45200,
+   "params": 2041,
+   "method": "pub6372:ovr"
   },
   "205": {
    "points": 13.83389816291813,
@@ -1231,10 +1231,10 @@
    "method": "gen:thbdh6332"
   },
   "206": {
-   "points": 13.975062924893004,
-   "memory": 61296,
-   "params": 90,
-   "method": "gen:thbdh6332"
+   "points": 15.025169007395737,
+   "memory": 21408,
+   "params": 71,
+   "method": "pub6372:ovr"
   },
   "207": {
    "points": 17.463636061595487,
@@ -1291,10 +1291,10 @@
    "method": "custom:task215"
   },
   "216": {
-   "points": 13.562736020953684,
-   "memory": 92612,
-   "params": 101,
-   "method": "gen:vyank6322"
+   "points": 13.813247986663525,
+   "memory": 72072,
+   "params": 96,
+   "method": "pub6372:ovr"
   },
   "217": {
    "points": 15.479824750930902,
@@ -1393,10 +1393,10 @@
    "method": "gen:thbdh6332"
   },
   "233": {
-   "points": 13.251931269136003,
-   "memory": 125010,
-   "params": 1499,
-   "method": "gen:thbdh6332"
+   "points": 13.264715291204286,
+   "memory": 123849,
+   "params": 1053,
+   "method": "pub6372:ovr"
   },
   "234": {
    "points": 15.10042007229489,
@@ -1429,10 +1429,10 @@
    "method": "gen:thbdh6332"
   },
   "239": {
-   "points": 14.948351096483352,
-   "memory": 21922,
-   "params": 1272,
-   "method": "custom:task239"
+   "points": 15.962466592449186,
+   "memory": 8294,
+   "params": 119,
+   "method": "pub6372:ovr"
   },
   "240": {
    "points": 15.131259183793707,
@@ -1465,10 +1465,10 @@
    "method": "gen:biohack_new"
   },
   "245": {
-   "points": 14.724535183516696,
-   "memory": 28916,
-   "params": 96,
-   "method": "gen:thbdh6332"
+   "points": 15.965561833015588,
+   "memory": 8316,
+   "params": 71,
+   "method": "pub6372:ovr"
   },
   "246": {
    "points": 16.017815721161572,
@@ -1501,10 +1501,10 @@
    "method": "ext:biohack_new"
   },
   "251": {
-   "points": 13.481291290274044,
-   "memory": 100560,
-   "params": 20,
-   "method": "gen:thbdh6332"
+   "points": 14.885117643184211,
+   "memory": 24672,
+   "params": 36,
+   "method": "pub6372:ovr"
   },
   "252": {
    "points": 16.295166090312208,
@@ -1579,10 +1579,10 @@
    "method": "ext:vyank6322"
   },
   "264": {
-   "points": 15.127848327773725,
-   "memory": 15614,
-   "params": 3769,
-   "method": null
+   "points": 13.154639006390818,
+   "memory": 138584,
+   "params": 852,
+   "method": "pub6372:base"
   },
   "265": {
    "points": 14.424537832136728,
@@ -1639,10 +1639,10 @@
    "method": "ext:kojimar6275"
   },
   "274": {
-   "points": 15.999146852890542,
-   "memory": 0,
-   "params": 8110,
-   "method": "conv9x9+b"
+   "points": 16.623218962300506,
+   "memory": 4226,
+   "params": 119,
+   "method": "pub6372:ovr"
   },
   "275": {
    "points": 14.15589990344465,
@@ -1681,10 +1681,10 @@
    "method": "gen:vyank6322"
   },
   "281": {
-   "points": 14.202549127473807,
-   "memory": 48818,
-   "params": 78,
-   "method": "custom:task281"
+   "points": 14.850551210869217,
+   "memory": 25330,
+   "params": 247,
+   "method": "pub6372:ovr"
   },
   "282": {
    "points": 18.197605236675688,
@@ -1795,16 +1795,16 @@
    "method": "ext:biohack_new"
   },
   "300": {
-   "points": 13.741373412351637,
-   "memory": 77438,
-   "params": 108,
-   "method": "gen:thbdh6332"
+   "points": 14.762937260384033,
+   "memory": 27812,
+   "params": 107,
+   "method": "pub6372:ovr"
   },
   "301": {
-   "points": 15.043493143488236,
-   "memory": 21022,
-   "params": 67,
-   "method": "custom:task301"
+   "points": 15.384794699987685,
+   "memory": 14915,
+   "params": 76,
+   "method": "pub6372:ovr"
   },
   "302": {
    "points": 16.03863393937255,
@@ -1963,10 +1963,10 @@
    "method": "ext:kojimar6275"
   },
   "328": {
-   "points": 13.886165004389737,
-   "memory": 63207,
-   "params": 3886,
-   "method": "gen:galaxy"
+   "points": 14.290081225450589,
+   "memory": 43287,
+   "params": 1511,
+   "method": "pub6372:ovr"
   },
   "329": {
    "points": 15.76399188127524,
@@ -2215,10 +2215,10 @@
    "method": "ext:galaxy_v1"
   },
   "370": {
-   "points": 13.886671892110053,
-   "memory": 64602,
-   "params": 2457,
-   "method": "gen:thbdh6332"
+   "points": 14.055070337410799,
+   "memory": 55222,
+   "params": 1444,
+   "method": "pub6372:ovr"
   },
   "371": {
    "points": 15.50983333153762,
@@ -2287,10 +2287,10 @@
    "method": "ext:ghiotto_conv4"
   },
   "382": {
-   "points": 13.792839115032319,
-   "memory": 72542,
-   "params": 1114,
-   "method": "custom:task382"
+   "points": 13.925641514643052,
+   "memory": 64392,
+   "params": 104,
+   "method": "pub6372:ovr"
   },
   "383": {
    "points": 14.371236953152405,
@@ -2371,10 +2371,10 @@
    "method": "ext:wguesdon6304"
   },
   "396": {
-   "points": 14.009399355188783,
-   "memory": 58199,
-   "params": 1115,
-   "method": "gen:thbdh6332"
+   "points": 14.521585898291358,
+   "memory": 35025,
+   "params": 515,
+   "method": "pub6372:ovr"
   },
   "397": {
    "points": 15.084929786220805,
