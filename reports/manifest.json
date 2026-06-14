@@ -1129,10 +1129,10 @@
    "method": "gen:thbdh6332"
   },
   "189": {
-   "points": 14.887914167591697,
-   "memory": 24380,
-   "params": 259,
-   "method": "gen:thbdh6332"
+   "points": 15.348570008942724,
+   "memory": 13938,
+   "params": 1606,
+   "method": "custom:task189"
   },
   "190": {
    "points": 15.700276066889131,
@@ -1435,10 +1435,10 @@
    "method": "custom:task239"
   },
   "240": {
-   "points": 14.8892137657115,
-   "memory": 10872,
-   "params": 13735,
-   "method": "ext:biohack_new"
+   "points": 15.131259183793707,
+   "memory": 18360,
+   "params": 957,
+   "method": "custom:task240"
   },
   "241": {
    "points": 25.0,
