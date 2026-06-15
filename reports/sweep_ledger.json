@@ -4334,14 +4334,14 @@
  {
   "task": 362,
   "arc_id": "e48d4e1a",
-  "points": 15.61,
+  "points": 16.33,
   "memory": 11894,
   "params": 45,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "16.33 adopted (15.61->16.33, +0.72); floor 5685. INSIGHT: offset-shifted cross closed-form, line positions = colored-count==gridside"
  },
  {
   "task": 363,

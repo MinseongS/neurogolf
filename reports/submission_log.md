@@ -21,6 +21,11 @@ delta from a generalizing floor-break win ≈ LB delta. Keep grinding; trust sto
 Two submissions now: both +stored ≈ +LB exactly, gap pinned at ~61.2. The PROJECTED LB (stored − gap)
 is trustworthy to ±0.1 — no need to submit to know where we stand; submit only to re-anchor/lock.
 
+| 3 | 06-15 18:21 | 6467.99 | 290,195,188,341,375 | **6406.72** | **+6.48** | proj was 6406.72 → **0.00 error**. stored Δ +6.48 → LB +6.48 = 1:1. gap 61.27 PINNED. 3rd consecutive exact projection. |
+
+## ⭐ 3 submissions, all exact (errors 0.01/0.01/0.00). Gap pinned at 61.27. Stored is a perfect LB proxy
+(minus the constant 61.27 base-net gap). Submit only to lock/re-anchor; the projected LB is the truth.
+
 ## Procedure (folded into loop)
 1. trigger: every 5 adopted wins.
 2. `python -c "from src.pipeline import pack; pack()"` (networks/ only; never --pack flag).
