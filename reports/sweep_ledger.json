@@ -230,14 +230,14 @@
  {
   "task": 20,
   "arc_id": "11852cab",
-  "points": 15.71,
+  "points": 16.38,
   "memory": 52053,
   "params": 91,
   "method": "gen:vyank6322",
   "class": "FEASIBLE",
   "sig": "-",
   "status": "done",
-  "verdict": "15.71 adopted (+1.57); RE-ATTACK: uint8 crop -> ~17, mem 10708>>floor"
+  "verdict": "16.38 adopted (14.14->15.71->16.38, +2.24); near floor (2048 crop). INSIGHT: geometry bounds>dtype"
  },
  {
   "task": 21,

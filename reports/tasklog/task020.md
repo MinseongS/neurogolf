@@ -12,26 +12,25 @@ OUTPUT completes all rings. Task = detect center + 4 ring colors, re-stamp the f
 | # | angle | tier | mem | params | pts | fresh | outcome |
 |---|---|---|---|---|---|---|---|
 | 1 | center via stamp-correlation==10, ring color via max-over-ring, restamp uint8 L on 10×10 crop → Pad → Equal | B-ish | 10708 | 160 | 15.71 | 200/200 (+1500/1500) | ADOPTED (+1.57) |
+| 2 | RE-ATTACK: 8×8 crop (center∈[3,6]²), channels 1..8 only, drop presW/onesW convs (pres=V>0), fused Sum | B | 5422 | 145 | 16.38 | 200/200 (+1500/1500) | ADOPTED (+0.67) |
 
 ## Best achieved
-15.71 @ mem 10708 params 160 — adopted? **Y**. Beats prior 14.14? Y (+1.57).
+16.38 @ mem 5422 params 145 — adopted? **Y**. Cumulative 14.14→16.38 (+2.24).
 
-## Irreducible-floor analysis
-NOT at floor. mem_profile: **4000B fp32 input crop [1,10,10,10]** dominates (1000 elem × 4) + 900 uint8 L
-Pad + 3×400B fp32 Conv + ~25 × 200B fp16 planes (correlation/color reductions). The 4000B crop is one-hot
-(values 0/1) held in fp32 → 4× waste; the fp16 planes are already lean.
+## Irreducible-floor analysis (after attempt 2)
+At/near floor. mem_profile: **2048B fp32 [1,8,8,8] crop** dominates + 900B uint8 L[1,1,30,30] (feeds free
+Equal). The crop is irreducible-ish: an 8-channel small tensor needs either an fp32 crop (2048) or casting
+full input to small dtype first (≥9000B cast) — Pad can't retype, so the crop is the cheapest gateway. The
+900B L is minimal (30×30 needed so Equal writes straight into FREE output incl. selective bg channel0).
 
-## OPEN ANGLES (re-attack)
-- **Crop input as uint8 or fp16, not fp32** (one-hot is 0/1). 4000→1000 (uint8) or 2000 (fp16). Conv needs
-  float, but ORT runs Conv in fp32 internally regardless of declared dtype — feed a fp16 crop, or do the
-  correlation Conv straight on a smaller-dtype crop. ⇒ mem ~7–8k ⇒ ~16.2 pts.
-- **Avoid the full [1,10,10,10] crop**: center detection only needs the present-mask (ReduceMax over
-  channels → [1,1,10,10], 100 elem). Color reads need per-ring argmax but only at 13 fixed offsets — gather
-  those 13 cells, don't carry the whole 10-channel crop. ⇒ could drop the 4000 entirely ⇒ ~17 pts.
-- The 3 fp32 Convs (400 each) → fp16 (200) if exact (counts ≤13, colors ≤9 — fp16-exact). −600B.
+## OPEN ANGLES (mostly exhausted — diminishing)
+- split crop into channels{1,2,3,4}+separate color-8 grab (<2048) — needs 2 Pads, likely net-neutral.
+- 30×30 uint8 V via Conv→Cast then crop — rejected, 3600 fp32 conv output > 2048 crop.
 
 ## INSIGHT (transferable)
-⭐ Carrying the full [1,10,H,W] one-hot crop in fp32 is the single most common avoidable cost. Two fixes:
-(1) downcast the crop (one-hot ⇒ uint8/fp16 exact); (2) better, REDUCE to a present-mask [1,1,H,W] for
-geometry and only Gather the few cells whose COLOR you actually need. Detection rarely needs all 10
-channels carried full-size.
+⭐⭐ **Geometry bounds beat dtype tricks.** The highest-leverage move on a size-bounded detection task:
+read the generator's coordinate bounds and shrink the working canvas to the TRUE active region (center∈[3,6]²
++radius2 ⇒ 8×8, not 10×10 or 30×30), AND crop out unused color channels (colors∈{1,2,3,4,8} ⇒ channels 1..8).
+An 8×8×8 fp32 crop (2048) beats any fp16-via-full-cast path because Pad cannot retype and the full-size cast
+intermediate dominates. Also: derive masks from each other (pres=(V>0); in-grid via 0-pad border) to DELETE
+whole channel-reduction convs, not just downcast them. → promote to project memory.
