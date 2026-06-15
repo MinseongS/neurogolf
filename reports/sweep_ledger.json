@@ -392,8 +392,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "mega",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: 1e32b0e9: broadcast the cell(0,0) sprite to all 9 hollywood-square cel"
+  "status": "pending-retry",
+  "verdict": "agent STALLED at 600s from the START (systemic env degradation, not task-specific). Re-build when infra recovers."
  },
  {
   "task": 34,
@@ -2120,8 +2120,8 @@
   "method": "gen:biohack_new",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: un-duplicate crop + mirror: 7468f01a crops the colored box region and "
+  "status": "pending-retry",
+  "verdict": "agent STALLED at 600s from the START (systemic env degradation, not task-specific). Re-build when infra recovers."
  },
  {
   "task": 178,
@@ -2312,8 +2312,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE B ~16.8pt: 7f4411dc: keep only isolated pixels (those with empty horiz OR vert ne"
+  "status": "pending-retry",
+  "verdict": "agent STALLED at 600s from the START (systemic env degradation, not task-specific). Re-build when infra recovers."
  },
  {
   "task": 194,
