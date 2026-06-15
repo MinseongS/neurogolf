@@ -7,9 +7,11 @@ Fast triage per task (small train/verify, k=1 then 3). Any task that reaches
 stored-ok + FRESH clean is re-verified at full strength and, if still clean and
 it BEATS the current adopted points, the custom file is written (NOT adopted —
 main runs src.adopt). Results logged to reports/conv_hits.json incrementally."""
-import json, sys
+import json, os, sys
 import importlib.util
 
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+os.environ.setdefault("ORT_NUM_THREADS", "1")
 sys.path.insert(0, "/tmp/arc-gen")
 # load the solver module directly (reports/ is not a package)
 spec = importlib.util.spec_from_file_location("conv_fit", "reports/conv_fit.py")
@@ -30,18 +32,20 @@ if arg == "auto":
 else:
     cand = [int(x) for x in arg.split(",")]
 
-print(f"sweeping {len(cand)} tasks")
+HITS_PATH = os.environ.get("CONV_HITS", "reports/conv_hits.json")
+print(f"sweeping {len(cand)} tasks -> {HITS_PATH}", flush=True)
 hits = {}
 try:
-    hits = json.load(open("reports/conv_hits.json"))
+    hits = json.load(open(HITS_PATH))
 except Exception:
     pass
 
-for N in cand:
+for ci, N in enumerate(cand):
+    print(f"[{ci+1}/{len(cand)}] task{N:03d}...", flush=True)
     try:
         # fast triage: k=1 then k=3, small budgets
         res = conv_fit.solve(N, ks=(1, 3), n_train=200, n_verify=60,
-                             rounds=6, write=False, verbose=False)
+                             rounds=4, write=False, verbose=False)
     except Exception as e:
         print(f"task{N:03d}: error {e}")
         continue
@@ -59,7 +63,7 @@ for N in cand:
           f"(cur {cur_pts(N):.2f}, +{beat:.2f}) [{tag}]")
     hits[str(N)] = {"k": full["k"], "points": round(full["points"], 2),
                     "cur": round(cur_pts(N), 2), "gain": round(beat, 2)}
-    json.dump(hits, open("reports/conv_hits.json", "w"), indent=1)
+    json.dump(hits, open(HITS_PATH, "w"), indent=1)
     if full["points"] > cur_pts(N) + 1e-9:
         conv_fit.emit_custom(full["W"], full["B"], full["k"], N)
 

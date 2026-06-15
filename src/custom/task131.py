@@ -15,14 +15,16 @@ Rule (recovered EXACTLY on all 266 generator examples):
   Horizontal-red is the transpose of the vertical case.
 
 Floor-break encoding (single canonical branch + final Equal; no [1,10,30,30] tensor):
-  We extract green/red/in-grid planes with 1x1 Convs (free input -> [1,1,30,30]).
-  We pick a CANONICAL orientation in which the red line is a COLUMN: if `input`
-  already has a red column we use the planes as-is, else we use their transpose
-  (a red row becomes a red column).  We run ONE vertical-rule subgraph producing a
-  uint8 label map L[30,30], then transpose L back where we transposed the input.
-  The data-dependent column shift of the green plane is done with a Gather using a
-  computed index vector idx[c'] = c'-s.  Final free BOOL output = Equal(L,arange).
-  All values are small integers, exact in float32 / uint8.
+  Three planes (green/red/in-grid) are made with 1x1 Convs / ReduceMax from the free
+  `input` ([1,1,30,30] float each).  We compute the rc / cmin / cmax / shift / cyan
+  scalars from cheap 1-D row AND column aggregates of those planes, and pick the set
+  belonging to whichever orientation has a full red line (column => vertical).
+  The 2-D label assembly is done on uint8 planes in a CANONICAL orientation (red
+  line vertical): green/red/in-grid planes are cast to uint8, transposed, and
+  selected by orientation.  The green column shift is a Gather with idx[c']=c'-s.
+  The uint8 label L[30,30] is transposed back where we transposed, reshaped to
+  [1,1,30,30], and the free BOOL output = Equal(L, arange).  All values are small
+  integers, exact in float32 / uint8.
 """
 
 import numpy as np
@@ -53,135 +55,178 @@ def build(task):
         nodes.append(helper.make_node(op, ins, [out], **attrs))
         return out
 
-    init("colvec", np.arange(N, dtype=np.float32).reshape(1, 1, 1, N), np.float32)  # [1,1,1,30]
-    init("idxbase", np.arange(N, dtype=np.float32), np.float32)                      # [30]
+    M = 20  # working canvas for 2-D ops (grids are <=18; redline/cyan/green all < 20)
+    init("idxbase", np.arange(M, dtype=np.float32), np.float32)             # [M]
     init("zero", np.array(0.0, np.float32), np.float32)
     init("one", np.array(1.0, np.float32), np.float32)
     init("half", np.array(0.5, np.float32), np.float32)
     init("big", np.array(1000.0, np.float32), np.float32)
-    init("s11", np.array([1, 1], np.int64), np.int64)
-
-    # --- extract green / red / in-grid planes ONCE (no [1,10,30,30] tensor) --
-    gw = np.zeros((1, 10, 1, 1), np.float32); gw[0, 3, 0, 0] = 1.0
-    rw = np.zeros((1, 10, 1, 1), np.float32); rw[0, 2, 0, 0] = 1.0
-    init("gw", gw, np.float32)
-    init("rw", rw, np.float32)
-    n("Conv", ["input", "gw"], "Gp")   # [1,1,30,30] green
-    n("Conv", ["input", "rw"], "Rp")   # [1,1,30,30] red
-    n("ReduceMax", ["input"], "IGp", axes=[1], keepdims=1)  # [1,1,30,30] in-grid
-
-    # --- decide canonical orientation: does `input` have a full red COLUMN? ---
-    # red column c: colR[c] == colIG[c] and colR[c] > 0   (full red over in-grid rows)
-    n("ReduceSum", ["Rp"], "colR0", axes=[2], keepdims=1)    # [1,1,1,30]
-    n("ReduceSum", ["IGp"], "colIG0", axes=[2], keepdims=1)  # [1,1,1,30]
-    n("Greater", ["colR0", "zero"], "rpos0")
-    n("Sub", ["colR0", "colIG0"], "rd0"); n("Abs", ["rd0"], "rda0")
-    n("Less", ["rda0", "half"], "req0")
-    n("And", ["rpos0", "req0"], "rc0_b")
-    n("Cast", ["rc0_b"], "rc0f", to=F)
-    n("ReduceMax", ["rc0f"], "hasrcf", axes=[1, 2, 3], keepdims=1)  # [1,1,1,1]
-    n("Reshape", ["hasrcf", "s11"], "hasrc11")
-    n("Greater", ["hasrc11", "half"], "sel11")  # [1,1] bool
-
-    # --- transposed planes (red row -> red column) --------------------------
-    n("Transpose", ["Gp"], "GpT", perm=[0, 1, 3, 2])
-    n("Transpose", ["Rp"], "RpT", perm=[0, 1, 3, 2])
-    n("Transpose", ["IGp"], "IGpT", perm=[0, 1, 3, 2])
-    # squeeze all to [30,30] then select canonical planes
-    for nm in ["Gp", "Rp", "IGp", "GpT", "RpT", "IGpT"]:
-        n("Squeeze", [nm], nm + "2", axes=[0, 1])  # [30,30]
-    n("Where", ["sel11", "Gp2", "GpT2"], "G")    # [30,30] canonical green
-    n("Where", ["sel11", "Rp2", "RpT2"], "R")    # canonical red
-    n("Where", ["sel11", "IGp2", "IGpT2"], "IG") # canonical in-grid
-
-    # --- vertical-rule on canonical [30,30] planes --------------------------
-    # column aggregates (reduce over rows = axis 0)
-    n("ReduceSum", ["R"], "colR", axes=[0], keepdims=1)    # [1,30]
-    n("ReduceSum", ["IG"], "colIG", axes=[0], keepdims=1)  # [1,30]
-    n("ReduceMax", ["G"], "gcol", axes=[0], keepdims=1)    # [1,30] green col presence
-    init("colrow", np.arange(N, dtype=np.float32).reshape(1, N), np.float32)  # [1,30]
-
-    # red column rc (exactly one)
-    n("Greater", ["colR", "zero"], "rpos")
-    n("Sub", ["colR", "colIG"], "rdc"); n("Abs", ["rdc"], "rdca")
-    n("Less", ["rdca", "half"], "req")
-    n("And", ["rpos", "req"], "redcol_b")
-    n("Cast", ["redcol_b"], "redcol", to=F)
-    n("Mul", ["redcol", "colrow"], "rcw")
-    n("ReduceSum", ["rcw"], "rc", axes=[1], keepdims=1)  # [1,1]
-
-    # green bbox cmin / cmax
-    n("Mul", ["gcol", "colrow"], "cmaxw")
-    n("ReduceMax", ["cmaxw"], "cmax", axes=[1], keepdims=1)  # [1,1]
-    n("Sub", ["one", "gcol"], "nog"); n("Mul", ["nog", "big"], "pen")
-    n("Add", ["cmaxw", "pen"], "cminw")
-    n("ReduceMin", ["cminw"], "cmin", axes=[1], keepdims=1)  # [1,1]
-
-    # direction + shift + cyan column
-    n("Less", ["cmax", "rc"], "left_b")
-    n("Cast", ["left_b"], "left", to=F)
-    n("Sub", ["one", "left"], "right")
-    n("Sub", ["rc", "one"], "rcm1"); n("Sub", ["rcm1", "cmax"], "sL")
-    n("Add", ["rc", "one"], "rcp1"); n("Sub", ["rcp1", "cmin"], "sR")
-    n("Mul", ["sL", "left"], "sLm"); n("Mul", ["sR", "right"], "sRm")
-    n("Add", ["sLm", "sRm"], "s")  # [1,1] shift
-    n("Add", ["cmin", "s"], "cycL0"); n("Sub", ["cycL0", "one"], "cycL")
-    n("Add", ["cmax", "s"], "cycR0"); n("Add", ["cycR0", "one"], "cycR")
-    n("Mul", ["cycL", "left"], "cycLm"); n("Mul", ["cycR", "right"], "cycRm")
-    n("Add", ["cycLm", "cycRm"], "cyc")  # [1,1]
-
-    # --- shift green plane by s along columns via Gather --------------------
-    # idx[c'] = c' - s  (clamped to [0,N-1]); Gather columns of G.
-    n("Reshape", ["s", "s11"], "s2")          # [1,1]
-    n("Squeeze", ["s2"], "ss", axes=[0, 1])   # scalar
-    n("Sub", ["idxbase", "ss"], "idxf")       # [30]
-    init("zerof1", np.array(0.0, np.float32), np.float32)
-    init("maxf1", np.array(float(N - 1), np.float32), np.float32)
-    n("Clip", ["idxf", "zerof1", "maxf1"], "idxc")
-    n("Cast", ["idxc"], "idx", to=I64)        # [30]
-    # Gather along columns (axis 1) of G[30,30]
-    n("Gather", ["G", "idx"], "Gs", axis=1)   # [30,30] columns picked
-    # but Gather picks G[:, idx[c']] = G[:, c'-s]; this places original col c into c+s. correct.
-    n("Greater", ["Gs", "half"], "Gs_b")      # [30,30] bool
-    # Guard against clamp duplication at borders: a shifted-in column is valid only
-    # if its source idx was within range, i.e. 0 <= c'-s <= N-1.
     init("neghalf", np.array(-0.5, np.float32), np.float32)
     init("nmhalf", np.array(float(N) - 0.5, np.float32), np.float32)
-    n("Greater", ["idxf", "neghalf"], "ge0")
-    n("Less", ["idxf", "nmhalf"], "le0")
-    n("And", ["ge0", "le0"], "valid")         # [30]
-    n("And", ["Gs_b", "valid"], "Gfin_b")     # broadcast [30,30] & [30]
+    init("s11", np.array([1, 1], np.int64), np.int64)
 
-    # --- cyan full column at cyc, only in-grid ------------------------------
-    n("Sub", ["colrow", "cyc"], "cyd"); n("Abs", ["cyd"], "cyda")
-    n("Less", ["cyda", "half"], "cymask_b")   # [1,30]
-    n("Cast", ["cymask_b"], "cymask", to=F)
-    n("Mul", ["cymask", "IG"], "cyplane")     # [30,30] (broadcast row)
-    n("Greater", ["cyplane", "half"], "cy_b")
 
-    n("Greater", ["R", "half"], "R_b")
-    n("Greater", ["IG", "half"], "IG_b")
+    # ===== 1-D aggregates via wide Convs (no 2-D red / in-grid plane) =======
+    # column aggregate kernel [1,10,30,1] (sum over 30 rows) -> [1,1,1,30].
+    # row    aggregate kernel [1,10,1,30] (sum over 30 cols) -> [1,1,30,1].
+    def aggker(over_rows, channels):
+        # weight 1 on the given channels, summed over the long spatial axis
+        if over_rows:
+            w = np.zeros((1, 10, N, 1), np.float32)
+            for c in channels:
+                w[0, c, :, 0] = 1.0
+        else:
+            w = np.zeros((1, 10, 1, N), np.float32)
+            for c in channels:
+                w[0, c, 0, :] = 1.0
+        return w
 
-    # --- assemble label map -------------------------------------------------
+    ALL = list(range(10))
+    init("kcolR", aggker(True, [2]), np.float32)    # red, per column
+    init("kcolIG", aggker(True, ALL), np.float32)   # in-grid count, per column
+    init("kcolG", aggker(True, [3]), np.float32)    # green, per column
+    init("krowR", aggker(False, [2]), np.float32)
+    init("krowIG", aggker(False, ALL), np.float32)
+    init("krowG", aggker(False, [3]), np.float32)
+
+    def aggregates(over_rows, tag):
+        kR = "kcolR" if over_rows else "krowR"
+        kIG = "kcolIG" if over_rows else "krowIG"
+        kG = "kcolG" if over_rows else "krowG"
+        n("Conv", ["input", kR], f"{tag}Rc")    # [1,1,1,30] or [1,1,30,1]
+        n("Conv", ["input", kIG], f"{tag}IGc")
+        n("Conv", ["input", kG], f"{tag}Gc")
+        sq = [0, 1, 2] if over_rows else [0, 1, 3]
+        n("Squeeze", [f"{tag}Rc"], f"{tag}Rv", axes=sq)    # [30]
+        n("Squeeze", [f"{tag}IGc"], f"{tag}IGv", axes=sq)
+        n("Squeeze", [f"{tag}Gc"], f"{tag}Gv", axes=sq)
+        return f"{tag}Rv", f"{tag}IGv", f"{tag}Gv"
+
+    vR, vIG, vG = aggregates(True, "v")    # vertical-red: per-column aggregates
+    hR, hIG, hG = aggregates(False, "h")   # horizontal-red: per-row aggregates
+
+    init("linev", np.arange(N, dtype=np.float32), np.float32)  # [30]
+
+    def scalars(Rv, IGv, Gv, tag):
+        # redcol indicator over the 30 line positions
+        n("Greater", [Rv, "zero"], f"{tag}rpos")
+        n("Sub", [Rv, IGv], f"{tag}rd"); n("Abs", [f"{tag}rd"], f"{tag}rda")
+        n("Less", [f"{tag}rda", "half"], f"{tag}req")
+        n("And", [f"{tag}rpos", f"{tag}req"], f"{tag}redln_b")  # [30]
+        n("Cast", [f"{tag}redln_b"], f"{tag}redln", to=F)
+        n("ReduceMax", [f"{tag}redln"], f"{tag}has", axes=[0], keepdims=1)  # [1]
+        n("Mul", [f"{tag}redln", "linev"], f"{tag}rcw")
+        n("ReduceSum", [f"{tag}rcw"], f"{tag}rc", axes=[0], keepdims=1)  # [1]
+        # green bbox (Gv is a count; convert to 0/1 presence)
+        n("Greater", [Gv, "zero"], f"{tag}gp_b")
+        n("Cast", [f"{tag}gp_b"], f"{tag}gp", to=F)
+        n("Mul", [f"{tag}gp", "linev"], f"{tag}cmaxw")
+        n("ReduceMax", [f"{tag}cmaxw"], f"{tag}cmax", axes=[0], keepdims=1)
+        n("Sub", ["one", f"{tag}gp"], f"{tag}nog"); n("Mul", [f"{tag}nog", "big"], f"{tag}pen")
+        n("Add", [f"{tag}cmaxw", f"{tag}pen"], f"{tag}cminw")
+        n("ReduceMin", [f"{tag}cminw"], f"{tag}cmin", axes=[0], keepdims=1)
+        # direction/shift/cyan
+        n("Less", [f"{tag}cmax", f"{tag}rc"], f"{tag}left_b")
+        n("Cast", [f"{tag}left_b"], f"{tag}left", to=F)
+        n("Sub", ["one", f"{tag}left"], f"{tag}right")
+        n("Sub", [f"{tag}rc", "one"], f"{tag}rcm1"); n("Sub", [f"{tag}rcm1", f"{tag}cmax"], f"{tag}sL")
+        n("Add", [f"{tag}rc", "one"], f"{tag}rcp1"); n("Sub", [f"{tag}rcp1", f"{tag}cmin"], f"{tag}sR")
+        n("Mul", [f"{tag}sL", f"{tag}left"], f"{tag}sLm"); n("Mul", [f"{tag}sR", f"{tag}right"], f"{tag}sRm")
+        n("Add", [f"{tag}sLm", f"{tag}sRm"], f"{tag}s")  # [1]
+        n("Add", [f"{tag}cmin", f"{tag}s"], f"{tag}cycL0"); n("Sub", [f"{tag}cycL0", "one"], f"{tag}cycL")
+        n("Add", [f"{tag}cmax", f"{tag}s"], f"{tag}cycR0"); n("Add", [f"{tag}cycR0", "one"], f"{tag}cycR")
+        n("Mul", [f"{tag}cycL", f"{tag}left"], f"{tag}cycLm"); n("Mul", [f"{tag}cycR", f"{tag}right"], f"{tag}cycRm")
+        n("Add", [f"{tag}cycLm", f"{tag}cycRm"], f"{tag}cyc")  # [1]
+        return f"{tag}has", f"{tag}s", f"{tag}cyc", f"{tag}rc"
+
+    vhas, vs, vcyc, vrc = scalars(vR, vIG, vG, "vs_")
+    hhas, hs, hcyc, hrc = scalars(hR, hIG, hG, "hs_")
+
+    # grid extent (original): in-grid present per column (vIGv) / per row (hIGv).
+    # W_orig = max in-grid column index +1 ; H_orig = max in-grid row index +1.
+    def extent(IGv, nm):
+        n("Greater", [IGv, "zero"], nm + "_b"); n("Cast", [nm + "_b"], nm + "f", to=F)
+        n("Mul", [nm + "f", "linev"], nm + "w")
+        n("ReduceMax", [nm + "w"], nm + "max", axes=[0], keepdims=1)
+        n("Add", [nm + "max", "one"], nm)   # [1]
+        return nm
+    Worig = extent(vIG, "Worig")   # in-grid columns
+    Horig = extent(hIG, "Horig")   # in-grid rows
+
+    # orientation: use vertical scalars where input has a full red column, else horizontal
+    n("Greater", [vhas, "half"], "usev")  # [1] bool
+    n("Where", ["usev", vs, hs], "s")        # chosen shift
+    n("Where", ["usev", vcyc, hcyc], "cyc")  # chosen cyan line index
+    n("Where", ["usev", vrc, hrc], "rcc")    # canonical red column index
+    # canonical grid dims: vertical keeps (H,W); horizontal transposes them.
+    n("Where", ["usev", Horig, Worig], "Hc")  # canonical height (rows)
+    n("Where", ["usev", Worig, Horig], "Wc")  # canonical width  (cols)
+
+    # ===== canonical GREEN plane (cropped to MxM working canvas) =============
     init("u0", np.array(0, np.uint8), np.uint8)
+    # Slice green channel (3) and the MxM working region directly from `input`
+    # -> [1,1,M,M] float, no 30x30 intermediate.
+    init("sl_starts", np.array([0, 3, 0, 0], np.int64), np.int64)
+    init("sl_ends", np.array([1, 4, M, M], np.int64), np.int64)
+    init("sl_axes", np.array([0, 1, 2, 3], np.int64), np.int64)
+    n("Slice", ["input", "sl_starts", "sl_ends", "sl_axes"], "Gpc")  # [1,1,M,M] float
+    n("Cast", ["Gpc"], "Gpu", to=U8)
+    n("Squeeze", ["Gpu"], "Gpu2", axes=[0, 1])       # [M,M]
+    n("Transpose", ["Gpu2"], "GpuT", perm=[1, 0])
+    n("Reshape", ["usev", "s11"], "usev11")
+    n("Where", ["usev11", "Gpu2", "GpuT"], "G")      # [M,M] canonical green
+
+    # in-grid (canonical): rows < Hc AND cols < Wc  (outer product of 1-D bounds)
+    init("col1", np.arange(M, dtype=np.float32).reshape(1, M), np.float32)  # [1,M]
+    init("row1", np.arange(M, dtype=np.float32).reshape(M, 1), np.float32)  # [M,1]
+    n("Less", ["col1", "Wc"], "colin_b")    # [1,M]
+    n("Less", ["row1", "Hc"], "rowin_b")    # [M,1]
+    n("And", ["colin_b", "rowin_b"], "IG_b")  # [M,M]
+
+    # ===== shift canonical green by s via Gather ============================
+    n("Reshape", ["s", "s11"], "s2"); n("Squeeze", ["s2"], "ss", axes=[0, 1])  # scalar
+    n("Sub", ["idxbase", "ss"], "idxf")            # [M]
+    init("zerof", np.array(0.0, np.float32), np.float32)
+    init("maxf", np.array(float(M - 1), np.float32), np.float32)
+    n("Clip", ["idxf", "zerof", "maxf"], "idxc")
+    n("Cast", ["idxc"], "idx", to=I64)
+    n("Gather", ["G", "idx"], "Gs", axis=1)        # [M,M] uint8, Gs[r,c']=G[r,c'-s]
+    n("Greater", ["Gs", "u0"], "Gs_b")
+    n("Greater", ["idxf", "neghalf"], "ge0")
+    init("mmhalf", np.array(float(M) - 0.5, np.float32), np.float32)
+    n("Less", ["idxf", "mmhalf"], "le0")
+    n("And", ["ge0", "le0"], "valid")              # [M]
+    n("And", ["Gs_b", "valid"], "Gfin_b")          # [M,M]
+
+    # ===== cyan full column at cyc, red column at rcc (only in-grid) =========
+    n("Sub", ["col1", "cyc"], "cyd"); n("Abs", ["cyd"], "cyda")
+    n("Less", ["cyda", "half"], "cymask_b")        # [1,M]
+    n("And", ["cymask_b", "IG_b"], "cy_b")         # [M,M]
+    n("Sub", ["col1", "rcc"], "rdd"); n("Abs", ["rdd"], "rdda")
+    n("Less", ["rdda", "half"], "rmask_b")         # [1,M]
+    n("And", ["rmask_b", "IG_b"], "R_b")           # [M,M]
+
+    # ===== assemble label map (MxM) =========================================
     init("u2", np.array(2, np.uint8), np.uint8)
     init("u3", np.array(3, np.uint8), np.uint8)
     init("u8", np.array(8, np.uint8), np.uint8)
     init("u10", np.array(10, np.uint8), np.uint8)
-    n("Where", ["IG_b", "u0", "u10"], "L0")   # 0 in-grid else 10
+    n("Where", ["IG_b", "u0", "u10"], "L0")
     n("Where", ["cy_b", "u8", "L0"], "L1")
     n("Where", ["Gfin_b", "u3", "L1"], "L2")
-    n("Where", ["R_b", "u2", "L2"], "Lcanon")  # [30,30] in canonical orientation
+    n("Where", ["R_b", "u2", "L2"], "Lcanon")      # [M,M]
 
-    # --- un-transpose where we used the transposed input --------------------
     n("Transpose", ["Lcanon"], "LcanonT", perm=[1, 0])
-    n("Where", ["sel11", "Lcanon", "LcanonT"], "Lsel")  # [30,30]
-    init("Lshape", np.array([1, 1, N, N], np.int64), np.int64)
-    n("Reshape", ["Lsel", "Lshape"], "L")  # [1,1,30,30]
+    n("Where", ["usev11", "Lcanon", "LcanonT"], "Lsel")  # [M,M]
+    # reshape to [1,1,M,M] then Pad to [1,1,N,N] with sentinel 10 (off-grid).
+    init("Mshape", np.array([1, 1, M, M], np.int64), np.int64)
+    n("Reshape", ["Lsel", "Mshape"], "Lr")  # [1,1,M,M]
+    init("padcfg", np.array([0, 0, 0, 0, 0, 0, N - M, N - M], np.int64), np.int64)
+    n("Pad", ["Lr", "padcfg", "u10"], "L", mode="constant")  # [1,1,N,N]
 
     chan = np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1)
     init("chan", chan, np.uint8)
-    n("Equal", ["L", "chan"], "output")  # [1,10,30,30] BOOL
+    n("Equal", ["L", "chan"], "output")            # [1,10,30,30] BOOL
 
     x = helper.make_tensor_value_info("input", F, [1, 10, N, N])
     y = helper.make_tensor_value_info("output", B, [1, 10, N, N])
