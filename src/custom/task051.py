@@ -60,6 +60,7 @@ def build(task):
         return out
 
     F = TensorProto.FLOAT
+    F16 = TensorProto.FLOAT16
     U8 = TensorProto.UINT8
     B = TensorProto.BOOL
 
@@ -71,53 +72,65 @@ def build(task):
     init("one", np.array(1.0), np.float32)
     init("onehalf", np.array(1.5), np.float32)
     init("eps", np.array(0.5), np.float32)
-    init("rowidx", np.arange(30).reshape(1, 1, 30, 1), np.float32)
-    init("colidx", np.arange(30).reshape(1, 1, 1, 30), np.float32)
+    init("eps16", np.array(0.5), np.float16)
+    init("one16", np.array(1.0), np.float16)
+    init("rowidx", np.arange(30).reshape(1, 1, 30, 1), np.float16)
+    init("colidx", np.arange(30).reshape(1, 1, 1, 30), np.float16)
     init("chan", np.arange(10).reshape(1, 10, 1, 1), np.uint8)
     # non-background channel gate [1,10,1,1] : 0 for ch0, 1 for ch1..9
     nonbg = np.ones((1, 10, 1, 1)); nonbg[0, 0, 0, 0] = 0
     init("nonbg", nonbg, np.float32)
+    init("sent15", np.array(15.0), np.float16)
 
-    # ---- per-cell colour index V [1,1,30,30] ----
-    n("Conv", ["input", "colW"], "V")                        # fp32 colour 0..9
+    # =================================================================
+    # ALL per-cell work is in fp16 (values are small integers, exact).
+    # The only [1,1,30,30] planes that survive are V16, ingrid, the masks,
+    # one beam outer-product and L.  Everything else is 1-D (30 elems) or
+    # channel-space (10 elems) and costs almost nothing.
+    # =================================================================
 
-    # ---- in-grid mask: off-grid cells are all-channels-0 (the harness leaves
-    #      them empty); only cells inside the real grid have a 1 somewhere. ----
-    n("ReduceSum", ["input"], "ingridS", axes=[1], keepdims=1)  # [1,1,30,30]
+    # ---- per-cell colour index V [1,1,30,30] (fp16) ----
+    n("Conv", ["input", "colW"], "V32")                      # fp32 colour 0..9
+    n("Cast", ["V32"], "V", to=F16)                          # fp16 plane
+
+    # ---- in-grid mask (fp16): off-grid cells are all-channels-0. ----
+    n("ReduceSum", ["input"], "ingridS", axes=[1], keepdims=1)  # fp32 [1,1,30,30]
     n("Greater", ["ingridS", "eps"], "ingridB")
-    n("Cast", ["ingridB"], "ingrid", to=F)
+    n("Cast", ["ingridB"], "ingrid", to=F16)
 
-    # ---- channel counts -> tip / triangle channel selectors [1,10,1,1] ----
-    n("ReduceSum", ["input"], "cnt", axes=[2, 3], keepdims=1)  # [1,10,1,1]
-    # tip channel: count == 1  -> |cnt-1| < 0.5
+    # ---- channel counts -> tip / triangle colour VALUES (channel space) ----
+    n("ReduceSum", ["input"], "cnt", axes=[2, 3], keepdims=1)  # [1,10,1,1] fp32
     n("Sub", ["cnt", "one"], "cm1")
     n("Mul", ["cm1", "cm1"], "cm1sq")
-    n("Less", ["cm1sq", "eps"], "tipchanB")                  # bool [1,10,1,1]
+    n("Less", ["cm1sq", "eps"], "tipchanB")                  # count == 1
     n("Cast", ["tipchanB"], "tipchan0", to=F)
-    n("Mul", ["tipchan0", "nonbg"], "tipchan")               # exclude ch0 (bg)
-    # triangle channel: count > 1.5
-    n("Greater", ["cnt", "onehalf"], "trichanB")
+    n("Mul", ["tipchan0", "nonbg"], "tipchan")               # exclude ch0
+    n("Greater", ["cnt", "onehalf"], "trichanB")             # count > 1
     n("Cast", ["trichanB"], "trichan0", to=F)
-    n("Mul", ["trichan0", "nonbg"], "trichan")               # exclude ch0 (bg)
+    n("Mul", ["trichan0", "nonbg"], "trichan")
+    n("Mul", ["chvals", "tipchan"], "tipcv")
+    n("ReduceSum", ["tipcv"], "tipcol32", axes=[1], keepdims=1)  # scalar fp32
+    n("Cast", ["tipcol32"], "tipcol", to=F16)
+    n("Mul", ["chvals", "trichan"], "tricv")
+    n("ReduceSum", ["tricv"], "tricol32", axes=[1], keepdims=1)  # scalar fp32
+    n("Cast", ["tricol32"], "tricol", to=F16)
 
-    # ---- tip / triangle cell masks [1,1,30,30] ----
-    n("Mul", ["input", "tipchan"], "tipsel")                 # [1,10,30,30]
-    n("ReduceSum", ["tipsel"], "tipmask", axes=[1], keepdims=1)
-    n("Mul", ["input", "trichan"], "trisel")
-    n("ReduceSum", ["trisel"], "trimask", axes=[1], keepdims=1)
+    # ---- tip / triangle cell masks [1,1,30,30] fp16 = (V == colour) ----
+    n("Sub", ["V", "tipcol"], "vmt"); n("Mul", ["vmt", "vmt"], "vmt2")
+    n("Less", ["vmt2", "eps16"], "tipmaskB"); n("Cast", ["tipmaskB"], "tipm0", to=F16)
+    n("Mul", ["tipm0", "ingrid"], "tipmask")
+    n("Sub", ["V", "tricol"], "vmr"); n("Mul", ["vmr", "vmr"], "vmr2")
+    n("Less", ["vmr2", "eps16"], "trimaskB"); n("Cast", ["trimaskB"], "trim0", to=F16)
+    n("Mul", ["trim0", "ingrid"], "trimask")
 
-    # ---- tip colour value (scalar [1,1,1,1]) ----
-    n("Mul", ["chvals", "tipchan"], "tipcv")                 # [1,10,1,1]
-    n("ReduceSum", ["tipcv"], "tipcol", axes=[1], keepdims=1)  # scalar
-
-    # ---- tip (ty,tx) scalars from tipmask (single 1) ----
+    # ---- tip (ty,tx) scalars : reduce mask*idx, all fp16 (values < 2048) ----
     n("Mul", ["tipmask", "rowidx"], "tym")
-    n("ReduceSum", ["tym"], "ty", axes=[2, 3], keepdims=1)   # [1,1,1,1]
+    n("ReduceSum", ["tym"], "ty", axes=[2, 3], keepdims=1)
     n("Mul", ["tipmask", "colidx"], "txm")
     n("ReduceSum", ["txm"], "tx", axes=[2, 3], keepdims=1)
 
-    # ---- triangle centroid (cr,cc) ----
-    n("ReduceSum", ["trimask"], "trin", axes=[2, 3], keepdims=1)  # cell count
+    # ---- triangle centroid (cr,cc) fp16 ----
+    n("ReduceSum", ["trimask"], "trin", axes=[2, 3], keepdims=1)
     n("Mul", ["trimask", "rowidx"], "trr")
     n("ReduceSum", ["trr"], "trrs", axes=[2, 3], keepdims=1)
     n("Div", ["trrs", "trin"], "cr")
@@ -125,72 +138,60 @@ def build(task):
     n("ReduceSum", ["trc"], "trcs", axes=[2, 3], keepdims=1)
     n("Div", ["trcs", "trin"], "cc")
 
-    # ---- orientation: row-span vs col-span of triangle ----
+    # ---- orientation: row-span vs col-span of triangle (1-D reductions) ----
     n("ReduceMax", ["trimask"], "rowocc", axes=[3], keepdims=1)  # [1,1,30,1]
     n("ReduceSum", ["rowocc"], "rspan", axes=[2, 3], keepdims=1)
     n("ReduceMax", ["trimask"], "colocc", axes=[2], keepdims=1)  # [1,1,1,30]
     n("ReduceSum", ["colocc"], "cspan", axes=[2, 3], keepdims=1)
-    n("Greater", ["cspan", "rspan"], "vertB")                # [1,1,1,1] bool
-    n("Cast", ["vertB"], "vert", to=F)                       # 1=vertical
+    n("Greater", ["cspan", "rspan"], "vertB")
+    n("Cast", ["vertB"], "vert", to=F16)                     # 1=vertical scalar
 
-    # ---- axis-line masks ----
-    # vertical axis: colidx == tx  (line is the tip's column)
-    n("Sub", ["colidx", "tx"], "dcol")                       # [1,1,1,30]
-    n("Mul", ["dcol", "dcol"], "dcol2")
-    n("Less", ["dcol2", "eps"], "oncolB")                    # cells on tip col
-    n("Cast", ["oncolB"], "oncol", to=F)
-    # horizontal axis: rowidx == ty
-    n("Sub", ["rowidx", "ty"], "drow")
-    n("Mul", ["drow", "drow"], "drow2")
-    n("Less", ["drow2", "eps"], "onrowB")
-    n("Cast", ["onrowB"], "onrow", to=F)
+    # ================= beam direction, built from 1-D vectors (fp16) =======
+    # axis lines (1-D):
+    n("Sub", ["colidx", "tx"], "dcol"); n("Mul", ["dcol", "dcol"], "dcol2")
+    n("Less", ["dcol2", "eps16"], "oncolB"); n("Cast", ["oncolB"], "oncol", to=F16)  # tip col
+    n("Sub", ["rowidx", "ty"], "drow"); n("Mul", ["drow", "drow"], "drow2")
+    n("Less", ["drow2", "eps16"], "onrowB"); n("Cast", ["onrowB"], "onrow", to=F16)  # tip row
 
-    # ---- direction half-planes (apex side) ----
-    # vertical up  iff cr < ty : rows with rowidx < ty ; else rows > ty
-    n("Sub", ["ty", "cr"], "tymcr")                          # >0 => apex up
-    n("Greater", ["tymcr", "eps"], "upB")                    # apex up
-    n("Cast", ["upB"], "vup", to=F)
-    # rows above tip (rowidx < ty) :
-    n("Less", ["rowidx", "ty"], "rowAboveB")
-    n("Cast", ["rowAboveB"], "rowAbove", to=F)
-    n("Greater", ["rowidx", "ty"], "rowBelowB")
-    n("Cast", ["rowBelowB"], "rowBelow", to=F)
-    # vertical half-plane = up? rowAbove : rowBelow   -> vup*rowAbove+(1-vup)*rowBelow
+    # vertical half-plane (apex side, rows): up iff cr < ty
+    n("Sub", ["ty", "cr"], "tymcr"); n("Greater", ["tymcr", "eps16"], "upB")
+    n("Cast", ["upB"], "vup", to=F16)
+    n("Less", ["rowidx", "ty"], "rowAboveB"); n("Cast", ["rowAboveB"], "rowAbove", to=F16)
+    n("Greater", ["rowidx", "ty"], "rowBelowB"); n("Cast", ["rowBelowB"], "rowBelow", to=F16)
     n("Mul", ["vup", "rowAbove"], "vha")
-    n("Sub", ["one", "vup"], "vdn")
-    n("Mul", ["vdn", "rowBelow"], "vhb")
-    n("Add", ["vha", "vhb"], "vhalf")                        # [1,1,30,1]
-    # vertical beam region = oncol(col) * vhalf(row)  -> [1,1,30,30]
-    n("Mul", ["oncol", "vhalf"], "vbeam")
+    n("Sub", ["one16", "vup"], "vdn"); n("Mul", ["vdn", "rowBelow"], "vhb")
+    n("Add", ["vha", "vhb"], "vhalf")                        # [1,1,30,1] rows
 
-    # horizontal left iff cc < tx
-    n("Sub", ["tx", "cc"], "txmcc")
-    n("Greater", ["txmcc", "eps"], "leftB")
-    n("Cast", ["leftB"], "hleft", to=F)
-    n("Less", ["colidx", "tx"], "colLeftB")
-    n("Cast", ["colLeftB"], "colLeft", to=F)
-    n("Greater", ["colidx", "tx"], "colRightB")
-    n("Cast", ["colRightB"], "colRight", to=F)
+    # horizontal half-plane (apex side, cols): left iff cc < tx
+    n("Sub", ["tx", "cc"], "txmcc"); n("Greater", ["txmcc", "eps16"], "leftB")
+    n("Cast", ["leftB"], "hleft", to=F16)
+    n("Less", ["colidx", "tx"], "colLeftB"); n("Cast", ["colLeftB"], "colLeft", to=F16)
+    n("Greater", ["colidx", "tx"], "colRightB"); n("Cast", ["colRightB"], "colRight", to=F16)
     n("Mul", ["hleft", "colLeft"], "hla")
-    n("Sub", ["one", "hleft"], "hright")
-    n("Mul", ["hright", "colRight"], "hlb")
-    n("Add", ["hla", "hlb"], "hhalf")                        # [1,1,1,30]
-    n("Mul", ["onrow", "hhalf"], "hbeam")                    # [1,1,30,30]
+    n("Sub", ["one16", "hleft"], "hright"); n("Mul", ["hright", "colRight"], "hlb")
+    n("Add", ["hla", "hlb"], "hhalf")                        # [1,1,1,30] cols
 
-    # ---- choose vertical or horizontal beam ----
-    n("Mul", ["vert", "vbeam"], "beamV")
-    n("Sub", ["one", "vert"], "horiz")
-    n("Mul", ["horiz", "hbeam"], "beamH")
-    n("Add", ["beamV", "beamH"], "beamLine")                 # axis*direction
+    # combine 1-D row/col vectors BEFORE the outer product -> single plane:
+    #   vertical  -> linerow = vhalf (rows), linecol = oncol (tip column)
+    #   horizontal-> linerow = onrow (tip row), linecol = hhalf (cols)
+    n("Sub", ["one16", "vert"], "horiz")
+    n("Mul", ["vert", "vhalf"], "lr_v"); n("Mul", ["horiz", "onrow"], "lr_h")
+    n("Add", ["lr_v", "lr_h"], "linerow")                    # [1,1,30,1]
+    n("Mul", ["vert", "oncol"], "lc_v"); n("Mul", ["horiz", "hhalf"], "lc_h")
+    n("Add", ["lc_v", "lc_h"], "linecol")                    # [1,1,1,30]
+    n("Mul", ["linerow", "linecol"], "beamLine")             # [1,1,30,30] fp16
 
-    # ---- restrict to background cells (don't overwrite the triangle) ----
-    n("Less", ["V", "eps"], "bgB")                           # V==0
-    n("Cast", ["bgB"], "bg", to=F)
-    n("Mul", ["beamLine", "bg"], "beam")                     # final beam mask
+    # ---- restrict to background & in-grid cells ----
+    n("Less", ["V", "eps16"], "bgB"); n("Cast", ["bgB"], "bg", to=F16)
+    n("Mul", ["beamLine", "bg"], "beam0")
+    n("Mul", ["beam0", "ingrid"], "beam")
 
-    # ---- label map L = V + tipcol*beam ----
+    # ---- label map L = V + tipcol*beam ; off-grid -> sentinel 15 ----
     n("Mul", ["beam", "tipcol"], "beamcol")
-    n("Add", ["V", "beamcol"], "Lf")
+    n("Add", ["V", "beamcol"], "Lf0")
+    n("Sub", ["one16", "ingrid"], "offgrid")
+    n("Mul", ["offgrid", "sent15"], "sentadd")
+    n("Add", ["Lf0", "sentadd"], "Lf")
     n("Cast", ["Lf"], "L", to=U8)                            # [1,1,30,30] uint8
     n("Equal", ["L", "chan"], "output")                      # [1,10,30,30] BOOL
 

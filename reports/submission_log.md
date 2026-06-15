@@ -6,7 +6,14 @@ Stored at session start: 6445.88 (≈61pt stored-vs-LB gap pre-existing from ove
 | # | time(UTC) | stored | wins since last | LB (publicScore) | Δ LB | notes |
 |---|---|---|---|---|---|---|
 | baseline | 06-15 16:07 | ~6384.6 | — | 6384.61 | — | pre-sweep |
-| 1 | 06-15 17:32 | 6454.46 | 020,034,020R,034R,091,224,370 | PENDING | ? | first sweep submit |
+| 1 | 06-15 17:32 | 6454.46 | 020,034,020R,034R,091,224,370 | **6393.20** | **+8.59** | session stored Δ +8.58 → LB +8.59 = **1:1 translation confirmed** |
+
+## ⭐ KEY RESULT (submission 1): floor-break sweep translates 1:1 to LB.
+Session wins +8.58 stored → +8.59 LB (baseline 6384.61 → 6393.20). The large floor-break compactions
+(020/034/091/224, each ~+2) are REAL LB gains, NOT local-only. (task370 +0.06 was marginal noise.)
+Pre-existing ~61pt stored-vs-LB gap (6454.46 stored vs 6393.20 LB) is UNCHANGED — it lives in the
+inherited public base nets (overcounted/non-generalizing), not touchable by our custom sweep. So: stored
+delta from a generalizing floor-break win ≈ LB delta. Keep grinding; trust stored for generalizing customs.
 
 ## Procedure (folded into loop)
 1. trigger: every 5 adopted wins.
