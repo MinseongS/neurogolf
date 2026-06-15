@@ -18,28 +18,24 @@ taking, for each canonical top-left position, the max over its 4 mirror cells.
 Canonical positions: corner d at (d,d); ring d at (d,d+2). Center (9,9) is never
 used (length<=4 => rings only reach d=7).
 
-Graph (no big float canvases, no symmetrization matmul):
-  1. Conv input one-hot -> color-index plane cidx [1,1,30,30].
-  2. Flatten, Gather 32 fixed cells (8 groups x 4 mirrors), max each group of 4
-     -> 8 group colors. Prepend [-1, 0] -> gcolor_vec[10]
-     (index 0 = outside-region sentinel -1, index 1 = in-region background 0,
-      indices 2..5 = corner colors of rings 1,3,5,7, 6..9 = ring colors).
-  3. A fixed groupid plane [1,1,30,30] maps every canvas cell to its group.
-     outidx = Gather(gcolor_vec, groupid)  (=-1 outside, 0 background, color>0).
-  4. output = Cast(Equal(outidx, [0..9] ramp)) -> one-hot. The -1 sentinel
-     matches no channel so cells outside the 19x19 grid stay all-zero, while
-     in-region background maps to channel 0.
+Floor-break re-encoding (old mem 18360 -> ~5400):
+  * `output` is BOOL (opset 11) so the final Equal writes straight into the free
+    output -- no materialised [1,10,30,30] one-hot (saved 9000B).
+  * the per-cell label plane is uint8 with sentinel 10 for outside-grid cells
+    (Equal vs the [0..9] channel ramp never matches -> all-false there), so it
+    costs 900B instead of an int32 3600B plane.
+  * tiny [8,4]/[10] color math stays int32 (ReduceMax rejects int8).
 """
 
 import numpy as np
 import onnx
 from onnx import helper, numpy_helper, TensorProto
 
-from ..builders import _model
+from ..harness import IR_VERSION
 
 
 def _groupid_plane():
-    gid = np.zeros((30, 30), np.int32)
+    gid = np.zeros((30, 30), np.int64)
     ring_index = {1: 0, 3: 1, 5: 2, 7: 3}
     for y in range(30):
         for x in range(30):
@@ -69,7 +65,6 @@ def _mirror_flat_indices():
 def build(task):
     inits = []
     nodes = []
-    vinfos = []
 
     def init(name, arr, dtype):
         inits.append(numpy_helper.from_array(
@@ -80,51 +75,43 @@ def build(task):
         nodes.append(helper.make_node(op, inputs, [out], **attrs))
         return out
 
-    def vi(name, dtype, shape):
-        vinfos.append(helper.make_tensor_value_info(name, dtype, shape))
-        return name
-
-    # 1. color-index plane: Conv with per-channel weight [0,1,...,9].
+    # 1. color-index plane: Conv with per-channel weight [0,1,...,9], cast
+    #    straight to uint8 (900B).  Only 32 cells are read from it downstream,
+    #    but the Conv collapses the 10 channels so its output is a single 30x30
+    #    plane (3600B f32) -- far cheaper than reshaping the full input.
     ramp = np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1)
     init("Wramp", ramp, np.float32)
     n("Conv", ["input", "Wramp"], "cidxf")               # [1,1,30,30] f32
-    vi("cidxf", TensorProto.FLOAT, [1, 1, 30, 30])
-    n("Cast", ["cidxf"], "cidx8", to=TensorProto.INT8)   # [1,1,30,30] i8 (900B)
-    vi("cidx8", TensorProto.INT8, [1, 1, 30, 30])
+    n("Cast", ["cidxf"], "cidx8", to=TensorProto.UINT8)  # [1,1,30,30] u8 (900B)
 
-    # 2. flatten (i8 -> 900B) + gather 32 mirror cells; cast to i32 for the
-    #    per-group max (ReduceMax rejects int8 but the tensors are tiny here).
+    # 2. flatten + gather 32 mirror cells; cast to i32 for the per-group max
+    #    (ReduceMax rejects uint8 but the gathered tensors are tiny).
     init("flat900", np.array([900], np.int64), np.int64)
-    n("Reshape", ["cidx8", "flat900"], "cflat")          # [900] i8
-    vi("cflat", TensorProto.INT8, [900])
+    n("Reshape", ["cidx8", "flat900"], "cflat")          # [900] u8
     init("mirIdx", _mirror_flat_indices(), np.int64)
-    n("Gather", ["cflat", "mirIdx"], "g32")              # [32] i8
-    vi("g32", TensorProto.INT8, [32])
+    n("Gather", ["cflat", "mirIdx"], "g32")              # [32] u8
     n("Cast", ["g32"], "g32i", to=TensorProto.INT32)     # [32] i32 (tiny)
-    vi("g32i", TensorProto.INT32, [32])
     init("shp84", np.array([8, 4], np.int64), np.int64)
     n("Reshape", ["g32i", "shp84"], "g84")               # [8,4] i32
-    vi("g84", TensorProto.INT32, [8, 4])
     n("ReduceMax", ["g84"], "gcol", axes=[1], keepdims=0)  # [8] i32
-    vi("gcol", TensorProto.INT32, [8])
 
-    # gcolor_vec[10] = concat([-1, 0], gcol)
-    init("head", np.array([-1, 0], np.int32), np.int32)
+    # gcolor_vec[10] = concat([10, 0], gcol) ; index 0 = outside sentinel 10.
+    init("head", np.array([10, 0], np.int32), np.int32)
     n("Concat", ["head", "gcol"], "gcvec", axis=0)       # [10] i32
-    vi("gcvec", TensorProto.INT32, [10])
+    n("Cast", ["gcvec"], "gcvec8", to=TensorProto.UINT8)  # [10] u8
 
-    # 3. map every canvas cell to its group's color (gather straight into the
-    #    [1,1,30,30] shape via a pre-shaped groupid index tensor).
-    init("groupid", _groupid_plane().reshape(1, 1, 30, 30), np.int32)
-    n("Gather", ["gcvec", "groupid"], "outidx")          # [1,1,30,30] i32
-    vi("outidx", TensorProto.INT32, [1, 1, 30, 30])
+    # 3. map every canvas cell to its group's color (gather into [1,1,30,30]).
+    init("groupid", _groupid_plane().reshape(1, 1, 30, 30), np.int64)
+    n("Gather", ["gcvec8", "groupid"], "outidx")         # [1,1,30,30] u8 (900B)
 
-    # 4. one-hot via Equal against [0..9] ramp (broadcast over channels). The
-    #    -1 sentinel (outside grid) matches no channel -> stays all-zero.
-    init("rampch", np.arange(10, dtype=np.int32).reshape(1, 10, 1, 1),
-         np.int32)
-    n("Equal", ["outidx", "rampch"], "eq")               # [1,10,30,30] bool
-    vi("eq", TensorProto.BOOL, [1, 10, 30, 30])
-    n("Cast", ["eq"], "output", to=TensorProto.FLOAT)    # [1,10,30,30] f32
+    # 4. one-hot via Equal vs the [0..9] channel ramp, straight into free BOOL
+    #    output. Sentinel 10 (outside grid) matches no channel -> all-zero.
+    init("rampch", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
+    n("Equal", ["outidx", "rampch"], "output")           # [1,10,30,30] BOOL
 
-    return _model(nodes, inits, vinfos)
+    x = helper.make_tensor_value_info("input", TensorProto.FLOAT, [1, 10, 30, 30])
+    y = helper.make_tensor_value_info("output", TensorProto.BOOL, [1, 10, 30, 30])
+    graph = helper.make_graph(nodes, "task240", [x], [y], inits)
+    return helper.make_model(
+        graph, ir_version=IR_VERSION,
+        opset_imports=[helper.make_opsetid("", 11)])

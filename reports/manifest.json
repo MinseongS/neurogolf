@@ -73,9 +73,9 @@
    "method": "gen:thbdh6332"
   },
   "13": {
-   "points": 14.985328918503257,
-   "memory": 22133,
-   "params": 219,
+   "points": 15.430308268881676,
+   "memory": 14103,
+   "params": 221,
    "method": "custom:task013"
   },
   "14": {
@@ -505,9 +505,9 @@
    "method": "custom:task084"
   },
   "85": {
-   "points": 14.90078120376,
-   "memory": 22500,
-   "params": 1824,
+   "points": 15.314606270145976,
+   "memory": 14880,
+   "params": 1201,
    "method": "custom:task085"
   },
   "86": {
@@ -1399,9 +1399,9 @@
    "method": "gen:thbdh6332"
   },
   "234": {
-   "points": 15.10042007229489,
-   "memory": 19812,
-   "params": 110,
+   "points": 15.213327202055707,
+   "memory": 17698,
+   "params": 97,
    "method": "custom:task234"
   },
   "235": {
@@ -1429,14 +1429,14 @@
    "method": "gen:thbdh6332"
   },
   "239": {
-   "points": 14.948351096483352,
-   "memory": 21922,
-   "params": 1272,
+   "points": 16.875553144284154,
+   "memory": 3318,
+   "params": 58,
    "method": "custom:task239"
   },
   "240": {
-   "points": 15.131259183793707,
-   "memory": 18360,
+   "points": 16.06055013783576,
+   "memory": 6670,
    "params": 957,
    "method": "custom:task240"
   },
@@ -1801,9 +1801,9 @@
    "method": "gen:thbdh6332"
   },
   "301": {
-   "points": 15.043493143488236,
-   "memory": 21022,
-   "params": 67,
+   "points": 15.843693516516304,
+   "memory": 9385,
+   "params": 89,
    "method": "custom:task301"
   },
   "302": {

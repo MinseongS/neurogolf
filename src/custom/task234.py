@@ -25,7 +25,7 @@ import numpy as np
 import onnx
 from onnx import helper, numpy_helper
 
-from ..builders import _model
+from ..harness import IR_VERSION
 
 BIG = 1000.0
 
@@ -59,10 +59,19 @@ def build(task):
 
     # --- per-channel projections (reduce fp32 `input`, then cast the small
     #     outputs to fp16 -- never materialise a fp16 copy of the canvas) ---
-    n("ReduceMax", ["input"], "Rf", axes=[3], keepdims=1)   # [1,10,30,1] fp32
-    n("Cast", ["Rf"], "R", to=onnx.TensorProto.FLOAT16)
-    n("ReduceMax", ["input"], "Cf", axes=[2], keepdims=1)   # [1,10,1,30]
-    n("Cast", ["Cf"], "C", to=onnx.TensorProto.FLOAT16)
+    # Per-row / per-col pixel counts double as occupancy: R = (rowSum>0),
+    # C = (colSum>0).  Deriving occupancy from the count reduces drops two whole
+    # fp32 [1,10,...] ReduceMax tensors (2400B) vs computing them separately.
+    init("zero", np.array(0.0))                     # fp16 (matches fp16 cmps)
+    init("zero32", np.array(0.0, np.float32), np.float32)
+    n("ReduceSum", ["input"], "rowSumChf", axes=[3], keepdims=1)  # [1,10,30,1] f32
+    n("Cast", ["rowSumChf"], "rowSumCh", to=onnx.TensorProto.FLOAT16)
+    n("ReduceSum", ["input"], "colSumChf", axes=[2], keepdims=1)  # [1,10,1,30]
+    n("Cast", ["colSumChf"], "colSumCh", to=onnx.TensorProto.FLOAT16)
+    n("Greater", ["rowSumChf", "zero32"], "R_b")
+    n("Cast", ["R_b"], "R", to=onnx.TensorProto.FLOAT16)         # [1,10,30,1] 0/1
+    n("Greater", ["colSumChf", "zero32"], "C_b")
+    n("Cast", ["C_b"], "C", to=onnx.TensorProto.FLOAT16)         # [1,10,1,30] 0/1
     n("ReduceSum", ["input"], "cntf", axes=[2, 3], keepdims=1)  # [1,10,1,1]
     n("Cast", ["cntf"], "cnt", to=onnx.TensorProto.FLOAT16)
 
@@ -79,7 +88,6 @@ def build(task):
     n("Equal", ["cnt_i", "bbox_i"], "eqsolid")                    # bool
     n("Cast", ["eqsolid"], "solid", to=onnx.TensorProto.FLOAT16)    # [1,10,1,1]
     # pos = cnt>0
-    init("zero", np.array(0.0, np.float32))
     n("Greater", ["cnt", "zero"], "pos_b")
     n("Cast", ["pos_b"], "pos", to=onnx.TensorProto.FLOAT16)
     n("Mul", ["solid", "pos"], "frog_raw")
@@ -137,11 +145,8 @@ def build(task):
     n("ReduceMin", ["flCcib"], "fl_cmin", axes=[2, 3], keepdims=1)
 
     # --- T = box thickness on the moved axis --------------------------
-    # per-channel column/row sums first (avoids a [1,10,30,30] intermediate)
-    n("ReduceSum", ["input"], "colSumChf", axes=[2], keepdims=1)  # [1,10,1,30]
-    n("Cast", ["colSumChf"], "colSumCh", to=onnx.TensorProto.FLOAT16)
-    n("ReduceSum", ["input"], "rowSumChf", axes=[3], keepdims=1)  # [1,10,30,1]
-    n("Cast", ["rowSumChf"], "rowSumCh", to=onnx.TensorProto.FLOAT16)
+    # per-channel column/row sums (colSumCh/rowSumCh) were already computed up
+    # front (they double as the R/C occupancy source).
     n("Mul", ["colSumCh", "isFly"], "colSumFly")
     n("ReduceSum", ["colSumFly"], "flyColSum", axes=[1], keepdims=1)  # [1,1,1,30]
     n("Mul", ["rowSumCh", "isFly"], "rowSumFly")
@@ -214,39 +219,54 @@ def build(task):
     n("Mul", ["keep_cols", "flyC"], "kc_C")
     n("Add", ["mc_run", "kc_C"], "flyOutCol")            # [1,1,1,30]
 
-    # --- fused bilinear assembly straight into `output` ---------------
-    # Only 3 basis vectors are ever non-zero (frog box, moved fly box, grid),
-    # so the canvas is two tiny MatMuls into `output` (free):
-    #   VrT3[1,1,30,3] = [frogRow | flyOutRow | gridRow]
-    #   VcT3[1,1,3,30] = [frogCol | flyOutCol | gridCol]
-    #   output[ch] = sum_{k,l} VrT3[:,k] My3[ch,k,l] VcT3[l,:]
-    # My3 routes basis 0->frog colour, 1->fly colour, 2(grid)->bg, with the
-    # coloured cells subtracted from the background channel:
-    #   My3[ch] = isFrog[ch]*E00 + isFly[ch]*E11 + e0[ch]*(E22 - E00 - E11)
+    # --- label-map + final Equal (floor-break) ------------------------
+    # The output is three separable rectangles: the frog box (frogColour), the
+    # moved fly box (flyColour) and the grid (background 0, sentinel 10 outside
+    # the actual grid).  Build a single uint8 label map L and finish with
+    # Equal(L, ramp) straight into the free BOOL output -- no [1,10,3,30] /
+    # [1,10,30,30] float canvas.
+    init("half16", np.array(0.5), np.float16)
     n("ReduceMax", ["input"], "gridRowf", axes=[1, 3], keepdims=1)  # [1,1,30,1]
     n("Cast", ["gridRowf"], "gridRow", to=onnx.TensorProto.FLOAT16)
     n("ReduceMax", ["input"], "gridColf", axes=[1, 2], keepdims=1)  # [1,1,1,30]
     n("Cast", ["gridColf"], "gridCol", to=onnx.TensorProto.FLOAT16)
-    n("Concat", ["frogR", "flyOutRow", "gridRow"], "VrT3h", axis=3)  # [1,1,30,3]
-    n("Concat", ["frogC", "flyOutCol", "gridCol"], "VcT3h", axis=2)  # [1,1,3,30]
-    # final MatMuls run in fp32 so the last op writes straight into `output`
-    n("Cast", ["VrT3h"], "VrT3", to=onnx.TensorProto.FLOAT)
-    n("Cast", ["VcT3h"], "VcT3", to=onnx.TensorProto.FLOAT)
 
-    E00 = np.zeros((1, 1, 3, 3)); E00[0, 0, 0, 0] = 1.0
-    E11 = np.zeros((1, 1, 3, 3)); E11[0, 0, 1, 1] = 1.0
-    Ec = np.zeros((1, 1, 3, 3))
-    Ec[0, 0, 2, 2] = 1.0; Ec[0, 0, 0, 0] = -1.0; Ec[0, 0, 1, 1] = -1.0
-    init("E00", E00); init("E11", E11); init("Ec", Ec)   # fp16 like the masks
-    e0 = np.zeros((1, 10, 1, 1)); e0[0, 0] = 1.0
-    init("e0", e0)
-    n("Mul", ["isFrog", "E00"], "M_frog")    # [1,10,3,3] fp16
-    n("Mul", ["isFly", "E11"], "M_fly")
-    n("Mul", ["e0", "Ec"], "M_bg")
-    n("Add", ["M_frog", "M_fly"], "M_ff")
-    n("Add", ["M_ff", "M_bg"], "My3h")       # [1,10,3,3] fp16
-    n("Cast", ["My3h"], "My3", to=onnx.TensorProto.FLOAT)
-    n("MatMul", ["My3", "VcT3"], "Rmid")     # [1,10,3,30]
-    n("MatMul", ["VrT3", "Rmid"], "output")  # [1,10,30,30] (free)
+    # box masks = outer product (AND) of 1-D row/col occupancy vectors
+    n("Greater", ["frogR", "half16"], "frB")            # [1,1,30,1] bool
+    n("Greater", ["frogC", "half16"], "fcB")            # [1,1,1,30] bool
+    n("And", ["frB", "fcB"], "frogBox")                 # [1,1,30,30] bool
+    n("Greater", ["flyOutRow", "half16"], "flrB")
+    n("Greater", ["flyOutCol", "half16"], "flcB")
+    n("And", ["flrB", "flcB"], "flyBox")                # [1,1,30,30] bool
+    n("Greater", ["gridRow", "half16"], "grB")
+    n("Greater", ["gridCol", "half16"], "gcB")
+    n("And", ["grB", "gcB"], "gridBox")                 # [1,1,30,30] bool
 
-    return _model(nodes, inits)
+    # frog / fly colour ids (uint8 scalars): sum_c c * is{Frog,Fly}[c]
+    cidx = np.arange(10).reshape(1, 10, 1, 1)
+    init("cidx", cidx)                                  # fp16 [1,10,1,1]
+    n("Mul", ["isFrog", "cidx"], "frogCparts")
+    n("ReduceSum", ["frogCparts"], "frogCol1", axes=[1], keepdims=1)  # [1,1,1,1]
+    n("Cast", ["frogCol1"], "frogColU", to=onnx.TensorProto.UINT8)
+    n("Mul", ["isFly", "cidx"], "flyCparts")
+    n("ReduceSum", ["flyCparts"], "flyCol1", axes=[1], keepdims=1)
+    n("Cast", ["flyCol1"], "flyColU", to=onnx.TensorProto.UINT8)
+
+    # uint8 label map L: 10 outside grid, 0 in-grid bg, fly colour, frog colour
+    init("u0", np.array(0, np.uint8), np.uint8)
+    init("u10", np.array(10, np.uint8), np.uint8)
+    n("Where", ["gridBox", "u0", "u10"], "Lg")          # 0 in-grid else 10
+    n("Where", ["flyBox", "flyColU", "Lg"], "Lf")       # fly box -> fly colour
+    n("Where", ["frogBox", "frogColU", "Lf"], "L")      # frog box -> frog colour
+
+    init("chan", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
+    n("Equal", ["L", "chan"], "output")                 # -> free BOOL output
+
+    x = helper.make_tensor_value_info(
+        "input", onnx.TensorProto.FLOAT, [1, 10, 30, 30])
+    y = helper.make_tensor_value_info(
+        "output", onnx.TensorProto.BOOL, [1, 10, 30, 30])
+    graph = helper.make_graph(nodes, "task234", [x], [y], inits)
+    return helper.make_model(
+        graph, ir_version=IR_VERSION,
+        opset_imports=[helper.make_opsetid("", 11)])
