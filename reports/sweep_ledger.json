@@ -410,14 +410,14 @@
  {
   "task": 35,
   "arc_id": "1f642eb9",
-  "points": 15.36,
+  "points": 16.2,
   "memory": 15312,
   "params": 51,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "16.20 adopted (15.36->16.20, +0.84); floor 6548. INSIGHT: apparent detection was border-pixel slide-copy along own line -> Tier-B, no detection"
  },
  {
   "task": 36,
