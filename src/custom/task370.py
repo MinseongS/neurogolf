@@ -56,6 +56,16 @@ from ..harness import IR_VERSION
 
 N = 30
 LMAX = 5
+# Padded sprite-vector layout. Each sprite row a occupies the slot
+# [PAD + a*S, PAD + a*S + L).  The per-cell flat index is PAD + a*S + (v-kr*sc);
+# the addend x = v-kr*sc is bounded by |x| <= 29 + 5*33 < 195 (v in [-29,29],
+# |kr|<=33, |sc|<=5), so with S = 400 >> 195 the index can never spill from one
+# row's slot into another's data, and with PAD = 200 it always stays in
+# [0, SPRVEC_LEN).  => no per-cell range check AND no clip needed (both provably
+# safe), removing the dominant per-a bool/fp16 planes.
+PAD = 205
+SPRVEC_S = 205
+SPRVEC_LEN = PAD + LMAX * SPRVEC_S + PAD     # 1435 (S>194+L, PAD>194: safe)
 
 
 def build(task):
@@ -121,10 +131,10 @@ def build(task):
     n("Mul", ["iscolor", "chidx"], "cidx_m")
     n("ReduceSum", ["cidx_m"], "color", axes=[1], keepdims=1)  # [1,1,1,1]
 
-    # hint plane via 1x1 Conv selecting colour channel
+    # hint plane via a 1x1 Conv selecting the colour channel, then 1-D reduces.
     n("Conv", ["input", "iscolor"], "hintp")                # [1,1,30,30] f32
-    n("ReduceMax", ["hintp"], "hrh", axes=[3], keepdims=1)
-    n("ReduceMax", ["hintp"], "hcw", axes=[2], keepdims=1)
+    n("ReduceMax", ["hintp"], "hrh", axes=[3], keepdims=1)  # [1,1,30,1]
+    n("ReduceMax", ["hintp"], "hcw", axes=[2], keepdims=1)  # [1,1,1,30]
     n("Mul", ["ar_r", "hrh"], "hr_m")
     n("ReduceSum", ["hr_m"], "hr", axes=[2], keepdims=1)    # [1,1,1,1]
     n("Mul", ["ar_c", "hcw"], "hc_m")
@@ -157,7 +167,22 @@ def build(task):
     n("Cast", ["spr_idx_c"], "spr_idx", to=I64)
     init("flat25", np.array([LMAX * LMAX], np.int64), np.int64)
     n("Reshape", ["spr_idx", "flat25"], "spr_idx25")
-    n("Gather", ["ch0f", "spr_idx25"], "spr25")             # [25] f32 sprite mask
+    n("Gather", ["ch0f", "spr_idx25"], "spr25")             # [25] uint8 sprite mask
+
+    # --- padded sprite vector for range-check-free gathers ----------------
+    # Layout: slot PAD + a*S + col holds spr[a,col]; everything else is 0.
+    # With S > 2*30 and a leading/trailing PAD, any column index b in
+    # [-30, 30) lands either on the correct cell or in a zero gap, so the
+    # per-a gather needs NO explicit b-range check.
+    # Append a 0 sentinel to spr25 (-> spr26) and scatter via a fixed map.
+    init("z_sent", np.array([0], np.uint8), np.uint8)
+    n("Concat", ["spr25", "z_sent"], "spr26", axis=0)       # [26] uint8
+    scatter = np.full(SPRVEC_LEN, LMAX * LMAX, dtype=np.int32)  # default -> sentinel 0
+    for a in range(LMAX):
+        for col in range(LMAX):
+            scatter[PAD + a * SPRVEC_S + col] = a * LMAX + col
+    init("scatter", scatter, np.int32)                      # [SPRVEC_LEN] params
+    n("Gather", ["spr26", "scatter"], "spr_vec")            # [SPRVEC_LEN] uint8
 
     # ===== 3. step magnitude m ========================================
     # for mm = 1..LMAX: cell (hofr - sgr*mm, hofc - sgc*mm); spr value there.
@@ -210,10 +235,6 @@ def build(task):
     F16 = TensorProto.FLOAT16
     I32 = TensorProto.INT32
     n("Cast", ["v"], "v16", to=F16)                         # [1,1,1,30] fp16
-    init("nhalf16", np.array(-0.5, np.float16), np.float16)
-    init("lmaxm0516", np.array(float(LMAX) - 0.5, np.float16), np.float16)
-    init("z016", np.array(0.0, np.float16), np.float16)
-    init("max2416", np.array(float(LMAX * LMAX - 1), np.float16), np.float16)
     colored_terms = []
     for a in range(LMAX):
         # --- all per-row (1-D [1,1,30,1]) work in fp32 ---------------
@@ -225,26 +246,20 @@ def build(task):
         n("Equal", [f"krsr_{a}", f"knum_{a}"], f"kint_{a}")  # k integer
         n("Greater", [f"kr_{a}", "half"], f"kge1_{a}")      # k>=1
         n("And", [f"kint_{a}", f"kge1_{a}"], f"kok_{a}")    # [1,1,30,1] bool
-        # column index into spr row a:  bidx = a*LMAX + (v - kr*sc).
-        # Build it in fp16 (values are small integers, exact in fp16) to halve
-        # the dominant 2-D planes.
+        n("Cast", [f"kok_{a}"], f"kok_u_{a}", to=U8)        # [1,1,30,1] uint8
+        # padded-layout index: idx = PAD + a*S + (v - kr*sc).  Out-of-range b
+        # lands in a zero gap of spr_vec, so NO explicit b-range check needed.
+        # fp16 throughout (values are small integers, exact in fp16).
         n("Mul", [f"kr_{a}", "sc"], f"krsc_{a}")            # [1,1,30,1]
         n("Cast", [f"krsc_{a}"], f"krsc16_{a}", to=F16)
-        n("Sub", ["v16", f"krsc16_{a}"], f"b_{a}")          # [1,1,30,30] fp16
-        # range check b in [0,LMAX)
-        n("Greater", [f"b_{a}", "nhalf16"], f"bge0_{a}")
-        n("Less", [f"b_{a}", "lmaxm0516"], f"blt_{a}")
-        n("And", [f"bge0_{a}", f"blt_{a}"], f"bok_{a}")     # [1,1,30,30] bool
-        # gather spr value: idx = a*LMAX + b, clamp to valid, int32 index
-        init(f"aLM16_{a}", np.array(a * LMAX, np.float16), np.float16)
-        n("Add", [f"b_{a}", f"aLM16_{a}"], f"sidx_f_{a}")   # [1,1,30,30] fp16
-        n("Clip", [f"sidx_f_{a}", "z016", "max2416"], f"sidx_c_{a}")
-        n("Cast", [f"sidx_c_{a}"], f"sidx_{a}", to=I32)     # [1,1,30,30] int32
-        n("Gather", ["spr25", f"sidx_{a}"], f"sprab_{a}")   # [1,1,30,30] uint8
-        n("Cast", [f"sprab_{a}"], f"sprab_b_{a}", to=B)     # 0/1 -> bool
-        # term = kok(row) AND bok AND sprab
-        n("And", [f"kok_{a}", f"bok_{a}"], f"kb_{a}")       # -> [1,1,30,30] bool
-        n("And", [f"kb_{a}", f"sprab_b_{a}"], f"term_{a}")  # [1,1,30,30] bool
+        # base = v16 + (PAD + a*S)   (1-D [1,1,1,30], cheap)
+        init(f"base16_{a}", np.array(PAD + a * SPRVEC_S, np.float16), np.float16)
+        n("Add", ["v16", f"base16_{a}"], f"vbase_{a}")      # [1,1,1,30] fp16
+        n("Sub", [f"vbase_{a}", f"krsc16_{a}"], f"sidx_f_{a}")  # [1,1,30,30] fp16
+        n("Cast", [f"sidx_f_{a}"], f"sidx_{a}", to=I32)     # [1,1,30,30] int32 (in range)
+        n("Gather", ["spr_vec", f"sidx_{a}"], f"sprab_{a}")  # [1,1,30,30] uint8
+        # term(uint8 0/1) = spr * kok(row)  (broadcast [1,1,30,1] -> [1,1,30,30])
+        n("Mul", [f"sprab_{a}", f"kok_u_{a}"], f"term_{a}")  # [1,1,30,30] uint8
         colored_terms.append(f"term_{a}")
 
     # OR all terms

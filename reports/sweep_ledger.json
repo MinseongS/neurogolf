@@ -1082,14 +1082,14 @@
  {
   "task": 91,
   "arc_id": "3f7978a0",
-  "points": 14.15,
+  "points": 16.23,
   "memory": 51328,
   "params": 78,
   "method": "gen:biohack_new",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "16.23 adopted (14.15->16.23, +2.08); near floor (6344). INSIGHT: variable-offset crop=Tier-B Gather; enumerate only colors generator uses"
  },
  {
   "task": 92,
