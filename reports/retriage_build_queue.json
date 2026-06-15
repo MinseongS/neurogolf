@@ -1,0 +1,352 @@
+[
+ {
+  "task": 275,
+  "gain": 4.84,
+  "est": 19.0,
+  "tier": "S",
+  "cur": 14.16
+ },
+ {
+  "task": 244,
+  "gain": 4.37,
+  "est": 19.0,
+  "tier": "S",
+  "cur": 14.63
+ },
+ {
+  "task": 278,
+  "gain": 4.33,
+  "est": 19.0,
+  "tier": "S",
+  "cur": 14.67
+ },
+ {
+  "task": 57,
+  "gain": 4.29,
+  "est": 19.0,
+  "tier": "S",
+  "cur": 14.71
+ },
+ {
+  "task": 264,
+  "gain": 3.85,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 13.15
+ },
+ {
+  "task": 77,
+  "gain": 3.32,
+  "est": 16.8,
+  "tier": "B",
+  "cur": 13.48
+ },
+ {
+  "task": 216,
+  "gain": 3.24,
+  "est": 16.8,
+  "tier": "B",
+  "cur": 13.56
+ },
+ {
+  "task": 36,
+  "gain": 3.09,
+  "est": 16.8,
+  "tier": "B",
+  "cur": 13.71
+ },
+ {
+  "task": 306,
+  "gain": 3.07,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 13.93
+ },
+ {
+  "task": 25,
+  "gain": 3.06,
+  "est": 16.8,
+  "tier": "B",
+  "cur": 13.74
+ },
+ {
+  "task": 206,
+  "gain": 3.02,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 13.98
+ },
+ {
+  "task": 112,
+  "gain": 2.99,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 14.01
+ },
+ {
+  "task": 372,
+  "gain": 2.97,
+  "est": 19.0,
+  "tier": "S",
+  "cur": 16.03
+ },
+ {
+  "task": 33,
+  "gain": 2.92,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 14.08
+ },
+ {
+  "task": 177,
+  "gain": 2.82,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 14.18
+ },
+ {
+  "task": 358,
+  "gain": 2.78,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 14.22
+ },
+ {
+  "task": 193,
+  "gain": 2.69,
+  "est": 16.8,
+  "tier": "B",
+  "cur": 14.11
+ },
+ {
+  "task": 161,
+  "gain": 2.33,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 14.67
+ },
+ {
+  "task": 359,
+  "gain": 2.32,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 14.68
+ },
+ {
+  "task": 368,
+  "gain": 2.31,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 14.69
+ },
+ {
+  "task": 132,
+  "gain": 2.29,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 14.71
+ },
+ {
+  "task": 232,
+  "gain": 2.29,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 14.71
+ },
+ {
+  "task": 390,
+  "gain": 2.11,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 14.89
+ },
+ {
+  "task": 271,
+  "gain": 2.07,
+  "est": 16.8,
+  "tier": "B",
+  "cur": 14.73
+ },
+ {
+  "task": 365,
+  "gain": 1.99,
+  "est": 16.8,
+  "tier": "B",
+  "cur": 14.81
+ },
+ {
+  "task": 117,
+  "gain": 1.78,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 15.22
+ },
+ {
+  "task": 354,
+  "gain": 1.74,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 15.26
+ },
+ {
+  "task": 134,
+  "gain": 1.42,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 15.58
+ },
+ {
+  "task": 94,
+  "gain": 1.23,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 15.77
+ },
+ {
+  "task": 346,
+  "gain": 1.12,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 15.88
+ },
+ {
+  "task": 180,
+  "gain": 0.92,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 16.08
+ },
+ {
+  "task": 27,
+  "gain": 0.67,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 16.33
+ },
+ {
+  "task": 321,
+  "gain": 0.6,
+  "est": 17.0,
+  "tier": "A",
+  "cur": 16.4
+ },
+ {
+  "task": 121,
+  "gain": 0.58,
+  "est": 16.8,
+  "tier": "B",
+  "cur": 16.22
+ },
+ {
+  "task": 93,
+  "gain": 0.05,
+  "est": 15.4,
+  "tier": null,
+  "cur": 15.35
+ },
+ {
+  "task": 80,
+  "gain": 0.04,
+  "est": 14.4,
+  "tier": null,
+  "cur": 14.36
+ },
+ {
+  "task": 392,
+  "gain": 0.04,
+  "est": 14.7,
+  "tier": null,
+  "cur": 14.66
+ },
+ {
+  "task": 383,
+  "gain": 0.03,
+  "est": 14.4,
+  "tier": null,
+  "cur": 14.37
+ },
+ {
+  "task": 154,
+  "gain": 0.03,
+  "est": 14.7,
+  "tier": null,
+  "cur": 14.67
+ },
+ {
+  "task": 153,
+  "gain": 0.03,
+  "est": 15.1,
+  "tier": null,
+  "cur": 15.07
+ },
+ {
+  "task": 4,
+  "gain": 0.02,
+  "est": 14.1,
+  "tier": null,
+  "cur": 14.08
+ },
+ {
+  "task": 397,
+  "gain": 0.02,
+  "est": 15.1,
+  "tier": null,
+  "cur": 15.08
+ },
+ {
+  "task": 30,
+  "gain": 0.02,
+  "est": 16.3,
+  "tier": null,
+  "cur": 16.28
+ },
+ {
+  "task": 165,
+  "gain": 0.01,
+  "est": 13.9,
+  "tier": null,
+  "cur": 13.89
+ },
+ {
+  "task": 86,
+  "gain": 0.01,
+  "est": 14.9,
+  "tier": null,
+  "cur": 14.89
+ },
+ {
+  "task": 125,
+  "gain": 0.0,
+  "est": 15.5,
+  "tier": null,
+  "cur": 15.5
+ },
+ {
+  "task": 374,
+  "gain": -0.02,
+  "est": 15.5,
+  "tier": null,
+  "cur": 15.52
+ },
+ {
+  "task": 41,
+  "gain": -0.03,
+  "est": 15.6,
+  "tier": null,
+  "cur": 15.63
+ },
+ {
+  "task": 118,
+  "gain": -0.04,
+  "est": 13.3,
+  "tier": null,
+  "cur": 13.34
+ },
+ {
+  "task": 302,
+  "gain": -0.04,
+  "est": 16.0,
+  "tier": null,
+  "cur": 16.04
+ }
+]

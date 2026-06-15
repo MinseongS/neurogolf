@@ -1,0 +1,1100 @@
+[
+ {
+  "task": 191,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "shape-correspondence: find all rot/transpose matches of reference sprite across grid (template matching over 8 orientations)",
+  "est_tier": null,
+  "est_points": 11.5,
+  "sketch": "-",
+  "stored": 11.53
+ },
+ {
+  "task": 101,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "object reconstruction: reveal hidden blue pixels of a sprite replicated at variable magnifiers; needs recovering canonical sprite then up-sampling per box",
+  "est_tier": null,
+  "est_points": 12.7,
+  "sketch": "-",
+  "stored": 12.68
+ },
+ {
+  "task": 133,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "sprite reconstruction from 2 shown pixels at variable mags; correspondence + up-sample",
+  "est_tier": null,
+  "est_points": 12.8,
+  "sketch": "-",
+  "stored": 12.84
+ },
+ {
+  "task": 158,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "diagonal-symmetry completion of sprite with per-instance flips/mags; object-level reconstruction not separable",
+  "est_tier": null,
+  "est_points": 12.9,
+  "sketch": "-",
+  "stored": 12.85
+ },
+ {
+  "task": 96,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "output-size not derivable simply + overlay/aggregation of scattered concentric diamonds onto a centered (2n-1) crop",
+  "est_tier": null,
+  "est_points": 13.0,
+  "sketch": "-",
+  "stored": 12.97
+ },
+ {
+  "task": 286,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "flood-fill maze parity coloring (unbounded propagation)",
+  "est_tier": null,
+  "est_points": 13.1,
+  "sketch": "-",
+  "stored": 13.1
+ },
+ {
+  "task": 367,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "box-to-box line connectivity (which pairs are connected)",
+  "est_tier": null,
+  "est_points": 13.1,
+  "sketch": "-",
+  "stored": 13.14
+ },
+ {
+  "task": 264,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "label-map/scatter: 9 fixed 3x3 sprite glyphs (idx//3,idx%3) recolored by detected color; output reconstructs canonical glyph per cell. Color per cell = ReduceMax over each 3x3 region; glyph shape is a constant init",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "detect 9 sprite colors (max over each gray-box region -> 9 scalars by sorting box positions), Where(const_glyph_mask, color_onehot) into 9x9 output",
+  "stored": 13.15
+ },
+ {
+  "task": 233,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "sprite placement-into-box by correspondence + rotation matching",
+  "est_tier": null,
+  "est_points": 13.3,
+  "sketch": "-",
+  "stored": 13.25
+ },
+ {
+  "task": 285,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "4-fold angular sprite reconstruction with per-sprite shown-angle; object reconstruction",
+  "est_tier": null,
+  "est_points": 13.3,
+  "sketch": "-",
+  "stored": 13.27
+ },
+ {
+  "task": 18,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "sprite + rotated clone where common color is hidden in clone; reconstruct by rotation matching between the two copies",
+  "est_tier": null,
+  "est_points": 13.3,
+  "sketch": "-",
+  "stored": 13.34
+ },
+ {
+  "task": 118,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "recolor: maze cells flagged cyan are gray in input, output restores cyan (just copy input, recolor gray->cyan only at flagged cells). Actually output = the colors array with cyan kept; input replaces cyan with gray. Output is identity-ish? input gray vs output gray+cyan: the cyan cells are NOT recoverable from input alone (gray maps to both). INFEASIBLE",
+  "est_tier": null,
+  "est_points": 13.3,
+  "sketch": "RECHECK: cyan in output corresponds to cells that were gray-static in input AND on red-cross arms; non-local -> INFEASIBLE",
+  "stored": 13.34
+ },
+ {
+  "task": 209,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "enclosed-region / nested-box parity recolor; non-local containment",
+  "est_tier": null,
+  "est_points": 13.4,
+  "sketch": "-",
+  "stored": 13.36
+ },
+ {
+  "task": 77,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "recolor via local Conv: 3x3 box neighborhoods -> mark diagonals red. static->static, boxes where every row/col visible. Output recolors yellow(box-on-static)->red, keeps static. Per-cell rule from local window",
+  "est_tier": "B",
+  "est_points": 16.8,
+  "sketch": "label-map: output[r][c]=red if input==yellow else static-passthrough; yellow already distinct color in input -> pure recolor Where(input==yellow,red,input). Tier-B ~16.8 maybe S",
+  "stored": 13.48
+ },
+ {
+  "task": 110,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "flood-fill / connected-region recolor (484b58aa is recolor-largest-region) - needs connectivity",
+  "est_tier": null,
+  "est_points": 13.5,
+  "sketch": "-",
+  "stored": 13.48
+ },
+ {
+  "task": 251,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "flood-fill region coloring (a5313dff = find enclosed rectangle, fill blue) connectivity",
+  "est_tier": null,
+  "est_points": 13.5,
+  "sketch": "-",
+  "stored": 13.48
+ },
+ {
+  "task": 54,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "264363fd: star projected along box rows/cols + reflected onto other boxes; object correspondence + ray projection",
+  "est_tier": null,
+  "est_points": 13.5,
+  "sketch": "-",
+  "stored": 13.5
+ },
+ {
+  "task": 366,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "e6721834: sprite extraction/placement by correspondence",
+  "est_tier": null,
+  "est_points": 13.5,
+  "sketch": "-",
+  "stored": 13.5
+ },
+ {
+  "task": 2,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "00d62c1b: flood-fill enclosed regions (classic). genverify-flagged base-net gap",
+  "est_tier": null,
+  "est_points": 13.5,
+  "sketch": "-",
+  "stored": 13.51
+ },
+ {
+  "task": 5,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "045e512c: replicate sprite along directions = object reconstruction + directional copy",
+  "est_tier": null,
+  "est_points": 13.5,
+  "sketch": "-",
+  "stored": 13.51
+ },
+ {
+  "task": 66,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "2dd70a9a: snake-path tracing along blue cells (orientation-equiv applied but path-following is sequential)",
+  "est_tier": null,
+  "est_points": 13.5,
+  "sketch": "-",
+  "stored": 13.51
+ },
+ {
+  "task": 173,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "72322fa7: reveal hidden cells of plus/x sprite type per show-mode; sprite-type classification + reconstruction",
+  "est_tier": null,
+  "est_points": 13.6,
+  "sketch": "-",
+  "stored": 13.55
+ },
+ {
+  "task": 216,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "un-duplicate crop: extract the box with MOST red pixels (idx0 always max count) into output sized wides[0]xtalls[0]. Box with max red-count -> crop. Count per box via ReduceSum, argmax-box crop",
+  "est_tier": "B",
+  "est_points": 16.8,
+  "sketch": "count red per box region (ReduceSum), select max-count box, gather its sub-rectangle; output size = that box size (content-dependent size -> hard). MARGINAL",
+  "stored": 13.56
+ },
+ {
+  "task": 187,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "7b6016b9: line/ray drawing through boxes with intersection rules; connectivity",
+  "est_tier": null,
+  "est_points": 13.7,
+  "sketch": "-",
+  "stored": 13.65
+ },
+ {
+  "task": 363,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "e5062a87: sprite stamping at all matching positions (cross-correlation/template match)",
+  "est_tier": null,
+  "est_points": 13.7,
+  "sketch": "-",
+  "stored": 13.68
+ },
+ {
+  "task": 36,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "un-duplicate crop: 1f85a75f crops the bbox of the idx==0 (special-color) connected blob. Output size = blob bbox (content-dependent). Crop to bbox of the single distinguished color",
+  "est_tier": "B",
+  "est_points": 16.8,
+  "sketch": "mask cells of color[0], bbox via row/col-any reductions, gather crop. Output-size from content -> MARGINAL but the special color is unique -> doable",
+  "stored": 13.71
+ },
+ {
+  "task": 76,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "36d67576: reveal hidden sprite cells (only yellow/red shown) via rotated copies; reconstruction+rotation match",
+  "est_tier": null,
+  "est_points": 13.7,
+  "sketch": "-",
+  "stored": 13.71
+ },
+ {
+  "task": 201,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "846bdb03: reconstruct/compare two conway sprites in a box; correspondence",
+  "est_tier": null,
+  "est_points": 13.7,
+  "sketch": "-",
+  "stored": 13.72
+ },
+ {
+  "task": 25,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "data-dependent translate: 1a07d186 moves each colored dot adjacent to the same-color vertical line (left/right of line by sign(c-linecol)). Per-row independent: place color one cell beside its matching line",
+  "est_tier": "B",
+  "est_points": 16.8,
+  "sketch": "lines are fixed columns; for each dot pick its line (same color) and write at linecol +/-1 by side. row-independent -> boolean MatMul scatter or per-color column ops. Tier-B/A",
+  "stored": 13.74
+ },
+ {
+  "task": 300,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "be94b721: extract the largest (idx0) sprite into its own bbox-sized output; pick max-size object + crop",
+  "est_tier": null,
+  "est_points": 13.7,
+  "sketch": "max-size object selection + content-dependent output size; MARGINAL-INFEASIBLE",
+  "stored": 13.74
+ },
+ {
+  "task": 364,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "recolor by shape-class: e509e548 each green blob recolored by which letter sprite it is (L=blue,U=pink,H=red). Shape classification per object -> color. Non-trivial but local: shape determined by pixel pattern",
+  "est_tier": null,
+  "est_points": 14.0,
+  "sketch": "requires classifying 3 letter shapes per connected blob -> needs object detection+classification. INFEASIBLE (shape classification across variable positions). Re-mark INFEASIBLE",
+  "stored": 13.75
+ },
+ {
+  "task": 157,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "recolor: 6a1e5592 maps gray 'falling' shapes to blue at their landing position in the red header. Per-column drop = gravity-ish but mapping bluerows is data-driven. genverify base-net gap. Likely INFEASIBLE (shape matching gray vs blue slots)",
+  "est_tier": null,
+  "est_points": 13.8,
+  "sketch": "RECHECK -> INFEASIBLE: correspondence between gray bottom shapes and blue top slots",
+  "stored": 13.76
+ },
+ {
+  "task": 71,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "3345333e: mirror sprite into box + reflect; reconstruction with box correspondence",
+  "est_tier": null,
+  "est_points": 13.8,
+  "sketch": "-",
+  "stored": 13.79
+ },
+ {
+  "task": 379,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "ecdecbb3: draw rays from red dots to cyan lines and cap with cyan square; ray-stop-at-line propagation",
+  "est_tier": null,
+  "est_points": 13.8,
+  "sketch": "-",
+  "stored": 13.82
+ },
+ {
+  "task": 69,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "321b1fc6: sprite extraction/clone by correspondence",
+  "est_tier": null,
+  "est_points": 13.8,
+  "sketch": "-",
+  "stored": 13.84
+ },
+ {
+  "task": 23,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "150deff5: recolor sprite parts (2x2 blocks vs single) - block/shape decomposition; pattern matching of 2x1/2x2 sub-shapes",
+  "est_tier": null,
+  "est_points": 13.9,
+  "sketch": "-",
+  "stored": 13.86
+ },
+ {
+  "task": 243,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "9edfc990: flood-fill background reachable from edge (connectivity)",
+  "est_tier": null,
+  "est_points": 13.9,
+  "sketch": "-",
+  "stored": 13.86
+ },
+ {
+  "task": 165,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "6d58a25d: drop columns under a 'kite' to the floor; gravity along columns gated by kite-above (per-column ray) -> actually CLOSED FORM per column. RECHECK",
+  "est_tier": null,
+  "est_points": 13.9,
+  "sketch": "per col c: if any kite above a pixel, fill from bottom up to kite. column-independent -> col profile. Possibly FEASIBLE Tier-B",
+  "stored": 13.89
+ },
+ {
+  "task": 280,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "b527c5c6: aim a green/red beam from one box toward partner; geometry depends on relative positions (object correspondence + directed ray)",
+  "est_tier": null,
+  "est_points": 13.9,
+  "sketch": "-",
+  "stored": 13.89
+ },
+ {
+  "task": 145,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "recolor by region-area-rank: 6455b5f5 recolors smallest-area region cyan, largest-area region blue; areas separated by red cut-lines (rectangles). Region = axis-aligned rect between red lines. Area rank -> recolor",
+  "est_tier": null,
+  "est_points": 13.9,
+  "sketch": "recursive bisection rectangles; need per-rectangle area then min/max -> requires region segmentation by red lines (connected). INFEASIBLE (region area requires segmentation)",
+  "stored": 13.9
+ },
+ {
+  "task": 306,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "Kronecker/quadrant tiling: c444b776 replicates the filled quadrant's content into ALL quadrants of a yellow-gridded canvas. Output = tile the single drawn quadrant across the (1-3)x2 grid",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "detect the one non-empty quadrant (the others are blank in input), broadcast its (size x size) content into every quadrant cell. Fixed grid structure -> Tile/Kronecker. Tier-A/S",
+  "stored": 13.93
+ },
+ {
+  "task": 162,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "6cf79266: find 3x3 all-black cutouts and stamp blue 3x3; detection of empty 3x3 windows + neighbor consistency (local but legality is global)",
+  "est_tier": null,
+  "est_points": 13.9,
+  "sketch": "-",
+  "stored": 13.94
+ },
+ {
+  "task": 255,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "a64e4611: random/non-deterministic restoration of green interior - known hard random",
+  "est_tier": null,
+  "est_points": 13.9,
+  "sketch": "-",
+  "stored": 13.95
+ },
+ {
+  "task": 90,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "recolor + find-empty-rect: 3eda0437 finds the single largest all-empty rectangle and fills pink; output also = input passthrough. Largest empty rectangle is a global search -> INFEASIBLE",
+  "est_tier": null,
+  "est_points": 14.0,
+  "sketch": "max-empty-rectangle is not closed-form/local",
+  "stored": 13.97
+ },
+ {
+  "task": 170,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "6ecd11f4: copy magnified sprite content into a same-size box, recolored by color-map grid; correspondence between sprite cells and color box",
+  "est_tier": null,
+  "est_points": 14.0,
+  "sketch": "-",
+  "stored": 13.98
+ },
+ {
+  "task": 206,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "stamp/replicate: 88a10436 copies the colored sprite (shown at sprite1) onto each gray marker location (sprite2). Fixed sprite, stamp at marker. Data-dependent translate of a recovered fixed sprite",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "recover sprite (the one colored copy), gray dot marks center; stamp sprite onto every gray-marked cell. scatter via MatMul. Tier-A ~17",
+  "stored": 13.98
+ },
+ {
+  "task": 112,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "replicate-with-reflection: 4938f0c2 stamps the recovered red sprite into 4 diagonal quadrants around a green box (with sign flips dr,dc). Fixed 4-fold mirrored stamp of a recovered sprite",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "sprite shown in one quadrant (showall=0 shows top-left); reflect into all 4 quadrants around green 2x2. orientation-equivariant mirror stamps. Tier-A",
+  "stored": 14.01
+ },
+ {
+  "task": 396,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "fcb5c309: extract box[0] content with its scattered pixels into box-sized output; crop with content-dependent size + which pixels fall inside",
+  "est_tier": null,
+  "est_points": 14.0,
+  "sketch": "-",
+  "stored": 14.01
+ },
+ {
+  "task": 4,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "data-dependent translate (closed-form): 025d127b reshapes each parallelogram by shifting rows by 1 (a fixed per-shape geometric squash). Per-color closed-form coordinate remap",
+  "est_tier": null,
+  "est_points": 14.1,
+  "sketch": "each shape redrawn shifted; rows of the slanted shape shift -> per-row translate. content-dependent but row-independent. MARGINAL Tier-B",
+  "stored": 14.08
+ },
+ {
+  "task": 33,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "1e32b0e9: broadcast the cell(0,0) sprite to all 9 hollywood-square cells; replicate a detected sub-region into a 3x3 macro-grid (Kronecker-like) BUT keeps other cells too. RECHECK FEASIBLE",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "the (0,0) macro cell sprite is copied into all 9 macro cells (line-grid fixed). detect (0,0) cell content, tile across 3x3 with fixed line offsets. Tier-A",
+  "stored": 14.08
+ },
+ {
+  "task": 193,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "7f4411dc: keep only isolated pixels (those with empty horiz OR vert neighbors) inside boxes; cross/junction detection - local Conv actually. RECHECK",
+  "est_tier": "B",
+  "est_points": 16.8,
+  "sketch": "rule: pixel kept if (left<=0 or right<=0) and (top<=0 or bottom<=0) = local 3x3 predicate -> single Conv recolor. FEASIBLE Tier-B/S",
+  "stored": 14.11
+ },
+ {
+  "task": 192,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "7e0986d6: place small colored pixels INTO the box whose interior shape matches (key-in-lock correspondence)",
+  "est_tier": null,
+  "est_points": 14.1,
+  "sketch": "-",
+  "stored": 14.14
+ },
+ {
+  "task": 275,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "per-cell broadcast in macro-grid: b190f7f5 - for each colored cell in grid-A and each cyan 'plus' in grid-B, output[row*s+r][col*s+c]=color = Kronecker outer product of two (sxs) bitmaps! output = A (colors) kron B (plus mask)",
+  "est_tier": "S",
+  "est_points": 19.0,
+  "sketch": "output = kron(colorgrid, plusmask): place colorgrid[i][j] at every plus position within block (i,j). Pure Kronecker of two recovered sub-grids -> MatMul/tile, mem~0. Tier-S ~19",
+  "stored": 14.16
+ },
+ {
+  "task": 177,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "un-duplicate crop + mirror: 7468f01a crops the colored box region and horizontally mirrors the inner pixels. Fixed crop (box at rowoffset) + flip",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "output = box interior with cols reversed (output[r][wide-col-1]). box position recoverable; crop + flip_horiz -> Tier-A/S geometric",
+  "stored": 14.18
+ },
+ {
+  "task": 138,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "5daaa586: trace ray from each pixel toward its matching border line, crop to inner rect; ray propagation + crop",
+  "est_tier": null,
+  "est_points": 14.2,
+  "sketch": "-",
+  "stored": 14.22
+ },
+ {
+  "task": 253,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "a61ba2ce: arrange 4 detected 2-cell sprite fragments into a fixed 4x4 layout by correspondence",
+  "est_tier": null,
+  "est_points": 14.2,
+  "sketch": "-",
+  "stored": 14.22
+ },
+ {
+  "task": 358,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "e21d9049: draw full diagonal-colored cross (row+col lines colored by (r+c)%n) through a center; input shows only a sub-segment. Output = colors[(r+c)%n] on the center's row and col. Closed-form arithmetic of recovered center+palette",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "recover center(row,col) + palette + offset; output cross = where(r==row or c==col, colors[(r+c)%n], 0). closed-form per cell. Tier-A maybe S",
+  "stored": 14.22
+ },
+ {
+  "task": 9,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "06df4c85: connect same-color dots with lines + add inferred dot; pairwise connect (which dots share row/col) - line drawing between matched pairs",
+  "est_tier": null,
+  "est_points": 14.2,
+  "sketch": "-",
+  "stored": 14.23
+ },
+ {
+  "task": 182,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "776ffc46: find the sprite matching the boxed one and recolor; template matching across 10 sprite types",
+  "est_tier": null,
+  "est_points": 14.2,
+  "sketch": "-",
+  "stored": 14.23
+ },
+ {
+  "task": 89,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "3e980e27: reveal/mirror hidden cells of two sprites + recolor; reconstruction + mirror",
+  "est_tier": null,
+  "est_points": 14.3,
+  "sketch": "-",
+  "stored": 14.26
+ },
+ {
+  "task": 338,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "d5d6de2d: recolor box interiors green - actually pure local recolor! interior of red boxes -> green. RECHECK",
+  "est_tier": "B",
+  "est_points": 16.8,
+  "sketch": "output green at black cells that are interior of a red box. The box interior is black in input; rule = black cells fully enclosed by red. Enclosure = connectivity BUT boxes are solid rects -> a black cell with red on all 4 sides extended = local-ish. Likely needs enclosure -> INFEASIBLE per known-flood",
+  "stored": 14.29
+ },
+ {
+  "task": 349,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "db93a21d: draw shadow (blue below) + green halo around maroon squares by radius; per-object directional projection + size-parametric halo",
+  "est_tier": null,
+  "est_points": 14.3,
+  "sketch": "-",
+  "stored": 14.31
+ },
+ {
+  "task": 325,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "d0f5fe59: output is len(brows)xlen(bcols) diagonal identity in cyan (output[i][i]=cyan). Output depends only on COUNT of sprites! count-parametric fixed shape",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "count sprites N (connected blobs) -> output NxN identity. Counting distinct objects needs connectivity -> but it's just count. MARGINAL: object count is hard without CC. INFEASIBLE-leaning",
+  "stored": 14.33
+ },
+ {
+  "task": 80,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "39e1d7f9: in a magnified line-grid, complete the cross/corner decoration around every center pixel (only one shown in input). Replicate fixed decoration pattern at all center cells",
+  "est_tier": null,
+  "est_points": 14.4,
+  "sketch": "stamp fixed plus/x decoration around each color[0] center cell in linegrid. local stamp -> Tier-A/B. FEASIBLE",
+  "stored": 14.36
+ },
+ {
+  "task": 383,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "f1cefba8: project barnacles (edge pixels) as colored lines across box interior. Each barnacle at row/col -> draw a line across the box at that row/col. Closed-form per row/col line",
+  "est_tier": null,
+  "est_points": 14.4,
+  "sketch": "barnacles mark rows/cols; output draws color[1] lines through box interior at those rows/cols. row/col profile -> separable. FEASIBLE Tier-B",
+  "stored": 14.37
+ },
+ {
+  "task": 14,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "0b148d64: extract the differently-colored quadrant of a 4-fold symmetric grid; find the odd quadrant + crop",
+  "est_tier": null,
+  "est_points": 14.4,
+  "sketch": "-",
+  "stored": 14.43
+ },
+ {
+  "task": 44,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "228f6490: move sprites into matching holes (shape-correspondence / fit)",
+  "est_tier": null,
+  "est_points": 14.4,
+  "sketch": "-",
+  "stored": 14.44
+ },
+ {
+  "task": 185,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "7837ac64: grid-of-cells, output one cell per unique color combo; aggregation/dedup of rows",
+  "est_tier": null,
+  "est_points": 14.5,
+  "sketch": "-",
+  "stored": 14.52
+ },
+ {
+  "task": 387,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "f35d900a: expand/pulse colored pixels toward each other with gray bridge; pairwise interaction",
+  "est_tier": null,
+  "est_points": 14.5,
+  "sketch": "-",
+  "stored": 14.55
+ },
+ {
+  "task": 17,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "0dfd9992: fill missing cells of a periodic texture (pattern completion / tiling-inference)",
+  "est_tier": null,
+  "est_points": 14.6,
+  "sketch": "-",
+  "stored": 14.57
+ },
+ {
+  "task": 319,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "ce602527: select the sprite matching a template at correct scale; correspondence",
+  "est_tier": null,
+  "est_points": 14.6,
+  "sketch": "-",
+  "stored": 14.58
+ },
+ {
+  "task": 174,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "72ca375d: select the sprite that is vertically symmetric and crop it; symmetry test per object + crop",
+  "est_tier": null,
+  "est_points": 14.6,
+  "sketch": "-",
+  "stored": 14.6
+ },
+ {
+  "task": 196,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "810b9b61: recolor box outlines green if 'closed' (no gap and >=3x3) else blue, keep gaps. closed = local property (gap pixel detection). per-box recolor by has-gap",
+  "est_tier": null,
+  "est_points": 14.6,
+  "sketch": "box border recolored green iff box has no black gap and min dim>=3. requires per-box gap aggregation along the outline (connected). MARGINAL/INFEASIBLE (per-object aggregate over outline)",
+  "stored": 14.62
+ },
+ {
+  "task": 244,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "9f236235: output = un-magnify the line-grid (sample 1 cell per magnified block) + the input was flipped_horiz. So output = flip_horiz then downsample by magnifier. Pure geometric un-magnify crop",
+  "est_tier": "S",
+  "est_points": 19.0,
+  "sketch": "input = flip_horiz(create_linegrid(output,mag)); invert: strip gridlines, take every (mag+1)th cell, flip back. Fixed stride Gather -> Tier-S mem~0 ~19",
+  "stored": 14.63
+ },
+ {
+  "task": 392,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "f8c80d96: extend concentric square 'mats' outward to fill grid (continue periodic rings); pattern continuation, output bg gray",
+  "est_tier": null,
+  "est_points": 14.7,
+  "sketch": "rings are periodic from center -> closed-form (thick,color,center) but show count varies; output draws ALL rings. parametric concentric squares = closed-form. RECHECK FEASIBLE",
+  "stored": 14.66
+ },
+ {
+  "task": 154,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "6855a6e4: fold a split sprite (top half above box, bottom half below, in input) into the box interior. Fixed coordinate remap of gray pixels into box. Data-dependent but deterministic gather",
+  "est_tier": null,
+  "est_points": 14.7,
+  "sketch": "gray pixels at known offsets map to box interior output[brow+r+2][bcol+c+1]; reverse-engineerable fixed remap. orientation-equiv (xpose). Tier-A/B FEASIBLE",
+  "stored": 14.67
+ },
+ {
+  "task": 161,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "6cdd2623: lasers (megarows/megacols) drawn full-length across grid; output fills entire row/col of laser. Closed-form: any row touched by laser-color at edges -> fill that row",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "detect laser rows/cols (megacolor at border), fill full row/col in output. row/col profile broadcast -> separable rowany/colany. Tier-A/S",
+  "stored": 14.67
+ },
+ {
+  "task": 278,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "b27ca6d3: recolor green->black; green marks 'noise' around red pairs. Output recolors green to black and keeps red. Pure recolor Where(input==green,black,input)",
+  "est_tier": "S",
+  "est_points": 19.0,
+  "sketch": "output[r][c]=input but green->black, red stays red. green and red distinct input colors -> single recolor, mem~0. Tier-S ~19. (base-net-style trivial recolor)",
+  "stored": 14.67
+ },
+ {
+  "task": 359,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "e26a3af2: striped background, output STRIPS the colored noise pixels (restores pure stripes). output = stripes only. stripes are vertical bands -> reconstruct from stripe colors (col-determined)",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "output[r][c]=stripes[band(c)] = per-column constant (the dominant color of each column band). column-profile broadcast. Tier-A/S",
+  "stored": 14.68
+ },
+ {
+  "task": 368,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "e76a88a6: recover the colored sprite shown once and stamp (recolored) over the gray copies. recover sprite + stamp at each gray cluster. RECHECK FEASIBLE (fixed sprite stamp)",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "one colored copy + N gray copies; output recolors all to the true colors. sprite content recovered from the colored one, stamped at gray positions. Tier-A FEASIBLE",
+  "stored": 14.69
+ },
+ {
+  "task": 57,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "28bf18c6: output is 2x-wide = sprite duplicated side by side (output[r][c]=output[r][c+minisize]). Pure horizontal tile x2 of cropped sprite",
+  "est_tier": "S",
+  "est_points": 19.0,
+  "sketch": "crop minisize x minisize sprite, tile horizontally x2. Kronecker/concat -> Tier-S. FEASIBLE",
+  "stored": 14.71
+ },
+ {
+  "task": 132,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "56ff96f3: fill each box (defined by 2 diagonal corner pixels) solid with its color. Output = filled rectangle from bbox of 2 same-color corners. Closed-form rect fill = rowspan & colspan",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "per color: bbox of the 2 corner pixels -> fill rect = rowmask & colmask outer product. Tier-A separable rectangle ~17",
+  "stored": 14.71
+ },
+ {
+  "task": 232,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "97999447: extend each colored dot rightward as a dashed line (color, gray, color...) to the edge. Per-row closed-form: from col, alternate color/gray by parity to width",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "each row has one dot; output fills c>=col with color if (c-col)%2==0 else gray. row-independent closed-form parity. Tier-A/S ~17-19",
+  "stored": 14.71
+ },
+ {
+  "task": 271,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "ae4f1146: output = the sprite (blue pixels) from the box with the MOST pixels (sorted lengths, last idx). select-max-count box + crop 3x3. count per 3x3 box",
+  "est_tier": "B",
+  "est_points": 16.8,
+  "sketch": "4 cyan boxes, blue pixels in each; output shows the densest. count per box via reduce, select max, gather 3x3. fixed 3x3 output size -> FEASIBLE Tier-B",
+  "stored": 14.73
+ },
+ {
+  "task": 365,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "e50d258f: output = the FIRST box (idx0) interior cropped (wides[0]xtalls[0]). The box[0] is just the first-listed; but selection is positional. crop a box. RECHECK which box",
+  "est_tier": "B",
+  "est_points": 16.8,
+  "sketch": "output = box[0] contents (1/8/red pixels). box[0] is a specific box (most reds, sorted). select max-red box + crop. content-dependent size. MARGINAL",
+  "stored": 14.81
+ },
+ {
+  "task": 279,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "b2862040: recolor 'closed' barnacle shapes vs open (maroon bg); enclosure/closed-loop detection - connectivity",
+  "est_tier": null,
+  "est_points": 14.8,
+  "sketch": "-",
+  "stored": 14.82
+ },
+ {
+  "task": 183,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "77fdfe62: index into a palette grid (corners) by sprite pattern; map black-region shape to colors. correspondence/lookup over a 2D key. INFEASIBLE-leaning",
+  "est_tier": null,
+  "est_points": 14.9,
+  "sketch": "requires reading corner color key + black-shape decode. complex correspondence",
+  "stored": 14.88
+ },
+ {
+  "task": 86,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "3befdf3e: draw a concentric square 'frame' (color1) around each filled square (color0), inverting inner colors. Fixed per-square stamp = size-parametric concentric ring",
+  "est_tier": null,
+  "est_points": 14.9,
+  "sketch": "each length-L square gets an outer L+2 ring of color1, swap inner. size-parametric closed-form stamp. FEASIBLE Tier-B/A",
+  "stored": 14.89
+ },
+ {
+  "task": 390,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "f8a8fe49: inverse of 6855a6e4 (input/output swapped) - fold box interior gray pixels back OUT to top/bottom halves. data-dependent split-scatter",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "output=grid (the unfolded version); deterministic gather from box interior to two halves. mirror of task154. FEASIBLE Tier-A",
+  "stored": 14.89
+ },
+ {
+  "task": 148,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "673ef223: trace cyan rays leftward from yellow markers + mirror to second band; ray propagation + reflection",
+  "est_tier": null,
+  "est_points": 15.0,
+  "sketch": "-",
+  "stored": 15.0
+ },
+ {
+  "task": 219,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "90f3ed37: append a C-pattern column of blue; non-deterministic / pattern-period inference. known non-det",
+  "est_tier": null,
+  "est_points": 15.0,
+  "sketch": "-",
+  "stored": 15.0
+ },
+ {
+  "task": 79,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "39a8645d: output 3x3 = the sprite-type that is the most COMMON among placed sprites (idx0=most). select majority sprite shape + render. count per shape needs CC/template",
+  "est_tier": null,
+  "est_points": 15.0,
+  "sketch": "-",
+  "stored": 15.03
+ },
+ {
+  "task": 153,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "681b3aeb: assemble 2 halves (each a 3x3 mask placed in grid) into one 3x3 where each cell colored by which half it belongs to. fixed 3x3 reconstruction from 2 detected blobs",
+  "est_tier": null,
+  "est_points": 15.1,
+  "sketch": "output[r][c]=color of the half containing (r,c); two 3x3 sprites at known positions -> gather both 3x3 windows + overlay. Tier-B FEASIBLE",
+  "stored": 15.07
+ },
+ {
+  "task": 168,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "6e19193c: extend arrows along their pointing direction to the edge (ray from each 2x2 arrow). direction from arrow's black corner -> ray. per-arrow directional ray",
+  "est_tier": null,
+  "est_points": 15.1,
+  "sketch": "ray direction is data-dependent per arrow (4 dirs); rays = closed-form diagonals from a vertex but here axis-rays gated by direction. MARGINAL-INFEASIBLE",
+  "stored": 15.08
+ },
+ {
+  "task": 397,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "fcc82909: under each 2x2 color box, draw a green 'shadow' of height = number of DISTINCT colors in the box. count-parametric vertical bar per box",
+  "est_tier": null,
+  "est_points": 15.1,
+  "sketch": "per box: distinct-color count (1-4) -> green bar of that height below. count distinct via comparisons; closed-form bar. FEASIBLE Tier-B",
+  "stored": 15.08
+ },
+ {
+  "task": 350,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "dbc1a6ce: connect blue dots sharing a row/col with cyan segments (gaps between pairs). pairwise connect",
+  "est_tier": null,
+  "est_points": 15.1,
+  "sketch": "-",
+  "stored": 15.11
+ },
+ {
+  "task": 143,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "63613498: move sprites matching the boxed (gray-outlined) sprite to it / recolor; correspondence to the key sprite",
+  "est_tier": null,
+  "est_points": 15.1,
+  "sketch": "-",
+  "stored": 15.12
+ },
+ {
+  "task": 169,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "6e82a1ae: recolor each tetromino by (5 - its pixel count). label-map: per-object cell value = 5-size. needs per-object size (connectivity)",
+  "est_tier": null,
+  "est_points": 15.2,
+  "sketch": "size per connected sprite -> connectivity needed for counting. INFEASIBLE (per-object pixel count requires CC)",
+  "stored": 15.16
+ },
+ {
+  "task": 117,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "4c5c2cf0: build a 4-legged creature - reflect sprite into 4 diagonal copies around a body. RECHECK: fixed 4-fold mirror stamp of recovered sprite around center",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "body (5-pixel X) + legs = 4 reflected copies of the conway sprite at corners. orientation-equiv 4-fold stamp. FEASIBLE Tier-A",
+  "stored": 15.22
+ },
+ {
+  "task": 330,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "d2abd087: recolor each gray sprite red if size==6 else blue. per-object pixel-count -> color. needs connected-component size",
+  "est_tier": null,
+  "est_points": 15.2,
+  "sketch": "size-6 -> red else blue. per-object count requires CC. INFEASIBLE",
+  "stored": 15.22
+ },
+ {
+  "task": 354,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "ddf7fa4f: recolor each gray box by the color of the light (top row) above its column span. Map box -> light by column overlap. closed-form: box color = light color at box's columns",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "each light at top col l; box spanning that col -> filled with light color. broadcast top-row color down its column into box. column-profile -> separable. Tier-A FEASIBLE",
+  "stored": 15.26
+ },
+ {
+  "task": 93,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "4093f84a: drop each pixel onto a horizon (gray band) - mark landing cell gray. gravity per column toward horizon. closed-form per column (orientation-equiv flip/xpose)",
+  "est_tier": null,
+  "est_points": 15.4,
+  "sketch": "each pixel above horizon falls to just above band; below falls up to band. per-column closest-to-band -> col profile. FEASIBLE Tier-B/A",
+  "stored": 15.35
+ },
+ {
+  "task": 125,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "543a7ed5: outline pink boxes with green frame; recolor yellow boxes. recolor + 1-cell dilation of pink boxes -> green border. local dilation Conv",
+  "est_tier": null,
+  "est_points": 15.5,
+  "sketch": "green = 1-pixel halo around pink rectangles (Conv dilate), recolor pink->cyan-interior. local -> Tier-B/A FEASIBLE",
+  "stored": 15.5
+ },
+ {
+  "task": 374,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "ea32f347: recolor 3 gray lines by their LENGTH rank (shortest=2nd color...). per-line length -> color. lines are isolated -> length = count along the line",
+  "est_tier": null,
+  "est_points": 15.5,
+  "sketch": "3 lines, recolor by rank of length. per-object length needs CC but lines are axis-aligned segments -> row/col run-length. MARGINAL FEASIBLE Tier-B",
+  "stored": 15.52
+ },
+ {
+  "task": 277,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "b230c067: classify each sprite as 'has a column removed' (idx1) vs whole (idx0) -> red/blue; compares two related shapes. correspondence",
+  "est_tier": null,
+  "est_points": 15.5,
+  "sketch": "-",
+  "stored": 15.53
+ },
+ {
+  "task": 134,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "5ad4f10b: output 3x3 = downscale the magnified conway sprite (megacolor block) to 1 cell per block, recolored. un-magnify a single sprite to 3x3",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "locate magnified 3x3 sprite (megacolor), sample 1 px per magnifier block -> 3x3 output in color. fixed-stride gather. Tier-A/S ~17-19",
+  "stored": 15.58
+ },
+ {
+  "task": 41,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "22168020: complete the 'V'/triangle shapes by filling above each diagonal arm up to the apex. per-column fill upward from arm. closed-form per column",
+  "est_tier": null,
+  "est_points": 15.6,
+  "sketch": "each column of the V filled from arm cell up to top of shape. column profile fill. FEASIBLE Tier-B",
+  "stored": 15.63
+ },
+ {
+  "task": 102,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "44d8ac46: recolor box interior red if box is a perfect square (with junk attached) else black. classify box squareness + recolor interior. needs per-box dim compare",
+  "est_tier": null,
+  "est_points": 15.7,
+  "sketch": "square -> red interior else black; junk boxes confuse. per-box width==height test. needs object dims (CC). INFEASIBLE-leaning",
+  "stored": 15.67
+ },
+ {
+  "task": 94,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "41e4d17e: extend blue squares' centers as pink crosses across grid + keep blue boxes. center of each 5x5 box -> full row/col pink. RECHECK: separable cross broadcast",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "each box center (r,c) -> pink full row r and col c, blue box on top. detect centers (box midpoints) -> rowany/colany broadcast. FEASIBLE Tier-A",
+  "stored": 15.77
+ },
+ {
+  "task": 346,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "d9fac9be: output 1x1 = the center color of the 3x3 monochrome cluster (the surrounded single different pixel). detect the cell whose 3x3 neighborhood is uniform color_list[1] with center color_list[0]",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "output[0][0] = center color = the pixel surrounded by 8 same-color neighbors. local 3x3 detection -> scalar. tiny output -> Tier-A/S ~17-19",
+  "stored": 15.88
+ },
+ {
+  "task": 50,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "253bf280: connect cyan dots sharing row/col with green segments (the classic). pairwise connect",
+  "est_tier": null,
+  "est_points": 15.9,
+  "sketch": "-",
+  "stored": 15.89
+ },
+ {
+  "task": 372,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "e98196ab: two stacked halves separated by gray line; overlay them (output[r][c]=whichever half has a pixel). fixed fold/overlay of top and bottom bands",
+  "est_tier": "S",
+  "est_points": 19.0,
+  "sketch": "output = OR-overlay of top band (rows 0..h-1) and bottom band (rows h+1..) with their colors. fixed crop + overlay. Tier-S ~19",
+  "stored": 16.03
+ },
+ {
+  "task": 302,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "c0f76784: recolor each square's interior by (gray + size-2) i.e. encode box size as interior color. size-parametric recolor (closed-form from box dim)",
+  "est_tier": null,
+  "est_points": 16.0,
+  "sketch": "interior color = 5 + (length-2). box length recoverable from extent; recolor interior. per-box dim. FEASIBLE Tier-B",
+  "stored": 16.04
+ },
+ {
+  "task": 180,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "75b8110e: overlay 4 sxs quadrants (colors 4,5,6,9 in 2x2 macro) into one sxs cell by priority order [0,3,2,1]. fixed overlay of 4 quadrants with priority",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "4 quadrants of a 2sx2s grid overlaid into sxs by fixed precedence. crop 4 quadrants + priority Where. Tier-A/S ~17-19",
+  "stored": 16.08
+ },
+ {
+  "task": 369,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "e8593010: recolor each gray-bg shape by its size (1/2/3 pixels) -> distinct color. per-object pixel count (1-3). connectivity",
+  "est_tier": null,
+  "est_points": 16.1,
+  "sketch": "size 1/2/3 -> color; tiny shapes but counting needs CC/local-window. local 3x3 may suffice (max run 3). MARGINAL",
+  "stored": 16.1
+ },
+ {
+  "task": 121,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "5117e062: output 3x3 = the sprite from box[0] (the one with a cyan center marker) recolored. select the cyan-marked sprite + crop 3x3",
+  "est_tier": "B",
+  "est_points": 16.8,
+  "sketch": "box0 has cyan center; output = that 3x3 sprite in its color. locate cyan-center box, crop 3x3. fixed output size. FEASIBLE Tier-B",
+  "stored": 16.22
+ },
+ {
+  "task": 247,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "a3325580: output = (numMaxColumns x maxCount) bars of the colors of the tallest sprites, ordered by column. select max-count objects + variable output size. CC + sizing",
+  "est_tier": null,
+  "est_points": 16.3,
+  "sketch": "-",
+  "stored": 16.27
+ },
+ {
+  "task": 30,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "1caeab9d: align 3 colored clusters to a common row (megarows[0]); vertical translate per cluster to top reference row. data-dependent row translate per object",
+  "est_tier": null,
+  "est_points": 16.3,
+  "sketch": "each cluster moved so its top is at megarows[0]; per-cluster vertical shift. column-grouped translate -> MatMul scatter. MARGINAL FEASIBLE",
+  "stored": 16.28
+ },
+ {
+  "task": 27,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "1b60fb0c: build 4-fold rotational symmetric figure from one quadrant (blue) + mark the missing red piece. C4 rotation stamp of recovered sprite + red completion",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "sprite rotated 4x around center (blue) and the input-missing copy drawn red. orientation-equiv 4 rotations. Tier-A FEASIBLE",
+  "stored": 16.33
+ },
+ {
+  "task": 321,
+  "verdict": "FEASIBLE",
+  "lens_or_blocker": "cf98881b: 3 sub-grids separated by red lines; overlay them by priority (last non-zero wins) into one sxs. fixed crop of 3 panels + overlay",
+  "est_tier": "A",
+  "est_points": 17.0,
+  "sketch": "split 3 panels at red separators, overlay by index priority. crop+priority Where. Tier-A/S ~17-19",
+  "stored": 16.4
+ },
+ {
+  "task": 48,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "239be575: output 1x1 = cyan if a path exists between red boxes through cyan (connectivity). pure connectivity decision",
+  "est_tier": null,
+  "est_points": 16.4,
+  "sketch": "-",
+  "stored": 16.42
+ },
+ {
+  "task": 356,
+  "verdict": "INFEASIBLE",
+  "lens_or_blocker": "ded97339: connect cyan dots sharing row/col with cyan fill (pairwise connect / spanning). pairwise connect",
+  "est_tier": null,
+  "est_points": 16.5,
+  "sketch": "-",
+  "stored": 16.48
+ }
+]

@@ -69,3 +69,13 @@ must be reported, not pretended past.
   (equivariance to color-perm + D4 + pair-order — we already exploit gravity/transpose equivariance).
 - Connected-component labeling = iterated flood/label-propagation, fixed-iteration unroll possible but
   cumulative-memory-expensive under this scorer.
+
+## RE-TRIAGE RESULT (2026-06-16): 50/122 mislabeled-FEASIBLE (+85.6 est), 72 genuine-infeasible.
+The BAIL list was 41% over-broad. Feasible reservoir: 5 Tier-S + 21 Tier-A + 24 Tier-B/count, est +85.6
+stored (→ ~6495 LB at 1:1, climbing toward the ~6900 ceiling as the rest of the floor grind lands).
+CONFIRMS the thesis: this reservoir does NOT reach 7500 — the 72 genuine-infeasible (flood-fill/enclosure,
+box-connectivity, sprite-correspondence/rotation-matching, ray-tracing, per-object CC-size, shape-classify)
+are the hard wall, scorer-capped ~14 for everyone. Queue: reports/retriage_build_queue.json (ranked by gain).
+NET 7500 VERDICT: re-encoding + this reservoir → realistic ~6800-6900 ceiling. 6900→7500 would require
+cracking flood-fill/connectivity/correspondence cheaply, which appears scorer-impossible (cumulative memory).
+Pursue the 50 feasible (big, real), then report the honest ceiling.

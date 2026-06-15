@@ -20,8 +20,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "uncertain",
+  "verdict": "re-triage said flood-fill but build-agent found possible SINGLE-PASS surroundedness (pre-filled pots); revisit"
  },
  {
   "task": 3,
@@ -44,8 +44,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE None ~14.1pt: data-dependent translate (closed-form): 025d127b reshapes each paralle"
  },
  {
   "task": 5,
@@ -56,8 +56,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 045e512c: replicate sprite along directions = object reconstruction + directiona"
  },
  {
   "task": 6,
@@ -104,8 +104,8 @@
   "method": "ext:thbdh6285",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 06df4c85: connect same-color dots with lines + add inferred dot; pairwise connec"
  },
  {
   "task": 10,
@@ -164,8 +164,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 0b148d64: extract the differently-colored quadrant of a 4-fold symmetric grid; f"
  },
  {
   "task": 15,
@@ -200,8 +200,8 @@
   "method": "ext:galaxy_v1",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 0dfd9992: fill missing cells of a periodic texture (pattern completion / tiling-"
  },
  {
   "task": 18,
@@ -212,8 +212,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: sprite + rotated clone where common color is hidden in clone; reconstruct by rot"
  },
  {
   "task": 19,
@@ -272,8 +272,8 @@
   "method": "gen:galaxy",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 150deff5: recolor sprite parts (2x2 blocks vs single) - block/shape decompositio"
  },
  {
   "task": 24,
@@ -296,8 +296,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE B ~16.8pt: data-dependent translate: 1a07d186 moves each colored dot adjacent to "
  },
  {
   "task": 26,
@@ -320,8 +320,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: 1b60fb0c: build 4-fold rotational symmetric figure from one quadrant ("
  },
  {
   "task": 28,
@@ -356,8 +356,8 @@
   "method": "ext:vyank6322",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE None ~16.3pt: 1caeab9d: align 3 colored clusters to a common row (megarows[0]); vert"
  },
  {
   "task": 31,
@@ -392,8 +392,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "mega",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: 1e32b0e9: broadcast the cell(0,0) sprite to all 9 hollywood-square cel"
  },
  {
   "task": 34,
@@ -428,8 +428,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE B ~16.8pt: un-duplicate crop: 1f85a75f crops the bbox of the idx==0 (special-colo"
  },
  {
   "task": 37,
@@ -488,8 +488,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE None ~15.6pt: 22168020: complete the 'V'/triangle shapes by filling above each diago"
  },
  {
   "task": 42,
@@ -524,8 +524,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 228f6490: move sprites into matching holes (shape-correspondence / fit)"
  },
  {
   "task": 45,
@@ -572,8 +572,8 @@
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 239be575: output 1x1 = cyan if a path exists between red boxes through cyan (con"
  },
  {
   "task": 49,
@@ -596,8 +596,8 @@
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 253bf280: connect cyan dots sharing row/col with green segments (the classic). p"
  },
  {
   "task": 51,
@@ -644,8 +644,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 264363fd: star projected along box rows/cols + reflected onto other boxes; objec"
  },
  {
   "task": 55,
@@ -680,8 +680,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE S ~19.0pt: 28bf18c6: output is 2x-wide = sprite duplicated side by side (output[r"
  },
  {
   "task": 58,
@@ -788,8 +788,8 @@
   "method": "gen:biohack_new",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 2dd70a9a: snake-path tracing along blue cells (orientation-equiv applied but pat"
  },
  {
   "task": 67,
@@ -824,8 +824,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 321b1fc6: sprite extraction/clone by correspondence"
  },
  {
   "task": 70,
@@ -848,8 +848,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 3345333e: mirror sprite into box + reflect; reconstruction with box corresponden"
  },
  {
   "task": 72,
@@ -908,8 +908,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 36d67576: reveal hidden sprite cells (only yellow/red shown) via rotated copies;"
  },
  {
   "task": 77,
@@ -920,8 +920,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE B ~16.8pt: recolor via local Conv: 3x3 box neighborhoods -> mark diagonals red. s"
  },
  {
   "task": 78,
@@ -944,8 +944,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "num_sprites",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 39a8645d: output 3x3 = the sprite-type that is the most COMMON among placed spri"
  },
  {
   "task": 80,
@@ -956,8 +956,8 @@
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE None ~14.4pt: 39e1d7f9: in a magnified line-grid, complete the cross/corner decorati"
  },
  {
   "task": 81,
@@ -1028,8 +1028,8 @@
   "method": "gen:biohack_new",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE None ~14.9pt: 3befdf3e: draw a concentric square 'frame' (color1) around each filled"
  },
  {
   "task": 87,
@@ -1064,8 +1064,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 3e980e27: reveal/mirror hidden cells of two sprites + recolor; reconstruction + "
  },
  {
   "task": 90,
@@ -1076,8 +1076,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: recolor + find-empty-rect: 3eda0437 finds the single largest all-empty rectangle"
  },
  {
   "task": 91,
@@ -1112,8 +1112,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE None ~15.4pt: 4093f84a: drop each pixel onto a horizon (gray band) - mark landing ce"
  },
  {
   "task": 94,
@@ -1124,8 +1124,8 @@
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: 41e4d17e: extend blue squares' centers as pink crosses across grid + k"
  },
  {
   "task": 95,
@@ -1148,8 +1148,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: output-size not derivable simply + overlay/aggregation of scattered concentric d"
  },
  {
   "task": 97,
@@ -1208,8 +1208,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: object reconstruction: reveal hidden blue pixels of a sprite replicated at varia"
  },
  {
   "task": 102,
@@ -1220,8 +1220,8 @@
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 44d8ac46: recolor box interior red if box is a perfect square (with junk attache"
  },
  {
   "task": 103,
@@ -1316,8 +1316,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: flood-fill / connected-region recolor (484b58aa is recolor-largest-region) - nee"
  },
  {
   "task": 111,
@@ -1340,8 +1340,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: replicate-with-reflection: 4938f0c2 stamps the recovered red sprite in"
  },
  {
   "task": 113,
@@ -1400,8 +1400,8 @@
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: 4c5c2cf0: build a 4-legged creature - reflect sprite into 4 diagonal c"
  },
  {
   "task": 118,
@@ -1412,8 +1412,8 @@
   "method": "gen:seddik",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE None ~13.3pt: recolor: maze cells flagged cyan are gray in input, output restores cy"
  },
  {
   "task": 119,
@@ -1448,8 +1448,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "num_sprites",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE B ~16.8pt: 5117e062: output 3x3 = the sprite from box[0] (the one with a cyan cen"
  },
  {
   "task": 122,
@@ -1496,8 +1496,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE None ~15.5pt: 543a7ed5: outline pink boxes with green frame; recolor yellow boxes. r"
  },
  {
   "task": 126,
@@ -1580,8 +1580,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: 56ff96f3: fill each box (defined by 2 diagonal corner pixels) solid wi"
  },
  {
   "task": 133,
@@ -1592,8 +1592,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: sprite reconstruction from 2 shown pixels at variable mags; correspondence + up-"
  },
  {
   "task": 134,
@@ -1604,8 +1604,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "mega",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: 5ad4f10b: output 3x3 = downscale the magnified conway sprite (megacolo"
  },
  {
   "task": 135,
@@ -1652,8 +1652,8 @@
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 5daaa586: trace ray from each pixel toward its matching border line, crop to inn"
  },
  {
   "task": 139,
@@ -1712,8 +1712,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 63613498: move sprites matching the boxed (gray-outlined) sprite to it / recolor"
  },
  {
   "task": 144,
@@ -1736,8 +1736,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: recolor by region-area-rank: 6455b5f5 recolors smallest-area region cyan, larges"
  },
  {
   "task": 146,
@@ -1772,8 +1772,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 673ef223: trace cyan rays leftward from yellow markers + mirror to second band; "
  },
  {
   "task": 149,
@@ -1832,8 +1832,8 @@
   "method": "gen:biohack_new",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE None ~15.1pt: 681b3aeb: assemble 2 halves (each a 3x3 mask placed in grid) into one "
  },
  {
   "task": 154,
@@ -1844,8 +1844,8 @@
   "method": "ext:biohack_new",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE None ~14.7pt: 6855a6e4: fold a split sprite (top half above box, bottom half below, "
  },
  {
   "task": 155,
@@ -1880,8 +1880,8 @@
   "method": "gen:wguesdon6315",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: recolor: 6a1e5592 maps gray 'falling' shapes to blue at their landing position i"
  },
  {
   "task": 158,
@@ -1892,8 +1892,8 @@
   "method": "gen:biohack_new",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: diagonal-symmetry completion of sprite with per-instance flips/mags; object-leve"
  },
  {
   "task": 159,
@@ -1928,8 +1928,8 @@
   "method": "ext:thbdh6285",
   "class": "BAIL?",
   "sig": "mega",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: 6cdd2623: lasers (megarows/megacols) drawn full-length across grid; ou"
  },
  {
   "task": 162,
@@ -1940,8 +1940,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 6cf79266: find 3x3 all-black cutouts and stamp blue 3x3; detection of empty 3x3 "
  },
  {
   "task": 163,
@@ -1976,8 +1976,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE None ~13.9pt: 6d58a25d: drop columns under a 'kite' to the floor; gravity along colu"
  },
  {
   "task": 166,
@@ -2012,8 +2012,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 6e19193c: extend arrows along their pointing direction to the edge (ray from eac"
  },
  {
   "task": 169,
@@ -2024,8 +2024,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL?",
   "sig": "num_sprites",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 6e82a1ae: recolor each tetromino by (5 - its pixel count). label-map: per-object"
  },
  {
   "task": 170,
@@ -2036,8 +2036,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 6ecd11f4: copy magnified sprite content into a same-size box, recolored by color"
  },
  {
   "task": 171,
@@ -2072,8 +2072,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 72322fa7: reveal hidden cells of plus/x sprite type per show-mode; sprite-type c"
  },
  {
   "task": 174,
@@ -2084,8 +2084,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 72ca375d: select the sprite that is vertically symmetric and crop it; symmetry t"
  },
  {
   "task": 175,
@@ -2120,8 +2120,8 @@
   "method": "gen:biohack_new",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: un-duplicate crop + mirror: 7468f01a crops the colored box region and "
  },
  {
   "task": 178,
@@ -2156,8 +2156,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: 75b8110e: overlay 4 sxs quadrants (colors 4,5,6,9 in 2x2 macro) into o"
  },
  {
   "task": 181,
@@ -2180,8 +2180,8 @@
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "num_sprites",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 776ffc46: find the sprite matching the boxed one and recolor; template matching "
  },
  {
   "task": 183,
@@ -2192,8 +2192,8 @@
   "method": "gen:biohack_new",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 77fdfe62: index into a palette grid (corners) by sprite pattern; map black-regio"
  },
  {
   "task": 184,
@@ -2216,8 +2216,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 7837ac64: grid-of-cells, output one cell per unique color combo; aggregation/ded"
  },
  {
   "task": 186,
@@ -2240,8 +2240,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 7b6016b9: line/ray drawing through boxes with intersection rules; connectivity"
  },
  {
   "task": 188,
@@ -2288,8 +2288,8 @@
   "method": "pub6372:base",
   "class": "BAIL?",
   "sig": "num_sprites",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: shape-correspondence: find all rot/transpose matches of reference sprite across "
  },
  {
   "task": 192,
@@ -2300,8 +2300,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 7e0986d6: place small colored pixels INTO the box whose interior shape matches ("
  },
  {
   "task": 193,
@@ -2312,8 +2312,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE B ~16.8pt: 7f4411dc: keep only isolated pixels (those with empty horiz OR vert ne"
  },
  {
   "task": 194,
@@ -2348,8 +2348,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 810b9b61: recolor box outlines green if 'closed' (no gap and >=3x3) else blue, k"
  },
  {
   "task": 197,
@@ -2408,8 +2408,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 846bdb03: reconstruct/compare two conway sprites in a box; correspondence"
  },
  {
   "task": 202,
@@ -2468,8 +2468,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: stamp/replicate: 88a10436 copies the colored sprite (shown at sprite1)"
  },
  {
   "task": 207,
@@ -2504,8 +2504,8 @@
   "method": "gen:wguesdon6315",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: enclosed-region / nested-box parity recolor; non-local containment"
  },
  {
   "task": 210,
@@ -2588,8 +2588,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE B ~16.8pt: un-duplicate crop: extract the box with MOST red pixels (idx0 always m"
  },
  {
   "task": 217,
@@ -2624,8 +2624,8 @@
   "method": null,
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 90f3ed37: append a C-pattern column of blue; non-deterministic / pattern-period "
  },
  {
   "task": 220,
@@ -2780,8 +2780,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: 97999447: extend each colored dot rightward as a dashed line (color, g"
  },
  {
   "task": 233,
@@ -2792,8 +2792,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "num_sprites",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: sprite placement-into-box by correspondence + rotation matching"
  },
  {
   "task": 234,
@@ -2912,8 +2912,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 9edfc990: flood-fill background reachable from edge (connectivity)"
  },
  {
   "task": 244,
@@ -2924,8 +2924,8 @@
   "method": "gen:biohack_new",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE S ~19.0pt: 9f236235: output = un-magnify the line-grid (sample 1 cell per magnifi"
  },
  {
   "task": 245,
@@ -2960,8 +2960,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: a3325580: output = (numMaxColumns x maxCount) bars of the colors of the tallest "
  },
  {
   "task": 248,
@@ -3008,8 +3008,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: flood-fill region coloring (a5313dff = find enclosed rectangle, fill blue) conne"
  },
  {
   "task": 252,
@@ -3032,8 +3032,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: a61ba2ce: arrange 4 detected 2-cell sprite fragments into a fixed 4x4 layout by "
  },
  {
   "task": 254,
@@ -3056,8 +3056,8 @@
   "method": null,
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: a64e4611: random/non-deterministic restoration of green interior - known hard ra"
  },
  {
   "task": 256,
@@ -3164,8 +3164,8 @@
   "method": "pub6372:base",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: label-map/scatter: 9 fixed 3x3 sprite glyphs (idx//3,idx%3) recolored "
  },
  {
   "task": 265,
@@ -3248,8 +3248,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE B ~16.8pt: ae4f1146: output = the sprite (blue pixels) from the box with the MOST"
  },
  {
   "task": 272,
@@ -3296,8 +3296,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE S ~19.0pt: per-cell broadcast in macro-grid: b190f7f5 - for each colored cell in "
  },
  {
   "task": 276,
@@ -3320,8 +3320,8 @@
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: b230c067: classify each sprite as 'has a column removed' (idx1) vs whole (idx0) "
  },
  {
   "task": 278,
@@ -3332,8 +3332,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE S ~19.0pt: b27ca6d3: recolor green->black; green marks 'noise' around red pairs. "
  },
  {
   "task": 279,
@@ -3344,8 +3344,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: b2862040: recolor 'closed' barnacle shapes vs open (maroon bg); enclosure/closed"
  },
  {
   "task": 280,
@@ -3356,8 +3356,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: b527c5c6: aim a green/red beam from one box toward partner; geometry depends on "
  },
  {
   "task": 281,
@@ -3416,8 +3416,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: 4-fold angular sprite reconstruction with per-sprite shown-angle; object reconst"
  },
  {
   "task": 286,
@@ -3428,8 +3428,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: flood-fill maze parity coloring (unbounded propagation)"
  },
  {
   "task": 287,
@@ -3596,8 +3596,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: be94b721: extract the largest (idx0) sprite into its own bbox-sized output; pick"
  },
  {
   "task": 301,
@@ -3620,8 +3620,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE None ~16.0pt: c0f76784: recolor each square's interior by (gray + size-2) i.e. encod"
  },
  {
   "task": 303,
@@ -3668,8 +3668,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: Kronecker/quadrant tiling: c444b776 replicates the filled quadrant's c"
  },
  {
   "task": 307,
@@ -3824,8 +3824,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: ce602527: select the sprite matching a template at correct scale; correspondence"
  },
  {
   "task": 320,
@@ -3848,8 +3848,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: cf98881b: 3 sub-grids separated by red lines; overlay them by priority"
  },
  {
   "task": 322,
@@ -3896,8 +3896,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: d0f5fe59: output is len(brows)xlen(bcols) diagonal identity in cyan (output[i][i"
  },
  {
   "task": 326,
@@ -3956,8 +3956,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: d2abd087: recolor each gray sprite red if size==6 else blue. per-object pixel-co"
  },
  {
   "task": 331,
@@ -4052,8 +4052,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: d5d6de2d: recolor box interiors green - actually pure local recolor! interior of"
  },
  {
   "task": 339,
@@ -4148,8 +4148,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: d9fac9be: output 1x1 = the center color of the 3x3 monochrome cluster "
  },
  {
   "task": 347,
@@ -4184,8 +4184,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: db93a21d: draw shadow (blue below) + green halo around maroon squares by radius;"
  },
  {
   "task": 350,
@@ -4196,8 +4196,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: dbc1a6ce: connect blue dots sharing a row/col with cyan segments (gaps between p"
  },
  {
   "task": 351,
@@ -4244,8 +4244,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: ddf7fa4f: recolor each gray box by the color of the light (top row) ab"
  },
  {
   "task": 355,
@@ -4268,8 +4268,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: ded97339: connect cyan dots sharing row/col with cyan fill (pairwise connect / s"
  },
  {
   "task": 357,
@@ -4292,8 +4292,8 @@
   "method": "ext:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: e21d9049: draw full diagonal-colored cross (row+col lines colored by ("
  },
  {
   "task": 359,
@@ -4304,8 +4304,8 @@
   "method": "gen:biohack_new",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: e26a3af2: striped background, output STRIPS the colored noise pixels ("
  },
  {
   "task": 360,
@@ -4352,8 +4352,8 @@
   "method": "gen:biohack_new",
   "class": "BAIL?",
   "sig": "num_sprites",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: e5062a87: sprite stamping at all matching positions (cross-correlation/template "
  },
  {
   "task": 364,
@@ -4364,8 +4364,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: recolor by shape-class: e509e548 each green blob recolored by which letter sprit"
  },
  {
   "task": 365,
@@ -4376,8 +4376,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE B ~16.8pt: e50d258f: output = the FIRST box (idx0) interior cropped (wides[0]xtal"
  },
  {
   "task": 366,
@@ -4388,8 +4388,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: e6721834: sprite extraction/placement by correspondence"
  },
  {
   "task": 367,
@@ -4400,8 +4400,8 @@
   "method": "gen:vyank6322",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: box-to-box line connectivity (which pairs are connected)"
  },
  {
   "task": 368,
@@ -4412,8 +4412,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: e76a88a6: recover the colored sprite shown once and stamp (recolored) "
  },
  {
   "task": 369,
@@ -4424,8 +4424,8 @@
   "method": "ext:galaxy_v1",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: e8593010: recolor each gray-bg shape by its size (1/2/3 pixels) -> distinct colo"
  },
  {
   "task": 370,
@@ -4460,8 +4460,8 @@
   "method": "gen:galaxy",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE S ~19.0pt: e98196ab: two stacked halves separated by gray line; overlay them (out"
  },
  {
   "task": 373,
@@ -4484,8 +4484,8 @@
   "method": "ext:galaxy_v1",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE None ~15.5pt: ea32f347: recolor 3 gray lines by their LENGTH rank (shortest=2nd colo"
  },
  {
   "task": 375,
@@ -4544,8 +4544,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: ecdecbb3: draw rays from red dots to cyan lines and cap with cyan square; ray-st"
  },
  {
   "task": 380,
@@ -4592,8 +4592,8 @@
   "method": "ext:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE None ~14.4pt: f1cefba8: project barnacles (edge pixels) as colored lines across box "
  },
  {
   "task": 384,
@@ -4640,8 +4640,8 @@
   "method": "ext:thbdh6285",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: f35d900a: expand/pulse colored pixels toward each other with gray bridge; pairwi"
  },
  {
   "task": 388,
@@ -4676,8 +4676,8 @@
   "method": "ext:kojimar6275",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE A ~17.0pt: f8a8fe49: inverse of 6855a6e4 (input/output swapped) - fold box interi"
  },
  {
   "task": 391,
@@ -4700,8 +4700,8 @@
   "method": "gen:biohack_new",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE None ~14.7pt: f8c80d96: extend concentric square 'mats' outward to fill grid (contin"
  },
  {
   "task": 393,
@@ -4748,8 +4748,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "INFEASIBLE: fcb5c309: extract box[0] content with its scattered pixels into box-sized output"
  },
  {
   "task": 397,
@@ -4760,8 +4760,8 @@
   "method": "gen:biohack_new",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "retriage-feasible",
+  "verdict": "FEASIBLE None ~15.1pt: fcc82909: under each 2x2 color box, draw a green 'shadow' of height = "
  },
  {
   "task": 398,
