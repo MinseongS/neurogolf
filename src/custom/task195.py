@@ -49,24 +49,24 @@ def build(task):
         nodes.append(helper.make_node(op, ins, [out], **attrs))
         return out
 
-    # ---- colour-5 occupancy plane (fp16 to keep it 1800 B) ----
-    # weight selects channel 5 only -> occ = 1 where input cell is gray.
-    w = np.zeros((1, 10, 1, 1), np.float32)
-    w[0, 5, 0, 0] = 1.0
-    init("occW", w, np.float32)
-    n("Conv", ["input", "occW"], "occf")            # [1,1,30,30] fp32
-    n("Cast", ["occf"], "occ", to=F16)              # [1,1,30,30] fp16 (1800B)
+    # ---- colour-5 occupancy on a small working canvas ----
+    # The upscaled sprite (9x9 + offset) always lies within rows 0..15, cols
+    # 0..17 (width<=19, height<=17, offset>=1), so an 18x18 channel-5 slice
+    # captures every live cell.  Slice keeps fp32 -> 18*18*4 = 1296 B.
+    W = 18
+    init("ss", np.array([0, 5, 0, 0], np.int64), np.int64)
+    init("se", np.array([1, 6, W, W], np.int64), np.int64)
+    init("sax", np.array([0, 1, 2, 3], np.int64), np.int64)
+    n("Slice", ["input", "ss", "se", "sax"], "occ")  # [1,1,W,W] fp32 (1296B)
 
     # ---- 1-D presence profiles (tiny) ----
-    n("ReduceMax", ["occ"], "rowocc", axes=[3], keepdims=1)  # [1,1,30,1] fp16
-    n("ReduceMax", ["occ"], "colocc", axes=[2], keepdims=1)  # [1,1,1,30] fp16
+    n("ReduceMax", ["occ"], "rowocc_f", axes=[3], keepdims=1)  # [1,1,W,1]
+    n("ReduceMax", ["occ"], "colocc_f", axes=[2], keepdims=1)  # [1,1,1,W]
 
-    # r0 = first occupied row, c0 = first occupied col (scalars, fp16->compute
-    # in fp32 for exact arange).  rowidx = present ? r : 99 ; r0 = min.
-    n("Cast", ["rowocc"], "rowocc_f", to=F32)       # [1,1,30,1]
-    n("Cast", ["colocc"], "colocc_f", to=F32)       # [1,1,1,30]
-    Irow = np.arange(30, dtype=np.float32).reshape(1, 1, 30, 1)
-    Icol = np.arange(30, dtype=np.float32).reshape(1, 1, 1, 30)
+    # r0 = first occupied row, c0 = first occupied col (scalars).
+    # rowidx = present ? r : 99 ; r0 = min.
+    Irow = np.arange(W, dtype=np.float32).reshape(1, 1, W, 1)
+    Icol = np.arange(W, dtype=np.float32).reshape(1, 1, 1, W)
     init("Irow", Irow, np.float32)
     init("Icol", Icol, np.float32)
     init("Big", np.array(99.0, np.float32), np.float32)
@@ -82,7 +82,6 @@ def build(task):
     # row indices r0 + [0,3,6]; col indices c0 + [0,3,6].  Build as fp32, clip,
     # cast to int64 for Gather (ORT Clip rejects int64 -> clip in float first).
     init("step", np.array([0.0, 3.0, 6.0], np.float32), np.float32)  # [3]
-    init("r0v", np.array([1], np.int64), np.int64)
     # r0 is [1,1,1,1]; reshape to scalar [1] then add step.
     init("sc1", np.array([1], np.int64), np.int64)
     n("Reshape", ["r0", "sc1"], "r0s")              # [1]
@@ -90,38 +89,43 @@ def build(task):
     n("Add", ["r0s", "step"], "ridx_f")             # [3] fp32
     n("Add", ["c0s", "step"], "cidx_f")             # [3] fp32
     init("lo", np.array(0.0, np.float32), np.float32)
-    init("hi", np.array(29.0, np.float32), np.float32)
+    init("hi", np.array(float(W - 1), np.float32), np.float32)
     n("Clip", ["ridx_f", "lo", "hi"], "ridx_c")     # [3]
     n("Clip", ["cidx_f", "lo", "hi"], "cidx_c")
     n("Cast", ["ridx_c"], "ridx", to=TensorProto.INT64)  # [3]
     n("Cast", ["cidx_c"], "cidx", to=TensorProto.INT64)
 
-    # Gather rows (axis 2) then cols (axis 3) from occ -> S [1,1,3,3] fp16.
-    n("Gather", ["occ", "ridx"], "occr", axis=2)    # [1,1,3,30] fp16
-    n("Gather", ["occr", "cidx"], "S", axis=3)      # [1,1,3,3] fp16
+    # Gather rows (axis 2) then cols (axis 3) from occ -> S [1,1,3,3] fp32.
+    n("Gather", ["occ", "ridx"], "occr", axis=2)    # [1,1,3,30] fp32
+    n("Gather", ["occr", "cidx"], "S", axis=3)      # [1,1,3,3] fp32
 
     # ---- build kron(S,S) on a 9x9 canvas ----
-    # S flat (9 values) -> Sa = S[u//3,u%3] over u in 0..8 ; Sb likewise.
-    # kron[u,v] = Sa[u] * Sb[v].  Reshape S to [1,9] then broadcast.
-    n("Cast", ["S"], "Sf", to=F32)                  # [1,1,3,3] fp32 (small)
-    init("s9", np.array([1, 9], np.int64), np.int64)
-    n("Reshape", ["Sf", "s9"], "Sflat")             # [1,9]
-    # Sa as column [9,1], Sb as row [1,9]
-    init("s91", np.array([9, 1], np.int64), np.int64)
-    init("s19", np.array([1, 9], np.int64), np.int64)
-    n("Reshape", ["Sflat", "s91"], "Sa")            # [9,1]
-    n("Reshape", ["Sflat", "s19"], "Sb")            # [1,9]
-    n("Mul", ["Sa", "Sb"], "Kr")                    # [9,9] fp32 (kron, in {0,1})
+    # kron(S,S)[u,v] = Sflat[macro] * Sflat[micro] with constant index maps
+    #   macro = (u//3)*3 + (v//3),  micro = (u%3)*3 + (v%3)   (u,v in 0..8).
+    # Gather Sflat (9 values) with each flattened [9,9] index map.
+    init("s9", np.array([9], np.int64), np.int64)
+    n("Reshape", ["S", "s9"], "Sflat")              # [9]
+    u = np.arange(9).reshape(9, 1)
+    v = np.arange(9).reshape(1, 9)
+    macro = ((u // 3) * 3 + (v // 3)).astype(np.int64)   # [9,9]
+    micro = ((u % 3) * 3 + (v % 3)).astype(np.int64)     # [9,9]
+    init("macro", macro, np.int64)
+    init("micro", micro, np.int64)
+    # work in bool: kron = Smac AND Smic (ORT Mul rejects uint8/bool, And is fine)
+    n("Greater", ["Sflat", "Half"], "Sb")           # [9] bool (sprite on/off)
+    n("Gather", ["Sb", "macro"], "Smac")            # [9,9] bool
+    n("Gather", ["Sb", "micro"], "Smic")            # [9,9] bool
+    n("And", ["Smac", "Smic"], "Kb")                # [9,9] bool (kron)
 
-    # ---- label map L (9x9, uint8): 5 where Kr>0.5, else 0 ----
-    n("Greater", ["Kr", "Half"], "Kb")              # [9,9] bool
+    # ---- label map L (9x9, uint8): 5 where kron, else 0 ----
     init("u5", np.array(5, np.uint8), np.uint8)
     init("u0", np.array(0, np.uint8), np.uint8)
-    n("Where", ["Kb", "u5", "u0"], "Lsm")           # [9,9] uint8
+    n("Where", ["Kb", "u5", "u0"], "Lsm")           # [9,9] uint8 (81B)
     init("Ls", np.array([1, 1, 9, 9], np.int64), np.int64)
-    n("Reshape", ["Lsm", "Ls"], "Lsm4")             # [1,1,9,9]
+    n("Reshape", ["Lsm", "Ls"], "Lsm4")             # [1,1,9,9] uint8
 
-    # pad 9x9 -> 30x30 with off-grid sentinel 10 (cells outside footprint).
+    # pad 9x9 label -> 30x30 with off-grid sentinel 10 (cells outside footprint
+    # become all-channels-off since 10 matches no channel index 0..9).
     init("u10", np.array(10, np.uint8), np.uint8)
     init("pads", np.array([0, 0, 0, 0, 0, 0, 21, 21], np.int64), np.int64)
     n("Pad", ["Lsm4", "pads", "u10"], "L", mode="constant")  # [1,1,30,30] uint8

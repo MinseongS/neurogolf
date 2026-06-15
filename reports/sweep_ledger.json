@@ -3470,14 +3470,14 @@
  {
   "task": 290,
   "arc_id": "b94a9452",
-  "points": 15.63,
+  "points": 17.48,
   "memory": 11614,
   "params": 94,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "17.48 adopted (15.63->17.48, +1.85!); mem 1802. INSIGHT: parametric concentric-square from per-channel pixel COUNTS (40B), no 3600B colour-Conv"
  },
  {
   "task": 291,
