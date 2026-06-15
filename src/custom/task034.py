@@ -78,34 +78,43 @@ def build(task):
     n("ReduceSum", ["colparts"], "color", keepdims=1)            # [1,1,1,1] scalar
     vi("color", F, [1, 1, 1, 1])
 
-    # ---------- crop input to a PxP window at offset OFF, collapse channels ----
-    # The seed 2x2 (corner R,C in [1,6]) lives entirely in rows/cols 1..7, so a
-    # 7x7 window at offset (1,1) (rows/cols 1..7) captures every occupied & every
-    # red cell.  Parameters (R, C, corner-red) are extracted from this window;
-    # the staircase painting uses index arithmetic on the full 9x9 canvas.  The
-    # only per-cell input plane is [1,10,7,7] = 1960 B.  Cropped index t maps to
-    # absolute coordinate t + OFF.
+    # ---------- crop a 3-channel PxP window, derive bg & red planes -----------
+    # The seed 2x2 (corner R,C in [1,6]) lives in rows/cols 1..7, so a 7x7 window
+    # at offset (1,1) captures every occupied & every red cell.  Only channels
+    # 0..2 are needed: a cell is OCCUPIED iff background channel 0 is OFF (true
+    # for every colour, not just 0..2), and RED iff channel 2 is ON.  Cropping to
+    # [1,3,7,7] = 588 B (vs 1960 for all 10 channels) is the only per-cell input
+    # tensor.  Cropped window index t maps to absolute coordinate t + OFF.
     P = S - 2   # 7
     OFF = 1
-    # Pad crops per side: begins remove OFF (top/left), ends remove the rest.
+    KEEP = 3    # channels 0..2
+    # Pad crops per side: begins remove OFF (top/left); also drop channels 3..9.
     # pad-spec layout = [b_n,b_c,b_h,b_w, e_n,e_c,e_h,e_w].
     init("croppadsX",
-         np.array([0, 0, -OFF, -OFF, 0, 0, -(G - P - OFF), -(G - P - OFF)],
-                  np.int64), np.int64)
-    n("Pad", ["input", "croppadsX"], "Xc", mode="constant")      # [1,10,7,7] f32
-    vi("Xc", F, [1, 10, P, P])
-    aw = np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1)
-    init("aw", aw, np.float32)
-    n("Conv", ["Xc", "aw"], "cidx")                              # [1,1,7,7] f32
-    vi("cidx", F, [1, 1, P, P])
+         np.array([0, 0, -OFF, -OFF, 0, -(10 - KEEP), -(G - P - OFF),
+                   -(G - P - OFF)], np.int64), np.int64)
+    n("Pad", ["input", "croppadsX"], "Xc", mode="constant")      # [1,3,7,7] f32
+    vi("Xc", F, [1, KEEP, P, P])
+    # two single-output Convs collapse channels to a bg plane and a red plane,
+    # each [1,1,7,7] = 196 B (no [1,2,7,7] intermediate, no slices).
+    bgw = np.zeros((1, KEEP, 1, 1), np.float32)
+    bgw[0, 0, 0, 0] = 1.0   # background channel
+    init("bgw", bgw, np.float32)
+    n("Conv", ["Xc", "bgw"], "bgp")                              # [1,1,7,7] bg f32
+    vi("bgp", F, [1, 1, P, P])
+    redw = np.zeros((1, KEEP, 1, 1), np.float32)
+    redw[0, 2, 0, 0] = 1.0  # red channel
+    init("redw", redw, np.float32)
+    n("Conv", ["Xc", "redw"], "redp")                            # [1,1,7,7] red f32
+    vi("redp", F, [1, 1, P, P])
 
-    # red (==2) plane on the 7x7 window, bool.
-    init("twof", np.array(2.0, np.float32), np.float32)
-    n("Equal", ["cidx", "twof"], "red")                          # [1,1,7,7] bool
+    # red (==1 in this window) plane, bool.
+    n("Greater", ["redp", "half"], "red")                        # [1,1,7,7] bool
     vi("red", B, [1, 1, P, P])
 
     # ---------- R = min occupied row, C = min occupied col --------------------
-    # occupancy = colour index > 0; reduce cidx directly. Window index t -> t+OFF.
+    # occupancy = background OFF.  A row is occupied iff its minimum bg value < .5
+    # (i.e. some cell has bg=0); reduce the fp32 bg plane directly (no occ plane).
     rrP = (np.arange(P, dtype=np.float32) + OFF).reshape(1, 1, P, 1)
     ccP = (np.arange(P, dtype=np.float32) + OFF).reshape(1, 1, 1, P)
     init("rrP", rrP, np.float32)                                 # [1,1,7,1] abs row
@@ -115,18 +124,18 @@ def build(task):
     init("rrS", rrS, np.float32)                                 # [1,1,9,1]
     init("ccS", ccS, np.float32)                                 # [1,1,1,9]
 
-    n("ReduceMax", ["cidx"], "rocc", axes=[3], keepdims=1)       # [1,1,7,1] f32
-    vi("rocc", F, [1, 1, P, 1])
-    n("Greater", ["rocc", "half"], "roccb")
+    n("ReduceMin", ["bgp"], "rbgmin", axes=[3], keepdims=1)      # [1,1,7,1] f32
+    vi("rbgmin", F, [1, 1, P, 1])
+    n("Less", ["rbgmin", "half"], "roccb")                       # occupied row
     vi("roccb", B, [1, 1, P, 1])
     n("Where", ["roccb", "rrP", "BIG"], "ridx")
     vi("ridx", F, [1, 1, P, 1])
     n("ReduceMin", ["ridx"], "R", keepdims=1)                    # [1,1,1,1] abs R
     vi("R", F, [1, 1, 1, 1])
 
-    n("ReduceMax", ["cidx"], "cocc", axes=[2], keepdims=1)       # [1,1,1,7] f32
-    vi("cocc", F, [1, 1, 1, P])
-    n("Greater", ["cocc", "half"], "coccb")
+    n("ReduceMin", ["bgp"], "cbgmin", axes=[2], keepdims=1)      # [1,1,1,7] f32
+    vi("cbgmin", F, [1, 1, 1, P])
+    n("Less", ["cbgmin", "half"], "coccb")                       # occupied col
     vi("coccb", B, [1, 1, 1, P])
     n("Where", ["coccb", "ccP", "BIG"], "cidv")
     vi("cidv", F, [1, 1, 1, P])
@@ -161,16 +170,38 @@ def build(task):
     #   dir2 (R+1, C+1) -> [1,1]   dir3 (R+1, C)   -> [1,0]
     CORNER_IJ = {0: (0, 0), 1: (0, 1), 2: (1, 1), 3: (1, 0)}
 
-    # ---------- per-direction band + chosen flag ------------------------------
+    # ---------- the 2x2 seed square (painted in every instance) ---------------
+    # seed = (R <= r <= R+1) & (C <= c <= C+1) — one 9x9 plane shared by all dirs.
+    init("onep5n", np.array(-1.5, np.float32), np.float32)
+    init("onep5", np.array(1.5, np.float32), np.float32)
+    init("nhalf", np.array(-0.5, np.float32), np.float32)
+    n("Sub", ["rrS", "R"], "rmR")                                # [1,1,9,1] r-R
+    vi("rmR", F, [1, 1, S, 1])
+    n("Greater", ["rmR", "nhalf"], "rlo")                        # r-R > -0.5 (>=0)
+    vi("rlo", B, [1, 1, S, 1])
+    n("Less", ["rmR", "onep5"], "rhi")                           # r-R < 1.5 (<=1)
+    vi("rhi", B, [1, 1, S, 1])
+    n("And", ["rlo", "rhi"], "rin")                              # [1,1,9,1]
+    vi("rin", B, [1, 1, S, 1])
+    n("Sub", ["ccS", "C"], "cmC")                                # [1,1,1,9] c-C
+    vi("cmC", F, [1, 1, 1, S])
+    n("Greater", ["cmC", "nhalf"], "clo")                        # c-C > -0.5 (>=0)
+    vi("clo", B, [1, 1, 1, S])
+    n("Less", ["cmC", "onep5"], "chi")                           # c-C < 1.5 (<=1)
+    vi("chi", B, [1, 1, 1, S])
+    n("And", ["clo", "chi"], "cin")                              # [1,1,1,9]
+    vi("cin", B, [1, 1, 1, S])
+    n("And", ["rin", "cin"], "seedsq")                           # [1,1,9,9]
+    vi("seedsq", B, [1, 1, S, S])
+
+    # ---------- per-direction band gated by the chosen flag -------------------
     # band predicate stays bool throughout: a>=0, b>=0 are 1-D row/col compares;
-    # |a-b|<=1  <=>  (a > b-1.5) AND (b > a-1.5), each a direct 9x9 bool broadcast
-    # of a [1,1,9,1] vs [1,1,1,9] compare (81 B), so NO fp32 9x9 plane survives.
+    # |a-b|<=1 <=> (a > b-1.5) AND (b > a-1.5).  The chosen flag is folded into
+    # the 1-D `age` (a tiny [1,1,9,1] AND) so no separate 9x9 gate plane exists.
     corner_r = {0: "R", 1: "R", 2: "R1", 3: "R1"}
     corner_c = {0: "C", 1: "C1", 2: "C1", 3: "C"}
-    init("onep5n", np.array(-1.5, np.float32), np.float32)
 
-    # precompute a_d = (r - r0)*dr and b_d = (c - c0)*dc as 1-D vectors.
-    L9_acc = None      # bool "painted" accumulator on the 9x9 canvas
+    L9_acc = "seedsq"      # bool "painted" accumulator (seed always on)
     for d in range(4):
         cr = corner_r[d]
         ccc = corner_c[d]
@@ -188,14 +219,6 @@ def build(task):
         n("Greater", [f"flagf{d}", "half"], f"flagb{d}")         # [1,1,1,1] bool
         vi(f"flagb{d}", B, [1, 1, 1, 1])
 
-        # seed/corner cell indicator (rr==cr)&(cc==ccc) — separable.
-        n("Equal", ["rrS", cr], f"sr{d}")                        # [1,1,9,1] bool
-        vi(f"sr{d}", B, [1, 1, S, 1])
-        n("Equal", ["ccS", ccc], f"sc{d}")                       # [1,1,1,9] bool
-        vi(f"sc{d}", B, [1, 1, 1, S])
-        n("And", [f"sr{d}", f"sc{d}"], f"seed{d}")               # [1,1,9,9] bool
-        vi(f"seed{d}", B, [1, 1, S, S])
-
         # a = (r-r0)*dr  (1-D row vector);  b = (c-c0)*dc  (1-D col vector).
         n("Sub", ["rrS", cr], f"dra{d}")                         # [1,1,9,1]
         vi(f"dra{d}", F, [1, 1, S, 1])
@@ -208,8 +231,10 @@ def build(task):
         n("Mul", [f"dcb{d}", f"sdc{d}"], f"b{d}")                # [1,1,1,9]
         vi(f"b{d}", F, [1, 1, 1, S])
 
-        # a >= 0 and b >= 0 (1-D compares, broadcast in the And below).
-        n("Greater", [f"a{d}", "onep5n"], f"age{d}")             # a > -1.5 (a>=0 ints)
+        # a >= 0 (1-D), gated by the chosen flag -> tiny [1,1,9,1] AND.
+        n("Greater", [f"a{d}", "onep5n"], f"age0{d}")            # a > -1.5
+        vi(f"age0{d}", B, [1, 1, S, 1])
+        n("And", [f"age0{d}", f"flagb{d}"], f"age{d}")           # gated, [1,1,9,1]
         vi(f"age{d}", B, [1, 1, S, 1])
         n("Greater", [f"b{d}", "onep5n"], f"bge{d}")             # b > -1.5
         vi(f"bge{d}", B, [1, 1, 1, S])
@@ -225,25 +250,17 @@ def build(task):
         vi(f"bgta{d}", B, [1, 1, S, S])
         n("Greater", [f"a{d}", f"bm{d}"], f"agtb{d}")            # [1,1,9,9] bool
         vi(f"agtb{d}", B, [1, 1, S, S])
-        n("And", [f"bgta{d}", f"agtb{d}"], f"band{d}")           # [1,1,9,9] bool
-        vi(f"band{d}", B, [1, 1, S, S])
 
-        n("And", [f"ab{d}", f"band{d}"], f"cond{d}")             # [1,1,9,9] bool
+        # cond = ab & bgta & agtb  (chained ANDs, no separate `band` plane).
+        n("And", [f"ab{d}", f"bgta{d}"], f"cnd1{d}")             # [1,1,9,9] bool
+        vi(f"cnd1{d}", B, [1, 1, S, S])
+        n("And", [f"cnd1{d}", f"agtb{d}"], f"cond{d}")           # [1,1,9,9] bool
         vi(f"cond{d}", B, [1, 1, S, S])
 
-        # staircase contributes only when this corner is chosen; seed always on.
-        n("And", [f"cond{d}", f"flagb{d}"], f"stair{d}")         # [1,1,9,9] bool
-        vi(f"stair{d}", B, [1, 1, S, S])
-        n("Or", [f"stair{d}", f"seed{d}"], f"on{d}")             # [1,1,9,9] bool
-        vi(f"on{d}", B, [1, 1, S, S])
-
-        if L9_acc is None:
-            L9_acc = f"on{d}"
-        else:
-            nn = f"onacc{d}"
-            n("Or", [L9_acc, f"on{d}"], nn)
-            vi(nn, B, [1, 1, S, S])
-            L9_acc = nn
+        nn = f"onacc{d}"
+        n("Or", [L9_acc, f"cond{d}"], nn)
+        vi(nn, B, [1, 1, S, S])
+        L9_acc = nn
 
     # ---------- label map: colour where painted else 0 (uint8 9x9) ------------
     n("Cast", ["color"], "coloru8", to=U8)                       # [1,1,1,1] uint8

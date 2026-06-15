@@ -25,7 +25,6 @@
  ],
  "note": "HARD-tagged (iterate/count/random-pick/bitmap-grow) deprioritized: floor-break bails. Already-15+ clean = public-tight, adopt likely rejects. Target low-score clean for real headroom.",
  "reattack_high_yield": [
-  "020-R uint8 crop",
-  "034-R downcast planes"
+  "DONE: 020-R 16.38, 034-R 16.36"
  ]
 }

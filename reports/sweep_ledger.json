@@ -398,14 +398,14 @@
  {
   "task": 34,
   "arc_id": "1f0c79e5",
-  "points": 15.16,
+  "points": 16.36,
   "memory": 60408,
   "params": 95,
   "method": "gen:thbdh6332",
   "class": "FEASIBLE",
   "sig": "-",
   "status": "done",
-  "verdict": "15.16 adopted (+1.17); RE-ATTACK: downcast predicate planes uint8 -> ~16.8, mem 18666>>floor"
+  "verdict": "16.36 adopted (13.99->15.16->16.36, +2.37); near Tier-B floor (5515). INSIGHT: scalar-ize params, crop minimal contiguous channels (deeper than uint8)"
  },
  {
   "task": 35,
