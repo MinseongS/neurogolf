@@ -608,8 +608,8 @@
   "method": "ext:vyank6322",
   "class": "FEASIBLE",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "15.03 candidate (+0.03 only, mem 21323) NOT adopted - detection-class arrowhead, public near floor ~15. INSIGHT: collapse 2-D detection to 1-D row/col profiles (zero 2-D mask planes)"
  },
  {
   "task": 52,

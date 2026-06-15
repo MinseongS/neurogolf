@@ -52,6 +52,12 @@ BEST submission so a flat/down result never loses standing; a FLAT result is a s
 translate (large floor-break compactions should translate ~1:1; sub-1pt stored gains are LB-noise). Limit
 100/day. Never block the build loop waiting on a score — poll opportunistically on the next wake.
 
+## MARGINAL-WIN THRESHOLD (adopt discipline)
+Adopt only if the candidate beats current by **≥ +0.3 stored** OR is a genuine large-memory floor-break.
+Sub-0.3 stored gains are LB-noise (Kaggle memory-measurement resolution) and just clutter the manifest with
+laterals — RECORD the insight in the task log, mark the ledger `skip-marginal`, do NOT adopt. (Examples this
+session: task370 +0.06 and task051 +0.03 — detection-class, public net already near floor; not worth the swap.)
+
 ## Stored↔LB gap tracker (check EVERY iteration): `PYTHONPATH=. .venv/bin/python reports/lb_status.py`
 stored is OPTIMISTIC (counts non-generalizing/overcounted base nets). Truth = confirmed LB.
 - **gap = stored_at_last_submit − LB** (anchor in reports/lb_anchor.json; updated by the submit step).

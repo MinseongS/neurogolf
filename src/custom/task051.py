@@ -85,6 +85,7 @@ def build(task):
     nonbg = np.ones((1, 10, 1, 1)); nonbg[0, 0, 0, 0] = 0
     init("nonbg", nonbg, np.float32)
     init("sent15", np.array(15.0), np.float16)
+    init("zero16", np.array(0.0), np.float16)
     # crop a [1,1,30,30] plane -> [1,1,CW,CW] (top-left) via negative Pad
     init("crop", np.array([0, 0, 0, 0, 0, 0, CW - 30, CW - 30], np.int64),
          np.int64)
@@ -143,9 +144,10 @@ def build(task):
     # so in-grid = (row < H) AND (col < W).  rowany / colany detect occupied
     # rows / cols straight from the profiles -> NO in-grid conv plane needed.
     n("ReduceSum", ["rowprof"], "rowanyS", axes=[1], keepdims=1)  # [1,1,CW,1]
-    n("Greater", ["rowanyS", "eps16"], "rowanyB"); n("Cast", ["rowanyB"], "rowany", to=F16)
+    n("Greater", ["rowanyS", "eps16"], "rowanyB")            # bool (row < H)
     n("ReduceSum", ["colprof"], "colanyS", axes=[1], keepdims=1)  # [1,1,1,CW]
-    n("Greater", ["colanyS", "eps16"], "colanyB"); n("Cast", ["colanyB"], "colany", to=F16)
+    n("Greater", ["colanyS", "eps16"], "colanyB")            # bool (col < W)
+    n("And", ["rowanyB", "colanyB"], "ingridB")              # [1,1,CW,CW] bool
 
     # tip 1-D occupancy vectors (single 1 at the tip's row / col)
     n("Mul", ["rowprof", "tipchan16"], "tr10"); n("ReduceSum", ["tr10"], "tr16", axes=[1], keepdims=1)
@@ -210,9 +212,8 @@ def build(task):
     n("Mul", ["linecol0", "tipcol"], "linecol")              # [1,1,1,CW]
     n("Mul", ["linerow", "linecol"], "beamLine")             # [1,1,CW,CW] fp16
 
-    # ---- in-grid = (row<H) AND (col<W) = rowany (outer) colany ----
-    n("Mul", ["rowany", "colany"], "ingrid")                 # [1,1,CW,CW]
-    n("Mul", ["ingrid", "notpres"], "bgin")                  # in-grid background
+    # ---- in-grid background = in-grid AND background (one Where) ----
+    n("Where", ["ingridB", "notpres", "zero16"], "bgin")
 
     # ---- beam lands only on in-grid background; beamLine already carries the
     #      tip colour, so its product with bgin IS the colour contribution. ----
@@ -220,9 +221,7 @@ def build(task):
     n("Add", ["V", "beamcol"], "Lf0")                        # colour value plane
 
     # ---- off-grid -> sentinel 15 (so the final Equal yields all-false) ----
-    n("Sub", ["one16", "ingrid"], "offgrid")
-    n("Mul", ["offgrid", "sent15"], "sentadd")
-    n("Add", ["Lf0", "sentadd"], "Lf")
+    n("Where", ["ingridB", "Lf0", "sent15"], "Lf")
     n("Cast", ["Lf"], "Lc", to=U8)                           # [1,1,CW,CW] uint8
     # pad CWxCW -> 30x30 with sentinel 15 (the off-canvas border is off-grid)
     n("Pad", ["Lc", "padO", "sentU8"], "L", mode="constant")  # [1,1,30,30]
