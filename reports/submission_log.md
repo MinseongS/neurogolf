@@ -15,6 +15,12 @@ Pre-existing ~61pt stored-vs-LB gap (6454.46 stored vs 6393.20 LB) is UNCHANGED 
 inherited public base nets (overcounted/non-generalizing), not touchable by our custom sweep. So: stored
 delta from a generalizing floor-break win ≈ LB delta. Keep grinding; trust stored for generalizing customs.
 
+| 2 | 06-15 17:58 | 6461.51 | 012,245,035,061,250 | **6400.24** | **+7.04** | proj was 6400.25 → **0.01 error, tracker exact**. stored Δ +7.05 → LB +7.04 = 1:1 again. gap 61.27 STABLE |
+
+## ⭐ Submission 2 confirms the model: gap tracker projected 6400.25, actual 6400.24 (0.01 error).
+Two submissions now: both +stored ≈ +LB exactly, gap pinned at ~61.2. The PROJECTED LB (stored − gap)
+is trustworthy to ±0.1 — no need to submit to know where we stand; submit only to re-anchor/lock.
+
 ## Procedure (folded into loop)
 1. trigger: every 5 adopted wins.
 2. `python -c "from src.pipeline import pack; pack()"` (networks/ only; never --pack flag).

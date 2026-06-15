@@ -51,22 +51,23 @@ def build(task):
 
     # ---- colour-5 occupancy on a small working canvas ----
     # The upscaled sprite (9x9 + offset) always lies within rows 0..15, cols
-    # 0..17 (width<=19, height<=17, offset>=1), so an 18x18 channel-5 slice
-    # captures every live cell.  Slice keeps fp32 -> 18*18*4 = 1296 B.
-    W = 18
+    # 0..17 (width<=19, height<=17, offset>=1; verified 30k fresh: last live
+    # row<=15, col<=17), so a 16x18 channel-5 slice captures every live cell.
+    # Slice keeps fp32 -> 16*18*4 = 1152 B.
+    HR, WC = 16, 18
     init("ss", np.array([0, 5, 0, 0], np.int64), np.int64)
-    init("se", np.array([1, 6, W, W], np.int64), np.int64)
+    init("se", np.array([1, 6, HR, WC], np.int64), np.int64)
     init("sax", np.array([0, 1, 2, 3], np.int64), np.int64)
-    n("Slice", ["input", "ss", "se", "sax"], "occ")  # [1,1,W,W] fp32 (1296B)
+    n("Slice", ["input", "ss", "se", "sax"], "occ")  # [1,1,HR,WC] fp32 (1152B)
 
     # ---- 1-D presence profiles (tiny) ----
-    n("ReduceMax", ["occ"], "rowocc_f", axes=[3], keepdims=1)  # [1,1,W,1]
-    n("ReduceMax", ["occ"], "colocc_f", axes=[2], keepdims=1)  # [1,1,1,W]
+    n("ReduceMax", ["occ"], "rowocc_f", axes=[3], keepdims=1)  # [1,1,HR,1]
+    n("ReduceMax", ["occ"], "colocc_f", axes=[2], keepdims=1)  # [1,1,1,WC]
 
     # r0 = first occupied row, c0 = first occupied col (scalars).
     # rowidx = present ? r : 99 ; r0 = min.
-    Irow = np.arange(W, dtype=np.float32).reshape(1, 1, W, 1)
-    Icol = np.arange(W, dtype=np.float32).reshape(1, 1, 1, W)
+    Irow = np.arange(HR, dtype=np.float32).reshape(1, 1, HR, 1)
+    Icol = np.arange(WC, dtype=np.float32).reshape(1, 1, 1, WC)
     init("Irow", Irow, np.float32)
     init("Icol", Icol, np.float32)
     init("Big", np.array(99.0, np.float32), np.float32)
@@ -89,9 +90,10 @@ def build(task):
     n("Add", ["r0s", "step"], "ridx_f")             # [3] fp32
     n("Add", ["c0s", "step"], "cidx_f")             # [3] fp32
     init("lo", np.array(0.0, np.float32), np.float32)
-    init("hi", np.array(float(W - 1), np.float32), np.float32)
-    n("Clip", ["ridx_f", "lo", "hi"], "ridx_c")     # [3]
-    n("Clip", ["cidx_f", "lo", "hi"], "cidx_c")
+    init("hir", np.array(float(HR - 1), np.float32), np.float32)
+    init("hic", np.array(float(WC - 1), np.float32), np.float32)
+    n("Clip", ["ridx_f", "lo", "hir"], "ridx_c")    # [3]
+    n("Clip", ["cidx_f", "lo", "hic"], "cidx_c")
     n("Cast", ["ridx_c"], "ridx", to=TensorProto.INT64)  # [3]
     n("Cast", ["cidx_c"], "cidx", to=TensorProto.INT64)
 
