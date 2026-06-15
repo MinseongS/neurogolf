@@ -296,8 +296,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE B ~16.8pt: data-dependent translate: 1a07d186 moves each colored dot adjacent to "
+  "status": "pending-retry",
+  "verdict": "agent STALLED (600s), left low-quality 11.44 (rejected). NOT infeasible - re-build later (move-dot-beside-line scatter)"
  },
  {
   "task": 26,
@@ -2468,8 +2468,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: stamp/replicate: 88a10436 copies the colored sprite (shown at sprite1)"
+  "status": "pending-retry",
+  "verdict": "agent STALLED before writing file. NOT infeasible - re-build later (sprite stamp at gray markers, double-MatMul scatter designed)"
  },
  {
   "task": 207,
@@ -4454,14 +4454,14 @@
  {
   "task": 372,
   "arc_id": "e98196ab",
-  "points": 16.03,
+  "points": 16.44,
   "memory": 7865,
   "params": 13,
   "method": "gen:galaxy",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE S ~19.0pt: e98196ab: two stacked halves separated by gray line; overlay them (out"
+  "status": "done",
+  "verdict": "16.44 adopted (16.03->16.44, +0.44) mislabeled-feasible #7. INSIGHT: fold/overlay -> 1x1 Conv to single colour-index plane FIRST, fold on tiny tensors (beats slice-9-channels idiom)"
  },
  {
   "task": 373,

@@ -2227,10 +2227,10 @@
    "method": "ext:kojimar6275"
   },
   "372": {
-   "points": 16.02817065646915,
-   "memory": 7865,
-   "params": 13,
-   "method": "gen:galaxy"
+   "points": 16.443586095430483,
+   "memory": 5160,
+   "params": 40,
+   "method": "custom:task372"
   },
   "373": {
    "points": 18.75972415482923,

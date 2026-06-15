@@ -31,6 +31,11 @@ is trustworthy to ±0.1 — no need to submit to know where we stand; submit onl
 ## ⭐ 4 submissions, errors 0.01/0.01/0.00/0.00. Gap immovable at 61.27. The stored→LB ratio is exactly 1:1
 for generalizing customs. lb_status.py projected LB is ground truth. LB so far: 6384.61→6393.20→6400.24→6406.72→6409.40.
 
+| 5 | 06-15 19:xx | 6480.57 | 244,278,275,306,264,57 (re-triage reservoir) | **6419.29** | **+9.89** | proj 6419.30 → **0.01** (5th exact). First batch from the 50 mislabeled-feasible. gap 61.28. |
+
+## ⭐ Submission 5: re-triage reservoir translates 1:1 too (proj 6419.30 → 6419.29). LB now 6419.29.
+Trajectory: 6384.61→6393.20→6400.24→6406.72→6409.40→6419.29. 6 mislabeled-feasible recoveries landed +9.89.
+
 ## Procedure (folded into loop)
 1. trigger: every 5 adopted wins.
 2. `python -c "from src.pipeline import pack; pack()"` (networks/ only; never --pack flag).

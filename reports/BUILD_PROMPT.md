@@ -61,6 +61,19 @@ float then Cast); Slice preserves the input float dtype; opset-11 has no Greater
 REMOVE unused initializers (they still count as params); calculate_params counts element COUNT not bytes
 (initializer dtype is free — only element count matters).
 
+## ANTI-STALL (agents have died at the 600s no-progress watchdog — obey)
+- WRITE src/custom/taskNNN.py EARLY (a first working draft within a few minutes) and iterate on disk; do
+  NOT think for 10+ min before writing.
+- BOUND verification: fresh 200/200 (or up to 500/500 once) is ENOUGH. Do NOT run 5000/20000-sample stress
+  loops or exhaustive Python brute-force — they stall the watchdog and rarely change the verdict.
+- `/tmp/arc-gen/src` SHADOWS the repo `src` package (genverify does sys.path.insert(0,'/tmp/arc-gen')).
+  If you hit `No module named src.custom` or a wrong `src`, run from repo root with `PYTHONPATH=.` and do NOT
+  insert /tmp/arc-gen at path position 0 in your own verify script; import repo src FIRST, or replicate the
+  fresh-instance check inline (load the generator by file path, don't rely on genverify's sys.path).
+- For overlay/fold tasks: collapse the 10-way one-hot to a single colour-index plane with a 1×1 Conv
+  (sum_k k·input_k) FIRST, then fold on tiny [1,1,H,W] tensors — leaner than slicing 9 colour channels +
+  Max + rebuilding ch0 (task372 16.44 beats the task360 slice idiom at 15.98).
+
 ## Step 3 — VERIFY (authoritative) then report
 evaluate() ok + ISOLATED fresh 200/200 against freshly-generated instances (see src/genverify.py +
 src/harness.py; fresh_pass reads networks/taskNNN.onnx from DISK so temp-write WITHOUT touching
