@@ -1045,10 +1045,10 @@
    "method": "gen:vyank6322"
   },
   "175": {
-   "points": 13.799746264185158,
-   "memory": 70400,
-   "params": 2749,
-   "method": "gen:biohack_new"
+   "points": 15.821769681942051,
+   "memory": 8208,
+   "params": 1476,
+   "method": "custom:task175"
   },
   "176": {
    "points": 16.315598889599855,
