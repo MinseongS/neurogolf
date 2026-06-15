@@ -4082,14 +4082,14 @@
  {
   "task": 341,
   "arc_id": "d6ad076f",
-  "points": 15.37,
+  "points": 15.77,
   "memory": 14976,
   "params": 289,
   "method": "ext:biohack_new",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "15.77 adopted (15.37->15.77, +0.40); mem 10109 RE-ATTACK-LOW (fp16 10x10 planes + drop band-products -> ~16.5). INSIGHT: apply_gravity=orientation-equivariance, select axis by internal-empty-run; cyan span=nested band intersection"
  },
  {
   "task": 342,

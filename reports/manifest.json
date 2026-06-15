@@ -2041,10 +2041,10 @@
    "method": "custom:task340"
   },
   "341": {
-   "points": 15.366682094831022,
-   "memory": 14976,
-   "params": 289,
-   "method": "ext:biohack_new"
+   "points": 15.772704187374403,
+   "memory": 10109,
+   "params": 62,
+   "method": "custom:task341"
   },
   "342": {
    "points": 15.640119560754242,
