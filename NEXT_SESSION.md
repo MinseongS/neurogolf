@@ -1,7 +1,12 @@
 # NeuroGolf — 다음 세션 인수인계 (2026-06-15 마감)
 
 ## 현재 상태 (확정)
-- **실제 Kaggle LB: 6370.12** (2026-06-15 floor-break 캠페인, 잠금). 경로 6338.91→6344.58→6356.04→6370.12.
+- **실제 Kaggle LB: 6374.94** (2026-06-15, 잠금). 경로 6338.91→6344.58→6356.04→6370.12→6374.94.
+- **public-net floor-break도 1:1 반영 검증됨.** 미지 public net을 triage(generator 읽고 깨끗한
+  per-cell 결정론 규칙만 선별)한 뒤 from-scratch 빌드. task097(14.11→15.70) task126(13.87→17.09) 완료.
+  triage 완료 feasible 큐(미빌드): **92 110 222 306 20 34 165 224 175 265 198 131** (12개, 각 +2~3).
+  triage 미실시 same-shape public 후보 추가 ~54개 더 있음(reports/floorbreak_targets.json).
+  **Opus 일일 cap이 ~17:00 KST에 걸려 19:00 리셋** → 그 후 2-agent build wave 재개. cap 중엔 메인이 직접 빌드 가능(97/126이 그 예).
   31개 custom floor-break 재인코딩(+25.54 real, stored와 1:1 일치). 큰 win: 215(1512)/239(3318)/019(3365)/
   384(3140)/156(3507). 남은 custom 타깃은 점감(<0.5): 137 166 252 312 197 269 297 256 등 ~+3-4.
   다음 방향: custom 꼬리 마무리 또는 same-shape 깨끗-규칙 미지 public net(reports/floorbreak_targets.md,
