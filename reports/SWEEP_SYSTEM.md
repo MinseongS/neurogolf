@@ -45,6 +45,13 @@ Created/updated every time the task is touched. Schema in tasklog/_TEMPLATE.md. 
 Fields: task, arc_id, points, memory, params, method, class, sig, status(pending|done|skip|wip),
 verdict. Update status+verdict per task. `reports/sweep_wave_queue.json` = prioritized build queue.
 
+## Submission step (every 5 adopted wins — authorized 2026-06-15)
+Fold into the loop: after every 5th adopted win, pack() → kaggle submit → poll publicScore → record in
+reports/submission_log.md with the stored→LB ratio. Procedure + cadence in submission_log.md. Kaggle keeps
+BEST submission so a flat/down result never loses standing; a FLAT result is a signal the wins didn't
+translate (large floor-break compactions should translate ~1:1; sub-1pt stored gains are LB-noise). Limit
+100/day. Never block the build loop waiting on a score — poll opportunistically on the next wake.
+
 ## BAIL classes (record verdict, do not grind): flood-fill/connectivity/enclosed-region,
 multi-object shape-correspondence/rotate, output-size-not-input-derivable, random-pixel noise,
 non-deterministic (same input→2 outputs). These cap at the memorizer ~14 floor for everyone —

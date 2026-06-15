@@ -74,9 +74,18 @@ def build(task):
     init("rowidx", np.arange(30).reshape(1, 1, 30, 1), np.float32)
     init("colidx", np.arange(30).reshape(1, 1, 1, 30), np.float32)
     init("chan", np.arange(10).reshape(1, 10, 1, 1), np.uint8)
+    # non-background channel gate [1,10,1,1] : 0 for ch0, 1 for ch1..9
+    nonbg = np.ones((1, 10, 1, 1)); nonbg[0, 0, 0, 0] = 0
+    init("nonbg", nonbg, np.float32)
 
     # ---- per-cell colour index V [1,1,30,30] ----
     n("Conv", ["input", "colW"], "V")                        # fp32 colour 0..9
+
+    # ---- in-grid mask: off-grid cells are all-channels-0 (the harness leaves
+    #      them empty); only cells inside the real grid have a 1 somewhere. ----
+    n("ReduceSum", ["input"], "ingridS", axes=[1], keepdims=1)  # [1,1,30,30]
+    n("Greater", ["ingridS", "eps"], "ingridB")
+    n("Cast", ["ingridB"], "ingrid", to=F)
 
     # ---- channel counts -> tip / triangle channel selectors [1,10,1,1] ----
     n("ReduceSum", ["input"], "cnt", axes=[2, 3], keepdims=1)  # [1,10,1,1]
@@ -84,10 +93,12 @@ def build(task):
     n("Sub", ["cnt", "one"], "cm1")
     n("Mul", ["cm1", "cm1"], "cm1sq")
     n("Less", ["cm1sq", "eps"], "tipchanB")                  # bool [1,10,1,1]
-    n("Cast", ["tipchanB"], "tipchan", to=F)
+    n("Cast", ["tipchanB"], "tipchan0", to=F)
+    n("Mul", ["tipchan0", "nonbg"], "tipchan")               # exclude ch0 (bg)
     # triangle channel: count > 1.5
     n("Greater", ["cnt", "onehalf"], "trichanB")
-    n("Cast", ["trichanB"], "trichan", to=F)
+    n("Cast", ["trichanB"], "trichan0", to=F)
+    n("Mul", ["trichan0", "nonbg"], "trichan")               # exclude ch0 (bg)
 
     # ---- tip / triangle cell masks [1,1,30,30] ----
     n("Mul", ["input", "tipchan"], "tipsel")                 # [1,10,30,30]
