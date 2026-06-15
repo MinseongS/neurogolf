@@ -4328,8 +4328,8 @@
   "method": "ext:biohack_new",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "14.99 candidate BELOW public 15.35 - NOT adopted. Confirms non-local symmetry-centre detection is near-floor for everyone. INSIGHT: rot-symmetry completion=orbit-consistency argmax about data-dep centre, no closed-form centre found"
  },
  {
   "task": 362,

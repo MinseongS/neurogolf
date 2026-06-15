@@ -98,10 +98,8 @@ def build(task):
     init("negbig", np.array(-1.0, np.float32), np.float32)
     init("posbig", np.array(99.0, np.float32), np.float32)
     init("three", np.array(3.0, np.float32), np.float32)
-    init("Wf", np.array(float(W), np.float32), np.float32)
     init("two", np.array(2.0, np.float32), np.float32)
     init("zerof", np.array(0.0, np.float32), np.float32)
-    init("Hm1", np.array(float(W - 1), np.float32), np.float32)
 
     init("swyh", swyf.astype(np.float16).reshape(1, SNW), np.float16)   # [1,49] fp16
     init("swxh", swxf.astype(np.float16).reshape(1, SNW), np.float16)
@@ -109,19 +107,13 @@ def build(task):
     init("u255s", np.full(SNW, 255, np.uint8), np.uint8)
     init("u0vecS", np.zeros(SNW, np.uint8), np.uint8)
 
-    # fp16 completion-window coords for the inverse-rotation loop (fp16-exact ints)
+    # fp16 completion-window coords for the index math (fp16-exact small ints)
     init("cwyh", cwyf.reshape(1, CNW), np.float16)
     init("cwxh", cwxf.reshape(1, CNW), np.float16)
-    init("Cf", np.array(float(CW), np.float16), np.float16)
-    init("CNf", np.array(float(CNW), np.float16), np.float16)
-    init("Cm1", np.array(float(CW - 1), np.float16), np.float16)
     init("zeroh", np.array(0.0, np.float16), np.float16)
-    init("twoh", np.array(2.0, np.float16), np.float16)
 
     init("ORB0", ORB[0], np.int32)                                     # [13,49]
     init("ORB1", ORB[1], np.int32)
-    init("s1wc", s1c.astype(np.float32), np.float32)                   # [13]
-    init("s2wc", s2c.astype(np.float32), np.float32)
 
     # ---- V = colour index (Conv full 30x30 -> slice corner -> uint8 -> flat) ----
     # the 30x30 Conv output (3600 B) is the cheapest colour-index path: Conv fuses
