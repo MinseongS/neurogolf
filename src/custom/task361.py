@@ -124,8 +124,12 @@ def build(task):
     init("s2wc", s2g.reshape(-1).astype(np.float32), np.float32)
 
     # ---- V = colour index, flattened, + bg sentinel ----
-    n("Conv", ["input", "kw"], "Vbig")
-    n("Slice", ["Vbig", "crop_st", "crop_en", "crop_ax"], "Vc")     # [1,1,10,10]
+    # slice the 10-channel input to the active 10x10 corner BEFORE the Conv so the
+    # colour-index plane is [1,1,10,10] (400 B) not [1,1,30,30] (3600 B).
+    init("in_st", np.array([0, 0], np.int64), np.int64)
+    init("in_en", np.array([W, W], np.int64), np.int64)
+    n("Slice", ["input", "in_st", "in_en", "crop_ax"], "incorner")  # [1,10,10,10]
+    n("Conv", ["incorner", "kw"], "Vc")                             # [1,1,10,10]
     n("Cast", ["Vc"], "Vu", to=TensorProto.UINT8)
     n("Reshape", ["Vu", "shp_n"], "Vn")                             # [100]
     n("Concat", ["Vn", "u0r"], "Vp", axis=0)                        # [101]
@@ -176,8 +180,8 @@ def build(task):
     n("Equal", ["col1", "base"], "eq1")
     n("And", ["eq0", "eq1"], "good01")
     n("And", ["good01", "occwR"], "goodocc")                       # [25,81]
-    n("Cast", ["goodocc"], "goodf", to=TensorProto.FLOAT)
-    n("ReduceSum", ["goodf", "redax1"], "score", keepdims=0)       # [25]
+    n("Cast", ["goodocc"], "goodf", to=TensorProto.FLOAT16)        # fp16: 81<2048 exact
+    n("ReduceSum", ["goodf", "redax1"], "score", keepdims=0)       # [25] fp16
     n("ArgMax", ["score"], "best", axis=0, keepdims=0)
     n("Reshape", ["best", "shp_1"], "best1")                       # [1]
 

@@ -4094,14 +4094,14 @@
  {
   "task": 342,
   "arc_id": "d89b689b",
-  "points": 15.64,
+  "points": 16.04,
   "memory": 11556,
   "params": 57,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "16.04 adopted (15.64->16.04, +0.40); mem 7684. INSIGHT: quadrant-color scatter -> 1-D col-profile per row-band, 2x2 label via outer product"
  },
  {
   "task": 343,
