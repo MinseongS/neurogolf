@@ -1,23 +1,46 @@
 # NeuroGolf — 다음 세션 인수인계 (2026-06-15 마감)
 
 ## 현재 상태 (확정)
-- **실제 Kaggle LB: 6374.94** (2026-06-15, 잠금). 경로 6338.91→6344.58→6356.04→6370.12→6374.94.
-- **public-net floor-break도 1:1 반영 검증됨.** 미지 public net을 triage(generator 읽고 깨끗한
-  per-cell 결정론 규칙만 선별)한 뒤 from-scratch 빌드. task097(14.11→15.70) task126(13.87→17.09) 완료.
-  triage 완료 feasible 큐(미빌드): **92 110 222 306 20 34 165 224 175 265 198 131** (12개, 각 +2~3).
-  triage 미실시 same-shape public 후보 추가 ~54개 더 있음(reports/floorbreak_targets.json).
-  **Opus 일일 cap이 ~17:00 KST에 걸려 19:00 리셋** → 그 후 2-agent build wave 재개. cap 중엔 메인이 직접 빌드 가능(97/126이 그 예).
-  31개 custom floor-break 재인코딩(+25.54 real, stored와 1:1 일치). 큰 win: 215(1512)/239(3318)/019(3365)/
-  384(3140)/156(3507). 남은 custom 타깃은 점감(<0.5): 137 166 252 312 197 269 297 256 등 ~+3-4.
-  다음 방향: custom 꼬리 마무리 또는 same-shape 깨끗-규칙 미지 public net(reports/floorbreak_targets.md,
-  bail율 높음 — 깨끗 geometric만 골라 triage).
-- **🔑 MEMORY FLOOR-BREAK 돌파 (reports/FLOOR_BREAK_GUIDE.md + memory/neurogolf-floor-break.md):**
-  9k floor는 10채널 one-hot 중간텐서 때문 → uint8 레이블맵 L[1,1,30,30] + 마지막 Equal→무료 output
-  으로 우회. **실제 LB 1:1 반영 검증됨**(13개 재인코딩 +11.46 stored = +11.46 real). 큰 메모리
-  감축만 추구(작은 압축은 Kaggle 무반응). 타깃 = 우리 custom을 메모리순(규칙 깨끗 보장, bail 0);
-  공개 high-mem은 memorizer라 bail. 남은 custom 타깃: 85 13 239 301 234 240 199 189 217 65 288
-  215 156 384 190 63 (~+12-15 추가 예상).
-- 400/400 적용, 모든 적용 네트워크 fresh-gated. 트리 클린.
+- **실제 Kaggle LB: ~6379** (2026-06-15 잠금; 6377.27 확정 + 293/222 +1.80 제출됨, 채점 확인 필요).
+  경로: 6338.91→6344.58→6356.04→6370.12→6374.94→6377.27→~6379 (오늘 +40).
+- 400/400 적용, 모든 적용 네트워크 fresh-gated.
+
+## 🔑 핵심 무기: MEMORY FLOOR-BREAK (이게 메인 레버)
+`reports/FLOOR_BREAK_GUIDE.md` + `memory/neurogolf-floor-break.md`에 전체 기법.
+- 9k "floor"는 10채널 one-hot 중간텐서 때문. uint8 레이블맵 L[1,1,30,30] + 마지막 `Equal(L,arange)
+  →무료 output`(BOOL, opset11)으로 우회. 또는 단일 Conv/Gather/separable And→output.
+- **실제 LB에 1:1 반영됨 (3회 검증).** 큰 메모리 감축만 추구(작은 압축은 Kaggle 무반응).
+- GOTCHA: 채점 one-hot은 in-grid 배경=ch0=1, **off-grid=전채널 0**. "검정(ch0=1)" ≠ off-grid(all-zero)
+  → 레이블 sentinel≥10 또는 `Where(cond|~ingrid, input, bg_onehot)`. 색 카운트는 ch0 가중치 0인 Conv로
+  (전채널 ReduceSum은 ch0 배경 포함 버그). ingrid=ReduceMax(input,axis=1)>0.5.
+- 검증: `PYTHONPATH=. .venv/bin/python reports/verify_fb.py N` → STORED ok + FRESH 200/200.
+
+## 워크플로 (검증된 정공법)
+1. **own custom 재인코딩** (bail 0, 규칙 깨끗 보장): 31개 완료. 남은 건 detection-heavy floor라
+   수익 점감(<0.5). 거의 소진.
+2. **public-net from-scratch** (현재 메인 작업): ① triage 에이전트가 `src.show N --gen` 읽고
+   per-cell 결정론 규칙만 FEASIBLE 분류(~40-65% 통과). ② build 에이전트가 from-scratch 빌드.
+   완료: 97 126 008 092 265 287 328 293 222 (9개). cap 중엔 메인이 직접 빌드 가능(97/126이 예).
+3. 메인이 `src.adopt N`로 직렬 채택(현재 net real을 이겨야 채택). 묶어서 제출.
+
+## ⚠️ 동시성 교훈 (중요)
+**build wave는 2-3 에이전트로 제한.** 8개 동시 → stream watchdog가 600s 무응답으로 대량 kill됨
+(부분 파일은 salvage: verify_fb로 검증 후 adopt). 에이전트엔 "sub-agent 금지, 파일 일찍 쓰고 점진
+반복" 명시. Sonnet도 mechanical 빌드는 충분(easy/med), 어려운 건 Opus.
+
+## 📋 다음 세션 작업 큐 (feasible, triage 완료, 미빌드)
+- **재시도(파일 있으나 미완/오류, /tmp나 src/custom에 잔재 가능)**: 132 55 110 (이번 wave 진행중이던 것),
+  20 34 161 224 306 (8-agent wave에서 stall).
+- **미빌드 feasible**: 70 175 198 131 228 324 333 86 51 397 (triage FEASIBLE 확정).
+- **bail 확정(재시도 금지)**: 66 77 25 23 157 243 162 173 54 112 71 364 5 90 280 145 193 192 69 76
+  379 9 89 4 44 118 2 387 17 383 359 368 154 148 390 (sprite/flood/correspondence/ambiguous/global).
+- **triage 미실시**: same-shape public 후보 ~30개 더(reports/floorbreak_targets.json 상위 중 미분류).
+  → triage 에이전트 1개 돌려 큐 보충.
+- 기대: feasible 1개당 +0.5~3 (geometric clean일수록 큼). 남은 feasible ~18개 → ~+25~35 잠재.
+
+## 천장 재추정
+public-net floor-break로 ~6420-6470 현실권. 그 이상(→7000+)은 mem-0 단일Conv 패턴을 광범위 적용
+해야 함(어려움). 1등 7700 = 400개 전부 ~300바이트 극한 압축(=floor-break를 전 task에).
 - 2026-06-15 세션: set-aside custom 11개 중 10개 재적용(+202) → +5.67 LB. genverify 감사 완료.
   - **교훈 재확인: stored 델타는 Kaggle를 ~3.5배 과대평가.** sub-1pt 압축 win은 Kaggle에서 ~0.
     real-0 복구와 큰 압축만 실제 LB를 움직임. task204 0->13.90도 실제론 부분점수였음.
