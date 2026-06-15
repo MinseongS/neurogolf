@@ -2930,14 +2930,14 @@
  {
   "task": 245,
   "arc_id": "a1570a43",
-  "points": 14.72,
+  "points": 16.58,
   "memory": 28916,
   "params": 96,
   "method": "gen:thbdh6332",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "16.58 adopted (14.72->16.58, +1.86); near floor 4420. INSIGHT: data-dependent uniform translation = Tier-B variable-offset gather; recover offset as scalar from bbox, cast-to-uint8-before-gather"
  },
  {
   "task": 246,

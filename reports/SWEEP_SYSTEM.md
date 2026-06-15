@@ -52,6 +52,18 @@ BEST submission so a flat/down result never loses standing; a FLAT result is a s
 translate (large floor-break compactions should translate ~1:1; sub-1pt stored gains are LB-noise). Limit
 100/day. Never block the build loop waiting on a score — poll opportunistically on the next wake.
 
+## Stored↔LB gap tracker (check EVERY iteration): `PYTHONPATH=. .venv/bin/python reports/lb_status.py`
+stored is OPTIMISTIC (counts non-generalizing/overcounted base nets). Truth = confirmed LB.
+- **gap = stored_at_last_submit − LB** (anchor in reports/lb_anchor.json; updated by the submit step).
+- **PROJECTED LB = current_stored − gap** — this is the number to trust, NOT raw stored.
+- Confirmed 2026-06-15: gap ≈ 61 and ~STABLE (our generalizing floor-break wins translate ~1:1, so the
+  gap doesn't grow). If the gap GROWS after a submit, new wins aren't translating — investigate.
+- Gap decomposition (lb_status.md): ~34pt = non-generalizing base nets (genverify-attributable, top:
+  219 255 209 118 2 90 157 366); ~27pt = harness memory-measurement divergence on opset>10 PUBLIC base
+  nets (NOT genverify-visible; the "stored overcounts on complex nets" lesson). Replacing a genverify-
+  flagged task with a generalizing custom closes that slice of the gap directly (then re-anchor at next submit).
+- The submit step writes lb_anchor.json (stored_at_submit, lb) so the projection re-calibrates each cycle.
+
 ## BAIL classes (record verdict, do not grind): flood-fill/connectivity/enclosed-region,
 multi-object shape-correspondence/rotate, output-size-not-input-derivable, random-pixel noise,
 non-deterministic (same input→2 outputs). These cap at the memorizer ~14 floor for everyone —

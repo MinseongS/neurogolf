@@ -67,9 +67,6 @@ def build(task):
     # ---- initializers ----
     # colour-index 1x1 conv weight [out=1,in=10,1,1] = [0,1,..,9]
     init("colW", np.arange(10).reshape(1, 10, 1, 1), np.float32)
-    # channel-0 selector conv weight -> in-grid background mask in ONE op
-    sel0 = np.zeros((1, 10, 1, 1)); sel0[0, 0, 0, 0] = 1
-    init("sel0W", sel0, np.float32)
     # per-channel arange [1,10,1,1] for selecting tip colour value
     init("chvals", np.arange(10).reshape(1, 10, 1, 1), np.float32)
     init("one", np.array(1.0), np.float32)
@@ -95,6 +92,10 @@ def build(task):
     init("padO", np.array([0, 0, 0, 0, 0, 0, 30 - CW, 30 - CW], np.int64),
          np.int64)
     init("sentU8", np.array(15), np.uint8)
+    # crop row-profile [1,10,30,1] -> [1,10,CW,1]  (spatial axis 2)
+    init("cropR", np.array([0, 0, 0, 0, 0, 0, CW - 30, 0], np.int64), np.int64)
+    # crop col-profile [1,10,1,30] -> [1,10,1,CW]  (spatial axis 3)
+    init("cropC", np.array([0, 0, 0, 0, 0, 0, 0, CW - 30], np.int64), np.int64)
 
     # =================================================================
     # ALL per-cell work is in fp16 (values are small integers, exact).
@@ -107,14 +108,8 @@ def build(task):
     n("Conv", ["input", "colW"], "V32")                      # fp32 [1,1,30,30]
     n("Pad", ["V32", "crop"], "Vc")                          # [1,1,CW,CW] fp32
     n("Cast", ["Vc"], "V", to=F16)                           # fp16 plane CWxCW
-
-    # ---- in-grid background = channel-0 of input, via a 1x1 conv (one plane).
-    #      coloured cell = (V>0).  off-grid = NOT bg AND NOT coloured. ----
-    n("Conv", ["input", "sel0W"], "bgin32")                  # ch0 mask fp32
-    n("Pad", ["bgin32", "crop"], "bginc")                    # [1,1,CW,CW] fp32
-    n("Cast", ["bginc"], "bgin", to=F16)                     # in-grid bg fp16
-    n("Greater", ["V", "eps16"], "presB")                    # coloured cell
-    n("Cast", ["presB"], "pres", to=F16)
+    n("Less", ["V", "eps16"], "notpresB")                    # background cell
+    n("Cast", ["notpresB"], "notpres", to=F16)
 
     # ---- channel counts -> tip / triangle colour VALUES (channel space) ----
     n("ReduceSum", ["input"], "cnt", axes=[2, 3], keepdims=1)  # [1,10,1,1] fp32
@@ -135,12 +130,22 @@ def build(task):
     # tip/triangle colour, so NO [1,1,30,30] tip/triangle mask plane is ever
     # built.  rowprof[1,10,30,1] / colprof[1,10,1,30] are only 300 elems.
     # =================================================================
-    n("ReduceSum", ["input"], "rowprof32", axes=[3], keepdims=1)  # [1,10,30,1]
-    n("ReduceSum", ["input"], "colprof32", axes=[2], keepdims=1)  # [1,10,1,30]
+    n("ReduceSum", ["input"], "rowprof30", axes=[3], keepdims=1)  # [1,10,30,1]
+    n("ReduceSum", ["input"], "colprof30", axes=[2], keepdims=1)  # [1,10,1,30]
+    n("Pad", ["rowprof30", "cropR"], "rowprof32")            # [1,10,CW,1]
+    n("Pad", ["colprof30", "cropC"], "colprof32")            # [1,10,1,CW]
     n("Cast", ["rowprof32"], "rowprof", to=F16)
     n("Cast", ["colprof32"], "colprof", to=F16)
     n("Cast", ["tipchan"], "tipchan16", to=F16)
     n("Cast", ["trichan"], "trichan16", to=F16)
+
+    # in-grid extent (1-D): the grid is a solid HxW rectangle anchored top-left,
+    # so in-grid = (row < H) AND (col < W).  rowany / colany detect occupied
+    # rows / cols straight from the profiles -> NO in-grid conv plane needed.
+    n("ReduceSum", ["rowprof"], "rowanyS", axes=[1], keepdims=1)  # [1,1,CW,1]
+    n("Greater", ["rowanyS", "eps16"], "rowanyB"); n("Cast", ["rowanyB"], "rowany", to=F16)
+    n("ReduceSum", ["colprof"], "colanyS", axes=[1], keepdims=1)  # [1,1,1,CW]
+    n("Greater", ["colanyS", "eps16"], "colanyB"); n("Cast", ["colanyB"], "colany", to=F16)
 
     # tip 1-D occupancy vectors (single 1 at the tip's row / col)
     n("Mul", ["rowprof", "tipchan16"], "tr10"); n("ReduceSum", ["tr10"], "tr16", axes=[1], keepdims=1)
@@ -199,18 +204,23 @@ def build(task):
     n("Mul", ["vert", "vhalf"], "lr_v"); n("Mul", ["horiz", "onrow"], "lr_h")
     n("Add", ["lr_v", "lr_h"], "linerow")                    # [1,1,30,1]
     n("Mul", ["vert", "oncol"], "lc_v"); n("Mul", ["horiz", "hhalf"], "lc_h")
-    n("Add", ["lc_v", "lc_h"], "linecol")                    # [1,1,1,30]
-    n("Mul", ["linerow", "linecol"], "beamLine")             # [1,1,30,30] fp16
+    n("Add", ["lc_v", "lc_h"], "linecol0")                   # [1,1,1,CW]
+    # fold the tip colour into the 1-D column vector (free) so the outer
+    # product directly produces the beam's COLOUR contribution.
+    n("Mul", ["linecol0", "tipcol"], "linecol")              # [1,1,1,CW]
+    n("Mul", ["linerow", "linecol"], "beamLine")             # [1,1,CW,CW] fp16
 
-    # ---- beam lands only on in-grid BACKGROUND cells = bgin (= ch0).
-    #      beam colour contribution = beamLine * bgin * tipcol. ----
-    n("Mul", ["beamLine", "bgin"], "beam")
-    n("Mul", ["beam", "tipcol"], "beamcol")
+    # ---- in-grid = (row<H) AND (col<W) = rowany (outer) colany ----
+    n("Mul", ["rowany", "colany"], "ingrid")                 # [1,1,CW,CW]
+    n("Mul", ["ingrid", "notpres"], "bgin")                  # in-grid background
+
+    # ---- beam lands only on in-grid background; beamLine already carries the
+    #      tip colour, so its product with bgin IS the colour contribution. ----
+    n("Mul", ["beamLine", "bgin"], "beamcol")
     n("Add", ["V", "beamcol"], "Lf0")                        # colour value plane
 
-    # ---- off-grid -> sentinel 15 : offgrid = 1 - bgin - pres (mutually excl.)
-    n("Sub", ["one16", "bgin"], "notbg")
-    n("Sub", ["notbg", "pres"], "offgrid")                   # off-grid (0/1)
+    # ---- off-grid -> sentinel 15 (so the final Equal yields all-false) ----
+    n("Sub", ["one16", "ingrid"], "offgrid")
     n("Mul", ["offgrid", "sent15"], "sentadd")
     n("Add", ["Lf0", "sentadd"], "Lf")
     n("Cast", ["Lf"], "Lc", to=U8)                           # [1,1,CW,CW] uint8
