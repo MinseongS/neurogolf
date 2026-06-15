@@ -1,36 +1,36 @@
 """Task 288 (ARC-AGI b8cdaf2b): complete the "robot" figure by drawing the two
 antenna diagonals.
 
-Rule (verified exact on all 267 stored examples, derived from the ARC-GEN
-generator). The s x s grid (s = neck + 2*shoulder, top-left on the canvas) holds
-a figure whose bottom two rows are given:
+Rule (verified exact on all 267 stored examples). The s x s grid holds a figure
+whose bottom two rows are: bottom row (s-1) has shoulder shirt cells on corners
+and neck antenna cells in the middle; row (s-2) has neck shirt cells in middle.
+The output ADDS two antenna-colored diagonals from each shoulder upward-outward.
 
-  * bottom row  (s-1): shoulder shirt cells on each corner + neck antenna cells
-                       in the middle
-  * row  (s-2)       : neck shirt cells in the middle
-
-The output ADDS two antenna-colored diagonals climbing up-and-outward from each
-shoulder.  In closed form the added cells are:
-
-  * left  diagonal: row - col == s-2-shoulder ,  0 <= col < shoulder
+  * left  diagonal: row - col == s-2-shoulder,  0 <= col < shoulder
   * right diagonal: row + col == 2s-3-shoulder,  s-shoulder <= col < s
 
-Both s and shoulder are read off the column-occupancy of the figure:
-  * every column 0..s-1 is occupied (bottom row fills them) -> s = #occupied cols
-  * the two shoulder corner columns each hold exactly one figure cell, the neck
-    columns hold two -> #columns-with-exactly-one-cell == 2*shoulder.
+s and shoulder are read from column occupancy:
+  * s = number of occupied columns
+  * 2*shoulder = number of columns with exactly one figure cell
 
-The antenna color is the less-frequent of the two figure colors (shirt count =
-neck+2*shoulder > neck = antenna count, always), recovered as the channel with
-the minimal positive cell count.
+Antenna color = channel with minimal positive cell count.
 
-Graph: compute the scalar s, shoulder, the two diagonal offsets, build the bool
-diagonal mask from fixed row/col index planes, build the antenna one-hot color
-vector A[1,10,1,1], then
-  output = Where(mask[1,1,30,30], A[1,10,1,1], input)
-which never materialises a 10-channel float canvas (the task166 single-Where
-trick): on mask cells the cell becomes the antenna one-hot, elsewhere it is the
-input untouched (mask cells are background in the input).
+Memory floor-break (eliminate the [1,1,30,30] occ plane + 1D column masks):
+
+  Old: Conv(input, Wocc) -> occ [1,1,30,30] (3600B) -> ReduceSum -> colcnt
+  New: Single Conv with 30x1 kernel summing all figure channels over all rows
+       -> colcnt [1,1,1,30] directly (no 2D intermediate).
+
+  Old: COL [1,1,30,30] param (900 elements) for column comparisons
+  New: COL1D [1,1,1,30] (30 elements); the column conditions ltSH, ltS, geSmSH
+       are 1D [1,1,1,30] (30B each) and broadcast over the 2D diagonal masks.
+
+  Old: separate geSmSH, ltS, Rmask0 as [1,1,30,30] planes
+  New: right_cols = And(geSmSH1d, ltS1d) in 1D (30B), then
+       Rmask = And(onLright, right_cols) directly (no Rmask0 intermediate).
+
+Remaining: 5 bool [1,1,30,30] planes (onLleft, Lmask, onLright, Rmask, mask)
+           = 4500B — unavoidable for 2D diagonal detection.
 """
 
 import numpy as np
@@ -58,118 +58,117 @@ def build(task):
         vinfos.append(helper.make_tensor_value_info(name, dtype, shape))
         return name
 
-    # ---- occupancy plane occ[1,1,30,30] = sum of colour channels 1..9 (=1 on a
-    #      figure cell, 0 on background / outside the grid) -------------------
-    wocc = np.zeros((1, 10, 1, 1), np.float32)
-    wocc[0, 1:, 0, 0] = 1.0
-    init("Wocc", wocc, np.float32)
-    n("Conv", ["input", "Wocc"], "occ")                       # [1,1,30,30] f32
-    vi("occ", TensorProto.FLOAT, [1, 1, 30, 30])
-
-    # ---- per-column figure count colcount[1,1,1,30] ------------------------
-    n("ReduceSum", ["occ"], "colcnt", axes=[2], keepdims=1)   # [1,1,1,30] f32
+    # ---- per-column figure count colcnt [1,1,1,30] via a single Conv --------
+    # W_col [1,10,30,1]: sums channels 1..9 across all 30 rows in a single conv.
+    # input [1,10,30,30] * W_col[1,10,30,1] -> colcnt [1,1,1,30]
+    W_col = np.zeros((1, 10, 30, 1), np.float32)
+    W_col[0, 1:, :, 0] = 1.0
+    init("W_col", W_col, np.float32)
+    n("Conv", ["input", "W_col"], "colcnt",
+      kernel_shape=[30, 1], pads=[0, 0, 0, 0])                   # [1,1,1,30] f32
     vi("colcnt", TensorProto.FLOAT, [1, 1, 1, 30])
+
     n("Cast", ["colcnt"], "colcnti", to=TensorProto.INT32)
     vi("colcnti", TensorProto.INT32, [1, 1, 1, 30])
 
-    # s = number of occupied columns (colcount > 0)
+    # s = number of occupied columns
     init("zero_i", np.array(0, np.int32), np.int32)
-    n("Greater", ["colcnti", "zero_i"], "occcol")             # [1,1,1,30] bool
+    n("Greater", ["colcnti", "zero_i"], "occcol")                 # [1,1,1,30] bool
     vi("occcol", TensorProto.BOOL, [1, 1, 1, 30])
     n("Cast", ["occcol"], "occcoli", to=TensorProto.INT32)
     vi("occcoli", TensorProto.INT32, [1, 1, 1, 30])
-    n("ReduceSum", ["occcoli"], "S", axes=[3], keepdims=1)    # [1,1,1,1] i32
+    n("ReduceSum", ["occcoli"], "S", axes=[3], keepdims=1)        # [1,1,1,1] i32
     vi("S", TensorProto.INT32, [1, 1, 1, 1])
 
     # 2*shoulder = number of columns with exactly one figure cell
     init("one_i", np.array(1, np.int32), np.int32)
-    n("Equal", ["colcnti", "one_i"], "iscorner")              # [1,1,1,30] bool
+    n("Equal", ["colcnti", "one_i"], "iscorner")                  # [1,1,1,30] bool
     vi("iscorner", TensorProto.BOOL, [1, 1, 1, 30])
     n("Cast", ["iscorner"], "iscorneri", to=TensorProto.INT32)
     vi("iscorneri", TensorProto.INT32, [1, 1, 1, 30])
     n("ReduceSum", ["iscorneri"], "twoSH", axes=[3], keepdims=1)  # [1,1,1,1]
     vi("twoSH", TensorProto.INT32, [1, 1, 1, 1])
     init("two_i", np.array(2, np.int32), np.int32)
-    n("Div", ["twoSH", "two_i"], "SH")                        # [1,1,1,1] i32
+    n("Div", ["twoSH", "two_i"], "SH")                           # [1,1,1,1] i32
     vi("SH", TensorProto.INT32, [1, 1, 1, 1])
 
     # ---- diagonal offsets ---------------------------------------------------
-    # K_left  = S - 2 - SH ;  K_right = 2S - 3 - SH
+    # Kleft  = S - 2 - SH;  Kright = 2S - 3 - SH
     init("c2", np.array(2, np.int32), np.int32)
     init("c3", np.array(3, np.int32), np.int32)
-    n("Sub", ["S", "SH"], "SmSH")                             # S - SH
+    n("Sub", ["S", "SH"], "SmSH")                                 # S - SH
     vi("SmSH", TensorProto.INT32, [1, 1, 1, 1])
-    n("Sub", ["SmSH", "c2"], "Kleft")                         # S - SH - 2
+    n("Sub", ["SmSH", "c2"], "Kleft")                             # S - SH - 2
     vi("Kleft", TensorProto.INT32, [1, 1, 1, 1])
-    n("Add", ["S", "SmSH"], "twoSmSH")                        # 2S - SH
+    n("Add", ["S", "SmSH"], "twoSmSH")                            # 2S - SH
     vi("twoSmSH", TensorProto.INT32, [1, 1, 1, 1])
-    n("Sub", ["twoSmSH", "c3"], "Kright")                     # 2S - SH - 3
+    n("Sub", ["twoSmSH", "c3"], "Kright")                         # 2S - SH - 3
     vi("Kright", TensorProto.INT32, [1, 1, 1, 1])
-    # S - SH  (lower bound for right diagonal columns)
-    # already have SmSH
 
-    # ---- fixed row/col index planes ----------------------------------------
+    # ---- fixed row-minus-col and row-plus-col planes (2D params) -----------
     rr = np.arange(30, dtype=np.int32).reshape(1, 1, 30, 1) * np.ones(
         (1, 1, 1, 30), np.int32)
     cc = np.ones((1, 1, 30, 1), np.int32) * np.arange(
         30, dtype=np.int32).reshape(1, 1, 1, 30)
-    init("RmC", (rr - cc).astype(np.int32), np.int32)         # row - col
-    init("RpC", (rr + cc).astype(np.int32), np.int32)         # row + col
-    init("COL", cc.astype(np.int32), np.int32)                # col index
+    init("RmC", (rr - cc).astype(np.int32), np.int32)            # [1,1,30,30]
+    init("RpC", (rr + cc).astype(np.int32), np.int32)            # [1,1,30,30]
 
-    # ---- left diagonal mask: (RmC == Kleft) & (COL < SH) -------------------
-    n("Equal", ["RmC", "Kleft"], "onLleft")                   # [1,1,30,30] bool
+    # ---- 1D column index (replaces 2D COL param, saves 870 param elements) -
+    init("COL1D", np.arange(30, dtype=np.int32).reshape(1, 1, 1, 30), np.int32)
+
+    # ---- left diagonal mask: (RmC == Kleft) & (COL1D < SH) ----------------
+    n("Equal", ["RmC", "Kleft"], "onLleft")                       # [1,1,30,30] bool
     vi("onLleft", TensorProto.BOOL, [1, 1, 30, 30])
-    n("Less", ["COL", "SH"], "ltSH")                          # COL < SH
-    vi("ltSH", TensorProto.BOOL, [1, 1, 30, 30])
-    n("And", ["onLleft", "ltSH"], "Lmask")
+    # COL1D < SH: [1,1,1,30] bool (1D, broadcasts)
+    n("Less", ["COL1D", "SH"], "ltSH")                            # [1,1,1,30] bool
+    vi("ltSH", TensorProto.BOOL, [1, 1, 1, 30])
+    n("And", ["onLleft", "ltSH"], "Lmask")                        # [1,1,30,30] bool
     vi("Lmask", TensorProto.BOOL, [1, 1, 30, 30])
 
-    # ---- right diagonal mask: (RpC == Kright) & (COL >= S-SH) & (COL < S) ---
-    n("Equal", ["RpC", "Kright"], "onLright")                 # [1,1,30,30] bool
+    # ---- right diagonal mask: (RpC == Kright) & (COL1D >= S-SH) & (COL1D < S)
+    n("Equal", ["RpC", "Kright"], "onLright")                     # [1,1,30,30] bool
     vi("onLright", TensorProto.BOOL, [1, 1, 30, 30])
-    # COL >= S-SH  <=>  (S-SH-1) < COL
+    # Compute right column conditions in 1D first, then And with 2D diagonal
     init("one_i2", np.array(1, np.int32), np.int32)
-    n("Sub", ["SmSH", "one_i2"], "SmSHm1")                    # S-SH-1
+    n("Sub", ["SmSH", "one_i2"], "SmSHm1")                        # S-SH-1
     vi("SmSHm1", TensorProto.INT32, [1, 1, 1, 1])
-    n("Less", ["SmSHm1", "COL"], "geSmSH")                    # COL > S-SH-1
-    vi("geSmSH", TensorProto.BOOL, [1, 1, 30, 30])
-    n("Less", ["COL", "S"], "ltS")                            # COL < S
-    vi("ltS", TensorProto.BOOL, [1, 1, 30, 30])
-    n("And", ["onLright", "geSmSH"], "Rmask0")
-    vi("Rmask0", TensorProto.BOOL, [1, 1, 30, 30])
-    n("And", ["Rmask0", "ltS"], "Rmask")
+    n("Less", ["SmSHm1", "COL1D"], "geSmSH")                      # [1,1,1,30] bool (1D)
+    vi("geSmSH", TensorProto.BOOL, [1, 1, 1, 30])
+    n("Less", ["COL1D", "S"], "ltS")                              # [1,1,1,30] bool (1D)
+    vi("ltS", TensorProto.BOOL, [1, 1, 1, 30])
+    # Combine right column conditions in 1D (30B) before the 2D And
+    n("And", ["geSmSH", "ltS"], "right_cols")                     # [1,1,1,30] bool (1D)
+    vi("right_cols", TensorProto.BOOL, [1, 1, 1, 30])
+    n("And", ["onLright", "right_cols"], "Rmask")                 # [1,1,30,30] bool
     vi("Rmask", TensorProto.BOOL, [1, 1, 30, 30])
 
-    n("Or", ["Lmask", "Rmask"], "mask")                       # [1,1,30,30] bool
+    n("Or", ["Lmask", "Rmask"], "mask")                           # [1,1,30,30] bool
     vi("mask", TensorProto.BOOL, [1, 1, 30, 30])
 
     # ---- antenna one-hot colour A[1,10,1,1] --------------------------------
-    # per-channel total count (integer-valued) -> int32
     n("ReduceSum", ["input"], "chcntf", axes=[2, 3], keepdims=1)  # [1,10,1,1]
     vi("chcntf", TensorProto.FLOAT, [1, 10, 1, 1])
-    n("Cast", ["chcntf"], "chcnt", to=TensorProto.INT32)     # [1,10,1,1] i32
+    n("Cast", ["chcntf"], "chcnt", to=TensorProto.INT32)
     vi("chcnt", TensorProto.INT32, [1, 10, 1, 1])
-    # adj = chcnt + (chcnt == 0) * BIG  so empty channels never win the min
-    n("Greater", ["chcnt", "zero_i"], "nonempty")            # [1,10,1,1] bool
+    n("Greater", ["chcnt", "zero_i"], "nonempty")
     vi("nonempty", TensorProto.BOOL, [1, 10, 1, 1])
-    n("Not", ["nonempty"], "isempty")                        # [1,10,1,1] bool
+    n("Not", ["nonempty"], "isempty")
     vi("isempty", TensorProto.BOOL, [1, 10, 1, 1])
     n("Cast", ["isempty"], "isempti", to=TensorProto.INT32)
     vi("isempti", TensorProto.INT32, [1, 10, 1, 1])
     init("big_i", np.array(1000000, np.int32), np.int32)
-    n("Mul", ["isempti", "big_i"], "bigmask")               # [1,10,1,1] i32
+    n("Mul", ["isempti", "big_i"], "bigmask")
     vi("bigmask", TensorProto.INT32, [1, 10, 1, 1])
-    n("Add", ["chcnt", "bigmask"], "adj")                    # [1,10,1,1] i32
+    n("Add", ["chcnt", "bigmask"], "adj")
     vi("adj", TensorProto.INT32, [1, 10, 1, 1])
-    n("ReduceMin", ["adj"], "minpos", axes=[1], keepdims=1)  # [1,1,1,1] i32
+    n("ReduceMin", ["adj"], "minpos", axes=[1], keepdims=1)
     vi("minpos", TensorProto.INT32, [1, 1, 1, 1])
-    n("Equal", ["chcnt", "minpos"], "isant")                 # [1,10,1,1] bool
+    n("Equal", ["chcnt", "minpos"], "isant")
     vi("isant", TensorProto.BOOL, [1, 10, 1, 1])
-    n("Cast", ["isant"], "A", to=TensorProto.FLOAT)          # [1,10,1,1] f32
+    n("Cast", ["isant"], "A", to=TensorProto.FLOAT)
     vi("A", TensorProto.FLOAT, [1, 10, 1, 1])
 
     # ---- output = Where(mask, A, input) ------------------------------------
-    n("Where", ["mask", "A", "input"], "output")             # [1,10,30,30] f32
+    n("Where", ["mask", "A", "input"], "output")
 
     return _model(nodes, inits, vinfos)

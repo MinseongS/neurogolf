@@ -1,25 +1,33 @@
 """Task 063: green-fill empty interior rows/columns of a bordered square grid.
 
-True rule (ARC-GEN 2bee17df, invariant to the generator's final flip/xpose
-since both grid and output are transformed identically):
+True rule (ARC-GEN 2bee17df): The input is a square grid whose perimeter ring
+is fully colored (red=2/cyan=8) and whose interior contains scattered colored
+cells. For every interior row that is entirely background, the whole interior of
+that row is painted green=3; likewise for every entirely-background interior
+column.
 
-  The input is a square grid whose perimeter ring is fully colored (red=2 /
-  cyan=8) and whose interior contains scattered colored cells. For every
-  interior row that is entirely background, the whole interior of that row is
-  painted green=3; likewise for every entirely-background interior column.
+Compact characterization: let rc_colored[r] = number of non-background cells in
+row r (channels 1..9), and cc_colored[c] likewise for columns.  Because the
+perimeter endpoints always contribute exactly 2 colored cells to any in-grid
+row/column, an interior row/col is "all background" iff its colored count == 2.
 
-Compact characterization used here (verified on all 266 stored examples and
-fresh arc-gen instances): let occ = colored-cell indicator (1 - channel0).
-  rowcount[r] = sum_c occ ,  colcount[c] = sum_r occ .
-Because the two perimeter endpoints always contribute exactly 2 colored cells
-to any in-grid row/column, an interior row/column is "all background" iff its
-count == 2. The grid region is (rowcount>0) & (colcount>0) (perimeter is full,
-off-grid canvas is background). A background cell is painted green iff it is
-in-grid and (rowcount==2 or colcount==2).
+Memory floor-break: avoid materialising the full [1,1,30,30] occ tensor (3600B
+f32).  Instead:
+  - Extract channel-0 of input via a 1×1 Conv → ch0_f [1,1,30,30] f32 = 3600B.
+    Note: ch0[r,c] = 1 iff the cell is a background cell AND in-grid (off-grid
+    cells have ALL channels 0, so ch0 = 0 there too).  This gives us:
+      bg = (ch0_f > 0.5) = [1,1,30,30] bool 900B — naturally excludes off-grid
+      cells, so we do NOT need a separate ingrid mask.
+  - Row/col colored counts: rc_colored = rc_all - rc_ch0, where rc_all comes
+    from ReduceSum(input, [1,3]) (free, 0 extra params) and rc_ch0 from
+    ReduceSum(ch0_f, [3]) (reusing ch0_f).
+  - rceq = Or(rowfill_1d, colfill_1d) broadcasts directly to [1,1,30,30] 900B.
+  - fillb = And(rceq, bg) [1,1,30,30] bool 900B.
+  - Where(fillb, green, input) → output.
 
-Graph: occ -> row/col reductions -> bool masks -> fill[1,1,30,30] ->
-delta(-1 on ch0, +1 on ch3) (x) fill -> Add(input, .) -> output.
-One [1,10,30,30] float intermediate; everything else 1-D or bool.
+Total [1,1,30,30] intermediates: ch0_f (3600B f32) + bg + rceq + fillb (3×900B
+bool) = 6300B vs old 8580B (occ_f32 + 5 bool 30×30).  Params: ~23 (W_ch0,
+green, thresholds) vs old 24.
 """
 
 import numpy as np
@@ -32,7 +40,6 @@ from ..builders import _model
 def build(task):
     inits = []
     nodes = []
-    vinfos = []
 
     def init(name, arr, dtype=np.float32):
         inits.append(numpy_helper.from_array(
@@ -43,77 +50,50 @@ def build(task):
         nodes.append(helper.make_node(op, inputs, [out], **attrs))
         return out
 
-    def vi(name, dtype, shape):
-        vinfos.append(helper.make_tensor_value_info(name, dtype, shape))
-        return name
+    # ---- channel-0 extractor: 1x1 Conv picking only ch0 ----
+    # ch0_f[r,c] = 1.0 iff background (ch0=1); 0.0 for colored or off-grid.
+    W_ch0 = np.zeros([1, 10, 1, 1], np.float32)
+    W_ch0[0, 0, 0, 0] = 1.0
+    init("W_ch0", W_ch0)
+    n("Conv", ["input", "W_ch0"], "ch0_f")         # [1,1,30,30] f32 = 3600B
 
-    # --- occupancy: occ = sum of color channels 1..9  (1 where colored, else 0).
-    # NB: off-grid canvas cells are all-zero across EVERY channel (incl. ch0),
-    # so summing channels 1..9 correctly marks them background; using 1-ch0
-    # would wrongly count off-grid cells as colored.
-    Wocc = np.ones((1, 10, 1, 1), np.float32)
-    Wocc[0, 0, 0, 0] = 0.0   # ignore background channel
-    init("Wocc", Wocc)
-    n("Conv", ["input", "Wocc"], "occ")  # [1,1,30,30]
-    vi("occ", TensorProto.FLOAT, [1, 1, 30, 30])
+    # ---- bg mask from ch0 (also encodes ingrid: off-grid ch0==0 → bg False) ----
+    init("half", np.array(0.5, np.float32))
+    n("Greater", ["ch0_f", "half"], "bg")          # [1,1,30,30] bool = 900B
 
-    # --- row / col counts
-    n("ReduceSum", ["occ"], "rc", axes=[3], keepdims=1)   # [1,1,30,1]
-    vi("rc", TensorProto.FLOAT, [1, 1, 30, 1])
-    n("ReduceSum", ["occ"], "cc", axes=[2], keepdims=1)   # [1,1,1,30]
-    vi("cc", TensorProto.FLOAT, [1, 1, 1, 30])
+    # ---- row/col colored counts via ReduceSum (0 extra params) ----
+    # rc_all[r] = total in-grid cells in row r (sum over all channels)
+    # For any in-grid cell exactly one channel is 1 → sum = 1.
+    # rc_ch0[r] = count of background cells in row r.
+    # rc_colored[r] = rc_all[r] - rc_ch0[r].
+    n("ReduceSum", ["input"], "rc_all", axes=[1, 3], keepdims=1)   # [1,1,30,1]
+    n("ReduceSum", ["ch0_f"], "rc_ch0", axes=[3], keepdims=1)      # [1,1,30,1]
+    n("Sub", ["rc_all", "rc_ch0"], "rc")                           # [1,1,30,1] f32
+    n("ReduceSum", ["input"], "cc_all", axes=[1, 2], keepdims=1)   # [1,1,1,30]
+    n("ReduceSum", ["ch0_f"], "cc_ch0", axes=[2], keepdims=1)      # [1,1,1,30]
+    n("Sub", ["cc_all", "cc_ch0"], "cc")                           # [1,1,1,30] f32
 
-    # counts are integers; compare directly in float (no Equal-on-float needed
-    # because we threshold via two Greater comparisons combined).
-    # rowfill: rc == 2  <=>  (rc > 1.5) & (rc < 2.5).  Counts are integers so
-    # rc==2 <=> Greater(rc,1.5) & Less(rc,2.5).
+    # ---- empty-row/col indicator: rc == 2 ↔ only perimeter endpoints colored ----
     init("th15", np.array(1.5, np.float32))
     init("th25", np.array(2.5, np.float32))
-    init("zero", np.array(0.0, np.float32))
+    n("Greater", ["rc", "th15"], "rc_g")      # [1,1,30,1] bool
+    n("Less", ["rc", "th25"], "rc_l")         # [1,1,30,1] bool
+    n("And", ["rc_g", "rc_l"], "rowfill")     # [1,1,30,1] bool (rc == 2)
+    n("Greater", ["cc", "th15"], "cc_g")      # [1,1,1,30] bool
+    n("Less", ["cc", "th25"], "cc_l")         # [1,1,1,30] bool
+    n("And", ["cc_g", "cc_l"], "colfill")     # [1,1,1,30] bool (cc == 2)
 
-    n("Greater", ["rc", "th15"], "rc_g1")        # rc>=2
-    vi("rc_g1", TensorProto.BOOL, [1, 1, 30, 1])
-    n("Less", ["rc", "th25"], "rc_l2")            # rc<=2
-    vi("rc_l2", TensorProto.BOOL, [1, 1, 30, 1])
-    n("And", ["rc_g1", "rc_l2"], "rc_eq2")        # rc==2
-    vi("rc_eq2", TensorProto.BOOL, [1, 1, 30, 1])
-    n("Greater", ["rc", "zero"], "rc_pos")        # row in grid
-    vi("rc_pos", TensorProto.BOOL, [1, 1, 30, 1])
+    # ---- fill condition: broadcast 1D conditions to [1,1,30,30] ----
+    # Or(rowfill[r], colfill[c]) broadcasts [1,1,30,1] OR [1,1,1,30] → [1,1,30,30]
+    n("Or", ["rowfill", "colfill"], "rceq")   # [1,1,30,30] bool = 900B
 
-    n("Greater", ["cc", "th15"], "cc_g1")
-    vi("cc_g1", TensorProto.BOOL, [1, 1, 1, 30])
-    n("Less", ["cc", "th25"], "cc_l2")
-    vi("cc_l2", TensorProto.BOOL, [1, 1, 1, 30])
-    n("And", ["cc_g1", "cc_l2"], "cc_eq2")
-    vi("cc_eq2", TensorProto.BOOL, [1, 1, 1, 30])
-    n("Greater", ["cc", "zero"], "cc_pos")        # col in grid
-    vi("cc_pos", TensorProto.BOOL, [1, 1, 1, 30])
+    # ---- final fill mask: in-grid background cells in empty rows/cols ----
+    n("And", ["rceq", "bg"], "fillb")         # [1,1,30,30] bool = 900B
 
-    # in-grid mask (outer product of row/col positivity) -> [1,1,30,30]
-    n("And", ["rc_pos", "cc_pos"], "ingrid")
-    vi("ingrid", TensorProto.BOOL, [1, 1, 30, 30])
-    # row-or-col empty -> [1,1,30,30]
-    n("Or", ["rc_eq2", "cc_eq2"], "rceq")
-    vi("rceq", TensorProto.BOOL, [1, 1, 30, 30])
-    # candidate = ingrid & (rc==2 | cc==2)
-    n("And", ["ingrid", "rceq"], "cand")
-    vi("cand", TensorProto.BOOL, [1, 1, 30, 30])
-    # background cells only: bg = (in0 == 1) i.e. occ == 0.  occ is 0/1 float.
-    # bg bool from occ: occ<0.5
-    init("th05", np.array(0.5, np.float32))
-    n("Less", ["occ", "th05"], "bg")
-    vi("bg", TensorProto.BOOL, [1, 1, 30, 30])
-    # fill (bool) = cand & bg  -> [1,1,30,30]
-    n("And", ["cand", "bg"], "fillb")
-    vi("fillb", TensorProto.BOOL, [1, 1, 30, 30])
-
-    # Final write into the free `output` tensor with a single Where. A fill cell
-    # is always background, so we may overwrite the WHOLE channel stack there with
-    # the green one-hot vector; the [1,1,30,30] bool condition broadcasts across
-    # channels (900B), avoiding any 10-channel intermediate entirely.
-    green = np.zeros((1, 10, 1, 1), np.float32)
-    green[0, 3, 0, 0] = 1.0   # green = channel 3
+    # ---- paint green (channel 3) on fill cells; keep input elsewhere ----
+    green = np.zeros([1, 10, 1, 1], np.float32)
+    green[0, 3, 0, 0] = 1.0
     init("green", green)
     n("Where", ["fillb", "green", "input"], "output")
 
-    return _model(nodes, inits, vinfos)
+    return _model(nodes, inits)
