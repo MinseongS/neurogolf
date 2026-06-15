@@ -2246,14 +2246,14 @@
  {
   "task": 188,
   "arc_id": "7b7f7511",
-  "points": 15.73,
+  "points": 17.13,
   "memory": 10616,
   "params": 48,
   "method": "gen:thbdh6332",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "17.13 adopted (15.73->17.13, +1.40); Tier-A mem 2531. INSIGHT: dup-detection=un-duplicate CROP=Where(rowmask&colmask). 0.04% 4x4 non-det wall shared w/ public"
  },
  {
   "task": 189,
