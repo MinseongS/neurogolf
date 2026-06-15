@@ -1327,10 +1327,10 @@
    "method": "custom:task221"
   },
   "222": {
-   "points": 14.031198444197276,
-   "memory": 57948,
-   "params": 87,
-   "method": "gen:thbdh6332"
+   "points": 14.68053610973006,
+   "memory": 29344,
+   "params": 973,
+   "method": "custom:task222"
   },
   "223": {
    "points": 20.500190329669735,
@@ -1753,10 +1753,10 @@
    "method": "conv1x59+b"
   },
   "293": {
-   "points": 14.91707003142076,
-   "memory": 23855,
-   "params": 76,
-   "method": "ext:kojimar6275"
+   "points": 16.069109015549124,
+   "memory": 6660,
+   "params": 902,
+   "method": "custom:task293"
   },
   "294": {
    "points": 18.186555400489105,
