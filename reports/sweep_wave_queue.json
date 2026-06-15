@@ -1,0 +1,31 @@
+{
+ "wave2_clean_lowscore": [
+  370,
+  224,
+  91,
+  51,
+  245,
+  12,
+  35,
+  21,
+  42,
+  61,
+  119,
+  188,
+  195,
+  225,
+  250,
+  290,
+  341,
+  342,
+  360,
+  361,
+  362,
+  375
+ ],
+ "note": "HARD-tagged (iterate/count/random-pick/bitmap-grow) deprioritized: floor-break bails. Already-15+ clean = public-tight, adopt likely rejects. Target low-score clean for real headroom.",
+ "reattack_high_yield": [
+  "020-R uint8 crop",
+  "034-R downcast planes"
+ ]
+}

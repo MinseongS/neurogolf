@@ -115,10 +115,10 @@
    "method": "custom:task019"
   },
   "20": {
-   "points": 14.138235598922657,
-   "memory": 52053,
-   "params": 91,
-   "method": "gen:vyank6322"
+   "points": 15.706422029453762,
+   "memory": 10708,
+   "params": 160,
+   "method": "custom:task020"
   },
   "21": {
    "points": 15.973702665716113,
@@ -199,10 +199,10 @@
    "method": "gen:thbdh6332"
   },
   "34": {
-   "points": 13.989551770433591,
-   "memory": 60408,
-   "params": 95,
-   "method": "gen:thbdh6332"
+   "points": 15.161797914162502,
+   "memory": 18666,
+   "params": 70,
+   "method": "custom:task034"
   },
   "35": {
    "points": 15.36028269986934,

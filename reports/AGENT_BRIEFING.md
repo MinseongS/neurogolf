@@ -48,6 +48,23 @@ Goal: a generalizing net at the ~3600B label-map floor (or lower) that scores
 - The scorer checks `(output[0] > 0)` per channel vs the target one-hot. A BOOL
   label-Equal output passes. Declare graph output value_info dtype = BOOL.
 
+## THE 3600 RULE — the single biggest memory lever (read this)
+Reading the colour of every cell from the one-hot input costs ONE [1,1,30,30] fp32
+plane = 3600 bytes (a 1x1 Conv with arange weights, or ReduceMax). This is the
+UNAVOIDABLE floor for any rule that passes input colours through per-cell. Input
+slicing does NOT help (a [1,10,10,10] 10-channel slice = 4000 > 3600). So a
+passthrough/label-map task floors at ~3600 (colour read) + ~900 (uint8 label) ≈ 16.6 pts.
+**ESCAPE IT when you can:** if the output colour at each cell comes from a SMALL set
+of SCALARS (e.g. one detected field/background colour + a fixed/derived geometric
+pattern), you do NOT need to read input colour per cell. Build the geometry as a
+[1,1,30,30] bool/uint8 mask (900) and emit
+  `output = Where(geom_mask, colourA_onehot[1,10,1,1], colourB_onehot[1,10,1,1])`
+or `Equal(label_from_scalars, arange)` — NO 3600 colour Conv. Pure geometric tasks
+(diagonals, borders, stripes, rectangles, centre-cross) hit ~900-1800 bytes ≈ 17.5-18 pts.
+Detect the 1-2 needed colours with cheap channel-count reductions (ReduceSum over
+spatial axes -> [1,10,1,1], ArgMax), never a full-grid colour read. ALWAYS ask first:
+"does my output colour actually depend on per-cell input, or just on a few scalars?"
+
 ## Byte budget reminders (score = max(1, 25 - ln(mem+params)))
 - [1,10,30,30]=9000 uint8 / 36000 fp32 — NEVER materialize this; route the
   10-way expansion into the final `output` op.
