@@ -1,7 +1,11 @@
 # NeuroGolf — 다음 세션 인수인계 (2026-06-15 마감)
 
 ## 현재 상태 (확정)
-- **실제 Kaggle LB: 6356.04** (2026-06-15 floor-break, 잠금). 직전 6344.58 → 6338.91.
+- **실제 Kaggle LB: 6370.12** (2026-06-15 floor-break 캠페인, 잠금). 경로 6338.91→6344.58→6356.04→6370.12.
+  31개 custom floor-break 재인코딩(+25.54 real, stored와 1:1 일치). 큰 win: 215(1512)/239(3318)/019(3365)/
+  384(3140)/156(3507). 남은 custom 타깃은 점감(<0.5): 137 166 252 312 197 269 297 256 등 ~+3-4.
+  다음 방향: custom 꼬리 마무리 또는 same-shape 깨끗-규칙 미지 public net(reports/floorbreak_targets.md,
+  bail율 높음 — 깨끗 geometric만 골라 triage).
 - **🔑 MEMORY FLOOR-BREAK 돌파 (reports/FLOOR_BREAK_GUIDE.md + memory/neurogolf-floor-break.md):**
   9k floor는 10채널 one-hot 중간텐서 때문 → uint8 레이블맵 L[1,1,30,30] + 마지막 Equal→무료 output
   으로 우회. **실제 LB 1:1 반영 검증됨**(13개 재인코딩 +11.46 stored = +11.46 real). 큰 메모리
