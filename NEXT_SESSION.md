@@ -1,9 +1,16 @@
 # NeuroGolf — 다음 세션 인수인계 (2026-06-15 마감)
 
 ## 현재 상태 (확정)
-- **실제 Kaggle LB: 6338.91** (신규 최고점, Kaggle은 best 제출을 유지하므로 잠긴 점수). stored manifest ~6400.18.
-- 400/400 적용, 모든 적용 네트워크 fresh-gated. git HEAD = `ba37289` 계열, 트리 클린.
-- 이번 세션 성과: 6372 머지 회귀(−148) 발견·되돌림 → de27cbf(6300.89) 복원 + 191/264/018 복구(+38.02).
+- **실제 Kaggle LB: 6344.58** (2026-06-15 신규 최고점, 잠금). 직전 6338.91.
+- 400/400 적용, 모든 적용 네트워크 fresh-gated. 트리 클린.
+- 2026-06-15 세션: set-aside custom 11개 중 10개 재적용(+202) → +5.67 LB. genverify 감사 완료.
+  - **교훈 재확인: stored 델타는 Kaggle를 ~3.5배 과대평가.** sub-1pt 압축 win은 Kaggle에서 ~0.
+    real-0 복구와 큰 압축만 실제 LB를 움직임. task204 0->13.90도 실제론 부분점수였음.
+  - **genverify 감사 결론: 신규 real-0 jackpot 없음.** 구조적 real-0 = 219/255(둘 다 infeasible)뿐.
+    batch가 90/251/101을 오탐(실제 200/200). 남은 lever = Phase 3 borderline 안정화뿐(저수익).
+  - **borderline 위험순(격리 n=200):** 118(.920) ≫ 157(.960)~209(.965)~2(.970) > 366(.985) > 18(.995).
+  - opset>10은 기존 public base(245/400)엔 정상(6338.91 채점됨). opset<=10 규칙은 내가 local-score로
+    채택하는 net에만 적용.
 
 ## 핵심 규칙 (반드시 지킬 것)
 1. **채택은 오직 `python -m src.adopt N`** (fresh-gate). raw `pipeline --methods custom` 금지(stored keep-best = 6505→4374 버그).
