@@ -26,5 +26,16 @@
  "note": "HARD-tagged (iterate/count/random-pick/bitmap-grow) deprioritized: floor-break bails. Already-15+ clean = public-tight, adopt likely rejects. Target low-score clean for real headroom.",
  "reattack_high_yield": [
   "DONE: 020-R 16.38, 034-R 16.36"
+ ],
+ "NEXT_PRIORITY": "RE-TRIAGE the infeasible-100 (reports/STRATEGY_7500.md) \u2014 the only reservoir big enough for 7500. Dispatch a triage agent over the BAIL/BAIL? ledger entries with fresh closed-form lenses; find mislabeled-feasible (like 191/264).",
+ "wave2_clean_remaining": [
+  21,
+  42
+ ],
+ "base_gap_recovery": [
+  209,
+  118,
+  2,
+  157
  ]
 }

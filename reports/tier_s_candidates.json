@@ -1,0 +1,107 @@
+[
+ {
+  "task": 1,
+  "points": 17.102703527404117,
+  "method": "ext:biohack_new",
+  "transforms": [
+   "kron_self"
+  ]
+ },
+ {
+  "task": 249,
+  "points": 18.325438608185575,
+  "method": "ext:biohack_new",
+  "transforms": [
+   "tile1x2",
+   "concat_lr"
+  ]
+ },
+ {
+  "task": 380,
+  "points": 18.409698951803314,
+  "method": "ext:kojimar6275",
+  "transforms": [
+   "rot90"
+  ]
+ },
+ {
+  "task": 150,
+  "points": 18.44322164384196,
+  "method": "ext:kojimar6275",
+  "transforms": [
+   "fliplr"
+  ]
+ },
+ {
+  "task": 155,
+  "points": 18.44322164384196,
+  "method": "ext:kojimar6275",
+  "transforms": [
+   "flipud"
+  ]
+ },
+ {
+  "task": 87,
+  "points": 19.09191706183107,
+  "method": "ext:kojimar6275",
+  "transforms": [
+   "rot180"
+  ]
+ },
+ {
+  "task": 140,
+  "points": 19.09191706183107,
+  "method": "ext:kojimar6275",
+  "transforms": [
+   "rot180"
+  ]
+ },
+ {
+  "task": 164,
+  "points": 21.598802618337846,
+  "method": "ext:kojimar6275",
+  "transforms": [
+   "concat_lr_mirror"
+  ]
+ },
+ {
+  "task": 172,
+  "points": 21.598802618337846,
+  "method": "ext:kojimar6275",
+  "transforms": [
+   "concat_ud_mirror"
+  ]
+ },
+ {
+  "task": 210,
+  "points": 21.598802618337846,
+  "method": "ext:kojimar6275",
+  "transforms": [
+   "concat_ud_mirror"
+  ]
+ },
+ {
+  "task": 311,
+  "points": 21.598802618337846,
+  "method": "ext:kojimar6275",
+  "transforms": [
+   "concat_lr_mirror"
+  ]
+ },
+ {
+  "task": 179,
+  "points": 25.0,
+  "method": "ext:kojimar6275",
+  "transforms": [
+   "transpose"
+  ]
+ },
+ {
+  "task": 241,
+  "points": 25.0,
+  "method": "ext:kojimar6275",
+  "transforms": [
+   "transpose"
+  ]
+ }
+]
