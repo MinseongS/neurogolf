@@ -1,7 +1,13 @@
 # NeuroGolf — 다음 세션 인수인계 (2026-06-15 마감)
 
 ## 현재 상태 (확정)
-- **실제 Kaggle LB: 6344.58** (2026-06-15 신규 최고점, 잠금). 직전 6338.91.
+- **실제 Kaggle LB: 6356.04** (2026-06-15 floor-break, 잠금). 직전 6344.58 → 6338.91.
+- **🔑 MEMORY FLOOR-BREAK 돌파 (reports/FLOOR_BREAK_GUIDE.md + memory/neurogolf-floor-break.md):**
+  9k floor는 10채널 one-hot 중간텐서 때문 → uint8 레이블맵 L[1,1,30,30] + 마지막 Equal→무료 output
+  으로 우회. **실제 LB 1:1 반영 검증됨**(13개 재인코딩 +11.46 stored = +11.46 real). 큰 메모리
+  감축만 추구(작은 압축은 Kaggle 무반응). 타깃 = 우리 custom을 메모리순(규칙 깨끗 보장, bail 0);
+  공개 high-mem은 memorizer라 bail. 남은 custom 타깃: 85 13 239 301 234 240 199 189 217 65 288
+  215 156 384 190 63 (~+12-15 추가 예상).
 - 400/400 적용, 모든 적용 네트워크 fresh-gated. 트리 클린.
 - 2026-06-15 세션: set-aside custom 11개 중 10개 재적용(+202) → +5.67 LB. genverify 감사 완료.
   - **교훈 재확인: stored 델타는 Kaggle를 ~3.5배 과대평가.** sub-1pt 압축 win은 Kaggle에서 ~0.
