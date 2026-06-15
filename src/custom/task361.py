@@ -93,16 +93,13 @@ def build(task):
     init("zerof", np.array(0.0, np.float32), np.float32)
     init("Hm1", np.array(float(W - 1), np.float32), np.float32)
 
-    init("swyf", swyf.astype(np.float32).reshape(1, SNW), np.float32)   # [1,49]
-    init("swxf", swxf.astype(np.float32).reshape(1, SNW), np.float32)
-    init("Sf", np.array(float(SW), np.float32), np.float32)
-    init("SNf", np.array(float(SNW), np.float32), np.float32)
+    init("swyh", swyf.astype(np.float16).reshape(1, SNW), np.float16)   # [1,49] fp16
+    init("swxh", swxf.astype(np.float16).reshape(1, SNW), np.float16)
+    init("SNfh", np.array(float(SNW), np.float16), np.float16)
     init("u255s", np.full(SNW, 255, np.uint8), np.uint8)
     init("u0vecS", np.zeros(SNW, np.uint8), np.uint8)
 
-    init("cwyf", cwyf.reshape(1, CNW), np.float32)                     # [1,81] f32 (gather)
-    init("cwxf", cwxf.reshape(1, CNW), np.float32)
-    # fp16 copies for the inverse-rotation loop (small ints, fp16-exact)
+    # fp16 completion-window coords for the inverse-rotation loop (fp16-exact ints)
     init("cwyh", cwyf.reshape(1, CNW), np.float16)
     init("cwxh", cwxf.reshape(1, CNW), np.float16)
     init("Cf", np.array(float(CW), np.float16), np.float16)
@@ -141,13 +138,14 @@ def build(task):
     n("Add", ["xmin", "xmax"], "xsum"); n("Div", ["xsum", "two"], "xmid")
     n("Floor", ["xmid"], "xmidf"); n("Sub", ["xmidf", "three"], "SX")
 
-    # ---- SEARCH: gather 49 search-window colours ----
-    n("Add", ["swyf", "SY"], "say"); n("Add", ["swxf", "SX"], "sax")   # [1,49]
-    g0 = n("GreaterOrEqual", ["say", "zerof"], "sy0"); g1 = n("LessOrEqual", ["say", "Hm1"], "sy1")
-    g2 = n("GreaterOrEqual", ["sax", "zerof"], "sx0"); g3 = n("LessOrEqual", ["sax", "Hm1"], "sx1")
+    # ---- SEARCH: gather 49 search-window colours (fp16 index math) ----
+    n("Cast", ["SY"], "SYh", to=TensorProto.FLOAT16); n("Cast", ["SX"], "SXh", to=TensorProto.FLOAT16)
+    n("Add", ["swyh", "SYh"], "say"); n("Add", ["swxh", "SXh"], "sax")   # [1,49] fp16
+    g0 = n("GreaterOrEqual", ["say", "zeroh"], "sy0"); g1 = n("LessOrEqual", ["say", "Hm1h"], "sy1")
+    g2 = n("GreaterOrEqual", ["sax", "zeroh"], "sx0"); g3 = n("LessOrEqual", ["sax", "Hm1h"], "sx1")
     sib = n("And", [g0, g1], "sib0"); sib = n("And", [sib, g2], "sib1"); sib = n("And", [sib, g3], "sib")
-    n("Mul", ["say", "Wf"], "safy"); n("Add", ["safy", "sax"], "saf0")
-    n("Where", ["sib", "saf0", "SNf"], "saf")                          # OOB -> 49
+    n("Mul", ["say", "Wh"], "safy"); n("Add", ["safy", "sax"], "saf0")
+    n("Where", ["sib", "saf0", "SNfh"], "saf")                          # OOB -> 49
     n("Cast", ["saf"], "saidx", to=TensorProto.INT32)
     n("Reshape", ["saidx", "shp_s"], "saidxv"); init("shp_s", np.array([SNW], np.int64), np.int64)
     # gather from a 50-slot search buffer (V window + bg sentinel)
@@ -173,15 +171,18 @@ def build(task):
     n("Add", ["bs2h", "twoh"], "bs2c")
 
     # ---- COMPLETION: gather 81 completion-window colours, inverse-rotate ----
-    # completion window top-left CY = SY-1, CX = SX-1
-    init("onef", np.array(1.0, np.float32), np.float32)
-    n("Sub", ["SY", "onef"], "CY"); n("Sub", ["SX", "onef"], "CX")
-    n("Add", ["cwyf", "CY"], "cay"); n("Add", ["cwxf", "CX"], "cax")
-    cg0 = n("GreaterOrEqual", ["cay", "zerof"], "cy0"); cg1 = n("LessOrEqual", ["cay", "Hm1"], "cy1")
-    cg2 = n("GreaterOrEqual", ["cax", "zerof"], "cx0"); cg3 = n("LessOrEqual", ["cax", "Hm1"], "cx1")
+    # completion window top-left CY = SY-1, CX = SX-1  (fp16 math)
+    init("oneh", np.array(1.0, np.float16), np.float16)
+    init("Wh", np.array(float(W), np.float16), np.float16)
+    init("Hm1h", np.array(float(W - 1), np.float16), np.float16)
+    init("CNoobh", np.array(float(W * W), np.float16), np.float16)
+    n("Sub", ["SYh", "oneh"], "CY"); n("Sub", ["SXh", "oneh"], "CX")
+    n("Add", ["cwyh", "CY"], "cay"); n("Add", ["cwxh", "CX"], "cax")
+    cg0 = n("GreaterOrEqual", ["cay", "zeroh"], "cy0"); cg1 = n("LessOrEqual", ["cay", "Hm1h"], "cy1")
+    cg2 = n("GreaterOrEqual", ["cax", "zeroh"], "cx0"); cg3 = n("LessOrEqual", ["cax", "Hm1h"], "cx1")
     cib = n("And", [cg0, cg1], "cib0"); cib = n("And", [cib, cg2], "cib1"); cib = n("And", [cib, cg3], "cib")
-    n("Mul", ["cay", "Wf"], "cafy"); n("Add", ["cafy", "cax"], "caf0")
-    n("Where", ["cib", "caf0", "CNoob"], "caf"); init("CNoob", np.array(float(W * W), np.float32), np.float32)
+    n("Mul", ["cay", "Wh"], "cafy"); n("Add", ["cafy", "cax"], "caf0")
+    n("Where", ["cib", "caf0", "CNoobh"], "caf")
     n("Cast", ["caf"], "caidx", to=TensorProto.INT32)
     n("Reshape", ["caidx", "shp_c"], "caidxv"); init("shp_c", np.array([CNW], np.int64), np.int64)
     n("Gather", ["Vp", "caidxv"], "cwin", axis=0)                      # [81] u8

@@ -11,24 +11,21 @@ The input is that block alone.  The output keeps the block and additionally
 stamps a 2x2 monochrome block of each colour at a diagonal corner offset
 (out-of-grid parts clipped):
 
-      c0 -> top-left (row+2, col+2)   c1 -> (row+2, col-2)
-      c2 -> (row-2, col+2)            c3 -> (row-2, col-2)
+      c0 -> (row+2, col+2)   c1 -> (row+2, col-2)
+      c2 -> (row-2, col+2)   c3 -> (row-2, col-2)
 
-The block and the four stamps are pairwise disjoint, so output = block + stamps.
-Every painted cell lies inside the 6x6 grid (rows/cols 0..5), so the whole
-construction runs on a 6x6 label canvas and is Pad'd to 30x30 (sentinel 10 =>
-all channels off) before the final Equal that routes the 10-channel expansion
-into the FREE `output`.
+Block + four stamps are pairwise disjoint, so output = block + stamps.  Every
+painted cell lies inside the 6x6 grid, so everything runs on a 6x6 canvas.
 
-Memory plan (all big tensors avoided):
-  * rowK[1,10,30,1] / colK[1,10,1,30] reductions of FREE `input` -> 1200B each.
-  * colours recovered as channel one-hots [1,10,1,1] (intersection of distinct
-    row-set and col-set) -> colour INDEX scalars [1,1,1,1].
-  * geometry scalars row, col from occupied-index sums.
-  * label built on a 6x6 canvas (144B) from 1-D region range masks * scalar
-    colour indices; Pad -> [1,1,30,30] uint8 (900B); Equal -> bool `output`.
-Dominant intermediates: the two 1200B per-channel reductions + 900B padded
-label.  No 10-channel and no 30x30 colour plane is ever materialised.
+Memory plan: Slice the FREE input to the active 6x6 window ([1,10,6,6]=2400B,
+the single dominant tensor), reduce to per-channel row/col sums ([1,10,6,1]=
+240B), recover the four colour one-hots (distinct colours => intersection of a
+row-set and a col-set) and geometry scalars row/col, then paint a 6x6 float
+label from separable row-range x col-range rectangles scaled by colour-index
+scalars.  Pad the label to 30x30 with sentinel 10 (=> all channels off, both
+off-grid AND beyond the window), Cast to uint8, and Equal vs arange[1,10,1,1]
+routes the 10-channel expansion into the FREE bool `output`.  No 10-channel or
+30x30 colour plane is ever materialised.
 """
 
 import numpy as np
@@ -55,53 +52,61 @@ def build(task):
         return name
 
     # =====================================================================
-    # 1. per-channel row / col sums of the (free) input one-hot
+    # 0. Slice the free input to the active 6x6 window -> [1,10,6,6]
     # =====================================================================
-    n("ReduceSum", ["input"], "rowK", axes=[3], keepdims=1)
-    vi("rowK", TensorProto.FLOAT, [1, 10, 30, 1])
-    n("ReduceSum", ["input"], "colK", axes=[2], keepdims=1)
-    vi("colK", TensorProto.FLOAT, [1, 10, 1, 30])
+    init("S_starts", np.array([0, 0], np.int64), np.int64)
+    init("S_ends", np.array([6, 6], np.int64), np.int64)
+    init("S_axes", np.array([2, 3], np.int64), np.int64)
+    n("Slice", ["input", "S_starts", "S_ends", "S_axes"], "inp6")
+    vi("inp6", TensorProto.FLOAT, [1, 10, 6, 6])
+
+    # =====================================================================
+    # 1. per-channel row / col sums  ->  [1,10,6,1] / [1,10,1,6]
+    # =====================================================================
+    n("ReduceSum", ["inp6"], "rowK", axes=[3], keepdims=1)
+    vi("rowK", TensorProto.FLOAT, [1, 10, 6, 1])
+    n("ReduceSum", ["inp6"], "colK", axes=[2], keepdims=1)
+    vi("colK", TensorProto.FLOAT, [1, 10, 1, 6])
 
     chm = np.ones((1, 10, 1, 1), np.float32)
     chm[0, 0, 0, 0] = 0.0
     init("CHM", chm, np.float32)
-
     n("Mul", ["rowK", "CHM"], "rowKc")
-    vi("rowKc", TensorProto.FLOAT, [1, 10, 30, 1])
+    vi("rowKc", TensorProto.FLOAT, [1, 10, 6, 1])
     n("Mul", ["colK", "CHM"], "colKc")
-    vi("colKc", TensorProto.FLOAT, [1, 10, 1, 30])
+    vi("colKc", TensorProto.FLOAT, [1, 10, 1, 6])
 
-    n("ReduceSum", ["rowKc"], "occr", axes=[1], keepdims=1)   # [1,1,30,1]
-    vi("occr", TensorProto.FLOAT, [1, 1, 30, 1])
-    n("ReduceSum", ["colKc"], "occc", axes=[1], keepdims=1)   # [1,1,1,30]
-    vi("occc", TensorProto.FLOAT, [1, 1, 1, 30])
+    n("ReduceSum", ["rowKc"], "occr", axes=[1], keepdims=1)   # [1,1,6,1]
+    vi("occr", TensorProto.FLOAT, [1, 1, 6, 1])
+    n("ReduceSum", ["colKc"], "occc", axes=[1], keepdims=1)   # [1,1,1,6]
+    vi("occc", TensorProto.FLOAT, [1, 1, 1, 6])
 
     # =====================================================================
     # 2. geometry scalars: row = (sum occupied row idx - 1) / 2 ; col idem
     # =====================================================================
-    ridx = np.arange(30, dtype=np.float32).reshape(1, 1, 30, 1)
-    cidx = np.arange(30, dtype=np.float32).reshape(1, 1, 1, 30)
-    init("RIDX", ridx, np.float32)
-    init("CIDX", cidx, np.float32)
+    r6 = np.arange(6, dtype=np.float32).reshape(1, 1, 6, 1)
+    c6 = np.arange(6, dtype=np.float32).reshape(1, 1, 1, 6)
+    init("R6", r6, np.float32)
+    init("C6", c6, np.float32)
     init("zero_f", np.array(0.0, np.float32), np.float32)
     init("one_f", np.array(1.0, np.float32), np.float32)
     init("two_f", np.array(2.0, np.float32), np.float32)
 
     n("Greater", ["occr", "zero_f"], "occr_b")
-    vi("occr_b", TensorProto.BOOL, [1, 1, 30, 1])
+    vi("occr_b", TensorProto.BOOL, [1, 1, 6, 1])
     n("Cast", ["occr_b"], "occr_f", to=TensorProto.FLOAT)
-    vi("occr_f", TensorProto.FLOAT, [1, 1, 30, 1])
+    vi("occr_f", TensorProto.FLOAT, [1, 1, 6, 1])
     n("Greater", ["occc", "zero_f"], "occc_b")
-    vi("occc_b", TensorProto.BOOL, [1, 1, 1, 30])
+    vi("occc_b", TensorProto.BOOL, [1, 1, 1, 6])
     n("Cast", ["occc_b"], "occc_f", to=TensorProto.FLOAT)
-    vi("occc_f", TensorProto.FLOAT, [1, 1, 1, 30])
+    vi("occc_f", TensorProto.FLOAT, [1, 1, 1, 6])
 
-    n("Mul", ["occr_f", "RIDX"], "riw")
-    vi("riw", TensorProto.FLOAT, [1, 1, 30, 1])
-    n("ReduceSum", ["riw"], "rsum", axes=[2], keepdims=1)
+    n("Mul", ["occr_f", "R6"], "riw")
+    vi("riw", TensorProto.FLOAT, [1, 1, 6, 1])
+    n("ReduceSum", ["riw"], "rsum", axes=[2], keepdims=1)     # [1,1,1,1]
     vi("rsum", TensorProto.FLOAT, [1, 1, 1, 1])
-    n("Mul", ["occc_f", "CIDX"], "ciw")
-    vi("ciw", TensorProto.FLOAT, [1, 1, 1, 30])
+    n("Mul", ["occc_f", "C6"], "ciw")
+    vi("ciw", TensorProto.FLOAT, [1, 1, 1, 6])
     n("ReduceSum", ["ciw"], "csum", axes=[3], keepdims=1)
     vi("csum", TensorProto.FLOAT, [1, 1, 1, 1])
 
@@ -121,39 +126,41 @@ def build(task):
 
     # =====================================================================
     # 3. recover the four colours as channel one-hots [1,10,1,1]
+    #    block rows: row -> {c0,c1}, row+1 -> {c2,c3}
+    #    block cols: col -> {c0,c2}, col+1 -> {c1,c3}
+    #    distinct colours => each one-hot = (row-set) * (col-set)
     # =====================================================================
-    n("Equal", ["RIDX", "ROW"], "rTop_b")
-    vi("rTop_b", TensorProto.BOOL, [1, 1, 30, 1])
+    n("Equal", ["R6", "ROW"], "rTop_b")
+    vi("rTop_b", TensorProto.BOOL, [1, 1, 6, 1])
     n("Cast", ["rTop_b"], "rTop", to=TensorProto.FLOAT)
-    vi("rTop", TensorProto.FLOAT, [1, 1, 30, 1])
-    n("Equal", ["RIDX", "ROW1"], "rBot_b")
-    vi("rBot_b", TensorProto.BOOL, [1, 1, 30, 1])
+    vi("rTop", TensorProto.FLOAT, [1, 1, 6, 1])
+    n("Equal", ["R6", "ROW1"], "rBot_b")
+    vi("rBot_b", TensorProto.BOOL, [1, 1, 6, 1])
     n("Cast", ["rBot_b"], "rBot", to=TensorProto.FLOAT)
-    vi("rBot", TensorProto.FLOAT, [1, 1, 30, 1])
-    n("Equal", ["CIDX", "COL"], "cLft_b")
-    vi("cLft_b", TensorProto.BOOL, [1, 1, 1, 30])
+    vi("rBot", TensorProto.FLOAT, [1, 1, 6, 1])
+    n("Equal", ["C6", "COL"], "cLft_b")
+    vi("cLft_b", TensorProto.BOOL, [1, 1, 1, 6])
     n("Cast", ["cLft_b"], "cLft", to=TensorProto.FLOAT)
-    vi("cLft", TensorProto.FLOAT, [1, 1, 1, 30])
-    n("Equal", ["CIDX", "COL1"], "cRgt_b")
-    vi("cRgt_b", TensorProto.BOOL, [1, 1, 1, 30])
+    vi("cLft", TensorProto.FLOAT, [1, 1, 1, 6])
+    n("Equal", ["C6", "COL1"], "cRgt_b")
+    vi("cRgt_b", TensorProto.BOOL, [1, 1, 1, 6])
     n("Cast", ["cRgt_b"], "cRgt", to=TensorProto.FLOAT)
-    vi("cRgt", TensorProto.FLOAT, [1, 1, 1, 30])
+    vi("cRgt", TensorProto.FLOAT, [1, 1, 1, 6])
 
     n("Mul", ["rowKc", "rTop"], "rk_top")
-    vi("rk_top", TensorProto.FLOAT, [1, 10, 30, 1])
+    vi("rk_top", TensorProto.FLOAT, [1, 10, 6, 1])
     n("ReduceSum", ["rk_top"], "setTop", axes=[2], keepdims=1)   # {c0,c1}
     vi("setTop", TensorProto.FLOAT, [1, 10, 1, 1])
     n("Mul", ["rowKc", "rBot"], "rk_bot")
-    vi("rk_bot", TensorProto.FLOAT, [1, 10, 30, 1])
+    vi("rk_bot", TensorProto.FLOAT, [1, 10, 6, 1])
     n("ReduceSum", ["rk_bot"], "setBot", axes=[2], keepdims=1)   # {c2,c3}
     vi("setBot", TensorProto.FLOAT, [1, 10, 1, 1])
-
     n("Mul", ["colKc", "cLft"], "ck_lft")
-    vi("ck_lft", TensorProto.FLOAT, [1, 10, 1, 30])
+    vi("ck_lft", TensorProto.FLOAT, [1, 10, 1, 6])
     n("ReduceSum", ["ck_lft"], "setLft", axes=[3], keepdims=1)   # {c0,c2}
     vi("setLft", TensorProto.FLOAT, [1, 10, 1, 1])
     n("Mul", ["colKc", "cRgt"], "ck_rgt")
-    vi("ck_rgt", TensorProto.FLOAT, [1, 10, 1, 30])
+    vi("ck_rgt", TensorProto.FLOAT, [1, 10, 1, 6])
     n("ReduceSum", ["ck_rgt"], "setRgt", axes=[3], keepdims=1)   # {c1,c3}
     vi("setRgt", TensorProto.FLOAT, [1, 10, 1, 1])
 
@@ -177,10 +184,6 @@ def build(task):
     # =====================================================================
     # 4. build the 6x6 label canvas from separable region rectangles
     # =====================================================================
-    r6 = np.arange(6, dtype=np.float32).reshape(1, 1, 6, 1)
-    c6 = np.arange(6, dtype=np.float32).reshape(1, 1, 1, 6)
-    init("R6", r6, np.float32)
-    init("C6", c6, np.float32)
     init("half_f", np.array(0.5, np.float32), np.float32)
     init("p2_f", np.array(2.0, np.float32), np.float32)
     init("p3_f", np.array(3.0, np.float32), np.float32)
@@ -205,7 +208,6 @@ def build(task):
     rshape = [1, 1, 6, 1]
     cshape = [1, 1, 1, 6]
 
-    # stamp row/col ranges (each 2 wide)
     n("Add", ["ROW", "p2_f"], "rP2")
     vi("rP2", TensorProto.FLOAT, [1, 1, 1, 1])
     n("Add", ["ROW", "p3_f"], "rP3")
@@ -227,7 +229,6 @@ def build(task):
     vi("cM1", TensorProto.FLOAT, [1, 1, 1, 1])
     cMinus = rangemask("C6", "cM2", "cM1", "cMinus", cshape)
 
-    # single-row / single-col masks for the 4 center cells
     rTop_s = rangemask("R6", "ROW", "ROW", "rTopS", rshape)
     rBot_s = rangemask("R6", "ROW1", "ROW1", "rBotS", rshape)
     cLft_s = rangemask("C6", "COL", "COL", "cLftS", cshape)

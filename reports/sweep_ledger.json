@@ -4310,14 +4310,14 @@
  {
   "task": 360,
   "arc_id": "e3497940",
-  "points": 15.96,
+  "points": 16.3,
   "memory": 8400,
   "params": 26,
   "method": "ext:biohack_new",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "16.30 adopted (15.96->16.30, +0.34); mem 6000. INSIGHT: fold/overlay two same-color regions = elementwise Max of colour slices, rebuild ch0=1-ReduceMax (no colour Conv/label map)"
  },
  {
   "task": 361,

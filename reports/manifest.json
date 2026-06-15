@@ -2155,10 +2155,10 @@
    "method": "gen:biohack_new"
   },
   "360": {
-   "points": 15.960922557461037,
-   "memory": 8400,
-   "params": 26,
-   "method": "ext:biohack_new"
+   "points": 16.295829440253613,
+   "memory": 6000,
+   "params": 28,
+   "method": "custom:task360"
   },
   "361": {
    "points": 15.351856412003707,
