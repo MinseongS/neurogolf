@@ -232,9 +232,10 @@ def build(task):
     n("Sub", ["ar_r", "r0"], "u")
     n("Sub", ["ar_c", "c0"], "v")
 
-    F16 = TensorProto.FLOAT16
     I32 = TensorProto.INT32
-    n("Cast", ["v"], "v16", to=F16)                         # [1,1,1,30] fp16
+    n("Cast", ["v"], "v_i", to=I32)                         # [1,1,1,30] int32
+    for a in range(LMAX):
+        init(f"base_i_{a}", np.array(PAD + a * SPRVEC_S, np.int32), np.int32)
     colored_terms = []
     for a in range(LMAX):
         # --- all per-row (1-D [1,1,30,1]) work in fp32 ---------------
@@ -246,23 +247,20 @@ def build(task):
         n("Equal", [f"krsr_{a}", f"knum_{a}"], f"kint_{a}")  # k integer
         n("Greater", [f"kr_{a}", "half"], f"kge1_{a}")      # k>=1
         n("And", [f"kint_{a}", f"kge1_{a}"], f"kok_{a}")    # [1,1,30,1] bool
-        n("Cast", [f"kok_{a}"], f"kok_u_{a}", to=U8)        # [1,1,30,1] uint8
-        # padded-layout index: idx = PAD + a*S + (v - kr*sc).  Out-of-range b
-        # lands in a zero gap of spr_vec, so NO explicit b-range check needed.
-        # fp16 throughout (values are small integers, exact in fp16).
-        n("Mul", [f"kr_{a}", "sc"], f"krsc_{a}")            # [1,1,30,1]
-        n("Cast", [f"krsc_{a}"], f"krsc16_{a}", to=F16)
-        # base = v16 + (PAD + a*S)   (1-D [1,1,1,30], cheap)
-        init(f"base16_{a}", np.array(PAD + a * SPRVEC_S, np.float16), np.float16)
-        n("Add", ["v16", f"base16_{a}"], f"vbase_{a}")      # [1,1,1,30] fp16
-        n("Sub", [f"vbase_{a}", f"krsc16_{a}"], f"sidx_f_{a}")  # [1,1,30,30] fp16
-        n("Cast", [f"sidx_f_{a}"], f"sidx_{a}", to=I32)     # [1,1,30,30] int32 (in range)
+        # padded-layout index: idx = (PAD + a*S + v) - kr*sc.  Out-of-range b
+        # lands in a zero gap of spr_vec -> NO range check.  Build the index in
+        # int32 directly: the only 2-D plane is the int32 result (no fp16 copy).
+        n("Mul", [f"kr_{a}", "sc"], f"krsc_{a}")            # [1,1,30,1] fp32
+        n("Cast", [f"krsc_{a}"], f"krsc_i_{a}", to=I32)     # [1,1,30,1] int32
+        n("Add", ["v_i", f"base_i_{a}"], f"vbase_i_{a}")    # [1,1,1,30] int32
+        n("Sub", [f"vbase_i_{a}", f"krsc_i_{a}"], f"sidx_{a}")  # [1,1,30,30] int32
         n("Gather", ["spr_vec", f"sidx_{a}"], f"sprab_{a}")  # [1,1,30,30] uint8
-        # term(uint8 0/1) = spr * kok(row)  (broadcast [1,1,30,1] -> [1,1,30,30])
-        n("Mul", [f"sprab_{a}", f"kok_u_{a}"], f"term_{a}")  # [1,1,30,30] uint8
+        n("Cast", [f"sprab_{a}"], f"sprab_b_{a}", to=B)
+        # term(bool) = (spr>0) AND kok(row)
+        n("And", [f"sprab_b_{a}", f"kok_{a}"], f"term_{a}")  # [1,1,30,30] bool
         colored_terms.append(f"term_{a}")
 
-    # OR all terms
+    # OR all bool terms
     cur = colored_terms[0]
     for j, t in enumerate(colored_terms[1:], 1):
         out = "colored" if j == len(colored_terms) - 1 else f"or_{j}"

@@ -1339,10 +1339,10 @@
    "method": "ext:wguesdon6304"
   },
   "224": {
-   "points": 14.275455898281896,
-   "memory": 45276,
-   "params": 182,
-   "method": "gen:thbdh6332"
+   "points": 16.11138119269912,
+   "memory": 7162,
+   "params": 87,
+   "method": "custom:task224"
   },
   "225": {
    "points": 15.68728356140695,
@@ -2215,10 +2215,10 @@
    "method": "ext:galaxy_v1"
   },
   "370": {
-   "points": 13.886671892110053,
-   "memory": 64602,
-   "params": 2457,
-   "method": "gen:thbdh6332"
+   "points": 13.95378758417744,
+   "memory": 61123,
+   "params": 1583,
+   "method": "custom:task370"
   },
   "371": {
    "points": 15.50983333153762,

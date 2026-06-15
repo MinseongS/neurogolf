@@ -21,25 +21,27 @@ Output colour per cell:
     0  otherwise (in-grid background),
    (outside the H x W grid: no channel set).
 
-Tier B (label map + final Equal), pushed hard:
+Tier B (label map + final Equal), pushed hard (mem ~7.2k, ~16.1 pts):
 
 * The box position is a GLOBAL aggregate of the gray markers (min/max gray row
   & col), so the rule is non-local -> no single Conv (Tier S out).
-* ONE Conv with weight [0,1,...,9] turns the one-hot input into a colour-value
-  plane cval (0 bg, 5 gray, c inner box).  Casting it to uint8 IS the label
-  base for every input-derived cell, so no separate gray/inner equality tests.
-* The whole active grid is <= 16 x 16 (generator bound), so every per-cell plane
-  is sliced to a 16 x 16 working canvas (256 elems) and the final label is
-  Padded back to 30 x 30 with an outside sentinel just before the Equal.
+* The whole active grid is <= 16 x 16 (generator bound: width = wides[0] + 3..5,
+  wides[0] <= 11), so every per-cell plane lives on a 16 x 16 working canvas
+  (256 elems) and the final label is Padded back to 30 x 30 with an outside
+  sentinel (10) just before the Equal.
+* Only TWO input channels matter per cell -- channel 0 (background) and channel
+  5 (gray).  They are sliced at the 16 x 16 region (2 x 1024 B fp32); the
+  colour c is a scalar (presence-weighted ReduceSum).  A cell is gray iff ch5
+  on, an inner-box (colour c) cell iff (not background) AND (not gray).
 * The outer-rectangle perimeter is built separably from 1-D row/col index
   conditions (inR/inC/edgeR/edgeC, each <=64 bytes) and OR'd in.
 * The 10-way colour expansion is routed into the FREE bool `output` via the
   final Equal(L, arange[0..9]).
 
-Dominant intermediate: the fp32 colour-value Conv plane sliced to 16 x 16
-(1024 B).  It is the one place the 10 input channels collapse to a per-cell
-scalar; nothing smaller carries both the gray and the inner-box colour at their
-exact 2-D positions.  All values are small integers, exact in fp32/uint8.
+Dominant intermediates: the two fp32 channel slices (1024 B each) -- the one
+place per-cell colour identity is read from the input -- and the 30 x 30 uint8
+label Pad (900 B, the output canvas).  All values are small integers, exact in
+fp32/uint8.
 """
 
 import numpy as np
@@ -68,8 +70,6 @@ def build(task):
     cw[0] = 0.0
     cw[5] = 0.0
     init("cw", cw.reshape(1, 10, 1, 1), np.float32)             # colour-scalar weights
-    init("colorw", np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1),
-         np.float32)                                            # 1x1 Conv: cell -> colour
 
     init("ar_row", np.arange(WORK, dtype=np.float32).reshape(1, 1, WORK, 1),
          np.float32)
@@ -83,14 +83,10 @@ def build(task):
     init("arange10", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1),
          np.uint8)
     init("v10", np.array(10, np.uint8), np.uint8)               # outside-grid sentinel
+    init("v5u", np.array(5, np.uint8), np.uint8)
+    init("v0u", np.array(0, np.uint8), np.uint8)
 
     # slice helpers
-    init("ch5_st", np.array([5], np.int64), np.int64)
-    init("ch5_en", np.array([6], np.int64), np.int64)
-    init("ch_ax", np.array([1], np.int64), np.int64)
-    init("w_st", np.array([0, 0], np.int64), np.int64)
-    init("w_en_rc", np.array([WORK, WORK], np.int64), np.int64)
-    init("w_ax_rc", np.array([2, 3], np.int64), np.int64)
     init("w_en_r", np.array([WORK], np.int64), np.int64)        # rows only
     init("ax2", np.array([2], np.int64), np.int64)
     init("ax3", np.array([3], np.int64), np.int64)
@@ -107,21 +103,25 @@ def build(task):
     n("Cast", ["cf"], "cu8_b", to=TensorProto.UINT8)
     n("Squeeze", ["cu8_b"], "cu8", axes=[0, 1, 2, 3])            # scalar uint8 c
 
-    # ---- colour-value plane (one Conv), sliced to the 16x16 working canvas ----
-    n("Conv", ["input", "colorw"], "cval30")                     # [1,1,30,30] fp32
-    n("Slice", ["cval30", "w_st", "w_en_rc", "w_ax_rc"], "cval")  # [1,1,16,16]
-    n("Cast", ["cval"], "Lcast", to=TensorProto.UINT8)           # [1,1,16,16] label base
+    # ---- two channel slices at 16x16 (cheaper than a full-grid Conv) ----
+    # Only channel 0 (background) and channel 5 (gray) are needed per-cell: a
+    # cell is gray iff ch5 on; an inner-box (colour c) cell iff in-grid AND ch0
+    # off AND ch5 off.  Slicing just these two channels at the 16x16 working
+    # region costs 2 x 1024 B, vs a 30x30 Conv (3600) + uint8 cast (900).
+    init("ch0_en", np.array([1, WORK, WORK], np.int64), np.int64)
+    init("ch5_en", np.array([6, WORK, WORK], np.int64), np.int64)
+    init("ch0_st", np.array([0, 0, 0], np.int64), np.int64)
+    init("ch5_st", np.array([5, 0, 0], np.int64), np.int64)
+    init("ch_ax3", np.array([1, 2, 3], np.int64), np.int64)
+    n("Slice", ["input", "ch5_st", "ch5_en", "ch_ax3"], "gray16")  # [1,1,16,16] fp32
+    n("Slice", ["input", "ch0_st", "ch0_en", "ch_ax3"], "bg16")    # [1,1,16,16] fp32
+    n("Greater", ["gray16", "half"], "is_gray")                  # bool 16x16
+    n("Less", ["bg16", "half"], "notbg")                         # bool 16x16
+    n("Less", ["gray16", "half"], "notgray")                     # bool 16x16
 
-    # ---- gray mask + 1-D occupancy (from cval, all on the 16x16 canvas) ----
-    # gray == colour 5: 4.5 < cval < 5.5.
-    init("v45", np.array(4.5, np.float32), np.float32)
-    init("v55", np.array(5.5, np.float32), np.float32)
-    n("Greater", ["cval", "v45"], "g_lo")
-    n("Less", ["cval", "v55"], "g_hi")
-    n("And", ["g_lo", "g_hi"], "is_gray")                        # [1,1,16,16] bool
-    n("Cast", ["is_gray"], "is_gray_f", to=TensorProto.FLOAT)    # 16x16 = 1024B
-    n("ReduceMax", ["is_gray_f"], "grow", axes=[3], keepdims=1)  # [1,1,16,1]
-    n("ReduceMax", ["is_gray_f"], "gcol", axes=[2], keepdims=1)  # [1,1,1,16]
+    # ---- gray 1-D occupancy (reduce the fp32 gray16 slice directly: 64B each) ----
+    n("ReduceMax", ["gray16"], "grow", axes=[3], keepdims=1)     # [1,1,16,1] fp32
+    n("ReduceMax", ["gray16"], "gcol", axes=[2], keepdims=1)     # [1,1,1,16] fp32
     n("Greater", ["grow", "half"], "growb")
     n("Greater", ["gcol", "half"], "gcolb")
 
@@ -164,10 +164,7 @@ def build(task):
     n("And", ["inR", "edgeC"], "vert")                           # left/right edges
     n("Or", ["horiz", "vert"], "perim")                          # [1,1,16,16] bool
 
-    # ---- label map L (uint8 16x16, padded to 30x30) ----
-    n("Where", ["perim", "cu8", "Lcast"], "Lin")                 # paint perimeter c
-    # in-grid mask from 1-D occupancy (grid is a solid HxW rect anchored at 0,0).
-    # Reduce over channels AND one spatial axis directly -> [1,1,30,1] = 120B.
+    # ---- in-grid mask from 1-D occupancy (grid is a solid HxW rect at 0,0) ----
     n("ReduceMax", ["input"], "rowany30", axes=[1, 3], keepdims=1)  # [1,1,30,1]
     n("Slice", ["rowany30", "st0", "w_en_r", "ax2"], "rowany")   # [1,1,16,1]
     n("ReduceMax", ["input"], "colany30", axes=[1, 2], keepdims=1)  # [1,1,1,30]
@@ -175,6 +172,16 @@ def build(task):
     n("Greater", ["rowany", "half"], "rowanyb")
     n("Greater", ["colany", "half"], "colanyb")
     n("And", ["rowanyb", "colanyb"], "ingrid")                   # [1,1,16,16]
+
+    # ---- label map L (uint8 16x16, padded to 30x30) ----
+    # inner-box (colour c) cell = not background AND not gray.  (Outside the grid
+    # this is also true, but the final in-grid Where overwrites it with the
+    # sentinel, so the extra `& ingrid` is unnecessary.)
+    n("And", ["notbg", "notgray"], "inner")                      # bool: colour c cell
+    n("Or", ["perim", "inner"], "is_c")                          # paint colour c
+    # base 0; gray -> 5; colour c overrides; outside grid -> sentinel 10.
+    n("Where", ["is_gray", "v5u", "v0u"], "Lg")                  # uint8
+    n("Where", ["is_c", "cu8", "Lg"], "Lin")                     # uint8
     n("Where", ["ingrid", "Lin", "v10"], "L16")                  # uint8 [1,1,16,16]
     n("Pad", ["L16", "padpads", "padval"], "L", mode="constant")  # [1,1,30,30] uint8
 
