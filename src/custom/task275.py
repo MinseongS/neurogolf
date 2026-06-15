@@ -62,16 +62,9 @@ def build(task):
 
     init("a1", np.array([1], np.int64), np.int64)
     init("a5", np.array([5], np.int64), np.int64)
-    init("e10", np.array([10], np.int64), np.int64)
     init("a8", np.array([8], np.int64), np.int64)
     init("a9", np.array([9], np.int64), np.int64)
     init("axc", np.array([1], np.int64), np.int64)
-
-    # any coloured/cyan (channels 1..9) presence per row/col
-    n("Slice", ["rowprof", "a1", "e10", "axc"], "rowprof19")  # [1,9,30,1]
-    n("Slice", ["colprof", "a1", "e10", "axc"], "colprof19")  # [1,9,1,30]
-    n("ReduceMax", ["rowprof19"], "rowany", axes=[1], keepdims=1)  # [1,1,30,1]
-    n("ReduceMax", ["colprof19"], "colany", axes=[1], keepdims=1)  # [1,1,1,30]
 
     # colour (channels 1..4) presence per row/col
     n("Slice", ["rowprof", "a1", "a5", "axc"], "rowprof14")  # [1,4,30,1]
@@ -82,6 +75,10 @@ def build(task):
     # cyan (channel 8) presence per row/col
     n("Slice", ["rowprof", "a8", "a9", "axc"], "cyn_row")  # [1,1,30,1]
     n("Slice", ["colprof", "a8", "a9", "axc"], "cyn_col")  # [1,1,1,30]
+
+    # any coloured-or-cyan presence per row/col = max(colour, cyan)
+    n("Max", ["col_row", "cyn_row"], "rowany")  # [1,1,30,1]
+    n("Max", ["col_col", "cyn_col"], "colany")  # [1,1,1,30]
 
     Irow = np.arange(30, dtype=np.float32).reshape(1, 1, 30, 1)
     Icol = np.arange(30, dtype=np.float32).reshape(1, 1, 1, 30)
@@ -175,17 +172,16 @@ def build(task):
     # ============================================================
     # gather each sub-grid to a top-left 4x4 block
     # ============================================================
-    # Build the two single-channel value planes once (each [1,1,30,30] = 3600B),
-    # then gather rows then cols (tiny [1,1,4,30] -> [1,1,4,4] intermediates).
-    # colour-value plane via a 1x1 Conv (weights are params, not memory):
-    # cplane = sum_{k=1..4} k * input[:,k]  -> [1,1,30,30] directly (3600B).
+    # ONE combined value plane via a 1x1 Conv (weights are params, not memory):
+    # mplane = 1..4 in coloured cells, 8 in cyan cells, 0 elsewhere -> [1,1,30,30]
+    # (3600B).  Colour & cyan live in disjoint halves so they never collide; the
+    # colour block reads values 1..4, the plus block reads value 8 (>4 = set).
     wcol = np.zeros((1, 10, 1, 1), np.float32)
     for k in range(1, 5):
         wcol[0, k, 0, 0] = float(k)
+    wcol[0, 8, 0, 0] = 8.0
     init("wcol", wcol, np.float32)
-    n("Conv", ["input", "wcol"], "cplane")               # [1,1,30,30] colour values
-    # cyan plane = channel 8
-    n("Slice", ["input", "a8", "a9", "axc"], "pplane")   # [1,1,30,30] cyan 0/1
+    n("Conv", ["input", "wcol"], "cplane")               # [1,1,30,30] combined values
 
     # row idx = roff + [0,1,2,3] ; col idx = coff + [0,1,2,3]  (clamp 0..29, cast int)
     base4 = np.array([0.0, 1.0, 2.0, 3.0], np.float32)
@@ -207,9 +203,9 @@ def build(task):
     # colour block 4x4
     n("Gather", ["cplane", "cr_idx"], "cblk_r", axis=2)  # [1,1,4,30]
     n("Gather", ["cblk_r", "cc_idx"], "cgrid", axis=3)   # [1,1,4,4] colour value
-    # plus block 4x4
-    n("Gather", ["pplane", "pr_idx"], "pblk_r", axis=2)  # [1,1,4,30]
-    n("Gather", ["pblk_r", "pc_idx"], "pgrid", axis=3)   # [1,1,4,4] cyan 0/1
+    # plus block 4x4 (same combined plane, different origin)
+    n("Gather", ["cplane", "pr_idx"], "pblk_r", axis=2)  # [1,1,4,30]
+    n("Gather", ["pblk_r", "pc_idx"], "pgrid", axis=3)   # [1,1,4,4] cyan value (8/0)
 
     # flatten grids to [16]
     init("s16", np.array([16], np.int64), np.int64)
@@ -239,26 +235,21 @@ def build(task):
     init("micro_tab", micro_tab, np.int32)
     init("valid_tab", valid_tab, np.bool_)
 
-    # select row by s4 (0 -> size3, 1 -> size4)
-    init("s256", np.array([256], np.int64), np.int64)
-    n("Cast", ["s4"], "s4i", to=I64)         # [] 0/1
-    init("s1", np.array([1], np.int64), np.int64)
-    n("Reshape", ["s4i", "s1"], "selidx")    # [1]
-    n("Gather", ["macro_tab", "selidx"], "macro_s", axis=0)  # [1,256] int32
-    n("Gather", ["micro_tab", "selidx"], "micro_s", axis=0)
-    n("Gather", ["valid_tab", "selidx"], "valid_s", axis=0)  # [1,256] bool
-    n("Reshape", ["macro_s", "s256"], "macro_v")   # [256] int32
-    n("Reshape", ["micro_s", "s256"], "micro_v")
-    n("Reshape", ["valid_s", "s256"], "valid_v")
+    # select row by s4 (0 -> size3, 1 -> size4); scalar index -> Gather drops axis
+    n("Cast", ["s4"], "selidx", to=I64)      # [] scalar 0/1
+    n("Gather", ["macro_tab", "selidx"], "macro_v", axis=0)  # [256] int32
+    n("Gather", ["micro_tab", "selidx"], "micro_v", axis=0)
+    n("Gather", ["valid_tab", "selidx"], "valid_v", axis=0)  # [256] bool
 
     # gather colour value & plus from the flat grids
     n("Gather", ["cflat", "macro_v"], "out_col")   # [256] colour value
     n("Gather", ["pflat", "micro_v"], "out_plus")  # [256] plus 0/1
 
-    # label: keep colour iff coloured(>0) AND plus set AND valid; else sentinel 10
+    # label: keep colour iff coloured(0<v<5) AND plus set(v==8 ->>4) AND valid.
     init("z0", np.array(0.5, np.float32), np.float32)
-    n("Greater", ["out_col", "z0"], "is_color")    # [256] bool (colour>0)
-    n("Greater", ["out_plus", "z0"], "is_plus")    # [256] bool
+    init("z4", np.array(4.5, np.float32), np.float32)
+    n("Greater", ["out_col", "z0"], "is_color")    # [256] colour in 1..4 (>0)
+    n("Greater", ["out_plus", "z4"], "is_plus")    # [256] cyan value 8 (>4)
     n("And", ["is_color", "is_plus"], "keep0")
     n("And", ["keep0", "valid_v"], "keep")         # [256] bool
 

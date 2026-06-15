@@ -1645,10 +1645,10 @@
    "method": "conv9x9+b"
   },
   "275": {
-   "points": 14.15589990344465,
-   "memory": 51133,
-   "params": 98,
-   "method": "gen:thbdh6332"
+   "points": 15.107775639742583,
+   "memory": 18091,
+   "params": 1685,
+   "method": "custom:task275"
   },
   "276": {
    "points": 22.697414907005953,

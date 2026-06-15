@@ -3290,14 +3290,14 @@
  {
   "task": 275,
   "arc_id": "b190f7f5",
-  "points": 14.16,
+  "points": 15.11,
   "memory": 51133,
   "params": 98,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE S ~19.0pt: per-cell broadcast in macro-grid: b190f7f5 - for each colored cell in "
+  "status": "done",
+  "verdict": "15.11 adopted (14.16->15.11, +0.95) mislabeled-feasible #3. Variable-size Kronecker (Tier-A/B, mem 18091). INSIGHT: per-size macro/micro flat-index tables [K,256] + scalar Gather"
  },
  {
   "task": 276,
