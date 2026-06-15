@@ -61,18 +61,14 @@ def build(task):
     B = TensorProto.BOOL
 
     # ---- constants (fp16; coords 0..23, slope +-1 all fp16-exact) ----
-    init("half", np.array(0.5, np.float16), np.float16)
+    init("halfF", np.array(0.5, np.float32), np.float32)   # for fp32 CY/RE masks
     init("big", np.array(99.0, np.float16), np.float16)
     init("negbig", np.array(-99.0, np.float16), np.float16)
     init("Wm1", np.array(float(W - 1), np.float16), np.float16)   # 11
-    init("eps", np.array(0.25, np.float16), np.float16)
     # final Equal comparator + sentinel + pad
     init("chan_u8", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
     init("sent_u8", np.array(99, np.uint8), np.uint8)
     init("padpads", np.array([0, 0, 0, 0, 0, 0, 30 - W, 30 - W], np.int64), np.int64)
-    init("c8", np.array(8.0, np.float16), np.float16)
-    init("c2", np.array(2.0, np.float16), np.float16)
-    init("c3", np.array(3.0, np.float16), np.float16)
     # 1-D row / col ramps (12 elems each) -> nrm/par built separably
     init("RIv", np.arange(W, dtype=np.float16).reshape(1, 1, W, 1), np.float16)
     init("CIv", np.arange(W, dtype=np.float16).reshape(1, 1, 1, W), np.float16)
@@ -84,18 +80,17 @@ def build(task):
     init("s_re_start", np.array([0, 2, 0, 0], np.int64), np.int64)
     init("s_re_end", np.array([1, 3, W, W], np.int64), np.int64)
     init("axes4", np.array([0, 1, 2, 3], np.int64), np.int64)
-    n("Slice", ["input", "s_cy_start", "s_cy_end", "axes4"], "CY32")   # [1,1,12,12]
-    n("Slice", ["input", "s_re_start", "s_re_end", "axes4"], "RE32")   # [1,1,12,12]
-    n("Cast", ["CY32"], "CY", to=H)
-    n("Cast", ["RE32"], "RE", to=H)
+    # keep these as fp32 (Greater/ReduceSum accept fp32); avoids an extra cast plane.
+    n("Slice", ["input", "s_cy_start", "s_cy_end", "axes4"], "CY")   # [1,1,12,12] fp32
+    n("Slice", ["input", "s_re_start", "s_re_end", "axes4"], "RE")   # [1,1,12,12] fp32
 
     # ---- wall side detection from the red plane's four edges ----
     # row sums / col sums (over the 12x12 plane).
     n("ReduceSum", ["RE"], "rowsum", axes=[3], keepdims=1)   # [1,1,12,1] cells per row
     n("ReduceSum", ["RE"], "colsum", axes=[2], keepdims=1)   # [1,1,1,12] cells per col
     # an edge is "wall" if that whole edge row/col is full (sum == 12).
-    init("Wf", np.array(float(W), np.float16), np.float16)   # 12
-    init("Whalf", np.array(float(W) - 0.5, np.float16), np.float16)  # 11.5
+    init("Wf", np.array(float(W), np.float32), np.float32)   # 12 (RE is fp32)
+    init("Whalf", np.array(float(W) - 0.5, np.float32), np.float32)  # 11.5
     # extract scalar edge sums via Slice on the profile vectors
     init("r0s", np.array([0, 0, 0, 0], np.int64), np.int64)
     init("r0e", np.array([1, 1, 1, 1], np.int64), np.int64)
@@ -118,8 +113,9 @@ def build(task):
     # band = wall thickness. For a top/bottom wall, every column has `band` red
     # cells; for left/right, every row has `band`.  Total red = band*12, so
     # band = sum(RE)/12 in every orientation.
-    n("ReduceSum", ["RE"], "redtot", axes=[2, 3], keepdims=1)   # [1,1,1,1]
-    n("Div", ["redtot", "Wf"], "band")                          # scalar
+    n("ReduceSum", ["RE"], "redtot", axes=[2, 3], keepdims=1)   # [1,1,1,1] fp32
+    n("Div", ["redtot", "Wf"], "band32")                        # scalar fp32
+    n("Cast", ["band32"], "band", to=H)                         # fp16 (feeds fp16 math)
 
     # ---- normal / parallel coordinate fields (built SEPARABLY from 1-D) ----
     # top:   nrm = RI,        par = CI
@@ -146,20 +142,19 @@ def build(task):
     n("Add", ["parRow", "parCol"], "par")      # broadcast -> ONE [1,1,12,12]
 
     # ---- cyan nearest / farthest from wall (min / max normal among cyan) ----
-    n("Greater", ["CY", "half"], "cyB")              # bool cyan mask
+    n("Greater", ["CY", "halfF"], "cyB")             # bool cyan mask (CY fp32)
     # nrm masked: non-cyan -> +big for the min, -big for the max
     n("Where", ["cyB", "nrm", "big"], "nrm_for_min")
     n("ReduceMin", ["nrm_for_min"], "nmin", axes=[2, 3], keepdims=1)   # scalar
     n("Where", ["cyB", "nrm", "negbig"], "nrm_for_max")
     n("ReduceMax", ["nrm_for_max"], "nmax", axes=[2, 3], keepdims=1)   # scalar
-    # par at the nearest cell: average par over cyan cells with nrm == nmin
+    # par at the nearest cell: nmin is ALWAYS a single cyan cell (verified, no
+    # ties) -> par_near is just the masked sum, no division.
+    init("zeroH", np.array(0.0, np.float16), np.float16)
     n("Equal", ["nrm_for_min", "nmin"], "atmin")     # only cyan cells can match
-    n("Cast", ["atmin"], "atmin_f", to=H)
-    n("Mul", ["atmin_f", "par"], "atmin_par")
-    n("ReduceSum", ["atmin_par"], "atmin_par_s", axes=[2, 3], keepdims=1)
-    n("ReduceSum", ["atmin_f"], "atmin_cnt", axes=[2, 3], keepdims=1)
-    n("Div", ["atmin_par_s", "atmin_cnt"], "par_near")
-    # par at the farthest cell
+    n("Where", ["atmin", "par", "zeroH"], "atmin_par")
+    n("ReduceSum", ["atmin_par"], "par_near", axes=[2, 3], keepdims=1)
+    # par at the farthest cell: may TIE (symmetric vertex-visible case) -> average.
     n("Equal", ["nrm_for_max", "nmax"], "atmax")
     n("Cast", ["atmax"], "atmax_f", to=H)
     n("Mul", ["atmax_f", "par"], "atmax_par")
@@ -207,7 +202,7 @@ def build(task):
 
     # ---- blocked cells = near side of vertex (normal < band) OR wall ----
     n("Less", ["nrm", "band"], "near_side")          # bool
-    n("Greater", ["RE", "half"], "wallB")            # bool wall mask
+    n("Greater", ["RE", "halfF"], "wallB")           # bool wall mask (RE fp32)
     n("Or", ["near_side", "wallB"], "blocked")
     n("Not", ["blocked"], "open_cell")
     n("And", ["ondiag", "open_cell"], "greenmask")
@@ -215,19 +210,14 @@ def build(task):
     # ---- assemble colour label in uint8 from THREE DISJOINT masks ----
     #   wall(2), cyan(8), green-not-cyan(3) never overlap, so a weighted sum is
     #   exact:  L = 2*wall + 8*cyan + 3*(green AND NOT cyan).  All uint8 (144 B).
-    n("Not", ["cyB"], "notcy")
-    n("And", ["greenmask", "notcy"], "green_only")     # green minus cyan
-    init("w2", np.array(2, np.uint8), np.uint8)
-    init("w8", np.array(8, np.uint8), np.uint8)
-    init("w3", np.array(3, np.uint8), np.uint8)
-    n("Cast", ["wallB"], "wallU8", to=U8)
-    n("Cast", ["cyB"], "cyU8", to=U8)
-    n("Cast", ["green_only"], "grU8", to=U8)
-    n("Mul", ["wallU8", "w2"], "tw")
-    n("Mul", ["cyU8", "w8"], "tc")
-    n("Mul", ["grU8", "w3"], "tg")
-    n("Add", ["tw", "tc"], "twc")
-    n("Add", ["twc", "tg"], "L12")                     # [1,1,12,12] uint8
+    # priority red > cyan > green > bg, via 3 chained Where (uint8 throughout).
+    init("z_u8", np.array(0, np.uint8), np.uint8)
+    init("two_u8", np.array(2, np.uint8), np.uint8)
+    init("eight_u8", np.array(8, np.uint8), np.uint8)
+    init("three_u8", np.array(3, np.uint8), np.uint8)
+    n("Where", ["greenmask", "three_u8", "z_u8"], "lab_g")   # green->3 (uint8)
+    n("Where", ["cyB", "eight_u8", "lab_g"], "lab_c")        # cyan->8
+    n("Where", ["wallB", "two_u8", "lab_c"], "L12")          # wall->2 (uint8)
 
     # ---- pad 12x12 -> 30x30 with sentinel (off-grid = all channels OFF) ----
     n("Pad", ["L12", "padpads", "sent_u8"], "L", mode="constant")  # [1,1,30,30]

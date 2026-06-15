@@ -4490,14 +4490,14 @@
  {
   "task": 375,
   "arc_id": "ea786f4a",
-  "points": 15.51,
+  "points": 16.91,
   "memory": 13104,
   "params": 80,
   "method": "ext:wguesdon6304",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "16.91 adopted (15.51->16.91, +1.40); floor 2729. INSIGHT: diagonal-paint, both diag masks CONSTANT planes (eye + sum-plane Equal s1), only scalar s1 data-dependent"
  },
  {
   "task": 376,
