@@ -26,6 +26,11 @@ is trustworthy to ±0.1 — no need to submit to know where we stand; submit onl
 ## ⭐ 3 submissions, all exact (errors 0.01/0.01/0.00). Gap pinned at 61.27. Stored is a perfect LB proxy
 (minus the constant 61.27 base-net gap). Submit only to lock/re-anchor; the projected LB is the truth.
 
+| 4 | 06-15 ~18:4x | 6470.67 | 119,362,342,360,225 | **6409.40** | **+2.68** | proj 6409.40 → **0.00 error** (4th exact). gap 61.27 pinned. Smaller Δ = thinning headroom (low-pt wins). |
+
+## ⭐ 4 submissions, errors 0.01/0.01/0.00/0.00. Gap immovable at 61.27. The stored→LB ratio is exactly 1:1
+for generalizing customs. lb_status.py projected LB is ground truth. LB so far: 6384.61→6393.20→6400.24→6406.72→6409.40.
+
 ## Procedure (folded into loop)
 1. trigger: every 5 adopted wins.
 2. `python -c "from src.pipeline import pack; pack()"` (networks/ only; never --pack flag).
