@@ -1,13 +1,13 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-14 20:46_
+_Updated: 2026-06-15 12:06_
 
-**Total: 6400.73 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 6400.18 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
 | ext:kojimar6275 | 129 | 2223.22 |
-| gen:thbdh6332 | 75 | 1084.61 |
+| gen:thbdh6332 | 76 | 1097.95 |
 | ext:biohack_new | 28 | 450.78 |
 | ext:wguesdon6304 | 23 | 406.33 |
 | gen:vyank6322 | 25 | 353.65 |
@@ -16,8 +16,8 @@ _Updated: 2026-06-14 20:46_
 | ext:vyank6322 | 8 | 125.95 |
 | ext:thbdh6285 | 7 | 108.81 |
 | ext:galaxy_v1 | 6 | 100.04 |
-| ? | 4 | 61.04 |
 | conv1x59+b | 3 | 48.95 |
+| ? | 3 | 47.15 |
 | gen:galaxy | 3 | 43.78 |
 | ext:thbdh6332 | 3 | 42.80 |
 | gen:wguesdon6315 | 2 | 27.12 |
@@ -97,7 +97,7 @@ _Updated: 2026-06-14 20:46_
 | 015 | ext:kojimar6275 | 0 | 900 | 18.20 |
 | 016 | ext:kojimar6275 | 0 | 10 | 22.70 |
 | 017 | ext:galaxy_v1 | 33625 | 182 | 14.57 |
-| 018 | ? | 52156 | 14476 | 13.89 |
+| 018 | gen:thbdh6332 | 112970 | 3069 | 13.34 |
 | 019 | custom:task019 | 43800 | 194 | 14.31 |
 | 020 | gen:vyank6322 | 52053 | 91 | 14.14 |
 | 021 | ext:wguesdon6304 | 8238 | 81 | 15.97 |
