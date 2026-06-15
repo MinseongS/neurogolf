@@ -1,67 +1,85 @@
 """Task 217 (8f2ea7aa): self-similar fractal sprite -> sprite (X) sprite.
 
-Rule (from ARC-GEN): the 9x9 input (size=3, a 3x3 grid of 3x3 blocks) holds a
-single copy of a 3x3 sprite S placed in one block. The output is the Kronecker
-fractal S (X) S: output block (bR,bC) is filled with S iff S[bR,bC] is set, i.e.
-  output[bR*3+r][bC*3+c] = S[bR][bC] * S[r][c].
-Each example uses a single color, so exactly one of channels 1..9 carries S.
+Rule (ARC-GEN, size=3 always): the 9x9 input (a 3x3 grid of 3x3 blocks) holds a
+single copy of a 3x3 sprite S placed in one block, in a single colour cc.  The
+output is the Kronecker fractal S (X) S over the same 9x9 region:
+  output[bR*3+r][bC*3+c] = cc  iff  S[bR,bC] and S[r,c]   (else background 0).
 
-Graph (depthwise on the 9 color channels; channel 0 rebuilt as complement):
-- Slice input to channels 1..9 and the 9x9 region: [1,9,9,9].
-- Reshape to [1,9,3,3,3,3]=(br,r,bc,c); ReduceSum over br,bc -> sprite S [1,9,3,3]
-  (only one block is nonzero, so this is exact). Reshape to kernel [9,1,3,3].
-- Grouped ConvTranspose (stride 3, group 9): input = block-map S [1,9,3,3],
-  weight = sprite S [9,1,3,3]; block (bR,bC) -> S[bR,bC]*S = the fractal (col).
-- channel 0 = 1 - sum_c col over the 9x9 region; Concat then Pad to 30x30.
+Memory floor-break (label map + final Equal).  Collapse the 9 colour channels to
+a single binary picture immediately, so no [1,9,9,9] / [1,10,9,9] float stack is
+ever materialised:
+  - colmask [1,1,9,9] (fp16) = the single-colour picture (channels 1..9 summed by
+    a 1x1 Conv collapse weight, after slicing the 9x9 region);
+  - sprite S [1,1,3,3] = block sum of colmask (only one block is nonzero -> exact);
+  - fractal M [1,1,9,9] = ConvTranspose(S, S, stride 3) > 0;
+  - cc = single colour index (uint8 scalar);
+  - L [1,1,9,9] uint8 = M ? cc : 0; Pad to 30x30 with sentinel 10 (outside cells
+    all-false, matching the generator's background-free pad), final Equal.
 """
 
 import numpy as np
-from onnx import helper, numpy_helper
+from onnx import helper, numpy_helper, TensorProto
 
-from ..builders import _model
+from ..harness import IR_VERSION
+
+F = TensorProto.FLOAT
+F16 = TensorProto.FLOAT16
+U8 = TensorProto.UINT8
 
 
 def build(task):
-    inits = []
-    nodes = []
+    inits, nodes = [], []
 
-    def init(name, arr, dtype=np.int64):
+    def init(name, arr, dtype):
         inits.append(numpy_helper.from_array(
             np.ascontiguousarray(arr, dtype=dtype), name))
         return name
 
-    def n(op, inputs, out, **attrs):
-        nodes.append(helper.make_node(op, inputs, [out], **attrs))
+    def n(op, ins, out, **kw):
+        nodes.append(helper.make_node(op, ins, [out], **kw))
         return out
 
-    # slice channels 1..9 and the top-left 9x9 region
-    init("s_st", np.array([1, 0, 0], np.int64))
-    init("s_en", np.array([10, 9, 9], np.int64))
-    init("s_ax", np.array([1, 2, 3], np.int64))
-    n("Slice", ["input", "s_st", "s_en", "s_ax"], "g99")          # [1,9,9,9]
+    # ---- collapse colour channels 1..9 to a single binary picture, then slice ----
+    # Conv on the full free input keeps a single 3600-byte plane (vs a 3240+ slice
+    # of all 10 channels); slice to the 9x9 active region immediately.
+    init("collapse", np.array([0.] + [1.] * 9, np.float32).reshape(1, 10, 1, 1), np.float32)
+    n("Conv", ["input", "collapse"], "pic")                        # [1,1,30,30] f32 0/1
+    init("s_st", np.array([0, 0], np.int64), np.int64)
+    init("s_en", np.array([9, 9], np.int64), np.int64)
+    init("s_ax", np.array([2, 3], np.int64), np.int64)
+    n("Slice", ["pic", "s_st", "s_en", "s_ax"], "colmask")         # [1,1,9,9] f32 0/1
 
-    # reshape to (1,9,br,r,bc,c) and sum over block axes -> sprite S
-    init("sh6", np.array([1, 9, 3, 3, 3, 3], np.int64))
-    n("Reshape", ["g99", "sh6"], "g6")                            # [1,9,3,3,3,3]
-    n("ReduceSum", ["g6"], "spr6", axes=[2, 4], keepdims=0)       # [1,9,3,3]
+    # ---- sprite S = block sum of colmask (one block nonzero -> exact) ----
+    init("sh6", np.array([1, 1, 3, 3, 3, 3], np.int64), np.int64)
+    n("Reshape", ["colmask", "sh6"], "c6")                         # [1,1,3,3,3,3]
+    n("ReduceSum", ["c6"], "S", axes=[2, 4], keepdims=0)           # [1,1,3,3] f32
 
-    # block-map input [1,9,3,3] and grouped ConvTranspose kernel [9,1,3,3]
-    init("sh4", np.array([1, 9, 3, 3], np.int64))
-    n("Reshape", ["spr6", "sh4"], "B")
-    init("shk", np.array([9, 1, 3, 3], np.int64))
-    n("Reshape", ["spr6", "shk"], "K")
+    # ---- fractal M = ConvTranspose(S, S, stride 3) > 0 ----
+    n("ConvTranspose", ["S", "S"], "frac", strides=[3, 3])        # [1,1,9,9] f32
+    init("half", np.array(0.5, np.float32), np.float32)
+    n("Greater", ["frac", "half"], "M")                            # [1,1,9,9] bool
 
-    # fractal on the 9 colored channels
-    n("ConvTranspose", ["B", "K"], "col", strides=[3, 3], group=9)  # [1,9,9,9]
+    # ---- colour index cc (uint8 scalar) ----
+    init("chvals", np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1), np.float32)
+    n("ReduceMax", ["input"], "pres", axes=[2, 3], keepdims=1)     # [1,10,1,1]
+    n("Mul", ["pres", "chvals"], "ccparts")
+    n("ReduceSum", ["ccparts"], "ccf", keepdims=1)                 # scalar cc float
+    n("Cast", ["ccf"], "cc8", to=U8)
 
-    # channel 0 = 1 - any-color, within the 9x9 region
-    n("ReduceSum", ["col"], "csum", axes=[1], keepdims=1)           # [1,1,9,9]
-    init("one", np.array(1.0, np.float32), np.float32)
-    n("Sub", ["one", "csum"], "ch0")                                # [1,1,9,9]
+    # ---- label map L = M ? cc : 0  (uint8 9x9) ----
+    init("v0", np.array(0, np.uint8), np.uint8)
+    n("Where", ["M", "cc8", "v0"], "L9")                           # [1,1,9,9] uint8
 
-    # reassemble [ch0, col] and pad to the 30x30 canvas (opset10 Pad attrs)
-    n("Concat", ["ch0", "col"], "full", axis=1)                     # [1,10,9,9]
-    n("Pad", ["full"], "output", mode="constant",
-      pads=[0, 0, 0, 0, 0, 0, 21, 21], value=0.0)
+    # ---- pad to 30x30 with sentinel 10 (outside all-false), final Equal ----
+    init("padpads", np.array([0, 0, 0, 0, 0, 0, 21, 21], np.int64), np.int64)
+    init("padval", np.array(10, np.uint8), np.uint8)
+    n("Pad", ["L9", "padpads", "padval"], "L", mode="constant")    # [1,1,30,30] uint8
+    init("chan", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
+    n("Equal", ["L", "chan"], "output")                            # [1,10,30,30] BOOL
 
-    return _model(nodes, inits)
+    x = helper.make_tensor_value_info("input", F, [1, 10, 30, 30])
+    y = helper.make_tensor_value_info("output", TensorProto.BOOL, [1, 10, 30, 30])
+    graph = helper.make_graph(nodes, "graph", [x], [y], inits)
+    return helper.make_model(
+        graph, ir_version=IR_VERSION,
+        opset_imports=[helper.make_opsetid("", 11)])

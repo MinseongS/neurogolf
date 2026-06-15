@@ -16,37 +16,38 @@ where the green-block offset orr/orc in {0,3} and the legend corner lr/lc in
 flip_vert (full cyan row at index 2 vs 6) and flip_horiz (full cyan col 2 vs 6).
 Verified exact on all 266 stored examples and 200/200 fresh arc-gen instances.
 
-Implementation (all integer-valued; exact in float32):
-  - vflip = (full-cyan row is at index 6), hflip = (full-cyan col at 6), as 0/1
-    scalars from the cyan(8) channel.
-  - Flip-indexed (Gather) constant banks select rows/cols from the 30-wide
-    canvas: Lr/Lc extract the 2x2 legend corner; Sr/Sc extract the 6x6 green
-    block. The 2x2 legend is read into a canvas-index-ordered local block, then
-    expanded to the 6x6 quadrant layout by *flip-independent* constants Kr/Kc.
-  - L22 = Lr @ input @ Lc                 -> [1,10,2,2] legend colors (one-hot)
-    le  = Kr @ L22 @ Kc                    -> [1,10,6,6] per-cell quadrant color
-    gb  = Sr @ green @ Sc                  -> [1,1,6,6]  green-block mask
-    out6 = gb*(le - onehot0) + onehot0     -> recolor green cells, bg elsewhere
-  - Pad the 6x6 result to the 30x30 canvas (free `output`).
-
-The recolor identity: ch0 = gb*(0-1)+1 = 1-gb (background where no green);
-ch_k = gb*(le_k-0) = gb*le_k (legend never uses colors 0/3/8, so le_0 == 0).
+Memory floor-break (color-index label map + final Equal):
+  Instead of materialising a [1,10,6,6] one-hot recolor stack, we collapse the
+  legend to FOUR scalar color indices (L22idx[1,1,2,2] = sum_k k*onehot), expand
+  them to a 6x6 quadrant grid (Kr @ . @ Kc on a single channel), mask by the
+  green block, and emit a uint8 label L[6,6] (legend color where green, else 0).
+  Padded to 30x30 (sentinel 10 outside the 6x6) the final op
+      output = Equal(L, arange[1,10,1,1])
+  writes straight into the free BOOL output -- no 10-channel plane after L22.
 """
 
 import numpy as np
 import onnx
 from onnx import helper, numpy_helper, TensorProto
 
-from ..builders import _model
+from ..harness import IR_VERSION
+
+F = TensorProto.FLOAT
+H = TensorProto.FLOAT16
+U8 = TensorProto.UINT8
+B = TensorProto.BOOL
+
+
+SRC = 9  # the grid + legend live entirely in the top-left 9x9 corner
 
 
 def _banks():
-    # legend-corner extractors: [2(flip), 2(local), 30] and [2, 30, 2]
-    Lr = np.zeros((2, 2, 30), np.float32)
-    Lc = np.zeros((2, 30, 2), np.float32)
-    # green-block extractors: [2, 6, 30] and [2, 30, 6]
-    Sr = np.zeros((2, 6, 30), np.float32)
-    Sc = np.zeros((2, 30, 6), np.float32)
+    # legend-corner extractors: [2(flip), 2(local), SRC] and [2, SRC, 2]
+    Lr = np.zeros((2, 2, SRC), np.float32)
+    Lc = np.zeros((2, SRC, 2), np.float32)
+    # green-block extractors: [2, 6, SRC] and [2, SRC, 6]
+    Sr = np.zeros((2, 6, SRC), np.float32)
+    Sc = np.zeros((2, SRC, 6), np.float32)
     for q in range(2):
         Lr[0, q, 0 + q] = 1.0   # no flip: legend rows 0,1
         Lr[1, q, 7 + q] = 1.0   # flip:    legend rows 7,8
@@ -67,7 +68,7 @@ def _banks():
 
 
 def build(task):
-    inits, nodes, vinfos = [], [], []
+    inits, nodes = [], []
 
     def init(name, arr, dtype=np.float32):
         inits.append(numpy_helper.from_array(
@@ -78,96 +79,84 @@ def build(task):
         nodes.append(helper.make_node(op, inputs, [out], **attrs))
         return out
 
-    def vi(name, dtype, shape):
-        vinfos.append(helper.make_tensor_value_info(name, dtype, shape))
-        return name
-
     # --- cyan(8) per-row / per-col counts -> vflip / hflip 0/1 scalars ---
-    # A width-30 conv kernel selecting channel 8 sums cyan across each row in one
-    # shot (-> [1,1,30,1]); a height-30 kernel does the same per column. This
-    # avoids ever materialising a 30x30 cyan canvas.
     Wrow = np.zeros((1, 10, 1, 30), np.float32); Wrow[0, 8, 0, :] = 1.0
     init("Wrow", Wrow)
     Wcol = np.zeros((1, 10, 30, 1), np.float32); Wcol[0, 8, :, 0] = 1.0
     init("Wcol", Wcol)
     n("Conv", ["input", "Wrow"], "rowsum")                  # [1,1,30,1]
-    vi("rowsum", TensorProto.FLOAT, [1, 1, 30, 1])
     n("Conv", ["input", "Wcol"], "colsum")                  # [1,1,1,30]
-    vi("colsum", TensorProto.FLOAT, [1, 1, 1, 30])
 
-    # The full-cyan line is at index 6 exactly when the flip moved it there, so
-    # vflip = (cyan count of row 6 == 9), hflip = (cyan count of col 6 == 9).
-    # Gather index 6 off the count vectors, threshold, cast to a scalar index.
+    # vflip = (cyan row count at index 6 == 9); hflip likewise on col 6.
     init("idx6", np.array(6, np.int64), dtype=np.int64)
     init("eight5", np.array(8.5, np.float32))
     n("Gather", ["rowsum", "idx6"], "row6", axis=2)         # [1,1,1,1]
-    vi("row6", TensorProto.FLOAT, [1, 1, 1, 1])
     n("Gather", ["colsum", "idx6"], "col6", axis=3)         # [1,1,1,1]
-    vi("col6", TensorProto.FLOAT, [1, 1, 1, 1])
-    n("Greater", ["row6", "eight5"], "vbool")               # [1,1,1,1] bool
-    vi("vbool", TensorProto.BOOL, [1, 1, 1, 1])
-    n("Greater", ["col6", "eight5"], "hbool")               # [1,1,1,1] bool
-    vi("hbool", TensorProto.BOOL, [1, 1, 1, 1])
+    n("Greater", ["row6", "eight5"], "vbool")
+    n("Greater", ["col6", "eight5"], "hbool")
     n("Cast", ["vbool"], "vflip4", to=TensorProto.INT64)
-    vi("vflip4", TensorProto.INT64, [1, 1, 1, 1])
     n("Cast", ["hbool"], "hflip4", to=TensorProto.INT64)
-    vi("hflip4", TensorProto.INT64, [1, 1, 1, 1])
     n("ReduceSum", ["vflip4"], "vflip", axes=[0, 1, 2, 3], keepdims=0)  # scalar
-    vi("vflip", TensorProto.INT64, [])
     n("ReduceSum", ["hflip4"], "hflip", axes=[0, 1, 2, 3], keepdims=0)  # scalar
-    vi("hflip", TensorProto.INT64, [])
 
     # --- pick flip-specific extractor matrices ---
     Lr, Lc, Sr, Sc, Kr, Kc = _banks()
     init("LrB", Lr); init("LcB", Lc); init("SrB", Sr); init("ScB", Sc)
     init("Kr", Kr, dtype=np.float16); init("Kc", Kc, dtype=np.float16)
-    n("Gather", ["LrB", "vflip"], "lr", axis=0)             # [2,30]
-    vi("lr", TensorProto.FLOAT, [2, 30])
-    n("Gather", ["LcB", "hflip"], "lc", axis=0)             # [30,2]
-    vi("lc", TensorProto.FLOAT, [30, 2])
-    n("Gather", ["SrB", "vflip"], "sr", axis=0)             # [6,30]
-    vi("sr", TensorProto.FLOAT, [6, 30])
-    n("Gather", ["ScB", "hflip"], "sc", axis=0)             # [30,6]
-    vi("sc", TensorProto.FLOAT, [30, 6])
+    n("Gather", ["LrB", "vflip"], "lr", axis=0)            # [2,30]
+    n("Gather", ["LcB", "hflip"], "lc", axis=0)            # [30,2]
+    n("Gather", ["SrB", "vflip"], "sr", axis=0)            # [6,30]
+    n("Gather", ["ScB", "hflip"], "sc", axis=0)            # [30,6]
 
-    # --- legend 2x2 -> per-cell quadrant color le [1,10,6,6] ---
-    n("MatMul", ["lr", "input"], "lrow")                   # [1,10,2,30]
-    vi("lrow", TensorProto.FLOAT, [1, 10, 2, 30])
-    n("MatMul", ["lrow", "lc"], "L22f")                    # [1,10,2,2]
-    vi("L22f", TensorProto.FLOAT, [1, 10, 2, 2])
-    n("Cast", ["L22f"], "L22", to=TensorProto.FLOAT16)     # fp16 from here
-    vi("L22", TensorProto.FLOAT16, [1, 10, 2, 2])
-    n("MatMul", ["Kr", "L22"], "lemid")                    # [1,10,6,2] fp16
-    vi("lemid", TensorProto.FLOAT16, [1, 10, 6, 2])
-    n("MatMul", ["lemid", "Kc"], "le")                     # [1,10,6,6] fp16
-    vi("le", TensorProto.FLOAT16, [1, 10, 6, 6])
+    # --- legend 2x2 one-hot L22 -> 4 color indices L22idx [1,1,2,2] ---
+    # Fold the channel-weighting (sum_k k*onehot) into the legend extraction so
+    # the intermediate carries a single channel: kin = sum_k k*input[k] is a
+    # [1,1,30,30] color-index plane, then lr @ kin @ lc -> [1,1,2,2] directly.
+    # Slice the input to the 9x9 corner first, then a 1x1 conv collapses the 10
+    # channels to a single color-index plane kin [1,1,9,9] (324 B).
+    init("i_st", np.array([0, 0], np.int64), np.int64)
+    init("i_en", np.array([SRC, SRC], np.int64), np.int64)
+    init("i_ax", np.array([2, 3], np.int64), np.int64)
+    n("Slice", ["input", "i_st", "i_en", "i_ax"], "in9")   # [1,10,SRC,SRC]
+    Wk = np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1)
+    init("Wk", Wk)
+    n("Conv", ["in9", "Wk"], "kin")                        # [1,1,SRC,SRC] color idx
+    n("MatMul", ["lr", "kin"], "lrow")                     # [1,1,2,SRC]
+    n("MatMul", ["lrow", "lc"], "L22idx")                  # [1,1,2,2] color idx
 
-    # --- green-block mask gb [1,1,6,6] ---
-    Wgreen = np.zeros((1, 10, 1, 1), np.float32); Wgreen[0, 3, 0, 0] = 1.0
-    init("Wgreen", Wgreen)
-    n("Conv", ["input", "Wgreen"], "greenf")               # [1,1,30,30]
-    vi("greenf", TensorProto.FLOAT, [1, 1, 30, 30])
-    n("MatMul", ["sr", "greenf"], "grow")                  # [1,1,6,30]
-    vi("grow", TensorProto.FLOAT, [1, 1, 6, 30])
-    n("MatMul", ["grow", "sc"], "gbf")                     # [1,1,6,6]
-    vi("gbf", TensorProto.FLOAT, [1, 1, 6, 6])
-    n("Cast", ["gbf"], "gb", to=TensorProto.FLOAT16)
-    vi("gb", TensorProto.FLOAT16, [1, 1, 6, 6])
+    # --- expand 2x2 color indices to the 6x6 quadrant grid (single channel) ---
+    n("Cast", ["L22idx"], "L22idxh", to=H)                 # [1,1,2,2] f16
+    n("MatMul", ["Kr", "L22idxh"], "lemid")                # [1,1,6,2] f16
+    n("MatMul", ["lemid", "Kc"], "leidx")                  # [1,1,6,6] f16 color idx
 
-    # --- recolor: out6 = gb*(le - onehot0) + onehot0  (fp16) ---
-    oh0 = np.zeros((1, 10, 1, 1), np.float16); oh0[0, 0, 0, 0] = 1.0
-    init("oh0", oh0, dtype=np.float16)
-    n("Sub", ["le", "oh0"], "lediff")                      # [1,10,6,6] fp16
-    vi("lediff", TensorProto.FLOAT16, [1, 10, 6, 6])
-    n("Mul", ["gb", "lediff"], "scaled")                   # [1,10,6,6] fp16
-    vi("scaled", TensorProto.FLOAT16, [1, 10, 6, 6])
-    n("Add", ["scaled", "oh0"], "out6h")                   # [1,10,6,6] fp16
-    vi("out6h", TensorProto.FLOAT16, [1, 10, 6, 6])
-    n("Cast", ["out6h"], "out6", to=TensorProto.FLOAT)     # back to fp32
-    vi("out6", TensorProto.FLOAT, [1, 10, 6, 6])
+    # --- green-block mask gb [1,1,6,6], derived from the SAME color-index plane ---
+    # green present at a cell <=> kin == 3. Extract the 6x6 green block, then
+    # threshold: gb = (selected color-index == 3). One row/col selection picks
+    # exactly one source cell per output cell, so the gathered value is that
+    # cell's color index (3 iff green).
+    n("MatMul", ["sr", "kin"], "krow")                     # [1,1,6,30] f32
+    n("MatMul", ["krow", "sc"], "kblk")                    # [1,1,6,6] color idx
+    init("two5", np.array(2.5, np.float32), np.float32)
+    init("three5", np.array(3.5, np.float32), np.float32)
+    n("Greater", ["kblk", "two5"], "g_lo")                 # > 2.5
+    n("Less", ["kblk", "three5"], "g_hi")                  # < 3.5  -> == 3
+    n("And", ["g_lo", "g_hi"], "gb")                       # [1,1,6,6] bool green
 
-    # --- pad 6x6 -> 30x30 (free output) ---
-    n("Pad", ["out6"], "output", mode="constant", value=0.0,
-      pads=[0, 0, 0, 0, 0, 0, 24, 24])
+    # --- L = legend color where green, else 0; uint8 6x6 ---
+    n("Cast", ["leidx"], "leidx_u8", to=U8)                # [1,1,6,6] uint8
+    init("v0", np.array(0, np.uint8), np.uint8)
+    n("Where", ["gb", "leidx_u8", "v0"], "Lwk")            # [1,1,6,6] uint8
 
-    return _model(nodes, inits, vinfos)
+    # --- pad 6x6 -> 30x30 (sentinel 10), final Equal -> free BOOL output ---
+    init("padpads", np.array([0, 0, 0, 0, 0, 0, 24, 24], np.int64), np.int64)
+    init("padval", np.array(10, np.uint8), np.uint8)
+    n("Pad", ["Lwk", "padpads", "padval"], "L", mode="constant")  # [1,1,30,30]
+    init("chan", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
+    n("Equal", ["L", "chan"], "output")
+
+    x = helper.make_tensor_value_info("input", F, [1, 10, 30, 30])
+    y = helper.make_tensor_value_info("output", B, [1, 10, 30, 30])
+    g = helper.make_graph(nodes, "task189", [x], [y], inits)
+    return helper.make_model(
+        g, ir_version=IR_VERSION,
+        opset_imports=[helper.make_opsetid("", 11)])
