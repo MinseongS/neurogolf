@@ -1418,14 +1418,14 @@
  {
   "task": 119,
   "arc_id": "508bd3b6",
-  "points": 15.37,
+  "points": 16.12,
   "memory": 15095,
   "params": 100,
   "method": "ext:vyank6322",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "16.12 adopted (15.37->16.12, +0.75); floor 7088. INSIGHT: ray-bounce detection=closed-form union of two 45deg diagonals (r+c==a OR r-c==b), recover vertex via +-1 slope"
  },
  {
   "task": 120,
