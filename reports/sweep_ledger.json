@@ -2330,14 +2330,14 @@
  {
   "task": 195,
   "arc_id": "80af3007",
-  "points": 15.44,
+  "points": 16.86,
   "memory": 12310,
   "params": 1919,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "16.86 adopted (15.44->16.86, +1.42); floor 3172. INSIGHT: fractal self-tiling = Kronecker kron(S,S) via macro/micro index maps, NOT naive outer product"
  },
  {
   "task": 196,

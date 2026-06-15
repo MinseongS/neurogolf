@@ -1165,10 +1165,10 @@
    "method": "ext:wguesdon6304"
   },
   "195": {
-   "points": 15.436962585454308,
-   "memory": 12310,
-   "params": 1919,
-   "method": "ext:kojimar6275"
+   "points": 16.864067227995108,
+   "memory": 3172,
+   "params": 243,
+   "method": "custom:task195"
   },
   "196": {
    "points": 14.619005786490737,
