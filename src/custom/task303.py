@@ -44,46 +44,57 @@ def build(task):
         return out
 
     F = TensorProto.FLOAT
+    H = TensorProto.FLOAT16
     U8 = TensorProto.UINT8
     B = TensorProto.BOOL
 
-    init("zerof", np.array(0.0, np.float32), np.float32)
+    init("fifteen", np.array(15.5, np.float32), np.float32)
 
-    # --- colour index per cell:  sum_c c*input[c]  (ch0 weight 0) -----------
-    cw = np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1)
+    # ONE 1x1 Conv encodes everything we need per cell (weights are params, not
+    # memory).  v[r,c] = 16*ingrid + colour_index, where ingrid = sum_c input[c]
+    # and colour_index = sum_c c*input[c]:
+    #   off-grid       -> v = 0
+    #   in-grid black  -> v = 16  (colour index 0)
+    #   in-grid col k  -> v = 16 + k
+    # so ingrid = (v > 15), colour index = v - 16 (when in-grid), and a cell is
+    # "coloured" iff v > 16.  All values are small integers, exact in float32.
+    cw = (np.arange(10, dtype=np.float32) + 16.0).reshape(1, 10, 1, 1)
+    cw[0, 0, 0, 0] = 16.0  # ch0 (black): only the +16 in-grid term, index 0
     init("cw", cw, np.float32)
-    n("Mul", ["input", "cw"], "weighted")              # [1,10,30,30]
-    n("ReduceSum", ["weighted"], "coloridxf", axes=[1], keepdims=1)  # [1,1,30,30]
+    n("Conv", ["input", "cw"], "vf")                   # [1,1,30,30] fp32
 
-    # --- coloured mask:  max over channels 1..9 -----------------------------
-    # weight channels 1..9 = 1, channel 0 = 0, then ReduceMax over channel axis.
-    mw = np.array([0] + [1] * 9, dtype=np.float32).reshape(1, 10, 1, 1)
-    init("mw", mw, np.float32)
-    n("Mul", ["input", "mw"], "colmasked")             # zero out ch0
-    n("ReduceMax", ["colmasked"], "coloredf", axes=[1], keepdims=1)  # [1,1,30,30]
+    n("Greater", ["vf", "fifteen"], "ingrid_b")        # v > 15  (in-grid)
 
-    # rowHasColor / colHasColor
-    n("ReduceMax", ["coloredf"], "rowhasf", axes=[3], keepdims=1)  # [1,1,30,1]
-    n("ReduceMax", ["coloredf"], "colhasf", axes=[2], keepdims=1)  # [1,1,1,30]
-    # straightaway = no colour in that row/col
-    n("Equal", ["rowhasf", "zerof"], "rowred_b")       # [1,1,30,1] bool
-    n("Equal", ["colhasf", "zerof"], "colred_b")       # [1,1,1,30] bool
+    # quantise v to uint8 ONCE; we keep the label map in the SHIFTED space
+    # (in-grid colour k -> 16+k), so no subtraction is needed.  The final Equal
+    # compares against arange(16..25); off-grid (v=0) matches nothing.
+    n("Cast", ["vf"], "vu8", to=U8)                    # [1,1,30,30] uint8
+
+    # Straightaway detection via 1-D reductions over vf directly (cheap, 120B
+    # each).  A row's max v is: 16 if every in-grid cell is black (=straightaway),
+    # >=17 if it has any colour, 0 if the row is entirely off-grid.  So a row is
+    # a straightaway iff its max v == 16, i.e. 15 < max < 17.
+    n("ReduceMax", ["vf"], "rowmax", axes=[3], keepdims=1)  # [1,1,30,1] fp32
+    n("ReduceMax", ["vf"], "colmax", axes=[2], keepdims=1)  # [1,1,1,30] fp32
+    init("sixteen", np.array(16.5, np.float32), np.float32)
+    # straightaway iff 15 < max < 17  (== 16 exactly)
+    n("Greater", ["rowmax", "fifteen"], "rgt15")
+    n("Less", ["rowmax", "sixteen"], "rlt16")
+    n("And", ["rgt15", "rlt16"], "rowred_b")           # [1,1,30,1] bool
+    n("Greater", ["colmax", "fifteen"], "cgt15")
+    n("Less", ["colmax", "sixteen"], "clt16")
+    n("And", ["cgt15", "clt16"], "colred_b")           # [1,1,1,30] bool
     n("Or", ["rowred_b", "colred_b"], "red_b")         # [1,1,30,30] broadcast
+    # only paint red on IN-GRID cells; off-grid cells keep vu8 (=0 sentinel).
+    n("And", ["red_b", "ingrid_b"], "redin_b")         # [1,1,30,30]
 
-    # in-grid: any channel set
-    n("ReduceMax", ["input"], "ingridf", axes=[1], keepdims=1)  # [1,1,30,30]
-    n("Greater", ["ingridf", "zerof"], "ingrid_b")
+    # --- assemble label map L[1,1,30,30] (in 16-shifted space) -------------
+    # red (colour 2) -> 16+2 = 18.  Off-grid v=0 -> 0 (matches nothing in 16..25),
+    # so it needs no explicit branch; in-grid passthrough = vu8 (16..25).
+    init("v18", np.array(18, np.uint8), np.uint8)
+    n("Where", ["redin_b", "v18", "vu8"], "L")         # red else passthrough
 
-    # --- assemble label map L[1,1,30,30] -----------------------------------
-    n("Cast", ["coloridxf"], "coloridxU8", to=U8)      # passthrough colour
-    init("v2", np.array(2, np.uint8), np.uint8)
-    init("v10", np.array(10, np.uint8), np.uint8)
-    # red where straightaway else passthrough colour
-    n("Where", ["red_b", "v2", "coloridxU8"], "Lon")   # [1,1,30,30]
-    # off-grid -> sentinel 10
-    n("Where", ["ingrid_b", "Lon", "v10"], "L")        # [1,1,30,30]
-
-    chan = np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1)
+    chan = (np.arange(10, dtype=np.uint8) + 16).reshape(1, 10, 1, 1)
     init("chan", chan, np.uint8)
     n("Equal", ["L", "chan"], "output")                # [1,10,30,30] BOOL
 
