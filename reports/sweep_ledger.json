@@ -3326,14 +3326,14 @@
  {
   "task": 278,
   "arc_id": "b27ca6d3",
-  "points": 14.67,
+  "points": 15.81,
   "memory": 30132,
   "params": 362,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE S ~19.0pt: b27ca6d3: recolor green->black; green marks 'noise' around red pairs. "
+  "status": "done",
+  "verdict": "15.81 adopted (14.7->15.81, +1.11) mislabeled-feasible. INSIGHT: BANDED SINGLE-CONV (pack predicates into 1 conv plane via disjoint magnitude bands)"
  },
  {
   "task": 279,

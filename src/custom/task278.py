@@ -18,22 +18,21 @@ Output color per cell:
   black(0) otherwise
 
 The scorer accepts channel k iff output[k] > 0, so we route the 10-channel
-one-hot expansion into the FREE `output` tensor via a final float `Equal`
+one-hot expansion into the FREE `output` tensor via a final `Equal`
 (opset-11 op; scorer checks DOMAIN not VERSION) producing a BOOL output.
 
-Encoding (all integer-valued float math, exact in float32):
-  nred  = Conv(input, plus-kernel on ch2)            -> [1,1,30,30] #red 4-nbrs
-  redc  = Conv(input, center on ch2)                 -> [1,1,30,30] center red
-        (both produced by ONE Conv with 2 output channels: redc, nred)
-  olive = (redc>0.5) & (nred>0.5)                     -> bool
-  dil   = Conv(olive_f, 3x3 ones)                     -> dilation count
-  green = (dil>0.5) & ~(redc>0.5)                     -> bool
-  L     = 2*red + 3*green  (uint8 label, 0 elsewhere)
-  output = Equal(L, [0..9])  (BOOL)
+Encoding (all integer-valued math, exact). mem 9684, params 138 -> 15.81 pts:
+  ocount = Conv(input)   ONE plane carrying in-grid (band 100), red (band 500),
+           olive (red + red-neighbor, band 501+) AND the red-neighbor count.
+  crop ocount 30x30 -> 18x18 (grid is anchored top-left, size <=18).
+  ingrid/red/olive  = three thresholds on the single ocount plane.
+  dil    = Conv(olive, 3x3 ones)  (fp16)   -> green = dil & in-grid.
+  L      = uint8 label (red=2, green=3, bg=0, off-grid=10), built by 3 Wheres.
+  L      = Pad(L, 30x30, value=10)         off-grid sentinel -> all-zero output.
+  output = Equal(L, [0..9])  (BOOL)        the 10-ch expansion lands in free output.
 """
 
 import numpy as np
-import onnx
 from onnx import helper, numpy_helper, TensorProto
 
 from ..harness import GRID_SHAPE, IR_VERSION
@@ -55,73 +54,82 @@ def build(task):
         nodes.append(helper.make_node(op, ins, [out], **attrs))
         return out
 
-    init("half", np.array(0.5, np.float32))
-
-    # ---- collapse the 10-channel input (FREE) to two single-channel feature
-    # planes via Conv, THEN crop. The generator sets width,height in [15,18] and
+    # ---- collapse the 10-channel input (FREE) to ONE single-channel feature
+    # plane via Conv, THEN crop. The generator sets width,height in [15,18] and
     # anchors the grid top-left, so the whole grid + olives + green dilation lie
-    # in the top-left S x S block (S=18). Converting 10->1 channel before the
+    # in the top-left S x S block (S=18). Collapsing 10->1 channel before the
     # Slice avoids a costly [1,10,18,18] crop; all downstream work is 18x18. ----
     S = 18
 
-    # ocount = 5*center_red + (#red 4-neighbors). Both terms are 0/1 from the
-    # one-hot input ch2, so ocount in 0..4 when not red, 5..9 when red.
-    # => red center IFF ocount > 4.5 ; olive_red IFF ocount > 5.5.
+    # ONE Conv yields ocount, which simultaneously encodes red, olive, AND
+    # in-grid -- with the three signals in disjoint magnitude bands so a single
+    # plane separates them by thresholds.  The INPUT only ever contains black
+    # (ch0) and red (ch2) (green was erased to black), so an in-grid cell has
+    # ch0=1 or ch2=1, off-grid is all 0.  The in-grid / red tags come ONLY from
+    # the CENTER (large weights); the red-neighbor count (weight 1) is small so
+    # it can never lift an off-grid cell (which has no center) past the in-grid
+    # threshold even when it sits next to in-grid red.
+    #   ocount = 100*center_bg + 500*center_red + 1*(#red 4-neighbors)
+    # Value bands:
+    #   off-grid (no center): 0..4       (#red nbrs only)
+    #   in-grid background:   100..104   (100 + #red nbrs)
+    #   static red center:    500        (red, no red nbr)
+    #   olive red center:     501..504   (red, >=1 red nbr)
+    # => in-grid IFF ocount>50 ; red IFF ocount>250 ; olive IFF ocount>500.5
     Wo = np.zeros((1, 10, 3, 3), np.float32)
-    Wo[0, 2, 1, 1] = 5.0                       # center red
+    Wo[0, 0, 1, 1] = 100.0                     # center background (in-grid tag)
+    Wo[0, 2, 1, 1] = 500.0                     # center red
     for r, c in [(0, 1), (2, 1), (1, 0), (1, 2)]:
         Wo[0, 2, r, c] = 1.0                   # plus-neighbor red count
     init("Wo", Wo)
     node("Conv", ["input", "Wo"], "ocount30", pads=[1, 1, 1, 1])  # [1,1,30,30]
 
-    # ingrid = sum of all 10 input channels (1 in-grid, 0 off-grid), 1x1 Conv.
-    Wg = np.ones((1, 10, 1, 1), np.float32)
-    init("Wg", Wg)
-    node("Conv", ["input", "Wg"], "ingrid30")  # [1,1,30,30]
-
-    # crop both feature planes to the top-left 18x18 active region.
+    # crop the single feature plane to the top-left 18x18 active region.
     init("st", np.array([0, 0, 0, 0], np.int64))
     init("en", np.array([1, 1, S, S], np.int64))
     init("ax", np.array([0, 1, 2, 3], np.int64))
     node("Slice", ["ocount30", "st", "en", "ax"], "ocount")  # [1,1,18,18]
-    node("Slice", ["ingrid30", "st", "en", "ax"], "ingrid")  # [1,1,18,18]
 
-    init("fourhalf", np.array(4.5, np.float32))
-    init("fivehalf", np.array(5.5, np.float32))
-    node("Greater", ["ocount", "fourhalf"], "redb")    # bool red center
-    node("Greater", ["ocount", "fivehalf"], "oliveb")  # bool olive_red
-    node("Greater", ["ingrid", "half"], "ingridb")     # bool in-grid
+    init("t50", np.array(50.0, np.float32))
+    init("t250", np.array(250.0, np.float32))
+    init("t500", np.array(500.5, np.float32))
+    node("Greater", ["ocount", "t50"], "ingridb")      # bool in-grid
+    node("Greater", ["ocount", "t250"], "redb")        # bool red center
+    node("Greater", ["ocount", "t500"], "oliveb")      # bool olive_red
 
-    # dilate olive 3x3 (Chebyshev-1) -> green region
-    node("Cast", ["oliveb"], "olivef", to=TensorProto.FLOAT)
-    W2 = np.ones((1, 1, 3, 3), np.float32)
+    # dilate olive 3x3 (Chebyshev-1) -> green region. Done in fp16 (olive counts
+    # are tiny ints, exact in fp16) to halve the cast + conv plane bytes.
+    node("Cast", ["oliveb"], "olivef", to=TensorProto.FLOAT16)  # [1,1,18,18] f16
+    W2 = np.ones((1, 1, 3, 3), np.float16)
     init("W2", W2)
-    node("Conv", ["olivef", "W2"], "dil", pads=[1, 1, 1, 1])  # [1,1,30,30]
-    node("Greater", ["dil", "half"], "dilb")
-    node("Not", ["redb"], "notred")
-    node("And", ["dilb", "notred"], "greentmp")     # dilation & ~red
-    # green is clipped to the grid: the generator draws green only inside bounds,
-    # so a dilation that spills past the edge must not paint off-grid cells.
-    node("And", ["greentmp", "ingridb"], "greenb")  # & in-grid
+    node("Conv", ["olivef", "W2"], "dil", pads=[1, 1, 1, 1])  # [1,1,18,18] f16
+    init("half16", np.array(0.5, np.float16))
+    node("Greater", ["dil", "half16"], "dilb")
+    # green = dilation, clipped to the grid (the generator draws green only inside
+    # bounds). No need to subtract red here: the red Where below runs LAST and
+    # overrides green wherever the cell is an olive-red center.
+    node("And", ["dilb", "ingridb"], "greenb")      # dilation & in-grid
 
-    # label L via nested Where (disjoint cases). Off-grid -> 10 so it matches no
-    # channel index 0..9 (Equal yields all-zero there, as required); in-grid
-    # background -> 0 (ch0); green -> 3; red -> 2 (red wins over green overlap).
-    init("c2", np.array(2.0, np.float32))
-    init("c3", np.array(3.0, np.float32))
-    init("c10", np.array(10.0, np.float32))
-    init("c0", np.array(0.0, np.float32))
+    # label L via nested Where (disjoint cases), in UINT8 to keep the planes
+    # cheap (ORT Where/Equal/Pad are implemented for uint8). Off-grid -> 10 so it
+    # matches no channel index 0..9 (Equal yields all-zero there, as required);
+    # in-grid background -> 0 (ch0); green -> 3; red -> 2 (red wins overlaps).
+    init("c2", np.array(2, np.uint8))
+    init("c3", np.array(3, np.uint8))
+    init("c10", np.array(10, np.uint8))
+    init("c0", np.array(0, np.uint8))
     node("Where", ["ingridb", "c0", "c10"], "Lbase")  # 0 in-grid, 10 off-grid
     node("Where", ["greenb", "c3", "Lbase"], "Lg")    # green=3
     node("Where", ["redb", "c2", "Lg"], "Lc")         # red=2 over green/bg
 
-    # pad the 18x18 label back to 30x30 with sentinel 10 (off-grid -> all-zero).
+    # pad the 18x18 uint8 label back to 30x30 with sentinel 10 (Pad supports
+    # uint8; the padded off-grid region -> all-zero output).
     init("pads", np.array([0, 0, 0, 0, 0, 0, 30 - S, 30 - S], np.int64))
-    init("padval", np.array(10.0, np.float32))
+    init("padval", np.array(10, np.uint8))
     node("Pad", ["Lc", "pads", "padval"], "L", mode="constant")  # [1,1,30,30]
 
     # output = Equal(L, [0..9]) -> BOOL [1,10,30,30] routed into the FREE output
-    arange = np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1)
+    arange = np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1)
     init("arange", arange)
     node("Equal", ["L", "arange"], "output")
 

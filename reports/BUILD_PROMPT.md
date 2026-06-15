@@ -39,6 +39,10 @@ forms below — most "detection" tasks this sweep turned out to be closed-form a
   boolean double MatMul Rmat@src@CmatT, fp16 {0,1} exact (task250); ray/bounce = union of 45° diagonals
   r+c==a OR r-c==b through a vertex (task119); apply_gravity/reflect/transpose = orientation-EQUIVARIANCE
   (same transform on input AND output) → compute both axis branches, select by structure (task341).
+- BANDED SINGLE-CONV: pack several boolean predicates into ONE conv plane via disjoint MAGNITUDE BANDS
+  recovered by thresholds (e.g. `100·center_bg + 500·center_red + 1·(#red 4-nbrs)` → in-grid=band100,
+  static-red=500, olive-red=501+ all from one plane) — kills separate in-grid/mask convs. Center tags need
+  weights large enough that neighbour-count leakage can't cross a lower threshold (task278).
 - variable offset → bbox first-occupied row/col; 2-D point lookup → chained Gather(axis=2 then 3), NOT
   row∧col outer product (cross-talks); K cheap channel-Slices beat a [0..9] colour Conv for fixed small
   color sets.
