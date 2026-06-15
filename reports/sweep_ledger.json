@@ -722,14 +722,14 @@
  {
   "task": 61,
   "arc_id": "29ec7d0e",
-  "points": 15.15,
+  "points": 17.25,
   "memory": 16942,
   "params": 1972,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "17.25 adopted (15.15->17.25, +2.10!); mem 1958, BEST. INSIGHT: replace lookup table w/ closed-form arithmetic (fp16 Mod exact <2048), fold offsets into Equal const"
  },
  {
   "task": 62,
