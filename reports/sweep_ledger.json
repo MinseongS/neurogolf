@@ -2918,14 +2918,14 @@
  {
   "task": 244,
   "arc_id": "9f236235",
-  "points": 14.63,
+  "points": 16.0,
   "memory": 31685,
   "params": 85,
   "method": "gen:biohack_new",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE S ~19.0pt: 9f236235: output = un-magnify the line-grid (sample 1 cell per magnifi"
+  "status": "done",
+  "verdict": "16.00 adopted (14.63->16.00, +1.37) MISLABELED-FEASIBLE recovered! Tier-A. INSIGHT: off-grid one-hot is ALL-ZERO not ch0=1; size lookup table keyed on ReduceMax-all-channels, double-Gather free input"
  },
  {
   "task": 245,

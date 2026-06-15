@@ -1459,10 +1459,10 @@
    "method": "gen:vyank6322"
   },
   "244": {
-   "points": 14.633722272736438,
-   "memory": 31685,
-   "params": 85,
-   "method": "gen:biohack_new"
+   "points": 15.997914566844276,
+   "memory": 7949,
+   "params": 171,
+   "method": "custom:task244"
   },
   "245": {
    "points": 16.578216993388423,
