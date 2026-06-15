@@ -234,45 +234,51 @@ def build(task):
     cLft_s = rangemask("C6", "COL", "COL", "cLftS", cshape)
     cRgt_s = rangemask("C6", "COL1", "COL1", "cRgtS", cshape)
 
-    def rect(rmask, cmask, tag):
-        n("Mul", [rmask, cmask], tag)
-        vi(tag, TensorProto.FLOAT, [1, 1, 6, 6])
+    # ---- factored rank-1 label build (minimise 6x6 planes) --------------
+    # column colour-index vectors [1,1,1,6] for each of the four row bands:
+    #   top  rows: c0 on left col, c1 on right col
+    #   bot  rows: c2 left, c3 right
+    #   +2   rows: c0 on +2 cols, c1 on -2 cols
+    #   -2   rows: c2 on +2 cols, c3 on -2 cols
+    def colvec(idxA, maskA, idxB, maskB, tag):
+        n("Mul", [maskA, idxA], tag + "_a")
+        vi(tag + "_a", TensorProto.FLOAT, cshape)
+        n("Mul", [maskB, idxB], tag + "_b")
+        vi(tag + "_b", TensorProto.FLOAT, cshape)
+        n("Add", [tag + "_a", tag + "_b"], tag)
+        vi(tag, TensorProto.FLOAT, cshape)
         return tag
 
-    blk00 = rect(rTop_s, cLft_s, "blk00")   # c0
-    blk01 = rect(rTop_s, cRgt_s, "blk01")   # c1
-    blk10 = rect(rBot_s, cLft_s, "blk10")   # c2
-    blk11 = rect(rBot_s, cRgt_s, "blk11")   # c3
-    stp0 = rect(rPlus, cPlus, "stp0")       # c0
-    stp1 = rect(rPlus, cMinus, "stp1")      # c1
-    stp2 = rect(rMinus, cPlus, "stp2")      # c2
-    stp3 = rect(rMinus, cMinus, "stp3")     # c3
+    cvTop = colvec("c0idx", cLft_s, "c1idx", cRgt_s, "cvTop")
+    cvBot = colvec("c2idx", cLft_s, "c3idx", cRgt_s, "cvBot")
+    cvPlus = colvec("c0idx", cPlus, "c1idx", cMinus, "cvPlus")
+    cvMinus = colvec("c2idx", cPlus, "c3idx", cMinus, "cvMinus")
 
-    terms = [(blk00, "c0idx"), (blk01, "c1idx"), (blk10, "c2idx"),
-             (blk11, "c3idx"), (stp0, "c0idx"), (stp1, "c1idx"),
-             (stp2, "c2idx"), (stp3, "c3idx")]
+    bands = [(rTop_s, cvTop), (rBot_s, cvBot),
+             (rPlus, cvPlus), (rMinus, cvMinus)]
     acc = None
-    for i, (reg, cidx_name) in enumerate(terms):
-        tname = "term%d" % i
-        n("Mul", [reg, cidx_name], tname)
+    for i, (rmask, cv) in enumerate(bands):
+        tname = "band%d" % i
+        n("Mul", [rmask, cv], tname)          # [1,1,6,1]x[1,1,1,6] -> [1,1,6,6]
         vi(tname, TensorProto.FLOAT, [1, 1, 6, 6])
         if acc is None:
             acc = tname
         else:
-            aname = "acc%d" % i
+            aname = "lacc%d" % i
             n("Add", [acc, tname], aname)
             vi(aname, TensorProto.FLOAT, [1, 1, 6, 6])
             acc = aname
 
     # =====================================================================
-    # 5. Pad to 30x30 with sentinel 10, Cast uint8, Equal vs arange -> output
+    # 5. Cast label to uint8, Pad to 30x30 with sentinel 10, Equal -> output
+    #    (pad in uint8 so the 30x30 plane is 900B, not 3600B)
     # =====================================================================
+    n("Cast", [acc], "L6u", to=TensorProto.UINT8)
+    vi("L6u", TensorProto.UINT8, [1, 1, 6, 6])
     pads = np.array([0, 0, 0, 0, 0, 0, 24, 24], dtype=np.int64)
     init("PADS", pads, np.int64)
-    init("pad10", np.array(10.0, np.float32), np.float32)
-    n("Pad", [acc, "PADS", "pad10"], "L30f", mode="constant")
-    vi("L30f", TensorProto.FLOAT, [1, 1, 30, 30])
-    n("Cast", ["L30f"], "L30", to=TensorProto.UINT8)
+    init("pad10", np.array(10, np.uint8), np.uint8)
+    n("Pad", ["L6u", "PADS", "pad10"], "L30", mode="constant")
     vi("L30", TensorProto.UINT8, [1, 1, 30, 30])
 
     arange = np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1)

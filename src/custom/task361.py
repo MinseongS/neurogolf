@@ -52,11 +52,21 @@ def _orb():
             ny = s1 + cx; nx = s2 - cy
             ib = (ny >= 0) & (ny < SW) & (nx >= 0) & (nx < SW)
             ORB[k, c] = np.where(ib, ny * SW + nx, SNW); cy, cx = ny, nx
-    return ORB, s1c, s2c, swyf, swxf, C
+    # completion source tables on the 9x9 window (centre s1_c=s1, s2_c=s2+2)
+    cwy, cwx = np.meshgrid(np.arange(CW), np.arange(CW), indexing="ij")
+    cwyf = cwy.reshape(-1); cwxf = cwx.reshape(-1)
+    SRC = np.full((3, C, CNW), CNW, np.int64)
+    for c in range(C):
+        s1, s2 = s1c[c], s2c[c] + 2; Y = cwyf.copy(); Xc = cwxf.copy()
+        for k in range(3):
+            nY = s2 - Xc; nX = Y - s1; Y, Xc = nY, nX
+            ib = (Y >= 0) & (Y < CW) & (Xc >= 0) & (Xc < CW)
+            SRC[k, c] = np.where(ib, Y * CW + Xc, CNW)
+    return ORB, SRC, s1c, s2c, swyf, swxf, C
 
 
 def build(task):
-    ORB, s1c, s2c, swyf, swxf, C = _orb()
+    ORB, SRC, s1c, s2c, swyf, swxf, C = _orb()
     cwy, cwx = np.meshgrid(np.arange(CW), np.arange(CW), indexing="ij")
     cwyf = cwy.reshape(-1).astype(np.float32); cwxf = cwx.reshape(-1).astype(np.float32)
 
@@ -113,7 +123,9 @@ def build(task):
     init("s1wc", s1c.astype(np.float32), np.float32)                   # [13]
     init("s2wc", s2c.astype(np.float32), np.float32)
 
-    # ---- V = colour index (Conv full -> slice corner -> uint8 -> flat + sentinel) ----
+    # ---- V = colour index (Conv full 30x30 -> slice corner -> uint8 -> flat) ----
+    # the 30x30 Conv output (3600 B) is the cheapest colour-index path: Conv fuses
+    # the 10-channel reduction without materialising a per-channel corner slice.
     n("Conv", ["input", "kw"], "Vbig")                                 # [1,1,30,30] f32
     init("crop_st", np.array([0, 0], np.int64), np.int64)
     init("crop_en", np.array([W, W], np.int64), np.int64)
@@ -163,15 +175,9 @@ def build(task):
     n("ReduceSum", ["goodf", "redax1"], "score", keepdims=0)           # [25] fp16
     n("ArgMax", ["score"], "best", axis=0, keepdims=0)
     n("Reshape", ["best", "shp_1"], "best1")
-    n("Gather", ["s1wc", "best1"], "bs1f", axis=0)                     # [1] f32
-    n("Gather", ["s2wc", "best1"], "bs2f", axis=0)
-    n("Cast", ["bs1f"], "bs1", to=TensorProto.FLOAT16)                 # fp16 scalars
-    n("Cast", ["bs2f"], "bs2h", to=TensorProto.FLOAT16)
-    # completion-window centre: s1_c = bs1 ; s2_c = bs2 + 2
-    n("Add", ["bs2h", "twoh"], "bs2c")
 
-    # ---- COMPLETION: gather 81 completion-window colours, inverse-rotate ----
-    # completion window top-left CY = SY-1, CX = SX-1  (fp16 math)
+    # ---- COMPLETION: gather 81 completion-window colours ----
+    # completion window top-left CY = SY-1, CX = SX-1  (fp16 index math)
     init("oneh", np.array(1.0, np.float16), np.float16)
     init("Wh", np.array(float(W), np.float16), np.float16)
     init("Hm1h", np.array(float(W - 1), np.float16), np.float16)
@@ -189,20 +195,16 @@ def build(task):
     n("Concat", ["cwin", "u0r"], "cwinp", axis=0)                      # [82]
     n("Reshape", ["cwin", "shp_1c"], "cwinrow"); init("shp_1c", np.array([1, CNW], np.int64), np.int64)
 
-    Y, Xc = "cwyh", "cwxh"
-    outcol = "cwinrow"                                                 # [1,81] u8
+    # source maps from precomputed SRC tables for the selected candidate
+    init("SRC0", SRC[0], np.int32)                                    # [13,81]
+    init("SRC1", SRC[1], np.int32)
+    init("SRC2", SRC[2], np.int32)
+    outcol = "cwinrow"                                                # [1,81] u8
     for k in range(3):
-        nY = n("Sub", ["bs2c", Xc], f"pY{k}"); nX = n("Sub", [Y, "bs1"], f"pX{k}")
-        a = n("GreaterOrEqual", [nY, "zeroh"], f"p0_{k}"); b = n("LessOrEqual", [nY, "Cm1"], f"p1_{k}")
-        c2 = n("GreaterOrEqual", [nX, "zeroh"], f"p2_{k}"); d = n("LessOrEqual", [nX, "Cm1"], f"p3_{k}")
-        ib = n("And", [a, b], f"pi0_{k}"); ib = n("And", [ib, c2], f"pi1_{k}"); ib = n("And", [ib, d], f"pi_{k}")
-        fl = n("Mul", [nY, "Cf"], f"pf_{k}"); fl = n("Add", [fl, nX], f"pf0_{k}")
-        fl = n("Where", [ib, fl, "CNf"], f"pfl_{k}")
-        idx = n("Cast", [fl], f"pidx{k}", to=TensorProto.INT32)
-        scol = n("Gather", ["cwinp", idx], f"scol{k}", axis=0)        # [1,81] u8
+        srck = n("Gather", [f"SRC{k}", "best1"], f"src{k}", axis=0)   # [1,81] int32
+        scol = n("Gather", ["cwinp", srck], f"scol{k}", axis=0)       # [1,81] u8
         isbg = n("Equal", [outcol, "u0"], f"isbg{k}")
         outcol = n("Where", [isbg, scol, outcol], f"oc{k}")
-        Y, Xc = nY, nX
 
     # ---- scatter the 81 completed colours back to the 10x10 corner ----
     n("Reshape", [outcol, "shp_c"], "outv")                            # [81] u8

@@ -2690,14 +2690,14 @@
  {
   "task": 225,
   "arc_id": "93b581b8",
-  "points": 15.69,
+  "points": 16.16,
   "memory": 10428,
   "params": 650,
   "method": "gen:thbdh6332",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "16.16 adopted (15.69->16.16, +0.47); prior 14.03 rejected. INSIGHT: slice 6x6 active window FIRST (240B reductions), Cast-to-uint8 BEFORE Pad (900 vs 3600)"
  },
  {
   "task": 226,
