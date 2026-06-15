@@ -25,7 +25,7 @@ import numpy as np
 import onnx
 from onnx import helper, numpy_helper, TensorProto
 
-from ..builders import _model
+from ..harness import IR_VERSION
 
 I8 = TensorProto.INT8
 I32 = TensorProto.INT32
@@ -193,24 +193,29 @@ def build(task):
     n("Transpose", ["O2"], "O2t", perm=[0, 1, 3, 2])
     n("Where", ["tpB", "O2t", "O2"], "O")                   # undo transpose
 
-    # ---- 7. assemble channels via 1x1 Conv into output ----
-    # red is the ORIGINAL red mask (rule leaves reds in place); cyan from O
+    # ---- 7. assemble into a single uint8 label map, then final Equal ----
+    # Output colours: background 0, red 2 (original positions), cyan 8 (solved).
+    # Off-grid cells get sentinel 10 (matches no channel).  Replacing the old
+    # [1,3,30,30] bool stack + f32 Conv with a uint8 label map + free BOOL
+    # Equal removes ~5.4KB of stack/stack-cast intermediate.
     n("Greater", ["M", "zeroF16"], "mpos")
     n("Less", ["M", "h5"], "mlt5")
-    n("And", ["mpos", "mlt5"], "fRB")        # original red
-    n("Greater", ["O", "h5"], "fCB")         # cyan from solved figure
-    n("Or", ["fRB", "fCB"], "colB")
-    n("Not", ["colB"], "ncolB")
-    n("Cast", ["occf"], "occB", to=BOOL)
-    n("And", ["occB", "ncolB"], "bgB")
-    # concat the bool masks then Cast once (cheaper than 3 separate f32 masks)
-    n("Concat", ["bgB", "fRB", "fCB"], "stackB", axis=1)    # [1,3,30,30] bool
-    n("Cast", ["stackB"], "stack", to=F32)                  # [1,3,30,30] f32
-    Wout = np.zeros((10, 3, 1, 1), np.float32)
-    Wout[0, 0, 0, 0] = 1.0
-    Wout[2, 1, 0, 0] = 1.0
-    Wout[8, 2, 0, 0] = 1.0
-    init("Wout", Wout)
-    n("Conv", ["stack", "Wout"], "output")
+    n("And", ["mpos", "mlt5"], "fRB")        # original red (bool)
+    n("Greater", ["O", "h5"], "fCB")         # cyan from solved figure (bool)
+    init("u0", np.array(0, np.uint8), np.uint8)
+    init("u2", np.array(2, np.uint8), np.uint8)
+    init("u8", np.array(8, np.uint8), np.uint8)
+    init("u10", np.array(10, np.uint8), np.uint8)
+    n("Cast", ["occf"], "occB", to=BOOL)     # bool inside grid
+    n("Where", ["occB", "u0", "u10"], "Lg")  # 0 in-grid else 10
+    n("Where", ["fCB", "u8", "Lg"], "Lc")    # cyan = 8
+    n("Where", ["fRB", "u2", "Lc"], "L")     # red = 2 (overrides)
+    init("chan", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
+    n("Equal", ["L", "chan"], "output")      # -> free BOOL output
 
-    return _model(nodes, inits)
+    x = helper.make_tensor_value_info("input", F32, [1, 10, 30, 30])
+    y = helper.make_tensor_value_info("output", BOOL, [1, 10, 30, 30])
+    graph = helper.make_graph(nodes, "graph", [x], [y], inits)
+    return helper.make_model(
+        graph, ir_version=IR_VERSION,
+        opset_imports=[helper.make_opsetid("", 11)])

@@ -1,24 +1,10 @@
 [
  {
-  "task": 158,
-  "mem": 189350,
-  "pts": 12.85,
-  "gain": 3.87,
-  "method": "gen:biohack_new"
- },
- {
   "task": 118,
   "mem": 116144,
   "pts": 13.34,
   "gain": 3.44,
   "method": "gen:seddik"
- },
- {
-  "task": 209,
-  "mem": 113691,
-  "pts": 13.36,
-  "gain": 3.41,
-  "method": "gen:wguesdon6315"
  },
  {
   "task": 2,
@@ -42,27 +28,6 @@
   "method": "gen:vyank6322"
  },
  {
-  "task": 216,
-  "mem": 92612,
-  "pts": 13.56,
-  "gain": 3.22,
-  "method": "gen:vyank6322"
- },
- {
-  "task": 233,
-  "mem": 125010,
-  "pts": 13.25,
-  "gain": 3.21,
-  "method": "gen:thbdh6332"
- },
- {
-  "task": 36,
-  "mem": 79832,
-  "pts": 13.71,
-  "gain": 3.07,
-  "method": "gen:vyank6322"
- },
- {
   "task": 77,
   "mem": 99840,
   "pts": 13.48,
@@ -77,39 +42,11 @@
   "method": "gen:thbdh6332"
  },
  {
-  "task": 300,
-  "mem": 77438,
-  "pts": 13.74,
-  "gain": 3.04,
-  "method": "gen:thbdh6332"
- },
- {
-  "task": 285,
-  "mem": 121246,
-  "pts": 13.27,
-  "gain": 3.0,
-  "method": "gen:thbdh6332"
- },
- {
-  "task": 366,
-  "mem": 97119,
-  "pts": 13.5,
-  "gain": 2.97,
-  "method": "gen:vyank6322"
- },
- {
   "task": 23,
   "mem": 68607,
   "pts": 13.86,
   "gain": 2.94,
   "method": "gen:galaxy"
- },
- {
-  "task": 88,
-  "mem": 69698,
-  "pts": 13.85,
-  "gain": 2.93,
-  "method": "gen:biohack_new"
  },
  {
   "task": 126,
@@ -152,13 +89,6 @@
   "pts": 13.94,
   "gain": 2.85,
   "method": "gen:thbdh6332"
- },
- {
-  "task": 205,
-  "mem": 106354,
-  "pts": 13.4,
-  "gain": 2.82,
-  "method": "custom:task205"
  },
  {
   "task": 34,
@@ -301,27 +231,6 @@
   "method": "gen:thbdh6332"
  },
  {
-  "task": 91,
-  "mem": 51328,
-  "pts": 14.15,
-  "gain": 2.64,
-  "method": "gen:biohack_new"
- },
- {
-  "task": 275,
-  "mem": 51133,
-  "pts": 14.16,
-  "gain": 2.63,
-  "method": "gen:thbdh6332"
- },
- {
-  "task": 177,
-  "mem": 49824,
-  "pts": 14.18,
-  "gain": 2.6,
-  "method": "gen:biohack_new"
- },
- {
   "task": 379,
   "mem": 69969,
   "pts": 13.82,
@@ -350,13 +259,6 @@
   "method": "ext:thbdh6285"
  },
  {
-  "task": 396,
-  "mem": 58199,
-  "pts": 14.01,
-  "gain": 2.53,
-  "method": "gen:thbdh6332"
- },
- {
   "task": 89,
   "mem": 46056,
   "pts": 14.26,
@@ -378,32 +280,11 @@
   "method": "gen:thbdh6332"
  },
  {
-  "task": 253,
-  "mem": 47830,
-  "pts": 14.22,
-  "gain": 2.48,
-  "method": "gen:thbdh6332"
- },
- {
-  "task": 19,
-  "mem": 43800,
-  "pts": 14.31,
-  "gain": 2.45,
-  "method": "custom:task019"
- },
- {
   "task": 175,
   "mem": 70400,
   "pts": 13.8,
   "gain": 2.44,
   "method": "gen:biohack_new"
- },
- {
-  "task": 29,
-  "mem": 57214,
-  "pts": 14.01,
-  "gain": 2.37,
-  "method": "custom:task029"
  },
  {
   "task": 265,
@@ -427,38 +308,10 @@
   "method": "ext:thbdh6332"
  },
  {
-  "task": 213,
-  "mem": 36599,
-  "pts": 14.49,
-  "gain": 2.29,
-  "method": "gen:thbdh6332"
- },
- {
   "task": 131,
   "mem": 43599,
   "pts": 14.3,
   "gain": 2.28,
-  "method": "gen:thbdh6332"
- },
- {
-  "task": 185,
-  "mem": 35463,
-  "pts": 14.52,
-  "gain": 2.27,
-  "method": "gen:thbdh6332"
- },
- {
-  "task": 351,
-  "mem": 35114,
-  "pts": 14.53,
-  "gain": 2.27,
-  "method": "gen:thbdh6332"
- },
- {
-  "task": 400,
-  "mem": 35114,
-  "pts": 14.53,
-  "gain": 2.27,
   "method": "gen:thbdh6332"
  },
  {
@@ -476,13 +329,6 @@
   "method": "ext:thbdh6285"
  },
  {
-  "task": 14,
-  "mem": 38399,
-  "pts": 14.43,
-  "gain": 2.22,
-  "method": "ext:kojimar6275"
- },
- {
   "task": 284,
   "mem": 34629,
   "pts": 14.54,
@@ -497,13 +343,6 @@
   "method": "ext:galaxy_v1"
  },
  {
-  "task": 174,
-  "mem": 32787,
-  "pts": 14.6,
-  "gain": 2.19,
-  "method": "gen:vyank6322"
- },
- {
   "task": 328,
   "mem": 63207,
   "pts": 13.89,
@@ -516,20 +355,6 @@
   "pts": 14.37,
   "gain": 2.18,
   "method": "ext:thbdh6332"
- },
- {
-  "task": 377,
-  "mem": 35471,
-  "pts": 14.51,
-  "gain": 2.16,
-  "method": "gen:vyank6322"
- },
- {
-  "task": 244,
-  "mem": 31685,
-  "pts": 14.63,
-  "gain": 2.15,
-  "method": "gen:biohack_new"
  },
  {
   "task": 359,
@@ -560,20 +385,6 @@
   "method": "ext:kojimar6275"
  },
  {
-  "task": 271,
-  "mem": 28928,
-  "pts": 14.73,
-  "gain": 2.07,
-  "method": "gen:thbdh6332"
- },
- {
-  "task": 325,
-  "mem": 41120,
-  "pts": 14.33,
-  "gain": 2.06,
-  "method": "gen:thbdh6332"
- },
- {
   "task": 64,
   "mem": 27744,
   "pts": 14.77,
@@ -588,37 +399,9 @@
   "method": "custom:task202"
  },
  {
-  "task": 365,
-  "mem": 26613,
-  "pts": 14.81,
-  "gain": 1.98,
-  "method": "gen:vyank6322"
- },
- {
-  "task": 46,
-  "mem": 30640,
-  "pts": 14.64,
-  "gain": 1.95,
-  "method": "gen:biohack_new"
- },
- {
-  "task": 183,
-  "mem": 24816,
-  "pts": 14.88,
-  "gain": 1.92,
-  "method": "gen:biohack_new"
- },
- {
   "task": 228,
   "mem": 25008,
   "pts": 14.87,
-  "gain": 1.92,
-  "method": "gen:thbdh6332"
- },
- {
-  "task": 310,
-  "mem": 25573,
-  "pts": 14.84,
   "gain": 1.92,
   "method": "gen:thbdh6332"
  },
@@ -628,13 +411,6 @@
   "pts": 14.53,
   "gain": 1.92,
   "method": "ext:thbdh6285+pruned"
- },
- {
-  "task": 289,
-  "mem": 24892,
-  "pts": 14.87,
-  "gain": 1.91,
-  "method": "ext:kojimar6275"
  },
  {
   "task": 154,
@@ -700,13 +476,6 @@
   "method": "custom:task013"
  },
  {
-  "task": 308,
-  "mem": 21698,
-  "pts": 15.01,
-  "gain": 1.77,
-  "method": "gen:thbdh6332"
- },
- {
   "task": 55,
   "mem": 25260,
   "pts": 14.83,
@@ -726,20 +495,6 @@
   "pts": 15.0,
   "gain": 1.72,
   "method": "ext:kojimar6275"
- },
- {
-  "task": 153,
-  "mem": 20491,
-  "pts": 15.07,
-  "gain": 1.72,
-  "method": "gen:biohack_new"
- },
- {
-  "task": 242,
-  "mem": 20074,
-  "pts": 15.09,
-  "gain": 1.71,
-  "method": "gen:thbdh6332"
  },
  {
   "task": 350,
@@ -791,39 +546,11 @@
   "method": "ext:kojimar6275"
  },
  {
-  "task": 31,
-  "mem": 18558,
-  "pts": 15.17,
-  "gain": 1.63,
-  "method": "gen:vyank6322"
- },
- {
   "task": 75,
   "mem": 18522,
   "pts": 15.17,
   "gain": 1.62,
   "method": "ext:wguesdon6304"
- },
- {
-  "task": 22,
-  "mem": 18291,
-  "pts": 15.17,
-  "gain": 1.56,
-  "method": "gen:thbdh6332"
- },
- {
-  "task": 239,
-  "mem": 21922,
-  "pts": 14.95,
-  "gain": 1.56,
-  "method": "custom:task239"
- },
- {
-  "task": 218,
-  "mem": 16438,
-  "pts": 15.29,
-  "gain": 1.51,
-  "method": "gen:vyank6322"
  },
  {
   "task": 354,
@@ -924,20 +651,6 @@
   "method": "gen:thbdh6332"
  },
  {
-  "task": 178,
-  "mem": 13569,
-  "pts": 15.48,
-  "gain": 1.31,
-  "method": "gen:thbdh6332"
- },
- {
-  "task": 65,
-  "mem": 13418,
-  "pts": 15.49,
-  "gain": 1.3,
-  "method": "custom:task065"
- },
- {
   "task": 298,
   "mem": 14378,
   "pts": 15.39,
@@ -1036,59 +749,10 @@
   "method": "ext:kojimar6275"
  },
  {
-  "task": 355,
-  "mem": 11706,
-  "pts": 15.62,
-  "gain": 1.16,
-  "method": "gen:thbdh6332"
- },
- {
-  "task": 290,
-  "mem": 11614,
-  "pts": 15.63,
-  "gain": 1.15,
-  "method": "ext:kojimar6275"
- },
- {
-  "task": 384,
-  "mem": 11236,
-  "pts": 15.66,
-  "gain": 1.11,
-  "method": "custom:task384"
- },
- {
-  "task": 189,
-  "mem": 13938,
-  "pts": 15.35,
-  "gain": 1.09,
-  "method": "custom:task189"
- },
- {
-  "task": 188,
-  "mem": 10616,
-  "pts": 15.73,
-  "gain": 1.07,
-  "method": "gen:thbdh6332"
- },
- {
-  "task": 184,
-  "mem": 28880,
-  "pts": 14.43,
-  "gain": 1.05,
-  "method": "gen:thbdh6332"
- },
- {
   "task": 329,
   "mem": 10214,
   "pts": 15.76,
   "gain": 1.03,
-  "method": "ext:kojimar6275"
- },
- {
-  "task": 391,
-  "mem": 9992,
-  "pts": 15.79,
-  "gain": 1.02,
   "method": "ext:kojimar6275"
  },
  {
