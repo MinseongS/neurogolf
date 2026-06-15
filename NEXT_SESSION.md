@@ -16,7 +16,7 @@
 1. **채택은 오직 `python -m src.adopt N`** (fresh-gate). raw `pipeline --methods custom` 금지(stored keep-best = 6505→4374 버그).
 2. **로컬 stored 점수 신뢰 금지.** Kaggle은 fresh 인스턴스로 채점 → 진단은 `src.genverify`/`fresh_pass`, 진실은 실제 LB.
 3. **공개 artifact 머지 금지** — 이미 소진됐고 머지하면 회귀(이번에 LB로 증명). `src.merge_external` 절대 금지.
-4. **제출 한도 = rolling ~5/24h** (무제한 아님). 0점 진단은 무료 로컬 감사로, 제출은 가끔 확인용. 제출 전 사용자 승인.
+4. **제출 한도 = 100/day** (Kaggle API maxDailySubmissions 확인, 2026-06-15. 과거 "~5/24h"는 오진단). 0점 진단은 무료 로컬 genverify로 충분(제출 아껴쓸 필요 없음), 제출 전 사용자 승인은 유지.
 5. custom 파일명은 3자리 zero-pad (`task071.py`). 에이전트는 `src/custom/taskNNN.py`만 작성, adopt/commit은 메인이.
 
 ## 작업 우선순위 (번호순 ❌, 효율순 ⭕)
