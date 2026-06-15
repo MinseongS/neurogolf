@@ -169,9 +169,9 @@
    "method": "ext:kojimar6275"
   },
   "29": {
-   "points": 14.012320297707067,
-   "memory": 57214,
-   "params": 1927,
+   "points": 15.206159916768403,
+   "memory": 17742,
+   "params": 181,
    "method": "custom:task029"
   },
   "30": {
@@ -649,9 +649,9 @@
    "method": "ext:kojimar6275"
   },
   "109": {
-   "points": 14.05795098692995,
-   "memory": 54573,
-   "params": 1930,
+   "points": 16.3347316905184,
+   "memory": 5395,
+   "params": 403,
    "method": "custom:task109"
   },
   "110": {
@@ -1681,9 +1681,9 @@
    "method": "gen:vyank6322"
   },
   "281": {
-   "points": 14.202549127473807,
-   "memory": 48818,
-   "params": 78,
+   "points": 15.54201860510922,
+   "memory": 12696,
+   "params": 114,
    "method": "custom:task281"
   },
   "282": {

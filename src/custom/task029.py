@@ -4,25 +4,30 @@ Rule (from ARC-GEN): the grid has random static plus one hollow rectangle drawn
 in a color that is never used by the static.  The output is the static content
 inside that rectangle, translated to the top-left.
 
-Approach (pure integer arithmetic, exact in float32):
-  - per color channel, get bbox [r0,r1]x[c0,c1] from row/col projections.
-  - the border color is the one whose bbox has all four edges fully filled
-    (top/bottom rows count == bw, left/right cols count == bh); among those
-    pick the largest perimeter.  Row/col counts come straight from ReduceSum
-    on the free `input` tensor, so no canvas-sized intermediate is needed.
-  - build crop+translate selection matrices Lr, Lc from the interior bounds
-    and emit  output = Lr @ input @ Lc^T  (writes the free `output` tensor).
+Memory floor-break (single-plane crop + label map + final Equal):
+  The previous encoding applied the crop/translate selection matrices to the
+  full 10-channel input (Lr @ input @ Lc^T), materialising a [1,10,30,30] f32
+  intermediate (36000B).  Instead we collapse the input to a single uint8/float
+  colour-id plane colorid[1,1,30,30] (0..9), crop THAT with the same selection
+  matrices (Lr @ colorid @ Lc^T -> [1,1,30,30], 3600B), and form a uint8 label
+  map L: cropped colour id inside the output rectangle, sentinel 10 outside
+  (10 never matches channels 0..9, so those cells are all-false, while
+  background cells map to id 0 -> channel 0 true, exactly as required).  The
+  final op Equal(L, arange[1,10,1,1]) writes the free BOOL `output` (opset 11).
+  Bounds are recovered with the same tiny scalar arithmetic as before.
 """
 
 import numpy as np
 import onnx
+from onnx import helper, numpy_helper, TensorProto
 
-from ..harness import DATA_TYPE, GRID_SHAPE, IR_VERSION, OPSET_IMPORTS
+from ..harness import IR_VERSION
 
 N = 30
 BIG = 1000.0
-I32 = onnx.TensorProto.INT32
-F32 = onnx.TensorProto.FLOAT
+I32 = TensorProto.INT32
+F32 = TensorProto.FLOAT
+F16 = TensorProto.FLOAT16
 
 
 def build(task):
@@ -30,14 +35,13 @@ def build(task):
 
     def init(name, arr, dtype=None):
         a = np.ascontiguousarray(arr, dtype=dtype) if dtype else np.ascontiguousarray(arr)
-        inits.append(onnx.numpy_helper.from_array(a, name))
+        inits.append(numpy_helper.from_array(a, name))
         return name
 
     def n(op, ins, out, **attrs):
-        nodes.append(onnx.helper.make_node(op, ins, [out], **attrs))
+        nodes.append(helper.make_node(op, ins, [out], **attrs))
         return out
 
-    F16 = onnx.TensorProto.FLOAT16
     ih = np.arange(N, dtype=np.float16).reshape(1, 1, N, 1)
     iw = np.arange(N, dtype=np.float16).reshape(1, 1, 1, N)
     init("ih", ih)            # [1,1,30,1] f16
@@ -50,12 +54,12 @@ def build(task):
     init("halfh", np.array(0.5, np.float16))   # for f16 score comparison
 
     # --- per-channel counts & bbox (presence derived from counts via Where) ---
-    n("ReduceSum", ["input"], "rc", axes=[3], keepdims=1)   # [1,10,30,1] f32 per-row count
-    n("ReduceSum", ["input"], "cc", axes=[2], keepdims=1)   # [1,10,1,30] f32 per-col count
+    n("ReduceSum", ["input"], "rc", axes=[3], keepdims=1)   # [1,10,30,1] row count
+    n("ReduceSum", ["input"], "cc", axes=[2], keepdims=1)   # [1,10,1,30] col count
     n("Greater", ["rc", "half"], "rpb")     # bool [1,10,30,1] row present
     n("Greater", ["cc", "half"], "cpb")     # bool [1,10,1,30] col present
 
-    # r0 = min present row, r1 = max present row  (ih broadcast against [1,10,30,1])
+    # r0 = min present row, r1 = max present row
     n("Where", ["rpb", "ih", "big"], "rlo")     # [1,10,30,1]
     n("ReduceMin", ["rlo"], "r0", axes=[2], keepdims=1)     # [1,10,1,1]
     n("Where", ["rpb", "ih", "nbig"], "rhi")
@@ -71,26 +75,24 @@ def build(task):
     n("Add", ["dh", "one"], "bh")       # [1,10,1,1]
     n("Add", ["dw", "one"], "bw")
 
-    # --- ring test: exactly 2 full rows (rc==bw) and exactly 2 full cols (cc==bh) ---
-    n("Cast", ["rc"], "rci", to=I32)
-    n("Cast", ["cc"], "cci", to=I32)
-    n("Cast", ["bw"], "bwi", to=I32)
-    n("Cast", ["bh"], "bhi", to=I32)
-    n("Equal", ["rci", "bwi"], "rowfull_b")          # [1,10,30,1] bool
-    n("Equal", ["cci", "bhi"], "colfull_b")          # [1,10,1,30] bool
+    # --- ring test: exactly 2 full rows (rc==bw) and 2 full cols (cc==bh) ---
+    # all counts/dims are <= 30 integers, exact in f16 -> use f16 Equal (no
+    # int32 count planes).
+    n("Cast", ["rc"], "rcf", to=F16)                 # [1,10,30,1] f16
+    n("Cast", ["cc"], "ccf", to=F16)                 # [1,10,1,30] f16
+    n("Equal", ["rcf", "bw"], "rowfull_b")           # [1,10,30,1] bool
+    n("Equal", ["ccf", "bh"], "colfull_b")           # [1,10,1,30] bool
     n("Cast", ["rowfull_b"], "rowfull", to=F16)
     n("Cast", ["colfull_b"], "colfull", to=F16)
     n("ReduceSum", ["rowfull"], "nrf", axes=[2], keepdims=1)  # [1,10,1,1]
     n("ReduceSum", ["colfull"], "ncf", axes=[3], keepdims=1)  # [1,10,1,1]
-    n("Cast", ["nrf"], "nrfi", to=I32)
-    n("Cast", ["ncf"], "ncfi", to=I32)
-    init("twoi", np.array(2, np.int32))
-    n("Equal", ["nrfi", "twoi"], "rr_b")
-    n("Equal", ["ncfi", "twoi"], "cc_b")
+    init("twof", np.array(2, np.float16))
+    n("Equal", ["nrf", "twof"], "rr_b")
+    n("Equal", ["ncf", "twof"], "cc_b")
     n("And", ["rr_b", "cc_b"], "ring_b")
     n("Cast", ["ring_b"], "ring", to=F16)            # [1,10,1,1]
 
-    # score = perimeter * ring  ( perimeter = 2*(dh+dw) )
+    # score = perimeter * ring
     n("Add", ["dh", "dw"], "dhw")
     n("Mul", ["dhw", "two"], "peri")
     n("Mul", ["peri", "ring"], "score")       # [1,10,1,1]
@@ -113,39 +115,51 @@ def build(task):
         n("Mul", [src, "win"], dst + "_m")
         n("ReduceSum", [dst + "_m"], dst, axes=[1], keepdims=1)  # [1,1,1,1]
 
-    # --- build Lr / Lc selection matrices ---
-    I = np.arange(N, dtype=np.int32).reshape(N, 1)
-    J = np.arange(N, dtype=np.int32).reshape(1, N)
-    # Lr[i,j] = (j - i == ir0) and (j <= ir1)
-    init("Dmat", (J - I).reshape(1, 1, N, N), np.int32)   # j - i   (param only)
-    # LcT[i,j] = Lc[j,i] = (i - j == ic0) and (i <= ic1)
-    init("Emat", (I - J).reshape(1, 1, N, N), np.int32)   # i - j
-    init("Jvec", J.reshape(1, 1, 1, N), np.int32)         # column index, broadcasts
-    init("Ivec", I.reshape(1, 1, N, 1), np.int32)         # row index, broadcasts
+    # --- collapse input to a single colour-id plane (cast to uint8: ids 0..9) ---
+    w_id = np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1)
+    init("w_id", w_id, np.float32)
+    n("Conv", ["input", "w_id"], "colorid_f")      # [1,1,30,30] f32 (id 0..9)
+    n("Cast", ["colorid_f"], "colorid", to=TensorProto.UINT8)  # [1,1,30,30] u8
 
-    n("Add", ["ir1", "one"], "ir1p")          # hi+1 for <=  comparison
-    n("Add", ["ic1", "one"], "ic1p")
+    # --- crop+translate by GATHER (output[r,c] = colorid[ir0+r, ic0+c]) ---
+    # gather index vectors gr/gc = bound + arange(30), clamped to 0..29 (cells
+    # past the region are masked to the sentinel below, so the clamp is safe).
+    n("Reshape", ["ir0", init("scl1", np.array([1], np.int64), np.int64)], "ir0s")
+    n("Reshape", ["ic0", "scl1"], "ic0s")          # [1] f16
+    init("ar30f", np.arange(N, dtype=np.float16))  # [30] f16
+    init("capf", np.array(N - 1, np.float16))      # clamp ceiling 29
+    n("Add", ["ar30f", "ir0s"], "gr0")             # [30] f16
+    n("Add", ["ar30f", "ic0s"], "gc0")
+    n("Min", ["gr0", "capf"], "grf")               # clamp to <= 29 (f16)
+    n("Min", ["gc0", "capf"], "gcf")
+    n("Cast", ["grf"], "gr", to=I32)               # [30] int32 indices
+    n("Cast", ["gcf"], "gc", to=I32)
+    n("Gather", ["colorid", "gr"], "crop_r", axis=2)   # [1,1,30,30] rows shifted
+    n("Gather", ["crop_r", "gc"], "cropped", axis=3)   # [1,1,30,30] cols shifted
 
-    def build_sel(prefix, dmat, kvec, lo, hip):
-        # L[i,j] = (dmat==lo) & (hip > kvec)   (kvec is the bounded axis index)
-        n("Cast", [lo], prefix + "_loi", to=I32)
-        n("Cast", [hip], prefix + "_hpi", to=I32)
-        n("Equal", [dmat, prefix + "_loi"], prefix + "_deq")     # bool [1,1,30,30]
-        n("Greater", [prefix + "_hpi", kvec], prefix + "_le")    # hip > k  (tiny vector)
-        n("And", [prefix + "_deq", prefix + "_le"], prefix + "_b")
-        n("Cast", [prefix + "_b"], prefix, to=F32)
-        return prefix
+    # --- output region mask (rows 0..dh-1 of interior, cols 0..dw-1) ---
+    # interior height = ir1 - ir0 + 1, width = ic1 - ic0 + 1.
+    n("Sub", ["ir1", "ir0"], "idh16")   # interior height - 1 (f16)
+    n("Sub", ["ic1", "ic0"], "idw16")   # interior width - 1 (f16)
+    # region: row <= idh  and  col <= idw  (output placed at top-left)
+    init("ihf", np.arange(N, dtype=np.float16).reshape(1, 1, N, 1))  # row idx f16
+    init("iwf", np.arange(N, dtype=np.float16).reshape(1, 1, 1, N))  # col idx f16
+    n("Sub", ["idh16", "ihf"], "rd")    # >=0 where row <= idh
+    n("Sub", ["idw16", "iwf"], "cd")
+    init("nh", np.array(-0.5, np.float16))
+    n("Greater", ["rd", "nh"], "rokB")  # row <= idh
+    n("Greater", ["cd", "nh"], "cokB")  # col <= idw
+    n("And", ["rokB", "cokB"], "regionB")          # [1,1,30,30] bool
 
-    # Lr bounded by j (cols of the row-selector); LcT bounded by i (rows)
-    build_sel("Lr", "Dmat", "Jvec", "ir0", "ir1p")
-    build_sel("LcT", "Emat", "Ivec", "ic0", "ic1p")
+    # --- label map: cropped colour id inside region, sentinel 10 outside ---
+    init("v10", np.array(10, np.uint8), np.uint8)
+    n("Where", ["regionB", "cropped", "v10"], "L")            # [1,1,30,30] uint8
 
-    # output = Lr @ input @ Lc^T
-    n("MatMul", ["Lr", "input"], "cropped")        # [1,10,30,30] f32
-    n("MatMul", ["cropped", "LcT"], "output")
+    init("chan10", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
+    n("Equal", ["L", "chan10"], "output")                     # -> free BOOL
 
-    x = onnx.helper.make_tensor_value_info("input", DATA_TYPE, GRID_SHAPE)
-    y = onnx.helper.make_tensor_value_info("output", DATA_TYPE, GRID_SHAPE)
-    graph = onnx.helper.make_graph(nodes, "task029", [x], [y], inits)
-    return onnx.helper.make_model(graph, ir_version=IR_VERSION,
-                                  opset_imports=OPSET_IMPORTS)
+    x = helper.make_tensor_value_info("input", F32, [1, 10, N, N])
+    y = helper.make_tensor_value_info("output", TensorProto.BOOL, [1, 10, N, N])
+    graph = helper.make_graph(nodes, "task029", [x], [y], inits)
+    return helper.make_model(graph, ir_version=IR_VERSION,
+                             opset_imports=[helper.make_opsetid("", 11)])
