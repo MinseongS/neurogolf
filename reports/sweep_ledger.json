@@ -2990,14 +2990,14 @@
  {
   "task": 250,
   "arc_id": "a48eeaf7",
-  "points": 15.61,
+  "points": 16.77,
   "memory": 11872,
   "params": 68,
   "method": "ext:biohack_new",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "16.77 adopted (15.61->16.77, +1.16); floor 3664. INSIGHT: data-dep coordinate remap = boolean double MatMul Rmat@src@CmatT (scatter w/o Gather/Loop)"
  },
  {
   "task": 251,
