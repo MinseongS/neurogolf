@@ -920,8 +920,8 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE B ~16.8pt: recolor via local Conv: 3x3 box neighborhoods -> mark diagonals red. s"
+  "status": "confirmed-infeasible",
+  "verdict": "RE-TRIAGE FALSE-POSITIVE: not a recolor, position-dependent detection w/ >50% reconstruction ambiguity (brute-force fails 77%). Infeasible at any budget."
  },
  {
   "task": 78,
