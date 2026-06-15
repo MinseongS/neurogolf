@@ -38,12 +38,13 @@ def build(task):
         nodes.append(onnx.helper.make_node(op, inputs, [out], **attrs))
         return out
 
-    init("kH", np.ones((1, 1, 1, 30), np.float32))
-    init("kV", np.ones((1, 1, 30, 1), np.float32))
+    F16 = TensorProto.FLOAT16
+    init("kH", np.ones((1, 1, 1, 30), np.float16), np.float16)
+    init("kV", np.ones((1, 1, 30, 1), np.float16), np.float16)
     init("c30", np.array(30.0, np.float32))
-    init("neg1", np.array(-1.0, np.float32))
-    init("half", np.array(0.5, np.float32))
-    init("big", np.array(1e9, np.float32))
+    init("neg1", np.array(-1.0, np.float16), np.float16)
+    init("half", np.array(0.5, np.float16), np.float16)
+    init("big", np.array(1e4, np.float16), np.float16)
     init("zero_i", np.array(0, np.int32), np.int32)
     init("eight_i", np.array(8, np.int32), np.int32)
 
@@ -73,17 +74,18 @@ def build(task):
     n("Sub", ["dot_f", "b30"], "Wrun")                         # [1,10,1,1] f
 
     # --- E0: +1 at dots, -30 at box cells (dynamic-weight 1x1 conv) ---
-    n("Conv", ["input", "Wrun"], "E0")                         # [1,1,30,30] f
+    n("Conv", ["input", "Wrun"], "E0f")                        # [1,1,30,30] f32
+    n("Cast", ["E0f"], "E0", to=F16)                           # [1,1,30,30] f16
 
-    # --- span masks -> per-row/col thresholds ---
-    n("ReduceMin", ["E0"], "rmin", axes=[3], keepdims=1)       # [1,1,30,1]
-    n("ReduceMin", ["E0"], "cmin", axes=[2], keepdims=1)       # [1,1,1,30]
+    # --- span masks -> per-row/col thresholds (fp16) ---
+    n("ReduceMin", ["E0"], "rmin", axes=[3], keepdims=1)       # [1,1,30,1] f16
+    n("ReduceMin", ["E0"], "cmin", axes=[2], keepdims=1)       # [1,1,1,30] f16
     n("Less", ["rmin", "neg1"], "rs_b")
     n("Less", ["cmin", "neg1"], "cs_b")
-    n("Where", ["rs_b", "half", "big"], "thrH")                # [1,1,30,1] f
+    n("Where", ["rs_b", "half", "big"], "thrH")                # [1,1,30,1] f16
     n("Where", ["cs_b", "half", "big"], "thrV")
 
-    # --- directional cumulative sums (box-blocked by -30 sentinel) ---
+    # --- directional cumulative sums (box-blocked by -30 sentinel), fp16 ---
     n("Conv", ["E0", "kH"], "cumL", pads=[0, 29, 0, 0])        # prefix in row
     n("Conv", ["E0", "kH"], "cumR", pads=[0, 0, 0, 29])        # suffix in row
     n("Conv", ["E0", "kV"], "cumT", pads=[29, 0, 0, 0])        # prefix in col

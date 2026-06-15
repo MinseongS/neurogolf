@@ -16,9 +16,9 @@ sharing a column => transposed) so a single graph handles both orientations.
 
 import numpy as np
 import onnx
-from onnx import helper, numpy_helper
+from onnx import helper, numpy_helper, TensorProto
 
-from ..builders import _model
+from ..harness import IR_VERSION
 
 
 def build(task):
@@ -35,29 +35,36 @@ def build(task):
         nodes.append(helper.make_node(op, inputs, [out], **attrs))
         return out
 
-    init("c_one", np.array(1.0, np.float32))
-    init("c_two", np.array(2.0, np.float32))
-    init("c_three", np.array(3.0, np.float32))
-    init("BIG", np.array(100.0, np.float32))
-    idx = np.arange(30, dtype=np.float32)
-    init("idxW", idx.reshape(1, 1, 1, 30))
-    init("idxH", idx.reshape(1, 1, 30, 1))
+    F16 = onnx.TensorProto.FLOAT16
+    # geometry constants in fp16 (all values are small integers / half-integers,
+    # exact in fp16) so the entire 1-D / factor pipeline is fp16.
+    init("c_one", np.array(1.0, np.float16), np.float16)
+    init("c_two", np.array(2.0, np.float16), np.float16)
+    init("c_three", np.array(3.0, np.float16), np.float16)
+    init("BIG", np.array(100.0, np.float16), np.float16)
+    idx = np.arange(30, dtype=np.float16)
+    init("idxW", idx.reshape(1, 1, 1, 30), np.float16)
+    init("idxH", idx.reshape(1, 1, 30, 1), np.float16)
 
     # --- per-channel occupancy (reused for both masks and color routing) ---
-    n("ReduceMax", "input", "rowOccF", axes=[3], keepdims=1)     # [1,10,30,1]
-    n("ReduceMax", "input", "colOccF", axes=[2], keepdims=1)     # [1,10,1,30]
-    no0 = np.ones((1, 10, 1, 1), np.float32); no0[0, 0, 0, 0] = 0.0
-    init("no0", no0)
+    # cast input -> fp16 occupancy via fp16 ReduceMax kept tiny: reduce first in
+    # fp32 then cast the small [1,10,30,1] results.
+    n("ReduceMax", "input", "rowOccF32", axes=[3], keepdims=1)   # [1,10,30,1] f32
+    n("ReduceMax", "input", "colOccF32", axes=[2], keepdims=1)   # [1,10,1,30] f32
+    n("Cast", "rowOccF32", "rowOccF", to=F16)                    # [1,10,30,1] f16
+    n("Cast", "colOccF32", "colOccF", to=F16)                    # [1,10,1,30] f16
+    no0 = np.ones((1, 10, 1, 1), np.float16); no0[0, 0, 0, 0] = 0.0
+    init("no0", no0, np.float16)
     # seed occupancy excluding channel 0, reduced over channels -> 1-D masks
-    n("Mul", ["rowOccF", "no0"], "rowOccS")                      # [1,10,30,1]
-    n("Mul", ["colOccF", "no0"], "colOccS")                      # [1,10,1,30]
+    n("Mul", ["rowOccF", "no0"], "rowOccS")                      # [1,10,30,1] f16
+    n("Mul", ["colOccF", "no0"], "colOccS")                      # [1,10,1,30] f16
     n("ReduceMax", "rowOccS", "rowMaskH", axes=[1], keepdims=1)  # [1,1,30,1]
     n("ReduceMax", "colOccS", "colMaskW", axes=[1], keepdims=1)  # [1,1,1,30]
 
     # isT = seeds share a column  <=>  >1 occupied row
     n("ReduceSum", "rowMaskH", "rowCnt", axes=[2], keepdims=1)   # [1,1,1,1]
     n("Greater", ["rowCnt", "c_one"], "isT_b")
-    n("Cast", "isT_b", "isT", to=onnx.TensorProto.FLOAT)         # [1,1,1,1]
+    n("Cast", "isT_b", "isT", to=F16)                            # [1,1,1,1] f16
     n("Sub", ["c_one", "isT"], "notT")
 
     # reshape masks across axes for orientation-agnostic along/cross vectors
@@ -97,7 +104,7 @@ def build(task):
         # build a [1,1,N,1] threshold column from (scalar, offset) terms
         parts = []
         for i, (base, off) in enumerate(terms):
-            init(f"o_{name}{i}", np.array(off, np.float32))
+            init(f"o_{name}{i}", np.array(off, np.float16), np.float16)
             parts.append(n("Add", [base, f"o_{name}{i}"], f"t_{name}{i}"))
         return n("Concat", parts, f"col_{name}", axis=2)        # [1,1,N,1]
 
@@ -105,9 +112,9 @@ def build(task):
         # batched 0/1 masks: (idxW > lo) & (idxW < hi) -> [1,1,N,30]
         g = n("Greater", ["idxW", lo], f"g_{name}")
         l = n("Less", ["idxW", hi], f"l_{name}")
-        gf = n("Cast", g, f"gf_{name}", to=onnx.TensorProto.FLOAT)
-        lf = n("Cast", l, f"lf_{name}", to=onnx.TensorProto.FLOAT)
-        return n("Mul", [gf, lf], f"b_{name}")                  # [1,1,N,30]
+        gf = n("Cast", g, f"gf_{name}", to=F16)
+        lf = n("Cast", l, f"lf_{name}", to=F16)
+        return n("Mul", [gf, lf], f"b_{name}")                  # [1,1,N,30] f16
 
     # all 6 along masks at once, rows [stemL,crossLc,hookLc, stemR,crossRc,hookRc]
     alo = col("alo", [("Cl", -0.5), ("e0", -0.5), ("e0", 0.5),
@@ -155,22 +162,37 @@ def build(task):
     n("Mul", ["notT", "alongLR"], "awN")
     n("Add", ["awT", "awN"], "AW2")                            # [1,2,3,30]
 
-    # in-grid rectangle as a rank-1 factor (rowExtent (x) colExtent), padded to
-    # 3 components with zeros so it stacks with the rank-3 glyph factors.
+    # in-grid rectangle as a rank-1 factor (rowExtent (x) colExtent).
     n("ReduceMax", "rowOccF", "rowExt", axes=[1], keepdims=1)    # [1,1,30,1]
     n("ReduceMax", "colOccF", "colExt", axes=[1], keepdims=1)    # [1,1,1,30]
-    init("zH", np.zeros((1, 1, 30, 2), np.float32))
-    init("zW", np.zeros((1, 1, 2, 30), np.float32))
-    n("Concat", ["rowExt", "zH"], "CH_G", axis=3)               # [1,1,30,3]
-    n("Concat", ["colExt", "zW"], "AW_G", axis=2)               # [1,1,3,30]
 
-    # Stack the 3 channels' factors and form all planes in ONE MatMul ->
-    # shapes [1,3,30,30] directly (no separate canvas-sized plane tensors).
-    n("Concat", ["CH2", "CH_G"], "CH3", axis=1)                # [1,3,30,3]
-    n("Concat", ["AW2", "AW_G"], "AW3", axis=1)                # [1,3,3,30]
-    n("MatMul", ["CH3", "AW3"], "shapes")                      # [1,3,30,30]
+    # Each of the three planes is a separable product summed over <=3 rank-1
+    # components.  Build each as its own [1,1,30,30] fp16 plane via MatMul of
+    # the channel factor [1,1,30,K] with the along factor [1,1,K,30] -- no
+    # 3-channel canvas tensor, no slicing.  Factors are 0/1 so fp16 is exact.
+    init("axC1", np.array([1], np.int64), np.int64)
+    init("s0a", np.array([0], np.int64), np.int64)
+    init("s1a", np.array([1], np.int64), np.int64)
+    init("s2a", np.array([2], np.int64), np.int64)
+    n("Slice", ["CH2", "s0a", "s1a", "axC1"], "CHl")           # [1,1,30,3]
+    n("Slice", ["CH2", "s1a", "s2a", "axC1"], "CHr")
+    n("Slice", ["AW2", "s0a", "s1a", "axC1"], "AWl")           # [1,1,3,30]
+    n("Slice", ["AW2", "s1a", "s2a", "axC1"], "AWr")
+    init("half16", np.array(0.5, np.float16), np.float16)
 
-    # --- color routing weight [10,3,1,1] from seed colors ---
+    def plane(ch, aw, mask):
+        n("MatMul", [ch, aw], mask + "P")                      # [1,1,30,30] f16
+        n("Greater", [mask + "P", "half16"], mask)             # bool
+
+    plane("CHl", "AWl", "leftM")
+    plane("CHr", "AWr", "rightM")
+    # in-grid mask is a single separable rectangle -> avoid a 30x30 MatMul,
+    # broadcast an AND of the two 1-D bool extents straight to [1,1,30,30].
+    n("Greater", ["rowExt", "half16"], "rowExtB")              # [1,1,30,1] bool
+    n("Greater", ["colExt", "half16"], "colExtB")             # [1,1,1,30] bool
+    n("And", ["rowExtB", "colExtB"], "gridM")                 # [1,1,30,30] bool
+
+    # --- scalar seed-colour ids colorL, colorR (uint8) ---
     # per-channel along-position via tiny [1,10,1,1] reductions (no canvas temp)
     n("Mul", ["idxH", "rowOccS"], "ioH")                        # [1,10,30,1]
     n("ReduceSum", "ioH", "rowPos", axes=[2], keepdims=1)       # [1,10,1,1]
@@ -183,21 +205,33 @@ def build(task):
     n("Mul", ["chPos", "c_two"], "chPos2")
     n("Less", ["chPos2", "S"], "isL_b")
     n("Greater", ["chPos2", "S"], "isR_b")
-    n("Cast", "isL_b", "isL", to=onnx.TensorProto.FLOAT)
-    n("Cast", "isR_b", "isR", to=onnx.TensorProto.FLOAT)
-    n("Mul", ["present", "isL"], "leftSel")                    # [1,10,1,1]
+    n("Cast", "isL_b", "isL", to=F16)
+    n("Cast", "isR_b", "isR", to=F16)
+    n("Mul", ["present", "isL"], "leftSel")                    # [1,10,1,1] one-hot
     n("Mul", ["present", "isR"], "rightSel")
-    init("shp10111", np.array([10, 1, 1, 1], np.int64), np.int64)
-    n("Reshape", ["leftSel", "shp10111"], "wL")                # [10,1,1,1]
-    n("Reshape", ["rightSel", "shp10111"], "wR")
-    init("wzero", np.zeros((10, 1, 1, 1), np.float32))
-    n("Concat", ["wL", "wR", "wzero"], "Wdyn", axis=1)         # [10,3,1,1]
-    # baseW: channel 0 = ingrid - left - right (background); colors unaffected
-    baseW = np.zeros((10, 3, 1, 1), np.float32)
-    baseW[0, 0, 0, 0] = -1.0; baseW[0, 1, 0, 0] = -1.0; baseW[0, 2, 0, 0] = 1.0
-    init("baseW", baseW)
-    n("Add", ["Wdyn", "baseW"], "Wrt")                         # [10,3,1,1]
+    arc = np.arange(10, dtype=np.float16).reshape(1, 10, 1, 1)
+    init("arc", arc, np.float16)
+    n("Mul", ["leftSel", "arc"], "cLp")
+    n("ReduceMax", "cLp", "colorLf", axes=[1, 2, 3], keepdims=1)  # [1,1,1,1]
+    n("Mul", ["rightSel", "arc"], "cRp")
+    n("ReduceMax", "cRp", "colorRf", axes=[1, 2, 3], keepdims=1)
+    n("Cast", "colorLf", "colorL", to=TensorProto.UINT8)        # scalar uint8
+    n("Cast", "colorRf", "colorR", to=TensorProto.UINT8)
 
-    # final 1x1 Conv: routes left/right planes + computes ch0 background
-    n("Conv", ["shapes", "Wrt"], "output", kernel_shape=[1, 1])
-    return _model(nodes, inits)
+    # --- uint8 label map L ---
+    # outside grid -> 10; in-grid bg -> 0; left glyph -> colorL; right -> colorR.
+    init("v0", np.array(0, np.uint8), np.uint8)
+    init("v10", np.array(10, np.uint8), np.uint8)
+    n("Where", ["gridM", "v0", "v10"], "L0")                   # 0 in-grid else 10
+    n("Where", ["rightM", "colorR", "L0"], "L1")               # right glyph
+    n("Where", ["leftM", "colorL", "L1"], "L")                 # left glyph (wins)
+
+    init("chan10", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
+    n("Equal", ["L", "chan10"], "output")                      # -> free BOOL
+
+    x = helper.make_tensor_value_info("input", TensorProto.FLOAT, [1, 10, 30, 30])
+    y = helper.make_tensor_value_info("output", TensorProto.BOOL, [1, 10, 30, 30])
+    graph = helper.make_graph(nodes, "task284", [x], [y], inits)
+    return helper.make_model(
+        graph, ir_version=IR_VERSION,
+        opset_imports=[helper.make_opsetid("", 11)])

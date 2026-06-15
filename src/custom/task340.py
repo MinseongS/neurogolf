@@ -187,21 +187,22 @@ def build(task):
     # --- combine (disjoint per cell) ---
     n("Add", ["colMM", "rowMM"], "og")
 
-    # --- mask outside grid to -1: ogm = og + gm - 1 (og==0 outside) ---
+    # --- in-grid mask (row<H & col<W) ---
     n("Sub", ["H", "arow"], "H_r"); n("Greater", ["H_r", "half"], "rin_b")
     n("Sub", ["W", "acol"], "W_c"); n("Greater", ["W_c", "half"], "cin_b")
-    n("And", ["rin_b", "cin_b"], "gm_b")
-    n("Cast", ["gm_b"], "gm", to=F16)
-    n("Add", ["og", "gm"], "ogp")
-    n("Sub", ["ogp", "one"], "ogm")
+    n("And", ["rin_b", "cin_b"], "gm_b")                # [1,1,30,30] bool
 
-    # --- one-hot expand into output ---
-    n("Cast", ["ogm"], "ogm_i", to=I32)
-    init("chvec", np.arange(10, dtype=np.int32).reshape(1, 10, 1, 1))
-    n("Equal", ["ogm_i", "chvec"], "oh_b")
-    n("Cast", ["oh_b"], "output", to=DATA_TYPE)
+    # --- uint8 label map L: colour inside grid, sentinel 10 outside ---
+    # og is the colour (0..9) inside the grid (0 outside, but masked away).
+    n("Cast", ["og"], "og_u8", to=onnx.TensorProto.UINT8)   # [30,30] u8
+    init("v10", np.array(10, np.uint8), np.uint8)
+    n("Where", ["gm_b", "og_u8", "v10"], "L")               # [1,1,30,30] u8
+    init("chan", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
+    n("Equal", ["L", "chan"], "output")                     # free BOOL output
 
     x = onnx.helper.make_tensor_value_info("input", DATA_TYPE, GRID_SHAPE)
-    y = onnx.helper.make_tensor_value_info("output", DATA_TYPE, GRID_SHAPE)
+    y = onnx.helper.make_tensor_value_info("output", onnx.TensorProto.BOOL, GRID_SHAPE)
     graph = onnx.helper.make_graph(nodes, "task340", [x], [y], inits)
-    return onnx.helper.make_model(graph, ir_version=IR_VERSION, opset_imports=OPSET_IMPORTS)
+    return onnx.helper.make_model(
+        graph, ir_version=IR_VERSION,
+        opset_imports=[onnx.helper.make_opsetid("", 11)])
