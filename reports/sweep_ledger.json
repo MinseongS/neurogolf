@@ -134,14 +134,14 @@
  {
   "task": 12,
   "arc_id": "0962bcdd",
-  "points": 15.56,
+  "points": 16.64,
   "memory": 12528,
   "params": 103,
   "method": "gen:thbdh6332",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "16.64 adopted (15.56->16.64, +1.08); near floor 4170. INSIGHT: gravity-invariant symmetry + color-independent structural center detection"
  },
  {
   "task": 13,

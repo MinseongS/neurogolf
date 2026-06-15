@@ -67,6 +67,9 @@ def build(task):
     # ---- initializers ----
     # colour-index 1x1 conv weight [out=1,in=10,1,1] = [0,1,..,9]
     init("colW", np.arange(10).reshape(1, 10, 1, 1), np.float32)
+    # channel-0 selector conv weight -> in-grid background mask in ONE op
+    sel0 = np.zeros((1, 10, 1, 1)); sel0[0, 0, 0, 0] = 1
+    init("sel0W", sel0, np.float32)
     # per-channel arange [1,10,1,1] for selecting tip colour value
     init("chvals", np.arange(10).reshape(1, 10, 1, 1), np.float32)
     init("one", np.array(1.0), np.float32)
@@ -74,13 +77,24 @@ def build(task):
     init("eps", np.array(0.5), np.float32)
     init("eps16", np.array(0.5), np.float16)
     init("one16", np.array(1.0), np.float16)
-    init("rowidx", np.arange(30).reshape(1, 1, 30, 1), np.float16)
-    init("colidx", np.arange(30).reshape(1, 1, 1, 30), np.float16)
+    # grids are always <=20x20 anchored top-left, so the active region fits a
+    # 20x20 working canvas.  All per-cell planes live in 20x20 (400 elems),
+    # then L is padded back to 30x30 (sentinel) just before the final Equal.
+    CW = 20
+    init("rowidx", np.arange(CW).reshape(1, 1, CW, 1), np.float16)
+    init("colidx", np.arange(CW).reshape(1, 1, 1, CW), np.float16)
     init("chan", np.arange(10).reshape(1, 10, 1, 1), np.uint8)
     # non-background channel gate [1,10,1,1] : 0 for ch0, 1 for ch1..9
     nonbg = np.ones((1, 10, 1, 1)); nonbg[0, 0, 0, 0] = 0
     init("nonbg", nonbg, np.float32)
     init("sent15", np.array(15.0), np.float16)
+    # crop a [1,1,30,30] plane -> [1,1,CW,CW] (top-left) via negative Pad
+    init("crop", np.array([0, 0, 0, 0, 0, 0, CW - 30, CW - 30], np.int64),
+         np.int64)
+    # pad L [1,1,CW,CW] -> [1,1,30,30] with sentinel (off-grid -> all false)
+    init("padO", np.array([0, 0, 0, 0, 0, 0, 30 - CW, 30 - CW], np.int64),
+         np.int64)
+    init("sentU8", np.array(15), np.uint8)
 
     # =================================================================
     # ALL per-cell work is in fp16 (values are small integers, exact).
@@ -89,14 +103,18 @@ def build(task):
     # channel-space (10 elems) and costs almost nothing.
     # =================================================================
 
-    # ---- per-cell colour index V [1,1,30,30] (fp16) ----
-    n("Conv", ["input", "colW"], "V32")                      # fp32 colour 0..9
-    n("Cast", ["V32"], "V", to=F16)                          # fp16 plane
+    # ---- per-cell colour index V (crop to CWxCW, then fp16) ----
+    n("Conv", ["input", "colW"], "V32")                      # fp32 [1,1,30,30]
+    n("Pad", ["V32", "crop"], "Vc")                          # [1,1,CW,CW] fp32
+    n("Cast", ["Vc"], "V", to=F16)                           # fp16 plane CWxCW
 
-    # ---- in-grid mask (fp16): off-grid cells are all-channels-0. ----
-    n("ReduceSum", ["input"], "ingridS", axes=[1], keepdims=1)  # fp32 [1,1,30,30]
-    n("Greater", ["ingridS", "eps"], "ingridB")
-    n("Cast", ["ingridB"], "ingrid", to=F16)
+    # ---- in-grid background = channel-0 of input, via a 1x1 conv (one plane).
+    #      coloured cell = (V>0).  off-grid = NOT bg AND NOT coloured. ----
+    n("Conv", ["input", "sel0W"], "bgin32")                  # ch0 mask fp32
+    n("Pad", ["bgin32", "crop"], "bginc")                    # [1,1,CW,CW] fp32
+    n("Cast", ["bginc"], "bgin", to=F16)                     # in-grid bg fp16
+    n("Greater", ["V", "eps16"], "presB")                    # coloured cell
+    n("Cast", ["presB"], "pres", to=F16)
 
     # ---- channel counts -> tip / triangle colour VALUES (channel space) ----
     n("ReduceSum", ["input"], "cnt", axes=[2, 3], keepdims=1)  # [1,10,1,1] fp32
@@ -111,38 +129,41 @@ def build(task):
     n("Mul", ["chvals", "tipchan"], "tipcv")
     n("ReduceSum", ["tipcv"], "tipcol32", axes=[1], keepdims=1)  # scalar fp32
     n("Cast", ["tipcol32"], "tipcol", to=F16)
-    n("Mul", ["chvals", "trichan"], "tricv")
-    n("ReduceSum", ["tricv"], "tricol32", axes=[1], keepdims=1)  # scalar fp32
-    n("Cast", ["tricol32"], "tricol", to=F16)
 
-    # ---- tip / triangle cell masks [1,1,30,30] fp16 = (V == colour) ----
-    n("Sub", ["V", "tipcol"], "vmt"); n("Mul", ["vmt", "vmt"], "vmt2")
-    n("Less", ["vmt2", "eps16"], "tipmaskB"); n("Cast", ["tipmaskB"], "tipm0", to=F16)
-    n("Mul", ["tipm0", "ingrid"], "tipmask")
-    n("Sub", ["V", "tricol"], "vmr"); n("Mul", ["vmr", "vmr"], "vmr2")
-    n("Less", ["vmr2", "eps16"], "trimaskB"); n("Cast", ["trimaskB"], "trim0", to=F16)
-    n("Mul", ["trim0", "ingrid"], "trimask")
+    # =================================================================
+    # CHANNEL-SPACE ROW/COL PROFILES — collapse to 1-D BEFORE selecting the
+    # tip/triangle colour, so NO [1,1,30,30] tip/triangle mask plane is ever
+    # built.  rowprof[1,10,30,1] / colprof[1,10,1,30] are only 300 elems.
+    # =================================================================
+    n("ReduceSum", ["input"], "rowprof32", axes=[3], keepdims=1)  # [1,10,30,1]
+    n("ReduceSum", ["input"], "colprof32", axes=[2], keepdims=1)  # [1,10,1,30]
+    n("Cast", ["rowprof32"], "rowprof", to=F16)
+    n("Cast", ["colprof32"], "colprof", to=F16)
+    n("Cast", ["tipchan"], "tipchan16", to=F16)
+    n("Cast", ["trichan"], "trichan16", to=F16)
 
-    # ---- tip (ty,tx) scalars : reduce mask*idx, all fp16 (values < 2048) ----
-    n("Mul", ["tipmask", "rowidx"], "tym")
-    n("ReduceSum", ["tym"], "ty", axes=[2, 3], keepdims=1)
-    n("Mul", ["tipmask", "colidx"], "txm")
-    n("ReduceSum", ["txm"], "tx", axes=[2, 3], keepdims=1)
+    # tip 1-D occupancy vectors (single 1 at the tip's row / col)
+    n("Mul", ["rowprof", "tipchan16"], "tr10"); n("ReduceSum", ["tr10"], "tr16", axes=[1], keepdims=1)
+    n("Mul", ["colprof", "tipchan16"], "tc10"); n("ReduceSum", ["tc10"], "tc16", axes=[1], keepdims=1)
+    n("Mul", ["tr16", "rowidx"], "tyv"); n("ReduceSum", ["tyv"], "ty", axes=[2, 3], keepdims=1)
+    n("Mul", ["tc16", "colidx"], "txv"); n("ReduceSum", ["txv"], "tx", axes=[2, 3], keepdims=1)
 
-    # ---- triangle centroid (cr,cc) fp16 ----
-    n("ReduceSum", ["trimask"], "trin", axes=[2, 3], keepdims=1)
-    n("Mul", ["trimask", "rowidx"], "trr")
-    n("ReduceSum", ["trr"], "trrs", axes=[2, 3], keepdims=1)
-    n("Div", ["trrs", "trin"], "cr")
-    n("Mul", ["trimask", "colidx"], "trc")
-    n("ReduceSum", ["trc"], "trcs", axes=[2, 3], keepdims=1)
-    n("Div", ["trcs", "trin"], "cc")
+    # triangle 1-D count-per-row / count-per-col vectors
+    n("Mul", ["rowprof", "trichan16"], "Rr10"); n("ReduceSum", ["Rr10"], "Rr16", axes=[1], keepdims=1)
+    n("Mul", ["colprof", "trichan16"], "Rc10"); n("ReduceSum", ["Rc10"], "Rc16", axes=[1], keepdims=1)
 
-    # ---- orientation: row-span vs col-span of triangle (1-D reductions) ----
-    n("ReduceMax", ["trimask"], "rowocc", axes=[3], keepdims=1)  # [1,1,30,1]
-    n("ReduceSum", ["rowocc"], "rspan", axes=[2, 3], keepdims=1)
-    n("ReduceMax", ["trimask"], "colocc", axes=[2], keepdims=1)  # [1,1,1,30]
-    n("ReduceSum", ["colocc"], "cspan", axes=[2, 3], keepdims=1)
+    # centroid (cr,cc) = sum(idx*count)/sum(count)
+    n("ReduceSum", ["Rr16"], "trn", axes=[2, 3], keepdims=1)
+    n("Mul", ["Rr16", "rowidx"], "trrv"); n("ReduceSum", ["trrv"], "trrs", axes=[2, 3], keepdims=1)
+    n("Div", ["trrs", "trn"], "cr")
+    n("Mul", ["Rc16", "colidx"], "trcv"); n("ReduceSum", ["trcv"], "trcs", axes=[2, 3], keepdims=1)
+    n("Div", ["trcs", "trn"], "cc")
+
+    # orientation: span = #occupied rows/cols = count of nonzero profile entries
+    n("Greater", ["Rr16", "eps16"], "rocB"); n("Cast", ["rocB"], "roc", to=F16)
+    n("ReduceSum", ["roc"], "rspan", axes=[2, 3], keepdims=1)
+    n("Greater", ["Rc16", "eps16"], "cocB"); n("Cast", ["cocB"], "coc", to=F16)
+    n("ReduceSum", ["coc"], "cspan", axes=[2, 3], keepdims=1)
     n("Greater", ["cspan", "rspan"], "vertB")
     n("Cast", ["vertB"], "vert", to=F16)                     # 1=vertical scalar
 
@@ -181,18 +202,20 @@ def build(task):
     n("Add", ["lc_v", "lc_h"], "linecol")                    # [1,1,1,30]
     n("Mul", ["linerow", "linecol"], "beamLine")             # [1,1,30,30] fp16
 
-    # ---- restrict to background & in-grid cells ----
-    n("Less", ["V", "eps16"], "bgB"); n("Cast", ["bgB"], "bg", to=F16)
-    n("Mul", ["beamLine", "bg"], "beam0")
-    n("Mul", ["beam0", "ingrid"], "beam")
-
-    # ---- label map L = V + tipcol*beam ; off-grid -> sentinel 15 ----
+    # ---- beam lands only on in-grid BACKGROUND cells = bgin (= ch0).
+    #      beam colour contribution = beamLine * bgin * tipcol. ----
+    n("Mul", ["beamLine", "bgin"], "beam")
     n("Mul", ["beam", "tipcol"], "beamcol")
-    n("Add", ["V", "beamcol"], "Lf0")
-    n("Sub", ["one16", "ingrid"], "offgrid")
+    n("Add", ["V", "beamcol"], "Lf0")                        # colour value plane
+
+    # ---- off-grid -> sentinel 15 : offgrid = 1 - bgin - pres (mutually excl.)
+    n("Sub", ["one16", "bgin"], "notbg")
+    n("Sub", ["notbg", "pres"], "offgrid")                   # off-grid (0/1)
     n("Mul", ["offgrid", "sent15"], "sentadd")
     n("Add", ["Lf0", "sentadd"], "Lf")
-    n("Cast", ["Lf"], "L", to=U8)                            # [1,1,30,30] uint8
+    n("Cast", ["Lf"], "Lc", to=U8)                           # [1,1,CW,CW] uint8
+    # pad CWxCW -> 30x30 with sentinel 15 (the off-canvas border is off-grid)
+    n("Pad", ["Lc", "padO", "sentU8"], "L", mode="constant")  # [1,1,30,30]
     n("Equal", ["L", "chan"], "output")                      # [1,10,30,30] BOOL
 
     x = helper.make_tensor_value_info("input", F, [1, 10, 30, 30])

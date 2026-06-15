@@ -139,7 +139,6 @@ def build(task):
     # ---- in-grid mask: bg OR red OR green (only colours {0,2,3}) ------------
     n("Greater", ["bg", "ZEROF"], "bgb")
     n("Greater", ["green", "ZEROF"], "greenb")
-    n("Greater", ["red", "ZEROF"], "redorigb")
     n("Or", ["bgb", "greenb"], "ing1")
     n("Or", ["ing1", "redorigb"], "ingrid_b")              # [1,1,W,W] bool
     init("V0", np.array(0, np.uint8), np.uint8)

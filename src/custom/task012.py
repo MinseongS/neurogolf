@@ -70,30 +70,27 @@ def build(task):
         return out
 
     # ---- constants ----
-    init("colw", np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1), np.float32)
-    init("kc0", _c0_kernel(), np.float32)
-    init("kc1", _c1_kernel(), np.float32)
+    init("kc0", _c0_kernel(), np.float16)
+    init("kc1", _c1_kernel(), np.float16)
     init("karange", np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1),
          np.float32)
     init("two", np.array(2.0, np.float32), np.float32)
     init("eight", np.array(8.0, np.float32), np.float32)
-    init("one", np.array(1.0, np.float32), np.float32)
-    init("zero", np.array(0.0, np.float32), np.float32)
     init("half", np.array(0.5, np.float32), np.float32)
+    init("half16", np.array(0.5, np.float16), np.float16)
+    init("thr35", np.array(3.5, np.float16), np.float16)
+    init("plus4", np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]],
+                           np.float16).reshape(1, 1, 3, 3), np.float16)
     init("chan", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
-    init("sent", np.array(10, np.uint8), np.uint8)
-    # slice A (30x30) -> 12x12 top-left
-    init("sl_st", np.array([0, 0], np.int64), np.int64)
-    init("sl_en", np.array([WORK, WORK], np.int64), np.int64)
-    init("sl_ax", np.array([2, 3], np.int64), np.int64)
+    init("bg0", np.array(0, np.uint8), np.uint8)
+    # slice background channel 0 over the 12x12 top-left window -> [1,1,12,12]
+    init("bg_st", np.array([0, 0, 0], np.int64), np.int64)
+    init("bg_en", np.array([1, WORK, WORK], np.int64), np.int64)
+    init("bg_ax", np.array([1, 2, 3], np.int64), np.int64)
     # pad L 12x12 -> 30x30 with sentinel
     init("padpads", np.array([0, 0, 0, 0, 0, 0, 30 - WORK, 30 - WORK], np.int64),
          np.int64)
     init("padval", np.array(10, np.uint8), np.uint8)
-
-    # ---- colour-value image A, cropped to 12x12 ----
-    n("Conv", ["input", "colw"], "A30")                  # [1,1,30,30] f32 colour
-    n("Slice", ["A30", "sl_st", "sl_en", "sl_ax"], "A")  # [1,1,12,12] f32
 
     # ---- per-colour counts -> c0 (count 2) and c1 (count 8) scalar colours ----
     n("ReduceSum", ["input"], "cnt", axes=[2, 3], keepdims=1)   # [1,10,1,1] f32
@@ -114,20 +111,27 @@ def build(task):
     n("Cast", ["c0f"], "c0u", to=TensorProto.UINT8)
     n("Cast", ["c1f"], "c1u", to=TensorProto.UINT8)
 
-    # ---- centre mask M = (A == c0colour) ----
-    n("Sub", ["A", "c0f"], "dA")                # broadcast scalar
-    n("Abs", ["dA"], "adA")
-    n("Less", ["adA", "half"], "Mb")            # [1,1,12,12] bool centre
-    n("Cast", ["Mb"], "Mf", to=TensorProto.FLOAT)
+    # ---- centre mask M (structural, colour-independent) ----
+    # A centre cell has all 4 orthogonal neighbours non-background (its arms);
+    # an arm cell has exactly 1 non-background orth neighbour (the centre).
+    # nbgf = non-background; Conv with the 4-orth plus kernel counts non-bg
+    # neighbours; centre = count >= 4 (> 3.5).  Plus is symmetric under the
+    # gravity reflect/transpose, so this holds in every gravity frame.
+    n("Slice", ["input", "bg_st", "bg_en", "bg_ax"], "bg")  # [1,1,12,12] f32 ch0
+    n("Less", ["bg", "half"], "nbgb")           # bool: non-background
+    n("Cast", ["nbgb"], "nbgf", to=TensorProto.FLOAT16)
+    n("Conv", ["nbgf", "plus4"], "nnbr", pads=[1, 1, 1, 1])  # [1,1,12,12] 0..4 fp16
+    n("Greater", ["nnbr", "thr35"], "Mb")       # centre mask bool
+    n("Cast", ["Mb"], "Mf", to=TensorProto.FLOAT16)
 
     # ---- stamps via Conv ----
-    n("Conv", ["Mf", "kc0"], "c0raw", pads=[2, 2, 2, 2])  # [1,1,12,12]
+    n("Conv", ["Mf", "kc0"], "c0raw", pads=[2, 2, 2, 2])  # [1,1,12,12] fp16
     n("Conv", ["Mf", "kc1"], "c1raw", pads=[2, 2, 2, 2])
-    n("Greater", ["c0raw", "half"], "c0st")
-    n("Greater", ["c1raw", "half"], "c1st")
+    n("Greater", ["c0raw", "half16"], "c0st")
+    n("Greater", ["c1raw", "half16"], "c1st")
 
     # ---- label map ----
-    n("Where", ["c0st", "c0u", "sent"], "L0")   # uint8 [1,1,12,12]
+    n("Where", ["c0st", "c0u", "bg0"], "L0")    # uint8 [1,1,12,12], bg=0 inside
     n("Where", ["c1st", "c1u", "L0"], "L12")    # c1 over c0 (disjoint anyway)
     n("Pad", ["L12", "padpads", "padval"], "L", mode="constant")  # [1,1,30,30]
     n("Equal", ["L", "chan"], "output")         # -> free BOOL output
