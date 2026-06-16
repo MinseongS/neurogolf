@@ -1926,14 +1926,15 @@
  {
   "task": 161,
   "arc_id": "6cdd2623",
-  "points": 14.67,
-  "memory": 30554,
-  "params": 78,
+  "points": 15.75,
+  "memory": 10293,
+  "params": 84,
   "method": "ext:thbdh6285",
   "class": "BAIL?",
   "sig": "mega",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: 6cdd2623: lasers (megarows/megacols) drawn full-length across grid; ou"
+  "status": "done",
+  "verdict": "FEASIBLE A ~17.0pt: 6cdd2623: lasers (megarows/megacols) drawn full-length across grid; ou",
+  "note": "adopted 14.67->15.75 laser rows/cols (both-ends presence AND, Gather border-lines); generalizes 266+500+12000"
  },
  {
   "task": 162,

@@ -104,7 +104,11 @@ float then Cast); Slice preserves the input float dtype; opset-11 has no Greater
 REMOVE unused initializers (they still count as params); calculate_params counts element COUNT not bytes
 (initializer dtype is free — only element count matters). Reshape-to-scalar MUST use a `[1]`-shaped
 initializer, NEVER an empty `[]` 0-dim init (a 0-dim shape makes calculate_params return None →
-"performance could not be measured" scorer trap, task036).
+"performance could not be measured" scorer trap, task036). A runtime-tensor (data-dependent) Slice also
+leaves SYMBOLIC dims → calculate_memory returns None (same "could not be measured" trap) — use Gather with
+squeezed scalar indices instead for data-dependent border/line extraction (task161). Detection lever:
+"border colour present at BOTH line-ends" = per-side ReduceMax-presence ANDed pairwise, gated by
+interior=(total−ring_count>0), using only tiny [1,10] tensors — no [1,10,30] matched-pair products (task161).
 
 ## ANTI-STALL (agents have died at the 600s no-progress watchdog — obey)
 - WRITE src/custom/taskNNN.py EARLY (a first working draft within a few minutes) and iterate on disk; do
