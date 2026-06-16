@@ -3858,14 +3858,15 @@
  {
   "task": 321,
   "arc_id": "cf98881b",
-  "points": 16.4,
-  "memory": 5376,
-  "params": 35,
+  "points": 17.88,
+  "memory": 1188,
+  "params": 45,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: cf98881b: 3 sub-grids separated by red lines; overlay them by priority"
+  "status": "done",
+  "verdict": "FEASIBLE A ~17.0pt: cf98881b: 3 sub-grids separated by red lines; overlay them by priority",
+  "note": "adopted 16.40->17.88 fixed-colour panel priority overlay (slice own channel, skip Conv); re-triage underestimated (est gain 0.60, actual +1.48); generalizes 267+200"
  },
  {
   "task": 322,

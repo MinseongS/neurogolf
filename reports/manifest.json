@@ -1921,10 +1921,10 @@
    "method": "ext:vyank6322"
   },
   "321": {
-   "points": 16.403810802357263,
-   "memory": 5376,
-   "params": 35,
-   "method": "ext:kojimar6275"
+   "points": 17.882794496835658,
+   "memory": 1188,
+   "params": 45,
+   "method": "custom:task321"
   },
   "322": {
    "points": 18.76558927428163,

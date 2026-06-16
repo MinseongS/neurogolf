@@ -119,7 +119,10 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   row∧col outer product (cross-talks); K cheap channel-Slices beat a [0..9] colour Conv for fixed small
   color sets. When each spatial REGION carries a FIXED colour, skip the 1×1 colour-index Conv entirely (it
   forces a 3600B fp32 30×30 plane) — slice each region's OWN colour channel from the FREE input for a tiny
-  presence mask, then map presence→constant-colour fill via a Where PRIORITY chain (task180, 16.48→17.74).
+  presence mask, then map presence→constant-colour fill via a Where PRIORITY chain (task180 16.48→17.74,
+  task321 16.40→17.88). DISCRIMINATOR: use Conv-collapse to a colour-index plane ONLY when output colours
+  COPY arbitrary input colours; for a FIXED known colour set always slice+Where instead. (Re-triage badly
+  UNDERESTIMATES fold/overlay tasks — 180 & 321 were est gain ~0.9/0.6 but delivered +1.66/+1.48.)
 - Tier S blocked if output colors are RANDOM per-instance (a fixed Conv can't route); Tier A blocked if the
   stamp/shape isn't a row⊗col separable rectangle (a 45° diagonal couples r&c → not separable).
 - "remove isolated noise, keep ≥2×2 SOLID shapes" = part-of-a-filled-2×2 predicate via TWO 2×2 sum-convs
