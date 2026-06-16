@@ -4250,14 +4250,15 @@
  {
   "task": 354,
   "arc_id": "ddf7fa4f",
-  "points": 15.26,
-  "memory": 16860,
-  "params": 147,
+  "points": 16.75,
+  "memory": 3780,
+  "params": 57,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: ddf7fa4f: recolor each gray box by the color of the light (top row) ab"
+  "status": "done",
+  "verdict": "FEASIBLE A ~17.0pt: ddf7fa4f: recolor each gray box by the color of the light (top row) ab",
+  "note": "adopted 15.26->16.75 seed-spread-along-run (iterated MaxPool re-gate); generalizes 266+600+5000"
  },
  {
   "task": 355,
