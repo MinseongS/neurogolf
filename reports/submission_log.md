@@ -84,3 +84,8 @@ Hit rate ~85% on lowest-points pending probes. Session total: 32 wins, confirmed
 33 wins adopted across submits #6-#11, all projection-exact (gap pinned 61.27). Pending pool is the engine;
 gap-closing concluded structurally dead. Handed off via RESUME.md + project memory. Next: keep mining the
 untriaged pending pool (lowest-points first, EARLY FEASIBILITY CHECK) until it mines out.
+
+| 12 | 06-16 08:18 | 6539.71 | RESUME-session wave: 154,107,4,392,383,55,343,202,340,310,222 (11 wins) | **6478.44** | **+10.35** | proj 6478.44 -> **0.00 error** (12th exact). gap 61.27 PINNED. New session from RESUME handoff; pending-pool engine. |
+
+## ⭐ Submission 12: LB 6478.44 (proj 6478.44, 0.00 error). New session resumed from RESUME.md.
+11-win pending-pool wave +10.35, all generalizing 1:1. Trajectory: ...->6468.09->6478.44. gap immovable 61.27.
