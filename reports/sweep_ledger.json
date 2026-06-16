@@ -3914,14 +3914,15 @@
  {
   "task": 324,
   "arc_id": "d07ae81c",
-  "points": 14.53,
-  "memory": 33639,
-  "params": 1538,
+  "points": 14.95,
+  "memory": 22216,
+  "params": 976,
   "method": "ext:thbdh6285+pruned",
   "class": "FEASIBLE",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 14.53->14.95 both-45deg-diagonals through seeds + 2-colour split (top-left KxK corner=base, exact where corner-cell fails); pending-pool win; gen 200+300"
  },
  {
   "task": 325,

@@ -1939,10 +1939,10 @@
    "method": "ext:kojimar6275"
   },
   "324": {
-   "points": 14.531852261069476,
-   "memory": 33639,
-   "params": 1538,
-   "method": "ext:thbdh6285+pruned"
+   "points": 14.948437329398509,
+   "memory": 22216,
+   "params": 976,
+   "method": "custom:task324"
   },
   "325": {
    "points": 14.330533108254256,
