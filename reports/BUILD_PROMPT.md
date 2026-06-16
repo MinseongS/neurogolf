@@ -78,7 +78,11 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   per-axis block index = EXCLUSIVE CumSum of the all-bg-line indicator (gated to in-grid extent), tiny
   [1,1,K,30] one-hot selectors, downsample by double MatMul Snum=Rsel@colf@Csel / Sden=Rsel@occ@Csel
   (colour=Snum/Sden exact); the data-dependent tall×wide OUTPUT shape falls out free — R≥tall/C≥wide get
-  Sden=0 → sentinel → all-zero, so fixed K×K→Pad(99)→Equal needs no NonZero (task184); ADD one *dynamic* colour at masked positions via output=Where(cond[1,1,30,30],
+  Sden=0 → sentinel → all-zero, so fixed K×K→Pad(99)→Equal needs no NonZero (task184); "distractor box +
+  REGULARLY-SPACED stripes → compacted n×n" is closed-form: regular spacing makes compaction a strided
+  Gather(linecolor, clip(offset+stride·i)) — kills the whole [30,30] prefix/eqpos matrix chain (~43KB→~1KB);
+  orientation = K_r<K_c (every col crosses every horizontal stripe so nonzero-cols≈W vs nonzero-rows=n),
+  n=min(K_r,K_c) (task213). integer Equal(int32) builds a colour one-hot in ONE op vs a 5-op Sub/Abs/Clip/Greater float chain; ADD one *dynamic* colour at masked positions via output=Where(cond[1,1,30,30],
   color_onehot[1,10,1,1],input) (broadcast lands in Where's FREE output, recover colour by slicing a
   guaranteed-hit position) — never build a [1,10,H,W] delta (task033); recover ORIENTATION (xpose) with
   ZERO per-cell planes via total peak-match mass (peak_col=Σ_c max_ch colcount vs peak_row=Σ_r max_ch rowcount,

@@ -2572,14 +2572,15 @@
  {
   "task": 213,
   "arc_id": "8e1813be",
-  "points": 14.49,
-  "memory": 36599,
-  "params": 103,
+  "points": 14.84,
+  "memory": 25797,
+  "params": 158,
   "method": "gen:thbdh6332",
   "class": "FEASIBLE?",
   "sig": "transpose",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 14.49->14.84 stripe-compaction (strided Gather(linecolor,clip(off+3i)) kills prefix matrix chain; orientation=K_r<K_c, n=min); pending-pool win; generalizes 200+500"
  },
  {
   "task": 214,
