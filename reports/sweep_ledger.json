@@ -4637,14 +4637,14 @@
   {
     "task": 383,
     "arc_id": "f1cefba8",
-    "points": 14.37,
+    "points": 14.77,
     "memory": 40254,
     "params": 1052,
-    "method": "ext:thbdh6332",
+    "method": "custom:383 marker-as-pattern-breaker perpendicular stripe (separable 1-D)",
     "class": "BAIL",
     "sig": "memory",
-    "status": "retriage-feasible",
-    "verdict": "FEASIBLE None ~14.4pt: f1cefba8: project barnacles (edge pixels) as colored lines across box "
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 500/500)"
   },
   {
     "task": 384,
