@@ -103,7 +103,10 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
 - ring/box CENTRE detection = ONE Conv whose kernel is the ring's exact perimeter pattern (response peaks
   at the perimeter pixel-count, strictly lower elsewhere → a single Greater isolates centres, no flood-fill);
   a no-pad Conv aligns the peak to the window TOP-LEFT so add pads=[k,k,k,k] (SAME) to land it on the
-  geometric centre. Independent full row+col crosshairs are SEPARABLE → is_row OR is_col, broadcast in the
+  geometric centre. "8 neighbours ALL EQUAL" = `8·S2 == S1²` (Cauchy-Schwarz equality) via two 8-ring convs
+  on V and V², fp16-exact when the gap ≫ fp16 step; the `S1>0` gate is LOAD-BEARING — an isolated noise
+  pixel has 8 empty neighbours trivially "all equal (==0)" and gets falsely picked without it (task346).
+  Independent full row+col crosshairs are SEPARABLE → is_row OR is_col, broadcast in the
   free final ops — and 1-D ReduceSum row/col profiles can replace the 30×30 Conv entirely (~120B vs 3600B)
   when row-set and col-set are independent (task094).
 - variable offset → bbox first-occupied row/col; 2-D point lookup → chained Gather(axis=2 then 3), NOT

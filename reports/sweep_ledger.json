@@ -4157,14 +4157,15 @@
  {
   "task": 346,
   "arc_id": "d9fac9be",
-  "points": 15.88,
-  "memory": 9069,
-  "params": 23,
+  "points": 16.26,
+  "memory": 6197,
+  "params": 46,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: d9fac9be: output 1x1 = the center color of the 3x3 monochrome cluster "
+  "status": "done",
+  "verdict": "FEASIBLE A ~17.0pt: d9fac9be: output 1x1 = the center color of the 3x3 monochrome cluster ",
+  "note": "adopted 15.88->16.26 8-neighbour-equal centre (8*S2==S1^2 Cauchy-Schwarz, S1>0 gate); 2-D detection ~16.3 cap; generalizes 267+5000"
  },
  {
   "task": 347,
