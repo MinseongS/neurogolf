@@ -4390,8 +4390,9 @@
   "method": "gen:vyank6322",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE B ~16.8pt: e50d258f: output = the FIRST box (idx0) interior cropped (wides[0]xtal"
+  "status": "skip-marginal",
+  "verdict": "FEASIBLE B ~16.8pt: e50d258f: output = the FIRST box (idx0) interior cropped (wides[0]xtal",
+  "note": "re-attack 15.08 vs 14.81 (+0.27 MARGINAL); solid-rect argmax+crop caps ~15.1 (2-D segmented sum=4 sweeps); B~16.8 needs CumSum integral image blocked by per-cell GatherND"
  },
  {
   "task": 366,

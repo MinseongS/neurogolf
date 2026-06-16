@@ -23,7 +23,11 @@ pass; the UNIQUE-argmax position recovers as a scalar (minrow,mincol)=ReduceMax(
 ReduceMax(iswin·colramp) with NO NonZero/ArgMax op; data-dependent crop = Add scalar offset to a [0..k]
 index const + chained Gather(axis2)·Gather(axis3), staying small (9×9/7×7) under the 30×30 label floor
 (task271). The discriminator: fixed small box + unique winner ⇒ feasible; variable-size components + global
-argmax ⇒ wall.
+argmax ⇒ wall. MIDDLE case (SOLID axis-aligned rects, variable size, DISTINCT counts): also feasible
+without flood-fill — per-component reductions become contiguous-run all-reduces (segmented doubling) and
+the unique-max winner's bbox falls out of one Equal-to-max; BUT a 2-D segmented SUM costs 4 one-directional
+sweeps (~13.6KB fp16) which caps the score ~15.1 (marginal) — reaching B≈16.8 needs a CumSum integral image
+with a per-cell rectangle read, blocked by needing a data-dependent GatherND (task365, marginal +0.27).
 
 ## Step 2 — read these
 - reports/SWEEP_SYSTEM.md (tier ladder S>A>B>detection; minimal-tier mindset; MARGINAL threshold ≥+0.3)
