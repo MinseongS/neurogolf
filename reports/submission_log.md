@@ -89,3 +89,8 @@ untriaged pending pool (lowest-points first, EARLY FEASIBILITY CHECK) until it m
 
 ## ⭐ Submission 12: LB 6478.44 (proj 6478.44, 0.00 error). New session resumed from RESUME.md.
 11-win pending-pool wave +10.35, all generalizing 1:1. Trajectory: ...->6468.09->6478.44. gap immovable 61.27.
+
+| 13 | 06-16 16:14 | 6548.00 | wave: 289,86,62,284,308,153,59,397 (8 wins) | **6486.73** | **+8.29** | proj 6486.73 -> **0.00 error** (13th exact). gap 61.27 PINNED. salvaged-while-idle batch translated 1:1. |
+
+## ⭐ Submission 13: LB 6486.73 (proj 6486.73, 0.00 error). Trajectory: ...->6478.44->6486.73.
+13 exact projections running. Pending pool still productive but points creeping to ~15.1 (easy sub-15 consumed).
