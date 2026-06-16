@@ -1153,10 +1153,10 @@
    "method": "gen:thbdh6332"
   },
   "193": {
-   "points": 14.109558240338645,
-   "memory": 53600,
-   "params": 61,
-   "method": "gen:thbdh6332"
+   "points": 15.49348868817613,
+   "memory": 13400,
+   "params": 47,
+   "method": "custom:task193"
   },
   "194": {
    "points": 17.672876707740706,

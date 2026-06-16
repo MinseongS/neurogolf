@@ -2311,14 +2311,15 @@
  {
   "task": 193,
   "arc_id": "7f4411dc",
-  "points": 14.11,
-  "memory": 53600,
-  "params": 61,
+  "points": 15.49,
+  "memory": 13400,
+  "params": 47,
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "pending-retry",
-  "verdict": "agent STALLED at 600s from the START (systemic env degradation, not task-specific). Re-build when infra recovers."
+  "status": "done",
+  "verdict": "agent STALLED at 600s from the START (systemic env degradation, not task-specific). Re-build when infra recovers.",
+  "note": "adopted 14.11->15.49 keep->=2x2-solid via two 2x2 sum-convs (no flood-fill); generalizes 266+500+3000bf"
  },
  {
   "task": 194,

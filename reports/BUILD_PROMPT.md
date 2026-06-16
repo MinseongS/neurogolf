@@ -78,6 +78,10 @@ at-floor; if the rule needs a global argmax across data-dependent-count componen
   color sets.
 - Tier S blocked if output colors are RANDOM per-instance (a fixed Conv can't route); Tier A blocked if the
   stamp/shape isn't a row⊗col separable rectangle (a 45° diagonal couples r&c → not separable).
+- "remove isolated noise, keep ≥2×2 SOLID shapes" = part-of-a-filled-2×2 predicate via TWO 2×2 sum-convs
+  (conv1 pad bottom/right counts each block, ==4 ⇒ full; conv2 pad top/left dilates full-blocks over their
+  4 covering cells) — exact, no flood-fill. Fold off-grid into the keep cond (selcond=keep OR offgrid) so
+  the removed branch is just a constant [1,10,1,1] bg one-hot in the FREE Where output (task193).
 
 ## SCORING + OP FACTS
 score=max(1,25−ln(mem+params)); mem=SUM over every intermediate tensor of elems×itemsize (input/output

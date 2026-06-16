@@ -1,9 +1,9 @@
 # LB status (stored ↔ real LB gap tracker)
 
-- **stored (local, optimistic):** 6490.96
+- **stored (local, optimistic):** 6492.34
 - **last confirmed LB:** 6428.35  (stored 6489.62 @ 2026-06-16 13:0x UTC)
 - **structural gap (stored−LB at anchor):** 61.27  ← base-net overcount, ~stable
-- **PROJECTED current LB:** 6429.69  (= stored − gap; +1.34 of un-submitted wins since anchor)
+- **PROJECTED current LB:** 6431.07  (= stored − gap; +2.72 of un-submitted wins since anchor)
 - next submit at +5 adopted wins re-anchors this.
 
 ## Gap attribution (genverify n=40 batch — rough, false-neg prone; isolated n=200 is truth)
