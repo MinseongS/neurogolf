@@ -77,3 +77,10 @@ genuine walls. Trajectory: …→6445.03→6453.40. Runway re-opened — keep mi
 ## ⭐ Submission 10: LB 6464.42 (proj 6464.43). Pending-pool wave +11.02. Trajectory: ...->6453.40->6464.42.
 The untriaged pending pool is the productive reservoir (gap-closing concluded dead — 219/255/209 are walls).
 Hit rate ~85% on lowest-points pending probes. Session total: 32 wins, confirmed LB +45.13 (6419.29->6464.42).
+
+| 11 | 06-16 16:3x | 6529.36 | session-final: 092,324,378,165,377 (+204 wave) | **6468.09** | **+3.67** | proj 6468.08 -> **0.01** (11th exact). SESSION-FINAL LOCK. gap 61.27. |
+
+## ⭐ Submission 11 (session-final): LB 6468.09 (proj 6468.08). SESSION TOTAL: 6419.29 -> 6468.09 (+48.80).
+33 wins adopted across submits #6-#11, all projection-exact (gap pinned 61.27). Pending pool is the engine;
+gap-closing concluded structurally dead. Handed off via RESUME.md + project memory. Next: keep mining the
+untriaged pending pool (lowest-points first, EARLY FEASIBILITY CHECK) until it mines out.
