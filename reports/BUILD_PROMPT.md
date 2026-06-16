@@ -66,7 +66,12 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   (task290); periodic arm/profile reconstruction is flip/offset/colour-AGNOSTIC — recover ONE period from
   the n shown consecutive cells and extend with a 1-D modular Gather(arm, first+(i−first) mod n), replacing
   a 30×30 equality/MatMul matrix; use an indicator-Conv [0,1,…,1] for counts + reduced-one-hot slices for
-  colours to never materialize a colour-index plane (task358); fractal self-tiling = Kronecker kron(S,S) via macro=(u//3)*3+v//3 & micro=(u%3)*3+v%3 index
+  colours to never materialize a colour-index plane (task358); horizontal PERIODIC tile to K× width = the
+  ENTIRE output is ONE free Gather(input, srcIdx, axis=3) (pad cols zeroed via an empty pad col; period from
+  colsig[c]==colsig[c+p]) (task231); D4-symmetric OCCLUDED fill = 8 dihedral pullbacks {I,T}×{none,flipR,
+  flipC,flipRC} (0-param Transpose + step −1 Slices), reconstruct by elementwise MAX with occluded=−1
+  sentinel, gathering the K×K crop from each orbit + maxing tiny blocks not 8 full planes (task400);
+  fractal self-tiling = Kronecker kron(S,S) via macro=(u//3)*3+v//3 & micro=(u%3)*3+v%3 index
   maps — NOT naive outer product (task195); un-duplicate CROP = Where(rowmask∧colmask,input,0), dup axis
   from generator range constraints (task188); data-dependent row/col-independent coordinate remap =
   boolean double MatMul Rmat@src@CmatT, fp16 {0,1} exact (task250); stamp a recovered K-row sub-pattern

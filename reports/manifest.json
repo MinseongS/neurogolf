@@ -1381,10 +1381,10 @@
    "method": null
   },
   "231": {
-   "points": 14.5892732472333,
-   "memory": 33113,
-   "params": 101,
-   "method": "gen:biohack_new"
+   "points": 17.08137134665776,
+   "memory": 2555,
+   "params": 193,
+   "method": "custom:task231"
   },
   "232": {
    "points": 16.20472062980543,
@@ -2395,10 +2395,10 @@
    "method": "ext:wguesdon6304"
   },
   "400": {
-   "points": 14.532534757896764,
-   "memory": 35114,
-   "params": 39,
-   "method": "gen:thbdh6332"
+   "points": 15.561170390384856,
+   "memory": 12523,
+   "params": 44,
+   "method": "custom:task400"
   }
  }
 }

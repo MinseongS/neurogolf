@@ -2791,14 +2791,15 @@
  {
   "task": 231,
   "arc_id": "963e52fc",
-  "points": 14.59,
-  "memory": 33113,
-  "params": 101,
+  "points": 17.08,
+  "memory": 2555,
+  "params": 193,
   "method": "gen:biohack_new",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 14.59->17.08 periodic horizontal 2x tile = single free Gather(axis=3); period via colsig[c]==colsig[c+2]; tier A; pending-pool win; gen 500+266"
  },
  {
   "task": 232,
@@ -4834,13 +4835,14 @@
  {
   "task": 400,
   "arc_id": "ff805c23",
-  "points": 14.53,
-  "memory": 35114,
-  "params": 39,
+  "points": 15.56,
+  "memory": 12523,
+  "params": 44,
   "method": "gen:thbdh6332",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 14.53->15.56 D4-symmetric occluded fill (8 dihedral pullbacks, max with -1 sentinel, gather KxK crops not 8 planes); pending-pool win; gen 500+266"
  }
 ]
