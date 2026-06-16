@@ -242,14 +242,15 @@
  {
   "task": 21,
   "arc_id": "1190e5a7",
-  "points": 15.97,
-  "memory": 8238,
-  "params": 81,
+  "points": 16.74,
+  "memory": 3786,
+  "params": 80,
   "method": "ext:wguesdon6304",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 15.97->16.74 line-count rect (bg=corner input[0][0] not modal; And-associate broadcasts, no box plane); generalizes 77+200+300"
  },
  {
   "task": 22,

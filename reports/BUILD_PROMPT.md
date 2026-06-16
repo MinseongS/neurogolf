@@ -152,7 +152,10 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
 score=max(1,25−ln(mem+params)); mem=SUM over every intermediate tensor of elems×itemsize (input/output
 tensors are FREE); itemsize bool/uint8=1 fp16=2 fp32/int32=4. NEVER materialize a [1,10,30,30] intermediate
 (9000+B) — route the 10-ch expansion into the FREE `output` as the final op: `Equal(L_uint8, arange[1,10,1,1])`
-→ BOOL (declare output value_info BOOL) or `Where(mask, onehot, input)`. opset 11 ops OK (scorer checks DOMAIN
+→ BOOL (declare output value_info BOOL) or `Where(mask, onehot, input)`. For a rect output, ASSOCIATE the
+three broadcasts `And(rowin[1,1,30,1], And(colin[1,1,1,30], bgbool[1,10,1,1]))` so NO [1,1,30,30] box/label
+plane is ever materialised (saves ~1800B vs Where→uint8-L→Equal). Watch the bg assumption: bg = the CORNER
+cell input[0][0], NOT the most-frequent colour — a line/fg colour can out-number bg (task021). opset 11 ops OK (scorer checks DOMAIN
 not VERSION). BANNED: Loop/Scan/NonZero/Unique/Compress/Function. Gather/Mod allowed. fp32 exact for ints <2^24.
 GOTCHAS: ORT ReduceMax/Sum reject uint8/bool (need float); ORT Mul/And/Mod reject uint8 (combines stay bool);
 ORT Where/Equal implemented for uint8 but NOT int8/int16; ORT Pad rejects bool; Clip rejects int64 (clip in
