@@ -43,8 +43,26 @@ kaggle CLI: /opt/homebrew/Caskroom/miniconda/base/bin/kaggle.
 - reports/{SWEEP_SYSTEM,STRATEGY_7500,BUILD_PROMPT}.md — system, 7500 ceiling analysis, build protocol
 - reports/tasklog/taskNNN.md — per-task insight logs
 
-## Honest status at pause (2026-06-16)
-Confirmed LB **6419.29** (session start 6384.61, +34.68). Projected LB 6419.70. 7500 verdict: re-encoding +
-the 50-feasible reservoir tops ~6800-6900; the 72 genuine-infeasible (flood/connectivity/correspondence) are
-the scorer-capped wall — 7500 is NOT reachable by known methods. Paused after 5 consecutive agent stalls
-(systemic env degradation). ~42 feasible reservoir tasks remain → resume restarts there.
+## TWO BIG REOPENED RESERVOIRS (discovered 2026-06-16 afternoon) — work these, NOT just the curated queue:
+1. **UNTRIAGED PENDING POOL**: `sweep_ledger.json` has ~270 low-score `pending`/`uncertain` tasks the
+   re-triage never examined. These have REAL HEADROOM (just under-golfed public nets), NOT all walls.
+   Proven: 088 13.85→15.53, 070 13.90→16.25, 238 13.93→15.34, 011 14.12→15.94, 037 14.12→14.84,
+   328 14.28→14.94 — ~6/8 probes were wins. PROBE lowest-points-first WITH the EARLY FEASIBILITY CHECK
+   (bail fast on variable-size flood / global-argmax walls). Refill source = step 7 tertiary.
+2. **⭐ GAP-CLOSING on NON-GENERALIZING base nets** (highest value): the 61.27 stored−LB gap is mostly a
+   handful of base nets with HIGH stored but fresh-rate 0.00 → they score ~0 on the real LB. `src/adopt.py`
+   ALREADY counts the current net as 0 pts when it fails fresh, so ANY generalizing custom you build for
+   them is adopted and raises LB by ~its full score (even at low stored). See `reports/lb_status.md` gap
+   attribution table. TOP TARGETS: **219 (stored 15.00, fresh 0.00 → ~+15 LB)**, **255 (13.95, 0.00 →
+   ~+14 LB)**, then 209/118/2/90/157/366/251/18/101 (partial, fresh 0.88-0.97, +0.3-1.7 each). These were
+   mislabeled "confirmed-infeasible" by judging +0.3 against the INFLATED stored — IGNORE that label and
+   build a generalizing exact encoding. This alone is worth ~+25 LB from 219+255.
+
+## Honest status (2026-06-16, mid-session)
+Confirmed LB **6453.40** (session start 6419.29, +34.11; this run opened the pending pool + gap-closing).
+27 wins adopted this session, 9 submissions, all proj-exact (gap pinned 61.27). Run MORE AGGRESSIVELY:
+5-6 concurrent agents OK (env healthy, 1 isolated hard-task stall in ~35 agents). A deep-research agent is
+investigating the fundamental ~16.3 floor (the [1,1,30,30] fp32 colour-plane that ORT won't let go sub-fp32)
+→ see reports/FLOOR_RESEARCH.md when it lands. Instruct stuck agents to go LOW-LEVEL: web-search ORT op
+semantics, test quant/cast/integer ops, boldly re-encode heavy layers. Never let score drop (adopt gate +
+Kaggle-keeps-best guarantee this).
