@@ -71,3 +71,9 @@ genuine walls. Trajectory: …→6445.03→6453.40. Runway re-opened — keep mi
 4. poll: `kaggle competitions submissions -c neurogolf-2026` until status COMPLETE; record publicScore.
 5. compute stored→LB ratio for the batch (calibrates whether wins translate). Kaggle keeps BEST submission,
    so a flat/down result never loses standing — but a flat result means the wins didn't translate (re-examine).
+
+| 10 | 06-16 16:0x | 6525.70 | pending-pool wave: 204,184,351,213,400,231,328,037,094,346 (10 wins) | **6464.42** | **+11.02** | proj 6464.43 -> **0.01** (10th exact). PENDING POOL is the engine. gap 61.27. |
+
+## ⭐ Submission 10: LB 6464.42 (proj 6464.43). Pending-pool wave +11.02. Trajectory: ...->6453.40->6464.42.
+The untriaged pending pool is the productive reservoir (gap-closing concluded dead — 219/255/209 are walls).
+Hit rate ~85% on lowest-points pending probes. Session total: 32 wins, confirmed LB +45.13 (6419.29->6464.42).
