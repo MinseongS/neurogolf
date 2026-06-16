@@ -257,14 +257,14 @@
   {
     "task": 22,
     "arc_id": "137eaa0f",
-    "points": 15.17,
+    "points": 15.78,
     "memory": 18291,
     "params": 298,
-    "method": "gen:thbdh6332",
+    "method": "custom:22 marker-neighbourhood correlation (one-hot shift Conv im2col)",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 200/200)"
   },
   {
     "task": 23,
