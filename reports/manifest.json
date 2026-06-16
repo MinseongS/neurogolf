@@ -1699,9 +1699,9 @@
    "method": "conv3x3+b"
   },
   "284": {
-   "points": 14.95853470452197,
-   "memory": 22821,
-   "params": 138,
+   "points": 15.286281669392984,
+   "memory": 16424,
+   "params": 119,
    "method": "custom:task284"
   },
   "285": {

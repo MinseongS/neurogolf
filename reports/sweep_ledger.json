@@ -3436,14 +3436,14 @@
   {
     "task": 284,
     "arc_id": "b7249182",
-    "points": 14.96,
+    "points": 15.29,
     "memory": 22821,
     "params": 138,
-    "method": "custom:task284",
+    "method": "custom:284 combined-glyph MatMul + canonical-frame conditional transpose",
     "class": "FEASIBLE?",
     "sig": "transpose",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 200/200)"
   },
   {
     "task": 285,

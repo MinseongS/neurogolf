@@ -1,17 +1,10 @@
 """Task 284 (ARC b7249182): two seed dots, each color grows a bilateral
 "wrench"/cross glyph toward the centerline; whole grid optionally transposed.
 
-Rule (canonical, seeds share a row R at columns Cl<Cr, half=(Cr-Cl+1)/2):
-  left glyph (color of left seed): horizontal stem row R cols Cl..e0, a 5-tall
-  vertical bar at col e0 (rows R-2..R+2), hook cells at (R-2,e0+1),(R+2,e0+1)
-  where e0=(Cl+Cr-3)/2; right glyph mirrors with e1=(Cl+Cr+3)/2.
-The two crosses are always 3 cols apart, straddling the seed-pair center.
-
-Net: build all 1-D along/cross masks (tiny vectors), form left/right abstract
-[1,1,30,30] planes via outer products, transpose+select for orientation, then
-one runtime-weighted 1x1 Conv routes the two planes into the two seed-color
-channels straight into `output`. The transpose is detected in-graph (seeds
-sharing a column => transposed) so a single graph handles both orientations.
+Optimized re-encode: ONE combined 6-component MatMul builds the entire glyph
+(both colors) as a single [1,1,30,30] plane; cells are coloured by an along-axis
+side threshold (left color if along-coord < S/2 else right color), so no second
+glyph plane is needed. Off-grid -> label 10 -> all-zero one-hot.
 """
 
 import numpy as np
@@ -36,53 +29,61 @@ def build(task):
         return out
 
     F16 = onnx.TensorProto.FLOAT16
-    # geometry constants in fp16 (all values are small integers / half-integers,
-    # exact in fp16) so the entire 1-D / factor pipeline is fp16.
     init("c_one", np.array(1.0, np.float16), np.float16)
     init("c_two", np.array(2.0, np.float16), np.float16)
     init("c_three", np.array(3.0, np.float16), np.float16)
+    init("half16", np.array(0.5, np.float16), np.float16)
     init("BIG", np.array(100.0, np.float16), np.float16)
     idx = np.arange(30, dtype=np.float16)
     init("idxW", idx.reshape(1, 1, 1, 30), np.float16)
     init("idxH", idx.reshape(1, 1, 30, 1), np.float16)
 
-    # --- per-channel occupancy (reused for both masks and color routing) ---
-    # cast input -> fp16 occupancy via fp16 ReduceMax kept tiny: reduce first in
-    # fp32 then cast the small [1,10,30,1] results.
-    n("ReduceMax", "input", "rowOccF32", axes=[3], keepdims=1)   # [1,10,30,1] f32
-    n("ReduceMax", "input", "colOccF32", axes=[2], keepdims=1)   # [1,10,1,30] f32
-    n("Cast", "rowOccF32", "rowOccF", to=F16)                    # [1,10,30,1] f16
-    n("Cast", "colOccF32", "colOccF", to=F16)                    # [1,10,1,30] f16
-    no0 = np.ones((1, 10, 1, 1), np.float16); no0[0, 0, 0, 0] = 0.0
-    init("no0", no0, np.float16)
-    # seed occupancy excluding channel 0, reduced over channels -> 1-D masks
-    n("Mul", ["rowOccF", "no0"], "rowOccS")                      # [1,10,30,1] f16
-    n("Mul", ["colOccF", "no0"], "colOccS")                      # [1,10,1,30] f16
-    n("ReduceMax", "rowOccS", "rowMaskH", axes=[1], keepdims=1)  # [1,1,30,1]
-    n("ReduceMax", "colOccS", "colMaskW", axes=[1], keepdims=1)  # [1,1,1,30]
+    # --- single colour-index plane of the input (only 2 seeds are nonzero) ---
+    # colf = sum_k k*input_k via a 1x1 Conv.  fp32 [1,1,30,30] (the one heavy
+    # plane); everything downstream reduces it to tiny 1-D profiles.
+    cw = np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1)
+    init("convW", cw, np.float32)
+    n("Conv", ["input", "convW"], "colf")                        # [1,1,30,30] f32
+    # colour profiles along each axis (sum of seed colours)
+    n("ReduceSum", "colf", "rowProfH", axes=[3], keepdims=1)     # [1,1,30,1]
+    n("ReduceSum", "colf", "colProfW", axes=[2], keepdims=1)     # [1,1,1,30]
+    # per-axis seed-presence (binary)
+    init("zeroF", np.array(0.0, np.float32), np.float32)
+    n("Greater", ["rowProfH", "zeroF"], "rowHas_b")              # [1,1,30,1] bool
+    n("Greater", ["colProfW", "zeroF"], "colHas_b")              # [1,1,1,30] bool
+    n("Cast", "rowHas_b", "rowHasF", to=F16)
+    n("Cast", "colHas_b", "colHasF", to=F16)
 
-    # isT = seeds share a column  <=>  >1 occupied row
-    n("ReduceSum", "rowMaskH", "rowCnt", axes=[2], keepdims=1)   # [1,1,1,1]
+    # isT = seeds share a column  <=>  >1 occupied seed row
+    n("ReduceSum", "rowHasF", "rowCnt", axes=[2], keepdims=1)    # [1,1,1,1]
     n("Greater", ["rowCnt", "c_one"], "isT_b")
-    n("Cast", "isT_b", "isT", to=F16)                            # [1,1,1,1] f16
+    n("Cast", "isT_b", "isT", to=F16)
     n("Sub", ["c_one", "isT"], "notT")
 
-    # reshape masks across axes for orientation-agnostic along/cross vectors
+    # reshape H-profiles to a W vector so along/cross are orientation-agnostic
     init("shpW", np.array([1, 1, 1, 30], np.int64), np.int64)
     init("shpH", np.array([1, 1, 30, 1], np.int64), np.int64)
-    n("Reshape", ["rowMaskH", "shpW"], "rowMaskW")               # [1,1,1,30]
-    n("Reshape", ["colMaskW", "shpH"], "colMaskH")               # [1,1,30,1]
+    n("Reshape", ["rowHasF", "shpW"], "rowHasW")                 # [1,1,1,30]
+    n("Reshape", ["colHasF", "shpH"], "colHasH")                 # [1,1,30,1]
+    # colour profiles, fp16, reshaped W
+    n("Cast", "rowProfH", "rowProfHf", to=F16)
+    n("Cast", "colProfW", "colProfWf", to=F16)
+    n("Reshape", ["rowProfHf", "shpW"], "rowProfW")              # [1,1,1,30]
 
-    # alongVecW [1,1,1,30] : ones at the two seed positions along long axis
-    n("Mul", ["isT", "rowMaskW"], "aw_t")
-    n("Mul", ["notT", "colMaskW"], "aw_n")
+    # alongVecW [1,1,1,30] : seed presence along the long axis (as a W vector)
+    n("Mul", ["isT", "rowHasW"], "aw_t")
+    n("Mul", ["notT", "colHasF"], "aw_n")
     n("Add", ["aw_t", "aw_n"], "alongVecW")
-    # crossVecH [1,1,30,1] : one at the shared coordinate K
-    n("Mul", ["isT", "colMaskH"], "ch_t")
-    n("Mul", ["notT", "rowMaskH"], "ch_n")
+    # crossVecH [1,1,30,1] : shared coordinate K presence (as an H vector)
+    n("Mul", ["isT", "colHasH"], "ch_t")
+    n("Mul", ["notT", "rowHasF"], "ch_n")
     n("Add", ["ch_t", "ch_n"], "crossVecH")
+    # along colour profile (as W vector): colour at each long-axis seed position
+    n("Mul", ["isT", "rowProfW"], "ac_t")
+    n("Mul", ["notT", "colProfWf"], "ac_n")
+    n("Add", ["ac_t", "ac_n"], "alongColW")                     # [1,1,1,30] f16
 
-    # --- along scalars ---
+    # --- along scalars: S=Cl+Cr, Cl, Cr ---
     n("Mul", ["idxW", "alongVecW"], "ia")                        # [1,1,1,30]
     n("ReduceSum", "ia", "S", axes=[3], keepdims=1)              # Cl+Cr
     n("ReduceMax", "ia", "Cr", axes=[3], keepdims=1)
@@ -90,144 +91,111 @@ def build(task):
     n("Mul", ["inv_a", "BIG"], "inv_big")
     n("Add", ["ia", "inv_big"], "ia_min")
     n("ReduceMin", "ia_min", "Cl", axes=[3], keepdims=1)
-    # e0 = (S-3)/2 , e1 = (S+3)/2
     n("Sub", ["S", "c_three"], "Sm3")
     n("Div", ["Sm3", "c_two"], "e0")
     n("Add", ["S", "c_three"], "Sp3")
     n("Div", ["Sp3", "c_two"], "e1")
+    n("Div", ["S", "c_two"], "mid")                              # side threshold
 
-    # cross coordinate K (shared seed coordinate along the short axis)
+    # cross coordinate K
     n("Mul", ["idxH", "crossVecH"], "ic")
-    n("ReduceSum", "ic", "K", axes=[2], keepdims=1)             # [1,1,1,1]
+    n("ReduceSum", "ic", "K", axes=[2], keepdims=1)              # [1,1,1,1]
 
+    # ---- build 6 glyph components ----
+    # along factor AW [1,1,6,30] : membership along the long axis
+    #   rows: 0 stemL, 1 barL, 2 hookL, 3 stemR, 4 barR, 5 hookR
     def col(name, terms):
-        # build a [1,1,N,1] threshold column from (scalar, offset) terms
         parts = []
         for i, (base, off) in enumerate(terms):
             init(f"o_{name}{i}", np.array(off, np.float16), np.float16)
             parts.append(n("Add", [base, f"o_{name}{i}"], f"t_{name}{i}"))
         return n("Concat", parts, f"col_{name}", axis=2)        # [1,1,N,1]
 
-    def bands(name, lo, hi):
-        # batched 0/1 masks: (idxW > lo) & (idxW < hi) -> [1,1,N,30]
-        g = n("Greater", ["idxW", lo], f"g_{name}")
-        l = n("Less", ["idxW", hi], f"l_{name}")
+    def bands(name, lo, hi, axisvec, outname):
+        g = n("Greater", [axisvec, lo], f"g_{name}")
+        l = n("Less", [axisvec, hi], f"l_{name}")
         gf = n("Cast", g, f"gf_{name}", to=F16)
         lf = n("Cast", l, f"lf_{name}", to=F16)
-        return n("Mul", [gf, lf], f"b_{name}")                  # [1,1,N,30] f16
+        return n("Mul", [gf, lf], outname)
 
-    # all 6 along masks at once, rows [stemL,crossLc,hookLc, stemR,crossRc,hookRc]
+    # along bands (vs idxW)
     alo = col("alo", [("Cl", -0.5), ("e0", -0.5), ("e0", 0.5),
                       ("e1", -0.5), ("e1", -0.5), ("e1", -1.5)])
     ahi = col("ahi", [("e0", 0.5), ("e0", 0.5), ("e0", 1.5),
                       ("Cr", 0.5), ("e1", 0.5), ("e1", -0.5)])
-    alongAll = bands("along", alo, ahi)                         # [1,1,6,30]
+    bands("along", alo, ahi, "idxW", "AWa")                      # [1,1,6,30]
 
-    # 3 cross masks: rows [crossK, band5, mid3] -> ends2 = band5 - mid3
+    # cross factor (vs idxW positions): only 3 distinct rows are needed --
+    #   row0 stemX: x==K ; row1 band5: K-2..K+2 ; row2 mid3: K-1..K+1.
+    # hook membership ends2 = band5 - mid3.  Glyph rows reuse these.
     clo = col("clo", [("K", -0.5), ("K", -2.5), ("K", -1.5)])
     chi = col("chi", [("K", 0.5), ("K", 2.5), ("K", 1.5)])
-    crossB = bands("cross", clo, chi)                           # [1,1,3,30]
-    init("s_b5", np.array([1], np.int64), np.int64)
-    init("s_b5e", np.array([2], np.int64), np.int64)
+    bands("cross", clo, chi, "idxW", "CHc")                      # [1,1,3,30]
     init("ax2", np.array([2], np.int64), np.int64)
-    n("Slice", [crossB, "s_b5", "s_b5e", "ax2"], "band5row")    # [1,1,1,30]
-    init("s_m3", np.array([2], np.int64), np.int64)
-    init("s_m3e", np.array([3], np.int64), np.int64)
-    n("Slice", [crossB, "s_m3", "s_m3e", "ax2"], "mid3row")
-    n("Sub", ["band5row", "mid3row"], "ends2row")               # [1,1,1,30]
-    init("s_cK", np.array([0], np.int64), np.int64)
-    init("s_cKe", np.array([1], np.int64), np.int64)
-    n("Slice", [crossB, "s_cK", "s_cKe", "ax2"], "crossKrow")
-    n("Concat", ["crossKrow", "band5row", "ends2row"], "crossT", axis=2)  # [1,1,3,30]
+    init("s0", np.array([0], np.int64), np.int64)
+    init("s1", np.array([1], np.int64), np.int64)
+    init("s2", np.array([2], np.int64), np.int64)
+    init("s3", np.array([3], np.int64), np.int64)
+    n("Slice", ["CHc", "s0", "s1", "ax2"], "stemX")            # x==K
+    n("Slice", ["CHc", "s1", "s2", "ax2"], "band5")            # K-2..K+2
+    n("Slice", ["CHc", "s2", "s3", "ax2"], "mid3a")            # K-1..K+1
+    n("Sub", ["band5", "mid3a"], "ends2")                       # x in {K-2,K+2}
+    # assemble CH (cross factor) rows: stem,bar,hook,stem,bar,hook
+    n("Concat", ["stemX", "band5", "ends2", "stemX", "band5", "ends2"],
+      "CHrows", axis=2)                                          # [1,1,6,30]
 
-    # split along masks into the two color triples
-    init("s_L", np.array([0], np.int64), np.int64)
-    init("s_Le", np.array([3], np.int64), np.int64)
-    n("Slice", [alongAll, "s_L", "s_Le", "ax2"], "alongL")      # [1,1,3,30]
-    init("s_R", np.array([3], np.int64), np.int64)
-    init("s_Re", np.array([6], np.int64), np.int64)
-    n("Slice", [alongAll, "s_R", "s_Re", "ax2"], "alongR")      # [1,1,3,30]
+    # ---- CANONICAL frame: H=cross, W=along.  Build the whole label here, then
+    #      transpose the finished label iff the instance is transposed. ----
+    # CH [1,1,30,6] cross-membership over H positions; AW [1,1,6,30] along over W.
+    n("Transpose", ["CHrows"], "CH", perm=[0, 1, 3, 2])         # [1,1,30,6]
+    n("MatMul", ["CH", "AWa"], "glyphP")                        # [1,1,30,30] f32
+    n("Greater", ["glyphP", "half16"], "glyphM")               # bool (sum>0.5 = OR)
 
-    # --- orientation: choose which triple lands on H vs W (factor-level) ---
-    # MatMul factors: CH [1,2,30,3] (H positions x 3 comps), AW [1,2,3,30].
-    # N-orientation: cross on H, along on W.  T: along on H, cross on W.
-    # Both color channels processed in one batched pass.
-    n("Concat", ["alongL", "alongR"], "alongLR", axis=1)        # [1,2,3,30]
-    n("Transpose", ["alongLR"], "alongH", perm=[0, 1, 3, 2])    # [1,2,30,3]
-    n("Transpose", ["crossT"], "crossH", perm=[0, 1, 3, 2])     # [1,1,30,3] (bcast)
-    n("Mul", ["isT", "alongH"], "chT")
-    n("Mul", ["notT", "crossH"], "chN")
-    n("Add", ["chT", "chN"], "CH2")                            # [1,2,30,3]
-    n("Mul", ["isT", "crossT"], "awT")
-    n("Mul", ["notT", "alongLR"], "awN")
-    n("Add", ["awT", "awN"], "AW2")                            # [1,2,3,30]
+    # in-grid extent vectors off the free input (120B each, no plane)
+    n("ReduceMax", "input", "rowExtF", axes=[1, 3], keepdims=1)  # [1,1,30,1] f32
+    n("ReduceMax", "input", "colExtF", axes=[1, 2], keepdims=1)  # [1,1,1,30] f32
+    n("Greater", ["rowExtF", "zeroF"], "rowExtB")               # real row extent
+    n("Greater", ["colExtF", "zeroF"], "colExtB")               # real col extent
+    # canonical extents: crossExt on H, alongExt on W.
+    #   non-T: cross=real rows, along=real cols.  T: swapped.
+    n("Not", "isT_b", "notT_b")
+    n("Reshape", ["rowExtB", "shpW"], "rowExtW")                # [1,1,1,30]
+    n("Reshape", ["colExtB", "shpH"], "colExtH")                # [1,1,30,1]
+    # crossExtH = notT?rowExt:colExt  (bool, via And/Or)
+    n("And", ["notT_b", "rowExtB"], "ceh_n")
+    n("And", ["isT_b", "colExtH"], "ceh_t")
+    n("Or", ["ceh_n", "ceh_t"], "crossExtH")                   # [1,1,30,1] bool
+    n("And", ["notT_b", "colExtB"], "aew_n")
+    n("And", ["isT_b", "rowExtW"], "aew_t")
+    n("Or", ["aew_n", "aew_t"], "alongExtW")                   # [1,1,1,30] bool
+    n("And", ["crossExtH", "alongExtW"], "gridC")              # [1,1,30,30] bool
 
-    # in-grid rectangle as a rank-1 factor (rowExtent (x) colExtent).
-    n("ReduceMax", "rowOccF", "rowExt", axes=[1], keepdims=1)    # [1,1,30,1]
-    n("ReduceMax", "colOccF", "colExt", axes=[1], keepdims=1)    # [1,1,1,30]
+    # canonical side mask: left iff along(=W) < mid -- pure 1-D, no Or.
+    n("Less", ["idxW", "mid"], "leftW_b")                       # [1,1,1,30] bool
 
-    # Each of the three planes is a separable product summed over <=3 rank-1
-    # components.  Build each as its own [1,1,30,30] fp16 plane via MatMul of
-    # the channel factor [1,1,30,K] with the along factor [1,1,K,30] -- no
-    # 3-channel canvas tensor, no slicing.  Factors are 0/1 so fp16 is exact.
-    init("axC1", np.array([1], np.int64), np.int64)
-    init("s0a", np.array([0], np.int64), np.int64)
-    init("s1a", np.array([1], np.int64), np.int64)
-    init("s2a", np.array([2], np.int64), np.int64)
-    n("Slice", ["CH2", "s0a", "s1a", "axC1"], "CHl")           # [1,1,30,3]
-    n("Slice", ["CH2", "s1a", "s2a", "axC1"], "CHr")
-    n("Slice", ["AW2", "s0a", "s1a", "axC1"], "AWl")           # [1,1,3,30]
-    n("Slice", ["AW2", "s1a", "s2a", "axC1"], "AWr")
-    init("half16", np.array(0.5, np.float16), np.float16)
-
-    def plane(ch, aw, mask):
-        n("MatMul", [ch, aw], mask + "P")                      # [1,1,30,30] f16
-        n("Greater", [mask + "P", "half16"], mask)             # bool
-
-    plane("CHl", "AWl", "leftM")
-    plane("CHr", "AWr", "rightM")
-    # in-grid mask is a single separable rectangle -> avoid a 30x30 MatMul,
-    # broadcast an AND of the two 1-D bool extents straight to [1,1,30,30].
-    n("Greater", ["rowExt", "half16"], "rowExtB")              # [1,1,30,1] bool
-    n("Greater", ["colExt", "half16"], "colExtB")             # [1,1,1,30] bool
-    n("And", ["rowExtB", "colExtB"], "gridM")                 # [1,1,30,30] bool
-
-    # --- scalar seed-colour ids colorL, colorR (uint8) ---
-    # per-channel along-position via tiny [1,10,1,1] reductions (no canvas temp)
-    n("Mul", ["idxH", "rowOccS"], "ioH")                        # [1,10,30,1]
-    n("ReduceSum", "ioH", "rowPos", axes=[2], keepdims=1)       # [1,10,1,1]
-    n("Mul", ["idxW", "colOccS"], "ioW")                        # [1,10,1,30]
-    n("ReduceSum", "ioW", "colPos", axes=[3], keepdims=1)       # [1,10,1,1]
-    n("Mul", ["isT", "rowPos"], "cp_t")
-    n("Mul", ["notT", "colPos"], "cp_n")
-    n("Add", ["cp_t", "cp_n"], "chPos")                        # [1,10,1,1]
-    n("ReduceMax", "rowOccS", "present", axes=[2], keepdims=1)  # [1,10,1,1]
-    n("Mul", ["chPos", "c_two"], "chPos2")
-    n("Less", ["chPos2", "S"], "isL_b")
-    n("Greater", ["chPos2", "S"], "isR_b")
-    n("Cast", "isL_b", "isL", to=F16)
-    n("Cast", "isR_b", "isR", to=F16)
-    n("Mul", ["present", "isL"], "leftSel")                    # [1,10,1,1] one-hot
-    n("Mul", ["present", "isR"], "rightSel")
-    arc = np.arange(10, dtype=np.float16).reshape(1, 10, 1, 1)
-    init("arc", arc, np.float16)
-    n("Mul", ["leftSel", "arc"], "cLp")
-    n("ReduceMax", "cLp", "colorLf", axes=[1, 2, 3], keepdims=1)  # [1,1,1,1]
-    n("Mul", ["rightSel", "arc"], "cRp")
-    n("ReduceMax", "cRp", "colorRf", axes=[1, 2, 3], keepdims=1)
-    n("Cast", "colorLf", "colorL", to=TensorProto.UINT8)        # scalar uint8
+    # ---- scalar seed colours colorL, colorR from the along colour profile ----
+    n("Cast", "leftW_b", "leftPos", to=F16)
+    n("Sub", ["c_one", "leftPos"], "rightPos")
+    n("Mul", ["alongColW", "leftPos"], "cLmask")
+    n("ReduceSum", "cLmask", "colorLf", axes=[3], keepdims=1)   # [1,1,1,1]
+    n("Mul", ["alongColW", "rightPos"], "cRmask")
+    n("ReduceSum", "cRmask", "colorRf", axes=[3], keepdims=1)
+    n("Cast", "colorLf", "colorL", to=TensorProto.UINT8)
     n("Cast", "colorRf", "colorR", to=TensorProto.UINT8)
 
-    # --- uint8 label map L ---
-    # outside grid -> 10; in-grid bg -> 0; left glyph -> colorL; right -> colorR.
+    # ---- canonical label map Lc ----
     init("v0", np.array(0, np.uint8), np.uint8)
     init("v10", np.array(10, np.uint8), np.uint8)
-    n("Where", ["gridM", "v0", "v10"], "L0")                   # 0 in-grid else 10
-    n("Where", ["rightM", "colorR", "L0"], "L1")               # right glyph
-    n("Where", ["leftM", "colorL", "L1"], "L")                 # left glyph (wins)
+    n("Where", ["gridC", "v0", "v10"], "Lc0")                  # in-grid bg=0 else 10
+    n("Where", ["leftW_b", "colorL", "colorR"], "glyphCol")    # uint8 [1,1,30,30]
+    n("Where", ["glyphM", "glyphCol", "Lc0"], "Lc")           # uint8 [1,1,30,30]
+
+    # transpose the finished label iff the instance is transposed
+    n("Transpose", ["Lc"], "LcT", perm=[0, 1, 3, 2])          # [1,1,30,30] uint8
+    n("Where", ["isT_b", "LcT", "Lc"], "L")                   # [1,1,30,30] uint8
 
     init("chan10", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
-    n("Equal", ["L", "chan10"], "output")                      # -> free BOOL
+    n("Equal", ["L", "chan10"], "output")
 
     x = helper.make_tensor_value_info("input", TensorProto.FLOAT, [1, 10, 30, 30])
     y = helper.make_tensor_value_info("output", TensorProto.BOOL, [1, 10, 30, 30])
