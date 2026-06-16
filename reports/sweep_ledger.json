@@ -2440,14 +2440,14 @@
   {
     "task": 202,
     "arc_id": "855e0971",
-    "points": 14.79,
+    "points": 15.15,
     "memory": 27063,
     "params": 40,
-    "method": "custom:task202",
+    "method": "custom:202 strata-band black-fill (MatMul rank-broadcast occupancy x colour slice)",
     "class": "FEASIBLE?",
     "sig": "transpose",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 500/500)"
   },
   {
     "task": 203,
