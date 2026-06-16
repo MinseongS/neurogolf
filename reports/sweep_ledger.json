@@ -2687,14 +2687,14 @@
   {
     "task": 222,
     "arc_id": "91714a58",
-    "points": 14.68,
+    "points": 15.17,
     "memory": 29344,
     "params": 973,
-    "method": "custom:task222",
+    "method": "custom:222 uniform-colour window detect+dilate (MaxPool range==0, task193 generalized)",
     "class": "BAIL?",
     "sig": "random_pixels",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win"
   },
   {
     "task": 223,
@@ -3748,14 +3748,14 @@
   {
     "task": 310,
     "arc_id": "c909285e",
-    "points": 14.84,
+    "points": 15.6,
     "memory": 25573,
     "params": 166,
-    "method": "gen:thbdh6332",
+    "method": "custom:310 wire-grid marked-box min-bbox-span crop (task036/177 idiom)",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win"
   },
   {
     "task": 311,
@@ -4111,14 +4111,14 @@
   {
     "task": 340,
     "arc_id": "d687bc17",
-    "points": 14.69,
+    "points": 15.22,
     "memory": 28784,
     "params": 1307,
-    "method": "custom:task340",
+    "method": "custom:340 copy-colour label map (depthwise count Convs + MatMul channel-contract, floor-break 28784->16904)",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 200/200, large floor-break)"
   },
   {
     "task": 341,

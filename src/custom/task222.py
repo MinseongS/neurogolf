@@ -1,34 +1,42 @@
-"""Task 222 (ARC-AGI 91714a58): keep only cells inside the solid box's bbox.
+"""task222 (ARC-AGI 91714a58) -- "keep the one solid box, drop the noise".
 
-Rule (from generator): a 16x16 grid holds scattered random single pixels plus ONE
-solid axis-aligned filled rectangle (the "box") of a single colour.  Output keeps
-every cell INSIDE the box's bounding rectangle (its own colour) and blacks out
-(0) everything else.
+Rule (from the generator):
+  A `size`x`size` (size=16) grid holds one SOLID axis-aligned rectangle of a single
+  `color` (width,height in [2,8], 9 <= area <= 16, placed strictly interior) on top of
+  a field of random single-pixel noise of arbitrary colours.  The generator guarantees
+  the box `color` has NO same-colour 4-neighbour anywhere outside the box (so noise of
+  the box colour is always isolated).  OUTPUT = INPUT with everything but the box zeroed
+  (keep box cells at their colour, blank everything else to background).
 
-Robust box detection (verified on 2000 fresh samples):
-  The box colour is the UNIQUE colour that forms 2x2 solid blocks: the box (area
-  >= 9, both sides >= 2) always contains >= 4 distinct 2x2 solid same-colour
-  blocks, whereas scattered random pixels (guaranteed by the generator to have no
-  same-colour 4-neighbour) form at most 1.  So `cnt2x2[c] >= 2` (channels 1..9)
-  isolates the box colour exactly.
+Exact local rule (brute-verified 0 fails / 50000 fresh instances):
+  keep(r,c) iff cell (r,c) belongs to a fully-filled, single-non-zero-colour block of
+  shape 3x3 OR 2x4 OR 4x2.
+  Why this is exact AND robust:
+    * Every valid box (area>=9, both dims>=2) CONTAINS such a sub-block: a box with a
+      dimension==2 must be >=2x5 (area>=9) so it contains a 2x4 (or 4x2); otherwise both
+      dims>=3 so it contains a 3x3.  Every box cell lies inside one of these windows
+      (3x3/2x4/4x2 windows tile a solid rectangle fully).
+    * Noise occasionally forms a spurious solid 2x2 (~1/60) and very rarely a 2x3
+      (~1/20000); requiring a 3x3 / 2x4 / 4x2 (>=8 same-colour pixels in that exact
+      shape among ~50%-density random noise) drives false positives to ~0.
 
-  The box colour's presence plane is the solid rectangle plus possibly a few
-  isolated box-colour singletons elsewhere.  Box rows are exactly the rows with a
-  HORIZONTAL box-colour pair (box width >= 2, singletons are isolated -> no pair);
-  box cols are the cols with a VERTICAL box-colour pair.  Their outer product is
-  precisely the box bbox.
-
-Floor-break: separable bbox = rowhas (30x1) x colhas (1x30); one final Where keeps
-`input` inside the bbox, writes black (bg one-hot) for in-grid cells outside it,
-and leaves off-grid cells all-zero.  All spatial intermediates are fp16 / uint8.
+Encoding (floor-break -- route the 10-ch expansion into the FREE output, task193 idiom):
+  colf[1,1,30,30] f32 = Conv1x1(input,[0,1,..,9]) -> per-cell colour index (bg/off-grid=0).
+  crop to the 16x16 active region, cast f16.  For each block shape (h,w):
+    mx = MaxPool(v,(h,w))      ; mn = -MaxPool(-v,(h,w))         (TL-anchored, no pad)
+    seed = (mx==mn) AND (mn>0)  -> window is uniform & non-background
+    pad seed back to 16x16 (TL); dilate = MaxPool(seed,(h,w)) bottom-right anchored
+  keep = OR of the three dilations; pad to 30x30 (False outside the 16x16 grid).
+  output = Where(keep, input, bg_onehot).
 """
 
 import numpy as np
 import onnx
 from onnx import helper, numpy_helper, TensorProto
 
-from ..builders import _model
+from ..harness import IR_VERSION
 
+F32 = TensorProto.FLOAT
 F16 = TensorProto.FLOAT16
 BOOL = TensorProto.BOOL
 
@@ -36,72 +44,81 @@ BOOL = TensorProto.BOOL
 def build(task):
     inits, nodes = [], []
 
-    def init(name, arr, dtype=np.float32):
+    def init(name, arr, dtype):
         inits.append(numpy_helper.from_array(
             np.ascontiguousarray(arr, dtype=dtype), name))
         return name
 
-    def n(op, ins, out, **kw):
-        nodes.append(helper.make_node(op, ins, [out], **kw))
+    def n(op, ins, out, **attrs):
+        nodes.append(helper.make_node(op, ins, [out], **attrs))
         return out
 
-    # ---- per-colour 2x2 solid-block count -> pick the box colour ----
-    # Slice straight from the f32 input to the 9 coloured channels over the 16x16
-    # active grid (blocks live only here), then cast that small slice to fp16: every
-    # per-channel plane is [1,9,15,15] (2025 B) not [1,10,29,29].  Channel 0
-    # (background, blocks everywhere) is dropped so argmax never picks it; the box
-    # colour index is recovered as argmax + 1.
-    init("sl_st", np.array([0, 1, 0, 0], np.int64), np.int64)
-    init("sl_en", np.array([1, 10, 16, 16], np.int64), np.int64)
-    init("sl_ax", np.array([0, 1, 2, 3], np.int64), np.int64)
-    n("Slice", ["input", "sl_st", "sl_en", "sl_ax"], "xc32")  # [1,9,16,16] f32
-    n("Cast", ["xc32"], "xc", to=F16)
+    # ---- colour-index plane (entry f32 read of the input) ------------------
+    wpack = np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1)  # [0,1,..,9]
+    init("WPACK", wpack, np.float32)
+    n("Conv", ["input", "WPACK"], "colf30", kernel_shape=[1, 1])  # [1,1,30,30] f32
 
-    init("W22", np.ones((9, 1, 2, 2), np.float16), np.float16)
-    # conv bias -3.5 then Relu: 0.5 exactly where a 2x2 block (sum==4), else 0.
-    init("B22", np.full((9,), -3.5, np.float16), np.float16)
-    n("Conv", ["xc", "W22", "B22"], "blk_sum", group=9)       # [1,9,15,15] f16
-    n("Relu", ["blk_sum"], "blkr")                            # 0.5 at blocks else 0
-    n("ReduceSum", ["blkr"], "cnt2x2", axes=[2, 3], keepdims=1)   # [1,9,1,1] 0.5*count
-    n("Squeeze", ["cnt2x2"], "cnt2x2s", axes=[2, 3])          # [1,9]
-    n("ArgMax", ["cnt2x2s"], "argc", axis=1, keepdims=0)      # [1] in 0..8
+    # crop to the 16x16 active region (grid size is fixed 16; box is interior).
+    init("c_s", np.array([0, 0], np.int64), np.int64)
+    init("c_e", np.array([16, 16], np.int64), np.int64)
+    init("c_ax", np.array([2, 3], np.int64), np.int64)
+    n("Slice", ["colf30", "c_s", "c_e", "c_ax"], "colf16")        # [1,1,16,16] f32
+    n("Cast", ["colf16"], "v", to=F16)                            # [1,1,16,16] f16
+    n("Neg", ["v"], "nv")                                         # for min via max
 
-    # ---- box-colour presence plane via channel Gather on the 16x16 slice ----
-    n("Gather", ["xc", "argc"], "boxpres16", axis=1)          # [1,1,16,16] f16
-    init("onehalf", np.array(1.5, np.float16), np.float16)
-    init("half", np.array(0.5, np.float16), np.float16)
+    init("NHALF", np.array(-0.5, np.float16), np.float16)
+    init("ZERO0", np.array(0.0, np.float16), np.float16)
+    init("ZERO5", np.array(0.5, np.float16), np.float16)
 
-    # ---- horizontal pair -> box rows ; vertical pair -> box cols (16x16) ----
-    init("Wh", np.ones((1, 1, 1, 2), np.float16), np.float16)
-    n("Conv", ["boxpres16", "Wh"], "hsum")                    # [1,1,16,15] f16
-    n("Greater", ["hsum", "onehalf"], "hpair")
-    n("Cast", ["hpair"], "hpairf", to=F16)
-    n("ReduceSum", ["hpairf"], "rowsum", axes=[3], keepdims=1)    # [1,1,16,1]
-    n("Greater", ["rowsum", "half"], "rowhas")                # [1,1,16,1] bool box rows
+    keep_terms = []
+    SZ = 16
+    for h, w in [(3, 3), (2, 4), (4, 2)]:
+        tag = f"{h}x{w}"
+        oh, ow = SZ - h + 1, SZ - w + 1
+        # TL-anchored window max(v) and max(-v) = -min(v)   (no padding).
+        n("MaxPool", ["v"], f"mx_{tag}", kernel_shape=[h, w], strides=[1, 1])
+        n("MaxPool", ["nv"], f"nmn_{tag}", kernel_shape=[h, w], strides=[1, 1])
+        # range = max - min = mx + nmn ; uniform-colour window iff range == 0
+        # (Add keeps a plane the same size min-via-Neg would, so no extra cost).
+        n("Add", [f"mx_{tag}", f"nmn_{tag}"], f"rng_{tag}")       # [1,1,oh,ow] f16
+        n("Equal", [f"rng_{tag}", "ZERO0"], f"uni_{tag}")        # max==min
+        # non-background: min > 0  <=>  nmn (=-min) < -0.5
+        n("Less", [f"nmn_{tag}", "NHALF"], f"nz_{tag}")
+        n("And", [f"uni_{tag}", f"nz_{tag}"], f"seedb_{tag}")     # [1,1,oh,ow] bool
+        n("Cast", [f"seedb_{tag}"], f"seed_{tag}", to=F16)        # f16 {0,1}
+        # pad seed back to 16x16 (place at top-left, fill 0).
+        pad = np.array([0, 0, 0, 0, 0, 0, SZ - oh, SZ - ow], np.int64)
+        init(f"spad_{tag}", pad, np.int64)
+        init(f"z16_{tag}", np.array(0.0, np.float16), np.float16)
+        n("Pad", [f"seed_{tag}", f"spad_{tag}", f"z16_{tag}"], f"seedpad_{tag}",
+          mode="constant")                                        # [1,1,16,16] f16
+        # dilate over the window footprint: bottom-right anchored MaxPool.
+        n("MaxPool", [f"seedpad_{tag}"], f"dil_{tag}",
+          kernel_shape=[h, w], strides=[1, 1], pads=[h - 1, w - 1, 0, 0])
+        keep_terms.append(f"dil_{tag}")
 
-    init("Wv", np.ones((1, 1, 2, 1), np.float16), np.float16)
-    n("Conv", ["boxpres16", "Wv"], "vsum")                    # [1,1,15,16] f16
-    n("Greater", ["vsum", "onehalf"], "vpair")
-    n("Cast", ["vpair"], "vpairf", to=F16)
-    n("ReduceSum", ["vpairf"], "colsum", axes=[2], keepdims=1)    # [1,1,1,16]
-    n("Greater", ["colsum", "half"], "colhas")                # [1,1,1,16] bool box cols
+    # keep = ANY block-shape dilation fired: Max over the three f16 maps, one Greater.
+    n("Max", [keep_terms[0], keep_terms[1]], "dil01")             # [1,1,16,16] f16
+    n("Max", ["dil01", keep_terms[2]], "dilmax")
+    n("Greater", ["dilmax", "ZERO5"], "keep16b")                  # [1,1,16,16] bool
+    n("Cast", ["keep16b"], "keep16_u8", to=TensorProto.UINT8)
+    # pad to 30x30 with True outside the 16x16 grid: those off-grid cells are all-zero
+    # in the input, so selecting `input` there yields the all-zero target (NOT the
+    # bg one-hot, which would wrongly set channel-0 high off-grid).  task193 idiom:
+    # selcond = keep OR off-grid.
+    init("kpad", np.array([0, 0, 0, 0, 0, 0, 14, 14], np.int64), np.int64)
+    init("ONEU8", np.array(1, np.uint8), np.uint8)
+    n("Pad", ["keep16_u8", "kpad", "ONEU8"], "keep30_u8", mode="constant")
+    n("Cast", ["keep30_u8"], "keep_b", to=BOOL)                   # [1,1,30,30] bool
 
-    # ---- bbox = rowhas & colhas (16x16) ; pad to 30x30 ; keep input inside ----
-    n("And", ["rowhas", "colhas"], "inbox16")                 # [1,1,16,16] bool
-    n("Cast", ["inbox16"], "inbox16f", to=F16)
-    # opset-10 Pad (attribute pads): pad rows/cols 16->30 with 0 (outside the box).
-    n("Pad", ["inbox16f"], "inboxf", mode="constant", value=0.0,
-      pads=[0, 0, 0, 0, 0, 0, 14, 14])                        # [1,1,30,30] f16
-    n("Greater", ["inboxf", "half"], "inbox")                 # [1,1,30,30] bool
+    # ---- single Where -> FREE [1,10,30,30] output --------------------------
+    bg = np.zeros((1, 10, 1, 1), np.float32)
+    bg[0, 0, 0, 0] = 1.0
+    init("bg_onehot", bg, np.float32)
+    n("Where", ["keep_b", "input", "bg_onehot"], "output")
 
-    # The grid is always exactly 16x16, so off-grid (= rows>=16 or cols>=16) is a
-    # constant mask; off-grid cells (all-zero input) must stay all-zero, not black.
-    offgrid = np.ones((1, 1, 30, 30), bool)
-    offgrid[0, 0, :16, :16] = False
-    init("offgrid", offgrid, bool)
-    n("Or", ["inbox", "offgrid"], "keep")                     # input where in-box or off-grid
-    bg = np.zeros((1, 10, 1, 1), np.float32); bg[0, 0, 0, 0] = 1.0
-    init("bg", bg)
-    n("Where", ["keep", "input", "bg"], "output")
-
-    return _model(nodes, inits)
+    x = helper.make_tensor_value_info("input", F32, [1, 10, 30, 30])
+    y = helper.make_tensor_value_info("output", F32, [1, 10, 30, 30])
+    graph = helper.make_graph(nodes, "task222", [x], [y], inits)
+    return helper.make_model(graph, ir_version=IR_VERSION,
+                             opset_imports=[helper.make_opsetid("", 11)])
