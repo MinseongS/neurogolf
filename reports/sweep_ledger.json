@@ -1052,14 +1052,15 @@
  {
   "task": 88,
   "arc_id": "3de23699",
-  "points": 13.85,
-  "memory": 69698,
-  "params": 120,
+  "points": 15.53,
+  "memory": 12791,
+  "params": 134,
   "method": "gen:biohack_new",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 13.85->15.53 corner-marker crop+shift (task036-class; marker disc by count==4 vs argmax); UNTRIAGED pending pool had pure headroom, NOT a wall; generalizes 200+500+5000"
  },
  {
   "task": 89,
