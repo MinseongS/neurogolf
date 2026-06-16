@@ -2651,7 +2651,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 90f3ed37: append a C-pattern column of blue; non-deterministic / pattern-period "
+  "verdict": "INFEASIBLE: 90f3ed37: append a C-pattern column of blue; non-deterministic / pattern-period ",
+  "note": "GAP-CLOSER FAILED: information bottleneck \u2014 C-template recoverable only from key block where superimposed on A/B; ~10% multi-output ambiguous, ~13% unreachable, ANY function caps ~85-87%. Overcount irrecoverable."
  },
  {
   "task": 220,

@@ -49,14 +49,20 @@ kaggle CLI: /opt/homebrew/Caskroom/miniconda/base/bin/kaggle.
    Proven: 088 13.85→15.53, 070 13.90→16.25, 238 13.93→15.34, 011 14.12→15.94, 037 14.12→14.84,
    328 14.28→14.94 — ~6/8 probes were wins. PROBE lowest-points-first WITH the EARLY FEASIBILITY CHECK
    (bail fast on variable-size flood / global-argmax walls). Refill source = step 7 tertiary.
-2. **⭐ GAP-CLOSING on NON-GENERALIZING base nets** (highest value): the 61.27 stored−LB gap is mostly a
+2. **GAP-CLOSING — CONCLUDED A DEAD END (2026-06-16, verified)**: all 3 gap giants are genuine walls —
+   219 (information bottleneck, ~85% ceiling), 255 (connectivity wall), 209 (non-deterministic, ~97% ceiling).
+   The 61.27 stored−LB gap is STRUCTURAL/unrecoverable: the overcounted base nets overfit tasks no function
+   can solve. Do NOT spend more agents re-encoding gap-attribution tasks (the partial ones 118/2/90/157/etc.
+   are near-optimal too). The PENDING POOL (#1) is the only productive reservoir. [Original thesis below kept
+   for record — it was wrong about closeability:]
+   ~~**⭐ GAP-CLOSING on NON-GENERALIZING base nets** (highest value): the 61.27 stored−LB gap is mostly a
    handful of base nets with HIGH stored but fresh-rate 0.00 → they score ~0 on the real LB. `src/adopt.py`
    ALREADY counts the current net as 0 pts when it fails fresh, so ANY generalizing custom you build for
    them is adopted and raises LB by ~its full score (even at low stored). See `reports/lb_status.md` gap
    attribution table. TOP TARGETS: **219 (stored 15.00, fresh 0.00 → ~+15 LB)**, **255 (13.95, 0.00 →
    ~+14 LB)**, then 209/118/2/90/157/366/251/18/101 (partial, fresh 0.88-0.97, +0.3-1.7 each). These were
    mislabeled "confirmed-infeasible" by judging +0.3 against the INFLATED stored — IGNORE that label and
-   build a generalizing exact encoding. This alone is worth ~+25 LB from 219+255.
+   build a generalizing exact encoding. This alone is worth ~+25 LB from 219+255.~~ (NOTE: closeability disproven — all 3 walls)
 
 ## Honest status (2026-06-16, mid-session)
 Confirmed LB **6453.40** (session start 6419.29, +34.11; this run opened the pending pool + gap-closing).
