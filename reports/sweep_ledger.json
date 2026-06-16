@@ -3243,14 +3243,14 @@
   {
     "task": 268,
     "arc_id": "aba27056",
-    "points": 15.15,
+    "points": 15.5,
     "memory": 18808,
     "params": 57,
-    "method": "ext:vyank6322",
+    "method": "custom:268 per-cell orientation-equivariant frame (compaction 18808->13243)",
     "class": "FEASIBLE?",
     "sig": "transpose",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 200/200)"
   },
   {
     "task": 269,
