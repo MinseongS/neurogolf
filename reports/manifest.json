@@ -1729,10 +1729,10 @@
    "method": "custom:task288"
   },
   "289": {
-   "points": 14.874489523818365,
-   "memory": 24892,
-   "params": 80,
-   "method": "ext:kojimar6275"
+   "points": 17.298799819142552,
+   "memory": 2125,
+   "params": 86,
+   "method": "custom:task289"
   },
   "290": {
    "points": 17.476518687426502,

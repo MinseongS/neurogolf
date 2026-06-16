@@ -3496,14 +3496,14 @@
   {
     "task": 289,
     "arc_id": "b91ae062",
-    "points": 14.87,
+    "points": 17.3,
     "memory": 24892,
     "params": 80,
-    "method": "ext:kojimar6275",
+    "method": "custom:289 data-dependent NN upscale (double Gather + sentinel row/col, task195/011 family)",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 500/500)"
   },
   {
     "task": 290,
