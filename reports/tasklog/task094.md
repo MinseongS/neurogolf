@@ -15,27 +15,35 @@ pink at overlaps.
 | 1 | 5x5 outline-Conv (no pad) → centre profiles → label map | A | 7575 | 289 | 16.03 | (offset bug) | Conv top-left aligned, crosshair off by (-2,-2) |
 | 2 | + pads=[2,2,2,2] to centre the Conv response | A | 7575 | 289 | 16.03 | 265/265 | correct, MARGINAL (+0.26) |
 | 3 | drop dead 15x15 resp slice; ReduceMax full resp → crop 1-D profiles | A | 6690 | 287 | 16.15 | 200/200 | beats P by +0.38 ✓ |
+| 4 | Conv on the 1-ch 15x15 blue SLICE (reuse blue_f) instead of 10-ch 30x30 input | A | 3750 | 58 | 16.76 | 500/500 | beats 16.15 by +0.61 ✓✓ |
 
 ## Best achieved
-16.15 @ mem 6690 params 287 — adopted? N (orchestrator gates). Beats prior 15.767? Y (+0.38).
+16.76 @ mem 3750 params 58 — adopted? N (orchestrator gates). Beats prior 16.15? Y (+0.61).
+KEY: the Conv never needed the full 10-ch 30x30 input. `blue_f` (the [1,1,15,15] fp32 blue
+slice, already computed for the overlay mask) IS the conv input → resp drops 3600B→900B and
+the kernel drops from [1,10,5,5] to [1,1,5,5] (params 287→58). The 30x30 conv crop constants
+(c0/c15/ax2/ax3) and the 30-wide ReduceMax/Slice all vanish.
 
-## Irreducible-floor analysis
-Dominant intermediate: the Conv response `resp` [1,1,30,30] fp32 = 3600B. Conv output is
-forced to 30x30 because the input is 30x30; cannot shrink without first slicing the 10-ch
-input (a [1,10,15,15]=2250B fp slice, plus its own conv — net worse). Second: the blue-mask
-fp slice [1,1,15,15]=900B. The 5x5 outline detector is the cheapest exact centre finder
-(peak=16 vs <=8 elsewhere) and reduces to two 1-D profiles immediately.
+## 1-D-only angle (re-attack hint) — REJECTED, INFEASIBLE for correctness
+The suggested "drop the 2-D Conv, use 1-D ReduceSum blue-count row/col profiles" does NOT work.
+Per-row blue count is 5 at box edges (r±2) and 2 at inner rows (r-1,r,r+1) — the centre row's
+count (2) is identical to its neighbours, so no threshold isolates it. A 1-D conv [1,0,0,0,1]
+peaks at 10 (5+5) at the centre, BUT two boxes whose edges align at row-distance 4 produce a
+phantom 5+5=10 peak at a NON-centre row. Valid generator configs hit this (e.g. dr=8 → phantom
+at r1+4; dr=4 with dc>=6 likewise). Verified false positive at row 7 for boxes (3,3),(11,11).
+The 2-D Conv is REQUIRED to bind the full outline at one location.
 
-## OPEN ANGLES (re-attack backlog)
-- Cast resp to fp16 before the two ReduceMax (1800B) — but Cast adds a tensor; only helps if
-  the fp32 resp can be elided (it can't, it's the Conv output). Net neutral/worse.
-- Detect centres without a 30x30 Conv: blue verticals at the centre row sit at cols c±2 with a
-  3-cell gap — a 1-D row-profile of "blue count == box-perimeter signature" might isolate the
-  centre row from cheap ReduceSum profiles (no 2-D Conv). Could drop the 3600B resp to ~120B
-  vecs → potential tier-A ceiling jump (~17+). Not yet tried; the 2-axis ambiguity (which
-  centre-row pairs with which centre-col) when two boxes are present needs the 2-D Conv to
-  bind them — but the rule paints FULL rows and FULL cols independently, so row-set and col-set
-  need NOT be paired. 1-D profiles alone may suffice → strong open lever.
+## Irreducible-floor analysis (after attempt 4)
+Per-tensor mem (total 3750): blue_f [1,1,15,15] fp32 900 + resp [1,1,15,15] fp32 900 +
+L [1,1,30,30] uint8 900 (off-grid sentinel pad, required since output is 30x30, ORT Pad
+rejects bool) + cross/is_blue/L_a/L15 (225 each) + profiles (~150). The two fp32 planes are
+the floor: Conv input/output must be float and the active grid is 15x15. Off-grid blue is
+confined to rows/cols 1..13, so a 13x13 crop (676B each, verified correct) would shave ~448B
+(~16.87) but needs +1 offset Pads on the 1-D profiles back to 15 — marginal, not taken.
+
+## OPEN ANGLES (untried)
+- 13x13 blue crop ([1:14]) → resp/blue_f 676B each, +offset Pad on profiles → ~16.87 (+0.1).
+- Cast resp fp16: adds a tensor, can't elide the fp32 Conv output → net worse.
 
 ## INSIGHT (transferable)
 ⭐ Box/ring CENTRE detection = one Conv with the ring's exact perimeter kernel; the response

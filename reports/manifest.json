@@ -559,9 +559,9 @@
    "method": "ext:kojimar6275"
   },
   "94": {
-   "points": 16.149625696060763,
-   "memory": 6690,
-   "params": 287,
+   "points": 16.755140604088744,
+   "memory": 3750,
+   "params": 58,
    "method": "custom:task094"
   },
   "95": {

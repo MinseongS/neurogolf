@@ -107,8 +107,11 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   on V and V², fp16-exact when the gap ≫ fp16 step; the `S1>0` gate is LOAD-BEARING — an isolated noise
   pixel has 8 empty neighbours trivially "all equal (==0)" and gets falsely picked without it (task346).
   Independent full row+col crosshairs are SEPARABLE → is_row OR is_col, broadcast in the
-  free final ops — and 1-D ReduceSum row/col profiles can replace the 30×30 Conv entirely (~120B vs 3600B)
-  when row-set and col-set are independent (task094).
+  free final ops. NEGATIVE result: a 1-D ReduceSum row/col profile does NOT replace the 2-D outline Conv
+  for centre detection — per-row counts are equal at edges and inner rows, and two boxes whose edges align
+  can fake a phantom peak at a non-centre row; the 2-D Conv is required to bind the outline at one location.
+  The real saving: run that 2-D Conv on a cheap 1-CHANNEL slice cropped to the active grid (slice the one
+  relevant colour to 15×15 FIRST), not the 10-ch 30×30 input → resp 3600B→900B, kernel params 287→58 (task094).
 - variable offset → bbox first-occupied row/col; 2-D point lookup → chained Gather(axis=2 then 3), NOT
   row∧col outer product (cross-talks); K cheap channel-Slices beat a [0..9] colour Conv for fixed small
   color sets. When each spatial REGION carries a FIXED colour, skip the 1×1 colour-index Conv entirely (it
