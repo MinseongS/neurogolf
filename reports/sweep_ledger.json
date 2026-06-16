@@ -1578,14 +1578,15 @@
  {
   "task": 132,
   "arc_id": "56ff96f3",
-  "points": 14.71,
-  "memory": 29394,
-  "params": 64,
+  "points": 15.84,
+  "memory": 9395,
+  "params": 67,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: 56ff96f3: fill each box (defined by 2 diagonal corner pixels) solid wi"
+  "status": "done",
+  "verdict": "FEASIBLE A ~17.0pt: 56ff96f3: fill each box (defined by 2 diagonal corner pixels) solid wi",
+  "note": "adopted 14.71->15.84 per-colour bbox-fill (MatMul contracts 10-ch axis, disjoint boxes); ~15.8 fp32-occupancy ceiling; generalizes 267+500"
  },
  {
   "task": 133,

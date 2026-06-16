@@ -91,6 +91,11 @@ at-floor; if the rule needs a global argmax across data-dependent-count componen
   (product-chain of shifted occupancy, resets at gaps) so key=dr·4+dc is per-cell with no flood-fill; the
   colour-by-offset 4×4 histogram is learned from the single coloured sprite via a double-MatMul over offset
   one-hots, propagated by a 1-D Gather (task368).
+- per-colour bbox-FILL of disjoint instance-coloured boxes = L=MatMul(A[r,c]=c·rowband_c, B[c,c']=colband_c)
+  contracts the 10-ch axis into ONE [1,1,H,W] colour-index plane, no [1,10,H,W] product (disjoint ⇒ no
+  double-stamp, weight-0 bg falls out); recover the in-grid bg channel as rowany⊗colany for ~120B by
+  reducing the existing fp32 occupancy over the channel axis (task132). Two fp32 per-channel spatial
+  reductions are a ~15.8 ceiling — don't chase tier-A past it.
 
 ## SCORING + OP FACTS
 score=max(1,25−ln(mem+params)); mem=SUM over every intermediate tensor of elems×itemsize (input/output
