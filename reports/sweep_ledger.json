@@ -2936,8 +2936,8 @@
     "method": "gen:thbdh6332",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "pending-retry",
+    "verdict": "agent stalled 600s mid-derivation; FEASIBLE (data-dependent 3x3 crop of vflipped input + hole-detect via broken symmetry). Retry later."
   },
   {
     "task": 243,
