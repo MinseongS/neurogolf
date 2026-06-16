@@ -95,6 +95,12 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   colf=Σ_k k·input_k (>0 ⇔ non-background) as the occupancy signal, which doubles as the value plane.
   A horizontal mirror of a cropped window = a flipped col-index ramp `min_col+(W-1)-arange(WORK)` into the
   col Gather — no reflection matrix needed (task177, task036 crop+flip).
+- ring/box CENTRE detection = ONE Conv whose kernel is the ring's exact perimeter pattern (response peaks
+  at the perimeter pixel-count, strictly lower elsewhere → a single Greater isolates centres, no flood-fill);
+  a no-pad Conv aligns the peak to the window TOP-LEFT so add pads=[k,k,k,k] (SAME) to land it on the
+  geometric centre. Independent full row+col crosshairs are SEPARABLE → is_row OR is_col, broadcast in the
+  free final ops — and 1-D ReduceSum row/col profiles can replace the 30×30 Conv entirely (~120B vs 3600B)
+  when row-set and col-set are independent (task094).
 - variable offset → bbox first-occupied row/col; 2-D point lookup → chained Gather(axis=2 then 3), NOT
   row∧col outer product (cross-talks); K cheap channel-Slices beat a [0..9] colour Conv for fixed small
   color sets.

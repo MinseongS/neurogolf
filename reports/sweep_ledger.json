@@ -1121,14 +1121,15 @@
  {
   "task": 94,
   "arc_id": "41e4d17e",
-  "points": 15.77,
-  "memory": 10115,
-  "params": 112,
+  "points": 16.15,
+  "memory": 6690,
+  "params": 287,
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: 41e4d17e: extend blue squares' centers as pink crosses across grid + k"
+  "status": "done",
+  "verdict": "FEASIBLE A ~17.0pt: 41e4d17e: extend blue squares' centers as pink crosses across grid + k",
+  "note": "adopted 15.77->16.15 ring-centre perimeter-Conv (SAME pad); RE-ATTACK angle: 1-D row/col profiles drop 3600B plane to 120B -> ~17 (crosshairs separable, independent); generalizes 265+200"
  },
  {
   "task": 95,
