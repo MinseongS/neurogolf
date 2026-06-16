@@ -836,14 +836,15 @@
  {
   "task": 70,
   "arc_id": "32597951",
-  "points": 13.9,
-  "memory": 66060,
-  "params": 78,
+  "points": 16.25,
+  "memory": 5710,
+  "params": 613,
   "method": "gen:thbdh6332",
   "class": "FEASIBLE",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 13.90->16.25 bbox-fill via triangular-MatMul prefix/suffix-OR mask (not component-detection); tier A; pending-pool win; generalizes 266+200"
  },
  {
   "task": 71,

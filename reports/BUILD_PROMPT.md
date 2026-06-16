@@ -119,6 +119,10 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   can fake a phantom peak at a non-centre row; the 2-D Conv is required to bind the outline at one location.
   The real saving: run that 2-D Conv on a cheap 1-CHANNEL slice cropped to the active grid (slice the one
   relevant colour to 15×15 FIRST), not the 10-ch 30×30 input → resp 3600B→900B, kernel params 287→58 (task094).
+- bounding-box-as-a-MASK (no scalar argmin/max) = boolean prefix-OR ∧ suffix-OR of the per-row/col "has"
+  vector via a lower- and upper-triangular boolean MatMul + Greater (only TWO triangulars needed since
+  tril.T==triu) — turns an apparent "find the rectangle component" task into closed-form tier A, beating the
+  public CumSum-scan floor (task070).
 - variable offset → bbox first-occupied row/col; 2-D point lookup → chained Gather(axis=2 then 3), NOT
   row∧col outer product (cross-talks); K cheap channel-Slices beat a [0..9] colour Conv for fixed small
   color sets. When each spatial REGION carries a FIXED colour, skip the 1×1 colour-index Conv entirely (it

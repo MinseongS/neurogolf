@@ -415,10 +415,10 @@
    "method": "gen:vyank6322"
   },
   "70": {
-   "points": 13.90050125280863,
-   "memory": 66060,
-   "params": 78,
-   "method": "gen:thbdh6332"
+   "points": 16.248050941941386,
+   "memory": 5710,
+   "params": 613,
+   "method": "custom:task070"
   },
   "71": {
    "points": 13.790235794330012,
