@@ -38,7 +38,11 @@ forms below — most "detection" tasks this sweep turned out to be closed-form a
   from generator range constraints (task188); data-dependent row/col-independent coordinate remap =
   boolean double MatMul Rmat@src@CmatT, fp16 {0,1} exact (task250); ray/bounce = union of 45° diagonals
   r+c==a OR r-c==b through a vertex (task119); apply_gravity/reflect/transpose = orientation-EQUIVARIANCE
-  (same transform on input AND output) → compute both axis branches, select by structure (task341).
+  (same transform on input AND output) → compute both axis branches, select by structure (task341);
+  "find the connected object among noise" is NOT a connectivity BAIL when the object is one clustered
+  colour and noise uses other colours → object = the MINIMUM-BBOX-SPAN colour (per-channel 1-D occupancy
+  → argmin of max(rowspan,colspan)), exact, no flood-fill; recover (min_row,min_col,H,W) as scalars then
+  Gather-shift a small WORK×WORK window to origin (task036).
 - BANDED SINGLE-CONV: pack several boolean predicates into ONE conv plane via disjoint MAGNITUDE BANDS
   recovered by thresholds (e.g. `100·center_bg + 500·center_red + 1·(#red 4-nbrs)` → in-grid=band100,
   static-red=500, olive-red=501+ all from one plane) — kills separate in-grid/mask convs. Center tags need
@@ -59,7 +63,9 @@ GOTCHAS: ORT ReduceMax/Sum reject uint8/bool (need float); ORT Mul/And/Mod rejec
 ORT Where/Equal implemented for uint8 but NOT int8/int16; ORT Pad rejects bool; Clip rejects int64 (clip in
 float then Cast); Slice preserves the input float dtype; opset-11 has no GreaterOrEqual (use Not(Less(...)));
 REMOVE unused initializers (they still count as params); calculate_params counts element COUNT not bytes
-(initializer dtype is free — only element count matters).
+(initializer dtype is free — only element count matters). Reshape-to-scalar MUST use a `[1]`-shaped
+initializer, NEVER an empty `[]` 0-dim init (a 0-dim shape makes calculate_params return None →
+"performance could not be measured" scorer trap, task036).
 
 ## ANTI-STALL (agents have died at the 600s no-progress watchdog — obey)
 - WRITE src/custom/taskNNN.py EARLY (a first working draft within a few minutes) and iterate on disk; do
