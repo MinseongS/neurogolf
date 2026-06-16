@@ -1231,10 +1231,10 @@
    "method": "custom:task205"
   },
   "206": {
-   "points": 13.975062924893004,
-   "memory": 61296,
-   "params": 90,
-   "method": "gen:thbdh6332"
+   "points": 15.890364332145449,
+   "memory": 8972,
+   "params": 70,
+   "method": "custom:task206"
   },
   "207": {
    "points": 17.463636061595487,

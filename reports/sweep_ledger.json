@@ -2464,14 +2464,15 @@
  {
   "task": 206,
   "arc_id": "88a10436",
-  "points": 13.98,
-  "memory": 61296,
-  "params": 90,
+  "points": 15.89,
+  "memory": 8972,
+  "params": 70,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "pending-retry",
-  "verdict": "agent STALLED before writing file. NOT infeasible - re-build later (sprite stamp at gray markers, double-MatMul scatter designed)"
+  "status": "done",
+  "verdict": "agent STALLED before writing file. NOT infeasible - re-build later (sprite stamp at gray markers, double-MatMul scatter designed)",
+  "note": "adopted 13.98->15.89 data-dependent translation (shift-matrix double-MatMul, MAX non-overlap); generalizes 266/266"
  },
  {
   "task": 207,

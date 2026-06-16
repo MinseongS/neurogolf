@@ -49,7 +49,11 @@ forms below — most "detection" tasks this sweep turned out to be closed-form a
 - BANDED SINGLE-CONV: pack several boolean predicates into ONE conv plane via disjoint MAGNITUDE BANDS
   recovered by thresholds (e.g. `100·center_bg + 500·center_red + 1·(#red 4-nbrs)` → in-grid=band100,
   static-red=500, olive-red=501+ all from one plane) — kills separate in-grid/mask convs. Center tags need
-  weights large enough that neighbour-count leakage can't cross a lower threshold (task278).
+  weights large enough that neighbour-count leakage can't cross a lower threshold (task278). A single
+  colour Conv can also FOLD IN a sentinel marker channel (e.g. gray weight=50 ⇒ value>9 means marker) so
+  colour label and marker position both come from ONE plane; and an origin-anchored rectangular in-grid
+  mask is FREE from 1-D occupancy profiles (ReduceSum of free input → 120B vecs → Greater→And) vs a
+  5760B [1,10,W,W] channel-max (task206).
 - variable offset → bbox first-occupied row/col; 2-D point lookup → chained Gather(axis=2 then 3), NOT
   row∧col outer product (cross-talks); K cheap channel-Slices beat a [0..9] colour Conv for fixed small
   color sets.
