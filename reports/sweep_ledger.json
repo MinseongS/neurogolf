@@ -44,8 +44,9 @@
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE None ~14.1pt: data-dependent translate (closed-form): 025d127b reshapes each paralle"
+  "status": "pending-retry",
+  "verdict": "FEASIBLE None ~14.1pt: data-dependent translate (closed-form): 025d127b reshapes each paralle",
+  "note": "agent stalled 600s very early (no draft); retry next session"
  },
  {
   "task": 5,
