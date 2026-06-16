@@ -3273,8 +3273,8 @@
     "method": "ext:kojimar6275",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "skip-marginal",
+    "verdict": "generalizing exact (fresh 500/500) but +0.199 < +0.3 bar; ~20KB irreducible (4 unfusable directional MatMuls). Insight logged."
   },
   {
     "task": 271,
