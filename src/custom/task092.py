@@ -21,13 +21,25 @@ Memory floor-break (label map + final Equal, only `output` is 2-D over channels)
   (each cell is covered by at most one row-stick and one col-stick, so each sum
   collapses to that single colour).  The uint8 label map is
 
-    L = colColor          where a col-stick covers the cell   (column wins)
-        rowColor          elif a row-stick covers the cell
-        0                 elif in-grid                        (background)
-        10                else (off-grid)                     (matches nothing)
+    stickColor = colColor where a col-stick covers (column wins), else rowColor.
+    L          = stickColor + offrow + offcol     where
+      offrow[r] = 10*(r>=H), offcol[c] = 10*(c>=W)   are 1-D [30,1]/[1,30] penalties
+      summed in ONE variadic Sum (broadcast).  In-grid cells keep stickColor (0 for
+      background -> ch0=1); off-grid cells become >=10 so Equal(L, arange[0..9])
+      matches NO channel -> all-zero, which is the target for cells outside the grid.
 
-  and the free BOOL output = Equal(L, arange[1,10,1,1]) (opset 11).  All values
-  are small integers, exact in float32 / uint8.
+  H,W (the grid frame) are recovered offset-free from per-row/col occupancy:
+    rowframe[r] = ReduceMax(rowhas, ch-axis) = 1 iff r<H  (bg ch0=1 fills every in-grid
+    cell), colframe[c] similarly.  No [1,1,30,30] in-grid plane is built.
+
+  The free BOOL output = Equal(L_u8[1,1,30,30], arange[0..9][1,10,1,1]) (opset 11).
+  All values are small integers, exact in float32 / float16 / uint8.
+
+  Verified: official 3/3, fresh 500/500.  pts 14.866, mem 23350, params 1829
+  (vs prior stored 14.56 / mem 32350).  Dominant intermediates: 2 colour MatMul
+  [30,30] f16 (1800 each) + the col-priority Where + the sentinel Sum [30,30] f16
+  (1800 each) + the two fp32 ReduceMax occupancy reductions (1200 each, forced
+  because ORT ReduceMax needs float and the input is fp32).
 """
 
 import numpy as np
@@ -55,10 +67,14 @@ def build(task):
     B = TensorProto.BOOL
 
     # --- per-colour has-row / has-col masks (ch0 kept harmlessly) -----------
-    n("ReduceMax", ["input"], "rowhasf", axes=[3], keepdims=1)  # [1,10,30,1]
-    n("ReduceMax", ["input"], "colhasf", axes=[2], keepdims=1)  # [1,10,1,30]
+    n("ReduceMax", ["input"], "rowhasf", axes=[3], keepdims=1)  # [1,10,30,1] f32
+    n("ReduceMax", ["input"], "colhasf", axes=[2], keepdims=1)  # [1,10,1,30] f32
     n("Cast", ["rowhasf"], "rowhas", to=H)
     n("Cast", ["colhasf"], "colhas", to=H)
+    # grid frame (r<H / c<W) from the per-row/col occupancy over the channel axis:
+    # any channel set (bg ch0=1 fills every in-grid cell) => 1 for in-grid rows/cols.
+    n("ReduceMax", ["rowhas"], "rowframe", axes=[1], keepdims=1)  # [1,1,30,1] f16
+    n("ReduceMax", ["colhas"], "colframe", axes=[1], keepdims=1)  # [1,1,1,30] f16
 
     Ltri = np.tril(np.ones((30, 30), np.float16))
     Utri = np.triu(np.ones((30, 30), np.float16))
@@ -76,16 +92,17 @@ def build(task):
     n("And", ["rpre_b", "rsuf_b"], "rowin_b")
     n("Cast", ["rowin_b"], "rowin", to=H)           # [1,10,30,1]
 
-    n("Transpose", ["colhas"], "colhasT", perm=[0, 1, 3, 2])    # [1,10,30,1]
-    n("MatMul", ["Ltri", "colhasT"], "cpre")
-    n("MatMul", ["Utri", "colhasT"], "csuf")
+    # col side: prefix/suffix-OR along the COL axis (axis 3) by RIGHT-multiplying
+    # colhas[1,10,1,30] by a triangular [30,30] (no transpose needed).
+    n("MatMul", ["colhas", "Utri"], "cpre")    # prefix: c'<=c needs Utri[c',c]=1 iff c'<=c
+    n("MatMul", ["colhas", "Ltri"], "csuf")    # suffix
     n("Greater", ["cpre", "zero"], "cpre_b")
     n("Greater", ["csuf", "zero"], "csuf_b")
-    n("And", ["cpre_b", "csuf_b"], "colinT_b")
-    n("Cast", ["colinT_b"], "colinT", to=H)         # [1,10,30,1] (col axis here)
+    n("And", ["cpre_b", "csuf_b"], "colin_b")
+    n("Cast", ["colin_b"], "colin4", to=H)          # [1,10,1,30]
 
     # --- classify channel: col-stick spans exactly one column ---------------
-    n("ReduceSum", ["colinT"], "colcount", axes=[2], keepdims=1)  # [1,10,1,1]
+    n("ReduceSum", ["colin4"], "colcount", axes=[3], keepdims=1)  # [1,10,1,1]
     n("Greater", ["colcount", "half"], "present")
     n("Less", ["colcount", "oneh"], "single_col")
     n("And", ["present", "single_col"], "iscol_b")
@@ -100,7 +117,7 @@ def build(task):
 
     # --- squeeze to [10,30] channel-major planes for contraction ------------
     n("Squeeze", ["rowin"], "RW", axes=[0, 3])      # [10,30] channel x row
-    n("Squeeze", ["colinT"], "CW", axes=[0, 3])     # [10,30] channel x col
+    n("Squeeze", ["colin4"], "CW", axes=[0, 2])     # [10,30] channel x col
     n("Squeeze", ["iscol"], "iscolv", axes=[0, 2, 3])   # [10]
     n("Squeeze", ["isrow"], "isrowv", axes=[0, 2, 3])   # [10]
     n("Squeeze", ["carr"], "cv", axes=[0, 2, 3])        # [10]
@@ -119,27 +136,29 @@ def build(task):
     n("Transpose", ["Rcol"], "RcolT", perm=[1, 0])  # [30,10]
     n("MatMul", ["RcolT", "CW"], "colColor")        # [30,30] colour of col-stick
 
-    # coverage planes (1 if a row/col stick covers the cell): a covered cell has
-    # colour >= 1, so colour > 0  <=>  covered (stick colours are 1..9).
-    n("Greater", ["rowColor", "zero"], "rowcov_b")
-    n("Greater", ["colColor", "zero"], "colcov_b")
+    # --- assemble a single f16 label plane, all in fp16 (no fp32 30x30) -----
+    # stickColor = colColor where a col-stick covers, else rowColor (col wins).
+    # A covered cell has colour 1..9 (>0).  colColor>0 => use colColor, else rowColor.
+    n("Greater", ["colColor", "zero"], "colcov_b")             # [30,30] bool
+    n("Where", ["colcov_b", "colColor", "rowColor"], "stickColor")  # [30,30] f16
 
-    # --- assemble label map L[30,30] ---------------------------------------
-    n("ReduceMax", ["input"], "ingridf", axes=[1], keepdims=1)  # [1,1,30,30]
-    n("Squeeze", ["ingridf"], "ingrid2", axes=[0, 1])          # [30,30] f32
-    init("zerof", np.array(0.0, np.float32), np.float32)
-    n("Greater", ["ingrid2", "zerof"], "ingrid_b")
-
-    n("Cast", ["rowColor"], "rowColorU8", to=U8)
-    n("Cast", ["colColor"], "colColorU8", to=U8)
-    init("v0", np.array(0, np.uint8), np.uint8)
-    init("v10", np.array(10, np.uint8), np.uint8)
-    # base: 0 in-grid else 10
-    n("Where", ["ingrid_b", "v0", "v10"], "Lbase")             # [30,30]
-    # row sticks on top of background
-    n("Where", ["rowcov_b", "rowColorU8", "Lbase"], "Lrow")
-    # col sticks win over everything
-    n("Where", ["colcov_b", "colColorU8", "Lrow"], "L2")       # [30,30]
+    # off-grid sentinel via 1-D penalties: a cell with r>=H or c>=W must map to a
+    # label that matches NO channel (>=10).  offrow[r] = 10*(1-rowframe[r]) [30,1],
+    # offcol[c] = 10*(1-colframe[c]) [1,30].  L = stickColor + offrow + offcol in ONE
+    # variadic Sum (broadcast) -> exactly stickColor in-grid (offrow=offcol=0), >=10
+    # off-grid (so Equal matches nothing -> all-zero target).
+    n("Squeeze", ["rowframe"], "rfr", axes=[0, 1, 3])          # [30] f16 {0,1}
+    n("Squeeze", ["colframe"], "cfr", axes=[0, 1, 2])          # [30] f16 {0,1}
+    init("ten", np.array(10.0, np.float16), np.float16)
+    init("onef", np.array(1.0, np.float16), np.float16)
+    n("Sub", ["onef", "rfr"], "nrfr")                          # [30] {0,1}
+    n("Sub", ["onef", "cfr"], "ncfr")                          # [30]
+    n("Mul", ["nrfr", "ten"], "offrow0")                       # [30]
+    n("Mul", ["ncfr", "ten"], "offcol0")                       # [30]
+    n("Unsqueeze", ["offrow0"], "offrow", axes=[1])            # [30,1]
+    n("Unsqueeze", ["offcol0"], "offcol", axes=[0])            # [1,30]
+    n("Sum", ["stickColor", "offrow", "offcol"], "L2f")        # [30,30] f16
+    n("Cast", ["L2f"], "L2", to=U8)                            # [30,30] uint8
     init("Lshape", np.array([1, 1, 30, 30], np.int64), np.int64)
     n("Reshape", ["L2", "Lshape"], "L")                        # [1,1,30,30]
 

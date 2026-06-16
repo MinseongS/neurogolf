@@ -1104,14 +1104,15 @@
  {
   "task": 92,
   "arc_id": "40853293",
-  "points": 14.56,
-  "memory": 32350,
-  "params": 1830,
+  "points": 14.87,
+  "memory": 23350,
+  "params": 1829,
   "method": "custom:task092",
   "class": "FEASIBLE",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 14.56->14.87 axis-aligned stick interval-fill (1-D row/col prefix^suffix-OR + channel MatMul, col-priority Where, no full plane); pending-pool win; gen 500+3"
  },
  {
   "task": 93,
