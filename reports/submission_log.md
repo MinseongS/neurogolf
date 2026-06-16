@@ -42,6 +42,12 @@ Trajectory: 6384.61→6393.20→6400.24→6406.72→6409.40→6419.29. 6 mislabe
 Trajectory: 6384.61→6393.20→6400.24→6406.72→6409.40→6419.29→6428.35. Reservoir wave 2 (+9.06).
 Note: task025 came back MARGINAL (+0.06, transpose-equiv cap) — skip-marginal, not counted.
 
+| 7 | 06-16 13:4x | 6498.01 | 358,193,359,368,161,132,390 (7 wins) | **6436.74** | **+8.39** | proj 6436.74 → **0.00** (7th exact). Reservoir wave 3. gap 61.27. |
+
+## ⭐ Submission 7: 7th consecutive exact (proj 6436.74 → 6436.74, 0.00 error). LB now 6436.74.
+Trajectory: …→6428.35→6436.74. Reservoir wave 3 (+8.39, 7 tier-A/B wins). task216 confirmed-infeasible
+(non-local detection wall, public net at real floor). Gap pinned at 61.27 across all 7 submissions.
+
 ## Procedure (folded into loop)
 1. trigger: every 5 adopted wins.
 2. `python -c "from src.pipeline import pack; pack()"` (networks/ only; never --pack flag).
