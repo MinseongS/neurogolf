@@ -4293,14 +4293,15 @@
  {
   "task": 358,
   "arc_id": "e21d9049",
-  "points": 14.22,
-  "memory": 47649,
-  "params": 222,
+  "points": 15.56,
+  "memory": 12504,
+  "params": 74,
   "method": "ext:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: e21d9049: draw full diagonal-colored cross (row+col lines colored by ("
+  "status": "done",
+  "verdict": "FEASIBLE A ~17.0pt: e21d9049: draw full diagonal-colored cross (row+col lines colored by (",
+  "note": "adopted 14.22->15.56 periodic arm reconstruction (1-D modular Gather, flip/colour-agnostic); tier A; generalizes 500+265"
  },
  {
   "task": 359,

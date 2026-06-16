@@ -41,7 +41,10 @@ at-floor; if the rule needs a global argmax across data-dependent-count componen
 - COLLAPSIBLE "DETECTION" forms (check each): copy/slide of a row/col/edge (task035); closed-form
   arithmetic of a recovered scalar — replace lookup tables, fp16 Mod is integer-exact <2048 and 4× cheaper
   than int32, fold offsets into the final Equal constant (task061); count-parametric shape rebuild
-  (task290); fractal self-tiling = Kronecker kron(S,S) via macro=(u//3)*3+v//3 & micro=(u%3)*3+v%3 index
+  (task290); periodic arm/profile reconstruction is flip/offset/colour-AGNOSTIC — recover ONE period from
+  the n shown consecutive cells and extend with a 1-D modular Gather(arm, first+(i−first) mod n), replacing
+  a 30×30 equality/MatMul matrix; use an indicator-Conv [0,1,…,1] for counts + reduced-one-hot slices for
+  colours to never materialize a colour-index plane (task358); fractal self-tiling = Kronecker kron(S,S) via macro=(u//3)*3+v//3 & micro=(u%3)*3+v%3 index
   maps — NOT naive outer product (task195); un-duplicate CROP = Where(rowmask∧colmask,input,0), dup axis
   from generator range constraints (task188); data-dependent row/col-independent coordinate remap =
   boolean double MatMul Rmat@src@CmatT, fp16 {0,1} exact (task250); stamp a recovered K-row sub-pattern
