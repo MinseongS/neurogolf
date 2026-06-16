@@ -18,7 +18,7 @@ stable; if it grows after a submit, wins aren't translating). (1) check complete
 `python -m src.adopt N` ONLY if generalizes AND beats current by >=+0.3 stored (else mark skip-marginal +
 log insight); ignore duplicate notifications for already-adopted tasks; salvage a died-agent's leftover file
 through the same gate (reject if worse). (2) mem_profile adopted nets; if mem>>tier floor queue a re-attack.
-(3) update reports/tasklog/taskNNN.md + reports/sweep_ledger.json. (4) git commit each win; graduate reusable
+(3) update reports/tasklog/taskNNN.md + reports/sweep_ledger.json. (4) git commit each win AND `git push origin main` (remote = github.com/MinseongS/neurogolf, already configured); graduate reusable
 insights into reports/BUILD_PROMPT.md. (5) read reports/lb_anchor.json for the last submit anchor; if a
 submission is PENDING poll `kaggle competitions submissions -c neurogolf-2026`, and on COMPLETE record
 reports/submission_log.md + rewrite lb_anchor.json (stored_at_submit, lb, time). (6) when current stored
