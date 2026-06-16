@@ -48,6 +48,13 @@ Note: task025 came back MARGINAL (+0.06, transpose-equiv cap) — skip-marginal,
 Trajectory: …→6428.35→6436.74. Reservoir wave 3 (+8.39, 7 tier-A/B wins). task216 confirmed-infeasible
 (non-local detection wall, public net at real floor). Gap pinned at 61.27 across all 7 submissions.
 
+| 8 | 06-16 14:5x | 6506.30 | 232,271,354,94,180,346,94R,(+others) 8 wins | **6445.03** | **+8.29** | proj 6445.03 → **0.00** (8th exact). Reservoir wave 4 + task094 re-attack. gap 61.27. |
+
+## ⭐ Submission 8: 8th consecutive exact (proj 6445.03 → 6445.03, 0.00 error). LB now 6445.03.
+Trajectory: …→6436.74→6445.03. Reservoir wave 4 (+8.29). Incl task271 17.01 (tier A) & task180 17.74.
+Marginal-skips this batch: 365 (+0.27), 117 (+0.035), 134 (+0.26) — all below +0.3 bar, not counted.
+Reservoir now nearly exhausted (remaining retriage gains <0.7); approaching productive-work-done stop.
+
 ## Procedure (folded into loop)
 1. trigger: every 5 adopted wins.
 2. `python -c "from src.pipeline import pack; pack()"` (networks/ only; never --pack flag).
