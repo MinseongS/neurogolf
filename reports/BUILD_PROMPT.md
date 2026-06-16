@@ -17,6 +17,13 @@ variable-size crop" floors near ~13.4 for everyone — the public CumSum-scan ne
 (T,L)=(top-of-col-run,left-of-row-run) prefix/suffix-MAX scans give a unique per-box label and per-box
 red-counts reduce to a 2-D integral image (4 Gathers, no flood-fill), but the constant factor still lands
 at-floor; if the rule needs a global argmax across data-dependent-count components, BAIL fast (task216).
+BUT the OPPOSITE case is closed-form & tier-A, NOT a BAIL: "emit the FIXED-SIZE (e.g. 3×3) box with the
+most X pixels" — a 3×3 all-ones sum-Conv gives per-top-left counts AND box-validity (occ-conv==9) in one
+pass; the UNIQUE-argmax position recovers as a scalar (minrow,mincol)=ReduceMax(iswin·rowramp)/
+ReduceMax(iswin·colramp) with NO NonZero/ArgMax op; data-dependent crop = Add scalar offset to a [0..k]
+index const + chained Gather(axis2)·Gather(axis3), staying small (9×9/7×7) under the 30×30 label floor
+(task271). The discriminator: fixed small box + unique winner ⇒ feasible; variable-size components + global
+argmax ⇒ wall.
 
 ## Step 2 — read these
 - reports/SWEEP_SYSTEM.md (tier ladder S>A>B>detection; minimal-tier mindset; MARGINAL threshold ≥+0.3)

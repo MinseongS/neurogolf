@@ -3253,14 +3253,15 @@
  {
   "task": 271,
   "arc_id": "ae4f1146",
-  "points": 14.73,
-  "memory": 28928,
-  "params": 63,
+  "points": 17.01,
+  "memory": 2880,
+  "params": 70,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE B ~16.8pt: ae4f1146: output = the sprite (blue pixels) from the box with the MOST"
+  "status": "done",
+  "verdict": "FEASIBLE B ~16.8pt: ae4f1146: output = the sprite (blue pixels) from the box with the MOST",
+  "note": "adopted 14.73->17.01 most-X-pixels 3x3 box (fixed-size sum-Conv argmax via ReduceMax(iswin*ramp), no NonZero); tier A; generalizes 267+500"
  },
  {
   "task": 272,

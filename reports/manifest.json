@@ -1621,10 +1621,10 @@
    "method": "ext:kojimar6275"
   },
   "271": {
-   "points": 14.725259284025897,
-   "memory": 28928,
-   "params": 63,
-   "method": "gen:thbdh6332"
+   "points": 17.010439550666135,
+   "memory": 2880,
+   "params": 70,
+   "method": "custom:task271"
   },
   "272": {
    "points": 18.86877351051686,
