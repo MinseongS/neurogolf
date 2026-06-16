@@ -2459,14 +2459,15 @@
  {
   "task": 204,
   "arc_id": "868de0fa",
-  "points": 14.3,
-  "memory": 43200,
-  "params": 1018,
+  "points": 15.26,
+  "memory": 16540,
+  "params": 484,
   "method": "custom:task204",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 14.30->15.26 enclosed-fill via wall-crossing parity (lower-tri MatMul + Mod2, no flood-fill) + size<=20 geometry crop; pending-pool win; generalizes 200+500"
  },
  {
   "task": 205,

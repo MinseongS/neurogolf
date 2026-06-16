@@ -84,7 +84,9 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   the matrix), killing the separate EYE init and the full-matrix Where selects; recover the reflection axes
   from FULL-edge detection (per-row count ≥ box width), which detects orientation for free (task390);
   ray/bounce = union of 45° diagonals
-  r+c==a OR r-c==b through a vertex (task119); FILL between two same-colour endpoints along a 45° line is
+  r+c==a OR r-c==b through a vertex (task119); FILL-ENCLOSED-REGION is NOT a connectivity wall — interior =
+  PARITY of horizontal-wall crossings above each cell (lower-triangular MatMul + Mod-2), a per-box fill
+  attribute like side-length parity = (topwall_row+botwall_row) mod 2 via index-weighted MaxPools (task204); FILL between two same-colour endpoints along a 45° line is
   NOT a connectivity bail — it is a direction-separable per-channel diagonal prefix-OR ∧ suffix-OR; when the
   generator BOUNDS segment length it collapses to a single bounded K×K diagonal Conv + >0 (cheaper than
   doubling-shift chains or a [100,100] reachability matmul); reshape the 9 colour channels onto the BATCH
