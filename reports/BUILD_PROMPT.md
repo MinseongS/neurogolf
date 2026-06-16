@@ -51,7 +51,11 @@ at-floor; if the rule needs a global argmax across data-dependent-count componen
   into a REGULAR CELL TILING = M=Srow@P@ScolT, Srow[R,dr]=(R%stride==dr+1), auto-zero on gaps/lines/off-grid
   (no in-grid mask); ADD one *dynamic* colour at masked positions via output=Where(cond[1,1,30,30],
   color_onehot[1,10,1,1],input) (broadcast lands in Where's FREE output, recover colour by slicing a
-  guaranteed-hit position) — never build a [1,10,H,W] delta (task033); ray/bounce = union of 45° diagonals
+  guaranteed-hit position) — never build a [1,10,H,W] delta (task033); recover ORIENTATION (xpose) with
+  ZERO per-cell planes via total peak-match mass (peak_col=Σ_c max_ch colcount vs peak_row=Σ_r max_ch rowcount,
+  correct axis maximizes it), then `Where(scalar[1,1,1,1], A[1,1,1,W], B[1,1,H,1])` broadcasts to [1,1,H,W]
+  in ONE op — selecting orientation AND broadcasting the chosen per-line vector at once, no two candidate
+  planes (task359); ray/bounce = union of 45° diagonals
   r+c==a OR r-c==b through a vertex (task119); 4-fold REFLECTION symmetrization about a data-dependent
   axis = the double-MatMul idiom with a reflection matrix Mat[out,in]=Equal(2*b+1−in_arange,out_arange),
   the four flips OR'd via one variadic Sum(input, R@input, input@C, R@input@C)>0 (task112); apply_gravity/reflect/transpose = orientation-EQUIVARIANCE

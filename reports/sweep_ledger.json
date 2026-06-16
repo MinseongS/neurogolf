@@ -4307,14 +4307,15 @@
  {
   "task": 359,
   "arc_id": "e26a3af2",
-  "points": 14.68,
-  "memory": 30300,
-  "params": 13,
+  "points": 16.27,
+  "memory": 6190,
+  "params": 12,
   "method": "gen:biohack_new",
   "class": "BAIL",
   "sig": "memory",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: e26a3af2: striped background, output STRIPS the colored noise pixels ("
+  "status": "done",
+  "verdict": "FEASIBLE A ~17.0pt: e26a3af2: striped background, output STRIPS the colored noise pixels (",
+  "note": "adopted 14.68->16.27 orientation via peak-mass (no per-cell plane) + Where scalar-broadcast; tier A; generalizes 266+2000"
  },
  {
   "task": 360,
