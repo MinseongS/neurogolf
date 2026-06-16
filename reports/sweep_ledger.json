@@ -4683,14 +4683,15 @@
  {
   "task": 390,
   "arc_id": "f8a8fe49",
-  "points": 14.89,
-  "memory": 23724,
-  "params": 967,
+  "points": 16.07,
+  "memory": 7456,
+  "params": 76,
   "method": "ext:kojimar6275",
   "class": "BAIL",
   "sig": "memory",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: f8a8fe49: inverse of 6855a6e4 (input/output swapped) - fold box interi"
+  "status": "done",
+  "verdict": "FEASIBLE A ~17.0pt: f8a8fe49: inverse of 6855a6e4 (input/output swapped) - fold box interi",
+  "note": "adopted 14.89->16.07 orientation-dependent 1-D reflection (gating folded into remap vector); generalizes 266+300+3000"
  },
  {
   "task": 391,

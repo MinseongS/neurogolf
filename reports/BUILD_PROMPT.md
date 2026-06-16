@@ -55,7 +55,11 @@ at-floor; if the rule needs a global argmax across data-dependent-count componen
   ZERO per-cell planes via total peak-match mass (peak_col=Σ_c max_ch colcount vs peak_row=Σ_r max_ch rowcount,
   correct axis maximizes it), then `Where(scalar[1,1,1,1], A[1,1,1,W], B[1,1,H,1])` broadcasts to [1,1,H,W]
   in ONE op — selecting orientation AND broadcasting the chosen per-line vector at once, no two candidate
-  planes (task359); ray/bounce = union of 45° diagonals
+  planes (task359); an orientation-dependent (xpose) 1-D reflection folds the per-axis gating into the tiny
+  [W] remap VECTOR (rvec=Where(active, refl, identity_i) → inactive axis becomes identity, ONE Equal builds
+  the matrix), killing the separate EYE init and the full-matrix Where selects; recover the reflection axes
+  from FULL-edge detection (per-row count ≥ box width), which detects orientation for free (task390);
+  ray/bounce = union of 45° diagonals
   r+c==a OR r-c==b through a vertex (task119); 4-fold REFLECTION symmetrization about a data-dependent
   axis = the double-MatMul idiom with a reflection matrix Mat[out,in]=Equal(2*b+1−in_arange,out_arange),
   the four flips OR'd via one variadic Sum(input, R@input, input@C, R@input@C)>0 (task112); apply_gravity/reflect/transpose = orientation-EQUIVARIANCE

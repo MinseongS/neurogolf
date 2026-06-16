@@ -2335,10 +2335,10 @@
    "method": "gen:thbdh6332"
   },
   "390": {
-   "points": 14.885805916253345,
-   "memory": 23724,
-   "params": 967,
-   "method": "ext:kojimar6275"
+   "points": 16.073084110222958,
+   "memory": 7456,
+   "params": 76,
+   "method": "custom:task390"
   },
   "391": {
    "points": 15.787561829941671,
