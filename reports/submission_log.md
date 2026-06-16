@@ -36,6 +36,12 @@ for generalizing customs. lb_status.py projected LB is ground truth. LB so far: 
 ## ⭐ Submission 5: re-triage reservoir translates 1:1 too (proj 6419.30 → 6419.29). LB now 6419.29.
 Trajectory: 6384.61→6393.20→6400.24→6406.72→6409.40→6419.29. 6 mislabeled-feasible recoveries landed +9.89.
 
+| 6 | 06-16 13:0x | 6489.62 | 036,206,112,033,177 | **6428.35** | **+9.06** | proj 6428.34 → **0.01** (6th exact). Re-triage reservoir wave 2. gap 61.27. |
+
+## ⭐ Submission 6: 6th consecutive exact (proj 6428.34 → 6428.35). LB now 6428.35.
+Trajectory: 6384.61→6393.20→6400.24→6406.72→6409.40→6419.29→6428.35. Reservoir wave 2 (+9.06).
+Note: task025 came back MARGINAL (+0.06, transpose-equiv cap) — skip-marginal, not counted.
+
 ## Procedure (folded into loop)
 1. trigger: every 5 adopted wins.
 2. `python -c "from src.pipeline import pack; pack()"` (networks/ only; never --pack flag).
