@@ -667,10 +667,10 @@
    "method": "ext:kojimar6275"
   },
   "112": {
-   "points": 14.010141445218116,
-   "memory": 59164,
-   "params": 106,
-   "method": "gen:thbdh6332"
+   "points": 14.774175357263276,
+   "memory": 27444,
+   "params": 163,
+   "method": "custom:task112"
   },
   "113": {
    "points": 21.598802618337846,

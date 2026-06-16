@@ -40,7 +40,9 @@ forms below — most "detection" tasks this sweep turned out to be closed-form a
   maps — NOT naive outer product (task195); un-duplicate CROP = Where(rowmask∧colmask,input,0), dup axis
   from generator range constraints (task188); data-dependent row/col-independent coordinate remap =
   boolean double MatMul Rmat@src@CmatT, fp16 {0,1} exact (task250); ray/bounce = union of 45° diagonals
-  r+c==a OR r-c==b through a vertex (task119); apply_gravity/reflect/transpose = orientation-EQUIVARIANCE
+  r+c==a OR r-c==b through a vertex (task119); 4-fold REFLECTION symmetrization about a data-dependent
+  axis = the double-MatMul idiom with a reflection matrix Mat[out,in]=Equal(2*b+1−in_arange,out_arange),
+  the four flips OR'd via one variadic Sum(input, R@input, input@C, R@input@C)>0 (task112); apply_gravity/reflect/transpose = orientation-EQUIVARIANCE
   (same transform on input AND output) → compute both axis branches, select by structure (task341);
   "find the connected object among noise" is NOT a connectivity BAIL when the object is one clustered
   colour and noise uses other colours → object = the MINIMUM-BBOX-SPAN colour (per-channel 1-D occupancy

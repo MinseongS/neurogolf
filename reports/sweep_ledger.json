@@ -1336,14 +1336,15 @@
  {
   "task": 112,
   "arc_id": "4938f0c2",
-  "points": 14.01,
-  "memory": 59164,
-  "params": 106,
+  "points": 14.77,
+  "memory": 27444,
+  "params": 163,
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: replicate-with-reflection: 4938f0c2 stamps the recovered red sprite in"
+  "status": "done",
+  "verdict": "FEASIBLE A ~17.0pt: replicate-with-reflection: 4938f0c2 stamps the recovered red sprite in",
+  "note": "adopted 14.01->14.77 4-fold reflection symmetrization (reflection double-MatMul); generalizes 266/266; tier-A blocked (2-D coupled, not separable)"
  },
  {
   "task": 113,
