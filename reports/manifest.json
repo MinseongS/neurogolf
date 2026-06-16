@@ -2101,10 +2101,10 @@
    "method": "ext:kojimar6275"
   },
   "351": {
-   "points": 14.532506311227156,
-   "memory": 35114,
-   "params": 40,
-   "method": "gen:thbdh6332"
+   "points": 15.81313298420946,
+   "memory": 9752,
+   "params": 16,
+   "method": "custom:task351"
   },
   "352": {
    "points": 18.186555400489105,

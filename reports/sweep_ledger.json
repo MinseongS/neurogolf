@@ -4237,14 +4237,15 @@
  {
   "task": 351,
   "arc_id": "dc0a314f",
-  "points": 14.53,
-  "memory": 35114,
-  "params": 40,
+  "points": 15.81,
+  "memory": 9752,
+  "params": 16,
   "method": "gen:thbdh6332",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 14.53->15.81 D2-symmetric 5x5 fill = pure spatial copy (mirror gather, ArgMax-first-occ row/col, 0 ramp params); pending-pool win; generalizes 200"
  },
  {
   "task": 352,
