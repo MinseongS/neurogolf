@@ -43,7 +43,12 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   slice + in-grid Or chain (the 30×30 Pad sentinel alone zeroes off-canvas).
 - REFUSE TO MATERIALIZE PLANES: rule params (color/pos/flag/size) are usually SCALARS via channel/axis
   reductions (ReduceMax(input,[2,3])→[1,10,1,1]; per-channel pixel COUNTS ReduceSum axes=[2,3]=40B; 1-D
-  ReduceMin/Max occupancy) — they never need a per-cell plane. ⭐ fp16/bool/uint8 do NOT shrink a FULL-GRID
+  ReduceMin/Max occupancy) — they never need a per-cell plane. ⭐ `ReduceMax(input, axes=[1,3])`→[1,1,30,1]
+  (and [1,2]→[1,1,1,30]) recovers grid HEIGHT/WIDTH as a 120B vector with NO 30×30 occupancy plane —
+  retrofit this into ANY task that recovers H/W. ⭐ For "argmin/argmax over K candidates with a unique winner
+  + per-candidate label", PACK count+label into ONE additive accumulation `base·cnt + label` (e.g. each
+  minimiser emits 100, +colour if even) read back by MAGNITUDE BANDS — collapses the whole ismin/count/
+  select/colour plane army into a single Sum (task328). ⭐ fp16/bool/uint8 do NOT shrink a FULL-GRID
   plane in the ORT trace (ORT upcasts via PrecisionFreeCast to fp32) — the lever is FEWER full planes, not
   narrower ones; dtype tricks only help SMALL working planes. "which scattered colour is the magnified
   sprite" = presence-DENSITY argmax cnt/(nrows·ncols), exact & cheap, beats bbox-area/span heuristics (task134). Recover SHAPE from counts, skipping the
@@ -145,7 +150,10 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   4 covering cells) — exact, no flood-fill. (task193)
 - "spread one seed across a contiguous RUN" = iterated MaxPool(1×k) → re-gate by the run mask after each
   pool, radius=min inter-box gap, iters=max seed-to-edge distance — exact, no Scan (ORT rejects uint8
-  MaxPool/int8 Max so fp16 2B is the dtype floor) (task354).
+  MaxPool/int8 Max so fp16 2B is the dtype floor) (task354). DISCRIMINATOR: this lever only beats the floor
+  when the active canvas is FIXED-SMALL (size-10 → planes 9× smaller); a bounded flood across a VARIABLE-size
+  region on the full 30×30 canvas is a WALL — the ~16-plane fp16 fill floor (~28.8KB) pins it near ~14.2
+  regardless of other optimisation, and a data-dependent crop trips the symbolic-dim trap (task198 infeasible).
 - [task193 cont.] Fold off-grid into the keep cond (selcond=keep OR offgrid) so
   the removed branch is just a constant [1,10,1,1] bg one-hot in the FREE Where output (task193).
 - "recolour every gray stamp from the one coloured stamp" (identical solid rects at random non-overlapping
