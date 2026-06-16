@@ -93,8 +93,8 @@
     "method": "custom:task008",
     "class": "FEASIBLE?",
     "sig": "transpose",
-    "status": "pending",
-    "verdict": ""
+    "status": "pending-retry",
+    "verdict": "agent stalled 600s early (2nd consecutive stall - backing off concurrency). Retry later."
   },
   {
     "task": 9,
