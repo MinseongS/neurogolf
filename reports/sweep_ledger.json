@@ -38,14 +38,14 @@
   {
     "task": 4,
     "arc_id": "025d127b",
-    "points": 14.08,
+    "points": 14.87,
     "memory": 54000,
     "params": 1020,
-    "method": "gen:thbdh6332",
+    "method": "custom:4 row-separable un-slant shear (local per-row shift, tier-A)",
     "class": "BAIL",
     "sig": "memory",
-    "status": "pending-retry",
-    "verdict": "FEASIBLE None ~14.1pt: data-dependent translate (closed-form): 025d127b reshapes each paralle",
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 500/500)",
     "note": "agent stalled 600s very early (no draft); retry next session"
   },
   {
@@ -4746,14 +4746,14 @@
   {
     "task": 392,
     "arc_id": "f8c80d96",
-    "points": 14.66,
+    "points": 15.97,
     "memory": 28696,
     "params": 2098,
-    "method": "gen:biohack_new",
+    "method": "custom:392 min-area-cover candidate match (concentric ring mats)",
     "class": "BAIL",
     "sig": "memory",
-    "status": "retriage-feasible",
-    "verdict": "FEASIBLE None ~14.7pt: f8c80d96: extend concentric square 'mats' outward to fill grid (contin"
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 500/500)"
   },
   {
     "task": 393,
