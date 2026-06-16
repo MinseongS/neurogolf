@@ -505,8 +505,9 @@
   "method": "ext:biohack_new",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "pending-retry",
+  "verdict": "",
+  "note": "agent STALLED 600s on hard task (varying magnify, offsets scale with block size, not fixed stamp); retry later"
  },
  {
   "task": 43,
