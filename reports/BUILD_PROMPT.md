@@ -66,7 +66,9 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   from generator range constraints (task188); data-dependent row/col-independent coordinate remap =
   boolean double MatMul Rmat@src@CmatT, fp16 {0,1} exact (task250); stamp a recovered K-row sub-pattern
   into a REGULAR CELL TILING = M=Srow@P@ScolT, Srow[R,dr]=(R%stride==dr+1), auto-zero on gaps/lines/off-grid
-  (no in-grid mask); ADD one *dynamic* colour at masked positions via output=Where(cond[1,1,30,30],
+  (no in-grid mask); "odd-one-out by pixel COUNT then K× upscale" is closed-form tier-B — unique cell =
+  `count<threshold` (NO ReduceMin/ArgMax when exactly one differs), select = `Sum_{R,C}(count<thr)·block`,
+  upscale via the task195 const-index Gather (task011); ADD one *dynamic* colour at masked positions via output=Where(cond[1,1,30,30],
   color_onehot[1,10,1,1],input) (broadcast lands in Where's FREE output, recover colour by slicing a
   guaranteed-hit position) — never build a [1,10,H,W] delta (task033); recover ORIENTATION (xpose) with
   ZERO per-cell planes via total peak-match mass (peak_col=Σ_c max_ch colcount vs peak_row=Σ_r max_ch rowcount,

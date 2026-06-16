@@ -122,14 +122,15 @@
  {
   "task": 11,
   "arc_id": "09629e4f",
-  "points": 14.12,
-  "memory": 50756,
-  "params": 2331,
+  "points": 15.94,
+  "memory": 8317,
+  "params": 298,
   "method": "gen:biohack_new",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 14.12->15.94 odd-one-out-by-count + 3x upscale (count<5 select, no ArgMax; task195 Gather upscale); pending-pool win; generalizes 200"
  },
  {
   "task": 12,
