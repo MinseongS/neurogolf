@@ -2930,14 +2930,14 @@
   {
     "task": 242,
     "arc_id": "9ecd008a",
-    "points": 15.09,
+    "points": 15.77,
     "memory": 20074,
     "params": 45,
-    "method": "gen:thbdh6332",
+    "method": "custom:242 D2-symmetry hole recovery (dual-mirror MAX + task036 crop-to-origin)",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending-retry",
-    "verdict": "agent stalled 600s mid-derivation; FEASIBLE (data-dependent 3x3 crop of vflipped input + hole-detect via broken symmetry). Retry later."
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 200/200); retry-with-hint cracked prior stall"
   },
   {
     "task": 243,
