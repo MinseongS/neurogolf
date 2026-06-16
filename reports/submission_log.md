@@ -55,6 +55,15 @@ Trajectory: …→6436.74→6445.03. Reservoir wave 4 (+8.29). Incl task271 17.0
 Marginal-skips this batch: 365 (+0.27), 117 (+0.035), 134 (+0.26) — all below +0.3 bar, not counted.
 Reservoir now nearly exhausted (remaining retriage gains <0.7); approaching productive-work-done stop.
 
+| 9 | 06-16 15:0x | 6514.67 | 321,121,27,21,88,70,238 (7 wins) | **6453.40** | **+8.37** | proj 6453.40 → **0.00** (9th exact). PENDING-POOL opened. gap 61.27. |
+
+## ⭐⭐ Submission 9: 9th consecutive exact (proj 6453.40 → 6453.40). LB now 6453.40.
+KEY DISCOVERY: the curated reservoir (retriage_build_queue + sweep_wave) was NOT the end — the UNTRIAGED
+"pending" pool in sweep_ledger (272 low-score tasks) has REAL HEADROOM, not just detection walls.
+Proven: task088 13.85→15.53 (+1.69), task070 13.90→16.25 (+2.35), task238 13.93→15.34 (+1.41) — all from
+"pending"/untriaged tasks the re-triage never looked at. Probe with EARLY FEASIBILITY CHECK to bail fast on
+genuine walls. Trajectory: …→6445.03→6453.40. Runway re-opened — keep mining lowest-points pending.
+
 ## Procedure (folded into loop)
 1. trigger: every 5 adopted wins.
 2. `python -c "from src.pipeline import pack; pack()"` (networks/ only; never --pack flag).
