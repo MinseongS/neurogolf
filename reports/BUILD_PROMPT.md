@@ -198,6 +198,18 @@ intermediates + ~60 ramp params); a 1×1 Conv with an OUTSIZED weight on the mar
 w_k=k) does triple duty from ONE plane — locate (ArgMax), read the ±1 sprite window (Gather), recover the
 sprite colour (ReduceMax of window with marker zeroed) (task121).
 
+## ⭐ THE 3600B PLANE FLOOR IS REAL — break it by REMOVING the plane, never by narrowing it (FLOOR_RESEARCH.md)
+Rigorously ORT-measured: you CANNOT get a per-cell colour-index/value/Gather-index plane below fp32 3600B
+via dtype tricks. Declaring fp32-as-uint8 → TypeInferenceError; Cast/Quantize→uint8 ADDS a plane (3600→4500);
+Cast→fp16 (5400); ArgMax→int64 (7200); Gather indices reject uint8 (int32 30×30 = 3600 irreducible); a single
+fp32 channel-Slice already costs 3600; full-input fp16 cast costs 18000. ORT Add/Mul/Mod reject uint8 and
+ReduceSum/Max reject bool/uint8, so `Σ k·input_k` MUST be fp32. ⇒ NEVER chase dtype tricks to accumulate a
+0-9 index. Instead test the THREE structure-escapes IN ORDER before accepting 3600B: (1) spatial-COPY of input
+cells → Tier-S mem 0; (2) SEPARABLE row⊗col routed into the FREE bool output → ~840-3000B (also dodges
+Pad-rejects-bool by never materializing a carrier); (3) small ACTIVE canvas (generator size bound) → slice the
+plane below 30×30, then fp16 is cheap there. A task stuck at ~16.2-16.4 is most likely silently failing escape
+(2) or (3) — re-triage it on separability + bounded-active-region before recording a verdict.
+
 ## ANTI-STALL (agents have died at the 600s no-progress watchdog — obey)
 - WRITE src/custom/taskNNN.py EARLY (a first working draft within a few minutes) and iterate on disk; do
   NOT think for 10+ min before writing.
