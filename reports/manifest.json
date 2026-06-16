@@ -985,10 +985,10 @@
    "method": "ext:kojimar6275"
   },
   "165": {
-   "points": 13.892729661190222,
-   "memory": 65660,
-   "params": 994,
-   "method": "gen:thbdh6332"
+   "points": 15.044726774314642,
+   "memory": 20809,
+   "params": 254,
+   "method": "custom:task165"
   },
   "166": {
    "points": 16.20184728189281,
@@ -2257,10 +2257,10 @@
    "method": "custom:task376"
   },
   "377": {
-   "points": 14.508614677623024,
-   "memory": 35471,
-   "params": 533,
-   "method": "gen:vyank6322"
+   "points": 14.832610903677494,
+   "memory": 25924,
+   "params": 116,
+   "method": "custom:task377"
   },
   "378": {
    "points": 15.896131872534333,

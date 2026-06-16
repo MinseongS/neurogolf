@@ -1989,14 +1989,15 @@
  {
   "task": 165,
   "arc_id": "6d58a25d",
-  "points": 13.89,
-  "memory": 65660,
-  "params": 994,
+  "points": 15.04,
+  "memory": 20809,
+  "params": 254,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE None ~13.9pt: 6d58a25d: drop columns under a 'kite' to the floor; gravity along colu"
+  "status": "done",
+  "verdict": "FEASIBLE None ~13.9pt: 6d58a25d: drop columns under a 'kite' to the floor; gravity along colu",
+  "note": "adopted 13.89->15.04 anchor-detect (Cauchy-Schwarz 10*S2==S1^2 finds K-cell same-value window + recovers colour S1/K) + per-column gated vertical fill (rowramp>=startrow); pending-pool win; gen 200+2000"
  },
  {
   "task": 166,
@@ -4560,14 +4561,15 @@
  {
   "task": 377,
   "arc_id": "eb5a1d5d",
-  "points": 14.51,
-  "memory": 35471,
-  "params": 533,
+  "points": 14.83,
+  "memory": 25924,
+  "params": 116,
   "method": "gen:vyank6322",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 14.51->14.83 nesting-depth=min(rowdepth,coldepth) separable (no depth plane); KEY: fp16-cast the collapsed 1-ch colour plane + keep downstream full-canvas ops fp16 = half mem (95k->26k); gen 10447"
  },
  {
   "task": 378,

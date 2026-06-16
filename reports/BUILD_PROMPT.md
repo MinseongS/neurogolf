@@ -227,6 +227,15 @@ cells → Tier-S mem 0; (2) SEPARABLE row⊗col routed into the FREE bool output
 Pad-rejects-bool by never materializing a carrier); (3) small ACTIVE canvas (generator size bound) → slice the
 plane below 30×30, then fp16 is cheap there. A task stuck at ~16.2-16.4 is most likely silently failing escape
 (2) or (3) — re-triage it on separability + bounded-active-region before recording a verdict.
+⭐ IMPORTANT CLARIFICATION (task377, contradicts a naive reading of the above): the "fp16 doesn't help" result
+is ONLY about the ENTRY colour-index plane (the 10→1 reduction must output fp32). But once you HAVE that one
+fp32 plane, CAST IT to fp16 (single-channel, 1800B) and run ALL downstream full-canvas ops (diffs/ring/gather-
+value/Min/Max) in fp16 — the static scorer counts fp16 full planes at HALF, and fp16 Min/Max DOES work under
+ORT_DISABLE_ALL. This routinely drops mem ~3-4× (task377: 95k→26k). So: pay the one 3600B fp32 entry, then go
+fp16 for everything after. (Do NOT cast the 10-ch INPUT to fp16 — that's 18000B.) Generalized anchor detector
+(task165): `10·S2==S1² AND S1>0` (Cauchy-Schwarz on value & value² ring-convs) finds the unique window where
+all K shape-cells share one nonzero value AND recovers the colour as S1/K — works for ANY fixed multi-cell
+shape, not just 8-neighbours.
 
 ## ANTI-STALL (agents have died at the 600s no-progress watchdog — obey)
 - WRITE src/custom/taskNNN.py EARLY (a first working draft within a few minutes) and iterate on disk; do
