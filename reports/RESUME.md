@@ -64,11 +64,26 @@ kaggle CLI: /opt/homebrew/Caskroom/miniconda/base/bin/kaggle.
    mislabeled "confirmed-infeasible" by judging +0.3 against the INFLATED stored — IGNORE that label and
    build a generalizing exact encoding. This alone is worth ~+25 LB from 219+255.~~ (NOTE: closeability disproven — all 3 walls)
 
-## Honest status (2026-06-16, mid-session)
-Confirmed LB **6453.40** (session start 6419.29, +34.11; this run opened the pending pool + gap-closing).
-27 wins adopted this session, 9 submissions, all proj-exact (gap pinned 61.27). Run MORE AGGRESSIVELY:
-5-6 concurrent agents OK (env healthy, 1 isolated hard-task stall in ~35 agents). A deep-research agent is
-investigating the fundamental ~16.3 floor (the [1,1,30,30] fp32 colour-plane that ORT won't let go sub-fp32)
-→ see reports/FLOOR_RESEARCH.md when it lands. Instruct stuck agents to go LOW-LEVEL: web-search ORT op
-semantics, test quant/cast/integer ops, boldly re-encode heavy layers. Never let score drop (adopt gate +
-Kaggle-keeps-best guarantee this).
+## ▶▶ RESUME HERE (handoff 2026-06-16 ~16:10, context filling up)
+Confirmed LB **6464.42** (session start 6419.29, **+45.13**). Stored 6526.00, gap pinned 61.28, proj LB
+6464.72 (+0.30 unsubmitted = task092, banked toward submit #11). 10 submissions total, ALL proj-exact (±0.01).
+**32 wins adopted** this session.
+
+THE PLAYBOOK FOR NEXT SESSION (do exactly this):
+1. Run the canonical loop, 5-6 concurrent agents. PRIMARY reservoir = the UNTRIAGED PENDING POOL (reservoir
+   #1 above): probe lowest-points `pending`/`uncertain` tasks in sweep_ledger.json, EARLY FEASIBILITY CHECK
+   to bail fast. Hit rate has been ~85%. `PYTHONPATH=. .venv/bin/python -c "import json;led=json.load(open('reports/sweep_ledger.json'));
+   c=sorted([(e['points'],e['task']) for e in (led.values() if isinstance(led,dict) else led) if isinstance(e,dict)
+   and e.get('status') not in ('done','confirmed-infeasible','skip-marginal') and e.get('points')];print(c[:20])"`
+   gives the next targets (skip gap-attribution tasks 219/255/209/118/2/90/157/366/251/18/101 — DEAD, see #2).
+2. Adopt gate (`src.adopt N`) is generalization-aware and never lets score drop. Submit every ~5 wins / +8 stored.
+3. Floor knowledge is in BUILD_PROMPT (the 3600B fp32 plane is UNbreakable by dtype — break by structure;
+   reports/FLOOR_RESEARCH.md has the proof). ~20 new levers were graduated this session.
+4. IN-FLIGHT AT HANDOFF (results may have landed by next session — check `git log` + sweep_ledger): agents on
+   tasks **377, 324, 378, 165, 4, 80** were running. If their src/custom/taskNNN.py exist & aren't in the
+   ledger as done, gate them via `src.adopt N` (salvage path).
+5. Agents drop scratch in repo root despite /tmp instructions — `git` only adds explicit paths so it's safe;
+   .gitignore covers the patterns. Tell agents again to use /tmp.
+
+Verdict on ceilings: gap-closing is a CONFIRMED dead end (61.28 gap is structural). The pending pool is the
+remaining runway; once it's mined out (lowest-points tasks all done/wall), the practical ceiling is reached.
