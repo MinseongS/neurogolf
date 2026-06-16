@@ -1611,8 +1611,9 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "mega",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: 5ad4f10b: output 3x3 = downscale the magnified conway sprite (megacolo"
+  "status": "skip-marginal",
+  "verdict": "FEASIBLE A ~17.0pt: 5ad4f10b: output 3x3 = downscale the magnified conway sprite (megacolo",
+  "note": "re-attack 15.83 vs 15.58 (+0.26 MARGINAL); conway sprite not separable, 3600B full-grid mask floor; gen 400/400+40k"
  },
  {
   "task": 135,

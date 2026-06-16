@@ -43,7 +43,10 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   slice + in-grid Or chain (the 30×30 Pad sentinel alone zeroes off-canvas).
 - REFUSE TO MATERIALIZE PLANES: rule params (color/pos/flag/size) are usually SCALARS via channel/axis
   reductions (ReduceMax(input,[2,3])→[1,10,1,1]; per-channel pixel COUNTS ReduceSum axes=[2,3]=40B; 1-D
-  ReduceMin/Max occupancy) — they never need a per-cell plane. Recover SHAPE from counts, skipping the
+  ReduceMin/Max occupancy) — they never need a per-cell plane. ⭐ fp16/bool/uint8 do NOT shrink a FULL-GRID
+  plane in the ORT trace (ORT upcasts via PrecisionFreeCast to fp32) — the lever is FEWER full planes, not
+  narrower ones; dtype tricks only help SMALL working planes. "which scattered colour is the magnified
+  sprite" = presence-DENSITY argmax cnt/(nrows·ncols), exact & cheap, beats bbox-area/span heuristics (task134). Recover SHAPE from counts, skipping the
   3600B colour-Conv. Collapse 2-D detection to 1-D ROW/COL PROFILES (tip/centroid/spans/in-grid rect =
   rowany⊗colany), zero 2-D mask planes. fp16/bool the small working planes. PER-CHANNEL BATCHED MATVEC:
   `MatMul(input, vec[1,10,30,1])` contracts an axis of the FREE fp32 input directly (operand order picks
