@@ -743,14 +743,14 @@
   {
     "task": 62,
     "arc_id": "2bcee788",
-    "points": 14.95,
+    "points": 15.94,
     "memory": 13538,
     "params": 9686,
-    "method": "custom:task062",
+    "method": "custom:62 reflection Gather + Pad-small-plane-as-output (10x10 -> free output)",
     "class": "FEASIBLE?",
     "sig": "transpose",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 200/200)"
   },
   {
     "task": 63,
