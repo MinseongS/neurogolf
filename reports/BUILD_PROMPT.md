@@ -29,7 +29,10 @@ forms below — most "detection" tasks this sweep turned out to be closed-form a
   reductions (ReduceMax(input,[2,3])→[1,10,1,1]; per-channel pixel COUNTS ReduceSum axes=[2,3]=40B; 1-D
   ReduceMin/Max occupancy) — they never need a per-cell plane. Recover SHAPE from counts, skipping the
   3600B colour-Conv. Collapse 2-D detection to 1-D ROW/COL PROFILES (tip/centroid/spans/in-grid rect =
-  rowany⊗colany), zero 2-D mask planes. fp16/bool the small working planes.
+  rowany⊗colany), zero 2-D mask planes. fp16/bool the small working planes. PER-CHANNEL BATCHED MATVEC:
+  `MatMul(input, vec[1,10,30,1])` contracts an axis of the FREE fp32 input directly (operand order picks
+  the contracted axis, no transpose copy) → eliminates the [1,10,30,30] materialization floor entirely;
+  params count ELEMENTS (cheap) so a small matrix often beats arange+compare arithmetic (task025).
 - COLLAPSIBLE "DETECTION" forms (check each): copy/slide of a row/col/edge (task035); closed-form
   arithmetic of a recovered scalar — replace lookup tables, fp16 Mod is integer-exact <2048 and 4× cheaper
   than int32, fold offsets into the final Equal constant (task061); count-parametric shape rebuild
