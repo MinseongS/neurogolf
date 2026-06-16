@@ -79,7 +79,12 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   the matrix), killing the separate EYE init and the full-matrix Where selects; recover the reflection axes
   from FULL-edge detection (per-row count ≥ box width), which detects orientation for free (task390);
   ray/bounce = union of 45° diagonals
-  r+c==a OR r-c==b through a vertex (task119); complete a Cn ROTATIONAL symmetry (input=k-of-n copies) →
+  r+c==a OR r-c==b through a vertex (task119); FILL between two same-colour endpoints along a 45° line is
+  NOT a connectivity bail — it is a direction-separable per-channel diagonal prefix-OR ∧ suffix-OR; when the
+  generator BOUNDS segment length it collapses to a single bounded K×K diagonal Conv + >0 (cheaper than
+  doubling-shift chains or a [100,100] reachability matmul); reshape the 9 colour channels onto the BATCH
+  axis so one small kernel serves all, and reuse each diagonal kernel for both opposite directions by
+  swapping the asymmetric SAME-pad side (no flips) (task037); complete a Cn ROTATIONAL symmetry (input=k-of-n copies) →
   missing copy = rot(colour) AND NOT colour; recover the data-dependent symmetry CENTRE offset-free by
   MINIMISING the newly-exposed set across candidate centres (max-self-overlap / rot180-size picks are NOT
   exact and silently fail genverify); rot90 needs no matrix = transpose(reverse_rows) (negative-step Slice +

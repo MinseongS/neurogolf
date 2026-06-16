@@ -440,14 +440,15 @@
  {
   "task": 37,
   "arc_id": "1f876c06",
-  "points": 14.12,
-  "memory": 45000,
-  "params": 8326,
+  "points": 14.84,
+  "memory": 25700,
+  "params": 146,
   "method": "gen:biohack_new",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 14.12->14.84 45-degree-line fill (direction-separable diagonal prefix-OR AND suffix-OR, bounded KxK Conv, colours on batch axis); pending-pool win; generalizes 200"
  },
  {
   "task": 38,
