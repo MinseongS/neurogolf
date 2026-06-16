@@ -387,14 +387,15 @@
  {
   "task": 33,
   "arc_id": "1e32b0e9",
-  "points": 14.08,
-  "memory": 55112,
-  "params": 49,
+  "points": 16.14,
+  "memory": 6584,
+  "params": 426,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "mega",
-  "status": "pending-retry",
-  "verdict": "agent STALLED at 600s from the START (systemic env degradation, not task-specific). Re-build when infra recovers."
+  "status": "done",
+  "verdict": "agent STALLED at 600s from the START (systemic env degradation, not task-specific). Re-build when infra recovers.",
+  "note": "adopted 14.08->16.14 separable cell-tiling stamp (Srow@P@ScolT, Where into free output); tier A; generalizes 265+200"
  },
  {
   "task": 34,

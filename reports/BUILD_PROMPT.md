@@ -39,7 +39,11 @@ forms below — most "detection" tasks this sweep turned out to be closed-form a
   (task290); fractal self-tiling = Kronecker kron(S,S) via macro=(u//3)*3+v//3 & micro=(u%3)*3+v%3 index
   maps — NOT naive outer product (task195); un-duplicate CROP = Where(rowmask∧colmask,input,0), dup axis
   from generator range constraints (task188); data-dependent row/col-independent coordinate remap =
-  boolean double MatMul Rmat@src@CmatT, fp16 {0,1} exact (task250); ray/bounce = union of 45° diagonals
+  boolean double MatMul Rmat@src@CmatT, fp16 {0,1} exact (task250); stamp a recovered K-row sub-pattern
+  into a REGULAR CELL TILING = M=Srow@P@ScolT, Srow[R,dr]=(R%stride==dr+1), auto-zero on gaps/lines/off-grid
+  (no in-grid mask); ADD one *dynamic* colour at masked positions via output=Where(cond[1,1,30,30],
+  color_onehot[1,10,1,1],input) (broadcast lands in Where's FREE output, recover colour by slicing a
+  guaranteed-hit position) — never build a [1,10,H,W] delta (task033); ray/bounce = union of 45° diagonals
   r+c==a OR r-c==b through a vertex (task119); 4-fold REFLECTION symmetrization about a data-dependent
   axis = the double-MatMul idiom with a reflection matrix Mat[out,in]=Equal(2*b+1−in_arange,out_arange),
   the four flips OR'd via one variadic Sum(input, R@input, input@C, R@input@C)>0 (task112); apply_gravity/reflect/transpose = orientation-EQUIVARIANCE
