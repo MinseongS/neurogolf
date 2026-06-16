@@ -2159,14 +2159,15 @@
  {
   "task": 180,
   "arc_id": "75b8110e",
-  "points": 16.08,
-  "memory": 6528,
-  "params": 922,
+  "points": 17.74,
+  "memory": 1284,
+  "params": 136,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: 75b8110e: overlay 4 sxs quadrants (colors 4,5,6,9 in 2x2 macro) into o"
+  "status": "done",
+  "verdict": "FEASIBLE A ~17.0pt: 75b8110e: overlay 4 sxs quadrants (colors 4,5,6,9 in 2x2 macro) into o",
+  "note": "adopted 16.08->17.74 fixed-colour quadrant priority overlay (slice own channel, skip colour Conv); generalizes 268+200; re-triage underestimated (est 17 gain 0.92, actual +1.66)"
  },
  {
   "task": 181,

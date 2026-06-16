@@ -108,7 +108,9 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   when row-set and col-set are independent (task094).
 - variable offset → bbox first-occupied row/col; 2-D point lookup → chained Gather(axis=2 then 3), NOT
   row∧col outer product (cross-talks); K cheap channel-Slices beat a [0..9] colour Conv for fixed small
-  color sets.
+  color sets. When each spatial REGION carries a FIXED colour, skip the 1×1 colour-index Conv entirely (it
+  forces a 3600B fp32 30×30 plane) — slice each region's OWN colour channel from the FREE input for a tiny
+  presence mask, then map presence→constant-colour fill via a Where PRIORITY chain (task180, 16.48→17.74).
 - Tier S blocked if output colors are RANDOM per-instance (a fixed Conv can't route); Tier A blocked if the
   stamp/shape isn't a row⊗col separable rectangle (a 45° diagonal couples r&c → not separable).
 - "remove isolated noise, keep ≥2×2 SOLID shapes" = part-of-a-filled-2×2 predicate via TWO 2×2 sum-convs
