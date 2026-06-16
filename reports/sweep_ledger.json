@@ -315,14 +315,15 @@
  {
   "task": 27,
   "arc_id": "1b60fb0c",
-  "points": 16.33,
-  "memory": 5777,
-  "params": 37,
+  "points": 16.66,
+  "memory": 4126,
+  "params": 44,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: 1b60fb0c: build 4-fold rotational symmetric figure from one quadrant ("
+  "status": "done",
+  "verdict": "FEASIBLE A ~17.0pt: 1b60fb0c: build 4-fold rotational symmetric figure from one quadrant (",
+  "note": "adopted 16.33->16.66 complete-Cn-symmetry (missing=rot AND NOT blue, centre via min-newly-exposed); generalizes 265+300+40k"
  },
  {
   "task": 28,

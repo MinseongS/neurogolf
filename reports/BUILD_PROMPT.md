@@ -77,7 +77,11 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   the matrix), killing the separate EYE init and the full-matrix Where selects; recover the reflection axes
   from FULL-edge detection (per-row count ≥ box width), which detects orientation for free (task390);
   ray/bounce = union of 45° diagonals
-  r+c==a OR r-c==b through a vertex (task119); 4-fold REFLECTION symmetrization about a data-dependent
+  r+c==a OR r-c==b through a vertex (task119); complete a Cn ROTATIONAL symmetry (input=k-of-n copies) →
+  missing copy = rot(colour) AND NOT colour; recover the data-dependent symmetry CENTRE offset-free by
+  MINIMISING the newly-exposed set across candidate centres (max-self-overlap / rot180-size picks are NOT
+  exact and silently fail genverify); rot90 needs no matrix = transpose(reverse_rows) (negative-step Slice +
+  Transpose, 0 params) (task027); 4-fold REFLECTION symmetrization about a data-dependent
   axis = the double-MatMul idiom with a reflection matrix Mat[out,in]=Equal(2*b+1−in_arange,out_arange),
   the four flips OR'd via one variadic Sum(input, R@input, input@C, R@input@C)>0 (task112); apply_gravity/reflect/transpose = orientation-EQUIVARIANCE
   (same transform on input AND output) → compute both axis branches, select by structure (task341);
