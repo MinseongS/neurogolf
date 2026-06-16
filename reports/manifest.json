@@ -1057,10 +1057,10 @@
    "method": "conv1x59+b"
   },
   "177": {
-   "points": 14.181702811871515,
-   "memory": 49824,
-   "params": 102,
-   "method": "gen:biohack_new"
+   "points": 16.130039489476047,
+   "memory": 6996,
+   "params": 119,
+   "method": "custom:task177"
   },
   "178": {
    "points": 15.478065735525723,

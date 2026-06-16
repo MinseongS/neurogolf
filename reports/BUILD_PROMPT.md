@@ -60,6 +60,11 @@ forms below — most "detection" tasks this sweep turned out to be closed-form a
   colour label and marker position both come from ONE plane; and an origin-anchored rectangular in-grid
   mask is FREE from 1-D occupancy profiles (ReduceSum of free input → 120B vecs → Greater→And) vs a
   5760B [1,10,W,W] channel-max (task206).
+- OCCUPANCY/bbox over the 10-ch input must EXCLUDE channel 0: every background cell sets ch0=1 so a
+  ReduceMax over all channels marks the whole grid occupied (silent bbox=full-grid bug) — use
+  colf=Σ_k k·input_k (>0 ⇔ non-background) as the occupancy signal, which doubles as the value plane.
+  A horizontal mirror of a cropped window = a flipped col-index ramp `min_col+(W-1)-arange(WORK)` into the
+  col Gather — no reflection matrix needed (task177, task036 crop+flip).
 - variable offset → bbox first-occupied row/col; 2-D point lookup → chained Gather(axis=2 then 3), NOT
   row∧col outer product (cross-talks); K cheap channel-Slices beat a [0..9] colour Conv for fixed small
   color sets.

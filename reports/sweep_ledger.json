@@ -2118,14 +2118,15 @@
  {
   "task": 177,
   "arc_id": "7468f01a",
-  "points": 14.18,
-  "memory": 49824,
-  "params": 102,
+  "points": 16.13,
+  "memory": 6996,
+  "params": 119,
   "method": "gen:biohack_new",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "pending-retry",
-  "verdict": "agent STALLED at 600s from the START (systemic env degradation, not task-specific). Re-build when infra recovers."
+  "status": "done",
+  "verdict": "agent STALLED at 600s from the START (systemic env degradation, not task-specific). Re-build when infra recovers.",
+  "note": "adopted 14.18->16.13 crop+flip mirror (colf=sum k*input_k occupancy excl ch0); generalizes 265+200; tier-A unreachable"
  },
  {
   "task": 178,
