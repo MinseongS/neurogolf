@@ -37,6 +37,9 @@ at-floor; if the rule needs a global argmax across data-dependent-count componen
   rowany⊗colany), zero 2-D mask planes. fp16/bool the small working planes. PER-CHANNEL BATCHED MATVEC:
   `MatMul(input, vec[1,10,30,1])` contracts an axis of the FREE fp32 input directly (operand order picks
   the contracted axis, no transpose copy) → eliminates the [1,10,30,30] materialization floor entirely;
+  TWO independent per-row scalars come from ONE MatMul(input[1,10,30,30], W[1,10,30,2]) by packing each as
+  a contraction-weight COLUMN (col0=k → weighted-count colour, col1=col-ramp gated k≥1 → start position),
+  then ReduceSum over channels + Slice — kills the colf plane and a duplicate contraction (task232);
   params count ELEMENTS (cheap) so a small matrix often beats arange+compare arithmetic (task025).
 - COLLAPSIBLE "DETECTION" forms (check each): copy/slide of a row/col/edge (task035); closed-form
   arithmetic of a recovered scalar — replace lookup tables, fp16 Mod is integer-exact <2048 and 4× cheaper

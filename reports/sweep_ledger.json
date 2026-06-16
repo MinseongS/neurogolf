@@ -2784,14 +2784,15 @@
  {
   "task": 232,
   "arc_id": "97999447",
-  "points": 14.71,
-  "memory": 29428,
-  "params": 69,
+  "points": 16.2,
+  "memory": 5944,
+  "params": 659,
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: 97999447: extend each colored dot rightward as a dashed line (color, g"
+  "status": "done",
+  "verdict": "FEASIBLE A ~17.0pt: 97999447: extend each colored dot rightward as a dashed line (color, g",
+  "note": "adopted 14.71->16.20 horizontal parity-trail (two per-row scalars in ONE packed MatMul); generalizes 266+200"
  },
  {
   "task": 233,

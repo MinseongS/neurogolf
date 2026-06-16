@@ -1387,10 +1387,10 @@
    "method": "gen:biohack_new"
   },
   "232": {
-   "points": 14.707956157758622,
-   "memory": 29428,
-   "params": 69,
-   "method": "gen:thbdh6332"
+   "points": 16.20472062980543,
+   "memory": 5944,
+   "params": 659,
+   "method": "custom:task232"
   },
   "233": {
    "points": 13.251931269136003,
