@@ -2594,8 +2594,9 @@
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE B ~16.8pt: un-duplicate crop: extract the box with MOST red pixels (idx0 always m"
+  "status": "confirmed-infeasible",
+  "verdict": "FEASIBLE B ~16.8pt: un-duplicate crop: extract the box with MOST red pixels (idx0 always m",
+  "note": "re-attack 13.39 vs 13.56 (-0.17 LOSS); public net at real floor (gen 300/300); non-local detection wall (segment+global-argmax+variable-crop floors ~13.4)"
  },
  {
   "task": 217,

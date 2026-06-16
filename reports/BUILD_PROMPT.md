@@ -12,6 +12,11 @@ EARLY FEASIBILITY CHECK: if it's a non-local detection task (rays/counts/flood/c
 correspondence) where the public net is already near its floor and you can't beat +0.3, report
 INFEASIBLE/MARGINAL FAST. BUT first test whether an apparent "detection" is really one of the collapsible
 forms below — most "detection" tasks this sweep turned out to be closed-form and beat the floor.
+CONFIRMED FLOOR (do NOT burn 40+ min here): "segment into components + GLOBAL-ArgMax over them +
+variable-size crop" floors near ~13.4 for everyone — the public CumSum-scan net is already exact at floor.
+(T,L)=(top-of-col-run,left-of-row-run) prefix/suffix-MAX scans give a unique per-box label and per-box
+red-counts reduce to a 2-D integral image (4 Gathers, no flood-fill), but the constant factor still lands
+at-floor; if the rule needs a global argmax across data-dependent-count components, BAIL fast (task216).
 
 ## Step 2 — read these
 - reports/SWEEP_SYSTEM.md (tier ladder S>A>B>detection; minimal-tier mindset; MARGINAL threshold ≥+0.3)
