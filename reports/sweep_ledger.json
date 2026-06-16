@@ -3084,7 +3084,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: a64e4611: random/non-deterministic restoration of green interior - known hard ra"
+  "verdict": "INFEASIBLE: a64e4611: random/non-deterministic restoration of green interior - known hard ra",
+  "note": "GAP-CLOSER FAILED: current net fresh 0/60 (overfit, ~0 LB) but TRUE connectivity wall \u2014 green=interior of maximal solid black rects, dense same-colour noise abutting outlines merges into chance-eroded connected blobs, needs global CC analysis (banned). Overcount unrecoverable."
  },
  {
   "task": 256,

@@ -156,6 +156,10 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   when the active canvas is FIXED-SMALL (size-10 → planes 9× smaller); a bounded flood across a VARIABLE-size
   region on the full 30×30 canvas is a WALL — the ~16-plane fp16 fill floor (~28.8KB) pins it near ~14.2
   regardless of other optimisation, and a data-dependent crop trips the symbolic-dim trap (task198 infeasible).
+Solid-rect-interior (1px-outline → erode / no-coloured-within-1, FN=0) is closed-form ONLY when shapes sit on
+a noise-free or DIFFERENTLY-coloured background; when dense noise shares the shape's colour and abuts the
+outline, noise+outline merge into chance-eroded blobs 8-CONNECTED to the true region — reconstruction leaks
+into them, a true connectivity wall (task255 infeasible).
 - [task193 cont.] Fold off-grid into the keep cond (selcond=keep OR offgrid) so
   the removed branch is just a constant [1,10,1,1] bg one-hot in the FREE Where output (task193).
 - "recolour every gray stamp from the one coloured stamp" (identical solid rects at random non-overlapping
