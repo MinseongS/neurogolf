@@ -966,8 +966,9 @@
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE None ~14.4pt: 39e1d7f9: in a magnified line-grid, complete the cross/corner decorati"
+  "status": "skip-marginal",
+  "verdict": "FEASIBLE None ~14.4pt: 39e1d7f9: in a magnified line-grid, complete the cross/corner decorati",
+  "note": "re-attack 14.11 vs 14.358 (-0.25 LOSS, more expensive 53k vs 42k); current ext:biohack_new generalizes 200/200 = real; c0=max-bbox-span isolates scattered colour"
  },
  {
   "task": 81,
