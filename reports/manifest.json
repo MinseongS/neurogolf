@@ -721,10 +721,10 @@
    "method": "conv3x3+b"
   },
   "121": {
-   "points": 16.215837777729526,
-   "memory": 6484,
-   "params": 46,
-   "method": "ext:kojimar6275"
+   "points": 16.566188417522813,
+   "memory": 4564,
+   "params": 36,
+   "method": "custom:task121"
   },
   "122": {
    "points": 17.17196196787417,

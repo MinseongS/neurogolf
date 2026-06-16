@@ -161,6 +161,10 @@ leaves SYMBOLIC dims → calculate_memory returns None (same "could not be measu
 squeezed scalar indices instead for data-dependent border/line extraction (task161). Detection lever:
 "border colour present at BOTH line-ends" = per-side ReduceMax-presence ANDed pairwise, gated by
 interior=(total−ring_count>0), using only tiny [1,10] tensors — no [1,10,30] matched-pair products (task161).
+To locate a UNIQUE marker, ArgMax of per-row/col ReduceMax beats Greater→Cast→Mul-ramp→ReduceSum (kills ~6
+intermediates + ~60 ramp params); a 1×1 Conv with an OUTSIZED weight on the marker channel (w_marker=1000,
+w_k=k) does triple duty from ONE plane — locate (ArgMax), read the ±1 sprite window (Gather), recover the
+sprite colour (ReduceMax of window with marker zeroed) (task121).
 
 ## ANTI-STALL (agents have died at the 600s no-progress watchdog — obey)
 - WRITE src/custom/taskNNN.py EARLY (a first working draft within a few minutes) and iterate on disk; do

@@ -1448,14 +1448,15 @@
  {
   "task": 121,
   "arc_id": "5117e062",
-  "points": 16.22,
-  "memory": 6484,
-  "params": 46,
+  "points": 16.57,
+  "memory": 4564,
+  "params": 36,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "num_sprites",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE B ~16.8pt: 5117e062: output 3x3 = the sprite from box[0] (the one with a cyan cen"
+  "status": "done",
+  "verdict": "FEASIBLE B ~16.8pt: 5117e062: output 3x3 = the sprite from box[0] (the one with a cyan cen",
+  "note": "adopted 16.22->16.57 outsized-weight marker Conv (ArgMax locate + pm1 window read); generalizes 266+200"
  },
  {
   "task": 122,
