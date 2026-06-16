@@ -84,7 +84,12 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   Gather-shift a small WORK×WORK window to origin (task036).
 - BANDED SINGLE-CONV: pack several boolean predicates into ONE conv plane via disjoint MAGNITUDE BANDS
   recovered by thresholds (e.g. `100·center_bg + 500·center_red + 1·(#red 4-nbrs)` → in-grid=band100,
-  static-red=500, olive-red=501+ all from one plane) — kills separate in-grid/mask convs. Center tags need
+  static-red=500, olive-red=501+ all from one plane) — kills separate in-grid/mask convs. Mono-colour
+  fixed-stamp centre detection needs ZERO [1,10,H,W] planes: on the colf plane a banded `10·#X-cells +
+  1·#edge-cells == 50` conv proves "X-full AND edges-empty" in one pass, a `corners=+1,centre=−4 == 0` conv
+  enforces mono-colour without a ×5 plane, and a Gather of per-channel counts by colf gives "count-of-my-
+  colour" per cell. Caveat: `cnt==N` is NOT a shape discriminator even if the body is always N px — identify
+  by SHAPE not count (task117). Center tags need
   weights large enough that neighbour-count leakage can't cross a lower threshold (task278). A single
   colour Conv can also FOLD IN a sentinel marker channel (e.g. gray weight=50 ⇒ value>9 means marker) so
   colour label and marker position both come from ONE plane; and an origin-anchored rectangular in-grid

@@ -1405,8 +1405,9 @@
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: 4c5c2cf0: build a 4-legged creature - reflect sprite into 4 diagonal c"
+  "status": "skip-marginal",
+  "verdict": "FEASIBLE A ~17.0pt: 4c5c2cf0: build a 4-legged creature - reflect sprite into 4 diagonal c",
+  "note": "re-attack 15.25 vs 15.22 (+0.035 MARGINAL lateral; ext:biohack_new already generalizes 100/100); data-dependent 2-D reflection floor"
  },
  {
   "task": 118,
