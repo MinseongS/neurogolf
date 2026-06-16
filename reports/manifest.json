@@ -1099,10 +1099,10 @@
    "method": "gen:biohack_new"
   },
   "184": {
-   "points": 14.432407952356657,
-   "memory": 28880,
-   "params": 9975,
-   "method": "gen:thbdh6332"
+   "points": 15.70394075262128,
+   "memory": 10786,
+   "params": 109,
+   "method": "custom:task184"
   },
   "185": {
    "points": 14.521811022110409,

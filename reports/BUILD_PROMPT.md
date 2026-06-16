@@ -73,7 +73,12 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   into a REGULAR CELL TILING = M=Srow@P@ScolT, Srow[R,dr]=(R%stride==dr+1), auto-zero on gaps/lines/off-grid
   (no in-grid mask); "odd-one-out by pixel COUNT then K× upscale" is closed-form tier-B — unique cell =
   `count<threshold` (NO ReduceMin/ArgMax when exactly one differs), select = `Sum_{R,C}(count<thr)·block`,
-  upscale via the task195 const-index Gather (task011); ADD one *dynamic* colour at masked positions via output=Where(cond[1,1,30,30],
+  upscale via the task195 const-index Gather (task011); "segment into a tall×wide grid of patches separated
+  by single all-bg lines + label each block" is a fully SEPARABLE rows×cols partition (NOT flood-fill):
+  per-axis block index = EXCLUSIVE CumSum of the all-bg-line indicator (gated to in-grid extent), tiny
+  [1,1,K,30] one-hot selectors, downsample by double MatMul Snum=Rsel@colf@Csel / Sden=Rsel@occ@Csel
+  (colour=Snum/Sden exact); the data-dependent tall×wide OUTPUT shape falls out free — R≥tall/C≥wide get
+  Sden=0 → sentinel → all-zero, so fixed K×K→Pad(99)→Equal needs no NonZero (task184); ADD one *dynamic* colour at masked positions via output=Where(cond[1,1,30,30],
   color_onehot[1,10,1,1],input) (broadcast lands in Where's FREE output, recover colour by slicing a
   guaranteed-hit position) — never build a [1,10,H,W] delta (task033); recover ORIENTATION (xpose) with
   ZERO per-cell planes via total peak-match mass (peak_col=Σ_c max_ch colcount vs peak_row=Σ_r max_ch rowcount,

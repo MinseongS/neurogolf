@@ -2217,14 +2217,15 @@
  {
   "task": 184,
   "arc_id": "780d0b14",
-  "points": 14.43,
-  "memory": 28880,
-  "params": 9975,
+  "points": 15.7,
+  "memory": 10786,
+  "params": 109,
   "method": "gen:thbdh6332",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 14.43->15.70 grid-of-patches segment+label (separable CumSum partition, one-hot selectors, double-MatMul downsample, Sden=0 sentinel for data-dep output shape); pending-pool win; generalizes 200+500"
  },
  {
   "task": 185,
