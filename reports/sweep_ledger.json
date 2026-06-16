@@ -2867,14 +2867,15 @@
  {
   "task": 238,
   "arc_id": "9aec4887",
-  "points": 13.93,
-  "memory": 62905,
-  "params": 1447,
+  "points": 15.34,
+  "memory": 15612,
+  "params": 129,
   "method": "gen:thbdh6332",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 13.93->15.34 closed-form sprite+box (channel-8 bbox, box-sides via per-side argmin/argmax, positional quadrant recolour); pending-pool win; generalizes 200+300"
  },
  {
   "task": 239,
