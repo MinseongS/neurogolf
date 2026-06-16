@@ -4612,8 +4612,9 @@
   "method": "custom:task382",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "re-attack 14.155 vs 13.996 (+0.16 MARGINAL); orientation-equivariant reconstruction, dual 3600B fp32+int32 planes floor; +0.3 needs risky 1-D rewrite"
  },
  {
   "task": 383,

@@ -8,8 +8,15 @@ data/
 
 # ORT profiler traces & scratch
 *.json.trace
+onnxruntime_profile__*.json
 scratch/
 *.prof
+# agent scratch verifiers (root-level probes, never adopted)
+/an*.py
+/verify*.py
+/debug*.py
+/_verify*.py
+/memprofile.py
 
 # Submission archives are reproducible artifacts
 submission/*.zip
