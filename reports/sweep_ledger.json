@@ -773,8 +773,8 @@
     "method": "custom:task064",
     "class": "BAIL?",
     "sig": "random_pixels",
-    "status": "pending",
-    "verdict": ""
+    "status": "skip-marginal",
+    "verdict": "at incumbent floor 14.99 (4-dir box-blocked prefix-sum fill; 4 directional planes + fp32 entry + exact rect detector all irreducible ~21-22k). Negative lever: 24x24 crop is a wash when final Where mask needs full 30x30."
   },
   {
     "task": 65,
