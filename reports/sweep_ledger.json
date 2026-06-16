@@ -1033,14 +1033,14 @@
   {
     "task": 86,
     "arc_id": "3befdf3e",
-    "points": 14.89,
+    "points": 15.67,
     "memory": 24480,
     "params": 225,
-    "method": "gen:biohack_new",
+    "method": "custom:86 size-parametric concentric stamp (per-size separable dilation, free Equal output)",
     "class": "BAIL?",
     "sig": "overlaps",
-    "status": "retriage-feasible",
-    "verdict": "FEASIBLE None ~14.9pt: 3befdf3e: draw a concentric square 'frame' (color1) around each filled"
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 500/500); was mis-flagged overlaps-wall, actually tier-A"
   },
   {
     "task": 87,

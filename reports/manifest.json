@@ -511,10 +511,10 @@
    "method": "custom:task085"
   },
   "86": {
-   "points": 14.88523906872015,
-   "memory": 24480,
-   "params": 225,
-   "method": "gen:biohack_new"
+   "points": 15.670455380545341,
+   "memory": 11168,
+   "params": 98,
+   "method": "custom:task086"
   },
   "87": {
    "points": 19.09191706183107,
