@@ -2468,14 +2468,15 @@
  {
   "task": 205,
   "arc_id": "8731374e",
-  "points": 13.81,
-  "memory": 69514,
-  "params": 2882,
+  "points": 14.26,
+  "memory": 46074,
+  "params": 239,
   "method": "custom:task205",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 13.81->14.26 confettibox (leaner detection encoding, Gather-shift vs MatMul, fp16 Equal); pending-pool win; box-detection 30x30 floor; generalizes 500+266"
  },
  {
   "task": 206,

@@ -161,6 +161,10 @@ three broadcasts `And(rowin[1,1,30,1], And(colin[1,1,1,30], bgbool[1,10,1,1]))` 
 plane is ever materialised (saves ~1800B vs Where→uint8-L→Equal). Watch the bg assumption: bg = the CORNER
 cell input[0][0], NOT the most-frequent colour — a line/fg colour can out-number bg (task021). opset 11 ops OK (scorer checks DOMAIN
 not VERSION). BANNED: Loop/Scan/NonZero/Unique/Compress/Function. Gather/Mod allowed. fp32 exact for ints <2^24.
+fp16 `Equal(diff,0)` is EXACT for integer operands and collapses a Sub+Abs+threshold chain to ONE bool op
+(but fp16 Min/Max crashes ORT under ORT_DISABLE_ALL — do clipping in fp32). A +1 bias on a colour-index
+plane lets a SINGLE value-carrying Where plane double as both colour-readout and occupancy mask, removing
+the separate {0,1} mask plane (task205).
 GOTCHAS: ORT ReduceMax/Sum reject uint8/bool (need float); ORT Mul/And/Mod reject uint8 (combines stay bool);
 ORT Where/Equal implemented for uint8 but NOT int8/int16; ORT Pad rejects bool; Clip rejects int64 (clip in
 float then Cast); Slice preserves the input float dtype; opset-11 has no GreaterOrEqual (use Not(Less(...)));
