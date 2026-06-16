@@ -64,10 +64,10 @@ kaggle CLI: /opt/homebrew/Caskroom/miniconda/base/bin/kaggle.
    mislabeled "confirmed-infeasible" by judging +0.3 against the INFLATED stored — IGNORE that label and
    build a generalizing exact encoding. This alone is worth ~+25 LB from 219+255.~~ (NOTE: closeability disproven — all 3 walls)
 
-## ▶▶ RESUME HERE (handoff 2026-06-16 ~16:10, context filling up)
-Confirmed LB **6464.42** (session start 6419.29, **+45.13**). Stored 6526.00, gap pinned 61.28, proj LB
-6464.72 (+0.30 unsubmitted = task092, banked toward submit #11). 10 submissions total, ALL proj-exact (±0.01).
-**32 wins adopted** this session.
+## ▶▶ RESUME HERE (handoff 2026-06-16 ~16:35, session closed cleanly)
+Confirmed LB **6468.09** (session start 6419.29, **+48.80**). Stored 6529.36, gap pinned 61.27, proj LB
+6468.09 (+0.00 unsubmitted — EVERYTHING submitted, #11 was the session-final lock). 11 submissions total, ALL
+proj-exact (±0.01). **33 wins adopted** this session. Repo pushes to github.com/MinseongS/neurogolf each commit.
 
 THE PLAYBOOK FOR NEXT SESSION (do exactly this):
 1. Run the canonical loop, 5-6 concurrent agents. PRIMARY reservoir = the UNTRIAGED PENDING POOL (reservoir
