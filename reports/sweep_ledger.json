@@ -900,14 +900,14 @@
   {
     "task": 75,
     "arc_id": "363442ee",
-    "points": 15.17,
+    "points": 16.02,
     "memory": 18522,
     "params": 69,
-    "method": "ext:wguesdon6304",
+    "method": "custom:75 single data-dependent flat Gather into free output (tier-S)",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 200/200)"
   },
   {
     "task": 76,
