@@ -349,10 +349,10 @@
    "method": "ext:biohack_new"
   },
   "59": {
-   "points": 15.077347278202861,
-   "memory": 17840,
-   "params": 2547,
-   "method": "ext:kojimar6275"
+   "points": 15.965681072269293,
+   "memory": 8093,
+   "params": 293,
+   "method": "custom:task059"
   },
   "60": {
    "points": 16.372876749211567,
@@ -913,10 +913,10 @@
    "method": "ext:wguesdon6304"
   },
   "153": {
-   "points": 15.067779228641,
-   "memory": 20491,
-   "params": 92,
-   "method": "gen:biohack_new"
+   "points": 15.96258546317741,
+   "memory": 8355,
+   "params": 57,
+   "method": "custom:task153"
   },
   "154": {
    "points": 15.853451761111597,
@@ -1843,10 +1843,10 @@
    "method": "ext:wguesdon6304"
   },
   "308": {
-   "points": 15.010380623834585,
-   "memory": 21698,
-   "params": 101,
-   "method": "gen:thbdh6332"
+   "points": 15.416029243435672,
+   "memory": 14409,
+   "params": 121,
+   "method": "custom:task308"
   },
   "309": {
    "points": 22.697414907005953,
@@ -2377,10 +2377,10 @@
    "method": "gen:thbdh6332"
   },
   "397": {
-   "points": 15.084929786220805,
-   "memory": 20146,
-   "params": 87,
-   "method": "gen:biohack_new"
+   "points": 15.587453747924487,
+   "memory": 12136,
+   "params": 105,
+   "method": "custom:task397"
   },
   "398": {
    "points": 16.162609144455303,
