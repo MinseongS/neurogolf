@@ -2669,8 +2669,8 @@
     "method": "custom:task220",
     "class": "BAIL?",
     "sig": "overlaps",
-    "status": "pending",
-    "verdict": ""
+    "status": "gap-closer-wip",
+    "verdict": "fresh=0.00 base net (real~0 on LB despite stored 18.2); attacking with generalizing solver"
   },
   {
     "task": 221,
@@ -2789,8 +2789,8 @@
     "method": null,
     "class": "BAIL?",
     "sig": "overlaps",
-    "status": "pending",
-    "verdict": ""
+    "status": "gap-closer-wip",
+    "verdict": "fresh=0.00 base net (real~0 on LB despite stored 18.2); attacking with generalizing solver"
   },
   {
     "task": 231,
@@ -3418,8 +3418,8 @@
     "method": "ext:octavi6154",
     "class": "BAIL?",
     "sig": "overlaps",
-    "status": "pending",
-    "verdict": ""
+    "status": "gap-closer-wip",
+    "verdict": "fresh=0.00 base net (real~0 on LB despite stored 18.2); attacking with generalizing solver"
   },
   {
     "task": 283,
@@ -3838,8 +3838,8 @@
     "method": "gen:thbdh6332",
     "class": "BAIL?",
     "sig": "random_pixels",
-    "status": "pending",
-    "verdict": ""
+    "status": "gap-closer-wip",
+    "verdict": "fresh=0.00 base net (real~0 on LB despite stored 18.2); attacking with generalizing solver"
   },
   {
     "task": 318,
