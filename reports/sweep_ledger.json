@@ -367,14 +367,14 @@
   {
     "task": 31,
     "arc_id": "1cf80156",
-    "points": 15.17,
+    "points": 16.09,
     "memory": 18558,
     "params": 58,
-    "method": "gen:vyank6322",
+    "method": "custom:31 single-blob crop-to-bbox (task036 easy twin, fixed-window Gather)",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 200/200)"
   },
   {
     "task": 32,
