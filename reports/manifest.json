@@ -2263,10 +2263,10 @@
    "method": "gen:vyank6322"
   },
   "378": {
-   "points": 14.428477967719003,
-   "memory": 38932,
-   "params": 76,
-   "method": "gen:thbdh6332"
+   "points": 15.896131872534333,
+   "memory": 8938,
+   "params": 52,
+   "method": "custom:task378"
   },
   "379": {
    "points": 13.819767920510943,

@@ -4571,14 +4571,15 @@
  {
   "task": 378,
   "arc_id": "ec883f72",
-  "points": 14.43,
-  "memory": 38932,
-  "params": 76,
+  "points": 15.9,
+  "memory": 8938,
+  "params": 52,
   "method": "gen:thbdh6332",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "adopted 14.43->15.90 clipped concentric figures from INNERMOST bbox (inner bbox +- const = true outer corners, clipping spares inner edges); pending-pool win; gen 500"
  },
  {
   "task": 379,
