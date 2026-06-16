@@ -422,14 +422,15 @@
  {
   "task": 36,
   "arc_id": "1f85a75f",
-  "points": 13.71,
-  "memory": 79832,
-  "params": 111,
+  "points": 15.66,
+  "memory": 11274,
+  "params": 118,
   "method": "gen:vyank6322",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE B ~16.8pt: un-duplicate crop: 1f85a75f crops the bbox of the idx==0 (special-colo"
+  "status": "done",
+  "verdict": "FEASIBLE B ~16.8pt: un-duplicate crop: 1f85a75f crops the bbox of the idx==0 (special-colo",
+  "note": "adopted 13.71->15.66 min-span-colour crop (exact 0/20000, generalizes)"
  },
  {
   "task": 37,
