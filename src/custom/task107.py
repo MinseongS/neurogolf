@@ -2,30 +2,31 @@
 overlay red (color 2) corner-ray decorations around the 2x2 "box".
 
 Rule (from the ARC-GEN generator): the input is always 5x5; the output is
-(5*factor)x(5*factor) where factor = (#distinct colors in the last row) + 1.
-The output is the kron upscale of the input by factor*factor, overlaid with red
-at four diagonal corner-rays of length `factor` emanating from the corners of
-the (upscaled) 2x2 box. Red is only ever drawn on background cells.
+(5*factor)x(5*factor) where factor = (#distinct colors in the last row) + 1
+(factor in 2..6).  The output is the kron upscale of the input by factor*factor,
+overlaid with red at four diagonal corner-rays of length `factor` emanating from
+the corners of the (upscaled) 2x2 box.  Red is only ever drawn on background
+cells (verified over 3000 fresh instances: 0 conflicts).
 
-Memory floor-break (label map + final Equal):
-  The previous design gathered the one-hot `src` [1,10,901] into a finished
-  [1,10,30,30] int8 plane (9000B) using a [15,30,30] int32 index table
-  (54000 param-bytes). Here instead:
-    * Build a flat COLOUR-LABEL source lab[1,1,901] uint8 by reshaping `input`
-      to [1,10,900] and reducing k*onehot over channels -> [1,1,900]; no
-      [1,1,30,30] float plane is ever materialised. A red column = 2 is
-      appended.
-    * The upscale gather index (R//f)*30+(C//f) is computed arithmetically;
-      a small uint8 RED table [15,30,30] (13500B) marks the red corner-ray
-      cells, where the gather index is forced to 900 (the red column).
-    * Gather(lab, idx) -> a single L[1,1,30,30] uint8 colour label. A sentinel
-      10 is written outside the 5*factor x 5*factor output region (those cells
-      are all-channels-off in the target). Final Equal(L, arange[0..9]) writes
-      the free BOOL `output`.
+Lean encoding (no 30x30 fp32/int32 index plane; no red lookup table):
+  * colour-label of the 5x5 input  lab5[1,1,5,5]  (Slice input->[1,10,5,5],
+    1x1 Conv with kvec=arange(10)); padded to [1,1,6,6] with a sentinel 10 on
+    the extra row/col (row/col 5).
+  * SENTINEL-VIA-GATHER: upscale index gidx = clip(floor(arange30/f), 0, 5).
+    In-grid rows R<5f give floor in 0..4; out-of-grid R>=5f give floor>=5 ->
+    clipped to 5 -> gathers the sentinel-10 row/col.  So the double Gather
+    (axis=2 then axis=3) of lab6 yields a [1,1,30,30] label that is ALREADY 10
+    (= no-channel) outside the 5*factor region -- no separate in-grid Where.
+  * red mask ARITHMETIC (no table):  red = (RmC==(row-col)*f OR
+    RpC==(row+col+2)*f-1) AND R in [trow-f+1,trow] U [brow,brow+f-1], where
+    trow=row*f-1, brow=(row+2)*f.  TL&BR rays share one main diagonal, TR&BL
+    share one anti-diagonal.  Computed on a 24x24 fp16 canvas (red never
+    exceeds coord 23) then padded to 30x30.  Verified exact vs the generator.
+  * L = Where(red, 2, label) ; final Equal(L, arange[0..9]) -> free BOOL output.
 
-Two scalars index the red table (boxcase*5 + (factor-2)):
+Scalars:
   * factor-2 = 4 - sum_i dot(onehot[i], onehot[i+1]) over the last-row cells.
-  * boxcase = 2 - 2*occ(0,1) - occ(2,0)   (box at (0,1)/(1,0)/(1,1)).
+  * row = 1 - occ(0,1), col = 1 - occ(2,0)   (box at (0,1)/(1,0)/(1,1)).
 """
 
 import numpy as np
@@ -33,28 +34,6 @@ import onnx
 from onnx import helper, numpy_helper, TensorProto
 
 from ..harness import IR_VERSION
-
-
-RED_SZ = 24  # red cells never exceed (row+2)*f+(f-1) <= 23 for row<=1, f<=6
-
-
-def _red_table():
-    """[15,RED_SZ,RED_SZ] uint8 red-cell mask keyed by boxcase*5 + (factor-2)."""
-    poses = {0: (0, 1), 1: (1, 0), 2: (1, 1)}
-    tab = np.zeros((15, RED_SZ, RED_SZ), np.uint8)
-    for bc in range(3):
-        row, col = poses[bc]
-        for fi, f in enumerate(range(2, 7)):
-            n = 5 * f
-            m = tab[bc * 5 + fi]
-            for k in range(f):
-                lorow, hirow = row * f - k - 1, (row + 2) * f + k
-                locol, hicol = col * f - k - 1, (col + 2) * f + k
-                for r, c in [(lorow, locol), (lorow, hicol),
-                             (hirow, locol), (hirow, hicol)]:
-                    if 0 <= r < n and 0 <= c < n:
-                        m[r, c] = 1
-    return tab
 
 
 def build(task):
@@ -70,10 +49,8 @@ def build(task):
         return out
 
     I32 = TensorProto.INT32
-    init("RED", _red_table(), np.uint8)                 # [15,30,30] uint8
+    F32 = TensorProto.FLOAT
     init("c4", np.array(4, np.int32), np.int32)
-    init("c2i", np.array(2, np.int32), np.int32)
-    init("c5", np.array(5, np.int32), np.int32)
 
     # Slice operand initializers (opset 11: starts/ends/axes are inputs)
     init("lr_s", np.array([4, 0], np.int64), np.int64)
@@ -92,6 +69,9 @@ def build(task):
     init("ch_s", np.array([1], np.int64), np.int64)
     init("ch_e", np.array([10], np.int64), np.int64)
     init("ch_ax", np.array([1], np.int64), np.int64)
+    init("g5_s", np.array([0, 0], np.int64), np.int64)
+    init("g5_e", np.array([5, 5], np.int64), np.int64)
+    init("g5_ax", np.array([2, 3], np.int64), np.int64)
 
     # ----- factor-2 = 4 - sum_i dot(lr[i], lr[i+1]) -----
     n("Slice", ["input", "lr_s", "lr_e", "lr_ax"], "lr")      # [1,10,1,5]
@@ -102,83 +82,115 @@ def build(task):
     n("Cast", ["dotsum_f"], "dotsum", to=I32)
     n("Sub", ["c4", "dotsum"], "fidx")                  # int32 scalar in 0..4
 
-    # ----- boxcase = 2 - 2*occ(0,1) - occ(2,0) -----
+    # ----- box position scalars: row = 1 - occ(0,1), col = 1 - occ(2,0) -----
+    # box at (0,1)->occ01=1; (1,0)->occ20=1; (1,1)->both 0.
     n("Slice", ["input", "p01_s", "p01_e", "p_ax"], "p01")    # [1,10,1,1]
     n("Slice", ["p01", "ch_s", "ch_e", "ch_ax"], "p01c")      # channels 1..9
-    n("ReduceSum", ["p01c"], "occ01_f", keepdims=0)
-    n("Cast", ["occ01_f"], "occ01", to=I32)
+    n("ReduceSum", ["p01c"], "occ01_f", keepdims=0)           # scalar f32 0/1
     n("Slice", ["input", "p20_s", "p20_e", "p_ax"], "p20")
     n("Slice", ["p20", "ch_s", "ch_e", "ch_ax"], "p20c")
-    n("ReduceSum", ["p20c"], "occ20_f", keepdims=0)
-    n("Cast", ["occ20_f"], "occ20", to=I32)
-    n("Mul", ["occ01", "c2i"], "occ01x2")
-    n("Sub", ["c2i", "occ01x2"], "bc_t")
-    n("Sub", ["bc_t", "occ20"], "boxcase")              # int32 scalar 0..2
-
-    # ----- table key = boxcase*5 + (factor-2); fetch red mask [30,30] -----
-    n("Mul", ["boxcase", "c5"], "bc5")
-    n("Add", ["bc5", "fidx"], "rkey_t")                 # int32, possibly [1]
-    n("Squeeze", ["rkey_t"], "rkey")                    # 0-D scalar
-    n("Gather", ["RED", "rkey"], "red_sm", axis=0)      # [RED_SZ,RED_SZ] u8
-    # pad red mask to [30,30] with 0 (no red outside the small region)
-    init("rpad", np.array([0, 0, 30 - RED_SZ, 30 - RED_SZ], np.int64), np.int64)
-    init("rpv", np.array(0, np.uint8), np.uint8)
-    n("Pad", ["red_sm", "rpad", "rpv"], "red2d", mode="constant")  # [30,30]
+    n("ReduceSum", ["p20c"], "occ20_f", keepdims=0)           # scalar f32 0/1
+    init("c1f", np.array(1.0, np.float32), np.float32)
+    n("Sub", ["c1f", "occ01_f"], "rowf")               # scalar float row in {0,1}
+    n("Sub", ["c1f", "occ20_f"], "colf")               # scalar float col in {0,1}
 
     # ----- factor f (float scalar) -----
     init("c2f", np.array(2.0, np.float32), np.float32)
     n("Cast", ["fidx"], "fidx_f", to=TensorProto.FLOAT)
     n("Add", ["fidx_f", "c2f"], "fscal")                # scalar float = factor
 
-    # ----- arithmetic upscale index (R//f)*30 + (C//f) over [30,30] -----
-    Rg = np.arange(30, dtype=np.float32).reshape(30, 1)
-    Cg = np.arange(30, dtype=np.float32).reshape(1, 30)
-    init("Rg", Rg, np.float32)                          # [30,1]
-    init("Cg", Cg, np.float32)                          # [1,30]
-    n("Div", ["Rg", "fscal"], "Rdiv")
-    n("Floor", ["Rdiv"], "Rf")                          # [30,1] floor(R/f)
-    n("Div", ["Cg", "fscal"], "Cdiv")
-    n("Floor", ["Cdiv"], "Cf")                          # [1,30] floor(C/f)
-    init("c30f", np.array(30.0, np.float32), np.float32)
-    n("Mul", ["Rf", "c30f"], "Rf30")                    # [30,1]
-    n("Add", ["Rf30", "Cf"], "base_f")                  # [30,30] = Rf*30+Cf
-    n("Cast", ["base_f"], "base_i", to=I32)             # [30,30] int32 0..624
+    # ----- arithmetic red mask (no table). Red = on main-diag RmC==(row-col)*f
+    #       OR anti-diag RpC==(row+col+2)*f-1, AND R in the two ray ranges
+    #       [trow-f+1, trow] (above box) or [brow, brow+f-1] (below box), where
+    #       trow=row*f-1, brow=(row+2)*f. Verified exact vs the generator. -----
+    # Red lives only in rows/cols < 24 (max coord (row+2)*f+(f-1) <= 23), so the
+    # diagonal/range planes use a 24x24 fp16 canvas (half the bytes of 30x30,
+    # and only 24 wide), then red_b is padded back to 30x30.
+    RS = 24
+    init("R24", np.arange(RS, dtype=np.float32).reshape(1, 1, RS, 1), np.float32)
+    init("C24", np.arange(RS, dtype=np.float32).reshape(1, 1, 1, RS), np.float32)
+    init("c1fs", np.array(1.0, np.float32), np.float32)
+    n("Sub", ["rowf", "colf"], "rmc")                  # row - col
+    n("Add", ["rowf", "colf"], "rpc")                  # row + col
+    n("Mul", ["rmc", "fscal"], "md")                   # main-diag const = (row-col)*f
+    init("c2fs", np.array(2.0, np.float32), np.float32)
+    n("Add", ["rpc", "c2fs"], "rpc2")                  # row+col+2
+    n("Mul", ["rpc2", "fscal"], "ad0")                 # (row+col+2)*f
+    n("Sub", ["ad0", "c1fs"], "ad")                    # anti-diag const = (row+col+2)*f-1
+    # diagonal planes in fp16 (R-C in [-23,23], R+C in [0,46], integer-exact).
+    F16 = TensorProto.FLOAT16
+    n("Cast", ["R24"], "R16", to=F16)                  # [1,1,24,1] fp16
+    n("Cast", ["C24"], "C16", to=F16)                  # [1,1,1,24] fp16
+    n("Cast", ["md"], "md16", to=F16)
+    n("Cast", ["ad"], "ad16", to=F16)
+    n("Sub", ["R16", "C16"], "RmC")                    # [1,1,24,24] fp16 = R-C
+    n("Add", ["R16", "C16"], "RpC")                    # [1,1,24,24] fp16 = R+C
+    n("Equal", ["RmC", "md16"], "ondm")                # bool main diag
+    n("Equal", ["RpC", "ad16"], "onda")                # bool anti diag
+    n("Or", ["ondm", "onda"], "ondiag")                # [1,1,24,24] bool
+    # row ranges: trow=row*f-1, brow=(row+2)*f  (use R24 ramp)
+    n("Mul", ["rowf", "fscal"], "rowf_f")
+    n("Sub", ["rowf_f", "c1fs"], "trow")               # trow scalar
+    n("Add", ["rowf", "c2fs"], "rowp2")
+    n("Mul", ["rowp2", "fscal"], "brow")               # brow scalar
+    n("Sub", ["trow", "fscal"], "trow_lo0")
+    n("Add", ["trow_lo0", "c1fs"], "trow_lo")          # trow-f+1
+    n("Add", ["brow", "fscal"], "brow_hi0")
+    n("Sub", ["brow_hi0", "c1fs"], "brow_hi")          # brow+f-1
+    # above-box range: trow_lo <= R <= trow ; Not(Less)==>= (no GreaterOrEqual)
+    n("Less", ["R24", "trow_lo"], "lt_tlo")
+    n("Not", ["lt_tlo"], "ge_tlo")                     # R >= trow_lo
+    n("Add", ["trow", "c1fs"], "trow_p1")
+    n("Less", ["R24", "trow_p1"], "le_trow")           # R < trow+1  == R <= trow
+    n("And", ["ge_tlo", "le_trow"], "rng_top")         # [1,1,24,1] bool
+    # below-box range: brow <= R <= brow_hi
+    n("Less", ["R24", "brow"], "lt_brow")
+    n("Not", ["lt_brow"], "ge_brow")                   # R >= brow
+    n("Add", ["brow_hi", "c1fs"], "brow_hi_p1")
+    n("Less", ["R24", "brow_hi_p1"], "le_bhi")         # R <= brow_hi
+    n("And", ["ge_brow", "le_bhi"], "rng_bot")         # [1,1,24,1] bool
+    n("Or", ["rng_top", "rng_bot"], "rrange")          # [1,1,24,1] bool
+    n("And", ["ondiag", "rrange"], "red24")            # [1,1,24,24] bool
+    # pad red mask back to [1,1,30,30] (ORT Pad rejects bool -> via uint8)
+    n("Cast", ["red24"], "red24u", to=TensorProto.UINT8)
+    init("rpad", np.array([0, 0, 0, 0, 0, 0, 30 - RS, 30 - RS], np.int64),
+         np.int64)
+    init("rpv", np.array(0, np.uint8), np.uint8)
+    n("Pad", ["red24u", "rpad", "rpv"], "red30u", mode="constant")  # [1,1,30,30]
+    n("Cast", ["red30u"], "red_b", to=TensorProto.BOOL)             # [1,1,30,30]
 
-    # ----- where red: index 900, else base index -----
-    init("c900", np.array(900, np.int32), np.int32)
-    n("Cast", ["red2d"], "red_b", to=TensorProto.BOOL)  # [30,30] bool
-    n("Where", ["red_b", "c900", "base_i"], "idx2d")    # [30,30] int32
+    # ----- separable upscale indices gidx = clip(floor(arange30 / f), 0, 5).
+    #       Out-of-grid R>=5f gives floor>=5 -> clip 5 -> gathers the padded
+    #       sentinel row/col (value 10), so NO separate in-grid Where is needed.
+    Ar = np.arange(30, dtype=np.float32)
+    init("Ar", Ar, np.float32)                          # [30]
+    n("Div", ["Ar", "fscal"], "Adiv")                   # [30]
+    n("Floor", ["Adiv"], "Afl")                         # [30] float floor(R/f)
+    init("c0f", np.array(0.0, np.float32), np.float32)
+    init("c5fc", np.array(5.0, np.float32), np.float32)
+    n("Clip", ["Afl", "c0f", "c5fc"], "Acl")            # [30] float clipped 0..5
+    n("Cast", ["Acl"], "gidx", to=I32)                  # [30] int32 0..5
 
-    # ----- colour-label source lab[1,1,901] uint8 -----
-    # colour index per cell = sum_k k*onehot[k]  (1x1 Conv with kvec); the
-    # [1,1,30,30] label plane is the only canvas-sized float here.
+    # ----- colour-label of the 5x5 input  lab5[1,1,5,5] u8, padded to 6x6
+    #       with sentinel 10 (the out-of-grid value, matches no channel) -----
+    n("Slice", ["input", "g5_s", "g5_e", "g5_ax"], "in5")     # [1,10,5,5]
     init("kvec", np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1),
          np.float32)
-    n("Conv", ["input", "kvec"], "lab_f", kernel_shape=[1, 1])  # [1,1,30,30] f32
-    n("Cast", ["lab_f"], "lab_u8", to=TensorProto.UINT8)        # [1,1,30,30] u8
-    init("flat", np.array([1, 1, 900], np.int64), np.int64)
-    n("Reshape", ["lab_u8", "flat"], "labflat")                 # [1,1,900] u8
-    redcol = np.array(2, np.uint8).reshape(1, 1, 1)
-    init("REDCOL", redcol, np.uint8)                            # [1,1,1]
-    n("Concat", ["labflat", "REDCOL"], "labsrc", axis=2)        # [1,1,901] u8
-
-    # ----- gather colour labels into L[1,1,30,30] -----
-    n("Gather", ["labsrc", "idx2d"], "Lraw", axis=2)            # [1,1,30,30] u8
-
-    # ----- sentinel 10 outside the 5*factor x 5*factor output region -----
-    init("c5f", np.array(5.0, np.float32), np.float32)
-    n("Mul", ["fscal", "c5f"], "nlim")                          # scalar = 5*factor
-    Rcol = np.arange(30, dtype=np.float32).reshape(1, 1, 30, 1)
-    Crow = np.arange(30, dtype=np.float32).reshape(1, 1, 1, 30)
-    init("Rcol", Rcol, np.float32)
-    init("Crow", Crow, np.float32)
-    n("Less", ["Rcol", "nlim"], "rin")                          # [1,1,30,1] bool
-    n("Less", ["Crow", "nlim"], "cin")                          # [1,1,1,30] bool
-    n("And", ["rin", "cin"], "ingrid")                          # [1,1,30,30] bool
+    n("Conv", ["in5", "kvec"], "lab5_f", kernel_shape=[1, 1])  # [1,1,5,5] f32
+    n("Cast", ["lab5_f"], "lab5", to=TensorProto.UINT8)        # [1,1,5,5] u8
+    init("lpad", np.array([0, 0, 0, 0, 0, 0, 1, 1], np.int64), np.int64)
     init("v10", np.array(10, np.uint8), np.uint8)
-    n("Where", ["ingrid", "Lraw", "v10"], "L")                  # [1,1,30,30] u8
+    n("Pad", ["lab5", "lpad", "v10"], "lab6", mode="constant")  # [1,1,6,6] u8
+
+    # ----- upscale: gather rows then cols (indices in 0..5) -----
+    n("Gather", ["lab6", "gidx"], "up_r", axis=2)       # [1,1,30,6] u8
+    n("Gather", ["up_r", "gidx"], "L0", axis=3)         # [1,1,30,30] u8 (w/ sentinel)
+
+    # ----- overlay red (color 2); red_b is false outside grid, so safe -----
+    init("c2u", np.array(2, np.uint8), np.uint8)
+    n("Where", ["red_b", "c2u", "L0"], "L")             # [1,1,30,30] u8
     init("chan", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
-    n("Equal", ["L", "chan"], "output")                         # free BOOL
+    n("Equal", ["L", "chan"], "output")                 # free BOOL
 
     x = helper.make_tensor_value_info("input", TensorProto.FLOAT, [1, 10, 30, 30])
     y = helper.make_tensor_value_info("output", TensorProto.BOOL, [1, 10, 30, 30])

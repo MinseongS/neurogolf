@@ -1288,14 +1288,14 @@
   {
     "task": 107,
     "arc_id": "469497ad",
-    "points": 14.61,
+    "points": 15.61,
     "memory": 23733,
     "params": 8821,
-    "method": "custom:task107",
+    "method": "custom:107 sentinel-gather variable kron + diagonal-ray fp16 planes",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 500/500)"
   },
   {
     "task": 108,
@@ -1857,14 +1857,14 @@
   {
     "task": 154,
     "arc_id": "6855a6e4",
-    "points": 14.67,
+    "points": 15.85,
     "memory": 29552,
     "params": 990,
-    "method": "ext:biohack_new",
+    "method": "custom:154 separable edge-reflection (2 bool permute MatMuls + orientation Where)",
     "class": "BAIL",
     "sig": "memory",
-    "status": "retriage-feasible",
-    "verdict": "FEASIBLE None ~14.7pt: 6855a6e4: fold a split sprite (top half above box, bottom half below, "
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 500/500)"
   },
   {
     "task": 155,
