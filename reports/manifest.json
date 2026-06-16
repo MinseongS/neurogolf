@@ -19,10 +19,10 @@
    "method": "ext:kojimar6275"
   },
   "4": {
-   "points": 14.084547965521434,
-   "memory": 54000,
-   "params": 1020,
-   "method": "gen:thbdh6332"
+   "points": 14.865797630653343,
+   "memory": 25152,
+   "params": 38,
+   "method": "custom:task004"
   },
   "5": {
    "points": 13.509903135969793,
@@ -325,10 +325,10 @@
    "method": "gen:thbdh6332"
   },
   "55": {
-   "points": 14.825531566735503,
-   "memory": 25260,
-   "params": 965,
-   "method": "ext:wguesdon6304"
+   "points": 15.9168114136843,
+   "memory": 8760,
+   "params": 46,
+   "method": "custom:task055"
   },
   "56": {
    "points": 19.638707834290575,
@@ -637,9 +637,9 @@
    "method": "ext:kojimar6275"
   },
   "107": {
-   "points": 14.609344472048557,
-   "memory": 23733,
-   "params": 8821,
+   "points": 15.606754907969282,
+   "memory": 11853,
+   "params": 154,
    "method": "custom:task107"
   },
   "108": {
@@ -919,10 +919,10 @@
    "method": "gen:biohack_new"
   },
   "154": {
-   "points": 14.673141935486873,
-   "memory": 29552,
-   "params": 990,
-   "method": "ext:biohack_new"
+   "points": 15.853451761111597,
+   "memory": 9311,
+   "params": 71,
+   "method": "custom:task154"
   },
   "155": {
    "points": 18.44322164384196,
@@ -2053,10 +2053,10 @@
    "method": "custom:task342"
   },
   "343": {
-   "points": 14.779659997712312,
-   "memory": 27208,
-   "params": 248,
-   "method": "gen:thbdh6332"
+   "points": 17.232736003242692,
+   "memory": 1686,
+   "params": 676,
+   "method": "custom:task343"
   },
   "344": {
    "points": 18.186555400489105,
@@ -2293,10 +2293,10 @@
    "method": "custom:task382"
   },
   "383": {
-   "points": 14.371236953152405,
-   "memory": 40254,
-   "params": 1052,
-   "method": "ext:thbdh6332"
+   "points": 14.771209498607744,
+   "memory": 27664,
+   "params": 25,
+   "method": "custom:task383"
   },
   "384": {
    "points": 16.912052445357332,
@@ -2347,10 +2347,10 @@
    "method": "ext:kojimar6275"
   },
   "392": {
-   "points": 14.664924855210137,
-   "memory": 28696,
-   "params": 2098,
-   "method": "gen:biohack_new"
+   "points": 15.968905918300845,
+   "memory": 4464,
+   "params": 3895,
+   "method": "custom:task392"
   },
   "393": {
    "points": 18.873130815885816,

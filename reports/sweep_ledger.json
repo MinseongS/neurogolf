@@ -659,14 +659,14 @@
   {
     "task": 55,
     "arc_id": "272f95fa",
-    "points": 14.83,
+    "points": 15.92,
     "memory": 25260,
     "params": 965,
-    "method": "ext:wguesdon6304",
+    "method": "custom:55 separable band-grid plus-fill (CumSum band index + double-MatMul LUT)",
     "class": "FEASIBLE",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 200/200)"
   },
   {
     "task": 56,
@@ -4147,14 +4147,14 @@
   {
     "task": 343,
     "arc_id": "d8c310e9",
-    "points": 14.78,
+    "points": 17.23,
     "memory": 27208,
     "params": 248,
-    "method": "gen:thbdh6332",
+    "method": "custom:343 data-dependent period detect (Gather c%p, ArgMax smallest consistent) + free col Gather",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 500/500)"
   },
   {
     "task": 344,
