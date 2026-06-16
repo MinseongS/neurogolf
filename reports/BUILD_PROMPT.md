@@ -86,6 +86,11 @@ at-floor; if the rule needs a global argmax across data-dependent-count componen
   (conv1 pad bottom/right counts each block, ==4 ⇒ full; conv2 pad top/left dilates full-blocks over their
   4 covering cells) — exact, no flood-fill. Fold off-grid into the keep cond (selcond=keep OR offgrid) so
   the removed branch is just a constant [1,10,1,1] bg one-hot in the FREE Where output (task193).
+- "recolour every gray stamp from the one coloured stamp" (identical solid rects at random non-overlapping
+  positions) is NOT a shape-correspondence BAIL: a cell's OFFSET within its own sprite is a LOCAL run-length
+  (product-chain of shifted occupancy, resets at gaps) so key=dr·4+dc is per-cell with no flood-fill; the
+  colour-by-offset 4×4 histogram is learned from the single coloured sprite via a double-MatMul over offset
+  one-hots, propagated by a 1-D Gather (task368).
 
 ## SCORING + OP FACTS
 score=max(1,25−ln(mem+params)); mem=SUM over every intermediate tensor of elems×itemsize (input/output

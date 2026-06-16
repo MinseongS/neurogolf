@@ -4416,14 +4416,15 @@
  {
   "task": 368,
   "arc_id": "e76a88a6",
-  "points": 14.69,
-  "memory": 29948,
-  "params": 84,
+  "points": 15.37,
+  "memory": 14936,
+  "params": 314,
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE A ~17.0pt: e76a88a6: recover the colored sprite shown once and stamp (recolored) "
+  "status": "done",
+  "verdict": "FEASIBLE A ~17.0pt: e76a88a6: recover the colored sprite shown once and stamp (recolored) ",
+  "note": "adopted 14.69->15.37 recolour-by-offset (local run-length key=dr*4+dc, 4x4 histogram double-MatMul, no flood-fill); generalizes 265+500"
  },
  {
   "task": 369,
