@@ -1966,14 +1966,14 @@
   {
     "task": 163,
     "arc_id": "6d0160f0",
-    "points": 14.92,
+    "points": 15.98,
     "memory": 22294,
     "params": 1655,
-    "method": "gen:biohack_new",
+    "method": "custom:163 data-dependent block-copy into grid slot (double bool MatMul, task250 idiom)",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 500/500)"
   },
   {
     "task": 164,
