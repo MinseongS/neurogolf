@@ -3340,14 +3340,15 @@
  {
   "task": 273,
   "arc_id": "af902bf9",
-  "points": 16.31,
-  "memory": 5900,
-  "params": 37,
+  "points": 16.65,
+  "memory": 4000,
+  "params": 230,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.34 (corner-rect fill = joint-4-quadrant enclosure test, double-tri MatMul per quadrant)"
  },
  {
   "task": 274,
