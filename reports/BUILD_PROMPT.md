@@ -37,6 +37,10 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   task119 ray=closed-form-diagonals, task341 orientation-equivariance) + 1-2 src/custom/task*.py for idiom.
 
 ## PROVEN LEVERS (reuse — most wins came from spotting one of these)
+- ⭐ ROW/COL SUM-PROFILE AS ONE NO-PAD CONV: a full-row/col sum over a channel-subset is ONE no-pad Conv —
+  `Conv(input[1,10,30,30], W[1,10,1,30]) -> [1,1,30,1]` (ch0 kernel weight = 0 to drop background) folds
+  "drop a channel + collapse a spatial axis" into one op, dodging the 1200B [1,10,30,1] intermediate that
+  ReduceSum(input,[3]) forces; cost is only a 300-elem kernel per axis as params (task141).
 - ⭐ 1×1 CONV WITH RUNTIME ONE-HOT WEIGHT = pick channel k + extract its 30×30 plane in ONE op: ORT accepts a
   non-initializer (runtime-computed) Conv weight, so a [1,10,1,1] selector one-hot built from a scalar k
   collapses "select channel + materialise its plane" into a single 3600B Conv — strictly cheaper than

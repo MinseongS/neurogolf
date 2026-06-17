@@ -1711,14 +1711,15 @@
  {
   "task": 141,
   "arc_id": "623ea044",
-  "points": 16.04,
-  "memory": 7668,
-  "params": 89,
+  "points": 16.56,
+  "memory": 3972,
+  "params": 674,
   "method": "ext:wguesdon6304",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.51 (row/col sum-profile via one no-pad Conv W[1,10,1,30], dodges 1200B ReduceSum intermediate)"
  },
  {
   "task": 142,
