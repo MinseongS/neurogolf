@@ -3029,14 +3029,15 @@
  {
   "task": 248,
   "arc_id": "a3df8b1e",
-  "points": 16.22,
-  "memory": 4698,
-  "params": 1812,
+  "points": 16.54,
+  "memory": 4602,
+  "params": 105,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.32 (bounce path triangle-wave, OneHot stamp per row = one fp16 plane no bool/cast)"
  },
  {
   "task": 249,
