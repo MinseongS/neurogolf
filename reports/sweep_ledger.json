@@ -544,14 +544,15 @@
  {
   "task": 45,
   "arc_id": "22eb0ac0",
-  "points": 16.09,
-  "memory": 7400,
-  "params": 25,
+  "points": 16.55,
+  "memory": 4650,
+  "params": 36,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win"
  },
  {
   "task": 46,
@@ -2923,14 +2924,15 @@
  {
   "task": 240,
   "arc_id": "9d9215db",
-  "points": 16.06,
-  "memory": 6670,
-  "params": 957,
+  "points": 16.85,
+  "memory": 3262,
+  "params": 209,
   "method": "custom:task240",
   "class": "FEASIBLE?",
   "sig": "mirror",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win"
  },
  {
   "task": 241,
@@ -3505,14 +3507,15 @@
  {
   "task": 288,
   "arc_id": "b8cdaf2b",
-  "points": 16.06,
-  "memory": 5466,
-  "params": 2137,
+  "points": 16.44,
+  "memory": 5136,
+  "params": 64,
   "method": "custom:task288",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win"
  },
  {
   "task": 289,
@@ -3565,14 +3568,15 @@
  {
   "task": 293,
   "arc_id": "ba97ae07",
-  "points": 16.07,
-  "memory": 6660,
-  "params": 902,
+  "points": 16.79,
+  "memory": 3058,
+  "params": 611,
   "method": "custom:task293",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win"
  },
  {
   "task": 294,
@@ -3977,14 +3981,15 @@
  {
   "task": 327,
   "arc_id": "d13f3404",
-  "points": 16.07,
-  "memory": 7516,
-  "params": 22,
+  "points": 17.56,
+  "memory": 1620,
+  "params": 80,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win"
  },
  {
   "task": 328,
