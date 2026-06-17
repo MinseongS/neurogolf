@@ -10,15 +10,22 @@ Key facts (verified on all 266 examples):
   (solid); the fly's count is strictly less (its bbox swallows the tongue).
 - the output fly box is always a rectangle, so it factors as the outer
   product of a row-mask and a col-mask -> the whole output (frog box + fly
-  box) is computed as outRow[1,10,30,1] * outCol[1,10,1,30] straight into
-  `output` (free).
+  box) is computed via a separable row/col label map straight into the free
+  BOOL output.
 - the moved axis is the one on which the frog and fly projections are
   disjoint; on the perpendicular axis the fly mask is unchanged, on the moved
-  axis it becomes a run of length T (= box thickness = min positive
-  per-perpendicular-line fly count) flush against the frog edge.
+  axis it becomes a run of length T (= box thickness) flush against the frog.
+
+Memory lever (vs the prior 17698B version): the frog/fly are exactly TWO
+colour channels, and the channel index of each equals its colour.  So instead
+of materialising per-channel spatial products (R*isFrog, C*isFly, ...) -- six
+[1,10,30,*] fp16 planes at 600B each -- we recover each colour's channel index
+as a runtime int32 [1] scalar and Gather that single channel out of R / C / the
+per-channel sums (each a 60-120B [1,1,30,1] slice).  This removes ~3.6KB of
+per-channel product planes.
 
 All intermediates are tiny 1-D / scalar tensors of small integers, so the
-graph is exact in float32 and cheap in memory.
+graph is exact in float16 (every value < 2048) and float32.
 """
 
 import numpy as np
@@ -33,11 +40,6 @@ BIG = 1000.0
 def build(task):
     inits = []
     nodes = []
-
-    # All mask math runs in float16 (every value is a small integer < 2048,
-    # so fp16 is exact) -> the many [1,10,30,1] mask tensors cost 600B each
-    # instead of 1200B.  Only the final basis vectors are cast back to fp32
-    # for the MatMuls into `output` (which must be fp32).
     F16 = np.float16
 
     def init(name, arr, dtype=F16):
@@ -54,40 +56,36 @@ def build(task):
     init("ci", np.arange(30).reshape(1, 1, 1, 30))   # cols
     init("one", np.array(1.0))
     init("big", np.array(BIG))
+    init("zero", np.array(0.0))
+    init("zero32", np.array(0.0, np.float32), np.float32)
+    init("half16", np.array(0.5), np.float16)
+    init("shape1", np.array([1], np.int64), np.int64)
+    cidx = np.arange(10).reshape(1, 10, 1, 1)
+    init("cidx", cidx)                                # fp16 [1,10,1,1]
     m0 = np.ones((1, 10, 1, 1)); m0[0, 0] = 0.0
     init("m0", m0)
 
-    # --- per-channel projections (reduce fp32 `input`, then cast the small
-    #     outputs to fp16 -- never materialise a fp16 copy of the canvas) ---
-    # Per-row / per-col pixel counts double as occupancy: R = (rowSum>0),
-    # C = (colSum>0).  Deriving occupancy from the count reduces drops two whole
-    # fp32 [1,10,...] ReduceMax tensors (2400B) vs computing them separately.
-    init("zero", np.array(0.0))                     # fp16 (matches fp16 cmps)
-    init("zero32", np.array(0.0, np.float32), np.float32)
+    # --- per-channel projections (reduce fp32 input) ------------------
     n("ReduceSum", ["input"], "rowSumChf", axes=[3], keepdims=1)  # [1,10,30,1] f32
-    n("Cast", ["rowSumChf"], "rowSumCh", to=onnx.TensorProto.FLOAT16)
-    n("ReduceSum", ["input"], "colSumChf", axes=[2], keepdims=1)  # [1,10,1,30]
-    n("Cast", ["colSumChf"], "colSumCh", to=onnx.TensorProto.FLOAT16)
+    n("ReduceSum", ["input"], "colSumChf", axes=[2], keepdims=1)  # [1,10,1,30] f32
+    # per-channel occupancy (bool->fp16) [1,10,30,1] / [1,10,1,30]
     n("Greater", ["rowSumChf", "zero32"], "R_b")
-    n("Cast", ["R_b"], "R", to=onnx.TensorProto.FLOAT16)         # [1,10,30,1] 0/1
+    n("Cast", ["R_b"], "R", to=onnx.TensorProto.FLOAT16)          # [1,10,30,1]
     n("Greater", ["colSumChf", "zero32"], "C_b")
-    n("Cast", ["C_b"], "C", to=onnx.TensorProto.FLOAT16)         # [1,10,1,30] 0/1
-    n("ReduceSum", ["input"], "cntf", axes=[2, 3], keepdims=1)  # [1,10,1,1]
+    n("Cast", ["C_b"], "C", to=onnx.TensorProto.FLOAT16)          # [1,10,1,30]
+    n("ReduceSum", ["input"], "cntf", axes=[2, 3], keepdims=1)    # [1,10,1,1]
     n("Cast", ["cntf"], "cnt", to=onnx.TensorProto.FLOAT16)
 
     # --- per-channel bbox area to find the solid (frog) channel -------
-    # both boxes are contiguous, so #occupied-rows == row-extent; bbox area
-    # = (sum of R) * (sum of C) -- no per-channel min/max needed.
     n("ReduceSum", ["R"], "rspan", axes=[2], keepdims=1)          # [1,10,1,1]
     n("ReduceSum", ["C"], "cspan", axes=[3], keepdims=1)          # [1,10,1,1]
     n("Mul", ["rspan", "cspan"], "bbox")                          # [1,10,1,1]
 
-    # isFrog = (cnt == bbox) & (cnt>0); isFly = (cnt>0) & !isFrog
+    # isFrog = (cnt == bbox) & (cnt>0) & (chan!=0); isFly = (cnt>0) & !isFrog
     n("Cast", ["cnt"], "cnt_i", to=onnx.TensorProto.INT32)
     n("Cast", ["bbox"], "bbox_i", to=onnx.TensorProto.INT32)
     n("Equal", ["cnt_i", "bbox_i"], "eqsolid")                    # bool
-    n("Cast", ["eqsolid"], "solid", to=onnx.TensorProto.FLOAT16)    # [1,10,1,1]
-    # pos = cnt>0
+    n("Cast", ["eqsolid"], "solid", to=onnx.TensorProto.FLOAT16)
     n("Greater", ["cnt", "zero"], "pos_b")
     n("Cast", ["pos_b"], "pos", to=onnx.TensorProto.FLOAT16)
     n("Mul", ["solid", "pos"], "frog_raw")
@@ -95,32 +93,38 @@ def build(task):
     n("Sub", ["pos", "isFrog"], "fly_raw")
     n("Mul", ["fly_raw", "m0"], "isFly")
 
-    # --- global frog / fly axis projections ---------------------------
-    n("Mul", ["R", "isFrog"], "RFrog")
-    n("ReduceSum", ["RFrog"], "frogR", axes=[1], keepdims=1)      # [1,1,30,1]
-    n("Mul", ["R", "isFly"], "RFly")
-    n("ReduceSum", ["RFly"], "flyR", axes=[1], keepdims=1)
-    n("Mul", ["C", "isFrog"], "CFrog")
-    n("ReduceSum", ["CFrog"], "frogC", axes=[1], keepdims=1)      # [1,1,1,30]
-    n("Mul", ["C", "isFly"], "CFly")
-    n("ReduceSum", ["CFly"], "flyC", axes=[1], keepdims=1)
+    # --- channel indices (== colour) as runtime int32 [1] scalars -----
+    def chan_index(sel, base):
+        n("Mul", [sel, "cidx"], base + "_p")
+        n("ReduceSum", [base + "_p"], base + "_s", axes=[1], keepdims=0)  # [] scalar
+        n("Reshape", [base + "_s", "shape1"], base + "_r")               # [1]
+        n("Cast", [base + "_r"], base + "_idx", to=onnx.TensorProto.INT32)
+        return base + "_idx"
 
-    # overlaps -> moved-axis selectors (scalars)
+    frogIdx = chan_index("isFrog", "frog")
+    flyIdx = chan_index("isFly", "fly")
+
+    # Gather the frog/fly channel directly out of the per-channel planes:
+    n("Gather", ["R", frogIdx], "frogR", axis=1)                  # [1,1,30,1]
+    n("Gather", ["R", flyIdx], "flyR", axis=1)
+    n("Gather", ["C", frogIdx], "frogC", axis=1)                  # [1,1,1,30]
+    n("Gather", ["C", flyIdx], "flyC", axis=1)
+    # fly per-row / per-col pixel counts (for thickness) -> fp16 [1,1,..]
+    n("Gather", ["rowSumChf", flyIdx], "flyRowSumf", axis=1)      # f32 [1,1,30,1]
+    n("Cast", ["flyRowSumf"], "flyRowSum", to=onnx.TensorProto.FLOAT16)
+    n("Gather", ["colSumChf", flyIdx], "flyColSumf", axis=1)      # f32 [1,1,1,30]
+    n("Cast", ["flyColSumf"], "flyColSum", to=onnx.TensorProto.FLOAT16)
+
+    # --- moved-axis selectors: axis where frog/fly projections disjoint
     n("Mul", ["frogR", "flyR"], "ovR")
     n("ReduceSum", ["ovR"], "ovRs", axes=[2, 3], keepdims=1)      # [1,1,1,1]
-    n("Mul", ["frogC", "flyC"], "ovC")
-    n("ReduceSum", ["ovC"], "ovCs", axes=[2, 3], keepdims=1)
-    # moved_rows = 1 - (ovRs>0); but rows-disjoint => moved.  moved_rows = (ovRs==0)
     n("Greater", ["ovRs", "zero"], "ovR_b")
     n("Cast", ["ovR_b"], "ovR_f", to=onnx.TensorProto.FLOAT16)
-    n("Sub", ["one", "ovR_f"], "moved_rows")                     # scalar [1,1,1,1]
-    n("Greater", ["ovCs", "zero"], "ovC_b")
-    n("Cast", ["ovC_b"], "ovC_f", to=onnx.TensorProto.FLOAT16)
-    n("Sub", ["one", "ovC_f"], "moved_cols")
+    n("Sub", ["one", "ovR_f"], "moved_rows")                     # scalar
 
     # --- frog edges (global) ------------------------------------------
     n("Mul", ["frogR", "ri"], "fRri")
-    n("ReduceMax", ["fRri"], "fr_rmax", axes=[2, 3], keepdims=1)  # [1,1,1,1]
+    n("ReduceMax", ["fRri"], "fr_rmax", axes=[2, 3], keepdims=1)
     n("Sub", ["one", "frogR"], "frogRinv")
     n("Mul", ["frogRinv", "big"], "frogRbig")
     n("Add", ["fRri", "frogRbig"], "fRrib")
@@ -132,7 +136,7 @@ def build(task):
     n("Add", ["fCci", "frogCbig"], "fCcib")
     n("ReduceMin", ["fCcib"], "fr_cmin", axes=[2, 3], keepdims=1)
 
-    # fly near edges
+    # fly near edge (min row / col)
     n("Mul", ["flyR", "ri"], "flRri")
     n("Sub", ["one", "flyR"], "flyRinv")
     n("Mul", ["flyRinv", "big"], "flyRbig")
@@ -145,13 +149,6 @@ def build(task):
     n("ReduceMin", ["flCcib"], "fl_cmin", axes=[2, 3], keepdims=1)
 
     # --- T = box thickness on the moved axis --------------------------
-    # per-channel column/row sums (colSumCh/rowSumCh) were already computed up
-    # front (they double as the R/C occupancy source).
-    n("Mul", ["colSumCh", "isFly"], "colSumFly")
-    n("ReduceSum", ["colSumFly"], "flyColSum", axes=[1], keepdims=1)  # [1,1,1,30]
-    n("Mul", ["rowSumCh", "isFly"], "rowSumFly")
-    n("ReduceSum", ["rowSumFly"], "flyRowSum", axes=[1], keepdims=1)  # [1,1,30,1]
-    # min positive (replace zeros with BIG via Where)
     n("Greater", ["flyColSum", "zero"], "fcs_pos")
     n("Where", ["fcs_pos", "flyColSum", "big"], "fcs_w")
     n("ReduceMin", ["fcs_w"], "Tr", axes=[2, 3], keepdims=1)   # thickness rows
@@ -160,17 +157,12 @@ def build(task):
     n("ReduceMin", ["frs_w"], "Tc", axes=[2, 3], keepdims=1)   # thickness cols
 
     # --- moved-axis run masks -----------------------------------------
-    # rows: below = fl_rmin > fr_rmax ; run = below?[fr_rmax+1, fr_rmax+Tr]
-    #                                            : [fr_rmin-Tr, fr_rmin-1]
     n("Greater", ["fl_rmin", "fr_rmax"], "below_b")
-    n("Cast", ["below_b"], "below", to=onnx.TensorProto.FLOAT16)   # scalar
-    # below run bounds
-    n("Add", ["fr_rmax", "one"], "lo_below_r")           # fr_rmax+1
-    n("Add", ["fr_rmax", "Tr"], "hi_below_r")            # fr_rmax+Tr
-    # above run bounds
-    n("Sub", ["fr_rmin", "Tr"], "lo_above_r")            # fr_rmin-Tr
-    n("Sub", ["fr_rmin", "one"], "hi_above_r")           # fr_rmin-1
-    # select lo/hi by 'below'
+    n("Cast", ["below_b"], "below", to=onnx.TensorProto.FLOAT16)
+    n("Add", ["fr_rmax", "one"], "lo_below_r")
+    n("Add", ["fr_rmax", "Tr"], "hi_below_r")
+    n("Sub", ["fr_rmin", "Tr"], "lo_above_r")
+    n("Sub", ["fr_rmin", "one"], "hi_above_r")
     n("Sub", ["one", "below"], "above")
     n("Mul", ["below", "lo_below_r"], "_lb")
     n("Mul", ["above", "lo_above_r"], "_la")
@@ -178,16 +170,14 @@ def build(task):
     n("Mul", ["below", "hi_below_r"], "_hb")
     n("Mul", ["above", "hi_above_r"], "_ha")
     n("Add", ["_hb", "_ha"], "hi_r")
-    # runRow[r] = (ri>=lo_r) & (ri<=hi_r)   over [1,1,30,1]
-    # opset10 has no GreaterOrEqual; use Greater with -1 offsets
     n("Sub", ["lo_r", "one"], "lo_r_m")
     n("Add", ["hi_r", "one"], "hi_r_p")
-    n("Greater", ["ri", "lo_r_m"], "geR")                # ri > lo-1  == ri>=lo
-    n("Greater", ["hi_r_p", "ri"], "leR")                # hi+1 > ri  == ri<=hi
+    n("Greater", ["ri", "lo_r_m"], "geR")
+    n("Greater", ["hi_r_p", "ri"], "leR")
     n("And", ["geR", "leR"], "runRow_b")
     n("Cast", ["runRow_b"], "runRow", to=onnx.TensorProto.FLOAT16)  # [1,1,30,1]
 
-    # cols
+    # cols (moved_cols == 1 - moved_rows, but recompute below_c independently)
     n("Greater", ["fl_cmin", "fr_cmax"], "belowc_b")
     n("Cast", ["belowc_b"], "belowc", to=onnx.TensorProto.FLOAT16)
     n("Add", ["fr_cmax", "one"], "lo_below_c")
@@ -208,30 +198,25 @@ def build(task):
     n("And", ["geC", "leC"], "runCol_b")
     n("Cast", ["runCol_b"], "runCol", to=onnx.TensorProto.FLOAT16)  # [1,1,1,30]
 
-    # --- global fly output row / col masks (single vectors) -----------
+    # --- output fly row / col masks -----------------------------------
     # flyOutRow = moved_rows ? runRow : flyR   (perpendicular axis kept)
     n("Mul", ["moved_rows", "runRow"], "mr_run")
     n("Sub", ["one", "moved_rows"], "keep_rows")
     n("Mul", ["keep_rows", "flyR"], "kr_R")
     n("Add", ["mr_run", "kr_R"], "flyOutRow")            # [1,1,30,1]
+    # moved_cols = 1 - moved_rows  (exactly one axis moves)
+    n("Sub", ["one", "moved_rows"], "moved_cols")
     n("Mul", ["moved_cols", "runCol"], "mc_run")
     n("Sub", ["one", "moved_cols"], "keep_cols")
     n("Mul", ["keep_cols", "flyC"], "kc_C")
     n("Add", ["mc_run", "kc_C"], "flyOutCol")            # [1,1,1,30]
 
-    # --- label-map + final Equal (floor-break) ------------------------
-    # The output is three separable rectangles: the frog box (frogColour), the
-    # moved fly box (flyColour) and the grid (background 0, sentinel 10 outside
-    # the actual grid).  Build a single uint8 label map L and finish with
-    # Equal(L, ramp) straight into the free BOOL output -- no [1,10,3,30] /
-    # [1,10,30,30] float canvas.
-    init("half16", np.array(0.5), np.float16)
-    n("ReduceMax", ["input"], "gridRowf", axes=[1, 3], keepdims=1)  # [1,1,30,1]
+    # --- label map + final Equal (floor-break) ------------------------
+    n("ReduceMax", ["input"], "gridRowf", axes=[1, 3], keepdims=1)  # [1,1,30,1] f32
     n("Cast", ["gridRowf"], "gridRow", to=onnx.TensorProto.FLOAT16)
     n("ReduceMax", ["input"], "gridColf", axes=[1, 2], keepdims=1)  # [1,1,1,30]
     n("Cast", ["gridColf"], "gridCol", to=onnx.TensorProto.FLOAT16)
 
-    # box masks = outer product (AND) of 1-D row/col occupancy vectors
     n("Greater", ["frogR", "half16"], "frB")            # [1,1,30,1] bool
     n("Greater", ["frogC", "half16"], "fcB")            # [1,1,1,30] bool
     n("And", ["frB", "fcB"], "frogBox")                 # [1,1,30,30] bool
@@ -242,17 +227,10 @@ def build(task):
     n("Greater", ["gridCol", "half16"], "gcB")
     n("And", ["grB", "gcB"], "gridBox")                 # [1,1,30,30] bool
 
-    # frog / fly colour ids (uint8 scalars): sum_c c * is{Frog,Fly}[c]
-    cidx = np.arange(10).reshape(1, 10, 1, 1)
-    init("cidx", cidx)                                  # fp16 [1,10,1,1]
-    n("Mul", ["isFrog", "cidx"], "frogCparts")
-    n("ReduceSum", ["frogCparts"], "frogCol1", axes=[1], keepdims=1)  # [1,1,1,1]
-    n("Cast", ["frogCol1"], "frogColU", to=onnx.TensorProto.UINT8)
-    n("Mul", ["isFly", "cidx"], "flyCparts")
-    n("ReduceSum", ["flyCparts"], "flyCol1", axes=[1], keepdims=1)
-    n("Cast", ["flyCol1"], "flyColU", to=onnx.TensorProto.UINT8)
+    # frog / fly colour ids (uint8 scalars): channel index == colour
+    n("Cast", ["frog_r"], "frogColU", to=onnx.TensorProto.UINT8)  # [1]
+    n("Cast", ["fly_r"], "flyColU", to=onnx.TensorProto.UINT8)
 
-    # uint8 label map L: 10 outside grid, 0 in-grid bg, fly colour, frog colour
     init("u0", np.array(0, np.uint8), np.uint8)
     init("u10", np.array(10, np.uint8), np.uint8)
     n("Where", ["gridBox", "u0", "u10"], "Lg")          # 0 in-grid else 10

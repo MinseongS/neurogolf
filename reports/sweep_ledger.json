@@ -349,8 +349,8 @@
     "method": "custom:task029",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "skip-marginal",
+    "verdict": "+0.12 < +0.3 bar; prior generalizes (fresh 500/500)"
   },
   {
     "task": 30,
@@ -2669,8 +2669,8 @@
     "method": "custom:task220",
     "class": "BAIL?",
     "sig": "overlaps",
-    "status": "gap-closer-wip",
-    "verdict": "fresh=0.00 base net (real~0 on LB despite stored 18.2); attacking with generalizing solver"
+    "status": "pending",
+    "verdict": "generalizes at stored 18.2 (isolated fresh 120/120); scan false-positive from single-process generator pollution. NOT a gap-closer."
   },
   {
     "task": 221,
@@ -2789,8 +2789,8 @@
     "method": null,
     "class": "BAIL?",
     "sig": "overlaps",
-    "status": "gap-closer-wip",
-    "verdict": "fresh=0.00 base net (real~0 on LB despite stored 18.2); attacking with generalizing solver"
+    "status": "pending",
+    "verdict": "generalizes at stored 18.2 (isolated fresh 120/120); scan false-positive from single-process generator pollution. NOT a gap-closer."
   },
   {
     "task": 231,
@@ -2833,14 +2833,14 @@
   {
     "task": 234,
     "arc_id": "98cf29f8",
-    "points": 15.21,
+    "points": 15.51,
     "memory": 17698,
     "params": 97,
-    "method": "custom:task234",
+    "method": "custom:234",
     "class": "FEASIBLE?",
     "sig": "transpose",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing win (fresh 200/200)"
   },
   {
     "task": 235,
@@ -3418,8 +3418,8 @@
     "method": "ext:octavi6154",
     "class": "BAIL?",
     "sig": "overlaps",
-    "status": "gap-closer-wip",
-    "verdict": "fresh=0.00 base net (real~0 on LB despite stored 18.2); attacking with generalizing solver"
+    "status": "pending",
+    "verdict": "generalizes at stored 18.2 (isolated fresh 120/120); scan false-positive from single-process generator pollution. NOT a gap-closer."
   },
   {
     "task": 283,
@@ -3838,8 +3838,8 @@
     "method": "gen:thbdh6332",
     "class": "BAIL?",
     "sig": "random_pixels",
-    "status": "gap-closer-wip",
-    "verdict": "fresh=0.00 base net (real~0 on LB despite stored 18.2); attacking with generalizing solver"
+    "status": "pending",
+    "verdict": "generalizes at stored 18.2 (isolated fresh 120/120); scan false-positive from single-process generator pollution. NOT a gap-closer."
   },
   {
     "task": 318,
