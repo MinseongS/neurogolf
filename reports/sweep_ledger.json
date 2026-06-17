@@ -3160,14 +3160,15 @@
  {
   "task": 259,
   "arc_id": "a740d043",
-  "points": 16.17,
-  "memory": 6793,
-  "params": 50,
+  "points": 16.8,
+  "memory": 3572,
+  "params": 66,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.63 (slice 10-ch input to active NxN BEFORE colour-index Conv; bbox=span not count for hollow sprites)"
  },
  {
   "task": 260,
