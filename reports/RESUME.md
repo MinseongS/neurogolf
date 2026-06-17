@@ -64,14 +64,29 @@ kaggle CLI: /opt/homebrew/Caskroom/miniconda/base/bin/kaggle.
    mislabeled "confirmed-infeasible" by judging +0.3 against the INFLATED stored — IGNORE that label and
    build a generalizing exact encoding. This alone is worth ~+25 LB from 219+255.~~ (NOTE: closeability disproven — all 3 walls)
 
-## ▶▶ RESUME HERE (handoff 2026-06-17 ~14:40, session closed cleanly)
-Confirmed LB **6486.73** at last confirmed submit (#13); **#14 is PENDING at handoff — proj 6492.58**.
-Session start was 6468.09, so **+24.49 this session** (6468.09→6492.58 proj). Stored 6553.85, gap pinned 61.27.
-14 submissions total, projections proj-exact (±0.01) through #13. **30 wins adopted** this session.
-Repo pushes to github.com/MinseongS/neurogolf each commit.
+## ▶▶ RESUME HERE (handoff 2026-06-18 ~04:40 — STOPPED on ENV DEGRADATION, not done)
+Confirmed LB **6559.24** at last confirmed submit (#19, proj-exact 17th). Session 6492.58→6559.24 = **+66.66**.
+Stored 6588.93, **gap 28.96 == EXACTLY the two walls 219(15.00)+255(13.95)** — gap is now fully structural.
+19 submissions, all projections exact. **48 pending-pool wins + 2 GAP-CLOSERS (274,332)** adopted this session.
++0.73 unsubmitted (task176 salvage) — not worth a lone submit; rolls into next batch.
 
-STEP 0 ADDENDUM: poll `kaggle competitions submissions -c neurogolf-2026` to CONFIRM #14 (proj 6492.58);
-update reports/lb_anchor.json `pending`→confirmed + reports/submission_log.md row 14 with the real score.
+⛔ WHY STOPPED: 5 consecutive build agents stalled at the 600s watchdog (78,176,292,109 + probe 78).
+Env degraded (likely transient/machine-load). NOT out of work — pending pool still has headroom (floor ~16.3,
+wins ~+0.4 steady). RESUME = just re-run the loop; if agents stall again immediately, wait longer / fewer agents.
+
+🔑 BIGGEST FINDING THIS SESSION (see project memory neurogolf-gap-closers — UPDATED): the "gap is structural
+dead end" conclusion was WRONG. Non-gen base nets that score ~0 on real LB but are EXACTLY solvable are
+gap-closers worth ~+16 each. Found 2 (274 conv1x59, 332 conv1x59), both proj-exact +16. DISCRIMINATOR:
+non-gen base method (conv1x59/our-own) → solvable gap-closer; "gen:" IMPORT → almost always a WALL
+(23/2/209/157 all confirmed walls). Reservoir now EXHAUSTED (gap==219+255 only). adopt.py reveals hidden
+gap-closers incidentally: when `src.adopt N` prints "current: generalizes=False, real=0.00", that base was
+a gap-closer — SUBMIT immediately to lock its full ~stored as real LB.
+
+NEXT TARGETS: lowest-points pending in sweep_ledger (78,176-done,292,109 stalled-retry; then 217,312,197,
+60,256,269...). Skip walls 219/255/209/118/2/90/157/366/251/18/101. Tell agents to CHECKPOINT build file
+early + write scratch to /tmp (they clobber each other's root build.py and lose work on watchdog kill).
+
+[prior handoff 2026-06-17: LB 6486.73→6492.58, 30 wins — superseded.]
 
 THE PLAYBOOK FOR NEXT SESSION (do exactly this):
 1. Run the canonical loop, 5-6 concurrent agents. PRIMARY reservoir = UNTRIAGED PENDING POOL: probe
