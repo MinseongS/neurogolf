@@ -106,3 +106,12 @@ dropping (~50% wins vs 85% early), more skip-marginal/at-floor. gap-closer hunt 
 11 wins: 371(+1.18),159(+0.54),125(+0.367),374(+0.76),68(+0.73),281(+0.47),260(+0.89),345(+0.32),
 97(+0.87),124(+0.33),329(+2.04). Stored 6553.85->6562.31 (+8.46). Hit rate this wave ~92% (11 wins +
 1 marginal/355). Floor ~15.6+; wins still landing well (329 was a +2.04 outlier). gap pinned 61.27.
+
+## ⭐⭐ Submission 16 (RESUME-session cont.): proj LB 6508.53, PENDING — TESTS GAP-CLOSER HYPOTHESIS.
+8 wins since #15 anchor: 391(stored+1.21 GAP-CLOSER),175(+0.94),301(+1.06),24(+0.82),303(+0.39),
+49(+0.54),212(+0.35) [wait: 391 was prior submit]. THIS batch: 175,301,24,303,49,212 (1:1 generalizing)
++ task274 GAP-CLOSER. task274 base net had fresh-rate 0 / real 0.00 (inflated stored 16.00) -> custom
+17.21 generalizing. lb_status anchor-arithmetic projects 6508.53 (treats 274 as +1.21 stored), but REAL
+LB gain from 274 is ~+17.21 if the local fresh-check reflects the hidden test. If actual LB ~6524 (+16
+over proj), the "gap is fully structural" conclusion is WRONG — there are recoverable non-generalizing
+base nets beyond the curated 219/255/209 walls, a reopened reservoir worth hunting (isolated-process scan).

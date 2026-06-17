@@ -1,7 +1,7 @@
 {
- "comment": "Last submission anchor. #15 CONFIRMED 6501.03 (proj 6501.04, 0.01 error; 15/15 near-exact). Re-anchor on next submit.",
- "stored_at_submit": 6562.31,
- "lb": 6501.03,
- "time_utc": "2026-06-18 00:55",
- "pending": false
+ "comment": "#16 PENDING. proj 6508.53 (anchor arithmetic). BUT task274 was a GAP-CLOSER (base net fresh-0/real-0, custom 17.21) - if local fresh-check reflects real LB, actual could be ~6524 (+16 over proj). The poll result TESTS whether non-generalizing base nets beyond the dead-list are a reopened reservoir.",
+ "stored_at_submit": 6569.81,
+ "lb": 6508.53,
+ "time_utc": "2026-06-18 01:45",
+ "pending": true
 }
