@@ -2341,10 +2341,10 @@
    "method": "custom:task390"
   },
   "391": {
-   "points": 15.787561829941671,
-   "memory": 9992,
-   "params": 29,
-   "method": "ext:kojimar6275"
+   "points": 17.980703346284955,
+   "memory": 1040,
+   "params": 78,
+   "method": "custom:task391"
   },
   "392": {
    "points": 15.968905918300845,

@@ -4746,14 +4746,15 @@
  {
   "task": 391,
   "arc_id": "f8b3ba0a",
-  "points": 15.79,
-  "memory": 9992,
-  "params": 29,
+  "points": 17.98,
+  "memory": 1040,
+  "params": 78,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +2.19 (rank via ReduceSum(Greater) [K,K]; MUST mask ch0 background first)"
  },
  {
   "task": 392,

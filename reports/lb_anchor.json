@@ -1,7 +1,7 @@
 {
- "comment": "Last submission anchor. #15 PENDING (proj 6501.04, +8.46 stored over prior anchor). Poll kaggle to confirm.",
+ "comment": "Last submission anchor. #15 CONFIRMED 6501.03 (proj 6501.04, 0.01 error; 15/15 near-exact). Re-anchor on next submit.",
  "stored_at_submit": 6562.31,
- "lb": 6501.04,
+ "lb": 6501.03,
  "time_utc": "2026-06-18 00:55",
- "pending": true
+ "pending": false
 }
