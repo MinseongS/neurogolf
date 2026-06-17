@@ -2572,14 +2572,15 @@
  {
   "task": 212,
   "arc_id": "8d510a79",
-  "points": 15.97,
-  "memory": 8192,
-  "params": 138,
+  "points": 16.32,
+  "memory": 5260,
+  "params": 647,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.35 (at-most-one-source: triangular MatMul prefix-OR is already {0,1}, skip Greater/Cast)"
  },
  {
   "task": 213,
