@@ -479,14 +479,15 @@
  {
   "task": 40,
   "arc_id": "2204b7a8",
-  "points": 16.03,
-  "memory": 7806,
-  "params": 62,
+  "points": 16.34,
+  "memory": 5715,
+  "params": 64,
   "method": "ext:kojimar6275",
   "class": "FEASIBLE?",
   "sig": "transpose",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.308 marginal (Equal(V,k) on existing colour-index plane; transpose flag gated on BOTH border lines full)"
  },
  {
   "task": 41,
