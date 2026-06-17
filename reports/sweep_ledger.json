@@ -1027,8 +1027,8 @@
     "method": "custom:task085",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "skip-marginal",
+    "verdict": "+0.065 < bar; fp32 occupancy entry plane (3600B) is binding floor. (small real cut found: mod-K prefix subsumes occupancy gate)"
   },
   {
     "task": 86,
