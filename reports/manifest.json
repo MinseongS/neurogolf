@@ -253,10 +253,10 @@
    "method": "ext:biohack_new"
   },
   "43": {
-   "points": 16.158118010502886,
-   "memory": 6780,
-   "params": 138,
-   "method": "ext:kojimar6275"
+   "points": 17.3342465681383,
+   "memory": 2100,
+   "params": 34,
+   "method": "custom:task043"
   },
   "44": {
    "points": 14.438681612031495,

@@ -521,14 +521,15 @@
  {
   "task": 43,
   "arc_id": "2281f1f4",
-  "points": 16.16,
-  "memory": 6780,
-  "params": 138,
+  "points": 17.33,
+  "memory": 2100,
+  "params": 34,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +1.17 (crosshair: marker lines ARE row/col masks, AND-broadcast, fill into free Where)"
  },
  {
   "task": 44,
