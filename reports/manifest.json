@@ -1783,10 +1783,10 @@
    "method": "custom:task297"
   },
   "298": {
-   "points": 15.390078463074628,
-   "memory": 14378,
-   "params": 534,
-   "method": "ext:biohack_new"
+   "points": 16.22460504145449,
+   "memory": 6406,
+   "params": 67,
+   "method": "custom:task298"
   },
   "299": {
    "points": 17.558093271948376,

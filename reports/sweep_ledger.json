@@ -3604,14 +3604,14 @@
   {
     "task": 298,
     "arc_id": "bda2d7a6",
-    "points": 15.39,
+    "points": 16.22,
     "memory": 14378,
     "params": 534,
-    "method": "ext:biohack_new",
+    "method": "custom:298 cyclic recolor (disjoint Equal masks + free Pad output, tier-S)",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 500/500)"
   },
   {
     "task": 299,
