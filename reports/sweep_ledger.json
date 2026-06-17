@@ -76,14 +76,15 @@
  {
   "task": 7,
   "arc_id": "05269061",
-  "points": 16.11,
-  "memory": 7240,
-  "params": 31,
+  "points": 16.43,
+  "memory": 5079,
+  "params": 173,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.32 (anti-diagonal fill out[r,c]=color[(r+c)%3] via (r%k+c%k)%k separability + Gather)"
  },
  {
   "task": 8,

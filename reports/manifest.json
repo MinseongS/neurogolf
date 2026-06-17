@@ -37,10 +37,10 @@
    "method": "ext:wguesdon6304"
   },
   "7": {
-   "points": 16.108350887349943,
-   "memory": 7240,
-   "params": 31,
-   "method": "ext:kojimar6275"
+   "points": 16.43363576457731,
+   "memory": 5079,
+   "params": 173,
+   "method": "custom:task007"
   },
   "8": {
    "points": 15.122086698583303,
