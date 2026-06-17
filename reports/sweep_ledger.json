@@ -2429,14 +2429,15 @@
  {
   "task": 199,
   "arc_id": "834ec97d",
-  "points": 16.3,
-  "memory": 5848,
-  "params": 172,
+  "points": 16.7,
+  "memory": 3298,
+  "params": 743,
   "method": "custom:task199",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.40 (single-pixel row/col/presence as scalars via ONE Conv W[2,10,30,1] packing presence+row-ramp)"
  },
  {
   "task": 200,
