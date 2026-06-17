@@ -37,6 +37,20 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   task119 ray=closed-form-diagonals, task341 orientation-equivariance) + 1-2 src/custom/task*.py for idiom.
 
 ## PROVEN LEVERS (reuse — most wins came from spotting one of these)
+- ⭐ WHERE-CHAIN PRIORITY: in a stacked `Where(maskN, colorN, ...)` priority chain you can DROP all ¬-masking
+  of lower-priority masks — the higher-priority Where overwrites any over-marked cells, so compute each mask
+  WITHOUT subtracting the masks above it (frees the AND/NOT ops, ~1.5kB) (task125).
+- ⭐ RUNTIME-FACTOR MAGNIFY (data-dependent Kronecker upscale): to upscale a recovered K×K pattern S by a
+  RUNTIME factor m, use two small gathers `out[i,j]=S[gidx[i],gidx[j]]` (Gather axis0 then axis1,
+  gidx[i]=clip(floor((i-1)/m),0,k-1)) — avoids both the int64 flat-index plane and the fp32 index-arithmetic
+  plane (generalises const-index Kronecker task195); recover m as a scalar from a perimeter/ring count (task159).
+- ⭐ FIXED-SHAPE STAMP AT MARKER MIDPOINT (orientation-free, closed-form, NOT a detection wall): centre =
+  channel centroid (Σcoord·profile/count) and a local shape (e.g. PLUS = radius-1 L1 ball `(|r−mr|+|c−mc|)<1.5`)
+  builds as ONE fp16 outer-sum plane routed into the FREE Where output; existing dots survive since they sit at
+  L1≥3 (task371).
+- ⭐ PER-DIRECTION ENCLOSURE = NOT a flood-fill wall on 2-color input: an enclosed hole = bg cell with shape
+  pixels in all 4 directions `aL∧aR∧aU∧aD`, each a strict-triangular prefix/suffix-OR MatMul applied
+  PER-DIRECTION so it never merges separated boxes (task125).
 - GEOMETRY BOUNDS BEAT DTYPE TRICKS: read generator coord bounds, shrink working canvas to the true active
   region, crop OUT unused color channels, slice colour channel to exact extent (fp16 can ADD bytes vs a
   tight fp32 slice). If the generator grid is a fixed full size, the canvas is all in-grid → delete the bg
