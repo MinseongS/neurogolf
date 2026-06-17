@@ -4176,14 +4176,15 @@
  {
   "task": 345,
   "arc_id": "d9f24cd1",
-  "points": 15.63,
-  "memory": 9860,
-  "params": 1856,
+  "points": 15.95,
+  "memory": 7820,
+  "params": 740,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.32 marginal (bounded-deflection ray sim via Hillis-Steele doubling OR-scan)"
  },
  {
   "task": 346,
