@@ -1,7 +1,7 @@
 {
- "comment": "#16 PENDING. proj 6508.53 (anchor arithmetic). BUT task274 was a GAP-CLOSER (base net fresh-0/real-0, custom 17.21) - if local fresh-check reflects real LB, actual could be ~6524 (+16 over proj). The poll result TESTS whether non-generalizing base nets beyond the dead-list are a reopened reservoir.",
+ "comment": "#16 CONFIRMED 6524.54 (proj was 6508.53; +16.01 ABOVE proj). task274 GAP-CLOSER validated - base net was fresh-0/real-0, custom closed ~16 of gap. GAP DROPPED 61.28 -> 45.27. The gap is NOT fully structural: fresh-0 base nets beyond 219/255/209 are recoverable. Re-anchor on next submit.",
  "stored_at_submit": 6569.81,
- "lb": 6508.53,
+ "lb": 6524.54,
  "time_utc": "2026-06-18 01:45",
- "pending": true
+ "pending": false
 }

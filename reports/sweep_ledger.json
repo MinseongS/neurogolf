@@ -3083,14 +3083,15 @@
  {
   "task": 254,
   "arc_id": "a61f2674",
-  "points": 16.02,
-  "memory": 7798,
-  "params": 158,
+  "points": 17.52,
+  "memory": 1736,
+  "params": 37,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +1.50 (bottom-anchored bars: height=colcount, recolour gray plane gated by Equal(colcnt,max/min))"
  },
  {
   "task": 255,

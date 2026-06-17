@@ -107,7 +107,13 @@ dropping (~50% wins vs 85% early), more skip-marginal/at-floor. gap-closer hunt 
 97(+0.87),124(+0.33),329(+2.04). Stored 6553.85->6562.31 (+8.46). Hit rate this wave ~92% (11 wins +
 1 marginal/355). Floor ~15.6+; wins still landing well (329 was a +2.04 outlier). gap pinned 61.27.
 
-## ⭐⭐ Submission 16 (RESUME-session cont.): proj LB 6508.53, PENDING — TESTS GAP-CLOSER HYPOTHESIS.
+## ⭐⭐⭐ Submission 16: LB 6524.54 CONFIRMED — GAP-CLOSER HYPOTHESIS PROVEN (+16.01 over proj 6508.53!).
+GAP DROPPED 61.28 -> 45.27. task274 base net was genuinely fresh-0/real-0; the custom closed ~16 of gap.
+The 15-submission "gap is fully structural" conclusion is OVERTURNED: there are recoverable non-generalizing
+base nets BEYOND the 219/255/209 walls. Each fresh-0 recovery is worth its ~full stored as real LB (~16 here)
+vs ~+0.5 for a normal pending-pool win. ACTION: isolated-process scan for other fresh-0 base nets = reopened
+high-value reservoir. (DO NOT trust single-process scans - generator pollution false-alarms, see gap_closers.md.)
+[original pending note:]
 8 wins since #15 anchor: 391(stored+1.21 GAP-CLOSER),175(+0.94),301(+1.06),24(+0.82),303(+0.39),
 49(+0.54),212(+0.35) [wait: 391 was prior submit]. THIS batch: 175,301,24,303,49,212 (1:1 generalizing)
 + task274 GAP-CLOSER. task274 base net had fresh-rate 0 / real 0.00 (inflated stored 16.00) -> custom
