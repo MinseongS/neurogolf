@@ -1910,7 +1910,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: recolor: 6a1e5592 maps gray 'falling' shapes to blue at their landing position i"
+  "verdict": "INFEASIBLE: recolor: 6a1e5592 maps gray 'falling' shapes to blue at their landing position i",
+  "note": "GAP-CLOSER PROBE -> WALL: two-region arbitrary-shape correspondence/one-to-one assignment with independent placement columns (feedforward join wall, banned Loop/Scan/NonZero); base gen:wguesdon6315 39/40. gen-imports all walls (4/4)."
  },
  {
   "task": 158,
