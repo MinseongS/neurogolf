@@ -2323,10 +2323,10 @@
    "method": "ext:thbdh6285"
   },
   "388": {
-   "points": 16.225377779303003,
-   "memory": 6282,
-   "params": 186,
-   "method": "ext:kojimar6275"
+   "points": 16.74080063733372,
+   "memory": 3785,
+   "params": 78,
+   "method": "custom:task388"
   },
   "389": {
    "points": 17.451444020830127,

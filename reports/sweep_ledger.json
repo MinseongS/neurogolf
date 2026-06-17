@@ -4744,14 +4744,15 @@
  {
   "task": 388,
   "arc_id": "f5b8619d",
-  "points": 16.23,
-  "memory": 6282,
-  "params": 186,
+  "points": 16.74,
+  "memory": 3785,
+  "params": 78,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.51 (2x2 tile via R@src@C^T double-MatMul; colour scalar from cnt, no 3600B collapse)"
  },
  {
   "task": 389,
