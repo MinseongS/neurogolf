@@ -781,9 +781,9 @@
    "method": "ext:wguesdon6304"
   },
   "131": {
-   "points": 15.282360214034385,
-   "memory": 14668,
-   "params": 1940,
+   "points": 15.597635295768477,
+   "memory": 10791,
+   "params": 1326,
    "method": "custom:task131"
   },
   "132": {

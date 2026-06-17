@@ -1579,14 +1579,14 @@
   {
     "task": 131,
     "arc_id": "56dc2b01",
-    "points": 15.28,
+    "points": 15.6,
     "memory": 14668,
     "params": 1940,
-    "method": "custom:task131",
+    "method": "custom:131 xpose+flip canonical-frame assembly (18x18 green crop)",
     "class": "BAIL?",
     "sig": "continuous_creature",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 500/500)"
   },
   {
     "task": 132,
