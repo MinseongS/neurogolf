@@ -1119,14 +1119,14 @@
   {
     "task": 93,
     "arc_id": "4093f84a",
-    "points": 15.35,
+    "points": 15.67,
     "memory": 15400,
     "params": 58,
-    "method": "ext:kojimar6275",
+    "method": "custom:93 stack-toward-barrier (dist<=count broadcast, masked-sum MatMul)",
     "class": "BAIL?",
     "sig": "random_pixels",
-    "status": "retriage-feasible",
-    "verdict": "FEASIBLE None ~15.4pt: 4093f84a: drop each pixel onto a horizon (gray band) - mark landing ce"
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 500/500)"
   },
   {
     "task": 94,
