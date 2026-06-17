@@ -64,26 +64,40 @@ kaggle CLI: /opt/homebrew/Caskroom/miniconda/base/bin/kaggle.
    mislabeled "confirmed-infeasible" by judging +0.3 against the INFLATED stored — IGNORE that label and
    build a generalizing exact encoding. This alone is worth ~+25 LB from 219+255.~~ (NOTE: closeability disproven — all 3 walls)
 
-## ▶▶ RESUME HERE (handoff 2026-06-16 ~16:35, session closed cleanly)
-Confirmed LB **6468.09** (session start 6419.29, **+48.80**). Stored 6529.36, gap pinned 61.27, proj LB
-6468.09 (+0.00 unsubmitted — EVERYTHING submitted, #11 was the session-final lock). 11 submissions total, ALL
-proj-exact (±0.01). **33 wins adopted** this session. Repo pushes to github.com/MinseongS/neurogolf each commit.
+## ▶▶ RESUME HERE (handoff 2026-06-17 ~14:40, session closed cleanly)
+Confirmed LB **6486.73** at last confirmed submit (#13); **#14 is PENDING at handoff — proj 6492.58**.
+Session start was 6468.09, so **+24.49 this session** (6468.09→6492.58 proj). Stored 6553.85, gap pinned 61.27.
+14 submissions total, projections proj-exact (±0.01) through #13. **30 wins adopted** this session.
+Repo pushes to github.com/MinseongS/neurogolf each commit.
+
+STEP 0 ADDENDUM: poll `kaggle competitions submissions -c neurogolf-2026` to CONFIRM #14 (proj 6492.58);
+update reports/lb_anchor.json `pending`→confirmed + reports/submission_log.md row 14 with the real score.
 
 THE PLAYBOOK FOR NEXT SESSION (do exactly this):
-1. Run the canonical loop, 5-6 concurrent agents. PRIMARY reservoir = the UNTRIAGED PENDING POOL (reservoir
-   #1 above): probe lowest-points `pending`/`uncertain` tasks in sweep_ledger.json, EARLY FEASIBILITY CHECK
-   to bail fast. Hit rate has been ~85%. `PYTHONPATH=. .venv/bin/python -c "import json;led=json.load(open('reports/sweep_ledger.json'));
+1. Run the canonical loop, 5-6 concurrent agents. PRIMARY reservoir = UNTRIAGED PENDING POOL: probe
+   lowest-points `pending` tasks in sweep_ledger.json, EARLY FEASIBILITY CHECK to bail fast.
+   NOTE: hit rate has DROPPED this session (~50% vs ~85% early) — the easy sub-15 tasks are mined out, the
+   pool floor is now ~15.4+ pts and wins average ~+0.4. More skip-marginal/at-floor results; that's expected.
+   `PYTHONPATH=. .venv/bin/python -c "import json;led=json.load(open('reports/sweep_ledger.json'));
    c=sorted([(e['points'],e['task']) for e in (led.values() if isinstance(led,dict) else led) if isinstance(e,dict)
-   and e.get('status') not in ('done','confirmed-infeasible','skip-marginal') and e.get('points')];print(c[:20])"`
-   gives the next targets (skip gap-attribution tasks 219/255/209/118/2/90/157/366/251/18/101 — DEAD, see #2).
+   and e.get('status') not in ('done','confirmed-infeasible','skip-marginal','pending-retry') and e.get('points')];print(c[:20])"`
+   gives next targets (skip gap tasks 219/255/209/118/2/90/157/366/251/18/101 — DEAD). pending-retry: 8, 242-done.
 2. Adopt gate (`src.adopt N`) is generalization-aware and never lets score drop. Submit every ~5 wins / +8 stored.
-3. Floor knowledge is in BUILD_PROMPT (the 3600B fp32 plane is UNbreakable by dtype — break by structure;
-   reports/FLOOR_RESEARCH.md has the proof). ~20 new levers were graduated this session.
-4. IN-FLIGHT AT HANDOFF (results may have landed by next session — check `git log` + sweep_ledger): agents on
-   tasks **377, 324, 378, 165, 4, 80** were running. If their src/custom/taskNNN.py exist & aren't in the
-   ledger as done, gate them via `src.adopt N` (salvage path).
-5. Agents drop scratch in repo root despite /tmp instructions — `git` only adds explicit paths so it's safe;
-   .gitignore covers the patterns. Tell agents again to use /tmp.
+   IMPORTANT adopt-gate naming: candidates MUST be zero-padded `src/custom/taskNNN.py` (e.g. task055.py not task55.py)
+   AND `src.adopt` writes networks/taskNNN.onnx + manifest.json + truegen.json — COMMIT ALL of those, not just the .py.
+3. Floor knowledge in BUILD_PROMPT. Levers graduated this session: sentinel row/col Gather (off-grid auto-handled),
+   Pad-small-plane-as-output, MatMul rank-broadcast channel-contract, 2-weight signature boundaries, dual-mirror
+   D2-symmetry hole recovery, min-area-cover candidate match, data-dependent period via Gather(c%p)+ArgMin.
+4. IN-FLIGHT AT HANDOFF: agents on **237, 178** were marginal (logged skip-marginal). No salvage needed.
+5. Agents drop scratch in repo root despite /tmp instructions — `find . -maxdepth 1 -name '*.py' -delete` before each
+   commit; `git` only adds explicit paths so it's safe. Tell agents again to use /tmp + zero-padded filenames.
 
-Verdict on ceilings: gap-closing is a CONFIRMED dead end (61.28 gap is structural). The pending pool is the
-remaining runway; once it's mined out (lowest-points tasks all done/wall), the practical ceiling is reached.
+⚠️ GAP-CLOSER HUNT WAS A FALSE ALARM (2026-06-17): a single-process fresh_pass scan falsely flagged 220/230/282/317
+as non-generalizing. ROOT CAUSE: arc-gen generators share module-level state → single-process scans pollute.
+Cross-task fresh scans MUST use isolated processes (`python -m src.genverify`, Pool maxtasksperchild=1) or trust
+the per-task `src.adopt` gate. There are NO big buildable gap-closers — only walls 219/255 + 9 small overcounts.
+See reports/gap_closers.md + project memory neurogolf-gap-closers.
+
+Verdict on ceilings: gap-closing is a CONFIRMED dead end (61.27 gap is structural). The pending pool is the
+remaining runway and is now thinning (floor ~15.4+); once mined out, the practical ceiling is reached. 7500 is
+NOT reachable (avg 18.75/task vs current ~16.3 + structural gap + ~14 BAIL-class floor on unsolvable tasks).
