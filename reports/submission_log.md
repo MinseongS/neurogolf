@@ -94,3 +94,10 @@ untriaged pending pool (lowest-points first, EARLY FEASIBILITY CHECK) until it m
 
 ## ⭐ Submission 13: LB 6486.73 (proj 6486.73, 0.00 error). Trajectory: ...->6478.44->6486.73.
 13 exact projections running. Pending pool still productive but points creeping to ~15.1 (easy sub-15 consumed).
+
+| 14 | 06-17 14:37 | 6553.85 | session-final: 31,75,22,268,234,218,131,298,93,13 (+ earlier wave) | **PENDING** | — | proj 6492.58. SESSION-FINAL LOCK. Verify score next session (Step 0). gap 61.27. |
+
+## ⭐ Submission 14 (session-final, RESUME-session): proj LB 6492.58, PENDING at handoff.
+Session: 6486.73->6492.58 proj. Pending pool now at ~15.4+ pts (easy sub-15 mined out); hit rate
+dropping (~50% wins vs 85% early), more skip-marginal/at-floor. gap-closer hunt was a FALSE ALARM
+(single-process generator pollution; see reports/gap_closers.md) - gap is structural, no big closers.

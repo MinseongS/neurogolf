@@ -1,6 +1,7 @@
 {
- "comment": "Last CONFIRMED Kaggle submission anchor.",
- "stored_at_submit": 6548.0,
- "lb": 6486.73,
- "time_utc": "2026-06-16 16:14"
+ "comment": "Last submission anchor. #14 PENDING at handoff - verify score next session (proj 6492.58, projections exact 13x).",
+ "stored_at_submit": 6553.85,
+ "lb": 6492.58,
+ "time_utc": "2026-06-17 14:37",
+ "pending": true
 }
