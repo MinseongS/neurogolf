@@ -1217,14 +1217,15 @@
  {
   "task": 100,
   "arc_id": "445eab21",
-  "points": 16.21,
-  "memory": 6493,
-  "params": 43,
+  "points": 16.75,
+  "memory": 3738,
+  "params": 86,
   "method": "ext:kojimar6275",
   "class": "FEASIBLE?",
   "sig": "transpose",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.54 (edge-reaching bbox: H/W = pixel COUNT of occupancy profile, area=tall*wide, no ramp/argmin)"
  },
  {
   "task": 101,
