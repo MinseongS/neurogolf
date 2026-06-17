@@ -1,39 +1,31 @@
-"""Task 190 (7ddcd7ec): extend diagonal rays from a 2x2 box.
+"""task190 (ARC-AGI 7ddcd7ec) — extend each diagonal seed of a 2x2 box into a full 45 ray.
 
-Rule (ARC-GEN generator): the input has a solid 2x2 box of one colour plus, for
-each chosen diagonal direction, a single 'seed' cell placed diagonally adjacent
-to the matching box corner.  The output extends every seed into a full diagonal
-ray going outward (away from the box) to the grid edge; the box is preserved.
+Rule (generator task_7ddcd7ec.py, size=10 fixed grid):
+  A solid 2x2 box of one COLOUR k sits at (row,col).  Up to three of the four diagonal
+  corners get a SEED pixel (same colour) one cell out from the matching box corner:
+      d0 up-left   seed (row-1,col-1)   d1 up-right  seed (row-1,col+2)
+      d3 down-left seed (row+2,col-1)   d2 down-right seed (row+2,col+2)
+  The INPUT shows box + the (present) seeds (one cell each).  The OUTPUT extends each
+  present seed into a FULL 45 ray from that corner out to the grid edge; box preserved.
 
-Every grid is 10x10 and fully populated, so the grid-occupancy mask is the
-constant all-ones 10x10 and the coloured mask is just (1 - background channel).
-We work entirely on the top-left 10x10 region.
+  Closed-form (verified 0/5000 fresh):
+    - main diagonal value  Dmain = row-col   (carries d0 up-left ray and d2 down-right ray)
+    - anti  diagonal value  Aanti = row+col+1 (carries d1 up-right ray and d3 down-left ray)
+    - upper half = rows <= row-1 ;  lower half = rows >= row+2  (box rows row,row+1 split them)
+    - ray present iff occupancy exists on that diagonal in that half:
+        has_d2 = any(occ & ondiag & lower)   has_d0 = any(occ & ondiag & upper)
+        has_d3 = any(occ & onanti & lower)   has_d1 = any(occ & onanti & upper)
+    - fill = box | ondiag&((lower&has_d2)|(upper&has_d0)) | onanti&((lower&has_d3)|(upper&has_d1))
+  The box cells on each diagonal (row,col)&(row+1,col+1) sit in NEITHER half so they never
+  trigger a flag; a half-flag fires only when a seed extends occupancy past the box.
 
-Memory floor-break (label map + final Equal, fp16 direction channels):
-
-  Old: Conv(A, Wc, bias0) -> out10 [1,10,10,10] f32 (4000B) then Pad -> output.
-  New: Build A [1,1,10,10] bool (coloured mask for output), then:
-       ki (uint8 scalar) = colour index from input
-       L10 = Where(A, ki, 0) as uint8 [1,1,10,10] (100B)
-       L30 = Pad(L10, sentinel 0, to 30x30) -> [1,1,30,30] uint8 (900B)
-       output = Equal(L30, arange[1,10,1,1]) -> free BOOL output (opset 11)
-
-  Additional: use fp16 for cmshift and seedtype [1,4,10,10] (1600B -> 800B each).
-
-  Masks ([1,1,10,10]):
-    ch0  = Slice(input, channel 0, top-left 10x10)   (background)
-    cm   = 1 - ch0                                    (coloured)
-  Seed detection (isolated coloured cell, no orth coloured neighbour):
-    isoscore = Conv(cm_f16, isoW_f16) with orth kernel - 2*centre
-    seeds = isoscore < -1.5  -> bool [1,1,10,10]
-  Directional rays:
-    cmshift = Conv(cm_f16, shiftW)  [1,4,10,10] fp16 (shifted box mask per direction)
-    seedtype = cmshift * seeds_f16  [1,4,10,10] fp16 (seeds tagged with their direction)
-    raysum = Conv(seedtype, rayW)   [1,1,10,10] f32  (ray coverage for all directions)
-    A = (cm_f32 + raysum > 0.5) bool [1,1,10,10]
-
-  Label map: L10 = Where(A_bool, ki, v0) uint8 [1,1,10,10]
-  Pad L10 to 30x30 (zero fill, 0 = background = ch0 on all outside cells) then Equal.
+Encoding (route 10-ch expansion into the FREE bool output):
+  - colf = 1x1 Conv (w[0,k]=k) -> colour-index plane; crop to 10x10; k = ReduceMax.
+  - occ = colf>0 ; box top-left = 2x2 sum-Conv==4 (unique); row/col = ReduceSum(btl*ramp).
+  - dval=rr-cc, aval=rr+cc are the only irreducible 2-D planes (broadcast 1-D fp16 ramps);
+    ondiag/onanti = Equal to scalar Dmain/Aanti; halves are 1-D column vectors.
+  - flags = ReduceMax over (occ & half & on...) > 0 (scalar bool, no Gather).
+  - L = fill*k -> Pad to 30x30 sentinel 255 (uint8) -> output = Equal(L, arange) BOOL FREE.
 """
 
 import numpy as np
@@ -42,106 +34,143 @@ from onnx import helper, numpy_helper, TensorProto
 
 from ..harness import IR_VERSION
 
+F16 = TensorProto.FLOAT16
+F32 = TensorProto.FLOAT
+BOOL = TensorProto.BOOL
+U8 = TensorProto.UINT8
+I64 = TensorProto.INT64
+
+N = 10  # active grid is always 10x10
+
 
 def build(task):
     inits, nodes = [], []
 
     def init(name, arr, dtype):
-        inits.append(numpy_helper.from_array(
-            np.ascontiguousarray(arr, dtype=dtype), name))
+        inits.append(numpy_helper.from_array(np.ascontiguousarray(arr, dtype=dtype), name))
         return name
 
     def n(op, ins, out, **attrs):
         nodes.append(helper.make_node(op, ins, [out], **attrs))
         return out
 
-    dirs = [(-1, -1), (-1, 1), (1, -1), (1, 1)]   # NW NE SW SE
-
-    init("c0_5", np.array(0.5, np.float32), np.float32)
-    init("c1", np.array(1.0, np.float32), np.float32)
-    init("c0_5_f16", np.array(0.5, np.float16), np.float16)
-
-    # isolated-cell kernel (orth-neighbour sum minus 2*centre, fp16)
-    isoW = np.zeros((1, 1, 3, 3), np.float16)
-    for (u, v) in [(0, 1), (2, 1), (1, 0), (1, 2)]:
-        isoW[0, 0, u, v] = 1.0
-    isoW[0, 0, 1, 1] = -2.0
-    init("isoW", isoW, np.float16)
-    init("cm1_5", np.array(-1.5, np.float32), np.float32)
-
-    # 1->4 shift kernel (fp16): out_d(r,c) = cm(r-dr, c-dc)
-    shiftW = np.zeros((4, 1, 3, 3), np.float16)
-    for i, (dr, dc) in enumerate(dirs):
-        shiftW[i, 0, 1 - dr, 1 - dc] = 1.0
-    init("shiftW", shiftW, np.float16)
-
-    # ray kernel (fp16): single output channel summing 4 directional half-lines
-    K, cc = 11, 5
-    rayW = np.zeros((1, 4, K, K), np.float16)
-    for i, (dr, dc) in enumerate(dirs):
-        for k in range(cc + 1):
-            rayW[0, i, cc - k * dr, cc - k * dc] = 1.0
-    init("rayW", rayW, np.float16)
-
-    # channel slice to get background at [1,1,10,10]
+    # ---- occupancy from background channel-0 (avoids the 3600B colour plane) -
     init("b_s", np.array([0, 0, 0], np.int64), np.int64)
-    init("b_e", np.array([1, 10, 10], np.int64), np.int64)
+    init("b_e", np.array([1, N, N], np.int64), np.int64)
     init("b_a", np.array([1, 2, 3], np.int64), np.int64)
+    n("Slice", ["input", "b_s", "b_e", "b_a"], "ch0")     # [1,1,10,10] f32 bg
+    init("HALF32", np.array(0.5, np.float32), np.float32)
+    n("Less", ["ch0", "HALF32"], "occ")                   # bool: bg==0 -> occupied
+    n("Cast", ["occ"], "occf", to=F16)                    # f16 {0,1}
 
-    # ---- masks ----
-    n("Slice", ["input", "b_s", "b_e", "b_a"], "ch0")              # [1,1,10,10] f32
-    n("Sub", ["c1", "ch0"], "cm_f")                                 # coloured mask f32
-    n("Cast", ["cm_f"], "cm_f16", to=TensorProto.FLOAT16)           # fp16
-
-    # seeds = isolated coloured cells
-    n("Conv", ["cm_f16", "isoW"], "isoscore_f16",
-      kernel_shape=[3, 3], pads=[1, 1, 1, 1])                       # [1,1,10,10] fp16
-    n("Cast", ["isoscore_f16"], "isoscore", to=TensorProto.FLOAT)   # f32
-    n("Less", ["isoscore", "cm1_5"], "seed_b")                      # [1,1,10,10] bool
-    n("Cast", ["seed_b"], "seeds_f16", to=TensorProto.FLOAT16)      # fp16
-
-    # directional shift of cm -> [1,4,10,10] fp16; multiply by seeds -> seedtype fp16
-    n("Conv", ["cm_f16", "shiftW"], "cmshift",
-      kernel_shape=[3, 3], pads=[1, 1, 1, 1])                       # [1,4,10,10] fp16
-    n("Mul", ["cmshift", "seeds_f16"], "seedtype")                  # [1,4,10,10] fp16
-
-    # ray conv: [1,4,10,10] fp16 -> [1,1,10,10] fp16
-    n("Conv", ["seedtype", "rayW"], "raysum_f16",
-      kernel_shape=[K, K], pads=[cc, cc, cc, cc])                   # [1,1,10,10] fp16
-    n("Cast", ["raysum_f16"], "raysum", to=TensorProto.FLOAT)       # f32
-
-    n("Add", ["cm_f", "raysum"], "Asum")
-    n("Greater", ["Asum", "c0_5"], "A_bool")                        # [1,1,10,10] bool
-
-    # ---- colour index ki (uint8 scalar) from input --------------------------
-    # The single colour k is the unique non-background channel present
-    # ki = ReduceSum(presf * arange) where presf[c] = max(input[c]) > 0
-    init("arange10", np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1),
-         np.float32)
-    n("ReduceMax", ["input"], "presf", axes=[2, 3], keepdims=1)     # [1,10,1,1]
+    # colour scalar k = ReduceSum(present_channel * arange) (no full colour plane)
+    init("arange10", np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1), np.float32)
+    n("ReduceMax", ["input"], "presf", axes=[2, 3], keepdims=1)  # [1,10,1,1] f32
     n("Mul", ["presf", "arange10"], "kparts")
-    n("ReduceSum", ["kparts"], "k_f")                               # scalar f32
-    n("Cast", ["k_f"], "ki", to=TensorProto.UINT8)                  # uint8
+    n("ReduceSum", ["kparts"], "k_f32", axes=[1], keepdims=1)    # [1,1,1,1] f32
+    n("Cast", ["k_f32"], "k16", to=F16)
 
-    # ---- uint8 label map L [1,1,10,10] -> Pad to [1,1,30,30] -> Equal ------
-    # Background cells (A=0) -> 0; coloured cells (A=1) -> ki
-    init("v0", np.array(0, np.uint8), np.uint8)
-    n("Where", ["A_bool", "ki", "v0"], "L10")                       # [1,1,10,10] u8
+    # ---- 2x2 box top-left via sum-Conv == 4 ---------------------------------
+    init("K22", np.ones((1, 1, 2, 2), np.float16), np.float16)
+    n("Conv", ["occf", "K22"], "bc")                      # [1,1,9,9] f16
+    init("FOUR", np.array(4.0, np.float16), np.float16)
+    n("Equal", ["bc", "FOUR"], "btl_b")                   # [1,1,9,9] bool (unique)
+    n("Cast", ["btl_b"], "btl", to=F16)                   # f16 {0,1}
 
-    # Pad to 30x30 with sentinel 10 (> any channel index 0..9, so Equal gives
-    # all-False there = all-channels-off, which is correct for cells outside the
-    # 10x10 active grid).
-    init("padpads",
-         np.array([0, 0, 0, 0, 0, 0, 20, 20], np.int64), np.int64)
-    init("padval", np.array(10, np.uint8), np.uint8)
-    n("Pad", ["L10", "padpads", "padval"], "L30", mode="constant")  # [1,1,30,30] u8
+    rr9 = np.arange(9, dtype=np.float16).reshape(1, 1, 9, 1)
+    cc9 = np.arange(9, dtype=np.float16).reshape(1, 1, 1, 9)
+    init("rr9", rr9, np.float16)
+    init("cc9", cc9, np.float16)
+    # reduce btl to 1-D row/col profiles first (avoid two full 9x9 product planes)
+    n("ReduceSum", ["btl"], "btlrow", axes=[3], keepdims=1)  # [1,1,9,1]
+    n("ReduceSum", ["btl"], "btlcol", axes=[2], keepdims=1)  # [1,1,1,9]
+    n("Mul", ["btlrow", "rr9"], "btlr_w")
+    n("ReduceSum", ["btlr_w"], "row16", axes=[2], keepdims=1)  # [1,1,1,1] = row
+    n("Mul", ["btlcol", "cc9"], "btlc_w")
+    n("ReduceSum", ["btlc_w"], "col16", axes=[3], keepdims=1)  # [1,1,1,1] = col
 
-    init("chan", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
-    n("Equal", ["L30", "chan"], "output")                            # BOOL [1,10,30,30]
+    # scalars
+    n("Sub", ["row16", "col16"], "Dmain")
+    n("Add", ["row16", "col16"], "rpc")
+    init("ONE16", np.array(1.0, np.float16), np.float16)
+    n("Add", ["rpc", "ONE16"], "Aanti")
+    init("TWO16", np.array(2.0, np.float16), np.float16)
+    n("Add", ["row16", "TWO16"], "rlo")                   # row+2
+    n("Add", ["row16", "ONE16"], "rowp1")                 # row+1
+    n("Add", ["col16", "ONE16"], "colp1")                 # col+1
 
-    x = helper.make_tensor_value_info("input", TensorProto.FLOAT, [1, 10, 30, 30])
-    y = helper.make_tensor_value_info("output", TensorProto.BOOL, [1, 10, 30, 30])
+    # ---- 2-D diagonal planes (the only irreducible full planes) -------------
+    rrf = np.arange(N, dtype=np.float16).reshape(1, 1, N, 1)
+    ccf = np.arange(N, dtype=np.float16).reshape(1, 1, 1, N)
+    init("rrf", rrf, np.float16)                          # [1,1,10,1]
+    init("ccf", ccf, np.float16)                          # [1,1,1,10]
+    # ondiag: rr-cc==Dmain  <=>  rr == cc+Dmain ; build the [1,1,1,10] target row
+    # vector so the Equal broadcasts straight to bool (no f16 dval/aval plane).
+    n("Add", ["ccf", "Dmain"], "cd")                      # [1,1,1,10] = cc+Dmain
+    n("Equal", ["rrf", "cd"], "ondiag")                   # [1,1,10,10] bool
+    n("Sub", ["Aanti", "ccf"], "ac")                      # [1,1,1,10] = Aanti-cc
+    n("Equal", ["rrf", "ac"], "onanti")                   # [1,1,10,10] bool
+
+    # half-plane column vectors (broadcast over cols)
+    n("Not", [n("Less", ["rrf", "rlo"], "lt_lo")], "lower")  # rr >= row+2
+    upper = n("Less", ["rrf", "row16"], "upper")             # rr <= row-1 (== rr < row)
+
+    # ---- ray-present flags via per-row occupancy profiles -------------------
+    # od/oa = occupied cells ON the (anti)diagonal; reduce over columns to a row
+    # profile [1,1,10,1], then split by half with the 1-D lower/upper vectors.
+    init("Z32f16", np.array(0.0, np.float16), np.float16)
+    n("Cast", ["lower"], "lowerf", to=F16)
+    n("Cast", [upper], "upperf", to=F16)
+    n("Where", ["ondiag", "occf", "Z32f16"], "od")        # occ on main diag, f16
+    n("Where", ["onanti", "occf", "Z32f16"], "oa")        # occ on anti diag, f16
+    n("ReduceMax", ["od"], "odrow", axes=[3], keepdims=1)  # [1,1,10,1] f16
+    n("ReduceMax", ["oa"], "oarow", axes=[3], keepdims=1)  # [1,1,10,1] f16
+
+    def flag(prof, halff, tag):
+        n("Mul", [prof, halff], f"pm_{tag}")              # [1,1,10,1]
+        n("ReduceMax", [f"pm_{tag}"], f"fl_{tag}", axes=[2], keepdims=1)
+        n("Greater", [f"fl_{tag}", "Z32f16"], f"has_{tag}")
+        return f"has_{tag}"
+
+    has_d2 = flag("odrow", "lowerf", "d2")
+    has_d0 = flag("odrow", "upperf", "d0")
+    has_d3 = flag("oarow", "lowerf", "d3")
+    has_d1 = flag("oarow", "upperf", "d1")
+
+    # ---- assemble fill mask -------------------------------------------------
+    n("And", ["lower", has_d2], "ld2")
+    n("And", [upper, has_d0], "ud0")
+    n("Or", ["ld2", "ud0"], "dhalf")                      # [1,1,10,1] bool
+    n("And", ["ondiag", "dhalf"], "diagfill")             # [1,1,10,10] bool
+    n("And", ["lower", has_d3], "ld3")
+    n("And", [upper, has_d1], "ud1")
+    n("Or", ["ld3", "ud1"], "ahalf")
+    n("And", ["onanti", "ahalf"], "antifill")
+
+    # box mask
+    n("Not", [n("Less", ["rrf", "row16"], "blt0")], "br_ge")     # rr >= row
+    n("Not", [n("Greater", ["rrf", "rowp1"], "bgt0")], "br_le")  # rr <= row+1
+    n("And", ["br_ge", "br_le"], "brow")                  # [1,1,10,1]
+    n("Not", [n("Less", ["ccf", "col16"], "bltc")], "bc_ge")     # cc >= col
+    n("Not", [n("Greater", ["ccf", "colp1"], "bgtc")], "bc_le")  # cc <= col+1
+    n("And", ["bc_ge", "bc_le"], "bcol")                  # [1,1,1,10]
+    n("And", ["brow", "bcol"], "boxmask")                 # [1,1,10,10]
+
+    # fill = box | diagfill | antifill
+    n("Or", ["diagfill", "antifill"], "rays")
+    n("Or", ["boxmask", "rays"], "fill")                  # [1,1,10,10] bool
+
+    # ---- L = k where filled -> Pad 30x30 sentinel 255 -> Equal(arange) ----
+    n("Where", ["fill", "k16", "Z32f16"], "L16")          # [1,1,10,10] f16 (k or 0)
+    n("Cast", ["L16"], "Lu8", to=U8)                      # uint8 0..9
+    init("Lpads", np.array([0, 0, 0, 0, 0, 0, 30 - N, 30 - N], np.int64), np.int64)
+    init("SENT", np.array(255, np.uint8), np.uint8)
+    n("Pad", ["Lu8", "Lpads", "SENT"], "L30", mode="constant")   # [1,1,30,30] u8
+    init("arange", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
+    n("Equal", ["L30", "arange"], "output")               # [1,10,30,30] BOOL FREE
+
+    x = helper.make_tensor_value_info("input", F32, [1, 10, 30, 30])
+    y = helper.make_tensor_value_info("output", BOOL, [1, 10, 30, 30])
     graph = helper.make_graph(nodes, "task190", [x], [y], inits)
-    return helper.make_model(
-        graph, ir_version=IR_VERSION,
-        opset_imports=[helper.make_opsetid("", 11)])
+    return helper.make_model(graph, ir_version=IR_VERSION,
+                             opset_imports=[helper.make_opsetid("", 11)])

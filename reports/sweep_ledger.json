@@ -2318,14 +2318,15 @@
  {
   "task": 190,
   "arc_id": "7ddcd7ec",
-  "points": 16.26,
-  "memory": 5685,
-  "params": 572,
+  "points": 16.69,
+  "memory": 3981,
+  "params": 85,
   "method": "custom:task190",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.43 (seed->ray-to-edge is fixed 45deg diagonal, scalar flags via ReduceMax, no flood)"
  },
  {
   "task": 191,
