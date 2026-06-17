@@ -815,14 +815,15 @@
  {
   "task": 68,
   "arc_id": "31aa019c",
-  "points": 15.56,
-  "memory": 12562,
-  "params": 27,
+  "points": 16.29,
+  "memory": 6035,
+  "params": 58,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.73 (unique=count-1 channel via Equal(ReduceSum,1), zero argmin)"
  },
  {
   "task": 69,
