@@ -1,29 +1,30 @@
 """Task 189 (ARC-AGI 7c008303): quadrant-legend recolor of a green stamp.
 
 Generator (size is always 6 -> input 9x9, output 6x6):
-  A 2x2 legend of four colors sits in a corner, separated from a size x size
-  region by a cyan(8) cross at index 2 (a full cyan row and a full cyan column).
-  Each green(3) pixel in the size x size region is recolored by the QUADRANT it
-  falls in (r,c vs size//2=3 -> one of the four legend cells), then a global
-  flip_horiz / flip_vert is applied to BOTH the grid and the output.
+  A 2x2 legend of four colors sits in a corner, separated from a 6x6 region by a
+  cyan(8) cross at index 2 (a full cyan row + full cyan column). Each green(3)
+  pixel in the 6x6 region is recolored by the QUADRANT it falls in: the cell at
+  (r>=3, c>=3) of the legend, with colors[2*(r>=3)+(c>=3)]. Then a global
+  flip_horiz / flip_vert is applied to BOTH grid and output identically. Legend
+  colors are sampled from {1,2,4,5,6,7,9} (1..9 minus green/cyan), so channel 0
+  (bg) carries no information.
 
-Because the flips transform grid and output identically, everything can be read
-in the *flipped frame* with no un-flipping:
-  out[R][C] (R,C in 0..5) = legend_cell[R//3][C//3]   if green at (R+orr, C+orc)
-                          = 0 (background)             otherwise
-where the green-block offset orr/orc in {0,3} and the legend corner lr/lc in
-{0,7} are fixed by which side of the cyan cross the legend sits on -- i.e. by
-flip_vert (full cyan row at index 2 vs 6) and flip_horiz (full cyan col 2 vs 6).
-Verified exact on all 266 stored examples and 200/200 fresh arc-gen instances.
+Read in the flipped frame (flips act identically on grid and output):
+  vflip <=> cyan(8) at (6,0); hflip <=> cyan(8) at (0,6).
+  legend corner rows/cols = {0,1} (no flip) or {7,8} (flip);
+  green block rows/cols    = {3..8} (no flip) or {0..5} (flip);
+  out[R][C] = legend[R//3][C//3] if green at the matching block cell, else 0.
 
-Memory floor-break (color-index label map + final Equal):
-  Instead of materialising a [1,10,6,6] one-hot recolor stack, we collapse the
-  legend to FOUR scalar color indices (L22idx[1,1,2,2] = sum_k k*onehot), expand
-  them to a 6x6 quadrant grid (Kr @ . @ Kc on a single channel), mask by the
-  green block, and emit a uint8 label L[6,6] (legend color where green, else 0).
-  Padded to 30x30 (sentinel 10 outside the 6x6) the final op
-      output = Equal(L, arange[1,10,1,1])
-  writes straight into the free BOOL output -- no 10-channel plane after L22.
+Floor-break (vs the 16.15 / 16.40 builds): never form the 10-channel 9x9 corner.
+Three cheap single-purpose reads instead:
+  * green9  = channel-3 slice [1,1,9,9] -> green presence (block via sr@.@sc).
+  * cyan9   = channel-8 slice [1,1,9,9] -> the two flip bits (cells 6,0 / 0,6).
+  * legtop/legbot = two 2-row x 9-col channel-1..9 strips (162B each) ->
+    channel-collapsed legend planes; pick rows by vflip, cols by hflip.
+Everything downstream is fp16 (color indices <=9 are exact); the 2x2 legend is
+expanded to the 6x6 quadrant grid, gated by green, sentinel-padded to 30x30 and
+emitted via Equal straight into the FREE bool output.
+Verified exact on all 266 stored examples and fresh arc-gen instances.
 """
 
 import numpy as np
@@ -37,34 +38,7 @@ H = TensorProto.FLOAT16
 U8 = TensorProto.UINT8
 B = TensorProto.BOOL
 
-
-SRC = 9  # the grid + legend live entirely in the top-left 9x9 corner
-
-
-def _banks():
-    # legend-corner extractors: [2(flip), 2(local), SRC] and [2, SRC, 2]
-    Lr = np.zeros((2, 2, SRC), np.float32)
-    Lc = np.zeros((2, SRC, 2), np.float32)
-    # green-block extractors: [2, 6, SRC] and [2, SRC, 6]
-    Sr = np.zeros((2, 6, SRC), np.float32)
-    Sc = np.zeros((2, SRC, 6), np.float32)
-    for q in range(2):
-        Lr[0, q, 0 + q] = 1.0   # no flip: legend rows 0,1
-        Lr[1, q, 7 + q] = 1.0   # flip:    legend rows 7,8
-        Lc[0, 0 + q, q] = 1.0
-        Lc[1, 7 + q, q] = 1.0
-    for R in range(6):
-        Sr[0, R, R + 3] = 1.0   # no flip: green rows 3..8
-        Sr[1, R, R] = 1.0       # flip:    green rows 0..5
-        Sc[0, R + 3, R] = 1.0
-        Sc[1, R, R] = 1.0
-    # legend 2x2 -> 6x6 quadrant expansion (flip-independent)
-    Kr = np.zeros((6, 2), np.float32)
-    Kc = np.zeros((2, 6), np.float32)
-    for R in range(6):
-        Kr[R, R // 3] = 1.0
-        Kc[R // 3, R] = 1.0
-    return Lr, Lc, Sr, Sc, Kr, Kc
+SRC = 9  # the legend + green region live entirely in the top-left 9x9 corner
 
 
 def build(task):
@@ -79,75 +53,76 @@ def build(task):
         nodes.append(helper.make_node(op, inputs, [out], **attrs))
         return out
 
-    # --- cyan(8) per-row / per-col counts -> vflip / hflip 0/1 scalars ---
-    Wrow = np.zeros((1, 10, 1, 30), np.float32); Wrow[0, 8, 0, :] = 1.0
-    init("Wrow", Wrow)
-    Wcol = np.zeros((1, 10, 30, 1), np.float32); Wcol[0, 8, :, 0] = 1.0
-    init("Wcol", Wcol)
-    n("Conv", ["input", "Wrow"], "rowsum")                  # [1,1,30,1]
-    n("Conv", ["input", "Wcol"], "colsum")                  # [1,1,1,30]
+    # ---- single-channel reads (green = ch3, cyan = ch8) over the 9x9 corner ----
+    init("g_st", np.array([3, 0, 0], np.int64), np.int64)
+    init("g_en", np.array([4, SRC, SRC], np.int64), np.int64)
+    init("g_ax", np.array([1, 2, 3], np.int64), np.int64)
+    n("Slice", ["input", "g_st", "g_en", "g_ax"], "green9f")  # [1,1,9,9] fp32
+    n("Cast", ["green9f"], "green9", to=H)                    # fp16
+    # ---- flip bits: cyan(8) at (6,0) <=> vflip, at (0,6) <=> hflip.
+    #      slice exactly those two single cells (4B each) ----
+    init("cv_st", np.array([8, 6, 0], np.int64), np.int64)
+    init("cv_en", np.array([9, 7, 1], np.int64), np.int64)
+    n("Slice", ["input", "cv_st", "cv_en", "g_ax"], "cy_v")  # [1,1,1,1] cyan(6,0)
+    init("ch_st", np.array([8, 0, 6], np.int64), np.int64)
+    init("ch_en", np.array([9, 1, 7], np.int64), np.int64)
+    n("Slice", ["input", "ch_st", "ch_en", "g_ax"], "cy_h")  # [1,1,1,1] cyan(0,6)
+    init("half", np.array(0.5, np.float32))
+    n("Greater", ["cy_v", "half"], "vbool")
+    n("Greater", ["cy_h", "half"], "hbool")
+    n("Cast", ["vbool"], "vfi", to=TensorProto.INT64)
+    n("Cast", ["hbool"], "hfi", to=TensorProto.INT64)
+    n("ReduceSum", ["vfi"], "vflip", axes=[0, 1, 2, 3], keepdims=0)  # scalar 0/1
+    n("ReduceSum", ["hfi"], "hflip", axes=[0, 1, 2, 3], keepdims=0)  # scalar 0/1
 
-    # vflip = (cyan row count at index 6 == 9); hflip likewise on col 6.
-    init("idx6", np.array(6, np.int64), dtype=np.int64)
-    init("eight5", np.array(8.5, np.float32))
-    n("Gather", ["rowsum", "idx6"], "row6", axis=2)         # [1,1,1,1]
-    n("Gather", ["colsum", "idx6"], "col6", axis=3)         # [1,1,1,1]
-    n("Greater", ["row6", "eight5"], "vbool")
-    n("Greater", ["col6", "eight5"], "hbool")
-    n("Cast", ["vbool"], "vflip4", to=TensorProto.INT64)
-    n("Cast", ["hbool"], "hflip4", to=TensorProto.INT64)
-    n("ReduceSum", ["vflip4"], "vflip", axes=[0, 1, 2, 3], keepdims=0)  # scalar
-    n("ReduceSum", ["hflip4"], "hflip", axes=[0, 1, 2, 3], keepdims=0)  # scalar
-
-    # --- pick flip-specific extractor matrices ---
-    Lr, Lc, Sr, Sc, Kr, Kc = _banks()
-    init("LrB", Lr); init("LcB", Lc); init("SrB", Sr); init("ScB", Sc)
-    init("Kr", Kr, dtype=np.float16); init("Kc", Kc, dtype=np.float16)
-    n("Gather", ["LrB", "vflip"], "lr", axis=0)            # [2,30]
-    n("Gather", ["LcB", "hflip"], "lc", axis=0)            # [30,2]
-    n("Gather", ["SrB", "vflip"], "sr", axis=0)            # [6,30]
-    n("Gather", ["ScB", "hflip"], "sc", axis=0)            # [30,6]
-
-    # --- legend 2x2 one-hot L22 -> 4 color indices L22idx [1,1,2,2] ---
-    # Fold the channel-weighting (sum_k k*onehot) into the legend extraction so
-    # the intermediate carries a single channel: kin = sum_k k*input[k] is a
-    # [1,1,30,30] color-index plane, then lr @ kin @ lc -> [1,1,2,2] directly.
-    # Slice the input to the 9x9 corner first, then a 1x1 conv collapses the 10
-    # channels to a single color-index plane kin [1,1,9,9] (324 B).
-    init("i_st", np.array([0, 0], np.int64), np.int64)
-    init("i_en", np.array([SRC, SRC], np.int64), np.int64)
-    init("i_ax", np.array([2, 3], np.int64), np.int64)
-    n("Slice", ["input", "i_st", "i_en", "i_ax"], "in9")   # [1,10,SRC,SRC]
-    Wk = np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1)
+    # ---- legend: slice the FOUR 2x2 corner blocks (channels 1..9), collapse
+    #      each to a color-index 2x2, pick the legend's corner by (vflip,hflip) ----
+    Wk = np.arange(1, 10, dtype=np.float32).reshape(1, 9, 1, 1)
     init("Wk", Wk)
-    n("Conv", ["in9", "Wk"], "kin")                        # [1,1,SRC,SRC] color idx
-    n("MatMul", ["lr", "kin"], "lrow")                     # [1,1,2,SRC]
-    n("MatMul", ["lrow", "lc"], "L22idx")                  # [1,1,2,2] color idx
+    corners = [("tl", 0, 0), ("tr", 0, 7), ("bl", 7, 0), ("br", 7, 7)]
+    kc_names = []
+    for name, r0, c0 in corners:
+        init(f"{name}_st", np.array([1, r0, c0], np.int64), np.int64)
+        init(f"{name}_en", np.array([10, r0 + 2, c0 + 2], np.int64), np.int64)
+        n("Slice", ["input", f"{name}_st", f"{name}_en", "g_ax"], f"{name}c")  # [1,9,2,2]
+        n("Conv", [f"{name}c", "Wk"], f"{name}kf")               # [1,1,2,2] fp32
+        n("Cast", [f"{name}kf"], f"{name}k", to=H)               # [1,1,2,2] fp16
+        kc_names.append(f"{name}k")
+    n("Concat", kc_names, "kstack", axis=0)                      # [4,1,2,2] fp16
+    # corner index = vflip*2 + hflip  (tl=0, tr=1, bl=2, br=3)
+    init("two", np.array(2, np.int64), np.int64)
+    n("Mul", ["vflip", "two"], "v2")                             # [1]
+    n("Add", ["v2", "hflip"], "cidx")                            # [1] in 0..3
+    n("Gather", ["kstack", "cidx"], "L22idx", axis=0)            # [1,1,2,2] fp16
 
-    # --- expand 2x2 color indices to the 6x6 quadrant grid (single channel) ---
-    n("Cast", ["L22idx"], "L22idxh", to=H)                 # [1,1,2,2] f16
-    n("MatMul", ["Kr", "L22idxh"], "lemid")                # [1,1,6,2] f16
-    n("MatMul", ["lemid", "Kc"], "leidx")                  # [1,1,6,6] f16 color idx
+    # ---- expand legend 2x2 -> 6x6 quadrant index (fp16) ----
+    Kr = np.zeros((6, 2), np.float16); Kc = np.zeros((2, 6), np.float16)
+    for R in range(6):
+        Kr[R, R // 3] = 1.0
+        Kc[R // 3, R] = 1.0
+    init("Kr", Kr, np.float16); init("Kc", Kc, np.float16)
+    n("MatMul", ["Kr", "L22idx"], "lemid")                       # [1,1,6,2] fp16
+    n("MatMul", ["lemid", "Kc"], "leidx")                        # [1,1,6,6] fp16
 
-    # --- green-block mask gb [1,1,6,6], derived from the SAME color-index plane ---
-    # green present at a cell <=> kin == 3. Extract the 6x6 green block, then
-    # threshold: gb = (selected color-index == 3). One row/col selection picks
-    # exactly one source cell per output cell, so the gathered value is that
-    # cell's color index (3 iff green).
-    n("MatMul", ["sr", "kin"], "krow")                     # [1,1,6,30] f32
-    n("MatMul", ["krow", "sc"], "kblk")                    # [1,1,6,6] color idx
-    init("two5", np.array(2.5, np.float32), np.float32)
-    init("three5", np.array(3.5, np.float32), np.float32)
-    n("Greater", ["kblk", "two5"], "g_lo")                 # > 2.5
-    n("Less", ["kblk", "three5"], "g_hi")                  # < 3.5  -> == 3
-    n("And", ["g_lo", "g_hi"], "gb")                       # [1,1,6,6] bool green
+    # ---- 6x6 green block: gb = (green presence at the block cell) ----
+    Sr = np.zeros((2, 6, SRC), np.float16); Sc = np.zeros((2, SRC, 6), np.float16)
+    for R in range(6):
+        Sr[0, R, R + 3] = 1.0   # no vflip: green rows 3..8
+        Sr[1, R, R] = 1.0       # vflip:    green rows 0..5
+        Sc[0, R + 3, R] = 1.0   # no hflip: green cols 3..8
+        Sc[1, R, R] = 1.0       # hflip:    green cols 0..5
+    init("SrB", Sr, np.float16); init("ScB", Sc, np.float16)
+    n("Gather", ["SrB", "vflip"], "sr", axis=0)                  # [6,9] fp16
+    n("Gather", ["ScB", "hflip"], "sc", axis=0)                  # [9,6] fp16
+    n("MatMul", ["sr", "green9"], "grow")                        # [1,1,6,9] fp16
+    n("MatMul", ["grow", "sc"], "gblk")                          # [1,1,6,6] fp16
+    init("half16", np.array(0.5, np.float16), np.float16)
+    n("Greater", ["gblk", "half16"], "gb")                       # [1,1,6,6] bool
 
-    # --- L = legend color where green, else 0; uint8 6x6 ---
-    n("Cast", ["leidx"], "leidx_u8", to=U8)                # [1,1,6,6] uint8
+    # ---- L = legend color where green, else 0; pad -> 30x30; final Equal ----
+    n("Cast", ["leidx"], "leidx_u8", to=U8)
     init("v0", np.array(0, np.uint8), np.uint8)
-    n("Where", ["gb", "leidx_u8", "v0"], "Lwk")            # [1,1,6,6] uint8
-
-    # --- pad 6x6 -> 30x30 (sentinel 10), final Equal -> free BOOL output ---
+    n("Where", ["gb", "leidx_u8", "v0"], "Lwk")                  # [1,1,6,6] uint8
     init("padpads", np.array([0, 0, 0, 0, 0, 0, 24, 24], np.int64), np.int64)
     init("padval", np.array(10, np.uint8), np.uint8)
     n("Pad", ["Lwk", "padpads", "padval"], "L", mode="constant")  # [1,1,30,30]

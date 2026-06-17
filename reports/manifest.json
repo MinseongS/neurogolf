@@ -625,10 +625,10 @@
    "method": "ext:kojimar6275"
   },
   "105": {
-   "points": 16.138508135713085,
-   "memory": 6987,
-   "params": 68,
-   "method": "ext:kojimar6275"
+   "points": 16.373055944624646,
+   "memory": 4945,
+   "params": 635,
+   "method": "custom:task105"
   },
   "106": {
    "points": 17.940382371708615,
@@ -1129,9 +1129,9 @@
    "method": "custom:task188"
   },
   "189": {
-   "points": 16.145477796242567,
-   "memory": 6054,
-   "params": 952,
+   "points": 16.891376731645405,
+   "memory": 3008,
+   "params": 315,
    "method": "custom:task189"
   },
   "190": {
@@ -1573,10 +1573,10 @@
    "method": "memorizer4(n=9,k=4,b=11,bb=3x6)"
   },
   "263": {
-   "points": 16.112347309674412,
-   "memory": 7190,
-   "params": 52,
-   "method": "ext:vyank6322"
+   "points": 16.33128816094485,
+   "memory": 5758,
+   "params": 60,
+   "method": "custom:task263"
   },
   "264": {
    "points": 15.040888543715875,

@@ -1275,14 +1275,15 @@
  {
   "task": 105,
   "arc_id": "4612dd53",
-  "points": 16.14,
-  "memory": 6987,
-  "params": 68,
+  "points": 16.37,
+  "memory": 4945,
+  "params": 635,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win; adopt showed base real=0.00 (POSSIBLE gap-closer OR rare-fail base; submit resolves)"
  },
  {
   "task": 106,
@@ -2300,14 +2301,15 @@
  {
   "task": 189,
   "arc_id": "7c008303",
-  "points": 16.15,
-  "memory": 6054,
-  "params": 952,
+  "points": 16.89,
+  "memory": 3008,
+  "params": 315,
   "method": "custom:task189",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.74"
  },
  {
   "task": 190,
@@ -3206,14 +3208,15 @@
  {
   "task": 263,
   "arc_id": "a87f7484",
-  "points": 16.11,
-  "memory": 7190,
-  "params": 52,
+  "points": 16.33,
+  "memory": 5758,
+  "params": 60,
   "method": "ext:vyank6322",
   "class": "FEASIBLE?",
   "sig": "transpose",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.22"
  },
  {
   "task": 264,
