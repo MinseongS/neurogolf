@@ -2546,7 +2546,7 @@
   "sig": "continuous_creature",
   "status": "confirmed-infeasible",
   "verdict": "INFEASIBLE: enclosed-region / nested-box parity recolor; non-local containment",
-  "note": "GAP-CLOSER FAILED: NON-DETERMINISTIC (same input->2 valid outputs via hidden RNG shows/irow/icol/mag); ANY solver caps ~96.8%, current net 95% near-optimal, overcount irrecoverable"
+  "note": "GAP-CLOSER PROBE -> WALL: generator intrinsically ambiguous (1.55% inputs map to multiple valid outputs, collinear shown sprite cells under-determine offset) => 500/500 impossible for ANY net; + correspondence-search no separable form. base gen:wguesdon6315."
  },
  {
   "task": 210,
