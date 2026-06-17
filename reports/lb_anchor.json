@@ -1,7 +1,7 @@
 {
- "comment": "#17 PENDING. proj (stored-gap) ~6527.4 BUT task332 GAP-CLOSER closed ~16.32 of gap (real 0->17) so expect ~6543.7. Confirm: if real >> proj, gap recalibrates down ~16 again.",
+ "comment": "#17 CONFIRMED 6543.68 (predicted 6543.7 EXACT - task332 gap-closer validated again). GAP recalibrated to 28.96 (was 45.27; two gap-closers 274+332 closed ~32 total). Re-anchor on next submit.",
  "stored_at_submit": 6572.64,
- "lb": 6527.36,
+ "lb": 6543.68,
  "time_utc": "2026-06-18 02:05",
- "pending": true
+ "pending": false
 }
