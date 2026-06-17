@@ -101,3 +101,8 @@ untriaged pending pool (lowest-points first, EARLY FEASIBILITY CHECK) until it m
 Session: 6486.73->6492.58 proj. Pending pool now at ~15.4+ pts (easy sub-15 mined out); hit rate
 dropping (~50% wins vs 85% early), more skip-marginal/at-floor. gap-closer hunt was a FALSE ALARM
 (single-process generator pollution; see reports/gap_closers.md) - gap is structural, no big closers.
+
+## ⭐ Submission 15 (RESUME-session cont.): proj LB 6501.04, PENDING.
+11 wins: 371(+1.18),159(+0.54),125(+0.367),374(+0.76),68(+0.73),281(+0.47),260(+0.89),345(+0.32),
+97(+0.87),124(+0.33),329(+2.04). Stored 6553.85->6562.31 (+8.46). Hit rate this wave ~92% (11 wins +
+1 marginal/355). Floor ~15.6+; wins still landing well (329 was a +2.04 outlier). gap pinned 61.27.
