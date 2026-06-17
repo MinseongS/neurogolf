@@ -4042,8 +4042,9 @@
   "method": "custom:task333",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "probe +0.24 (15.76->16.0) below +0.3 bar; structural floor (3600B fp32 colour-Conv + 900B output irreducible). insight: directional ray-fill toward barrier is separable prefix/suffix MatMul, barrier supplies gates (tasklog333)"
  },
  {
   "task": 334,
