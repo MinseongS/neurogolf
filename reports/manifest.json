@@ -2239,10 +2239,10 @@
    "method": "ext:wguesdon6304"
   },
   "374": {
-   "points": 15.524146480343099,
-   "memory": 12808,
-   "params": 233,
-   "method": "ext:galaxy_v1"
+   "points": 16.27693149883607,
+   "memory": 6064,
+   "params": 79,
+   "method": "custom:task374"
   },
   "375": {
    "points": 16.911745272877567,
