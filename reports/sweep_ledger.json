@@ -3326,14 +3326,15 @@
  {
   "task": 274,
   "arc_id": "b0c4d837",
-  "points": 16.0,
-  "memory": 0,
-  "params": 8110,
+  "points": 17.21,
+  "memory": 2383,
+  "params": 36,
   "method": "conv9x9+b",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "GAP-CLOSER: base net non-generalizing (fresh 0, real 0.00) -> custom 17.21 generalizing; real LB +~17 not +1.21"
  },
  {
   "task": 275,
