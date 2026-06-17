@@ -132,3 +132,9 @@ Since #16: 254(+1.5),40(+0.31),228(+0.33) [1:1] + task332 GAP-CLOSER (conv1x59+b
 custom 17.00, real +17). lb_status proj understates by ~16.32 (332 gap closure). Expect actual ~6543.7.
 Gap-closer scan results: 332 WIN; 23/2/209 confirmed WALLS (gen-imports). Discriminator: non-gen
 fresh-fail base nets are solvable gap-closers; gen-imports are mostly walls. See gap_closers memory.
+
+## Submission 18: proj 6551.52 PENDING. 13 pending-pool wins + task105 (possible gap-closer).
+Wins since #17: 39,141,137,240,288,293,327,45,348,63,7,263,189 (+~7.84 stored, all 1:1) + task105
+(adopt base real=0.00). WATCH: if actual LB ~6567 (proj+16), 105 was a HIDDEN gap-closer the genverify
+n=40 missed -> more may exist, re-open hunt. If ~6551.5, 105 base is a rare-fail that passes Kaggle
+(consistent with the post-#17 gap==219+255 result). Either way 105 custom adopted safely.

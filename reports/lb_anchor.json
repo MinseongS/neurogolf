@@ -1,7 +1,7 @@
 {
- "comment": "#17 CONFIRMED 6543.68 (predicted 6543.7 EXACT - task332 gap-closer validated again). GAP recalibrated to 28.96 (was 45.27; two gap-closers 274+332 closed ~32 total). Re-anchor on next submit.",
- "stored_at_submit": 6572.64,
- "lb": 6543.68,
- "time_utc": "2026-06-18 02:05",
- "pending": false
+ "comment": "#18 PENDING. proj 6551.52. WATCH task105: adopt showed base real=0.00 - if actual LB > proj by ~16, task105 was a hidden gap-closer (re-open hunt); if ~= proj, 105 base was a rare-fail (passes Kaggle).",
+ "stored_at_submit": 6580.48,
+ "lb": 6551.52,
+ "time_utc": "2026-06-18 02:50",
+ "pending": true
 }
