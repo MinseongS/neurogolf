@@ -276,7 +276,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 150deff5: recolor sprite parts (2x2 blocks vs single) - block/shape decompositio"
+  "verdict": "INFEASIBLE: 150deff5: recolor sprite parts (2x2 blocks vs single) - block/shape decompositio",
+  "note": "GAP-CLOSER PROBE -> WALL: recolor-by-shape-type but pieces touch (spacing=0) => global exact-cover + ~0.1-0.3% irreducible input ambiguity, 500/500 impossible; base 39/40 is near ambiguity ceiling (rare-fail, likely scores near-full on Kaggle, NOT a gap-closer)"
  },
  {
   "task": 24,
