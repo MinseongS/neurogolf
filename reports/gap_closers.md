@@ -1,24 +1,19 @@
-# Hidden gap-closers — fresh-rate scan (2026-06-17)
+# Gap-closer investigation — CONCLUSION (2026-06-17)
 
-## Method (KEY: genverify n=40 misses these; this n=100 scan + adopt's isolated check is truth)
-`for t in 1..400: fresh_pass(t,100)` over all adopted base nets. ~221s for 400.
-Tasks with fresh<0.99 = base net does NOT generalize → scores ~0 on real LB despite high stored.
-Building a GENERALIZING exact solver for these recovers ~full stored value on LB (gap-closing).
-Proven by task31 (old net real=0.00 → custom 16.09 adopted; NOT in genverify's flagged-11).
+## VERDICT: no big buildable gap-closers beyond the known walls.
+A single-process fresh_pass scan (2026-06-17) FALSELY flagged 220/230/282/317 as fresh=0.00.
+ROOT CAUSE: arc-gen generators share a module-level `common` state; running fresh_pass for many
+tasks in ONE process pollutes that state → bogus failures. The authoritative method runs ONE
+process per task (genverify.py uses multiprocessing Pool maxtasksperchild=1; src.adopt runs each
+task standalone). Re-checked in isolation: 220/230/282/317 all pass 120/120 (generalize at 18.2).
 
-## fresh=0.00 (score ~0 on LB; HIGH VALUE — each ~+18 LB if solvable):
-- task219 — confirmed-infeasible 15.00 (WALL: information bottleneck)
-- task255 — confirmed-infeasible 13.95 (WALL: connectivity)
-- task220 — pending 18.2 (custom:task220 adopted but fails fresh?!) ← ATTACK
-- task230 — pending 18.2 ← ATTACK
-- task282 — pending 18.2 (ext:octavi6154) ← ATTACK
-- task317 — pending 18.2 (gen:thbdh6332) ← ATTACK
+## The real non-generalizing set (reliable genverify.json, n=40 isolated): 11 tasks
+- WALLS (infeasible, do not build): 219 (info bottleneck, fresh 0.00), 255 (connectivity, 0.00)
+- small overcounts 0.3-1.7pt (low value): 209, 118, 2, 90, 157, 366, 251, 18, 101
+These were already known. No hidden +15 gap-closers exist. The 61.27 stored-LB gap is structural
+(per RESUME): overcounted/non-generalizing base nets on tasks no function can solve, + opset>10
+harness memory-measurement divergence. NOT recoverable by re-encoding.
 
-## fresh 0.95-0.98 (small overcount ~0.3-1pt each, LOW priority):
-- 157(0.95), 209(0.95), 23(0.96), 118(0.96), 2(0.97), 18(0.97),
-  151(0.97 pending 18.19), 319(0.98), 332(0.98 pending 16.32), 363(0.98)
-
-## Implication
-The 61.27 stored-LB gap is NOT all structural. The 4 fresh=0.00 pending tasks (220/230/282/317)
-@ stored 18.2 each are the bulk of recoverable headroom. If solvable (task31-style, not 219/255-style
-walls), they translate to large LB gains. Re-run this scan after each batch of adoptions.
+## Lesson (also in project memory neurogolf-gap-closers): to scan generalization across tasks,
+ALWAYS use isolated processes (`python -m src.genverify`), never a single-process loop.
+The proven engine remains the pending-pool grind (lowest-points-first, ~+0.3-0.9/win, ~70% hit).
