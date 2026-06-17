@@ -20,8 +20,9 @@
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "uncertain",
-  "verdict": "re-triage said flood-fill but build-agent found possible SINGLE-PASS surroundedness (pre-filled pots); revisit"
+  "status": "confirmed-infeasible",
+  "verdict": "re-triage said flood-fill but build-agent found possible SINGLE-PASS surroundedness (pre-filled pots); revisit",
+  "note": "GAP-CLOSER PROBE -> WALL: ARC 00d62c1b true flood-fill connectivity (box-interior-fill + order-dependent surround pass); pure flood over-fills static pockets 471/500, exact needs CC-detection (banned). base gen:vyank6322 overfit. gen-imports are mostly walls."
  },
  {
   "task": 3,
