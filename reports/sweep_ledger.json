@@ -3150,14 +3150,15 @@
  {
   "task": 260,
   "arc_id": "a78176bb",
-  "points": 15.58,
-  "memory": 12132,
-  "params": 141,
+  "points": 16.47,
+  "memory": 4886,
+  "params": 160,
   "method": "ext:biohack_new",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.89 (parallel diagonals: each Equal(r-c,k_scalar), offsets via masked ReduceMax/Min auto-gate)"
  },
  {
   "task": 261,
