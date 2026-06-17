@@ -1663,14 +1663,15 @@
  {
   "task": 137,
   "arc_id": "5c2c9af4",
-  "points": 16.04,
-  "memory": 7106,
+  "points": 16.74,
+  "memory": 3197,
   "params": 686,
   "method": "custom:task137",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.70 (chebyshev ring; off-grid zeroed by forcing that axis to win dominating-axis max, no dedicated plane)"
  },
  {
   "task": 138,
