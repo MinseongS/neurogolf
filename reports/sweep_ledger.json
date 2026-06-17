@@ -4361,14 +4361,15 @@
  {
   "task": 357,
   "arc_id": "e179c5f4",
-  "points": 16.21,
-  "memory": 6532,
-  "params": 40,
+  "points": 16.88,
+  "memory": 3280,
+  "params": 78,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.67 (zigzag ray as f(W) scalar: pc(r)=triangle-wave via fp16 Mod+Abs on [1,1,30,1])"
  },
  {
   "task": 358,
