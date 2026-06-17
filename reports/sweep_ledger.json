@@ -2638,14 +2638,14 @@
   {
     "task": 218,
     "arc_id": "90c28cc7",
-    "points": 15.29,
+    "points": 15.62,
     "memory": 16438,
     "params": 46,
-    "method": "gen:vyank6322",
+    "method": "custom:218 quilt->block-grid double-MatMul downsample (2-weight signature boundaries)",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing exact win (fresh 200/200 +800/800)"
   },
   {
     "task": 219,
