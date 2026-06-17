@@ -4306,8 +4306,9 @@
   "method": "gen:thbdh6332",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "probe +0.14 (15.62->15.77) below +0.3 bar; insight: 1-D occupancy IS bbox band, band_k@marker@band_kT 2 MatMuls (tasklog355)"
  },
  {
   "task": 356,
