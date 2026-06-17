@@ -762,14 +762,15 @@
  {
   "task": 63,
   "arc_id": "2bee17df",
-  "points": 16.11,
-  "memory": 7200,
-  "params": 23,
+  "points": 16.65,
+  "memory": 3600,
+  "params": 618,
   "method": "custom:task063",
   "class": "FEASIBLE?",
   "sig": "transpose",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.54 (free-row=coloured-count==2 via ch0-zeroed no-pad Conv profile, no flood)"
  },
  {
   "task": 64,

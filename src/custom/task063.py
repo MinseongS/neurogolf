@@ -1,38 +1,32 @@
 """Task 063: green-fill empty interior rows/columns of a bordered square grid.
 
-True rule (ARC-GEN 2bee17df): The input is a square grid whose perimeter ring
-is fully colored (red=2/cyan=8) and whose interior contains scattered colored
-cells. For every interior row that is entirely background, the whole interior of
-that row is painted green=3; likewise for every entirely-background interior
-column.
+True rule (ARC-GEN 2bee17df): a square size×size grid (size ∈ {10,12,14}) whose
+perimeter ring is fully coloured (red=2 / cyan=8) by inward-pointing teeth, with
+scattered coloured interior cells. For every INTERIOR row r (1..size-2) whose
+interior cells (cols 1..size-2) are entirely background, the whole interior of
+that row is painted green=3; likewise for every interior column whose interior
+is entirely background. (flip / transpose are applied afterwards but preserve
+the row/column structure.)
 
-Compact characterization: let rc_colored[r] = number of non-background cells in
-row r (channels 1..9), and cc_colored[c] likewise for columns.  Because the
-perimeter endpoints always contribute exactly 2 colored cells to any in-grid
-row/column, an interior row/col is "all background" iff its colored count == 2.
+Compact characterisation (no per-cell occupancy plane needed):
 
-Memory floor-break: avoid materialising the full [1,1,30,30] occ tensor (3600B
-f32).  Instead:
-  - Extract channel-0 of input via a 1×1 Conv → ch0_f [1,1,30,30] f32 = 3600B.
-    Note: ch0[r,c] = 1 iff the cell is a background cell AND in-grid (off-grid
-    cells have ALL channels 0, so ch0 = 0 there too).  This gives us:
-      bg = (ch0_f > 0.5) = [1,1,30,30] bool 900B — naturally excludes off-grid
-      cells, so we do NOT need a separate ingrid mask.
-  - Row/col colored counts: rc_colored = rc_all - rc_ch0, where rc_all comes
-    from ReduceSum(input, [1,3]) (free, 0 extra params) and rc_ch0 from
-    ReduceSum(ch0_f, [3]) (reusing ch0_f).
-  - rceq = Or(rowfill_1d, colfill_1d) broadcasts directly to [1,1,30,30] 900B.
-  - fillb = And(rceq, bg) [1,1,30,30] bool 900B.
-  - Where(fillb, green, input) → output.
+  * Per-row coloured count rc[r] = #cells in row r with colour in channels 1..9.
+    Because the two perimeter endpoints (cols 0 and size-1) are always coloured,
+    an interior row is "all-background-interior" iff rc[r] == 2. Same for cols.
+  * A cell is filled green iff it is INTERIOR on both axes AND (its row is free
+    OR its column is free):  fill = interior_r ∧ interior_c ∧ (rowfree ∨ colfree).
+    The Or already implies the cell is background (a free row has an all-bg
+    interior, ditto a free col), so NO separate background mask is required.
 
-Total [1,1,30,30] intermediates: ch0_f (3600B f32) + bg + rceq + fillb (3×900B
-bool) = 6300B vs old 8580B (occ_f32 + 5 bool 30×30).  Params: ~23 (W_ch0,
-green, thresholds) vs old 24.
+Memory: the only [1,1,30,30] tensors are three bool masks (900B each) plus the
+FREE output; everything else is a 120B row/col profile vector. The previous
+version paid a 3600B fp32 ch0 occupancy plane — removed here by deriving the
+coloured counts directly with two channel-weighted no-pad Convs (ch0 weight 0)
+and the in-grid / interior masks from 1-D neighbour Convs on those profiles.
 """
 
 import numpy as np
-import onnx
-from onnx import helper, numpy_helper, TensorProto
+from onnx import helper, numpy_helper
 
 from ..builders import _model
 
@@ -50,47 +44,54 @@ def build(task):
         nodes.append(helper.make_node(op, inputs, [out], **attrs))
         return out
 
-    # ---- channel-0 extractor: 1x1 Conv picking only ch0 ----
-    # ch0_f[r,c] = 1.0 iff background (ch0=1); 0.0 for colored or off-grid.
-    W_ch0 = np.zeros([1, 10, 1, 1], np.float32)
-    W_ch0[0, 0, 0, 0] = 1.0
-    init("W_ch0", W_ch0)
-    n("Conv", ["input", "W_ch0"], "ch0_f")         # [1,1,30,30] f32 = 3600B
+    # ---- per-row coloured count rc[r] in ONE no-pad Conv ----
+    # Wrow[1,10,1,30]: weight 1 on channels 1..9 (colours), 0 on channel 0 (bg).
+    # Conv(input, Wrow) -> [1,1,30,1]; each output = sum over cols of coloured.
+    Wrow = np.ones([1, 10, 1, 30], np.float32)
+    Wrow[0, 0] = 0.0
+    init("Wrow", Wrow)
+    n("Conv", ["input", "Wrow"], "rc")        # [1,1,30,1] f32 = 120B
 
-    # ---- bg mask from ch0 (also encodes ingrid: off-grid ch0==0 → bg False) ----
-    init("half", np.array(0.5, np.float32))
-    n("Greater", ["ch0_f", "half"], "bg")          # [1,1,30,30] bool = 900B
+    # ---- per-col coloured count cc[c] in ONE no-pad Conv ----
+    Wcol = np.ones([1, 10, 30, 1], np.float32)
+    Wcol[0, 0] = 0.0
+    init("Wcol", Wcol)
+    n("Conv", ["input", "Wcol"], "cc")        # [1,1,1,30] f32 = 120B
 
-    # ---- row/col colored counts via ReduceSum (0 extra params) ----
-    # rc_all[r] = total in-grid cells in row r (sum over all channels)
-    # For any in-grid cell exactly one channel is 1 → sum = 1.
-    # rc_ch0[r] = count of background cells in row r.
-    # rc_colored[r] = rc_all[r] - rc_ch0[r].
-    n("ReduceSum", ["input"], "rc_all", axes=[1, 3], keepdims=1)   # [1,1,30,1]
-    n("ReduceSum", ["ch0_f"], "rc_ch0", axes=[3], keepdims=1)      # [1,1,30,1]
-    n("Sub", ["rc_all", "rc_ch0"], "rc")                           # [1,1,30,1] f32
-    n("ReduceSum", ["input"], "cc_all", axes=[1, 2], keepdims=1)   # [1,1,1,30]
-    n("ReduceSum", ["ch0_f"], "cc_ch0", axes=[2], keepdims=1)      # [1,1,1,30]
-    n("Sub", ["cc_all", "cc_ch0"], "cc")                           # [1,1,1,30] f32
+    # ---- free row/col: coloured count == 2 (only the two perimeter endpoints).
+    # In-grid rows always have rc >= 2 (the two perimeter endpoints), so
+    # rc < 2.5 <=> rc == 2 <=> free.  (off-grid rows have rc == 0 but are removed
+    # by the interior mask below, so a single Less suffices — opset-10 Equal
+    # does not accept float operands.)
+    init("c25", np.array(2.5, np.float32))
+    n("Less", ["rc", "c25"], "rowfree")       # [1,1,30,1] bool
+    n("Less", ["cc", "c25"], "colfree")       # [1,1,1,30] bool
 
-    # ---- empty-row/col indicator: rc == 2 ↔ only perimeter endpoints colored ----
-    init("th15", np.array(1.5, np.float32))
-    init("th25", np.array(2.5, np.float32))
-    n("Greater", ["rc", "th15"], "rc_g")      # [1,1,30,1] bool
-    n("Less", ["rc", "th25"], "rc_l")         # [1,1,30,1] bool
-    n("And", ["rc_g", "rc_l"], "rowfill")     # [1,1,30,1] bool (rc == 2)
-    n("Greater", ["cc", "th15"], "cc_g")      # [1,1,1,30] bool
-    n("Less", ["cc", "th25"], "cc_l")         # [1,1,1,30] bool
-    n("And", ["cc_g", "cc_l"], "colfill")     # [1,1,1,30] bool (cc == 2)
+    # ---- in-grid indicator (count > 0) as float for neighbour Conv ----
+    init("zero", np.array(0.0, np.float32))
+    n("Greater", ["rc", "zero"], "rany_b")    # [1,1,30,1] bool
+    n("Greater", ["cc", "zero"], "cany_b")    # [1,1,1,30] bool
+    n("Cast", ["rany_b"], "rany_f", to=1)     # f32 0/1  [1,1,30,1]
+    n("Cast", ["cany_b"], "cany_f", to=1)     # f32 0/1  [1,1,1,30]
 
-    # ---- fill condition: broadcast 1D conditions to [1,1,30,30] ----
-    # Or(rowfill[r], colfill[c]) broadcasts [1,1,30,1] OR [1,1,1,30] → [1,1,30,30]
-    n("Or", ["rowfill", "colfill"], "rceq")   # [1,1,30,30] bool = 900B
+    # ---- interior: a row is interior iff it AND both neighbours are in-grid;
+    # neighbour-sum via a length-3 same-pad Conv on the 1-D profile == 3, i.e.
+    # > 2.5 (only the true interior rows reach 3). ----
+    Krow = np.ones([1, 1, 3, 1], np.float32)
+    init("Krow", Krow)
+    n("Conv", ["rany_f", "Krow"], "rnb", pads=[1, 0, 1, 0])  # [1,1,30,1]
+    Kcol = np.ones([1, 1, 1, 3], np.float32)
+    init("Kcol", Kcol)
+    n("Conv", ["cany_f", "Kcol"], "cnb", pads=[0, 1, 0, 1])  # [1,1,1,30]
+    n("Greater", ["rnb", "c25"], "intr")      # [1,1,30,1] bool (interior row)
+    n("Greater", ["cnb", "c25"], "intc")      # [1,1,1,30] bool (interior col)
 
-    # ---- final fill mask: in-grid background cells in empty rows/cols ----
-    n("And", ["rceq", "bg"], "fillb")         # [1,1,30,30] bool = 900B
+    # ---- fill = interior_r ∧ interior_c ∧ (rowfree ∨ colfree) ----
+    n("Or", ["rowfree", "colfree"], "freeor")  # [1,1,30,30] bool = 900B
+    n("And", ["intr", "intc"], "intr2")        # [1,1,30,30] bool = 900B
+    n("And", ["freeor", "intr2"], "fillb")     # [1,1,30,30] bool = 900B
 
-    # ---- paint green (channel 3) on fill cells; keep input elsewhere ----
+    # ---- paint green (channel 3); keep input elsewhere ----
     green = np.zeros([1, 10, 1, 1], np.float32)
     green[0, 3, 0, 0] = 1.0
     init("green", green)
