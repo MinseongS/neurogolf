@@ -37,6 +37,10 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   task119 ray=closed-form-diagonals, task341 orientation-equivariance) + 1-2 src/custom/task*.py for idiom.
 
 ## PROVEN LEVERS (reuse — most wins came from spotting one of these)
+- ⭐ 1×1 CONV WITH RUNTIME ONE-HOT WEIGHT = pick channel k + extract its 30×30 plane in ONE op: ORT accepts a
+  non-initializer (runtime-computed) Conv weight, so a [1,10,1,1] selector one-hot built from a scalar k
+  collapses "select channel + materialise its plane" into a single 3600B Conv — strictly cheaper than
+  per-channel ReduceMax-occupancy + gate-Mul (task049).
 - ⭐ COUNT-RANK = pure rank function, NO sort/argmax-loop: "sort/label the K rare colours by count" → cnt=
   ReduceSum(input,[2,3]) [1,K,1,1]; rank_k=ReduceSum(Greater(cnt,cnt')) over a tiny [K,K]; route into FREE
   bool output via Equal(rank, target-ramp)∧mask. ⚠️ PITFALL: MUST mask channel-0 (canvas background) to 0
