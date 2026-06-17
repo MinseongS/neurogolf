@@ -3213,8 +3213,8 @@
     "method": "custom:task265",
     "class": "BAIL?",
     "sig": "random_pixels",
-    "status": "pending",
-    "verdict": ""
+    "status": "skip-marginal",
+    "verdict": "+0.099 < +0.3 bar; 2-D product-of-counts paint condition forces ~7 bool planes. OPEN: base-3 band packing -> single Equal (~+0.39 if it lands)."
   },
   {
     "task": 266,
