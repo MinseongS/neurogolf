@@ -701,8 +701,8 @@
     "method": "ext:biohack_new",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "skip-marginal",
+    "verdict": "our closed-form 15.10 < public 15.31; non-separable spiral ring-dist = genuine 30x30 fp32-plane floor. Public net kept."
   },
   {
     "task": 59,
