@@ -73,9 +73,9 @@
    "method": "custom:task012"
   },
   "13": {
-   "points": 15.430308268881676,
-   "memory": 14103,
-   "params": 221,
+   "points": 15.773195901993152,
+   "memory": 10101,
+   "params": 65,
    "method": "custom:task013"
   },
   "14": {

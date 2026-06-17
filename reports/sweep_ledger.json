@@ -148,14 +148,14 @@
   {
     "task": 13,
     "arc_id": "0a938d79",
-    "points": 15.43,
+    "points": 15.77,
     "memory": 14103,
     "params": 221,
-    "method": "custom:task013",
+    "method": "custom:13",
     "class": "FEASIBLE?",
     "sig": "transpose",
-    "status": "pending",
-    "verdict": ""
+    "status": "done",
+    "verdict": "generalizing win"
   },
   {
     "task": 14,
@@ -2154,8 +2154,8 @@
     "method": "gen:thbdh6332",
     "class": "FEASIBLE?",
     "sig": "transpose",
-    "status": "pending",
-    "verdict": ""
+    "status": "skip-marginal",
+    "verdict": "+0.25 < +0.3 bar (orientation-unify compaction)"
   },
   {
     "task": 179,
@@ -2875,8 +2875,8 @@
     "method": "ext:kojimar6275",
     "class": "CHECK",
     "sig": "-",
-    "status": "pending",
-    "verdict": ""
+    "status": "skip-marginal",
+    "verdict": "+0.22 < +0.3 bar (suffix-fill MatMul)"
   },
   {
     "task": 238,
