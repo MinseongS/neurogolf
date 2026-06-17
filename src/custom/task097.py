@@ -1,29 +1,44 @@
-"""Task 097 (ARC-AGI): erase isolated single-colour pixels.
+"""Task 097 (ARC-AGI 42a50994): erase isolated single-colour pixels.
 
-Rule (from the ARC-GEN generator): the grid holds scattered pixels, all of one
-colour. For every cell, count `friends` = number of coloured cells in its 3x3
-neighbourhood INCLUDING itself; if friends <= 1 (the pixel is isolated, only
-itself) the cell becomes black(0). Everything else is unchanged. Background and
-off-grid cells stay as they are.
+Rule (from the ARC-GEN generator): the grid (width,height in [5,20]) holds
+scattered pixels, all of ONE random colour. For every cell, count
+`friends` = number of coloured cells in its 3x3 neighbourhood INCLUDING itself;
+if friends <= 1 (i.e. a coloured cell with no coloured 8-neighbour, or a bg cell)
+the cell becomes black(0). So the ONLY cells that change are coloured cells with
+zero coloured 8-neighbours -> they are cleared to background. Background and
+off-grid cells are unchanged.
 
-Floor-break encoding (no 10-channel intermediate): the whole transform is one
-final Where into the free `output`.
-  cnt   = Conv3x3(coloured)              # friends count per cell
-  keep  = cnt > 1.5                      # >=2 friends -> keep the cell
-  ingrid= ReduceMax(input over channels) > 0.5   # 1 in-grid, 0 off-grid
-  mask  = keep OR (NOT ingrid)
-  output= Where(mask, input, bg_onehot)
-Routing: off-grid cells (all-zero input) have ingrid=0 -> mask=1 -> output=input
-(stays all-zero, matching the target). In-grid kept cells -> input. In-grid
-erased/background cells -> bg_onehot (ch0=1 = black). The 3x3 Conv weight is 0
-on channel 0 and 1 on channels 1..9, so it counts only coloured cells.
+  => output = input EVERYWHERE except in-grid coloured cells that have ZERO
+     coloured 8-neighbours, which are cleared to ch0 (background).
+
+Floor-break encoding (single conv plane, no 10-channel intermediate):
+  BANDED 3x3 Conv over channels 1..9 with CENTRE weight 10 and the 8 neighbour
+  weights 1:
+      C = 10*(centre coloured) + (# coloured 8-neighbours)
+  - bg / off-grid cell (centre not coloured):  C in 0..8.
+  - coloured cell:                             C = 10 + (#nbrs) in 10..18.
+  A coloured-and-isolated cell is EXACTLY C == 10 (the unique band, no separate
+  occupancy plane needed; bg/off-grid never reach 10).  fp32 Equal on integer
+  conv values is exact.
+      kill   = (C == 10)
+      output = Where(kill, bg_onehot, input)
+  Off-grid cells (all-zero input) have C<=8 -> kill=0 -> output=input (stays
+  all-zero); in-grid kept/bg cells pass input through; isolated coloured cells
+  become ch0=1.  Off-grid SAME-pad neighbours read as 0, matching the generator's
+  get_val() out-of-grid = 0.
+
+  mem = ONE fp32 [1,1,30,30] conv plane (3600B, irreducible: Conv must consume the
+  fp32 input) + one bool [1,1,30,30] kill mask; the 10-ch expansion is routed into
+  the FREE Where output.
 """
 
 import numpy as np
 import onnx
 from onnx import helper, numpy_helper, TensorProto
 
-from ..builders import _model
+from ..harness import IR_VERSION
+
+F32 = TensorProto.FLOAT
 
 
 def build(task):
@@ -33,25 +48,25 @@ def build(task):
         inits.append(numpy_helper.from_array(np.ascontiguousarray(arr, dtype=dtype), name))
         return name
 
-    # 3x3 Conv weight: count coloured cells (channels 1..9) in the neighbourhood.
-    W = np.zeros((1, 10, 3, 3), dtype=np.float32)
-    W[0, 1:, :, :] = 1.0
+    def n(op, ins, out, **kw):
+        nodes.append(helper.make_node(op, ins, [out], **kw))
+
+    # Banded 3x3 Conv over channels 1..9: centre weight 10, the 8 neighbours weight 1.
+    W = np.ones((1, 10, 3, 3), dtype=np.float32)
+    W[0, 0, :, :] = 0.0          # channel 0 (background) never counts
+    W[0, 1:, 1, 1] = 10.0        # centre cell of every colour channel
     init("W3x3", W)
-    init("thr15", np.array([1.5], dtype=np.float32))
-    init("thr05", np.array([0.5], dtype=np.float32))
+    init("ten", np.array([10.0], dtype=np.float32))
     bg = np.zeros((1, 10, 1, 1), dtype=np.float32)
     bg[0, 0, 0, 0] = 1.0
     init("bg_onehot", bg)
 
-    def n(op, ins, out, **kw):
-        nodes.append(helper.make_node(op, ins, [out], **kw))
+    n("Conv", ["input", "W3x3"], "C", pads=[1, 1, 1, 1])   # [1,1,30,30] fp32 banded count
+    n("Equal", ["C", "ten"], "kill")                        # bool (opset 11 float Equal): coloured & isolated
+    n("Where", ["kill", "bg_onehot", "input"], "output")    # route 10-ch into FREE fp32 output
 
-    n("Conv", ["input", "W3x3"], "cnt", pads=[1, 1, 1, 1])         # [1,1,30,30] friends
-    n("Greater", ["cnt", "thr15"], "keep")                          # >=2 friends
-    n("ReduceMax", ["input"], "s", axes=[1], keepdims=1)            # 1 in-grid, 0 off-grid
-    n("Greater", ["s", "thr05"], "ingrid")
-    n("Not", ["ingrid"], "notin")
-    n("Or", ["keep", "notin"], "mask")
-    n("Where", ["mask", "input", "bg_onehot"], "output")
-
-    return _model(nodes, inits)
+    x = helper.make_tensor_value_info("input", F32, [1, 10, 30, 30])
+    y = helper.make_tensor_value_info("output", F32, [1, 10, 30, 30])
+    graph = helper.make_graph(nodes, "task097", [x], [y], inits)
+    return helper.make_model(graph, ir_version=IR_VERSION,
+                             opset_imports=[helper.make_opsetid("", 11)])

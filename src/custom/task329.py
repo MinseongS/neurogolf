@@ -1,27 +1,34 @@
-"""task329 (ARC-AGI d23f8c26) — keep only the middle column, clear the rest.
+"""Task 329 (d23f8c26): keep only the middle column of a square grid.
 
-Rule (from the generator): the grid is a square `size x size` of random colours
-(size always ODD = 2*randint(1,4)+1, anchored top-left).  The output keeps the
-cell at column `size//2` (the middle column) unchanged for every row, and clears
-every other cell to background (0).
+Rule (from ARC-GEN generator, verified):
+  Input is a square SIZE x SIZE grid (SIZE odd, in {3,5,7,9}) anchored at the
+  top-left corner of the 30x30 canvas; every in-grid cell is either background
+  (0) or a random colour.  Output is the same grid with EVERY cell zeroed
+  EXCEPT the middle column (c == SIZE//2), which copies the input verbatim.
+  Off-grid cells are background (all-channels-off in the one-hot embedding).
 
-Memory floor-break (single uint8 label map + final Equal):
-  v[r,c] = 16*ingrid + colour_index   (one 1x1 Conv; weights are params)
-     off-grid      -> 0
-     in-grid black -> 16
-     in-grid col k -> 16 + k
-  ingrid[r,c] = (v > 15).  The in-grid region is a square anchored top-left, so
-  every in-grid column is full; the in-grid width W = sum_c colHas[c] where
-  colHas[c] = max over rows of ingrid.  size is ODD => the middle column index is
-  mid = (W-1)/2 (exact integer).  A column-index plane is compared to mid.
+Key structural facts:
+  * In the 10-channel one-hot embedding an OFF-GRID cell has ALL channels 0
+    (the harness only sets cells inside the grid).  Every IN-GRID cell sets
+    exactly one channel (ch0 for background).  Therefore:
+        in-grid column  <=>  some channel is on in that column
+        in-grid row     <=>  some channel is on in that row
+    and SIZE = (number of in-grid columns).  Verified 0 mismatches / 60000.
+  * mid = floor(SIZE / 2).
 
-  L[r,c] = vu8 (16..25)   if in-grid AND col == mid   (passthrough colour)
-           16             elif in-grid                 (cleared -> background 0)
-           0              else (off-grid)              (matches nothing)
-  output = Equal(L, arange(16..25))  (BOOL, opset 11)
+Encoding (spatial COPY routed into the FREE Where output, no colour plane):
+  colany[c] = ReduceMax(input, axes=[1,2])  -> [1,1,1,30]  (1 iff col in-grid)
+  rowany[r] = ReduceMax(input, axes=[1,3])  -> [1,1,30,1]  (1 iff row in-grid)
+  SIZE      = ReduceSum(colany, axes=[3])   -> [1,1,1,1]
+  mid       = floor(SIZE / 2)               -> [1,1,1,1]
+  fill[r,c] = rowany[r] AND (c != mid) AND colany[c]   -> [1,1,30,30] bool
+  output    = Where(fill, bg_onehot[1,10,1,1], input)
+              at non-mid in-grid cells -> background one-hot (ch0=1)
+              at mid col (fill False, in-grid) -> input copied verbatim
+              off-grid (fill False) -> input == all-zero -> correct.
 
-  Only one ~900B uint8 plane (L) is materialised; everything else is 1-D / small.
-  All values are small integers, exact in float32 / uint8.
+  The only ~900B intermediate is the bool fill plane; the rest is 1-D (<=120B)
+  or scalar.  No [1,10,30,30] colour plane is ever materialised.
 """
 
 import numpy as np
@@ -44,53 +51,38 @@ def build(task):
         return out
 
     F = TensorProto.FLOAT
-    U8 = TensorProto.UINT8
     B = TensorProto.BOOL
 
-    init("fifteen", np.array(15.5, np.float32), np.float32)
+    init("colramp", np.arange(30, dtype=np.float32).reshape(1, 1, 1, 30),
+         np.float32)
+    init("half", np.array(0.5, np.float32), np.float32)
+    init("bg_onehot",
+         np.array([1] + [0] * 9, dtype=np.float32).reshape(1, 10, 1, 1),
+         np.float32)
 
-    # v[r,c] = 16*ingrid + colour_index via one 1x1 Conv.
-    cw = (np.arange(10, dtype=np.float32) + 16.0).reshape(1, 10, 1, 1)
-    cw[0, 0, 0, 0] = 16.0  # ch0 (black/background): only the +16 in-grid term
-    init("cw", cw, np.float32)
-    n("Conv", ["input", "cw"], "vf")                   # [1,1,30,30] fp32
+    # per-axis in-grid occupancy (1 iff that row/col lies inside the grid)
+    n("ReduceMax", ["input"], "colany", axes=[1, 2], keepdims=1)  # [1,1,1,30]
+    n("ReduceMax", ["input"], "rowany", axes=[1, 3], keepdims=1)  # [1,1,30,1]
 
-    n("Greater", ["vf", "fifteen"], "ingrid_b")        # v > 15  (in-grid)
-    n("Cast", ["vf"], "vu8", to=U8)                    # [1,1,30,30] uint8
+    # SIZE and middle-column index
+    n("ReduceSum", ["colany"], "size", axes=[3], keepdims=1)      # [1,1,1,1]
+    n("Mul", ["size", "half"], "size_h")
+    n("Floor", ["size_h"], "mid")                                 # floor(SIZE/2)
 
-    # colHas[c] = 1 iff column c is in-grid.  Derive from a 1-D reduction over vf
-    # (avoids materialising a 30x30 ingrid float plane): colmax[c] = max over rows
-    # of v; column is in-grid iff colmax > 15.
-    n("ReduceMax", ["vf"], "colmax", axes=[2], keepdims=1)        # [1,1,1,30]
-    n("Greater", ["colmax", "fifteen"], "colHas_b")              # [1,1,1,30] bool
-    n("Cast", ["colHas_b"], "colHas", to=F)                      # [1,1,1,30] {0,1}
-    # in-grid width W = sum_c colHas[c]
-    n("ReduceSum", ["colHas"], "W", axes=[3], keepdims=1)         # [1,1,1,1]
-    # size is odd => mid column index = (W-1)/2
-    init("one", np.array(1.0, np.float32), np.float32)
-    init("two", np.array(2.0, np.float32), np.float32)
-    n("Sub", ["W", "one"], "Wm1")
-    n("Div", ["Wm1", "two"], "mid")                    # [1,1,1,1] integer-valued
+    # fill condition = non-mid AND in-grid (row and col both in-grid)
+    n("Equal", ["colramp", "mid"], "is_mid")                      # [1,1,1,30] bool
+    n("Not", ["is_mid"], "not_mid")
+    n("Greater", ["colany", "half"], "colin")                     # [1,1,1,30] bool
+    n("Greater", ["rowany", "half"], "rowin")                     # [1,1,30,1] bool
+    n("And", ["not_mid", "colin"], "fillcol")                     # [1,1,1,30] bool
+    n("And", ["rowin", "fillcol"], "fill")                        # [1,1,30,30] bool
 
-    # column-index plane [1,1,1,30] = 0,1,2,...,29
-    colidx = np.arange(30, dtype=np.float32).reshape(1, 1, 1, 30)
-    init("colidx", colidx, np.float32)
-    n("Equal", ["colidx", "mid"], "colmid_b")          # [1,1,1,30] bool
-    # keep cell iff in-grid AND col == mid
-    n("And", ["colmid_b", "ingrid_b"], "keep_b")       # [1,1,30,30] broadcast
-
-    # cleared in-grid cells -> 16 (colour 0 in the 16-shifted space => background)
-    init("v16", np.array(16, np.uint8), np.uint8)
-    n("Where", ["ingrid_b", "v16", "vu8"], "Lclear")   # in-grid->16 else off (0)
-    # kept cells restore their colour (vu8); everything else stays Lclear
-    n("Where", ["keep_b", "vu8", "Lclear"], "L")       # [1,1,30,30] uint8
-
-    chan = (np.arange(10, dtype=np.uint8) + 16).reshape(1, 10, 1, 1)
-    init("chan", chan, np.uint8)
-    n("Equal", ["L", "chan"], "output")                # [1,10,30,30] BOOL
+    # route the 10-channel expansion into the FREE output
+    n("Where", ["fill", "bg_onehot", "input"], "output")          # [1,10,30,30] f32
 
     x = helper.make_tensor_value_info("input", F, [1, 10, 30, 30])
-    y = helper.make_tensor_value_info("output", B, [1, 10, 30, 30])
-    g = helper.make_graph(nodes, "task329", [x], [y], inits)
-    return helper.make_model(g, ir_version=IR_VERSION,
-                             opset_imports=[helper.make_opsetid("", 11)])
+    y = helper.make_tensor_value_info("output", F, [1, 10, 30, 30])
+    graph = helper.make_graph(nodes, "task329", [x], [y], inits)
+    return helper.make_model(
+        graph, ir_version=IR_VERSION,
+        opset_imports=[helper.make_opsetid("", 11)])

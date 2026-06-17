@@ -1169,14 +1169,15 @@
  {
   "task": 97,
   "arc_id": "42a50994",
-  "points": 15.7,
-  "memory": 10800,
-  "params": 102,
+  "points": 16.57,
+  "memory": 4500,
+  "params": 101,
   "method": "custom:task097",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.87"
  },
  {
   "task": 98,
@@ -1496,14 +1497,15 @@
  {
   "task": 124,
   "arc_id": "53b68214",
-  "points": 15.71,
-  "memory": 10520,
-  "params": 353,
+  "points": 16.04,
+  "memory": 7694,
+  "params": 119,
   "method": "ext:biohack_new",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.33"
  },
  {
   "task": 125,
@@ -3984,14 +3986,15 @@
  {
   "task": 329,
   "arc_id": "d23f8c26",
-  "points": 15.76,
-  "memory": 10214,
-  "params": 46,
+  "points": 17.8,
+  "memory": 1302,
+  "params": 41,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +2.04"
  },
  {
   "task": 330,
