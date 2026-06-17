@@ -1,31 +1,35 @@
 """Task 228 (ARC-AGI 952a094c) — box with interior corner pixels ejected.
 
 Rule (from the generator):
-  A solid rectangle of `bcolor` (outline ring; interior cleared to black) sits in
-  the grid.  Inside, at the 4 interior corners of the ring, are 4 distinct colours:
-    colors[0] at (r0+1, c0+1)  (interior top-left)
-    colors[1] at (r0+1, c1-1)  (interior top-right)
-    colors[2] at (r1-1, c0+1)  (interior bottom-left)
-    colors[3] at (r1-1, c1-1)  (interior bottom-right)
-  box outer bounds are rows [r0, r1], cols [c0, c1].
+  A hollow rectangle of `bcolor` (outline ring; interior all black) sits in the
+  10x10 grid.  Inside, at the 4 interior corners, are 4 distinct colours:
+    colors[0] at (r0+1, c0+1)   (interior top-left)
+    colors[1] at (r0+1, c1-1)   (interior top-right)
+    colors[2] at (r1-1, c0+1)   (interior bottom-left)
+    colors[3] at (r1-1, c1-1)   (interior bottom-right)
+  where the box outer bounds are rows [r0,r1], cols [c0,c1].
 
-  Output: the same ring (interior all black), and the 4 colours EJECTED to the 4
-  *outer* diagonal corners, each going to the diagonally OPPOSITE outer corner:
-    (r0-1, c0-1) = colors[3]   (interior BR -> outer TL)
-    (r0-1, c1+1) = colors[2]   (interior BL -> outer TR)
-    (r1+1, c0-1) = colors[1]   (interior TR -> outer BL)
-    (r1+1, c1+1) = colors[0]   (interior TL -> outer BR)
-  i.e. the colour in interior quadrant Q moves to the outer corner of the OPPOSITE
-  quadrant.
+  Output: the SAME hollow ring (interior all black, the interior corner pixels
+  cleared) plus the 4 colours EJECTED to the 4 *outer* diagonal corners, each
+  moving to the diagonally OPPOSITE outer corner (point-reflection through the
+  box centre):
+    (r0-1, c0-1) = colors[3]   (interior BR  -> outer TL)
+    (r0-1, c1+1) = colors[2]   (interior BL  -> outer TR)
+    (r1+1, c0-1) = colors[1]   (interior TR  -> outer BL)
+    (r1+1, c1+1) = colors[0]   (interior TL  -> outer BR)
 
-Memory floor-break (label map + final Equal):
-  The grid is always 10x10, so all work is done on a WORK=10 canvas (the whole
-  grid, no off-grid cells inside it) and Pad fills the rest of the 30x30 with the
-  off-grid sentinel 10.  We detect bcolor (most frequent non-zero channel), the
-  box bounds r0/r1/c0/c1, and the 4 interior corner colours (max of the colour
-  plane in each box quadrant), then build a single uint8 label map L and emit
-  output = Equal(L, arange[1,10,1,1]) (opset 11, BOOL).  No [1,10,30,30]
-  intermediate is materialised; all values are small ints (exact fp16/uint8).
+Lean reconstruction (NO 30x30 colour plane):
+  The whole output is reconstructible from a handful of SCALARS:
+    * bcolor       = ArgMax over channel pixel-counts (ch0 masked).
+    * r0,r1,c0,c1  = min/max index of the bcolor channel's row/col occupancy.
+    * 4 corner colours = the unique non-bg, non-bcolor colour present in each
+      (top|bottom row-band) x (left|right col-band) combination.
+  Box bounds + corner colours both come from the two per-channel occupancy
+  reductions ReduceMax(input,[3]) [1,10,30,1] and ReduceMax(input,[2]) [1,10,1,30]
+  (1200B each) — NO 3600B fp32 [1,1,30,30] colour Conv is ever materialised.
+  The label map L is then assembled on a WORK=10 uint8 canvas (separable ring
+  frame from 1-D bounds + 4 single-cell outer-corner Wheres), Pad'ed to 30x30
+  with sentinel 10, and emitted as output = Equal(L, arange) (opset 11, BOOL).
 """
 
 import numpy as np
@@ -38,8 +42,9 @@ F32 = TensorProto.FLOAT
 F16 = TensorProto.FLOAT16
 U8 = TensorProto.UINT8
 B = TensorProto.BOOL
+I64 = TensorProto.INT64
 
-WORK = 10  # grid is always 10x10; work on exactly the grid, pad rest to sentinel
+WORK = 10  # grid is always 10x10 at the top-left of the 30x30 canvas
 
 
 def build(task):
@@ -54,126 +59,172 @@ def build(task):
         nodes.append(helper.make_node(op, ins, [out], **attrs))
         return out
 
-    # ---- colour plane G (0 background AND off-grid), sliced to WORK in fp16 -
-    init("Wg", np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1), np.float32)
-    n("Conv", ["input", "Wg"], "Gf")                  # [1,1,30,30] f32 colour
-    init("st", np.array([0, 0, 0], np.int64), np.int64)
-    init("en", np.array([1, WORK, WORK], np.int64), np.int64)
-    init("ax", np.array([1, 2, 3], np.int64), np.int64)
-    n("Slice", ["Gf", "st", "en", "ax"], "Gs")        # [1,1,WORK,WORK] f32
-    n("Cast", ["Gs"], "G", to=F16)                    # fp16 (288B)
-    init("Half", np.array(0.5, np.float16), np.float16)
+    # ---- per-channel occupancy over the FREE input (fp32 reductions) --------
+    n("ReduceMax", ["input"], "rowocc", axes=[3], keepdims=1)  # [1,10,30,1] f32
+    n("ReduceMax", ["input"], "colocc", axes=[2], keepdims=1)  # [1,10,1,30] f32
 
-    # ---- bcolor = argmax over channels 1..9 of cell counts -----------------
+    # ---- bcolor = argmax over channels 1..9 of cell counts ------------------
     n("ReduceSum", ["input"], "counts", axes=[2, 3], keepdims=1)  # [1,10,1,1]
     init("mask01", np.array([0] + [1] * 9, np.float32).reshape(1, 10, 1, 1), np.float32)
-    n("Mul", ["counts", "mask01"], "counts1")          # zero ch0
-    n("ArgMax", ["counts1"], "bidx", axis=1, keepdims=1)  # [1,1,1,1] int64
-    n("Cast", ["bidx"], "bcolor_f", to=F16)            # scalar colour value
-    n("Cast", ["bidx"], "bcolor_u", to=U8)             # uint8 scalar
+    n("Mul", ["counts", "mask01"], "counts1")
+    n("ArgMax", ["counts1"], "bidx", axis=1, keepdims=1)        # [1,1,1,1] int64
+    n("Squeeze", ["bidx"], "bidx_s", axes=[0, 1, 2, 3])        # scalar int64
+    n("Cast", ["bidx"], "bcolor_u", to=U8)                     # uint8 scalar [1,1,1,1]
 
-    # ---- box mask = (G == bcolor) (interior is black -> not in box) --------
-    # uint8 colour plane (100B) gives cheap exact Equal/comparisons.
-    n("Cast", ["G"], "Gu", to=U8)                      # [1,1,WORK,WORK] uint8
-    init("v0u", np.array(0, np.uint8), np.uint8)
-    n("Equal", ["Gu", "bcolor_u"], "box_b")            # ring
-    n("Equal", ["Gu", "v0u"], "bg_b"); n("Not", ["bg_b"], "nonbg_b")  # coloured
-    n("Cast", ["box_b"], "box_f", to=F16)
+    # ---- bcolor-channel row/col occupancy (Gather one channel), sliced to 10 -
+    # rowocc[1,10,30,1] -> pick channel bidx along axis=1 -> [1,30,1]
+    n("Gather", ["rowocc", "bidx_s"], "browocc_g", axis=1)     # [1,30,1] f32
+    n("Unsqueeze", ["browocc_g"], "browocc", axes=[0])         # [1,1,30,1]
+    n("Gather", ["colocc", "bidx_s"], "bcolocc_g", axis=1)     # [1,1,30] f32
+    n("Unsqueeze", ["bcolocc_g"], "bcolocc", axes=[0])         # [1,1,1,30]
 
-    # ---- box bounds r0,r1,c0,c1 (scalars) ----------------------------------
-    n("ReduceMax", ["box_f"], "rowocc", axes=[3], keepdims=1)  # [1,1,WORK,1]
-    n("ReduceMax", ["box_f"], "colocc", axes=[2], keepdims=1)  # [1,1,1,WORK]
-    init("Icol", np.arange(WORK, dtype=np.float16).reshape(1, 1, WORK, 1), np.float16)
-    init("IcolH", (WORK - np.arange(WORK)).astype(np.float16).reshape(1, 1, WORK, 1), np.float16)
-    init("Irow", np.arange(WORK, dtype=np.float16).reshape(1, 1, 1, WORK), np.float16)
-    init("IrowH", (WORK - np.arange(WORK)).astype(np.float16).reshape(1, 1, 1, WORK), np.float16)
-    init("CW", np.array(float(WORK), np.float16), np.float16)
-    n("Mul", ["rowocc", "IcolH"], "r0a"); n("ReduceMax", ["r0a"], "r0m", keepdims=1)
-    n("Sub", ["CW", "r0m"], "r0")                      # [1,1,1,1]
-    n("Mul", ["rowocc", "Icol"], "r1a"); n("ReduceMax", ["r1a"], "r1", keepdims=1)
-    n("Mul", ["colocc", "IrowH"], "c0a"); n("ReduceMax", ["c0a"], "c0m", keepdims=1)
-    n("Sub", ["CW", "c0m"], "c0")
-    n("Mul", ["colocc", "Irow"], "c1a"); n("ReduceMax", ["c1a"], "c1", keepdims=1)
+    init("half32", np.array(0.5, np.float32), np.float32)
+    n("Greater", ["browocc", "half32"], "browb30")            # [1,1,30,1] bool
+    n("Greater", ["bcolocc", "half32"], "bcolb30")            # [1,1,1,30] bool
+    init("s0", np.array([0], np.int64), np.int64)
+    init("sW", np.array([WORK], np.int64), np.int64)
+    init("ax2", np.array([2], np.int64), np.int64)
+    init("ax3", np.array([3], np.int64), np.int64)
+    n("Slice", ["browb30", "s0", "sW", "ax2"], "browb")       # [1,1,W,1] bool
+    n("Slice", ["bcolb30", "s0", "sW", "ax3"], "bcolb")       # [1,1,1,W] bool
 
-    # ---- box centre (mid row / mid col) ------------------------------------
-    init("Two", np.array(2.0, np.float16), np.float16)
-    n("Add", ["r0", "r1"], "rs"); n("Div", ["rs", "Two"], "rmid")
-    n("Add", ["c0", "c1"], "cs"); n("Div", ["cs", "Two"], "cmid")
+    # ---- box bounds r0,r1,c0,c1 (scalars, fp16) over the WORK=10 ramps -------
+    init("wr", np.arange(WORK, dtype=np.float16).reshape(1, 1, WORK, 1), np.float16)
+    init("wc", np.arange(WORK, dtype=np.float16).reshape(1, 1, 1, WORK), np.float16)
+    init("PBIG", np.array(100.0, np.float16), np.float16)
+    init("NBIG", np.array(-100.0, np.float16), np.float16)
 
-    # ---- colour-pixel plane: non-background and non-bcolor (the 4 pixels) ---
-    n("Not", ["box_b"], "notbc_b")                     # not bcolor
-    n("And", ["nonbg_b", "notbc_b"], "pix_b")          # [1,1,WORK,WORK] the 4 pixels
-    init("zeroG", np.array(0.0, np.float16), np.float16)
-    n("Where", ["pix_b", "G", "zeroG"], "Gpix")        # colour where pixel else 0
+    n("Where", ["browb", "wr", "PBIG"], "r0src")
+    n("ReduceMin", ["r0src"], "r0", axes=[2], keepdims=1)     # [1,1,1,1] f16
+    n("Where", ["browb", "wr", "NBIG"], "r1src")
+    n("ReduceMax", ["r1src"], "r1", axes=[2], keepdims=1)
+    n("Where", ["bcolb", "wc", "PBIG"], "c0src")
+    n("ReduceMin", ["c0src"], "c0", axes=[3], keepdims=1)
+    n("Where", ["bcolb", "wc", "NBIG"], "c1src")
+    n("ReduceMax", ["c1src"], "c1", axes=[3], keepdims=1)
 
-    # ---- quadrant masks relative to box centre -----------------------------
-    # Collapse to two 10x10 planes (top / bottom rows of Gpix), reduce over rows
-    # to per-column [1,1,1,WORK] vectors, then split left/right -> 4 scalars.
-    init("zero16", np.array(0.0, np.float16), np.float16)
-    n("Less", ["Icol", "rmid"], "top_b")               # [1,1,WORK,1]
-    n("Greater", ["Icol", "rmid"], "bot_b")
-    n("Less", ["Irow", "cmid"], "lft_b")               # [1,1,1,WORK]
-    n("Greater", ["Irow", "cmid"], "rgt_b")
+    # ---- interior / exterior corner row & col indices (scalars) -------------
+    init("One16", np.array(1.0, np.float16), np.float16)
+    n("Add", ["r0", "One16"], "ri_t")   # interior top row    = r0+1
+    n("Sub", ["r1", "One16"], "ri_b")   # interior bottom row = r1-1
+    n("Add", ["c0", "One16"], "ci_l")   # interior left  col  = c0+1
+    n("Sub", ["c1", "One16"], "ci_r")   # interior right col  = c1-1
+    n("Sub", ["r0", "One16"], "ro_t")   # outer top row    = r0-1
+    n("Add", ["r1", "One16"], "ro_b")   # outer bottom row = r1+1
+    n("Sub", ["c0", "One16"], "co_l")   # outer left  col  = c0-1
+    n("Add", ["c1", "One16"], "co_r")   # outer right col  = c1+1
 
-    n("Where", ["top_b", "Gpix", "zero16"], "Gtop")    # [1,1,WORK,WORK]
-    n("Where", ["bot_b", "Gpix", "zero16"], "Gbot")
-    n("ReduceMax", ["Gtop"], "topcol", axes=[2], keepdims=1)  # [1,1,1,WORK]
-    n("ReduceMax", ["Gbot"], "botcol", axes=[2], keepdims=1)
+    # ---- 4 corner colours (channel presence at interior corner row/col) -----
+    # present_top[k] = colour k present in row (r0+1); from rowocc Gather'd at
+    # that row.  Likewise bottom/left/right.  bcolor & ch0 masked out so only the
+    # 4 distinct corner colours survive.  A colour is in the TL interior corner
+    # iff it is in the top colour-row AND the left colour-col, etc.
+    n("Cast", ["ri_t"], "ri_t_i", to=I64); n("Squeeze", ["ri_t_i"], "ri_t_s", axes=[0, 1, 2, 3])
+    n("Cast", ["ri_b"], "ri_b_i", to=I64); n("Squeeze", ["ri_b_i"], "ri_b_s", axes=[0, 1, 2, 3])
+    n("Cast", ["ci_l"], "ci_l_i", to=I64); n("Squeeze", ["ci_l_i"], "ci_l_s", axes=[0, 1, 2, 3])
+    n("Cast", ["ci_r"], "ci_r_i", to=I64); n("Squeeze", ["ci_r_i"], "ci_r_s", axes=[0, 1, 2, 3])
 
-    def split(colvec, sidemask, name):
-        n("Where", [sidemask, colvec, "zero16"], name + "_m")  # [1,1,1,WORK]
-        n("ReduceMax", [name + "_m"], name + "_c", axes=[3], keepdims=1)  # scalar
-        return name + "_c"
+    # presence vectors : Gather (scalar idx) drops the gathered spatial axis ->
+    # [1,10,1]; Unsqueeze back to [1,10,1,1] so broadcasts stay aligned.
+    n("Gather", ["rowocc", "ri_t_s"], "ptop_r", axis=2); n("Unsqueeze", ["ptop_r"], "ptop_g", axes=[2])
+    n("Gather", ["rowocc", "ri_b_s"], "pbot_r", axis=2); n("Unsqueeze", ["pbot_r"], "pbot_g", axes=[2])
+    n("Gather", ["colocc", "ci_l_s"], "plft_r", axis=3); n("Unsqueeze", ["plft_r"], "plft_g", axes=[3])
+    n("Gather", ["colocc", "ci_r_s"], "prgt_r", axis=3); n("Unsqueeze", ["prgt_r"], "prgt_g", axes=[3])
 
-    cTL = split("topcol", "lft_b", "qtl")  # colors[0]
-    cTR = split("topcol", "rgt_b", "qtr")  # colors[1]
-    cBL = split("botcol", "lft_b", "qbl")  # colors[2]
-    cBR = split("botcol", "rgt_b", "qbr")  # colors[3]
+    # mask: exclude ch0 (background) and the bcolor channel (bool, [1,10,1,1])
+    init("chan_u8", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
+    init("zero_u8", np.array(0, np.uint8), np.uint8)
+    n("Equal", ["chan_u8", "zero_u8"], "is_ch0")              # [1,10,1,1] bool
+    n("Equal", ["chan_u8", "bcolor_u"], "is_bc")
+    n("Or", ["is_ch0", "is_bc"], "drop_ch")
+    n("Not", ["drop_ch"], "keep_ch")                          # [1,10,1,1] bool
 
-    # ---- output corner cells (single-cell masks) ---------------------------
-    init("One", np.array(1.0, np.float16), np.float16)
-    n("Sub", ["r0", "One"], "or0")     # outer-top row    = r0-1
-    n("Add", ["r1", "One"], "or1")     # outer-bottom row = r1+1
-    n("Sub", ["c0", "One"], "oc0")     # outer-left col   = c0-1
-    n("Add", ["c1", "One"], "oc1")     # outer-right col  = c1+1
+    # presence -> bool, then masked once: kpt = keep AND present.
+    n("Greater", ["ptop_g", "half32"], "ptop_b")
+    n("Greater", ["pbot_g", "half32"], "pbot_b")
+    n("Greater", ["plft_g", "half32"], "plft_b")
+    n("Greater", ["prgt_g", "half32"], "prgt_b")
+    n("And", ["ptop_b", "keep_ch"], "ptop_k")                 # [1,10,1,1] bool
+    n("And", ["pbot_b", "keep_ch"], "pbot_k")
+    # corner colour: channel where (rowband AND colband) -> sum of k over that
+    # single surviving channel, computed in fp16 (chan ramp <16, exact).
+    init("chan16", np.arange(10, dtype=np.float16).reshape(1, 10, 1, 1), np.float16)
 
-    def rowmask(val, name):
-        n("Sub", ["Icol", val], name + "_d"); n("Abs", [name + "_d"], name + "_a")
-        n("Greater", ["Half", name + "_a"], name + "_b")
-        return name + "_b"
+    init("zero16c", np.array(0.0, np.float16), np.float16)
 
-    def colmask(val, name):
-        n("Sub", ["Irow", val], name + "_d"); n("Abs", [name + "_d"], name + "_a")
-        n("Greater", ["Half", name + "_a"], name + "_b")
-        return name + "_b"
+    def corner(rowk, colb, name):
+        n("And", [rowk, colb], name + "_ind")                 # [1,10,1,1] bool
+        n("Where", [name + "_ind", "chan16", "zero16c"], name + "_w")  # [1,10,1,1] f16
+        n("ReduceSum", [name + "_w"], name + "_v", axes=[1], keepdims=1)  # [1,1,1,1] f16
+        return name + "_v"
 
-    rTopB = rowmask("or0", "rtop")
-    rBotB = rowmask("or1", "rbot")
-    cLftB = colmask("oc0", "clft")
-    cRgtB = colmask("oc1", "crgt")
+    cTL = corner("ptop_k", "plft_b", "ctl")   # colors[0]
+    cTR = corner("ptop_k", "prgt_b", "ctr")   # colors[1]
+    cBL = corner("pbot_k", "plft_b", "cbl")   # colors[2]
+    cBR = corner("pbot_k", "prgt_b", "cbr")   # colors[3]
 
-    n("And", [rTopB, cLftB], "oTL_b")  # outer top-left  -> cBR
-    n("And", [rTopB, cRgtB], "oTR_b")  # outer top-right -> cBL
-    n("And", [rBotB, cLftB], "oBL_b")  # outer bot-left  -> cTR
-    n("And", [rBotB, cRgtB], "oBR_b")  # outer bot-right -> cTL
+    # ---- build uint8 label map L on WORK=10 canvas (reuse wr/wc ramps) ------
+    def eq_row(val, name):  # row index == val  -> [1,1,W,1] bool (fp16 Equal exact)
+        n("Equal", ["wr", val], name)
+        return name
 
-    # ---- build uint8 label map L (in-grid background everywhere = 0) --------
-    n("Cast", [cTL], "uTL", to=U8)
-    n("Cast", [cTR], "uTR", to=U8)
-    n("Cast", [cBL], "uBL", to=U8)
-    n("Cast", [cBR], "uBR", to=U8)
-    init("v0arr", np.zeros((1, 1, WORK, WORK), np.uint8), np.uint8)
+    def eq_col(val, name):  # col index == val  -> [1,1,1,W] bool
+        n("Equal", ["wc", val], name)
+        return name
 
-    n("Where", ["box_b", "bcolor_u", "v0arr"], "L1")   # ring=bcolor else 0
-    n("Where", ["oTL_b", "uBR", "L1"], "L2")
-    n("Where", ["oTR_b", "uBL", "L2"], "L3")
-    n("Where", ["oBL_b", "uTR", "L3"], "L4")
-    n("Where", ["oBR_b", "uTL", "L4"], "L5")           # [1,1,WORK,WORK] uint8
+    def le_row(lo, hi, name):  # lo <= row <= hi -> [1,1,W,1] bool
+        n("Less", ["wr", lo], name + "_lt"); n("Less", [hi, "wr"], name + "_gt")
+        n("Or", [name + "_lt", name + "_gt"], name + "_out"); n("Not", [name + "_out"], name)
+        return name
 
-    # ---- pad to 30x30 with sentinel 10, then final Equal -------------------
+    def le_col(lo, hi, name):  # lo <= col <= hi -> [1,1,1,W] bool
+        n("Less", ["wc", lo], name + "_lt"); n("Less", [hi, "wc"], name + "_gt")
+        n("Or", [name + "_lt", name + "_gt"], name + "_out"); n("Not", [name + "_out"], name)
+        return name
+
+    # ring frame = (row in {r0,r1} AND c0<=col<=c1) OR (col in {c0,c1} AND r0<=row<=r1)
+    r_is_r0 = eq_row("r0", "r_r0")
+    r_is_r1 = eq_row("r1", "r_r1")
+    c_is_c0 = eq_col("c0", "c_c0")
+    c_is_c1 = eq_col("c1", "c_c1")
+    r_in = le_row("r0", "r1", "r_in")
+    c_in = le_col("c0", "c1", "c_in")
+    n("Or", [r_is_r0, r_is_r1], "r_edge")                     # [1,1,W,1]
+    n("Or", [c_is_c0, c_is_c1], "c_edge")                     # [1,1,1,W]
+    n("And", ["r_edge", c_in], "hbar")                        # horizontal edges
+    n("And", [r_in, "c_edge"], "vbar")                        # vertical edges
+    n("Or", ["hbar", "vbar"], "frame_b")                      # [1,1,W,W] bool ring
+
+    # outer-corner label as a sum of two rank-1 outer products (fp16, exact):
+    #   Lcorner[r,c] = (r==ro_t)*topcols[c] + (r==ro_b)*botcols[c]
+    #   topcols[c]   = cBR*(c==co_l) + cBL*(c==co_r)   (outer TL gets cBR, TR gets cBL)
+    #   botcols[c]   = cTR*(c==co_l) + cTL*(c==co_r)   (outer BL gets cTR, BR gets cTL)
+    or_t = eq_row("ro_t", "or_t")    # [1,1,W,1] bool
+    or_b = eq_row("ro_b", "or_b")
+    oc_l = eq_col("co_l", "oc_l")    # [1,1,1,W] bool
+    oc_r = eq_col("co_r", "oc_r")
+    n("Cast", [or_t], "ort_f", to=F16); n("Cast", [or_b], "orb_f", to=F16)
+    n("Cast", [oc_l], "ocl_f", to=F16); n("Cast", [oc_r], "ocr_f", to=F16)
+    # topcols / botcols  [1,1,1,W] f16
+    n("Mul", [cBR, "ocl_f"], "tc_l"); n("Mul", [cBL, "ocr_f"], "tc_r")
+    n("Add", ["tc_l", "tc_r"], "topcols")
+    n("Mul", [cTR, "ocl_f"], "bc_l"); n("Mul", [cTL, "ocr_f"], "bc_r")
+    n("Add", ["bc_l", "bc_r"], "botcols")
+    # one MatMul instead of two outer products + Add:
+    #   rows[1,1,W,2] = [ort_f | orb_f] , cols[1,1,2,W] = [topcols; botcols]
+    #   Lcorner = rows @ cols  -> [1,1,W,W]
+    n("Concat", ["ort_f", "orb_f"], "rowsel", axis=3)         # [1,1,W,2] f16
+    n("Concat", ["topcols", "botcols"], "colsel", axis=2)     # [1,1,2,W] f16
+    n("MatMul", ["rowsel", "colsel"], "Lcorner_f")            # [1,1,W,W] f16
+    n("Cast", ["Lcorner_f"], "Lcorner_u8", to=U8)
+
+    # assemble label map (uint8): ring=bcolor over the frame, else outer-corner.
+    n("Where", ["frame_b", "bcolor_u", "Lcorner_u8"], "L5")   # [1,1,W,W] uint8
+
+    # ---- pad to 30x30 with sentinel 10, final Equal -------------------------
     init("padpads", np.array([0, 0, 0, 0, 0, 0, 30 - WORK, 30 - WORK], np.int64), np.int64)
     init("padval", np.array(10, np.uint8), np.uint8)
-    n("Pad", ["L5", "padpads", "padval"], "L", mode="constant")  # [1,1,30,30] uint8
+    n("Pad", ["L5", "padpads", "padval"], "L", mode="constant")  # [1,1,30,30] u8
     init("chan", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
     n("Equal", ["L", "chan"], "output")
 

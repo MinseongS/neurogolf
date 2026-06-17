@@ -1363,9 +1363,9 @@
    "method": "conv9x1+b"
   },
   "228": {
-   "points": 15.987379126997869,
-   "memory": 8011,
-   "params": 195,
+   "points": 16.315260537371962,
+   "memory": 5833,
+   "params": 79,
    "method": "custom:task228"
   },
   "229": {

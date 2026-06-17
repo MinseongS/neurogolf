@@ -2771,14 +2771,15 @@
  {
   "task": 228,
   "arc_id": "952a094c",
-  "points": 15.99,
-  "memory": 8011,
-  "params": 195,
+  "points": 16.32,
+  "memory": 5833,
+  "params": 79,
   "method": "custom:task228",
   "class": "FEASIBLE",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.33"
  },
  {
   "task": 229,
