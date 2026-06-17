@@ -3081,14 +3081,15 @@
  {
   "task": 252,
   "arc_id": "a5f85a15",
-  "points": 16.3,
-  "memory": 5970,
-  "params": 62,
+  "points": 16.66,
+  "memory": 3495,
+  "params": 713,
   "method": "custom:task252",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.36 (sparse recolor Where-into-free-output, cond on active patch zero-Concat to 30x30; prefer Where over Conv into free fp32 output)"
  },
  {
   "task": 253,

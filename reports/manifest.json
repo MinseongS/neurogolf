@@ -1507,9 +1507,9 @@
    "method": "gen:thbdh6332"
   },
   "252": {
-   "points": 16.295166090312208,
-   "memory": 5970,
-   "params": 62,
+   "points": 16.655257245582455,
+   "memory": 3495,
+   "params": 713,
    "method": "custom:task252"
   },
   "253": {
