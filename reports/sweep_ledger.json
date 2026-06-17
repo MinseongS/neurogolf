@@ -789,14 +789,15 @@
  {
   "task": 65,
   "arc_id": "2dc579da",
-  "points": 16.17,
-  "memory": 6758,
-  "params": 108,
+  "points": 16.59,
+  "memory": 4366,
+  "params": 109,
   "method": "custom:task065",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.42"
  },
  {
   "task": 66,

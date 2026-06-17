@@ -9,8 +9,10 @@ colours (line/dot/b) are distinct, so:
   - b        = the colour with cell-count 4s^2-1 = tot - 2*sqrt(tot)
 
 Memory floor-break (label map + final Equal, small working canvas).
-Find the dot's (row,col) from per-channel 1-D marginals (no 30x30 dotmask), fold
-to (dr,dc) = (row mod (s+1), col mod (s+1)), and build a uint8 label map on a
+Find the dot's (row,col) by reducing the FREE input over each spatial axis once
+([1,10,30,1]/[1,10,1,30] marginals) then GATHERING the dotcolour channel out
+(120B each) — no 30x30 dotmask and no masked-copy marginals.  Fold the position
+to (dr,dc) = (row mod (s+1), col mod (s+1)) and build a uint8 label map on a
 WORK x WORK (=7x7) canvas:
     L = (r==dr & c==dc) ? dotcolor : b   for r<s,c<s ; sentinel 10 outside.
 Pad L to 30x30 with the sentinel, then `output = Equal(L, arange[1,10,1,1])`
@@ -73,19 +75,21 @@ def build(task):
     n("Mul", ["dotvec", "chvals"], "dcparts")
     n("ReduceSum", ["dcparts"], "dcf", keepdims=1)                 # scalar dotcolor
     n("Cast", ["dcf"], "dot8", to=U8)
+    n("Cast", ["dcf"], "dot_i", to=I32)
+    init("shp1", np.array([1], np.int64), np.int64)
+    nodes.append(helper.make_node("Reshape", ["dot_i", "shp1"], ["dot1"]))  # [1] int32 channel idx
     n("Cast", ["bvec_b"], "bvecf", to=F)
     n("Mul", ["bvecf", "chvals"], "bparts")
     n("ReduceSum", ["bparts"], "bf", keepdims=1)                   # scalar b colour
     n("Cast", ["bf"], "b8", to=U8)
 
     # ---- dot row/col from per-channel marginals (no 30x30 dotmask) ----
-    # select the dotcolor channel out of the [1,10,30,1] / [1,10,1,30] marginals.
-    n("ReduceSum", ["input"], "rc", axes=[3], keepdims=1)          # [1,10,30,1]
-    n("Mul", ["rc", "dotvec"], "rc_d")
-    n("ReduceSum", ["rc_d"], "dotrow", axes=[1], keepdims=1)       # [1,1,30,1] 1@row
-    n("ReduceSum", ["input"], "cc_", axes=[2], keepdims=1)         # [1,10,1,30]
-    n("Mul", ["cc_", "dotvec"], "cc_d")
-    n("ReduceSum", ["cc_d"], "dotcol", axes=[1], keepdims=1)       # [1,1,1,30] 1@col
+    # Reduce once over each spatial axis, then GATHER the dotcolour channel
+    # (120B [1,1,30,1]/[1,1,1,30]) instead of Mul+ReduceSum masked copies.
+    n("ReduceSum", ["input"], "rc", axes=[3], keepdims=1)          # [1,10,30,1] 1200B
+    n("Gather", ["rc", "dot1"], "dotrow", axis=1)                  # [1,1,30,1] 1@row
+    n("ReduceSum", ["input"], "cc_", axes=[2], keepdims=1)         # [1,10,1,30] 1200B
+    n("Gather", ["cc_", "dot1"], "dotcol", axis=1)                 # [1,1,1,30] 1@col
 
     n("Mul", ["idxH30", "dotrow"], "rrw")
     n("ReduceSum", ["rrw"], "row", keepdims=1)                     # scalar row
