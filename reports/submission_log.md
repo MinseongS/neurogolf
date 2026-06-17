@@ -122,7 +122,12 @@ LB gain from 274 is ~+17.21 if the local fresh-check reflects the hidden test. I
 over proj), the "gap is fully structural" conclusion is WRONG — there are recoverable non-generalizing
 base nets beyond the curated 219/255/209 walls, a reopened reservoir worth hunting (isolated-process scan).
 
-## ⭐⭐ Submission 17: proj ~6527.4 PENDING — locks GAP-CLOSER #2 (task332).
+## ⭐⭐⭐ Submission 17: LB 6543.68 CONFIRMED (predicted 6543.7 EXACT) — GAP-CLOSER #2 validated.
+GAP recalibrated 45.27 -> 28.96. CLEAN RESULT: remaining gap 28.96 == 219(15.00)+255(13.95) EXACTLY —
+the two genuine info-bottleneck/connectivity WALLS. The two gap-closers 274(+16.01)+332(+16.31) closed
+the ENTIRE recoverable portion (~32.3 pts). Gap is now TRULY structural (only the 2 walls left). NOTE:
+23/2/209 base nets mostly PASS Kaggle (rare-failures, genverify binary over-flagged them) — NOT real gap.
+Session: 6492.58 -> 6543.68 (+51.10). Gap-closer reservoir exhausted; back to pending-pool grind (~+0.4/win).
 Since #16: 254(+1.5),40(+0.31),228(+0.33) [1:1] + task332 GAP-CLOSER (conv1x59+b base fresh-0/real-0 ->
 custom 17.00, real +17). lb_status proj understates by ~16.32 (332 gap closure). Expect actual ~6543.7.
 Gap-closer scan results: 332 WIN; 23/2/209 confirmed WALLS (gen-imports). Discriminator: non-gen
