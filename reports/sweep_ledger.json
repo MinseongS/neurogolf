@@ -2116,14 +2116,15 @@
  {
   "task": 175,
   "arc_id": "73251a56",
-  "points": 15.82,
-  "memory": 8208,
-  "params": 1476,
+  "points": 16.76,
+  "memory": 3297,
+  "params": 483,
   "method": "custom:task175",
   "class": "FEASIBLE",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.94 (scalars from cnt=ReduceSum[2,3]; ArgMax(cnt) survives cutout corruption)"
  },
  {
   "task": 176,
