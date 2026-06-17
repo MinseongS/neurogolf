@@ -3006,14 +3006,15 @@
  {
   "task": 246,
   "arc_id": "a2fd1cf0",
-  "points": 16.29,
-  "memory": 5520,
-  "params": 520,
+  "points": 16.62,
+  "memory": 3900,
+  "params": 457,
   "method": "custom:task246",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.327 (L-path = separable bilinear L=R@M@C single colour-index plane, endpoint ids from conv value feature)"
  },
  {
   "task": 247,
