@@ -281,14 +281,15 @@
  {
   "task": 24,
   "arc_id": "178fcbfb",
-  "points": 15.89,
-  "memory": 8820,
-  "params": 260,
+  "points": 16.71,
+  "memory": 3900,
+  "params": 70,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.82"
  },
  {
   "task": 25,
@@ -3648,14 +3649,15 @@
  {
   "task": 301,
   "arc_id": "beb8660c",
-  "points": 15.84,
-  "memory": 9385,
-  "params": 89,
+  "points": 16.9,
+  "memory": 3211,
+  "params": 70,
   "method": "custom:task301",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +1.06"
  },
  {
   "task": 302,

@@ -1,28 +1,34 @@
-"""Task 301 (beb8660c): rebuild a right-aligned color staircase.
+"""task301 (ARC-AGI beb8660c) — "sort the length-coded color bars into a right-justified triangle".
 
-ARC-GEN rule: input has `num_colors` horizontal bars; the bar for color index
-i has length i+1, so a color's pixel count n_c uniquely identifies its index.
-Cyan (channel 8) is always the last color: a full-width bar of length
-width = num_colors. The output footprint is the rectangle (col < n8) & (r <= r8)
-where n8 = cyan count = width and r8 = grid row of cyan = height-1. Inside it
-each colour c (>0) is a right-aligned bar of length n_c at output row
-Rc = n_c + (r8 - n8); the cells of that row left of the bar are background 0.
+Rule (from tasks/task_beb8660c.py):
+  Input grid is W x H, where W = num_colors (3..9) and H = W + gap (gap 0..3).
+  Each color k (cyan/8 is always the longest) appears as ONE horizontal bar of
+  a DISTINCT length L (lengths are 1..W, one per color) at a random row/col.
+  i.e. the pixel-count of color k == its bar length L_k, and these are distinct.
+  Output: a right-justified staircase triangle. The color whose bar length is L
+  fills output row (L-1+gap), right-aligned over columns [W-L .. W-1] (a run of
+  length L). Output rows 0..gap-1 are empty. Equivalently a cell (r,c) inside
+  the grid is occupied iff  r + c >= H-1 , and its color = the color whose bar
+  length == (r - gap + 1).
 
-Per-row factoring (the floor-break): every output row r holds at most one
-colour (the rows Rc are distinct because the bar lengths n_c are distinct), so
-the whole picture is described by two 1-D row vectors:
+Recovery (all scalars / tiny planes; no [1,10,30,30] / 30x30 materialization):
+  cnt[k]   = ReduceSum(input, axes=[2,3])  -> [1,10,1,1]   (bar length of color k)
+  rowin    = ReduceMax(input, axes=[1,3])  -> [1,1,30,1]   (in-grid rows: 1 for r<H)
+  colin    = ReduceMax(input, axes=[1,2])  -> [1,1,1,30]   (in-grid cols: 1 for c<W)
+  H = sum(rowin), W = sum(colin), gap = H - W.
+  On a small RH=12 x RW=9 canvas (grid always sits at top-left):
+    lenOfRow[r] = r - gap + 1
+    rowcolor[r] = sum_k k * (cnt[k] == lenOfRow[r])          (per-row color)
+    occupied(r,c) = (r + c >= H-1) AND rowin[r] AND colin[c]
+    ingrid(r,c)   = rowin[r] AND colin[c]
+    L(r,c) = ingrid ? (occupied ? rowcolor[r] : 0) : 99      (uint8 label map)
+  Pad L to 30x30 with 99 (off-grid stays 99 -> never equals any color 0..9).
+  output = Equal(L_uint8, arange[0..9][1,10,1,1])  -> BOOL   (the FREE 10-ch tensor)
+  Off-grid cells = 99 != any k  => all channels 0 (correct: off-grid is all-zero).
+  In-grid empty cells = 0       => channel 0 set (correct background).
 
-    rowcolor[r] = the colour c with Rc == r          (0 if none)
-    rowN[r]     = that colour's bar length n_c        (0 if none)
-    split[r]    = n8 - rowN[r]   (bar occupies cols split..n8-1)
-
-A single uint8 label map L[1,1,30,30] is then:
-    L[r,col] = 10                      if r > r8 or col >= n8      (outside)
-             = rowcolor[r]             if col >= split[r] and rowcolor[r] > 0
-             = 0                       otherwise                   (background)
-and  output = Equal(L, arange[1,10,1,1])  writes straight into the free BOOL
-output (opset 11).  No [1,9,30,30] / [1,10,30,30] stack is ever materialised;
-the only ~900B tensor is L itself.  All values are small integers, fp16-exact.
+Working on the 12x9 active canvas shrinks every full plane ~9x vs the 30x30
+formulation (the prior 15.84 net carried five ~900-1200B 30x30 planes).
 """
 
 import numpy as np
@@ -31,100 +37,105 @@ from onnx import helper, numpy_helper, TensorProto
 
 from ..harness import IR_VERSION
 
+F32 = TensorProto.FLOAT
+F16 = TensorProto.FLOAT16
+BOOL = TensorProto.BOOL
+U8 = TensorProto.UINT8
+I64 = TensorProto.INT64
+
+RH = 12  # working rows (max H = num_colors(9) + gap(3))
+RW = 9   # working cols (max W = num_colors = 9)
+
 
 def build(task):
-    inits, nodes = [], []
+    inits, nodes, vis = [], [], []
 
     def init(name, arr, dtype):
         inits.append(numpy_helper.from_array(
             np.ascontiguousarray(arr, dtype=dtype), name))
         return name
 
-    def n(op, ins, out, **attrs):
+    def vi(name, dtype, shape):
+        vis.append(helper.make_tensor_value_info(name, dtype, shape))
+
+    def n(op, ins, out, dtype=None, shape=None, **attrs):
         nodes.append(helper.make_node(op, ins, [out], **attrs))
+        if dtype is not None:
+            vi(out, dtype, shape)
         return out
 
-    # ---- index ramps / constants ----
-    init("I", np.arange(30, dtype=np.float32).reshape(1, 1, 30, 1), np.float32)
-    init("J", np.arange(30, dtype=np.float32).reshape(1, 1, 1, 30), np.float32)
-    init("half", np.array(0.5, dtype=np.float32), np.float32)
-    init("c8_st", np.array([8], dtype=np.int64), np.int64)
-    init("c8_en", np.array([9], dtype=np.int64), np.int64)
-    init("c1_ax", np.array([1], dtype=np.int64), np.int64)
-    init("c1_10st", np.array([1], dtype=np.int64), np.int64)
-    init("c1_10en", np.array([10], dtype=np.int64), np.int64)
-    init("cidx9", np.arange(1, 10, dtype=np.float32).reshape(1, 9, 1, 1),
-         np.float32)                                     # colour index 1..9
+    # ---- per-channel counts (= bar lengths) -------------------------------
+    n("ReduceSum", ["input"], "cnt", F32, [1, 10, 1, 1], axes=[2, 3], keepdims=1)
 
-    # ---- per-channel pixel counts n_c; n8 = cyan count = width ----
-    n("ReduceSum", ["input"], "ncnt", axes=[2, 3], keepdims=1)   # [1,10,1,1]
-    n("Slice", ["ncnt", "c8_st", "c8_en", "c1_ax"], "n8")        # [1,1,1,1]
+    # ---- in-grid row / col occupancy (H, W recovery) ----------------------
+    n("ReduceMax", ["input"], "rowin30", F32, [1, 1, 30, 1], axes=[1, 3], keepdims=1)
+    n("ReduceMax", ["input"], "colin30", F32, [1, 1, 1, 30], axes=[1, 2], keepdims=1)
+    init("z_s", np.array([0], np.int64), np.int64)
+    init("rh_e", np.array([RH], np.int64), np.int64)
+    init("ax2", np.array([2], np.int64), np.int64)
+    n("Slice", ["rowin30", "z_s", "rh_e", "ax2"], "rowinS", F32, [1, 1, RH, 1])
+    init("rw_e", np.array([RW], np.int64), np.int64)
+    init("ax3", np.array([3], np.int64), np.int64)
+    n("Slice", ["colin30", "z_s", "rw_e", "ax3"], "colinS", F32, [1, 1, 1, RW])
 
-    # ---- r8 = grid row of cyan: row-occupancy of channel 8 ----
-    # (ReduceSum over cols gives [1,10,30,1]=1200B, cheaper than slicing the
-    #  full 30x30 channel-8 plane which would be 3600B float.)
-    n("ReduceSum", ["input"], "rocc", axes=[3], keepdims=1)      # [1,10,30,1]
-    n("Slice", ["rocc", "c8_st", "c8_en", "c1_ax"], "occ8")      # [1,1,30,1]
-    n("Greater", ["occ8", "half"], "ind8_b")
-    n("Cast", ["ind8_b"], "ind8", to=TensorProto.FLOAT)
-    n("Mul", ["ind8", "I"], "iI")
-    n("ReduceSum", ["iI"], "r8", axes=[2], keepdims=1)           # [1,1,1,1]
+    # H = sum(rowin30), W = sum(colin30)  (scalars)
+    n("ReduceSum", ["rowin30"], "Hf", F32, [1, 1, 1, 1], axes=[2, 3], keepdims=1)
+    n("ReduceSum", ["colin30"], "Wf", F32, [1, 1, 1, 1], axes=[2, 3], keepdims=1)
+    n("Sub", ["Hf", "Wf"], "gapf", F32, [1, 1, 1, 1])
+    init("ONE", np.array(1.0, np.float32), np.float32)
+    n("Sub", ["Hf", "ONE"], "Hm1", F32, [1, 1, 1, 1])
 
-    # ---- colours 1..9: output row Rc and bar length n_c ----
-    n("Slice", ["ncnt", "c1_10st", "c1_10en", "c1_ax"], "ncnt9")  # [1,9,1,1]
-    n("Sub", ["r8", "n8"], "delta")                              # [1,1,1,1]
-    n("Add", ["ncnt9", "delta"], "Rc9")                          # [1,9,1,1]
-    # rowsel[c,r] = (I == Rc[c])  but only where the colour exists (n_c>0)
-    n("Cast", ["I"], "Ii", to=TensorProto.INT32)
-    n("Cast", ["Rc9"], "Rci9", to=TensorProto.INT32)
-    n("Equal", ["Ii", "Rci9"], "rowsel_b")                       # [1,9,30,1] bool
-    n("Greater", ["ncnt9", "half"], "exist9")                    # [1,9,1,1] bool
-    n("And", ["rowsel_b", "exist9"], "rowsel")                   # [1,9,30,1] bool
-    n("Cast", ["rowsel"], "rowselF", to=TensorProto.FLOAT16)     # [1,9,30,1] f16
+    # ---- lenOfRow[r] = r - gap + 1  ([1,1,RH,1]) --------------------------
+    rramp = np.arange(RH, dtype=np.float32).reshape(1, 1, RH, 1)
+    init("rramp", rramp, np.float32)
+    n("Sub", ["rramp", "gapf"], "r_minus_gap", F32, [1, 1, RH, 1])
+    n("Add", ["r_minus_gap", "ONE"], "lenOfRow", F32, [1, 1, RH, 1])
 
-    # rowcolor[r] = sum_c cidx[c]*rowsel[c,r] ; rowN[r] = sum_c n_c*rowsel
-    # (fp16: every value is a small integer, so exact; halves the [1,9,30,1]s)
-    n("Cast", ["cidx9"], "cidx9h", to=TensorProto.FLOAT16)
-    n("Cast", ["ncnt9"], "ncnt9h", to=TensorProto.FLOAT16)
-    n("Mul", ["rowselF", "cidx9h"], "colsel")                    # [1,9,30,1] f16
-    n("ReduceSum", ["colsel"], "rowcolorH", axes=[1], keepdims=1)  # [1,1,30,1] f16
-    n("Cast", ["rowcolorH"], "rowcolor", to=TensorProto.FLOAT)
-    n("Mul", ["rowselF", "ncnt9h"], "nsel")                      # [1,9,30,1] f16
-    n("ReduceSum", ["nsel"], "rowNH", axes=[1], keepdims=1)      # [1,1,30,1] f16
-    n("Cast", ["rowNH"], "rowN", to=TensorProto.FLOAT)
-    n("Sub", ["n8", "rowN"], "split")                            # [1,1,30,1] = n8-n_c
+    # ---- rowcolor[r] = sum_k k * (cnt[k] == lenOfRow[r]) ------------------
+    n("Equal", ["cnt", "lenOfRow"], "match", BOOL, [1, 10, RH, 1])  # broadcast
+    n("Cast", ["match"], "matchf", F16, [1, 10, RH, 1], to=F16)
+    kvec = np.arange(10, dtype=np.float16).reshape(1, 10, 1, 1)
+    init("kvec", kvec, np.float16)
+    n("Mul", ["matchf", "kvec"], "kmatch", F16, [1, 10, RH, 1])
+    n("ReduceSum", ["kmatch"], "rowcolor", F16, [1, 1, RH, 1], axes=[1], keepdims=1)
 
-    # ---- rectangle mask inrect = (r <= r8) & (col < n8) ----
-    # 1-D row/col masks first, AND into a single 30x30 plane.
-    init("mhalf", np.array(-0.5, np.float32), np.float32)
-    n("Sub", ["r8", "I"], "r8mI")                                # [1,1,30,1]
-    n("Greater", ["r8mI", "mhalf"], "rleR8")                     # [1,1,30,1] bool
-    n("Less", ["J", "n8"], "ltN8")                               # [1,1,1,30] bool
-    n("And", ["rleR8", "ltN8"], "inrect")                        # [1,1,30,30] bool
+    # ---- occupied(r,c) = (r + c >= H-1) AND rowin AND colin --------------
+    # work in fp16 (all values are small integers -> exact, half the bytes).
+    rramp16 = np.arange(RH, dtype=np.float16).reshape(1, 1, RH, 1)
+    cramp16 = np.arange(RW, dtype=np.float16).reshape(1, 1, 1, RW)
+    init("rramp16", rramp16, np.float16)
+    init("cramp16", cramp16, np.float16)
+    n("Add", ["rramp16", "cramp16"], "rcsum", F16, [1, 1, RH, RW])  # broadcast r+c
+    n("Cast", ["Hm1"], "Hm1h", F16, [1, 1, 1, 1], to=F16)
+    # ge: rcsum >= Hm1  ==  Not(rcsum < Hm1)
+    n("Less", ["rcsum", "Hm1h"], "lt", BOOL, [1, 1, RH, RW])
+    n("Not", ["lt"], "ge", BOOL, [1, 1, RH, RW])
 
-    # ---- bar = inrect & (col >= split[r]) ----
-    # split = n8 for colourless rows, so the bar collapses there (col>=n8 but
-    # col<n8 in inrect => empty) and the whole row stays background -- no
-    # separate hasColor test needed.  col >= split  <=>  col > split-1.
-    init("one", np.array(1.0, np.float32), np.float32)
-    n("Sub", ["split", "one"], "split_m")
-    n("Greater", ["J", "split_m"], "geSplit")                    # [1,1,30,30] bool
-    n("And", ["inrect", "geSplit"], "inbar")                     # [1,1,30,30] bool
+    # ingrid = rowin AND colin (bool)
+    n("Cast", ["rowinS"], "rowinb", BOOL, [1, 1, RH, 1], to=BOOL)
+    n("Cast", ["colinS"], "colinb", BOOL, [1, 1, 1, RW], to=BOOL)
+    n("And", ["rowinb", "colinb"], "ingrid", BOOL, [1, 1, RH, RW])
+    n("And", ["ge", "ingrid"], "occupied", BOOL, [1, 1, RH, RW])
 
-    # ---- uint8 label map L ----
-    n("Cast", ["rowcolor"], "rowcolU", to=TensorProto.UINT8)     # [1,1,30,1] u8
-    init("u0", np.array(0, np.uint8), np.uint8)
-    init("u10", np.array(10, np.uint8), np.uint8)
-    n("Where", ["inrect", "u0", "u10"], "Lrect")                 # 0 in-rect else 10
-    n("Where", ["inbar", "rowcolU", "Lrect"], "L")               # bar -> colour
+    # ---- label map L (small, fp16) ---------------------------------------
+    init("ZERO16", np.array(0.0, np.float16), np.float16)
+    n("Where", ["occupied", "rowcolor", "ZERO16"], "occval", F16, [1, 1, RH, RW])
+    init("S99", np.array(99.0, np.float16), np.float16)
+    n("Where", ["ingrid", "occval", "S99"], "Lf", F16, [1, 1, RH, RW])
+    n("Cast", ["Lf"], "Lu8", U8, [1, 1, RH, RW], to=U8)
 
-    # ---- final Equal into free BOOL output ----
-    init("chan", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
-    n("Equal", ["L", "chan"], "output")                          # [1,10,30,30] BOOL
+    # ---- pad to 30x30 with 99 --------------------------------------------
+    init("pads", np.array([0, 0, 0, 0, 0, 0, 30 - RH, 30 - RW], np.int64), np.int64)
+    init("P99", np.array(99, np.uint8), np.uint8)
+    n("Pad", ["Lu8", "pads", "P99"], "L30", U8, [1, 1, 30, 30], mode="constant")
 
-    x = helper.make_tensor_value_info("input", TensorProto.FLOAT, [1, 10, 30, 30])
-    y = helper.make_tensor_value_info("output", TensorProto.BOOL, [1, 10, 30, 30])
-    graph = helper.make_graph(nodes, "task301", [x], [y], inits)
-    return helper.make_model(
-        graph, ir_version=IR_VERSION,
-        opset_imports=[helper.make_opsetid("", 11)])
+    # ---- output = Equal(L, arange[0..9]) : FREE [1,10,30,30] bool ---------
+    arange = np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1)
+    init("arange", arange, np.uint8)
+    nodes.append(helper.make_node("Equal", ["L30", "arange"], ["output"]))
+
+    x = helper.make_tensor_value_info("input", F32, [1, 10, 30, 30])
+    y = helper.make_tensor_value_info("output", BOOL, [1, 10, 30, 30])
+    graph = helper.make_graph(nodes, "task301", [x], [y], inits, value_info=vis)
+    return helper.make_model(graph, ir_version=IR_VERSION,
+                             opset_imports=[helper.make_opsetid("", 11)])

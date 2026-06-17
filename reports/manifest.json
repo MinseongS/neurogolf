@@ -139,10 +139,10 @@
    "method": "gen:galaxy"
   },
   "24": {
-   "points": 15.88617052840466,
-   "memory": 8820,
-   "params": 260,
-   "method": "ext:kojimar6275"
+   "points": 16.713478626318764,
+   "memory": 3900,
+   "params": 70,
+   "method": "custom:task024"
   },
   "25": {
    "points": 13.735241065999542,
@@ -1801,9 +1801,9 @@
    "method": "gen:thbdh6332"
   },
   "301": {
-   "points": 15.843693516516304,
-   "memory": 9385,
-   "params": 89,
+   "points": 16.904096467038897,
+   "memory": 3211,
+   "params": 70,
    "method": "custom:task301"
   },
   "302": {
