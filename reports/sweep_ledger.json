@@ -4032,14 +4032,15 @@
  {
   "task": 332,
   "arc_id": "d406998b",
-  "points": 16.32,
-  "memory": 0,
-  "params": 5910,
+  "points": 17.0,
+  "memory": 2912,
+  "params": 61,
   "method": "conv1x59+b",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "GAP-CLOSER: base conv1x59+b fresh-0/real-0 -> custom 17.00 (col-parity-vs-width, W=ReduceSum(col-presence)); ~+16 real LB"
  },
  {
   "task": 333,

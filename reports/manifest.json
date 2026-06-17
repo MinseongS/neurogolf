@@ -1987,10 +1987,10 @@
    "method": "conv3x3+b"
   },
   "332": {
-   "points": 16.315598889599855,
-   "memory": 0,
-   "params": 5910,
-   "method": "conv1x59+b"
+   "points": 17.002673177001903,
+   "memory": 2912,
+   "params": 61,
+   "method": "custom:task332"
   },
   "333": {
    "points": 15.757386067473522,
