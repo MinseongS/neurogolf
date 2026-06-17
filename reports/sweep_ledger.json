@@ -4094,14 +4094,15 @@
  {
   "task": 335,
   "arc_id": "d4a91cb9",
-  "points": 16.29,
-  "memory": 5520,
-  "params": 520,
+  "points": 16.6,
+  "memory": 4080,
+  "params": 373,
   "method": "custom:task335",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.305 (two-endpoint L-route: ONE Where(onpath,color,input), L-mask=rank-2 outer product rowA*colA+rowB*colB)"
  },
  {
   "task": 336,
