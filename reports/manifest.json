@@ -2083,10 +2083,10 @@
    "method": "ext:wguesdon6304"
   },
   "348": {
-   "points": 16.11719194507556,
-   "memory": 7068,
-   "params": 139,
-   "method": "ext:kojimar6275"
+   "points": 16.54234452129996,
+   "memory": 4626,
+   "params": 85,
+   "method": "custom:task348"
   },
   "349": {
    "points": 14.306261242455944,

@@ -4240,14 +4240,15 @@
  {
   "task": 348,
   "arc_id": "db3e9e38",
-  "points": 16.12,
-  "memory": 7068,
-  "params": 139,
+  "points": 16.54,
+  "memory": 4626,
+  "params": 85,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.42 (row/col-coupled pyramid mask via Less(rowramp,thresh-vector), per-col one-hot Where into free output)"
  },
  {
   "task": 349,
