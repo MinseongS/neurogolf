@@ -3674,14 +3674,15 @@
  {
   "task": 303,
   "arc_id": "c1d99e64",
-  "points": 15.95,
-  "memory": 8520,
-  "params": 23,
+  "points": 16.34,
+  "memory": 5760,
+  "params": 31,
   "method": "custom:task303",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.39 (black-line recolor via 1-D reduce; gate by in-grid rect or off-grid paints red)"
  },
  {
   "task": 304,

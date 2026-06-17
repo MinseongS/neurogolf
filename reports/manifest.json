@@ -1813,9 +1813,9 @@
    "method": "ext:kojimar6275"
   },
   "303": {
-   "points": 15.947132486848382,
-   "memory": 8520,
-   "params": 23,
+   "points": 16.33593973277421,
+   "memory": 5760,
+   "params": 31,
    "method": "custom:task303"
   },
   "304": {

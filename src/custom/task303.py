@@ -1,31 +1,34 @@
-"""task303 (ARC-AGI c1d99e64) — paint full-black row/col red, else passthrough.
+"""Task 303 (ARC-GEN c1d99e64): recolour all-black rows/cols to red.
 
-Rule (from the generator): the grid is filled with one non-red colour plus black
-(0) cells.  A set of "straightaway" rows and columns are forced entirely black.
-The generator guarantees every NON-straightaway in-grid row and column contains
-at least one coloured (non-black) cell.  Output: every cell whose row OR column
-is a straightaway becomes red (colour 2); all other cells pass the input through
-unchanged.  Equivalently, a cell is red iff its whole (in-grid) row is black OR
-its whole (in-grid) column is black.
+Rule (from ARC-GEN generator, verified fresh):
+  The input grid has background black (colour 0) and exactly one foreground
+  colour.  A set of full ROWS and full COLS were overwritten to all-black
+  ("straightaways").  The generator first builds the static pattern so that
+  EVERY in-grid row and EVERY in-grid col contains >=2 colours, THEN paints the
+  chosen rows/cols entirely black.  Therefore a "line" row/col is exactly an
+  in-grid row/col whose every cell is black.
+  Output: output[r][c] = red(2) if (row r is all-black OR col c is all-black)
+  else input[r][c].
 
-Memory floor-break (separable conditions + single uint8 label map + final Equal):
-  colored[r,c]   = max over channels 1..9 of input  (1 if cell is non-black)
-  rowHasColor[r] = max over c of colored            (0 => row is all-black)
-  colHasColor[c] = max over r of colored            (0 => col is all-black)
-  ingrid[r,c]    = max over all channels (any channel set => cell is on-grid)
-  colorIdx[r,c]  = sum_c c*input[c]                  (input colour 0..9, exact)
+Encoding (Tier A, separable row/col line masks, NO [1,*,30,30] colour plane):
+  A row r is a line iff (#black cells == #in-grid cells in the row) AND
+  (#in-grid cells > 0).  Off-grid cells set NO channel, so a per-row count of
+  channel-0 (black) vs the per-row count over ALL channels (in-grid)
+  distinguishes an all-black IN-GRID row from an off-grid (all-zero) row.  Both
+  counts come from one column-reduce rsum[1,10,30,1] (= ReduceSum(input,[3]),
+  1200 B): in_row = ReduceSum(rsum, ch); black_row = rsum[:,0:1].  Symmetric for
+  columns via csum[1,10,1,30].  rowline[1,1,30,1]/colline[1,1,1,30] are tiny;
+  linemask = OR broadcasts to a [1,1,30,30] bool plane (900 B), and the single
+  final op Where(linemask, red_onehot[1,10,1,1], input) writes straight into the
+  FREE output (off-grid stays all-zero: input is zero there and off-grid
+  rows/cols are never lines).
 
-  L[r,c] = 10                          if off-grid               (matches nothing)
-           2 (red)                     elif rowHasColor[r]==0 OR colHasColor[c]==0
-           colorIdx[r,c]               else (passthrough)
-  output = Equal(L, arange[1,10,1,1])  (BOOL, opset 11)
-
-  Only one ~900B uint8 plane (L) is materialised; everything else is 1-D / small.
-  All values are small integers, exact in float32 / uint8.
+  Dominant intermediate: rsum/csum [1,10,30,1] = 1200 B each (irreducible -- a
+  per-channel single-axis reduce splits the black-count from the in-grid count
+  without ever materialising a [1,*,30,30] colour plane).
 """
 
 import numpy as np
-import onnx
 from onnx import helper, numpy_helper, TensorProto
 
 from ..harness import IR_VERSION
@@ -44,62 +47,49 @@ def build(task):
         return out
 
     F = TensorProto.FLOAT
-    H = TensorProto.FLOAT16
-    U8 = TensorProto.UINT8
     B = TensorProto.BOOL
 
-    init("fifteen", np.array(15.5, np.float32), np.float32)
+    init("zero", np.array(0.0, np.float32), np.float32)
+    init("ch_ax", np.array([0, 1, 2, 3], np.int64), np.int64)
 
-    # ONE 1x1 Conv encodes everything we need per cell (weights are params, not
-    # memory).  v[r,c] = 16*ingrid + colour_index, where ingrid = sum_c input[c]
-    # and colour_index = sum_c c*input[c]:
-    #   off-grid       -> v = 0
-    #   in-grid black  -> v = 16  (colour index 0)
-    #   in-grid col k  -> v = 16 + k
-    # so ingrid = (v > 15), colour index = v - 16 (when in-grid), and a cell is
-    # "coloured" iff v > 16.  All values are small integers, exact in float32.
-    cw = (np.arange(10, dtype=np.float32) + 16.0).reshape(1, 10, 1, 1)
-    cw[0, 0, 0, 0] = 16.0  # ch0 (black): only the +16 in-grid term, index 0
-    init("cw", cw, np.float32)
-    n("Conv", ["input", "cw"], "vf")                   # [1,1,30,30] fp32
+    # --- per-row counts -----------------------------------------------------
+    n("ReduceSum", ["input"], "rsum", axes=[3], keepdims=1)        # [1,10,30,1] f32
+    n("ReduceSum", ["rsum"], "in_row", axes=[1], keepdims=1)       # [1,1,30,1] in-grid count
+    init("r0_s", np.array([0, 0, 0, 0], np.int64), np.int64)
+    init("r0_e", np.array([1, 1, 30, 1], np.int64), np.int64)
+    n("Slice", ["rsum", "r0_s", "r0_e", "ch_ax"], "black_row")     # [1,1,30,1] black count
 
-    n("Greater", ["vf", "fifteen"], "ingrid_b")        # v > 15  (in-grid)
+    # --- per-col counts -----------------------------------------------------
+    n("ReduceSum", ["input"], "csum", axes=[2], keepdims=1)        # [1,10,1,30] f32
+    n("ReduceSum", ["csum"], "in_col", axes=[1], keepdims=1)       # [1,1,1,30] in-grid count
+    init("c0_s", np.array([0, 0, 0, 0], np.int64), np.int64)
+    init("c0_e", np.array([1, 1, 1, 30], np.int64), np.int64)
+    n("Slice", ["csum", "c0_s", "c0_e", "ch_ax"], "black_col")     # [1,1,1,30] black count
 
-    # quantise v to uint8 ONCE; we keep the label map in the SHIFTED space
-    # (in-grid colour k -> 16+k), so no subtraction is needed.  The final Equal
-    # compares against arange(16..25); off-grid (v=0) matches nothing.
-    n("Cast", ["vf"], "vu8", to=U8)                    # [1,1,30,30] uint8
+    # --- line masks ---------------------------------------------------------
+    # row is a line iff black_row == in_row (all in-grid cells black) AND
+    # in_row > 0 (the row is actually in-grid).
+    n("Equal", ["black_row", "in_row"], "row_allblack")            # [1,1,30,1] bool
+    n("Greater", ["in_row", "zero"], "row_ingrid")                 # [1,1,30,1] bool
+    n("And", ["row_allblack", "row_ingrid"], "rowline")            # [1,1,30,1] bool
 
-    # Straightaway detection via 1-D reductions over vf directly (cheap, 120B
-    # each).  A row's max v is: 16 if every in-grid cell is black (=straightaway),
-    # >=17 if it has any colour, 0 if the row is entirely off-grid.  So a row is
-    # a straightaway iff its max v == 16, i.e. 15 < max < 17.
-    n("ReduceMax", ["vf"], "rowmax", axes=[3], keepdims=1)  # [1,1,30,1] fp32
-    n("ReduceMax", ["vf"], "colmax", axes=[2], keepdims=1)  # [1,1,1,30] fp32
-    init("sixteen", np.array(16.5, np.float32), np.float32)
-    # straightaway iff 15 < max < 17  (== 16 exactly)
-    n("Greater", ["rowmax", "fifteen"], "rgt15")
-    n("Less", ["rowmax", "sixteen"], "rlt16")
-    n("And", ["rgt15", "rlt16"], "rowred_b")           # [1,1,30,1] bool
-    n("Greater", ["colmax", "fifteen"], "cgt15")
-    n("Less", ["colmax", "sixteen"], "clt16")
-    n("And", ["cgt15", "clt16"], "colred_b")           # [1,1,1,30] bool
-    n("Or", ["rowred_b", "colred_b"], "red_b")         # [1,1,30,30] broadcast
-    # only paint red on IN-GRID cells; off-grid cells keep vu8 (=0 sentinel).
-    n("And", ["red_b", "ingrid_b"], "redin_b")         # [1,1,30,30]
+    n("Equal", ["black_col", "in_col"], "col_allblack")            # [1,1,1,30] bool
+    n("Greater", ["in_col", "zero"], "col_ingrid")                 # [1,1,1,30] bool
+    n("And", ["col_allblack", "col_ingrid"], "colline")            # [1,1,1,30] bool
 
-    # --- assemble label map L[1,1,30,30] (in 16-shifted space) -------------
-    # red (colour 2) -> 16+2 = 18.  Off-grid v=0 -> 0 (matches nothing in 16..25),
-    # so it needs no explicit branch; in-grid passthrough = vu8 (16..25).
-    init("v18", np.array(18, np.uint8), np.uint8)
-    n("Where", ["redin_b", "v18", "vu8"], "L")         # red else passthrough
+    n("Or", ["rowline", "colline"], "lineraw")                     # [1,1,30,30] bool
+    # gate to the in-grid rectangle: cell in-grid iff its row AND col are in-grid
+    n("And", ["row_ingrid", "col_ingrid"], "ingrid")               # [1,1,30,30] bool
+    n("And", ["lineraw", "ingrid"], "linemask")                    # [1,1,30,30] bool
 
-    chan = (np.arange(10, dtype=np.uint8) + 16).reshape(1, 10, 1, 1)
-    init("chan", chan, np.uint8)
-    n("Equal", ["L", "chan"], "output")                # [1,10,30,30] BOOL
+    # --- route into FREE output --------------------------------------------
+    red = np.zeros((1, 10, 1, 1), np.float32)
+    red[0, 2, 0, 0] = 1.0
+    init("red", red, np.float32)
+    n("Where", ["linemask", "red", "input"], "output")             # FREE [1,10,30,30]
 
     x = helper.make_tensor_value_info("input", F, [1, 10, 30, 30])
-    y = helper.make_tensor_value_info("output", B, [1, 10, 30, 30])
+    y = helper.make_tensor_value_info("output", F, [1, 10, 30, 30])
     g = helper.make_graph(nodes, "task303", [x], [y], inits)
     return helper.make_model(g, ir_version=IR_VERSION,
                              opset_imports=[helper.make_opsetid("", 11)])
