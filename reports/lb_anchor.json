@@ -1,7 +1,7 @@
 {
- "comment": "#16 CONFIRMED 6524.54 (proj was 6508.53; +16.01 ABOVE proj). task274 GAP-CLOSER validated - base net was fresh-0/real-0, custom closed ~16 of gap. GAP DROPPED 61.28 -> 45.27. The gap is NOT fully structural: fresh-0 base nets beyond 219/255/209 are recoverable. Re-anchor on next submit.",
- "stored_at_submit": 6569.81,
- "lb": 6524.54,
- "time_utc": "2026-06-18 01:45",
- "pending": false
+ "comment": "#17 PENDING. proj (stored-gap) ~6527.4 BUT task332 GAP-CLOSER closed ~16.32 of gap (real 0->17) so expect ~6543.7. Confirm: if real >> proj, gap recalibrates down ~16 again.",
+ "stored_at_submit": 6572.64,
+ "lb": 6527.36,
+ "time_utc": "2026-06-18 02:05",
+ "pending": true
 }

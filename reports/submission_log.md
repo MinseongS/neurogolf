@@ -121,3 +121,9 @@ high-value reservoir. (DO NOT trust single-process scans - generator pollution f
 LB gain from 274 is ~+17.21 if the local fresh-check reflects the hidden test. If actual LB ~6524 (+16
 over proj), the "gap is fully structural" conclusion is WRONG — there are recoverable non-generalizing
 base nets beyond the curated 219/255/209 walls, a reopened reservoir worth hunting (isolated-process scan).
+
+## ⭐⭐ Submission 17: proj ~6527.4 PENDING — locks GAP-CLOSER #2 (task332).
+Since #16: 254(+1.5),40(+0.31),228(+0.33) [1:1] + task332 GAP-CLOSER (conv1x59+b base fresh-0/real-0 ->
+custom 17.00, real +17). lb_status proj understates by ~16.32 (332 gap closure). Expect actual ~6543.7.
+Gap-closer scan results: 332 WIN; 23/2/209 confirmed WALLS (gen-imports). Discriminator: non-gen
+fresh-fail base nets are solvable gap-closers; gen-imports are mostly walls. See gap_closers memory.
