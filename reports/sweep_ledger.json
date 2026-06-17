@@ -2024,14 +2024,15 @@
  {
   "task": 166,
   "arc_id": "6d75e8bb",
-  "points": 16.2,
-  "memory": 6600,
-  "params": 22,
+  "points": 16.89,
+  "memory": 3282,
+  "params": 30,
   "method": "custom:task166",
   "class": "FEASIBLE?",
   "sig": "transpose",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.69 (bounded-active-region crop escapes 3600B plane even at variable grid size)"
  },
  {
   "task": 167,
