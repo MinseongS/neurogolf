@@ -4863,14 +4863,15 @@
  {
   "task": 398,
   "arc_id": "feca6190",
-  "points": 16.16,
-  "memory": 4428,
-  "params": 2459,
+  "points": 16.75,
+  "memory": 2624,
+  "params": 1201,
   "method": "custom:task398",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.59 (variable-output family: const tuple-id KEY plane + tiny per-tuple value table, data-dependent map before canvas gather)"
  },
  {
   "task": 399,
