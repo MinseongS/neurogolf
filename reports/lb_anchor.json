@@ -1,7 +1,7 @@
 {
- "comment": "#19 PENDING. proj 6559.24 (11-win pending-pool wave, all 1:1 generalizing). gap 28.96==219+255 walls. Expect proj-exact.",
+ "comment": "#19 CONFIRMED 6559.24 (proj 6559.24 EXACT, 17th). gap 28.96==219+255. Re-anchor next submit.",
  "stored_at_submit": 6588.2,
  "lb": 6559.24,
  "time_utc": "2026-06-18 03:25",
- "pending": true
+ "pending": false
 }

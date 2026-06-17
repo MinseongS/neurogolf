@@ -1051,10 +1051,10 @@
    "method": "custom:task175"
   },
   "176": {
-   "points": 16.315598889599855,
-   "memory": 0,
-   "params": 5910,
-   "method": "conv1x59+b"
+   "points": 17.04107350694989,
+   "memory": 1950,
+   "params": 911,
+   "method": "custom:task176"
   },
   "177": {
    "points": 16.130039489476047,

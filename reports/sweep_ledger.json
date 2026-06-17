@@ -2146,14 +2146,15 @@
  {
   "task": 176,
   "arc_id": "7447852a",
-  "points": 16.32,
-  "memory": 0,
-  "params": 5910,
+  "points": 17.04,
+  "memory": 1950,
+  "params": 911,
   "method": "conv1x59+b",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.72 (salvaged from watchdog-stalled agent; work was complete)"
  },
  {
   "task": 177,
