@@ -469,14 +469,15 @@
  {
   "task": 39,
   "arc_id": "2013d3e2",
-  "points": 16.04,
-  "memory": 7744,
-  "params": 28,
+  "points": 16.35,
+  "memory": 5696,
+  "params": 36,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.306 Tier-S (3x3 window copy at bbox top-left; pre-crop to bounded active region)"
  },
  {
   "task": 40,
