@@ -588,14 +588,15 @@
  {
   "task": 49,
   "arc_id": "23b5c85d",
-  "points": 15.93,
-  "memory": 8554,
-  "params": 150,
+  "points": 16.47,
+  "memory": 4996,
+  "params": 72,
   "method": "ext:wguesdon6304",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.54 (1x1 Conv with RUNTIME one-hot weight picks+extracts channel plane in one 3600B op)"
  },
  {
   "task": 50,

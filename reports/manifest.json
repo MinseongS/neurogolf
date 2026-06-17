@@ -289,10 +289,10 @@
    "method": "ext:biohack_new"
   },
   "49": {
-   "points": 15.928462030904276,
-   "memory": 8554,
-   "params": 150,
-   "method": "ext:wguesdon6304"
+   "points": 16.46929845855897,
+   "memory": 4996,
+   "params": 72,
+   "method": "custom:task049"
   },
   "50": {
    "points": 15.892246216798918,
