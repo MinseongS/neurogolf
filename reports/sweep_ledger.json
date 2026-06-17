@@ -1507,14 +1507,15 @@
  {
   "task": 125,
   "arc_id": "543a7ed5",
-  "points": 15.5,
-  "memory": 13170,
-  "params": 246,
+  "points": 15.87,
+  "memory": 8775,
+  "params": 484,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE None ~15.5pt: 543a7ed5: outline pink boxes with green frame; recolor yellow boxes. r"
+  "status": "done",
+  "verdict": "FEASIBLE None ~15.5pt: 543a7ed5: outline pink boxes with green frame; recolor yellow boxes. r",
+  "note": "pending-pool win +0.367 (per-direction enclosure MatMul; drop lower-priority masking in Where chain)"
  },
  {
   "task": 126,
@@ -1917,14 +1918,15 @@
  {
   "task": 159,
   "arc_id": "6b9890af",
-  "points": 15.49,
-  "memory": 13331,
-  "params": 166,
+  "points": 16.03,
+  "memory": 7718,
+  "params": 173,
   "method": "custom:task159",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "pending-pool win +0.54 (runtime-factor magnify via two small gathers)"
  },
  {
   "task": 160,
@@ -4527,14 +4529,15 @@
  {
   "task": 374,
   "arc_id": "ea32f347",
-  "points": 15.52,
-  "memory": 12808,
-  "params": 233,
+  "points": 16.28,
+  "memory": 6064,
+  "params": 79,
   "method": "ext:galaxy_v1",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE None ~15.5pt: ea32f347: recolor 3 gray lines by their LENGTH rank (shortest=2nd colo"
+  "status": "done",
+  "verdict": "FEASIBLE None ~15.5pt: ea32f347: recolor 3 gray lines by their LENGTH rank (shortest=2nd colo",
+  "note": "pending-pool win +0.76 (length-rank recolor via 1-D length vector, no run-length scan)"
  },
  {
   "task": 375,
