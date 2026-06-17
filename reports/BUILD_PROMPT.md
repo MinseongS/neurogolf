@@ -37,6 +37,14 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   task119 ray=closed-form-diagonals, task341 orientation-equivariance) + 1-2 src/custom/task*.py for idiom.
 
 ## PROVEN LEVERS (reuse — most wins came from spotting one of these)
+- ⭐ COUNT-RANK = pure rank function, NO sort/argmax-loop: "sort/label the K rare colours by count" → cnt=
+  ReduceSum(input,[2,3]) [1,K,1,1]; rank_k=ReduceSum(Greater(cnt,cnt')) over a tiny [K,K]; route into FREE
+  bool output via Equal(rank, target-ramp)∧mask. ⚠️ PITFALL: MUST mask channel-0 (canvas background) to 0
+  FIRST — ch0 has the largest pixel count and silently steals rank-0, shifting every label by one (task391).
+- ⭐ SCALARS FROM PIXEL-COUNT VECTOR (cutout-robust): when a plane is parameterised by a few scalars and the
+  input is partially corrupted (cutout/specks), derive the scalars from cnt=ReduceSum(input,[2,3]) ([1,K,1,1],
+  40B) instead of a single-cell readout — a dominant colour's count survives ~125 cut cells so ArgMax(cnt)
+  stays exact; fold any "+1"/offset into the channel constant (chan[k]=k−1) to drop an Add plane (task175).
 - ⭐ WHERE-CHAIN PRIORITY: in a stacked `Where(maskN, colorN, ...)` priority chain you can DROP all ¬-masking
   of lower-priority masks — the higher-priority Where overwrites any over-marked cells, so compute each mask
   WITHOUT subtracting the masks above it (frees the AND/NOT ops, ~1.5kB) (task125).
