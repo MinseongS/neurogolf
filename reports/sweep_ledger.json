@@ -2658,14 +2658,15 @@
  {
   "task": 208,
   "arc_id": "890034e9",
-  "points": 15.13,
+  "points": 15.47,
   "memory": 19057,
   "params": 236,
   "method": "custom:task208",
   "class": "CHECK",
   "sig": "-",
-  "status": "skip-marginal",
-  "verdict": "+0.12 < +0.3 bar; prior net already generalizes 200/200. fp32 entry plane + ConvTranspose ring irreducible ~15.25."
+  "status": "done",
+  "verdict": "+0.12 < +0.3 bar; prior net already generalizes 200/200. fp32 entry plane + ConvTranspose ring irreducible ~15.25.",
+  "note": "WIN +0.34 (beat own custom): draw-frame; recover h,w from COUNT of boxcolor-occupied rows/cols (ReduceSum of collapse-Conv occupancy) not bbox scan -> kills ~14 planes; NO-pad 26x26 detect Conv; ConvTranspose crop-pad emits 30x30 ring direct. fresh 200/200."
  },
  {
   "task": 209,
