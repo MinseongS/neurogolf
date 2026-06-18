@@ -1357,10 +1357,10 @@
    "method": "custom:task226"
   },
   "227": {
-   "points": 18.186555400489105,
-   "memory": 0,
-   "params": 910,
-   "method": "conv9x1+b"
+   "points": 19.06775481255199,
+   "memory": 336,
+   "params": 41,
+   "method": "custom:task227"
   },
   "228": {
    "points": 16.315260537371962,

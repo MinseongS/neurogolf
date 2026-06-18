@@ -1501,8 +1501,9 @@
   "method": "conv3x3+b",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "at-floor: genuine 3x3-neighbourhood rule (interior->cyan/keep-border edge-class). single Conv [10,10,3,3]=910 params irreducible (params=ELEMENTS, 10ch out reads 10ch over 3x3). Where-route decomp=990>910 worse. 1x1 recolor NOT applicable (output depends on neighbourhood). conv3x3+b pool likely mostly at-floor"
  },
  {
   "task": 121,
@@ -2845,14 +2846,16 @@
  {
   "task": 227,
   "arc_id": "94f9d214",
-  "points": 18.19,
+  "points": 19.07,
   "memory": 0,
   "params": 910,
-  "method": "conv9x1+b",
+  "method": "custom:task227",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.88 (18.19->19.07): conv9x1 was NOT vertical rule - per-pixel NOR of stacked top(green)/bottom(blue) halves. ch0==1<=>empty so emptiness-logic = direct ch0 Slice (no occupancy sum). Pad CHANNEL dim too (pads channel-axis) to Concat only 3 set channels not 10. Slice ch0 each half->Mul(AND)->1-Sub(bg)->Cast uint8->Concat 3ch->Pad uint8"
  },
  {
   "task": 228,
