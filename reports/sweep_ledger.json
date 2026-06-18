@@ -1717,7 +1717,7 @@
   "sig": "memory",
   "status": "confirmed-infeasible",
   "verdict": "INFEASIBLE: sprite reconstruction from 2 shown pixels at variable mags; correspondence + up-",
-  "note": "multi-sprite reconstruction/correspondence wall: variable-count sprites, per-sprite runtime-mag Kronecker, cross-channel anchor matching = connectivity (banned). insight: marker pcolor=argmax(bbox_area/pixel_count)"
+  "note": "DEEP RE-ATTACK 2026-06-19: prior 'correspondence/flood-fill wall' verdict was FALSE -- rule is fully closed-form & LOCAL (anchor=pcolor-block-corner, m=solid-run scalar, colour in-block, S=OR-over-anchors, out=input+translated blocks). Built exact generalizing net 200/200 BUT 11.63 << gen-import 12.84: shift-stamp form needs O(K*mag*offset) full planes ~340K, BELOW the deployed magnify-Gather export (191K, fresh_pass 60/60 generalizes). AT EFFICIENT FLOOR. LESSON: separability != winning bytes; when a gen-import already does per-sprite Gather+Floor/Div and generalizes, that IS the floor -- the lean form is per-sprite-slot double-Gather (task195/159), not per-offset*per-m shift-stamp. Not adopted."
  },
  {
   "task": 134,

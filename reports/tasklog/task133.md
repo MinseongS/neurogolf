@@ -1,54 +1,72 @@
 # task133 — 57aa92db
 
-**Rule:** A per-instance random 3×3 connected "creature" template (one cell tagged
-"pixel0") is stamped 2–4 times. Each stamp has its own random magnification m∈{1..4}
-(stamp 0 always m=1 = the "master"), random position, and a distinct random color
-(all ≠ pcolor). In the INPUT, the master is drawn FULLY (creature at m=1, its pixel0
-cell drawn in pcolor), while every other sprite shows only TWO magnified blocks: its
-pixel0 block (drawn pcolor) and one adjacent "show" template cell (drawn in the sprite
-color). The OUTPUT fully reconstructs every sprite: the whole magnified template in the
-sprite color, with the pixel0 block recolored to pcolor.
-**Current:** 12.84 pts, gen-import (gen:thbdh6332), mem 191249, params 206.
-**Target tier:** none admissible — reconstruction/correspondence wall.
+**Rule:** A shared 3×3 "creature" shape S (`continuous_creature`, seed pixels[0]=(0,0) →
+every cell offset (dr,dc)∈{0,1,2}², (0,0)=signature). 2–4 sprites; sprite idx has anchor
+(brow,bcol), magnifier bmag∈[1,4] (bmag[0]=1), a distinct colour, and a "show" cell. The
+OUTPUT draws, for every sprite, the FULL shape S magnified by m (each cell → solid m×m
+block), signature cell in `pcolor`, all other cells in the sprite's colour. The INPUT draws
+sprite 0 fully (the m=1 template) but for every other sprite only TWO blocks (signature in
+pcolor + one cell in its colour). So OUTPUT = INPUT + the missing magnified blocks per sprite.
+**Current:** 12.84 pts, `gen:thbdh6332`, mem 191249, params 206 — GENERALIZES (fresh_pass 60/60).
+**Target tier:** B (closed-form exact reconstruction).
 
-## Feasibility analysis (why INFEASIBLE)
-A full numpy reference solver was built and is exact, but ONLY by using explicit
-non-local connectivity:
-1. **pcolor** = argmax(bbox_area / cell_count) over present colors — verified 0/300
-   against true generator pcolor. (This single piece IS ONNX-friendly.)
-2. **master** = the one non-square sprite (creature, not a solid block).
-3. **template** recovered from master color cells ∪ its pcolor pixel0 cell.
-4. **per-sprite anchor**: each non-master sprite shows a `show` block of side m AND
-   a separate pcolor pixel0 block; they must be MATCHED by spatial adjacency (the
-   pcolor channel holds 2–4 differently-sized pixel0 blocks, one per sprite, and
-   nothing but proximity distinguishes which belongs to which sprite). The `show`
-   index is random, so the anchor is NOT derivable from the sprite channel alone.
-5. **stamp**: per-sprite variable-magnification Kronecker upscale of the recovered
-   arbitrary template at a data-dependent anchor, with pixel0-block recoloring.
+## ⚠️ PRIOR "INFEASIBLE / correspondence wall" VERDICT WAS FALSE
+The earlier tasklog called this a connectivity/correspondence wall ("pcolor↔sprite matching
+needs flood-fill; variable-count components; anchor not derivable"). **All of that is wrong.**
+Everything is LOCAL and closed-form, verified EXACT 3000/3000 fresh + ISOLATED fresh 200/200:
+- anchor = pcolor-block TOP-LEFT (P & ¬up & ¬left) — no matching needed.
+- m per sprite = rightward SOLID RUN of the pcolor block (count-separable, blocks never touch).
+- sprite colour = the colour 4-adjacent to the pcolor block, dilated over the block (≤3 steps).
+- S (offset set) = OR-over-anchors of "any colour at anchor+(dr·m,dc·m)"; the m=1 template
+  reveals all of S. Stamp = Where(shift(spriteColour_m, off·m)>0 ∧ Smask, that, out).
+There is NO sprite enumeration, NO component labelling, NO `show`↔anchor correspondence — the
+output is INPUT plus translated colour blocks. The bail intuition was the documented-FALSE one.
 
-Steps 2–5 each require operations with no compact ONNX form:
-- variable NUMBER of sprite components (2–4) ⇒ no fixed-slot unrolling without
-  data-dependent component assignment (ArgMax/sort/NonZero over components — BANNED);
-- cross-channel pixel0↔sprite matching is a connectivity/correspondence grouping
-  (flood-fill / component labeling — BANNED, and no separable surrogate exists);
-- per-channel RUNTIME-magnification Kronecker of a per-instance ARBITRARY template
-  needs a data-dependent Gather-index plane PER sprite channel (~3600B fp32 each),
-  and even that presupposes the (already-blocked) anchor.
+## Attempts
+| # | angle | mem | params | stored | fresh | outcome |
+|---|---|---|---|---|---|---|
+| 1 | shift-stamp fp16, offsets {0,1,2} | 1.27M | 2784 | — | 200/200 | correct, over mem |
+| 2 | uint8 + slice-shifts | 888K | 1582 | 11.0 | 200/200 | correct, over |
+| 3 | fp16 adjacency, p=1 pads, merged Where-per-m stamp, drop redundant P | 642K | 1424 | 11.63 | 200/200 | correct, over |
 
-This is the BUILD_PROMPT-flagged wall: variable-size/variable-count components +
-cross-component spatial correspondence. The public net's 191KB is just a bloated
-gen-import; there is no compact exact construction to undercut it meaningfully.
+## Best achieved
+11.63 @ mem 641650 params 1424 — adopted? **N**. Beats 12.84? **NO (−1.21 stored)**.
+EXACT + GENERALIZES (ISOLATED fresh 200/200, arc-gen 262/262), but heavier than the deployed
+Gather net AND fails the 5 ARC-AGI ORIGINALS (train+test) → `evaluate.ok=False`.
 
-## OPEN ANGLES (exhausted)
-- Per-channel processing avoids sprite ENUMERATION but NOT the pcolor↔sprite
-  spatial matching (pcolor blocks are mutually indistinguishable within the channel).
-- No bound on sprite count or magnification makes any fixed-slot unroll exact.
+## Irreducible-floor analysis (at-floor vs the DEPLOYED net)
+The deployed 12.84 net is itself a generalizing exact solver using the **task195/159
+magnify-Gather** (inspected: 18× Gather + Floor/Div/Clip = `gidx=clip(floor((i−anchor)/m))`,
+per-sprite-slot peel) at 191K / 206 params — the EFFICIENT form of this reconstruction.
+My shift-stamp net floors ~11.6 because a multi-sprite variable-magnify STAMP intrinsically
+needs ~370 full 30×30 planes: stamp loop 4 m × 8 offsets (32), Smask OR 8×4 (32 back-slices +
+ands), run/m-plane/colour dilations (~100), pcolor adjacency (one fp32 4-nbr Conv 36000 + fp16
+[10,900] reshapes ~90K). Even all-uint8 working planes (900B) + merged stamp pin it at ~340K in
+planes alone ⇒ ≤~11.9 < 12.84. **m is count-separable, placement is positional/deterministic
+(no random bijection)** — fully closed-form — but per-offset×per-m SHIFTING is the wrong (heavy)
+form; the deployed double-Gather already sits at the byte floor.
+
+## OPEN ANGLES (re-attack backlog)
+- ONLY path to beat 12.84: reimplement the magnify-Gather per-sprite-slot (task195/159) and
+  shave under 141K. Low odds — would have to undercut an already-tuned 191K/206 gen export.
+  Not attempted (re-deriving the deployed approach to win a few KB is poor EV).
+- The 5 ARC-AGI ORIGINALS use WIDER creatures (validate ex1 width 4: S col-offset +3, pixels[0]
+  not at the corner ⇒ offsets span −2..3). Extending the offset window to cover them ~4× the
+  stamp/Smask loops (prohibitive) — and they are OUT-OF-DISTRIBUTION for the fresh-graded
+  generator (which always has pixels[0]=(0,0), offsets {0,1,2}). So evaluate.ok is unattainable
+  cheaply even ignoring the byte floor.
 
 ## INSIGHT (transferable)
-⭐ pcolor / "signature marker color stamped once per object" is recoverable as
-argmax(bbox_area / pixel_count) — the marker's cells are scattered across all objects
-so its bbox is huge relative to its count, while each object color is a tight block.
-But "reconstruct N variable-scale Kronecker stamps of a per-instance template, each
-anchored by matching a same-colored marker block to its object" is a genuine
-correspondence wall (no separable/banded/closed-form escape; matching needs banned
-connectivity ops).
+⭐ "Variable-magnify is SEPARABLE" held — and this whole rule is closed-form & LOCAL (m = solid-run
+scalar; per-sprite anchor = pcolor-block corner; colour propagates within the block) — so the prior
+"correspondence/flood-fill wall" verdict was a FALSE bail. BUT separability ≠ a winning byte count.
+A MULTI-OBJECT variable-magnify STAMP (≤K sprites × {1..4} mag × ≤9 offsets) costs ~O(K·mag·offset)
+full 30×30 planes via shift-stamping (~340K+), which floors BELOW a deployed **magnify-Gather**
+export. When a gen-import already uses 18× Gather + Floor/Div and `fresh_pass` confirms it
+generalizes, it is at the EFFICIENT FLOOR — re-deriving by shifts LOSES. The right efficient form
+is the per-sprite-slot double-Gather `out[i,j]=S[clip(floor((i−anc)/m))…]`, not per-offset×per-m shifts.
+⭐ pcolor = the unique colour 4-adjacent to ≥2 DISTINCT other colours (component-count / corner-count
+fail ~70% — a creature colour splits into ≥2 blobs / has ≥2 top-left corners). Build via 4-nbr
+dilation-MatMul → [10,10], zero row0+col0 (bg neighbours everything).
+⭐ This harness pads OFF-grid input AND target with ALL-ZERO channels (NOT ch0=1) → gate the output
+one-hot by an in-grid mask = ReduceMax(input, axes=[1])>0, else off-grid ch0=1 fails every example.
