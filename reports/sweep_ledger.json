@@ -2477,8 +2477,9 @@
   "method": "ext:galaxy_v1",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "already good net (16.91); agent 16.69 worse"
  },
  {
   "task": 201,
