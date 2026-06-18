@@ -463,10 +463,10 @@
    "method": "gen:thbdh6332"
   },
   "78": {
-   "points": 16.315598889599855,
-   "memory": 0,
-   "params": 5910,
-   "method": "conv59x1+b"
+   "points": 16.61839746289011,
+   "memory": 4320,
+   "params": 46,
+   "method": "custom:task078"
   },
   "79": {
    "points": 15.029648507210364,

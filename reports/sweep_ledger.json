@@ -949,14 +949,15 @@
  {
   "task": 78,
   "arc_id": "3906de3d",
-  "points": 16.32,
-  "memory": 0,
-  "params": 5910,
+  "points": 16.62,
+  "memory": 4320,
+  "params": 46,
   "method": "conv59x1+b",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "HAND-BUILT: blue/red bar stack via per-col counts + row comparisons"
  },
  {
   "task": 79,
