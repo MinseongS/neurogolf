@@ -4219,14 +4219,16 @@
  {
   "task": 334,
   "arc_id": "d4469b4b",
-  "points": 18.59,
+  "points": 19.56,
   "memory": 572,
   "params": 37,
-  "method": "ext:kojimar6275",
+  "method": "custom:task334",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.97 (18.59->19.56): COUNT->FIXED-PATTERN, output depends only on single colour c. recover c via ReduceSum[2,3]->Slice 1:4->ArgMax, GATHER tiny uint8 [K,h,w] pattern table by scalar (skips fp32 one-hot/MatMul/Reshape). Concat {ch0,ch5} + reused zero3 const + Pad free"
  },
  {
   "task": 335,

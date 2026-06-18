@@ -1999,10 +1999,10 @@
    "method": "custom:task333"
   },
   "334": {
-   "points": 18.588181732290103,
-   "memory": 572,
-   "params": 37,
-   "method": "ext:kojimar6275"
+   "points": 19.561920691076804,
+   "memory": 167,
+   "params": 63,
+   "method": "custom:task334"
   },
   "335": {
    "points": 16.598666694678297,
