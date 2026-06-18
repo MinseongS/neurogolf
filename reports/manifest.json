@@ -1879,10 +1879,10 @@
    "method": "custom:task313"
   },
   "314": {
-   "points": 18.78539190157781,
+   "points": 20.394829814011906,
    "memory": 0,
-   "params": 500,
-   "method": "ext:wguesdon6304"
+   "params": 100,
+   "method": "custom:task314"
   },
   "315": {
    "points": 17.444094906388653,

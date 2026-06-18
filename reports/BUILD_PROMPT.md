@@ -84,6 +84,13 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   set {0,1,…}; recover the odd block by a magnitude-BAND test on the count (e.g. cnt∈{1,4}). Because it's
   per-channel it reconstructs the odd block's full one-hot DIRECTLY — beats the public majority-vote+ArgMax+Gather
   net (task207: mem 1840→1000, +0.60). Generalizes: counts are exact regardless of which block is odd.
+- ⭐ DILATED-CONV (dense conv tapping a FIXED STRIDE → small dilated kernel, 5× fewer params): when a public
+  depthwise/conv net only ever taps offsets at a fixed stride s (e.g. ±3 on a spacing-3 sublattice), a DENSE
+  (2s+1)×(2s+1) kernel collapses to a 3×3 kernel DILATED by s — identical footprint, ~5× fewer params
+  (490→90, mem stays 0 since output is the graph output) (task314 18.79→20.39, +1.61). The ±2-corner/+center/
+  −bias trick that emulates AND-of-endpoints doubles as turning a background channel OFF at filled cells. Keep
+  channel-0 (grid lines) copy-only or line cells false-fill. Check a conv net's actual tap stride before assuming
+  its dense kernel is irreducible.
 - ⭐ COUNT→FIXED-PATTERN (output content is CONSTANT given a scalar count) = the cheapest tier (~100B, can hit
   20+): when the whole output is determined by ONE scalar (e.g. # of red pixels), compute cnt=ReduceSum(input,[2,3])
   (fp32 [1,K,1,1], 40B — ReduceSum rejects uint8), build the tiny K×K one-hot from CONSTANTS gated by ONE

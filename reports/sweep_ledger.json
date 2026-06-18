@@ -3969,14 +3969,16 @@
  {
   "task": 314,
   "arc_id": "cbded52d",
-  "points": 18.79,
+  "points": 20.39,
   "memory": 0,
   "params": 500,
-  "method": "ext:wguesdon6304",
+  "method": "custom:task314",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +1.61 (18.79->20.39): DILATED-CONV lever - public depthwise conv tapping fixed stride s (here +-3 on spacing-3 sublattice) = DENSE 7x7 (49 taps) collapses to 3x3 kernel DILATED by s (9 taps), identical footprint 5x fewer params 490->90. mem-0 output. bias load-bearing for out>0"
  },
  {
   "task": 315,
