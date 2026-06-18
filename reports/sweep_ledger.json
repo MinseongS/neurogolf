@@ -526,15 +526,15 @@
  {
   "task": 42,
   "arc_id": "22233c11",
-  "points": 15.98,
+  "points": 16.44,
   "memory": 7502,
   "params": 728,
   "method": "ext:biohack_new",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending-retry",
+  "status": "done",
   "verdict": "",
-  "note": "agent STALLED 600s on hard task (varying magnify, offsets scale with block size, not fixed stamp); retry later"
+  "note": "WIN +0.46: variable-magnify staircase was SEPARABLE not a wall; cyan=AND of two m-scaled diagonal Gathers of green plane (task159 lever), m from green pixel count. fresh 200/200."
  },
  {
   "task": 43,
@@ -3445,14 +3445,15 @@
  {
   "task": 270,
   "arc_id": "ae3edfdc",
-  "points": 14.85,
+  "points": 15.97,
   "memory": 24316,
   "params": 1185,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "skip-marginal",
-  "verdict": "generalizing exact (fresh 500/500) but +0.199 < +0.3 bar; ~20KB irreducible (4 unfusable directional MatMuls). Insight logged."
+  "status": "done",
+  "verdict": "generalizing exact (fresh 500/500) but +0.199 < +0.3 bar; ~20KB irreducible (4 unfusable directional MatMuls). Insight logged.",
+  "note": "WIN +1.11: blank-note skip-marginal = missed headroom; 12-scalar COUNT->FIXED-PATTERN (2 centres+8 dir flags via 1-D profile sign tests, 10 cells = one MatMul L=RS@CW). fresh 200/200."
  },
  {
   "task": 271,
@@ -3564,7 +3565,8 @@
   "class": "BAIL?",
   "sig": "overlaps",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: b2862040: recolor 'closed' barnacle shapes vs open (maroon bg); enclosure/closed"
+  "verdict": "INFEASIBLE: b2862040: recolor 'closed' barnacle shapes vs open (maroon bg); enclosure/closed",
+  "note": "REVERIFIED wall: variable-count correspondence; barnacles bridge closed+open boxes into one 8-conn component needing 2 colors; flood/parity ceiling ~97.8% fresh, cannot 200/200. True-positive."
  },
  {
   "task": 280,

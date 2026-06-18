@@ -17,6 +17,7 @@ correspondence.
 ## Attempts
 | # | angle | tier | mem | params | pts | fresh | outcome |
 |---|---|---|---|---|---|---|---|
+| 6 | **SCALAR rebuild: 12-scalar pull-back, 1-D profile flags + single small MatMul L=RS@CW** | A* | **8235** | **146** | **15.97** | **200/200** | **NEW BEST (+1.11)** |
 | 1 | CumSum prefix-OR presence + MatMul shifts, fp32 | A | 52200 | 961 | 14.12 | — | below P |
 | 2 | strict-triangular MatMul presence (skip Greater/Cast: <=1 petal/ray so gated exclusive count is {0,1}) + MatMul shifts, fp16, Sum-fold | A | 21600 | 1858 | 14.94 | — | MARGINAL |
 | 3 | stacked 2-flower channel batch + grouped Conv shift | A | 32850 | 1109 | 14.57 | — | worse (multi-ch planes bloat mem) |
@@ -24,8 +25,27 @@ correspondence.
 | 5 | #4 + uint8 label entry plane (Cast L->uint8, Pad sentinel 99, uint8 Equal) | A | 20025 | 958 | **15.05** | 500/500 | MARGINAL (+0.20) |
 
 ## Best achieved
-15.049 @ mem 20025 params 958 — adopted? **N** (below the +0.3 bar). Beats prior 14.85? YES (+0.199),
-and generalizes perfectly (fresh 500/500). MARGINAL by the adopt rule.
+**15.97 @ mem 8235 params 146** (attempt #6) — beats prior 14.85 by **+1.11**, fresh 200/200,
+eval 204/204 exact. CLEARS the +0.3 bar decisively. (Earlier 15.049 @ mem 20025 was MARGINAL.)
+
+## ⭐ THE WIN (attempt #6) — scalar pull-back, not directional MatMuls
+The shelving note ("MARGINAL ~0.1 short") came from over-modelling the task as a directional
+prefix/shift problem (~34 fp16 15x15 planes). The real structure: the ENTIRE output is a function
+of 12 scalars — two centres (r,c) + 8 direction flags — so it is a COUNT/SCALAR->FIXED-PATTERN
+rebuild, NOT a plane pipeline.
+- Centres = position-weighted ReduceSum of the centre-colour profile (single pixel -> exact).
+- Each direction flag is a pure 1-D-PROFILE test, NO 2-D plane: rowprof=ReduceSum(petal_ch,axis=col),
+  up = any rowprof at rows<r, dn = rows>r; colprof for lf/rt. Exact because vertical petals sit at
+  col==c, row!=r (land in rowprof at rows!=r) while horizontal petals sit at row==r (touch only
+  rowprof[r]) -- the two never collide.
+- 10 candidate cells (2 centres + 8 petals) are each a rank-1 placement, so the WHOLE label plane is
+  ONE small matrix product: RS[r,k]=Equal(rampR[r],row_k) [15,10], CW[k,c]=(colour_k*flag_k)*
+  Equal(col_k,rampC[c]) [10,15], L=RS@CW [15,15] (cells disjoint -> exact). No per-cell 15x15 plane.
+- Route to free output: Cast L->uint8, Pad to 30x30 with sentinel 99 (off-grid stays all-zero),
+  Equal(L,arange[1,10,1,1]) -> bool output.
+Dominant intermediates now: two fp32 row/col profiles (1200B each) + the 900B uint8 Pad carrier.
+
+## Irreducible-floor analysis (superseded — kept for history)
 
 ## Irreducible-floor analysis
 ~34 fp16 [1,1,15,15] working planes (450B each) dominate. The per-flower pipeline needs 13 planes:
