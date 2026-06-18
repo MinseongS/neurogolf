@@ -3140,15 +3140,15 @@
  {
   "task": 243,
   "arc_id": "9edfc990",
-  "points": 13.86,
+  "points": 14.06,
   "memory": 68616,
   "params": 102,
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
+  "status": "done",
   "verdict": "INFEASIBLE: 9edfc990: flood-fill background reachable from edge (connectivity)",
-  "note": "RE-PROBE: agent built 28-iter 4-conn flood (68616->44352 mem golf via single-conv occupancy-packing) claiming fresh 1000/1000, but src.adopt ISOLATED fresh check says generalizes=False -> REJECTED. Likely data-required flood depth >28 on held-out, or occupancy-packing edge case. Current net (13.86) retained. Structural 4-conn flood floor."
+  "note": "WIN 2026-06-19 (deep re-attack, scout-flagged): exact 4-conn BFS flood, cropped Wk=18 D=38, fp16 56484B, 500/500 fresh -> 14.06 (+0.20 over gen-import 13.86, ADOPTED generalizing). MARGINAL by +0.3 heuristic but adopt gate accepted (both generalize, strictly better+robust). Flood-floor law (task286) confirmed: smaller grid=higher floor but +0.3 crossover D=33 < worst-geodesic 38 so full +0.3 impossible. uint8 Conv INVALID_GRAPH even opset18 -> fp16 is dtype floor for 4-conn cross-dilate."
  },
  {
   "task": 244,
