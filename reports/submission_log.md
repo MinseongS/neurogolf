@@ -156,7 +156,7 @@ Subagent infra recovered (probes 109/10 cleared). Wave: 109,10,28,353,41,136,226
 323,130,123,316 (all generalizing, ~+0.4-0.9 each; 305/123/316 +0.66-0.91). Truly-untouched pending pool
 (no prior custom) is the productive frontier now. gap pinned 28.96. Session: 6492.58 -> proj 6569.81 (+77).
 
-## ⭐ Submission 22: proj 6578.01 PENDING. ~21-win wave (infra healthy, scaled to ~10 agents).
+## ⭐ Submission 22: LB 6578.01 CONFIRMED (proj 6578.01 EXACT, 20th). ~21-win wave (infra healthy, scaled to ~10 agents).
 Incl task191 +2.24 (8-orientation dihedral template match, weak base 11.53). TARGETING LESSON: rank by
 MANIFEST points not stale ledger. Lowest-manifest(11-13) gen-imports mostly WALLS (158 multi-object-scatter,
 286 unbounded-flood, 133 multi-sprite-correspondence confirmed-infeasible) BUT 191 solvable +2.24. Sweet spot

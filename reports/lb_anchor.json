@@ -1,7 +1,7 @@
 {
- "comment": "#22 PENDING. proj 6578.01. Big wave incl task191 +2.24 (low-manifest dihedral-match). gap 28.96==219+255. Low-manifest(11-13) tier mostly walls (158/286/133) but 191 was a +2.24 win.",
+ "comment": "#22 CONFIRMED 6578.01 (proj 6578.01 EXACT, 20th). gap 28.96==219+255. Re-anchor next submit.",
  "stored_at_submit": 6606.97,
  "lb": 6578.01,
  "time_utc": "2026-06-18 15:00",
- "pending": true
+ "pending": false
 }

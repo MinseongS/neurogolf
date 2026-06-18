@@ -3134,14 +3134,15 @@
  {
   "task": 253,
   "arc_id": "a61ba2ce",
-  "points": 14.22,
-  "memory": 47830,
-  "params": 439,
+  "points": 15.54,
+  "memory": 12740,
+  "params": 139,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: a61ba2ce: arrange 4 detected 2-cell sprite fragments into a fixed 4x4 layout by "
+  "status": "done",
+  "verdict": "INFEASIBLE: a61ba2ce: arrange 4 detected 2-cell sprite fragments into a fixed 4x4 layout by ",
+  "note": "subagent win +1.32 mid-manifest (14.22 bloated import)"
  },
  {
   "task": 254,
