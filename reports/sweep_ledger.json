@@ -1335,8 +1335,9 @@
   "method": "custom:task109",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "already has committed custom (prior session)"
  },
  {
   "task": 110,
@@ -2662,8 +2663,9 @@
   "method": "custom:task217",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "already has committed custom (prior session)"
  },
  {
   "task": 218,

@@ -144,7 +144,7 @@ Wins since #18: 43,259,65,398,100,357,166,388,248,190,335,246,199,252,273 (+7.68
 28.96 (==219+255 walls). Session total so far: 47 wins + 2 gap-closers (274,332). LB trajectory
 6492.58 -> 6501 -> 6524 -> 6543 -> 6551 -> (proj 6559). Pending pool floor now ~16.3, wins ~+0.4 steady.
 
-## Submission 20: proj 6561.68 PENDING. 3 HAND-BUILT wins (subagent infra down).
+## ⭐ Submission 20: LB 6561.68 CONFIRMED (proj 6561.68 EXACT, 18th). 3 HAND-BUILT wins (subagent infra down).
 Subagent streaming infra stalled 7 agents at 600s watchdog. Pivoted to building nets MYSELF in the
 main loop (my own tools work fine): task60 (16.37->16.92 mirror-fill), task292 (16.32->17.18 recolor),
 task78 (16.32->16.62 bar-stack) + task176 salvage. All fixed-size simple-recolor/fill (small active

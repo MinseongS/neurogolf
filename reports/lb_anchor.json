@@ -1,7 +1,7 @@
 {
- "comment": "#20 PENDING. proj 6561.68. 3 HAND-BUILT wins (60,292,78) built in main loop while subagent infra down (7 stalls). gap 28.96==219+255.",
+ "comment": "#20 CONFIRMED 6561.68 (proj 6561.68 EXACT, 18th). 3 hand-built wins translated 1:1. gap 28.96==219+255.",
  "stored_at_submit": 6590.64,
  "lb": 6561.68,
  "time_utc": "2026-06-18 06:30",
- "pending": true
+ "pending": false
 }
