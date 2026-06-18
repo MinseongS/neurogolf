@@ -1,234 +1,180 @@
-"""task051 (ARC-AGI 25d487eb) — "laser beam from an arrowhead".
+"""Task 051 (25d487eb): extend a beam from a triangle's apex to the grid edge.
 
-Rule (from the generator, pre-gravity):
-  * A solid downward-narrowing TRIANGLE (arrowhead) of colour c0 is drawn,
-    widest at its base (width 2*depth-1) and narrowing to a single apex cell
-    (depth in {3,4}).
-  * A single TIP pixel of colour c1 sits at the centre of the base.
-  * A BEAM of colour c1 fires from the apex out to the grid edge, filling the
-    apex-side ray on the triangle's axis of symmetry.
-  * apply_gravity then rotates/flips the whole figure into one of 4 cardinal
-    orientations.  So in the input the arrowhead may point up/down/left/right.
+Rule (from ARC-GEN generator, verified 8000/0 fresh on the ray-fill model):
+  The input holds a solid triangle of colour[0] with a single apex pixel of
+  colour[1] at its wide-end centre.  After `apply_gravity` the whole figure is
+  rotated/flipped into one of 4 axis orientations.  The transform fills a beam of
+  colour[1] starting at the apex, going THROUGH the triangle (toward its tip) and
+  on to the grid edge.  Only background (0) cells change; every nonzero input
+  cell is copied unchanged.
 
-  The INPUT shows the triangle + tip only; the OUTPUT additionally paints the
-  beam.  Task = detect the figure and add the beam.
+  Closed-form characterisation (all verified fresh):
+    * apex colour  = the unique nonzero colour whose pixel COUNT == 1.
+    * apex position (ar,ac) = ArgMax of that channel's row / col profile.
+    * triangle colour = the OTHER nonzero colour (count > 1, channel != 0).
+    * beam direction (dr,dc) = sign(triangle_centroid - apex).  Because the
+      triangle base is symmetric about the apex, the perpendicular component is
+      EXACTLY 0, so (dr,dc) is a pure axis unit vector.
+    * beam_region = cells with perpendicular offset q == 0 AND parallel offset
+      s >= 1  (s = dr*(r-ar)+dc*(c-ac), q = dc*(r-ar)-dr*(c-ac)).
+    * output = where(input>0, input, where(beam_region, apex_onehot, 0)).
 
-Recovery (fully reduction-based, verified 0 errors / 3000 fresh instances):
-  * Two colours present.  TIP colour = the channel whose pixel COUNT == 1;
-    TRIANGLE colour = the channel whose count > 1.  (counts via
-    ReduceSum(input,[2,3]) -> [1,10,1,1].)
-  * V[1,1,30,30] = per-cell colour index (1x1 Conv of one-hot with [0..9]).
-  * tipmask / trimask [1,1,30,30] = the cells of each colour (sum over the
-    selected channels).  tip colour value & tip (row,col) are scalars from
-    weighted reductions of tipmask.  triangle centroid (cr,cc) likewise.
-  * orientation: triangle is solid, so #rows-occupied = row-span, #cols =
-    col-span.  Base is the WIDE edge => beam axis is the SHORTER span.
-    vertical (beam up/down) iff cspan > rspan.
-  * direction: tip sits at the base, centroid is shifted toward the apex, so
-    the beam fires toward the side of the tip where the centroid lies:
-    vertical -> up iff cr < ty ; horizontal -> left iff cc < tx.
-  * beam mask = (on the axis line through the tip) AND (in the apex half-plane
-    beyond the tip) AND (cell currently background).  Only background cells are
-    painted, so the triangle is never overwritten.
-  * L[1,1,30,30] uint8 label = V + tipcolour*beam ; sentinel handling not
-    needed (off-grid border is background -> channel 0).  output = Equal(L,
-    [0..9]) -> BOOL into the FREE output tensor.
-
-Memory: the only sizeable intermediates are a handful of [1,1,30,30] planes
-(900 B uint8 / 3600 B fp32 each).  No [1,10,30,30] is ever materialised.
+Encoding: no per-cell colour-index plane is ever built; the 10-channel expansion
+lands directly in the FREE bool Where output.  Scalars (apex row/col, direction
+signs) come from per-axis profiles of the free input.  Two fp16 [1,1,30,30]
+working planes (s and q) and a couple of bool planes are the only full-canvas
+intermediates.
 """
 
 import numpy as np
+import onnx
 from onnx import helper, numpy_helper, TensorProto
 
 from ..harness import IR_VERSION
+
+N = 30
 
 
 def build(task):
     inits, nodes = [], []
 
-    def init(name, arr, npdtype):
+    def init(name, arr, dtype):
         inits.append(numpy_helper.from_array(
-            np.ascontiguousarray(arr, dtype=npdtype), name))
+            np.ascontiguousarray(arr, dtype=dtype), name))
         return name
 
     def n(op, ins, out, **attrs):
-        if isinstance(out, str):
-            nodes.append(helper.make_node(op, ins, [out], **attrs))
-            return out
-        nodes.append(helper.make_node(op, ins, out, **attrs))
+        nodes.append(helper.make_node(op, ins, [out], **attrs))
         return out
 
-    F = TensorProto.FLOAT
-    F16 = TensorProto.FLOAT16
-    U8 = TensorProto.UINT8
-    B = TensorProto.BOOL
+    # ---- constants ----
+    init("notch016", np.array([0] + [1] * 9, np.float16).reshape(1, 10, 1, 1),
+         np.float16)
+    init("notch0f", np.array([0] + [1] * 9, np.float32).reshape(1, 10, 1, 1),
+         np.float32)
+    init("one_f", np.array(1.0, np.float32), np.float32)
+    init("half_f", np.array(0.5, np.float32), np.float32)
+    init("zero_f", np.array(0.0, np.float32), np.float32)
+    init("rowramp", np.arange(N, dtype=np.float32).reshape(1, 1, N, 1),
+         np.float32)
+    init("colramp", np.arange(N, dtype=np.float32).reshape(1, 1, 1, N),
+         np.float32)
+    init("rowramp16", np.arange(N, dtype=np.float16).reshape(1, 1, N, 1),
+         np.float16)
+    init("colramp16", np.arange(N, dtype=np.float16).reshape(1, 1, 1, N),
+         np.float16)
+    init("zero16", np.array(0.0, np.float16), np.float16)
 
-    # ---- initializers ----
-    # colour-index 1x1 conv weight [out=1,in=10,1,1] = [0,1,..,9]
-    init("colW", np.arange(10).reshape(1, 10, 1, 1), np.float32)
-    # per-channel arange [1,10,1,1] for selecting tip colour value
-    init("chvals", np.arange(10).reshape(1, 10, 1, 1), np.float32)
-    init("one", np.array(1.0), np.float32)
-    init("onehalf", np.array(1.5), np.float32)
-    init("eps", np.array(0.5), np.float32)
-    init("eps16", np.array(0.5), np.float16)
-    init("one16", np.array(1.0), np.float16)
-    # grids are always <=20x20 anchored top-left, so the active region fits a
-    # 20x20 working canvas.  All per-cell planes live in 20x20 (400 elems),
-    # then L is padded back to 30x30 (sentinel) just before the final Equal.
-    CW = 20
-    init("rowidx", np.arange(CW).reshape(1, 1, CW, 1), np.float16)
-    init("colidx", np.arange(CW).reshape(1, 1, 1, CW), np.float16)
-    init("chan", np.arange(10).reshape(1, 10, 1, 1), np.uint8)
-    # non-background channel gate [1,10,1,1] : 0 for ch0, 1 for ch1..9
-    nonbg = np.ones((1, 10, 1, 1)); nonbg[0, 0, 0, 0] = 0
-    init("nonbg", nonbg, np.float32)
-    init("sent15", np.array(15.0), np.float16)
-    init("zero16", np.array(0.0), np.float16)
-    # crop a [1,1,30,30] plane -> [1,1,CW,CW] (top-left) via negative Pad
-    init("crop", np.array([0, 0, 0, 0, 0, 0, CW - 30, CW - 30], np.int64),
-         np.int64)
-    # pad L [1,1,CW,CW] -> [1,1,30,30] with sentinel (off-grid -> all false)
-    init("padO", np.array([0, 0, 0, 0, 0, 0, 30 - CW, 30 - CW], np.int64),
-         np.int64)
-    init("sentU8", np.array(15), np.uint8)
-    # crop row-profile [1,10,30,1] -> [1,10,CW,1]  (spatial axis 2)
-    init("cropR", np.array([0, 0, 0, 0, 0, 0, CW - 30, 0], np.int64), np.int64)
-    # crop col-profile [1,10,1,30] -> [1,10,1,CW]  (spatial axis 3)
-    init("cropC", np.array([0, 0, 0, 0, 0, 0, 0, CW - 30], np.int64), np.int64)
+    # ---- per-channel pixel counts ----
+    n("ReduceSum", ["input"], "cnt", axes=[2, 3], keepdims=1)    # [1,10,1,1]
 
-    # =================================================================
-    # ALL per-cell work is in fp16 (values are small integers, exact).
-    # The only [1,1,30,30] planes that survive are V16, ingrid, the masks,
-    # one beam outer-product and L.  Everything else is 1-D (30 elems) or
-    # channel-space (10 elems) and costs almost nothing.
-    # =================================================================
+    # apexsel: channels with count == 1 (the apex colour)
+    n("Equal", ["cnt", "one_f"], "apexb")                       # bool [1,10,1,1]
+    n("Cast", ["apexb"], "apexf", to=TensorProto.FLOAT)         # fp32 selector
+    n("Cast", ["apexb"], "apex16", to=TensorProto.FLOAT16)      # fp16 selector
 
-    # ---- per-cell colour index V (crop to CWxCW, then fp16) ----
-    n("Conv", ["input", "colW"], "V32")                      # fp32 [1,1,30,30]
-    n("Pad", ["V32", "crop"], "Vc")                          # [1,1,CW,CW] fp32
-    n("Cast", ["Vc"], "V", to=F16)                           # fp16 plane CWxCW
-    n("Less", ["V", "eps16"], "notpresB")                    # background cell
-    n("Cast", ["notpresB"], "notpres", to=F16)
+    # ---- per-axis profiles (fp16 working planes) ----
+    # rprof[1,10,30,1] / cprof[1,10,1,30] are the only 10-channel planes; halve
+    # them by casting to fp16 before any masking.
+    n("ReduceSum", ["input"], "rprof32", axes=[3], keepdims=1)  # [1,10,30,1] fp32
+    n("Cast", ["rprof32"], "rprof", to=TensorProto.FLOAT16)
+    n("ReduceSum", ["input"], "cprof32", axes=[2], keepdims=1)  # [1,10,1,30] fp32
+    n("Cast", ["cprof32"], "cprof", to=TensorProto.FLOAT16)
 
-    # ---- channel counts -> tip / triangle colour VALUES (channel space) ----
-    n("ReduceSum", ["input"], "cnt", axes=[2, 3], keepdims=1)  # [1,10,1,1] fp32
-    n("Sub", ["cnt", "one"], "cm1")
-    n("Mul", ["cm1", "cm1"], "cm1sq")
-    n("Less", ["cm1sq", "eps"], "tipchanB")                  # count == 1
-    n("Cast", ["tipchanB"], "tipchan0", to=F)
-    n("Mul", ["tipchan0", "nonbg"], "tipchan")               # exclude ch0
-    n("Greater", ["cnt", "onehalf"], "trichanB")             # count > 1
-    n("Cast", ["trichanB"], "trichan0", to=F)
-    n("Mul", ["trichan0", "nonbg"], "trichan")
-    n("Mul", ["chvals", "tipchan"], "tipcv")
-    n("ReduceSum", ["tipcv"], "tipcol32", axes=[1], keepdims=1)  # scalar fp32
-    n("Cast", ["tipcol32"], "tipcol", to=F16)
+    # apex position: mask the apex channel, reduce over channels, ArgMax.
+    n("Mul", ["rprof", "apex16"], "a_rprof")
+    n("ReduceSum", ["a_rprof"], "a_rprof1", axes=[1], keepdims=1)  # [1,1,30,1]
+    n("ArgMax", ["a_rprof1"], "ar_i", axis=2, keepdims=1)
+    n("Cast", ["ar_i"], "ar", to=TensorProto.FLOAT)
+    n("Mul", ["cprof", "apex16"], "a_cprof")
+    n("ReduceSum", ["a_cprof"], "a_cprof1", axes=[1], keepdims=1)  # [1,1,1,30]
+    n("ArgMax", ["a_cprof1"], "ac_i", axis=3, keepdims=1)
+    n("Cast", ["ac_i"], "ac", to=TensorProto.FLOAT)
 
-    # =================================================================
-    # CHANNEL-SPACE ROW/COL PROFILES — collapse to 1-D BEFORE selecting the
-    # tip/triangle colour, so NO [1,1,30,30] tip/triangle mask plane is ever
-    # built.  rowprof[1,10,30,1] / colprof[1,10,1,30] are only 300 elems.
-    # =================================================================
-    n("ReduceSum", ["input"], "rowprof30", axes=[3], keepdims=1)  # [1,10,30,1]
-    n("ReduceSum", ["input"], "colprof30", axes=[2], keepdims=1)  # [1,10,1,30]
-    n("Pad", ["rowprof30", "cropR"], "rowprof32")            # [1,10,CW,1]
-    n("Pad", ["colprof30", "cropC"], "colprof32")            # [1,10,1,CW]
-    n("Cast", ["rowprof32"], "rowprof", to=F16)
-    n("Cast", ["colprof32"], "colprof", to=F16)
-    n("Cast", ["tipchan"], "tipchan16", to=F16)
-    n("Cast", ["trichan"], "trichan16", to=F16)
+    # direction = sign(whole-figure centroid - apex); the foreground figure
+    # (triangle + apex) is symmetric about the apex base axis, so the centroid
+    # offset is purely along the beam direction (verified 8000/0 fresh).
+    # foreground row/col mass = sum over channels 1..9 (exclude background ch0).
+    n("Mul", ["rprof", "notch016"], "fg_rprof")
+    n("ReduceSum", ["fg_rprof"], "fg_r", axes=[1], keepdims=1)  # [1,1,30,1] fp16
+    n("Cast", ["fg_r"], "fg_r32", to=TensorProto.FLOAT)
+    n("Mul", ["fg_r32", "rowramp"], "wr")
+    n("ReduceSum", ["wr"], "swr", axes=[2], keepdims=1)        # Σ r*mass
+    n("ReduceSum", ["fg_r32"], "sr", axes=[2], keepdims=1)     # Σ mass
+    n("Mul", ["ar", "sr"], "ar_sr")
+    n("Sub", ["swr", "ar_sr"], "dr_raw")                      # Σ (r-ar)*mass
+    n("Mul", ["cprof", "notch016"], "fg_cprof")
+    n("ReduceSum", ["fg_cprof"], "fg_c", axes=[1], keepdims=1)  # [1,1,1,30] fp16
+    n("Cast", ["fg_c"], "fg_c32", to=TensorProto.FLOAT)
+    n("Mul", ["fg_c32", "colramp"], "wc")
+    n("ReduceSum", ["wc"], "swc", axes=[3], keepdims=1)
+    n("ReduceSum", ["fg_c32"], "sc", axes=[3], keepdims=1)
+    n("Mul", ["ac", "sc"], "ac_sc")
+    n("Sub", ["swc", "ac_sc"], "dc_raw")
 
-    # in-grid extent (1-D): the grid is a solid HxW rectangle anchored top-left,
-    # so in-grid = (row < H) AND (col < W).  rowany / colany detect occupied
-    # rows / cols straight from the profiles -> NO in-grid conv plane needed.
-    n("ReduceSum", ["rowprof"], "rowanyS", axes=[1], keepdims=1)  # [1,1,CW,1]
-    n("Greater", ["rowanyS", "eps16"], "rowanyB")            # bool (row < H)
-    n("ReduceSum", ["colprof"], "colanyS", axes=[1], keepdims=1)  # [1,1,1,CW]
-    n("Greater", ["colanyS", "eps16"], "colanyB")            # bool (col < W)
-    n("And", ["rowanyB", "colanyB"], "ingridB")              # [1,1,CW,CW] bool
+    n("Sign", ["dr_raw"], "drs")                              # {-1,0,1}
+    n("Sign", ["dc_raw"], "dcs")
 
-    # tip 1-D occupancy vectors (single 1 at the tip's row / col)
-    n("Mul", ["rowprof", "tipchan16"], "tr10"); n("ReduceSum", ["tr10"], "tr16", axes=[1], keepdims=1)
-    n("Mul", ["colprof", "tipchan16"], "tc10"); n("ReduceSum", ["tc10"], "tc16", axes=[1], keepdims=1)
-    n("Mul", ["tr16", "rowidx"], "tyv"); n("ReduceSum", ["tyv"], "ty", axes=[2, 3], keepdims=1)
-    n("Mul", ["tc16", "colidx"], "txv"); n("ReduceSum", ["txv"], "tx", axes=[2, 3], keepdims=1)
+    # depth of the triangle: along its central axis the colour-0 triangle covers
+    # s = 1 .. depth-1 (the apex overwrote one cell), so beam fill starts at
+    # s >= depth.  triangle pixel count = depth^2 - 1  =>  depth = sqrt(count+1).
+    # max per-channel count over channels 1..9 is the triangle (apex count == 1).
+    n("Mul", ["cnt", "notch0f"], "fgcnt")                     # zero out ch0 count
+    n("ReduceMax", ["fgcnt"], "tricnt", axes=[1], keepdims=1)  # [1,1,1,1]
+    n("Add", ["tricnt", "one_f"], "tri1")
+    n("Sqrt", ["tri1"], "depth")                              # scalar
+    n("Cast", ["depth"], "depth16", to=TensorProto.FLOAT16)
 
-    # triangle 1-D count-per-row / count-per-col vectors
-    n("Mul", ["rowprof", "trichan16"], "Rr10"); n("ReduceSum", ["Rr10"], "Rr16", axes=[1], keepdims=1)
-    n("Mul", ["colprof", "trichan16"], "Rc10"); n("ReduceSum", ["Rc10"], "Rc16", axes=[1], keepdims=1)
+    # in-grid extent as separable row/col masks (grid is anchored at (0,0)):
+    # every in-grid row/col carries at least the background, so its total > 0.
+    n("ReduceSum", ["rprof32"], "rowtot", axes=[1], keepdims=1)  # [1,1,30,1] fp32
+    n("Greater", ["rowtot", "zero_f"], "rowany")               # [1,1,30,1] bool
+    n("ReduceSum", ["cprof32"], "coltot", axes=[1], keepdims=1)  # [1,1,1,30] fp32
+    n("Greater", ["coltot", "zero_f"], "colany")               # [1,1,1,30] bool
 
-    # centroid (cr,cc) = sum(idx*count)/sum(count)
-    n("ReduceSum", ["Rr16"], "trn", axes=[2, 3], keepdims=1)
-    n("Mul", ["Rr16", "rowidx"], "trrv"); n("ReduceSum", ["trrv"], "trrs", axes=[2, 3], keepdims=1)
-    n("Div", ["trrs", "trn"], "cr")
-    n("Mul", ["Rc16", "colidx"], "trcv"); n("ReduceSum", ["trcv"], "trcs", axes=[2, 3], keepdims=1)
-    n("Div", ["trcs", "trn"], "cc")
+    # ---- beam region as a SEPARABLE row x col AND (no 30x30 fp32 plane) ----
+    # Axis-aligned half-line factorises; fold in s>=depth (skip the triangle) and
+    # the in-grid extent so the only full-canvas tensor is the final And output.
+    #   vertical (dr!=0):  dr*rdev>=depth  x  col == ac
+    #   horizontal:        row == ar       x  dc*cdev>=depth
+    n("Cast", ["ar"], "ar16", to=TensorProto.FLOAT16)
+    n("Cast", ["ac"], "ac16", to=TensorProto.FLOAT16)
+    n("Cast", ["drs"], "dr16", to=TensorProto.FLOAT16)
+    n("Cast", ["dcs"], "dc16", to=TensorProto.FLOAT16)
+    n("Sub", ["rowramp16", "ar16"], "rdev")                    # [1,1,30,1]
+    n("Sub", ["colramp16", "ac16"], "cdev")                    # [1,1,1,30]
+    n("Mul", ["dr16", "rdev"], "along_r")                      # [1,1,30,1]
+    n("Mul", ["dc16", "cdev"], "along_c")                      # [1,1,1,30]
 
-    # orientation: span = #occupied rows/cols = count of nonzero profile entries
-    n("Greater", ["Rr16", "eps16"], "rocB"); n("Cast", ["rocB"], "roc", to=F16)
-    n("ReduceSum", ["roc"], "rspan", axes=[2, 3], keepdims=1)
-    n("Greater", ["Rc16", "eps16"], "cocB"); n("Cast", ["cocB"], "coc", to=F16)
-    n("ReduceSum", ["coc"], "cspan", axes=[2, 3], keepdims=1)
-    n("Greater", ["cspan", "rspan"], "vertB")
-    n("Cast", ["vertB"], "vert", to=F16)                     # 1=vertical scalar
+    # vert scalar = (dr != 0); horiz = not vert.  (ORT has no bool Where, so the
+    # branch selection is done with And/Or on the scalar masks.)
+    n("Abs", ["drs"], "drabs")
+    n("Greater", ["drabs", "half_f"], "vert")                  # bool [1,1,1,1]
+    n("Not", ["vert"], "horiz")
 
-    # ================= beam direction, built from 1-D vectors (fp16) =======
-    # axis lines (1-D):
-    n("Sub", ["colidx", "tx"], "dcol"); n("Mul", ["dcol", "dcol"], "dcol2")
-    n("Less", ["dcol2", "eps16"], "oncolB"); n("Cast", ["oncolB"], "oncol", to=F16)  # tip col
-    n("Sub", ["rowidx", "ty"], "drow"); n("Mul", ["drow", "drow"], "drow2")
-    n("Less", ["drow2", "eps16"], "onrowB"); n("Cast", ["onrowB"], "onrow", to=F16)  # tip row
+    # row condition A = (vert?(dr*rdev>=depth):(r==ar)) AND rowany
+    n("Not", [n("Less", ["along_r", "depth16"], "ar_ltd")], "ar_ged")
+    n("Equal", ["rdev", "zero16"], "r_eq")                     # r == ar
+    n("Or", [n("And", ["vert", "ar_ged"], "A1"),
+             n("And", ["horiz", "r_eq"], "A2")], "A0")         # [1,1,30,1] bool
+    n("And", ["A0", "rowany"], "A")
+    # col condition B = (vert?(c==ac):(dc*cdev>=depth)) AND colany
+    n("Equal", ["cdev", "zero16"], "c_eq")                     # c == ac
+    n("Not", [n("Less", ["along_c", "depth16"], "ac_ltd")], "ac_ged")
+    n("Or", [n("And", ["vert", "c_eq"], "B1"),
+             n("And", ["horiz", "ac_ged"], "B2")], "B0")       # [1,1,1,30] bool
+    n("And", ["B0", "colany"], "B")
+    n("And", ["A", "B"], "beamcell")                          # [1,1,30,30] bool
 
-    # vertical half-plane (apex side, rows): up iff cr < ty
-    n("Sub", ["ty", "cr"], "tymcr"); n("Greater", ["tymcr", "eps16"], "upB")
-    n("Cast", ["upB"], "vup", to=F16)
-    n("Less", ["rowidx", "ty"], "rowAboveB"); n("Cast", ["rowAboveB"], "rowAbove", to=F16)
-    n("Greater", ["rowidx", "ty"], "rowBelowB"); n("Cast", ["rowBelowB"], "rowBelow", to=F16)
-    n("Mul", ["vup", "rowAbove"], "vha")
-    n("Sub", ["one16", "vup"], "vdn"); n("Mul", ["vdn", "rowBelow"], "vhb")
-    n("Add", ["vha", "vhb"], "vhalf")                        # [1,1,30,1] rows
+    # ---- assemble straight into the FREE fp32 output ----
+    # output = input one-hot, EXCEPT at beam cells where it becomes the apex
+    # colour one-hot.  Passing `input` as the Where false-branch keeps the whole
+    # 10-channel expansion in the FREE graph output -- no per-cell copy is built.
+    n("Where", ["beamcell", "apexf", "input"], "output")       # fp32 [1,10,30,30]
 
-    # horizontal half-plane (apex side, cols): left iff cc < tx
-    n("Sub", ["tx", "cc"], "txmcc"); n("Greater", ["txmcc", "eps16"], "leftB")
-    n("Cast", ["leftB"], "hleft", to=F16)
-    n("Less", ["colidx", "tx"], "colLeftB"); n("Cast", ["colLeftB"], "colLeft", to=F16)
-    n("Greater", ["colidx", "tx"], "colRightB"); n("Cast", ["colRightB"], "colRight", to=F16)
-    n("Mul", ["hleft", "colLeft"], "hla")
-    n("Sub", ["one16", "hleft"], "hright"); n("Mul", ["hright", "colRight"], "hlb")
-    n("Add", ["hla", "hlb"], "hhalf")                        # [1,1,1,30] cols
-
-    # combine 1-D row/col vectors BEFORE the outer product -> single plane:
-    #   vertical  -> linerow = vhalf (rows), linecol = oncol (tip column)
-    #   horizontal-> linerow = onrow (tip row), linecol = hhalf (cols)
-    n("Sub", ["one16", "vert"], "horiz")
-    n("Mul", ["vert", "vhalf"], "lr_v"); n("Mul", ["horiz", "onrow"], "lr_h")
-    n("Add", ["lr_v", "lr_h"], "linerow")                    # [1,1,30,1]
-    n("Mul", ["vert", "oncol"], "lc_v"); n("Mul", ["horiz", "hhalf"], "lc_h")
-    n("Add", ["lc_v", "lc_h"], "linecol0")                   # [1,1,1,CW]
-    # fold the tip colour into the 1-D column vector (free) so the outer
-    # product directly produces the beam's COLOUR contribution.
-    n("Mul", ["linecol0", "tipcol"], "linecol")              # [1,1,1,CW]
-    n("Mul", ["linerow", "linecol"], "beamLine")             # [1,1,CW,CW] fp16
-
-    # ---- in-grid background = in-grid AND background (one Where) ----
-    n("Where", ["ingridB", "notpres", "zero16"], "bgin")
-
-    # ---- beam lands only on in-grid background; beamLine already carries the
-    #      tip colour, so its product with bgin IS the colour contribution. ----
-    n("Mul", ["beamLine", "bgin"], "beamcol")
-    n("Add", ["V", "beamcol"], "Lf0")                        # colour value plane
-
-    # ---- off-grid -> sentinel 15 (so the final Equal yields all-false) ----
-    n("Where", ["ingridB", "Lf0", "sent15"], "Lf")
-    n("Cast", ["Lf"], "Lc", to=U8)                           # [1,1,CW,CW] uint8
-    # pad CWxCW -> 30x30 with sentinel 15 (the off-canvas border is off-grid)
-    n("Pad", ["Lc", "padO", "sentU8"], "L", mode="constant")  # [1,1,30,30]
-    n("Equal", ["L", "chan"], "output")                      # [1,10,30,30] BOOL
-
-    x = helper.make_tensor_value_info("input", F, [1, 10, 30, 30])
-    y = helper.make_tensor_value_info("output", B, [1, 10, 30, 30])
-    g = helper.make_graph(nodes, "task051", [x], [y], inits)
-    return helper.make_model(g, ir_version=IR_VERSION,
-                             opset_imports=[helper.make_opsetid("", 11)])
+    x = helper.make_tensor_value_info("input", TensorProto.FLOAT, [1, 10, N, N])
+    y = helper.make_tensor_value_info("output", TensorProto.FLOAT, [1, 10, N, N])
+    graph = helper.make_graph(nodes, "graph", [x], [y], inits)
+    return helper.make_model(
+        graph, ir_version=IR_VERSION,
+        opset_imports=[helper.make_opsetid("", 11)])

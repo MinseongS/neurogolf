@@ -639,14 +639,15 @@
  {
   "task": 51,
   "arc_id": "25d487eb",
-  "points": 15.0,
+  "points": 15.9,
   "memory": 21966,
   "params": 100,
   "method": "ext:vyank6322",
   "class": "FEASIBLE",
   "sig": "-",
-  "status": "skip-marginal",
-  "verdict": "15.03 candidate (+0.03 only, mem 21323) NOT adopted - detection-class arrowhead, public near floor ~15. INSIGHT: collapse 2-D detection to 1-D row/col profiles (zero 2-D mask planes)"
+  "status": "done",
+  "verdict": "15.03 candidate (+0.03 only, mem 21323) NOT adopted - detection-class arrowhead, public near floor ~15. INSIGHT: collapse 2-D detection to 1-D row/col profiles (zero 2-D mask planes)",
+  "note": "WIN +0.90: false-pos skip-marginal=Tier A; separable half-line A[30,1] AND B[1,30] via And/Or scalar-select (no bool Where); output=Where(mask,apex_onehot,input) so 10ch expansion FREE; counted threshold s>=sqrt(tri_count+1) skips triangle. fresh 200/200."
  },
  {
   "task": 52,
@@ -1883,14 +1884,15 @@
  {
   "task": 148,
   "arc_id": "673ef223",
-  "points": 15.0,
+  "points": 15.67,
   "memory": 21676,
   "params": 353,
   "method": "ext:kojimar6275",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 673ef223: trace cyan rays leftward from yellow markers + mirror to second band; "
+  "status": "done",
+  "verdict": "INFEASIBLE: 673ef223: trace cyan rays leftward from yellow markers + mirror to second band; ",
+  "note": "WIN +0.67: false-pos infeasible; portal-beam projection; slice only {2,8} channels of free input to active 24x12 (skip colour Conv); data-dep vertical shift = ONE Gather(axis2) idx=clip(rowramp-delta); Where(ingrid,L,sentinel) cleans off-grid free. fresh 500/500."
  },
  {
   "task": 149,
@@ -3150,14 +3152,15 @@
  {
   "task": 247,
   "arc_id": "a3325580",
-  "points": 16.27,
+  "points": 17.29,
   "memory": 6142,
   "params": 26,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: a3325580: output = (numMaxColumns x maxCount) bars of the colors of the tallest "
+  "status": "done",
+  "verdict": "INFEASIBLE: a3325580: output = (numMaxColumns x maxCount) bars of the colors of the tallest ",
+  "note": "WIN +1.02: false-pos infeasible; COUNT->ORDER->TILE; all reductions on FREE input (ReduceSum counts, ReduceMax+ArgMax min-col), rank-by-Less exact (disjoint cols); carry uint8/bool/fp16; size canvas to JSON max not gen max. fresh 500/500."
  },
  {
   "task": 248,
