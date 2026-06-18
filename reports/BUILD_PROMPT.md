@@ -366,6 +366,29 @@ plane as un-golfed until you've tried to fuse that plane into the output.
 `calculate_params` DOES count a sparse initializer by NONZEROS only and ORT runs it, BUT `check_model(full_check=True)`
 (harness.py:49) rejects sparse_tensor(float) for MatMul/Gather/Add/Conv alike (TypeInferenceError / unsupported type).
 Do NOT spend agents trying to shrink params via sparse initializers on any op.
+⛔ NO SCORING/EXPAND EXPLOIT (investigated 2026-06-19 against Kaggle discussion 692827 "Issues in onnx-tool"):
+the official scorer `data/neurogolf_utils.py` (which our harness mirrors) is TRACE-BASED — it reads each tensor's
+ACTUAL runtime shape from the ORT profiler trace and takes max(static_declared, runtime). So the famous
+`Sqrt(Expand(input,[30]))` onnx_tool trick (scored cheap by onnx_tool 1.0.0's STATIC profiler) is DEAD: directly
+measured, the Expand `temp` plane counts at full 36000B (pts 25.00→14.51, strictly WORSE). onnx_tool 1.0.1 (the
+"fixed" version) ALSO counts it full. Constant-folding doesn't change it. The host applied a metric update that
+switched scoring to the trace path. ⇒ Do NOT use Expand/broadcast to "hide" a full-grid tensor — the trace counts
+it. The ONLY way to a zero-cost full-grid result is to NAME the producing node's output "output" (truly free) — a
+single-op net like `Sqrt(input)->output` scores mem=0/25.00. Our 36 proj-exact submissions confirm the live LB uses
+this trace-based scorer, so local harness == real LB; there is no scoring-divergence free lunch.
+⭐ NEW STRUCTURAL-RE-GOLF LEVERS (2026-06-19 plane-elimination wave):
+- FRACTIONAL ch0 WEIGHT folds two planes into one (task004 +0.34): a separate in-grid/off-grid mask plane
+  (ReduceMax(input)) is UNNECESSARY — set the colour-index Conv's channel-0 weight to 0.5 so ONE plane encodes
+  off-grid=0 / in-grid-bg=0.5 / coloured-pixel=k≥1; recover `occ=colf>0.75`, `ingrid=colf>0.25`. Kills a full 3600B+crop.
+- opset-11 `Pad` ACCEPTS int32 (task004) — the "Pad rejects int32" tasklog claim is opset-10-ONLY. So Cast a small
+  cropped value plane to int32 and int32-Pad to 30×30, dropping the fp16 bridge plane that only existed to dodge it.
+- SCALAR-WHERE ORIENTATION = zero candidate planes (task213 +0.62): pick row-solid vs col-solid output via
+  `Where(horiz_scalar, colour_by_row[1,1,30,1], colour_by_col[1,1,1,30])` — broadcasts both per-line vectors into
+  ONE colour-index plane, no two candidate planes. Route the 10-ch expansion into the FREE bool output via
+  `Equal(cidx_int32, arange_ch[1,10,1,1])`. ⚠️ ORT `Equal` rejects fp16 AND uint8 (int32 only), so an index plane
+  feeding an Equal-to-output op is pinned at int32 3600B — that pair of int32 [1,1,30,30] carriers is the floor.
+- ⚠️ SCOUT ESTIMATES RUN ~4× HIGH: the plane-free-escape scout estimated 213 at +3.7; actual +0.62 (carriers that
+  resist fusion remain). Treat "est_gain" as an upper bound; the real win is whatever fully fuses.
 
 ## ⭐ THE 3600B PLANE FLOOR IS REAL — break it by REMOVING the plane, never by narrowing it (FLOOR_RESEARCH.md)
 [⚠️ OUTDATED — read the CORRECTION block above first; the "narrowing never helps" claim here is wrong, only the
