@@ -5,33 +5,37 @@ Rule (from the generator):
     yellow(4) gridlines.  height is ALWAYS 2 and size is ALWAYS 9, so the grid
     is 19 rows tall and width*10-1 wide with width in {1,2,3} -> W in {9,19,29}.
     Vertical gridlines sit at c in {9,19} (only when width>=2); the horizontal
-    gridline at row 9 ALWAYS exists and is yellow across every in-grid column.
+    gridline at row 9 ALWAYS exists, yellow across every in-grid column.
   * The INPUT has the (up to 10) coloured pixels in exactly ONE quadrant; every
-    other quadrant is empty.  The colours are drawn excluding yellow, so the
-    content pixels are in {1,2,3,5,6,7,8,9} (never 0=bg, never 4=yellow).
-  * The OUTPUT stamps that same 9x9 pattern into EVERY quadrant (the gridlines
-    are unchanged).
+    other quadrant is empty.  Colours exclude yellow, so content pixels are in
+    {1,2,3,5,6,7,8,9} (never 0=bg, never 4=yellow).
+  * The OUTPUT stamps that same 9x9 pattern into EVERY quadrant (gridlines kept).
 
-So the output colour at content cell (r,c) is the single colour that appears at
-local position (r%10, c%10) across the quadrants, or background if none.
+So output colour at content cell (r,c) = the single colour at local position
+(r%10, c%10) across the quadrants, or background if none.
 
-Construction (label map + final Equal, opset 11, BOOL output):
-  * label grid Lin[1,1,30,30] = sum_k k*input[k]  (background 0, colours 1..9,
-    yellow 4).  This is the one fp32 30x30 plane (3600 B, the floor).
-  * FOLD over quadrants by Max of the content row-bands (rows 0..8 / 10..18) and
-    content col-bands (cols 0..8 / 10..18 / 20..28) -> patt[1,1,9,9] of colours.
-    Gridline rows/cols are excluded from the bands, so only colours/bg fold in;
-    Max recovers the colour because exactly one quadrant is filled (>0 wins).
-  * UNFOLD: Gather patt with a [19] row index map and a [29] col index map to
-    replicate the 9x9 pattern into every quadrant -> content[1,1,19,29].
-  * Overlay yellow(4) on the gridline cells (r==9 or c in {9,19}); mask off-grid
-    columns to a >=10 sentinel using the recovered in-grid column mask
-    (input[4,9,c]); rows are always in-grid (H=19).
-  * Pad to 30x30 with the sentinel and Equal(L, arange[1,10,1,1]) -> BOOL output.
+Escape-1 SPATIAL-COPY (fixed lattice remap):
+  1. FOLD the one-hot quadrants in ONE op: a DEPTHWISE Conv with a 3x3 all-ones
+     kernel DILATED by 10 sums input[k, lr+10i, lc+10j] over the 3x3 quadrant grid
+     -> foldoh[1,10,10,10].  Channels 0 (bg) and 4 (yellow) get weight 0 so only
+     the eight CONTENT colours fold; exactly one quadrant is filled so the sum
+     equals the donor's one-hot (no double-count).  (bg/yellow are double-summed
+     across quadrants, hence excluded and reconstructed in the table below.)
+  2. COLLAPSE to a value plane: 1x1 Conv (sum_k k) -> patt[1,1,10,10]; local rows/
+     cols 0..8 = donor colour (0 = bg).
+  3. Build an 11x11 lookup table from patt[:, :, :9, :9]: index 9 = gridline lane
+     (value 4), index 10 = off-grid sentinel (99), via two Pads.
+  4. UNFOLD by a 2-D Gather (col map then row map [30]) replicating the 9x9 pattern
+     into every quadrant AND overlaying gridlines from the same table.  Rows 19..29
+     map to the off-grid index; off-grid COLUMNS (width-dependent) are masked to the
+     sentinel via the always-present row-9 gridline presence input[4,9,c] BEFORE the
+     row-gather so no full extra carrier plane is needed.
+  5. Equal(L, arange_ch[1,10,1,1]) -> BOOL output (10-ch expansion lands in the
+     FREE output; 4 -> yellow, 99 -> nothing -> off-grid all-zero one-hot).
 
-Memory floor: the lone 30x30 plane is Lin (fp32 = 3600 B); the unfolded content
-plane is [1,1,19,29] (fp32 551 -> uint8 sentinel work small); everything else is
-1-D / 9x9 tiny.
+Dominant intermediate: the uint8 30x30 carrier L (900 B) feeding the final Equal
+(an Equal index-feeder is pinned at one full 30x30 plane); the fold+collapse is a
+single 10x10 fp32 Conv plane (400 B) and the 10-ch output expansion is FREE.
 """
 
 import numpy as np
@@ -41,6 +45,7 @@ from onnx import helper, numpy_helper, TensorProto
 from ..harness import IR_VERSION
 
 F32 = TensorProto.FLOAT
+I64 = TensorProto.INT64
 U8 = TensorProto.UINT8
 B = TensorProto.BOOL
 
@@ -54,79 +59,60 @@ def build(task):
         return name
 
     def n(op, ins, out, **attrs):
-        nodes.append(helper.make_node(op, ins, [out], **attrs))
+        nodes.append(helper.make_node(op, ins if isinstance(ins, list) else [ins],
+                                      [out], **attrs))
         return out
 
-    # ---- label grid Lin[1,1,30,30] = sum_k k * input[k] via a 1x1 Conv ----
-    # A Conv with a [1,10,1,1] weight = arange(10) collapses the one-hot to the
-    # colour label in ONE op (no [1,10,30,30] intermediate).
-    W1 = np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1)
-    init("W1", W1, np.float32)
-    n("Conv", ["input", "W1"], "Lin")                  # [1,1,30,30] fp32 (3600)
+    # ---- 1. FUSED dilated fold + channel-collapse in ONE Conv ----
+    # A 3x3 kernel DILATED by 10 sums input[k, lr+10i, lc+10j] over the 3x3
+    # quadrant grid; weight[0,k,i,j] = k (the colour value) for the 8 content
+    # channels, 0 for bg(0) and yellow(4).  Exactly one quadrant is filled so the
+    # sum collapses directly to the donor colour value -> patt[1,1,10,10].
+    # (bg/yellow are double-summed across quadrants, hence excluded and
+    # reconstructed in the table below.)
+    Wf = np.zeros((1, 10, 3, 3), dtype=np.float32)
+    for k in range(10):
+        if k not in (0, 4):
+            Wf[0, k, :, :] = float(k)
+    init("Wf", Wf, np.float32)
+    n("Conv", ["input", "Wf"], "patt", dilations=[10, 10],
+      pads=[0, 0, 0, 0])                                # [1,1,10,10] fp32 (400)
 
-    # ---- fold over quadrants: Max of the up-to-6 content blocks ----
-    # ORT Max rejects uint8, so the fold stays fp32 on tiny 9x9 blocks; patt is
-    # cast to uint8 afterwards (everything downstream is then 1-byte).
-    # block(h,w) = Lin[h*10:h*10+9, w*10:w*10+9] (skips gridline row 9 / cols 9,19).
-    # Off-grid blocks (width<3) are all-zero, harmless under Max.
+    # ---- 3. build 11x11 lookup table ----
+    n("Cast", ["patt"], "pu8", to=U8)                  # [1,1,10,10] uint8
+    init("ss", np.array([0, 0, 0, 0], np.int64), np.int64)
+    init("se", np.array([1, 1, 9, 9], np.int64), np.int64)
     init("ax4", np.array([0, 1, 2, 3], np.int64), np.int64)
-    blocks = []
-    for h in range(2):
-        for w in range(3):
-            r0, c0 = h * 10, w * 10
-            sname, ename = f"bs{h}{w}", f"be{h}{w}"
-            init(sname, np.array([0, 0, r0, c0], np.int64), np.int64)
-            init(ename, np.array([1, 1, r0 + 9, c0 + 9], np.int64), np.int64)
-            blk = f"blk{h}{w}"
-            n("Slice", ["Lin", sname, ename, "ax4"], blk)  # [1,1,9,9] fp32
-            blocks.append(blk)
-    # variadic Max folds all 6 blocks in ONE op (no intermediate accumulators)
-    nodes.append(helper.make_node("Max", blocks, ["pattf"]))   # [1,1,9,9] fp32
-    n("Cast", ["pattf"], "patt", to=U8)                        # [1,1,9,9] uint8
-
-    # ---- unfold: gather patt to replicate the 9x9 pattern over all quadrants ----
-    # row index map [19]: local row = r%10 for content rows; row 9 -> dummy 0
-    # (overwritten by the gridline overlay).
-    row_idx = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 0,
-                        0, 1, 2, 3, 4, 5, 6, 7, 8], dtype=np.int64)
-    # col index map [29]: local col = c%10 for content cols; cols 9,19 -> dummy 0.
-    col_idx = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 0,
-                        0, 1, 2, 3, 4, 5, 6, 7, 8, 0,
-                        0, 1, 2, 3, 4, 5, 6, 7, 8], dtype=np.int64)
-    init("row_idx", row_idx, np.int64)
-    init("col_idx", col_idx, np.int64)
-    n("Gather", ["patt", "row_idx"], "gr", axis=2)     # [1,1,19,9] uint8
-    n("Gather", ["gr", "col_idx"], "content", axis=3)  # [1,1,19,29] uint8
-
-    # ---- overlay yellow(4) on gridline cells ----
-    # gridline mask [1,1,19,29] bool: r==9 or c in {9,19}
-    gl = np.zeros((1, 1, 19, 29), dtype=bool)
-    gl[0, 0, 9, :] = True
-    gl[0, 0, :, 9] = True
-    gl[0, 0, :, 19] = True
-    init("glmask", gl, np.bool_)
+    n("Slice", ["pu8", "ss", "se", "ax4"], "p9")       # [1,1,9,9] uint8
     init("yel", np.array(4, np.uint8), np.uint8)
-    n("Where", ["glmask", "yel", "content"], "Lg")     # [1,1,19,29] uint8
+    init("padgl", np.array([0, 0, 0, 0, 0, 0, 1, 1], np.int64), np.int64)
+    n("Pad", ["p9", "padgl", "yel"], "tbl0", mode="constant")  # [1,1,10,10] u8
+    init("sent", np.array(99, np.uint8), np.uint8)
+    init("padog", np.array([0, 0, 0, 0, 0, 0, 1, 1], np.int64), np.int64)
+    n("Pad", ["tbl0", "padog", "sent"], "tbl", mode="constant")  # [1,1,11,11] u8
 
-    # ---- mask off-grid columns to sentinel 10 ----
-    # in-grid columns: input[4, 9, c] == yellow (the always-present row-9 line).
-    # Slice channel 4, row 9, cols 0..28 -> [1,1,1,29]; >0.5 => in-grid.
+    # ---- 4. unfold via 2-D Gather (cols first, mask off-grid cols, then rows) ----
+    col_idx = [c % 10 for c in range(30)]              # gridline cols -> local 9
+    row_idx = [(r % 10 if r < 19 else 10) for r in range(30)]  # rows>=19 off-grid
+    init("col_idx", np.array(col_idx, np.int64), np.int64)
+    init("row_idx", np.array(row_idx, np.int64), np.int64)
+    n("Gather", ["tbl", "col_idx"], "gc", axis=3)      # [1,1,11,30] uint8
+
+    # mask off-grid columns on the SMALL gc plane (avoids a full extra carrier).
+    # in-grid columns = where the always-present row-9 gridline is yellow:
+    # input[4,9,c] == 1.  Slice channel 4, row 9 -> [1,1,1,30].
     init("ms", np.array([4, 9, 0], np.int64), np.int64)
-    init("me", np.array([5, 10, 29], np.int64), np.int64)
-    init("ax013", np.array([1, 2, 3], np.int64), np.int64)
-    n("Slice", ["input", "ms", "me", "ax013"], "colline")  # [1,1,1,29] fp32
+    init("me", np.array([5, 10, 30], np.int64), np.int64)
+    init("ax123", np.array([1, 2, 3], np.int64), np.int64)
+    n("Slice", ["input", "ms", "me", "ax123"], "colline")  # [1,1,1,30] fp32
     init("half", np.array(0.5, np.float32), np.float32)
-    n("Greater", ["colline", "half"], "ingrid")        # [1,1,1,29] bool
-    init("sent", np.array(10, np.uint8), np.uint8)
-    n("Where", ["ingrid", "Lg", "sent"], "Lu")         # [1,1,19,29] uint8
+    n("Greater", ["colline", "half"], "ingrid")        # [1,1,1,30] bool
+    init("sent2", np.array(99, np.uint8), np.uint8)
+    n("Where", ["ingrid", "gc", "sent2"], "gcm")       # [1,1,11,30] uint8 broadcast
+    n("Gather", ["gcm", "row_idx"], "L", axis=2)       # [1,1,30,30] uint8
 
-    # ---- pad to 30x30 with sentinel, final Equal ----
-    init("u10", np.array(10, np.uint8), np.uint8)
-    init("pads", np.array([0, 0, 0, 0, 0, 0, 11, 1], np.int64), np.int64)
-    n("Pad", ["Lu", "pads", "u10"], "L", mode="constant")  # [1,1,30,30] uint8
-
-    chan = np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1)
-    init("chan", chan, np.uint8)
+    # ---- 5. final Equal -> BOOL output ----
+    init("chan", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
     n("Equal", ["L", "chan"], "output")                # [1,10,30,30] BOOL
 
     x = helper.make_tensor_value_info("input", F32, [1, 10, 30, 30])

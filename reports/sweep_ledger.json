@@ -3952,14 +3952,15 @@
  {
   "task": 306,
   "arc_id": "c444b776",
-  "points": 15.84,
+  "points": 17.09,
   "memory": 64374,
   "params": 68,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
   "status": "done",
-  "verdict": "15.84 adopted (13.93->15.84, +1.91) mislabeled-feasible #4"
+  "verdict": "15.84 adopted (13.93->15.84, +1.91) mislabeled-feasible #4",
+  "note": "WIN 2026-06-19 (plane-free harvest, BIG +1.25): fixed-lattice quadrant-tile spatial copy 15.84->17.09 (ADOPTED 500/500). \u2b50LEVER: FIXED-LATTICE QUADRANT-TILE = ONE DILATED CONV fusing FOLD+CHANNEL-COLLAPSE \u2014 Conv 3x3 kernel DILATED by quadrant pitch, weight[0,k]=k (separator/bg ch zeroed), emits donor colour plane at small K\u00d7K (one filled source => dilated sum=donor colour, no double-count); then tiny K\u00d7K->(K+2)\u00b2 sentinel-lane table + separable 2-D const-index Gather rebuilds 30\u00d730 into FREE output. Floor=900B uint8 Equal-feeder."
  },
  {
   "task": 307,

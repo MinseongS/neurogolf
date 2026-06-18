@@ -1831,9 +1831,9 @@
    "method": "custom:task305"
   },
   "306": {
-   "points": 15.839900844460564,
-   "memory": 8818,
-   "params": 692,
+   "points": 17.094189687341068,
+   "memory": 2512,
+   "params": 201,
    "method": "custom:task306"
   },
   "307": {
