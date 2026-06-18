@@ -876,14 +876,15 @@
  {
   "task": 69,
   "arc_id": "321b1fc6",
-  "points": 13.84,
+  "points": 14.86,
   "memory": 68858,
   "params": 1398,
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 321b1fc6: sprite extraction/clone by correspondence"
+  "status": "done",
+  "verdict": "INFEASIBLE: 321b1fc6: sprite extraction/clone by correspondence",
+  "note": "RE-PROBE WIN +1.02 (13.84->14.86): recolour every cyan sprite from one revealed coloured sprite, ARBITRARY 4-conn shapes (generalizes task368 solid-rect). Per-cell offset=(r,c)-sprite-bbox-topleft via iterated PLUS-shaped MIN (4-conn: Min of 3x1+1x3 minpool, radius MUST be 1 else corner-touching bboxes merge). Min-prop in negated space (plain MaxPool). offset->colour via dr/dc double-MatMul. fresh 500/500."
  },
  {
   "task": 70,
