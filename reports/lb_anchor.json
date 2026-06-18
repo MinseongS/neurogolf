@@ -1,10 +1,10 @@
 {
- "comment": "#31 PENDING proj 6628.61 (+8.37 over #30 anchor). REOPENED blank-note false-pos pool -> 14 wins this wave (42,270,143,350,74,387,369,51,247,148,102,356,50,237) + 4 walls reverified (279,277,361,64). gap 28.96 unchanged.",
+ "comment": "#31 CONFIRMED 6628.62 (proj-exact, off 0.01). REOPENED blank-note false-pos pool: this submission = 14 wins. 6620.24->6628.62 = +8.38. Lesson: confirmed-infeasible/skip-marginal with BLANK note = ~80% FALSE-POSITIVE (re-probe by bloat). gap now 37.33 (stored grew, more pending wins).",
  "stored_at_submit": 6657.57,
- "lb": 6620.24,
- "time_utc": "2026-06-18 20:51",
- "pending": true,
- "pending_submit": "#31 re-probe wave: 14 false-pos blank-note wins; proj 6628.61",
+ "lb": 6628.62,
+ "time_utc": "2026-06-18 21:00",
+ "pending": false,
+ "pending_submit": "#31 CONFIRMED 6628.62 (proj 6628.61 exact)",
  "prev_stored_at_submit": 6649.2,
  "prev_lb": 6620.24
 }
