@@ -1298,7 +1298,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: object reconstruction: reveal hidden blue pixels of a sprite replicated at varia"
+  "verdict": "INFEASIBLE: object reconstruction: reveal hidden blue pixels of a sprite replicated at varia",
+  "note": "SKIP-LIST RE-PROBE -> TRUE WALL: paint magnified-blue cells of boxes shown only by red, ref=unique fully-drawn creature sprite. EXACT algo verified in numpy but step-3 matched-filter produces spurious overlapping origins when boxes chain (inter-object offset == intra-template red offset) => needs lexicographic maximal-matching = min-conv erosion by RUNTIME structuring element. Loop/NonZero-banned => enumerate 4m x 4m gated offsets x 2 greedy rounds = ~460KB (score ~12.0 < current 12.68). Single-pass surrogates 93-99.3%, not exact. NOT a gap task (deployed generalizes). Unlike 251/090, this skip-list label was CORRECT."
  },
  {
   "task": 102,
