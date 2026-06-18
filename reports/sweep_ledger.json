@@ -1958,7 +1958,8 @@
   "class": "BAIL?",
   "sig": "overlaps",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: diagonal-symmetry completion of sprite with per-instance flips/mags; object-leve"
+  "verdict": "INFEASIBLE: diagonal-symmetry completion of sprite with per-instance flips/mags; object-leve",
+  "note": "BAIL-class: multi-object reconstruction with per-object mag{1,2,3}+dihedral flip; variable-mag scatter needs Loop/Scan/NonZero (banned). low-manifest gen-import that is a genuine wall."
  },
  {
   "task": 159,
