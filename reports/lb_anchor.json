@@ -1,10 +1,10 @@
 {
  "comment": "#27 CONFIRMED 6602.46 (proj 6602.46 EXACT, 23rd near-exact). NEW BEST (was 6595.39 #25). gap 28.96==219+255. 151 revert + 7 golf wins translated 1:1.",
- "stored_at_submit": 6631.42,
+ "stored_at_submit": 6639.54,
  "lb": 6602.46,
  "time_utc": "2026-06-18 18:49",
- "pending": false,
- "pending_submit": "#27: 151 reverted + 7 golf wins. proj 6602.46. expect proj-exact -> new best (clears #26 regression).",
- "prev_stored_at_submit": 6623.81,
- "prev_lb": 6594.85
+ "pending": true,
+ "pending_submit": "#28: 9 golf wins 18.4-19.0 ext pool. proj 6610.58.",
+ "prev_stored_at_submit": 6631.42,
+ "prev_lb": 6602.46
 }
