@@ -17,6 +17,17 @@ variable-size crop" floors near ~13.4 for everyone — the public CumSum-scan ne
 (T,L)=(top-of-col-run,left-of-row-run) prefix/suffix-MAX scans give a unique per-box label and per-box
 red-counts reduce to a 2-D integral image (4 Gathers, no flood-fill), but the constant factor still lands
 at-floor; if the rule needs a global argmax across data-dependent-count components, BAIL fast (task216).
+⭐ GROUPED-CONV SUB-FLOOR ESCAPE (try BEFORE bailing a mem-0 single-conv): a dense mem-0 `Conv[10,10,k,k]`
+(910) emitting bg ch0 is NOT at floor if the cross-channel coupling is BLOCK-LOCALISED — i.e. only a few output
+channels need the neighbourhood/relabel and the rest (ch3-ch9) are pure copies. Pick the SMALLEST equal group
+size dividing 10 that still co-locates every coupled (target,source) channel pair in one group: e.g. red→{blue,bg}
+lives in channels {0,1,2} → group=2 gives `Conv[10,5,k,k]`=460, mem still 0 (task352 18.19→18.87, +0.68). This
+REFINES the bail rule below: only bail when the coupling spans channels that NO equal group <10 can contain (e.g.
+ch5→{0,1,5} needs group≥6∤10 → task127/317/282/331 truly at floor). ⚠️ ORT 1.26 has a grouped-Conv bug: a
+sparse/off-centre group weight block silently corrupts OTHER groups' outputs. WORKAROUND (free): densify the
+sparse group with dummy weights on a structurally-always-zero input channel (params count elements, so inert).
+ALWAYS cross-check grouped-Conv builds with `onnx.reference.ReferenceEvaluator` — the scorer's ORT can disagree
+with the spec.
 ⛔ MEM-0 SINGLE-CONV-AT-FLOOR (do NOT attempt): if the CURRENT net is a memory-0 single `Conv(input,W[10,10,k,k])`
 whose output IS the graph output (params=100·k², e.g. 910 incl bias for k=3), and the rule is a genuine
 cross-channel spatial neighbourhood op that must also emit the subtractive background channel-0 (interior-fill,
