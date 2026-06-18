@@ -1669,14 +1669,15 @@
  {
   "task": 136,
   "arc_id": "5c0a986e",
-  "points": 16.52,
-  "memory": 4700,
-  "params": 136,
+  "points": 16.86,
+  "memory": 3348,
+  "params": 86,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.34 (2x2 boxes + 45deg rays via shared RmC plane, scalar half-plane gate)"
  },
  {
   "task": 137,
