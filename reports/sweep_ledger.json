@@ -4740,15 +4740,15 @@
  {
   "task": 367,
   "arc_id": "e73095fd",
-  "points": 13.14,
+  "points": 13.46,
   "memory": 141212,
   "params": 144,
   "method": "gen:vyank6322",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "confirmed-infeasible",
+  "status": "done",
   "verdict": "INFEASIBLE: box-to-box line connectivity (which pairs are connected)",
-  "note": "DEEP RE-ATTACK 2026-06-19: prior INFEASIBLE was WRONG -- it IS closed-form/exact. Built exact generalizing net (500/500 fresh) but 12.91 < gen-import 13.14, adopt REJECTED (current generalizes real=13.14). Line-vs-box discriminator = HORIZONTAL CORNER-TERMINATION (box wall's gray run stops at corner; line passes through). Clips are NOT a sentinel-ring problem (clipped interior is genuinely border-reachable -> flood-from-border is the WRONG tool). Floor set by 12 mandatory int64 GatherND wall-reads (~177KB; int64 forced since full_check rejects int32 GatherND) on irreducible 20x20 crop. OPEN ANGLE (potential WIN): gather-free wall-validity propagation reached 97.3% -- an exact gather-free corner gate drops mem <100KB and would beat 13.14. Worth ONE focused agent on the gather-free corner gate."
+  "note": "WIN 2026-06-19 (deep re-attack v2, gather-free corner gate): prior INFEASIBLE was WRONG -- closed-form. v1 exact net used 12 int64 GatherND wall-reads (~177KB, 12.91 < floor). v2 ELIMINATED all GatherND via DIRECTIONAL CARRIES of run endpoints: pack prio*BIG+(val+OFF) at gray cells, directional prefix-max via one-sided full-length MaxPool (0 params), decode val=pack mod BIG-OFF, src=floor(pack/BIG); A=20 crop keeps ints<2048 so fp16 exact. Corner-termination box-vs-line gate = topR==c1 & botR==c1 (run endpoints = prefix-max/suffix-min). mem 177K->102880, 13.46 (+0.32 over gen-import 13.14, ADOPTED generalizing 500/500). LEVER: per-cell wall-read via directional MaxPool-carry of packed (prio,val) beats int64 GatherND."
  },
  {
   "task": 368,

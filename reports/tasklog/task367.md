@@ -40,7 +40,34 @@ border through the 1-col clip gap, so flood-from-border is wrong; rectangle-gate
 | 9 | reach-8 scans (3 doubling steps; walls <=5 away) | 177180 | 1541 | **12.91** | 500/500 | best, EXACT |
 
 ## Best achieved
-**12.91 @ mem 177180 params 1541 — EXACT, isolated fresh 500/500.** Beats 13.14? **NO** (−0.23).
+**13.46 @ mem 102880 params 128 — EXACT GATHER-FREE, isolated fresh 500/500.** Beats 13.14 by **+0.32 (≥+0.3)**.
+(Prior best was 12.91 @ 177180 with GatherND; the documented "open angle" gather-free corner gate WAS closed.)
+
+| 10 | GATHER-FREE prefix-carry (this agent) | 102880 | 128 | **13.46** | 500/500 | EXACT, WIN |
+
+### How the GatherND machinery was eliminated (the closed open-angle)
+The prior 97.3% gather-free attempt used a LOCAL corner-termination test. The exact replacement is a
+DIRECTIONAL CARRY of run endpoints — no per-cell gather, no int64, no GatherND:
+- Per black cell, the four nearest gray walls' info is carried IN from the 4 directions by packing
+  `prio*BIG + (val+OFF)` only at gray cells (else a fp16-safe sentinel) and taking a directional
+  prefix-max; decode `val = pack mod BIG − OFF`, `src = floor(pack/BIG)` (reversed for up/left carries).
+  Prefix/suffix-max = `MaxPool` with a one-sided full-length 1-D kernel (ZERO params). A=20 keeps every
+  packed integer < 2048 (fp16-exact); BIG=32, OFF=10, P=20.
+- Run endpoints (Lstart/Rend/Tstart/Bend) = prefix-max of left/top edge marks and suffix-min (= −prefix-max
+  of −ramp) of right/bottom edge marks; edge marks from g AND ¬(shifted g).
+- Predicate at interior cell (r,c): nearest gray UP rt / DOWN rb / LEFT c0 / RIGHT c1 (clip side -> grid
+  edge via in-grid `lastcol`); top wall run endpoints carried down == [c0,c1] (corner-termination is
+  exactly `topR==c1 ∧ botR==c1`); bottom wall same; left/right vertical walls span [rt,rb] (skip a
+  clipped side). Verified 1500/1500 numpy oracle, then port-for-port in ONNX.
+- Clip = "no gray to the right/left in this row" (rightCol/leftCol carry = −99 when unseen). In-grid
+  `lastcol` (= grid width−1) needed because the active crop A=20 ≠ true grid width; derived from
+  `max(black,gray)` since input has only those two colours.
+
+### Memory levers that crossed 105KB
+fp16 everywhere on the 20×20 crop; share the 4 `prio*BIG+OFF` planes across all carries; drop dead `src`
+outputs (4 of 8 carries only need val); fold OFF into prio; drop the per-val unseen-sentinel Where (val
+correctness is gated by have_top/have_bot + clip flags); derive in-grid from black∨gray slices (avoids the
+3600B f32 30×30 channel-ReduceMax). 155760 -> 122320 -> 117120 -> 110880 -> **102880**.
 
 ## Irreducible-floor analysis
 The exact rule needs PER-CELL 2-D reads of CumSum/gray at the four wall positions (rU,rD,cL,cR)

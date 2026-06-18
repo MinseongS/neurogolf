@@ -2197,10 +2197,10 @@
    "method": "gen:vyank6322"
   },
   "367": {
-   "points": 13.140963189954599,
-   "memory": 141212,
-   "params": 144,
-   "method": "gen:vyank6322"
+   "points": 13.457438065901465,
+   "memory": 102880,
+   "params": 128,
+   "method": "custom:task367"
   },
   "368": {
    "points": 15.367665217964442,
