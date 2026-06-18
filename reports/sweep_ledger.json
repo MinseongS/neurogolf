@@ -1275,14 +1275,15 @@
  {
   "task": 104,
   "arc_id": "4522001f",
-  "points": 16.79,
-  "memory": 2692,
-  "params": 990,
+  "points": 17.31,
+  "memory": 1778,
+  "params": 400,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.58 (fixed pattern set by scalar selector: qvec one-hot @ const Mflat table)"
  },
  {
   "task": 105,
