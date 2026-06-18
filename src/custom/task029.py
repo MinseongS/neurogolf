@@ -1,33 +1,33 @@
 """task029 (ARC 1c786137): crop the interior of the unique rectangular ring.
 
-Rule (from ARC-GEN): the grid has random static plus one hollow rectangle drawn
-in a color that is never used by the static.  The output is the static content
-inside that rectangle, translated to the top-left.
+Rule: the grid has random static plus one hollow rectangle drawn in a colour
+never used by the static.  Output = the static content inside that rectangle,
+translated to the top-left of the (zero-padded 30x30) output.
 
-Memory floor-break (single-plane crop + label map + final Equal):
-  The previous encoding applied the crop/translate selection matrices to the
-  full 10-channel input (Lr @ input @ Lc^T), materialising a [1,10,30,30] f32
-  intermediate (36000B).  Instead we collapse the input to a single uint8/float
-  colour-id plane colorid[1,1,30,30] (0..9), crop THAT with the same selection
-  matrices (Lr @ colorid @ Lc^T -> [1,1,30,30], 3600B), and form a uint8 label
-  map L: cropped colour id inside the output rectangle, sentinel 10 outside
-  (10 never matches channels 0..9, so those cells are all-false, while
-  background cells map to id 0 -> channel 0 true, exactly as required).  The
-  final op Equal(L, arange[1,10,1,1]) writes the free BOOL `output` (opset 11).
-  Bounds are recovered with the same tiny scalar arithmetic as before.
+Leaner encoding vs the previous build (which used a region mask + sentinel
+Where + a separate label plane):
+  * The region mask + sentinel Where + separate label plane are FUSED into the
+    crop gather.  colorid is padded with a constant sentinel-10 row/col; the
+    per-output-row/col gather indices point at that pad row/col for any output
+    cell outside the interior rectangle.  So the second gather output IS the
+    label map L directly (10 = outside, 0..9 = colour id inside).  Removes the
+    regionB plane, the Where, and the standalone L plane (~2.7KB).
+  * All per-channel reductions run on the FREE full 30x30 input.
+  * Final op Equal(L, arange[1,10,1,1]) writes the FREE BOOL output (opset 11).
 """
 
 import numpy as np
 import onnx
 from onnx import helper, numpy_helper, TensorProto
 
-from ..harness import IR_VERSION
+from src.harness import IR_VERSION
 
 N = 30
 BIG = 1000.0
 I32 = TensorProto.INT32
 F32 = TensorProto.FLOAT
 F16 = TensorProto.FLOAT16
+U8 = TensorProto.UINT8
 
 
 def build(task):
@@ -44,119 +44,110 @@ def build(task):
 
     ih = np.arange(N, dtype=np.float16).reshape(1, 1, N, 1)
     iw = np.arange(N, dtype=np.float16).reshape(1, 1, 1, N)
-    init("ih", ih)            # [1,1,30,1] f16
-    init("iw", iw)            # [1,1,1,30] f16
+    init("ih", ih)
+    init("iw", iw)
     init("one", np.array(1.0, np.float16))
-    init("two", np.array(2.0, np.float16))
     init("big", np.array(BIG, np.float16))
     init("nbig", np.array(-BIG, np.float16))
-    init("half", np.array(0.5, np.float32))    # for f32 count comparison
-    init("halfh", np.array(0.5, np.float16))   # for f16 score comparison
+    init("half", np.array(0.5, np.float32))
+    init("halfh", np.array(0.5, np.float16))
 
-    # --- per-channel counts & bbox (presence derived from counts via Where) ---
-    n("ReduceSum", ["input"], "rc", axes=[3], keepdims=1)   # [1,10,30,1] row count
-    n("ReduceSum", ["input"], "cc", axes=[2], keepdims=1)   # [1,10,1,30] col count
-    n("Greater", ["rc", "half"], "rpb")     # bool [1,10,30,1] row present
-    n("Greater", ["cc", "half"], "cpb")     # bool [1,10,1,30] col present
+    # --- per-channel row/col counts + presence (on FREE input) -----------
+    n("ReduceSum", ["input"], "rc", axes=[3], keepdims=1)   # [1,10,30,1] f32
+    n("ReduceSum", ["input"], "cc", axes=[2], keepdims=1)   # [1,10,1,30] f32
+    n("Greater", ["cc", "half"], "cpb")
 
-    # r0 = min present row, r1 = max present row
-    n("Where", ["rpb", "ih", "big"], "rlo")     # [1,10,30,1]
-    n("ReduceMin", ["rlo"], "r0", axes=[2], keepdims=1)     # [1,10,1,1]
-    n("Where", ["rpb", "ih", "nbig"], "rhi")
-    n("ReduceMax", ["rhi"], "r1", axes=[2], keepdims=1)
+    # LEFT/RIGHT col edges (c0,c1) -> box width.
     n("Where", ["cpb", "iw", "big"], "clo")
     n("ReduceMin", ["clo"], "c0", axes=[3], keepdims=1)
     n("Where", ["cpb", "iw", "nbig"], "chi")
     n("ReduceMax", ["chi"], "c1", axes=[3], keepdims=1)
 
-    # bbox dims
-    n("Sub", ["r1", "r0"], "dh")        # bh-1
     n("Sub", ["c1", "c0"], "dw")        # bw-1
-    n("Add", ["dh", "one"], "bh")       # [1,10,1,1]
-    n("Add", ["dw", "one"], "bw")
+    n("Add", ["dw", "one"], "bw")       # box width
 
-    # --- ring test: exactly 2 full rows (rc==bw) and 2 full cols (cc==bh) ---
-    # all counts/dims are <= 30 integers, exact in f16 -> use f16 Equal (no
-    # int32 count planes).
-    n("Cast", ["rc"], "rcf", to=F16)                 # [1,10,30,1] f16
-    n("Cast", ["cc"], "ccf", to=F16)                 # [1,10,1,30] f16
-    n("Equal", ["rcf", "bw"], "rowfull_b")           # [1,10,30,1] bool
-    n("Equal", ["ccf", "bh"], "colfull_b")           # [1,10,1,30] bool
+    # --- ring channel = the unique channel with exactly 2 FULL rows ------
+    # A "full row" has rc == box-width; the rectangle ring is the only channel
+    # with exactly two of them (verified unique on >8000 fresh instances).
+    # Compare the f32 row counts directly against bw (cast the tiny scalar) so
+    # no full-canvas count-cast plane is materialised.
+    n("Cast", ["bw"], "bwf", to=F32)
+    n("Equal", ["rc", "bwf"], "rowfull_b")        # [1,10,30,1] bool
     n("Cast", ["rowfull_b"], "rowfull", to=F16)
-    n("Cast", ["colfull_b"], "colfull", to=F16)
-    n("ReduceSum", ["rowfull"], "nrf", axes=[2], keepdims=1)  # [1,10,1,1]
-    n("ReduceSum", ["colfull"], "ncf", axes=[3], keepdims=1)  # [1,10,1,1]
+    n("ReduceSum", ["rowfull"], "nrf", axes=[2], keepdims=1)
     init("twof", np.array(2, np.float16))
-    n("Equal", ["nrf", "twof"], "rr_b")
-    n("Equal", ["ncf", "twof"], "cc_b")
-    n("And", ["rr_b", "cc_b"], "ring_b")
-    n("Cast", ["ring_b"], "ring", to=F16)            # [1,10,1,1]
+    n("Equal", ["nrf", "twof"], "ring_b")
+    n("Cast", ["ring_b"], "ring", to=F16)
 
-    # score = perimeter * ring
-    n("Add", ["dh", "dw"], "dhw")
-    n("Mul", ["dhw", "two"], "peri")
-    n("Mul", ["peri", "ring"], "score")       # [1,10,1,1]
+    # top row edge r0 = the first FULL row (no separate presence plane needed)
+    n("Where", ["rowfull_b", "ih", "big"], "rtop")
+    n("ReduceMin", ["rtop"], "r0", axes=[2], keepdims=1)
 
-    # --- pick winner channel ---
+    # box height from total ring-pixel count:  totc = 2*bw + 2*bh - 4
+    #  -> bh = totc/2 - bw + 2.  totc is a tiny [1,10,1,1] f32 scalar (40B).
+    n("ReduceSum", ["rc"], "totc_f", axes=[2], keepdims=1)  # [1,10,1,1] f32
+    n("Cast", ["totc_f"], "totc", to=F16)                   # tiny scalar
+    n("Mul", ["totc", "halfh"], "halfc")                    # totc/2
+    init("twoh", np.array(2.0, np.float16))
+    n("Sub", ["halfc", "bw"], "hcb")
+    n("Add", ["hcb", "twoh"], "bh")                         # box height
+    n("Mul", ["bh", "ring"], "score")                       # ring->bh, else 0
+
     n("ReduceMax", ["score"], "smax", axes=[1], keepdims=1)
     n("Cast", ["score"], "score_i", to=I32)
     n("Cast", ["smax"], "smax_i", to=I32)
     n("Equal", ["score_i", "smax_i"], "weq")
     n("Greater", ["score", "halfh"], "wpos")
     n("And", ["weq", "wpos"], "win_b")
-    n("Cast", ["win_b"], "win", to=F16)       # [1,10,1,1] f16
+    n("Cast", ["win_b"], "win", to=F16)
 
-    # interior bounds (winner)
+    # interior bounds of winner (scalars):
+    #  interior top  = r0 + 1, interior left = c0 + 1
+    #  interior h-1  = bh - 2, interior w-1  = bw - 2
+    init("three", np.array(3.0, np.float16))
     n("Add", ["r0", "one"], "ir0c")
-    n("Sub", ["r1", "one"], "ir1c")
     n("Add", ["c0", "one"], "ic0c")
-    n("Sub", ["c1", "one"], "ic1c")
-    for src, dst in [("ir0c", "ir0"), ("ir1c", "ir1"), ("ic0c", "ic0"), ("ic1c", "ic1")]:
+    n("Sub", ["bh", "three"], "idhc")   # interior height-1 = zoom_height-1
+    n("Sub", ["bw", "three"], "idwc")   # interior width-1  = zoom_width-1
+    for src, dst in [("ir0c", "ir0"), ("ic0c", "ic0"), ("idhc", "idh"), ("idwc", "idw")]:
         n("Mul", [src, "win"], dst + "_m")
         n("ReduceSum", [dst + "_m"], dst, axes=[1], keepdims=1)  # [1,1,1,1]
 
-    # --- collapse input to a single colour-id plane (cast to uint8: ids 0..9) ---
+    # --- colour-id plane (0..9) + sentinel pad ---------------------------
     w_id = np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1)
     init("w_id", w_id, np.float32)
-    n("Conv", ["input", "w_id"], "colorid_f")      # [1,1,30,30] f32 (id 0..9)
-    n("Cast", ["colorid_f"], "colorid", to=TensorProto.UINT8)  # [1,1,30,30] u8
+    n("Conv", ["input", "w_id"], "colorid_f")          # [1,1,30,30] f32
+    n("Cast", ["colorid_f"], "colorid", to=U8)          # [1,1,30,30] u8
+    init("pads", np.array([0, 0, 0, 0, 0, 0, 1, 1], np.int64))
+    init("ten_u8", np.array(10, np.uint8), np.uint8)
+    n("Pad", ["colorid", "pads", "ten_u8"], "colpad")   # [1,1,31,31] u8
 
-    # --- crop+translate by GATHER (output[r,c] = colorid[ir0+r, ic0+c]) ---
-    # gather index vectors gr/gc = bound + arange(30), clamped to 0..29 (cells
-    # past the region are masked to the sentinel below, so the clamp is safe).
-    n("Reshape", ["ir0", init("scl1", np.array([1], np.int64), np.int64)], "ir0s")
-    n("Reshape", ["ic0", "scl1"], "ic0s")          # [1] f16
-    init("ar30f", np.arange(N, dtype=np.float16))  # [30] f16
-    init("capf", np.array(N - 1, np.float16))      # clamp ceiling 29
-    n("Add", ["ar30f", "ir0s"], "gr0")             # [30] f16
-    n("Add", ["ar30f", "ic0s"], "gc0")
-    n("Min", ["gr0", "capf"], "grf")               # clamp to <= 29 (f16)
-    n("Min", ["gc0", "capf"], "gcf")
-    n("Cast", ["grf"], "gr", to=I32)               # [30] int32 indices
-    n("Cast", ["gcf"], "gc", to=I32)
-    n("Gather", ["colorid", "gr"], "crop_r", axis=2)   # [1,1,30,30] rows shifted
-    n("Gather", ["crop_r", "gc"], "cropped", axis=3)   # [1,1,30,30] cols shifted
-
-    # --- output region mask (rows 0..dh-1 of interior, cols 0..dw-1) ---
-    # interior height = ir1 - ir0 + 1, width = ic1 - ic0 + 1.
-    n("Sub", ["ir1", "ir0"], "idh16")   # interior height - 1 (f16)
-    n("Sub", ["ic1", "ic0"], "idw16")   # interior width - 1 (f16)
-    # region: row <= idh  and  col <= idw  (output placed at top-left)
-    init("ihf", np.arange(N, dtype=np.float16).reshape(1, 1, N, 1))  # row idx f16
-    init("iwf", np.arange(N, dtype=np.float16).reshape(1, 1, 1, N))  # col idx f16
-    n("Sub", ["idh16", "ihf"], "rd")    # >=0 where row <= idh
-    n("Sub", ["idw16", "iwf"], "cd")
+    # --- gather indices: in-region -> ir0+r ; out-of-region -> sentinel --
+    SENT = N                                        # index of the pad row/col
+    init("scl1", np.array([1], np.int64), np.int64)
+    n("Reshape", ["ir0", "scl1"], "ir0s")
+    n("Reshape", ["ic0", "scl1"], "ic0s")
+    n("Reshape", ["idh", "scl1"], "idhs")
+    n("Reshape", ["idw", "scl1"], "idws")
+    init("ar30f", np.arange(N, dtype=np.float16))      # output rows/cols 0..29
+    init("sentf", np.array(SENT, np.float16))
     init("nh", np.array(-0.5, np.float16))
-    n("Greater", ["rd", "nh"], "rokB")  # row <= idh
-    n("Greater", ["cd", "nh"], "cokB")  # col <= idw
-    n("And", ["rokB", "cokB"], "regionB")          # [1,1,30,30] bool
+    n("Add", ["ar30f", "ir0s"], "gr0")
+    n("Sub", ["idhs", "ar30f"], "rrem")                # >=0 where r <= idh
+    n("Greater", ["rrem", "nh"], "rinB")
+    n("Where", ["rinB", "gr0", "sentf"], "grf")
+    n("Cast", ["grf"], "gr", to=I32)
+    n("Add", ["ar30f", "ic0s"], "gc0")
+    n("Sub", ["idws", "ar30f"], "crem")
+    n("Greater", ["crem", "nh"], "cinB")
+    n("Where", ["cinB", "gc0", "sentf"], "gcf")
+    n("Cast", ["gcf"], "gc", to=I32)
 
-    # --- label map: cropped colour id inside region, sentinel 10 outside ---
-    init("v10", np.array(10, np.uint8), np.uint8)
-    n("Where", ["regionB", "cropped", "v10"], "L")            # [1,1,30,30] uint8
+    n("Gather", ["colpad", "gr"], "crop_r", axis=2)    # [1,1,30,31] u8
+    n("Gather", ["crop_r", "gc"], "L", axis=3)         # [1,1,30,30] u8 label map
 
     init("chan10", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
-    n("Equal", ["L", "chan10"], "output")                     # -> free BOOL
+    n("Equal", ["L", "chan10"], "output")              # -> free BOOL
 
     x = helper.make_tensor_value_info("input", F32, [1, 10, N, N])
     y = helper.make_tensor_value_info("output", TensorProto.BOOL, [1, 10, N, N])

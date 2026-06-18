@@ -361,14 +361,15 @@
  {
   "task": 29,
   "arc_id": "1c786137",
-  "points": 15.21,
+  "points": 15.45,
   "memory": 17742,
   "params": 181,
   "method": "custom:task029",
   "class": "CHECK",
   "sig": "-",
-  "status": "skip-marginal",
-  "verdict": "+0.12 < +0.3 bar; prior generalizes (fresh 500/500)"
+  "status": "done",
+  "verdict": "+0.12 < +0.3 bar; prior generalizes (fresh 500/500)",
+  "note": "WIN +0.24 (beat own custom): crop-interior-of-ring; FUSE region mask into gather via sentinel-10 pad (>=10 => all-false in final Equal free output); recover box dims from perimeter-count identity bh=totc/2-bw+2 not 2nd bbox extreme. 17742->13953. fresh 200/200."
  },
  {
   "task": 30,
