@@ -45,6 +45,17 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   non-initializer (runtime-computed) Conv weight, so a [1,10,1,1] selector one-hot built from a scalar k
   collapses "select channel + materialise its plane" into a single 3600B Conv — strictly cheaper than
   per-channel ReduceMax-occupancy + gate-Mul (task049).
+- ⭐ RANK-k CONV WEIGHT FROM fp16 OUTER-PRODUCTS + ONE fp32 CAST: a recolor task (e.g. gray dots→bg color on
+  black canvas) is ONE 1×1 Conv whose runtime weight is a tiny [10,10,1,1] permutation/rank-k matrix
+  parameterised by a recovered scalar color. ORT Conv FORCES the weight dtype = fp32 input dtype, so build the
+  rank-k weight as a SUM OF fp16 OUTER-PRODUCTS (200B each) and pay ONE Cast→fp32 at the very end — halves every
+  [10,10] working tensor vs building in fp32. The 10-ch output expansion lands in the FREE output (zero mem).
+  Casting the 10-ch INPUT to fp16 to dodge the weight cast is far worse (18000B) (task389).
+- ⭐ ODD-ONE-OUT / k-identical-blocks = CLOSED-FORM per-channel COUNT, NO argmax/gather: "k identical candidate
+  blocks + 1 odd one, output the odd block" → per-channel COUNT over the n candidate windows lands in a fixed
+  set {0,1,…}; recover the odd block by a magnitude-BAND test on the count (e.g. cnt∈{1,4}). Because it's
+  per-channel it reconstructs the odd block's full one-hot DIRECTLY — beats the public majority-vote+ArgMax+Gather
+  net (task207: mem 1840→1000, +0.60). Generalizes: counts are exact regardless of which block is odd.
 - ⭐ COUNT-RANK = pure rank function, NO sort/argmax-loop: "sort/label the K rare colours by count" → cnt=
   ReduceSum(input,[2,3]) [1,K,1,1]; rank_k=ReduceSum(Greater(cnt,cnt')) over a tiny [K,K]; route into FREE
   bool output via Equal(rank, target-ramp)∧mask. ⚠️ PITFALL: MUST mask channel-0 (canvas background) to 0
