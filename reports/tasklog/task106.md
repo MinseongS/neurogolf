@@ -19,12 +19,33 @@ size flag (the 144B int32 Where). Equal→one-hot [1,10,6,6] bool→Pad→output
 |---|---|---|---|---|---|---|---|
 | 1 | colf Conv on 6×6 slice; rot90 = F_N@Tᵀ ×3 MatMul, Max-OR; Equal→Pad bool | A | 12690 | 66 | 15.55 | — | works, heavy |
 | 2 | sentinel-bg, single-channel uint8 Pad→Equal | A | 3654 | 57 | 16.78 | — | trim |
-| 3 | 6×6 uint8 one-hot → Pad as FREE uint8 output | A | 3438 | 57 | 16.84 | 200/200 | best (mine) |
+| 3 | 6×6 uint8 one-hot → Pad as FREE uint8 output | A | 3438 | 57 | 16.84 | 200/200 | best (mine, old) |
+| 4 | DIRECT uint8-one-hot gather: slice 3×3 f32→u8→flat[1,10,9], Where-select [6,6] perm idx, Gather axis=2 → [1,10,6,6] direct → Pad | A | 1085 | 99 | 17.92 | 500/500 | best, ties stored |
 
-## Best achieved
-16.84 @ mem 3438 params 57 — adopted? **N**. Beats prior 17.94? **NO** — my MatMul-rotation
-approach is structurally heavier than the stored constant-gather. Stored net remains best (17.94).
-My net is correct & generalizes 200/200 but is +1.1 WORSE.
+## 2026-06-19 re-probe (uint8 whole-pipeline angle)
+NEW best net `src/custom/task106.py`: **17.92 @ mem 1085 / params 99, fresh 500/500**. Improves the
+distribution massively over my old MatMul attempts (16.84 → 17.92, +1.08) by following the task152
+uint8-one-hot lever: NO ArgMax, NO colour-index plane, NO Equal-expansion — gather the uint8 one-hot
+*directly*. Pipeline: Slice input→[1,10,3,3] f32 (the ONLY fp32 plane), Cast→uint8, Reshape→[1,10,9],
+size-flag Where over two [6,6] int32 perm tables → idx, ONE Gather axis=2 with the [6,6] index emits
+[1,10,6,6] DIRECTLY (output=data[:axis]+indices.shape, so no reshape plane), Pad→free uint8 output.
+Background output cells (size=2's outer ring) route to 3×3 source cell 8 (always empty for size=2) →
+no zero-column needed. But it only TIES the stored 17.94 (Δ≈−0.02), does NOT beat by +0.3.
+
+## ⛔ +0.3 INFEASIBLE — hard floor proof (864B > 862B budget)
+Target 18.24 requires mem+params ≤ ~862. Three planes are each individually irreducible for ANY
+copy/permutation encoding and SUM to 864 in mem ALONE (before cast/reshape/flag overhead + params):
+1. **fp32 entry [1,10,3,3] = 360B**: Slice preserves fp32; ALL 10 channels needed (one-hot copy);
+   3×3 is the min source extent (size≤3). Casting the full input first = 9000B. Irreducible.
+2. **uint8 one-hot output plane [1,10,6,6] = 360B**: Pad needs a 4D input; the 10-ch one-hot at the
+   6×6 working canvas (min for size=3) is 360B even in uint8. Gathering straight to [1,10,30,30] (free
+   output, no Pad) needs a [30,30] int32 index = 3600B — far worse. Irreducible.
+3. **int32 Gather index = 144B**: ORT Gather REJECTS int8/int16/uint8 indices (re-tested 2026-06-19,
+   ShapeInferenceError); int32 is the floor; a [6,6] index = 36×4 = 144B. The size flag is MANDATORY —
+   the two C4 perm tables genuinely differ (size=2 fills a 4×4 orbit, size=3 a 6×6 orbit; no fixed perm
+   or N-arithmetic unifies them — diff matrix has no clean structure), so the index is a RUNTIME Where
+   output (a counted intermediate), not a static init.
+360+360+144 = 864 > 862 ⇒ no copy/gather encoding can reach +0.3. The stored 17.94 is at floor.
 
 ## Irreducible-floor analysis
 The STORED net is at floor. Two ~360B planes dominate and are both structural:
