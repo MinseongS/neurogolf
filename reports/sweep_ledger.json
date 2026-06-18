@@ -2377,14 +2377,15 @@
  {
   "task": 185,
   "arc_id": "7837ac64",
-  "points": 14.52,
+  "points": 15.75,
   "memory": 35463,
   "params": 69,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 7837ac64: grid-of-cells, output one cell per unique color combo; aggregation/ded"
+  "status": "done",
+  "verdict": "INFEASIBLE: 7837ac64: grid-of-cells, output one cell per unique color combo; aggregation/ded",
+  "note": "RE-PROBE WIN +1.23 (14.52->15.75): task080 line-lattice family. Recover period p from first full-line row, strided-Gather intersections into <=10x10 bitmap, solve there, route 3x3 to free BOOL output. Trap: recover linecolor from a cell provably NOT an intersection (col 0 of a line row). fresh 200/200."
  },
  {
   "task": 186,
