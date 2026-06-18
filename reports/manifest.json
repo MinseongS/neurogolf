@@ -475,10 +475,10 @@
    "method": "gen:thbdh6332"
   },
   "80": {
-   "points": 14.358033456905844,
-   "memory": 41638,
-   "params": 217,
-   "method": "ext:biohack_new"
+   "points": 15.224743625360954,
+   "memory": 17106,
+   "params": 487,
+   "method": "custom:task080"
   },
   "81": {
    "points": 17.256296741826247,
