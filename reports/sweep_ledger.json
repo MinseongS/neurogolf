@@ -1510,8 +1510,9 @@
   "method": "conv5x5+b",
   "class": "FEASIBLE?",
   "sig": "transpose",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "already at conv5x5 floor (17.17); agent matched, no improvement"
  },
  {
   "task": 123,
