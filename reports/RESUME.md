@@ -64,15 +64,27 @@ kaggle CLI: /opt/homebrew/Caskroom/miniconda/base/bin/kaggle.
    mislabeled "confirmed-infeasible" by judging +0.3 against the INFLATED stored — IGNORE that label and
    build a generalizing exact encoding. This alone is worth ~+25 LB from 219+255.~~ (NOTE: closeability disproven — all 3 walls)
 
-## ▶▶ RESUME HERE (handoff 2026-06-18 ~04:40 — STOPPED on ENV DEGRADATION, not done)
-Confirmed LB **6559.24** at last confirmed submit (#19, proj-exact 17th). Session 6492.58→6559.24 = **+66.66**.
-Stored 6588.93, **gap 28.96 == EXACTLY the two walls 219(15.00)+255(13.95)** — gap is now fully structural.
-19 submissions, all projections exact. **48 pending-pool wins + 2 GAP-CLOSERS (274,332)** adopted this session.
-+0.73 unsubmitted (task176 salvage) — not worth a lone submit; rolls into next batch.
+## ▶▶ RESUME HERE (handoff 2026-06-18 ~13:10 — subagent infra flaky; hand-build path proven)
+Confirmed LB **6561.68** at last confirmed submit (#20, proj-exact 18th). Session 6492.58→6561.68 = **+69.10**.
+Stored 6590.64, **gap 28.96 == EXACTLY the two walls 219(15.00)+255(13.95)** — gap is fully structural.
+20 submissions, ALL projections exact. **48 pending-pool wins + 2 GAP-CLOSERS (274,332) + 3 HAND-BUILT (60,292,78)**.
 
-⛔ WHY STOPPED: 5 consecutive build agents stalled at the 600s watchdog (78,176,292,109 + probe 78).
-Env degraded (likely transient/machine-load). NOT out of work — pending pool still has headroom (floor ~16.3,
-wins ~+0.4 steady). RESUME = just re-run the loop; if agents stall again immediately, wait longer / fewer agents.
+⛔ SUBAGENT INFRA WAS DOWN: 7+ build agents stalled at the 600s stream watchdog (often before any work —
+infra-level streaming hang, not task difficulty). WORKAROUND PROVEN: build nets MYSELF in the main loop
+(my own bash/python tools never stall). Got 3 wins that way (task60 16.37→16.92, task292 16.32→17.18,
+task78 16.32→16.62), all proj-exact on #20. RESUME: re-run loop; dispatch 1 subagent probe — if it
+completes, infra recovered → use fast parallel subagent dispatch; if it stalls, keep hand-building.
+
+🛠️ HAND-BUILD RECIPE (when infra down): pick a FIXED-SIZE, simple recolor/fill/geometry task (small active
+region, NO full-channel read needed). `src.show N --gen` to read rule. Write src/custom/taskNNN.py using the
+idiom in task060/292/078: build a small color-index plane L on the active region (per-row/col color via
+channel-contract Σ k·input[:,k]; masks as consts; data-dep magnify via task159 two-gather), Cast uint8, Pad
+to 30x30 with SENTINEL 99 (off-grid MUST be all-False — convert_to_numpy leaves off-grid all-zero, in-grid
+bg = ch0=1), Equal(L,arange[1,10,1,1])→BOOL output. Verify: `solve_custom(load_task(N),task_num=N)` +
+`evaluate`. points=25−ln(mem+params); to beat current need mem+params lower. Then `python -m src.adopt N`,
+commit. NOTE many "pending" ledger entries already HAVE a committed src/custom/taskNNN.py (stale status, now
+cleaned). Truly-untouched pending (no custom file) are the HARD remainder: 41,302,30,353,10,28,136,336,226,
+394,160,323,291,130,115... — variable-size / data-dependent / encoding-based → need SUBAGENTS, not hand-build.
 
 🔑 BIGGEST FINDING THIS SESSION (see project memory neurogolf-gap-closers — UPDATED): the "gap is structural
 dead end" conclusion was WRONG. Non-gen base nets that score ~0 on real LB but are EXACTLY solvable are
