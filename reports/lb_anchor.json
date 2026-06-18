@@ -1,7 +1,7 @@
 {
- "comment": "#20 CONFIRMED 6561.68 (proj 6561.68 EXACT, 18th). 3 hand-built wins translated 1:1. gap 28.96==219+255.",
- "stored_at_submit": 6590.64,
- "lb": 6561.68,
- "time_utc": "2026-06-18 06:30",
- "pending": false
+ "comment": "#21 PENDING. proj 6569.81. 16-win infra-recovered wave (incl 3 hand-built already in #20). gap 28.96==219+255.",
+ "stored_at_submit": 6598.77,
+ "lb": 6569.81,
+ "time_utc": "2026-06-18 13:55",
+ "pending": true
 }
