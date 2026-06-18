@@ -358,3 +358,32 @@ file early and iterate.
 "RESULT taskNNN: pts=X.XX mem=N params=M fresh=K/200 | tier reached: S/A/B/detection | beats P by ≥+0.3?
 Y/N/MARGINAL | dominant intermediate: <what>B <why irreducible> | OPEN ANGLES untried: <list> | INSIGHT:
 <transferable lesson>"  — or "INFEASIBLE taskNNN: <specific irreducible reason>"
+
+## ⭐ RE-PROBE WAVE LEVERS (2026-06-18 evening — blank-note false-positive sweep, 6/7 wins)
+Blank-note "confirmed-infeasible"/"skip-marginal" labels were ~25% wrong (here 6/7 broke). When re-probing a
+high-bloat task with NO documented reason, treat it as UNEXPLORED. Proven collapses:
+- **CROP-TO-ACTIVE-REGION** (387 +0.64, 143 +0.50): if the generator bounds the grid (e.g. ≤18×18), do the
+  full 30×30 Conv ONCE, `Slice` to WORK×WORK, run all Where/mask/compare planes at (WORK/30)² cost, then
+  `Pad` the small index plane back to 30×30. Turns 34k→18k bloat. Fold in-grid mask into the colour Conv
+  (ch0 weight 0.5 → off-grid=0 / bg=0.5 / pixel=k in ONE plane).
+- **uint8 elementwise-max** = `Where(Greater(a,b),a,b)` at 900B/plane — ORT has NO uint8 `Max` but DOES have
+  uint8 `Greater`/`Where`; beats fp16 `Max` (1800B) for orbit-max / D4-symmetrization pipelines (74 +0.40).
+- **D4 / orbit symmetrization** (74): needs exactly 3 maxes {flipC, flipR, transpose}; a 2-max set is
+  INSUFFICIENT when the flip axis sits at index n−1 (edge), not centre. Flip about idx k = Pad-end + Gather
+  index [k−i]. Fold occlusion-drop (maroon→0) into the Conv kernel (w=0) — 0 loses every max, no extra plane.
+- **COUNT→FIXED-PATTERN scalar rebuild** (270 +1.11): if the output is determined by O(1) scalars (e.g. 2
+  centres + 8 direction flags), model it as scalars + ONE selector MatMul `L=RS@CW`, NOT a per-cell plane
+  pipeline. Direction flags = 1-D-profile sign tests (vertical vs horizontal petals never collide in profile).
+- **sprite-match via per-channel grouped-Conv corr + count-gate** (143 +0.50): "match the reference sprite"
+  is NOT a wall when canvas is gen-bounded small AND sprites are monochrome in distinct colour channels —
+  grouped-Conv correlation with the ref kernel + per-channel pixel-COUNT gate (==K) uniquely picks the
+  matching channel; that channel's plane IS the target mask. Suppress fixed self-window via `corr−BIG·mask`.
+- **directional prefix/suffix-OR** (350 +0.16) = fp16 `MaxPool` with a full-length 1-D kernel + one-sided
+  pad (ZERO params); beats the triangular-MatMul idiom (~2500 params). Non-separable per-line spans still
+  need all 4 directional planes (~16.8KB floor).
+- **data-dependent magnify/shift is SEPARABLE** (42 +0.46): the "varying magnify" wall a prior agent stalled
+  on was illusory — m-scaled diagonal reads = AND of two cached `Gather`s of a tiny zero-padded plane with
+  per-m index tables `Gather(table, m)` (task159 lever); CLAMP off-grid indices into the zero pad so PAD=1
+  suffices. Recover m from pixel COUNT alone when count ranges don't overlap.
+TRUE WALL re-confirmed: 279 (variable-count correspondence — barnacles bridge closed+open boxes into one
+8-conn component needing 2 colours; flood/parity ceiling ~97.8% fresh).
