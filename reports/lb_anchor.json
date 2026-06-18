@@ -1,10 +1,10 @@
 {
  "comment": "#28 CONFIRMED 6610.58 (proj 6610.58 EXACT, 24th near-exact). NEW BEST. gap 28.96==219+255. 9 golf wins translated 1:1.",
- "stored_at_submit": 6639.54,
+ "stored_at_submit": 6647.54,
  "lb": 6610.58,
  "time_utc": "2026-06-18 18:58",
- "pending": false,
- "pending_submit": "#28: 9 golf wins 18.4-19.0 ext pool. proj 6610.58.",
- "prev_stored_at_submit": 6631.42,
- "prev_lb": 6602.46
+ "pending": true,
+ "pending_submit": "#29: 11 golf wins tail pool. proj 6618.58.",
+ "prev_stored_at_submit": 6639.54,
+ "prev_lb": 6610.58
 }
