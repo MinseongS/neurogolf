@@ -811,7 +811,8 @@
   "class": "BAIL?",
   "sig": "random_pixels",
   "status": "skip-marginal",
-  "verdict": "at incumbent floor 14.99 (4-dir box-blocked prefix-sum fill; 4 directional planes + fp32 entry + exact rect detector all irreducible ~21-22k). Negative lever: 24x24 crop is a wash when final Where mask needs full 30x30."
+  "verdict": "at incumbent floor 14.99 (4-dir box-blocked prefix-sum fill; 4 directional planes + fp32 entry + exact rect detector all irreducible ~21-22k). Negative lever: 24x24 crop is a wash when final Where mask needs full 30x30.",
+  "note": "REVERIFIED at-floor 14.99: bidirectional ray-fill blocked by box; 4 directional cum-scan convs (7200B) + fp32 entry (3600B) = 12600B structural core; crop-to-active NET-NEGATIVE here (opset-10 Pad rejects uint8/bool -> mandatory 1800B fp16 pad-back swamps crop savings). Existing custom optimal."
  },
  {
   "task": 65,
