@@ -186,8 +186,9 @@
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "at-floor tie 18.20: copy+local-stamp (twinkling stars halo), deployed generalizes 200/200. mem-0 single Conv [10,10,3,3]=900 optimal. runtime-assembled weight forced fp32 = 3600B intermediate (net loss). BAIL"
  },
  {
   "task": 16,
@@ -3564,8 +3565,9 @@
   "method": "conv3x3+b",
   "class": "FEASIBLE?",
   "sig": "transpose",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "at-floor: per-pixel role-by-neighbour recolor (interior/edge/corner of rects), deployed generalizes 200/200. mem-0 single Conv routes both channel-onehot AND spatial output free; structured rebuild pays >=900B plane (ties at best)"
  },
  {
   "task": 284,
