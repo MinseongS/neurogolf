@@ -4712,14 +4712,15 @@
  {
   "task": 369,
   "arc_id": "e8593010",
-  "points": 16.1,
+  "points": 16.58,
   "memory": 7200,
   "params": 129,
   "method": "ext:galaxy_v1",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: e8593010: recolor each gray-bg shape by its size (1/2/3 pixels) -> distinct colo"
+  "status": "done",
+  "verdict": "INFEASIBLE: e8593010: recolor each gray-bg shape by its size (1/2/3 pixels) -> distinct colo",
+  "note": "WIN +0.48: false-pos infeasible; color-blob-by-SIZE collapses to LOCAL closed form when sizes gen-bounded<=3: size=plus-conv degree + black-gated deg>=2 spread; label=5-3*black+single-is3, uint8 Pad-routed. fresh 200/200."
  },
  {
   "task": 370,

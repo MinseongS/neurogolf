@@ -2209,10 +2209,10 @@
    "method": "custom:task368"
   },
   "369": {
-   "points": 16.10040564007415,
-   "memory": 7200,
-   "params": 129,
-   "method": "ext:galaxy_v1"
+   "points": 16.57909746890205,
+   "memory": 4500,
+   "params": 41,
+   "method": "custom:task369"
   },
   "370": {
    "points": 13.95378758417744,
