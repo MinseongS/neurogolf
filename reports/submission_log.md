@@ -220,3 +220,4 @@ SESSION TOTAL 2026-06-19: 6635.63 -> 6661.38 = +25.75 confirmed, 27 wins / 8 wal
 proj-exact. PRODUCTIVE RESERVOIR EXHAUSTED (blank-note + skip-list + skip-marginal + gap-closer all mined). Remaining
 = documented tight floors (18.19 mem-0-conv cluster, fixed-crop fp32-slice floors, 19.09+ near-optimal, 21.6 do-not-resweep).
 - 2026-06-19 #36: 6662.12 (+0.74 vs #35 6661.38) — 3 deep-custom wall wins 243/096/367; proj 6662.11 exact
+- 2026-06-19 #37: 6667.42 (+5.30 vs #36 6662.12) — 11-win structural plane-free re-golf wave; 306 +1.25, 355 +1.26; proj-exact

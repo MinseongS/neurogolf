@@ -1,10 +1,10 @@
 {
- "comment": "#36 = 3 genuine-wall deep-custom wins (243 BFS-flood +0.20, 096 matched-filter-fp16 +0.23, 367 gather-free-corner-gate +0.32) = +0.74 confirmed over #35 6661.38. 3 false-INFEASIBLE overturned. Both lever-reservoirs (fp16-conv, directional-carry) scouted exhausted after.",
- "stored_at_submit": 6692.09,
- "lb": 6662.12,
- "time_utc": "2026-06-19 #36 confirmed",
+ "comment": "#37 = structural plane-free re-golf wave, 11 wins (243/96/367 wall-cracks + 4/213/287/84/377/306/312/355 plane-elim) = +5.30 over #36 6662.12. Highlights 306 quadrant-tile-dilated-conv +1.25, 355 area-count-identity +1.26. No scoring exploit (verified); gap is plane-free reformulation + hard-task cracking (option-2 next session).",
+ "stored_at_submit": 6697.39,
+ "lb": 6667.42,
+ "time_utc": "2026-06-19 #37 confirmed",
  "pending": false,
- "pending_submit": "#36 CONFIRMED 6662.12 (proj 6662.11, +0.01)",
- "prev_stored_at_submit": 6691.36,
- "prev_lb": 6661.38
+ "pending_submit": "#37 CONFIRMED 6667.42 (proj-exact)",
+ "prev_stored_at_submit": 6692.09,
+ "prev_lb": 6662.12
 }
