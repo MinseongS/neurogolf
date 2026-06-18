@@ -161,3 +161,9 @@ Incl task191 +2.24 (8-orientation dihedral template match, weak base 11.53). TAR
 MANIFEST points not stale ledger. Lowest-manifest(11-13) gen-imports mostly WALLS (158 multi-object-scatter,
 286 unbounded-flood, 133 multi-sprite-correspondence confirmed-infeasible) BUT 191 solvable +2.24. Sweet spot
 = mid-manifest(14-16.5) solvable-bloated imports. Session: 6492.58 -> proj 6578.01 (+85.4). 85 wins adopted.
+
+## ⭐ Submission 23 (SESSION-FINAL): proj 6585.60 PENDING.
+Mid-manifest wave: 253,192,198,138,396,325,338,89,9,182 (+191 in #22). Mid-manifest(14-16.5) bloated
+imports are the productive frontier — big wins 191(+2.24),325(+1.55),253(+1.62),192(+1.18),338(+1.08).
+SESSION TOTAL: confirmed 6492.58 -> proj 6585.60 (+93.0). ~97 wins adopted. gap pinned 28.96==219+255.
+NEXT SESSION: poll to confirm #23, then continue mid-manifest sweep (rank by MANIFEST points, ~38 left).
