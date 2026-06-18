@@ -97,10 +97,10 @@
    "method": "ext:kojimar6275"
   },
   "17": {
-   "points": 14.57157683937954,
-   "memory": 33625,
-   "params": 182,
-   "method": "ext:galaxy_v1"
+   "points": 13.937667770755684,
+   "memory": 63256,
+   "params": 469,
+   "method": "custom:task017"
   },
   "18": {
    "points": 13.338318379519821,

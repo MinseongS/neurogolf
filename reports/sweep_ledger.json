@@ -202,14 +202,15 @@
  {
   "task": 17,
   "arc_id": "0dfd9992",
-  "points": 14.57,
+  "points": 13.94,
   "memory": 33625,
   "params": 182,
-  "method": "ext:galaxy_v1",
-  "class": "BAIL",
+  "method": "custom:task017",
+  "class": "WIN",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 0dfd9992: fill missing cells of a periodic texture (pattern completion / tiling-"
+  "status": "done",
+  "verdict": "generalizing exact (adopt-gate fresh-verified); base did NOT generalize",
+  "note": "GAP-CLOSER: base ext:galaxy_v1 real=0.00 (mislabeled infeasible periodic-texture); agent built generalizing 13.94 net -> ~+13.94 real LB on submit"
  },
  {
   "task": 18,
