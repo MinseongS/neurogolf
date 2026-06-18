@@ -21,10 +21,24 @@ is closed-form (triangular prefix/suffix MatMul) — NOT a flood-fill wall.
 | 5 | beam = disjoint Where-CHAIN (no Add planes) | B | 8680 | 247 | 15.90 | 200/200 | -600B |
 | 6 | 4D throughout (drop Squeeze + Reshape planes) | B | 8380 | 243 | 15.94 | 200/200 | -300B |
 | 7 | fold "beam>0?beam:C" by using C as Where-chain base case | B | 8080 | 243 | 15.97 | 200/200 | -300B |
-| 8 | drop Cn entirely (green never enters the gated prefix sums) | B | 7880 | 243 | **15.998** | 500/500 | **best** |
+| 8 | drop Cn entirely (green never enters the gated prefix sums) | B | 7880 | 243 | **15.998** | 500/500 | (prior probe, never committed) |
+| 9 | feed RAW C into the 4 triangular MatMuls; box-row/col restriction moves into the Where condition (drop Crows/Ccols pre-mask) | B | 8128 | 264 | 15.96 | 500/500 | -2 Mul planes |
+| 10 | drop the 4 `fill>0` Greater planes: on a box-line the only coloured cell in a side region IS the beam, so cond = (side AND box-line) suffices | B | 7728 | 264 | **16.014** | 500/500 | **NEW BEST** |
 
 ## Best achieved
-15.998 @ mem 7880 params 243 — adopted? NO (MARGINAL, +0.24 < +0.3). Beats prior 15.757 by +0.24.
+**16.014 @ mem 7728 params 264** (=16.014 pts). Beats prior committed 15.757 by **+0.257**.
+Beats the un-committed 15.998 probe by +0.016. ISOLATED FRESH 500/500. **MARGINAL** (+0.257 < +0.3)
+but per adopt.py rule a generalizing gain is a WIN — rebuilt and checked into src/custom/task333.py.
+
+### Two structural collapses past the prior 15.998 probe (both eliminate full [1,1,10,10] fp16 planes):
+1. **RAW-C triangular fills.** The directional fill MatMuls (`C@Utri`, `C@Ltri`, `Ltri@C`,
+   `Utri@C`) can run on the unmasked colour plane C — no box-row/box-col pre-mask Mul needed.
+   Any carry that spills onto a non-box row/col is never SELECTED, because the combine
+   Where only writes a beam where (side AND box-line) holds. Removes Crows+Ccols (−400B, +2 ops).
+2. **No `fill>0` gate.** On a box row the ONLY coloured cells in the left region belong to the
+   left beam (generator allows ≤1 dot/side, stray dots live on non-box lines), so where fill==0
+   the colour plane C is also 0 → the Where condition needs only `(sidemask AND box-linemask)`,
+   not a separate `Greater(fill,0)` plane. Removes 4 bool [1,1,10,10] planes (−400B).
 
 ## Irreducible-floor analysis
 Fixed costs pin the floor at ~16.0:
