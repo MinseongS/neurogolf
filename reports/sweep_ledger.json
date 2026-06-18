@@ -4868,7 +4868,7 @@
  {
   "task": 377,
   "arc_id": "eb5a1d5d",
-  "points": 14.83,
+  "points": 15.28,
   "memory": 25924,
   "params": 116,
   "method": "gen:vyank6322",
@@ -4876,7 +4876,7 @@
   "sig": "-",
   "status": "done",
   "verdict": "",
-  "note": "adopted 14.51->14.83 nesting-depth=min(rowdepth,coldepth) separable (no depth plane); KEY: fp16-cast the collapsed 1-ch colour plane + keep downstream full-canvas ops fp16 = half mem (95k->26k); gen 10447"
+  "note": "WIN 2026-06-19 (plane-free harvest): parametric concentric-frames figure 14.83->15.28 (+0.45, ADOPTED 500/500). Built on 15x15 canvas, uint8 Pad->30x30, Equal->free bool output. Read defining colour SEQUENCE off the deepest row (1-hot selector @ colf -> 1-D transition -> upper-tri-MatMul prefix-sum) = killed the second full-grid vertical scan. Floor = fp32 colour conv entry 3600B. NOTE agent claims uint8/fp16 Equal+Pad work (contradicts 213 'int32-only' - version nuance, verify per-task)."
  },
  {
   "task": 378,
