@@ -3916,8 +3916,9 @@
   "method": "ext:wguesdon6304",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "",
+  "note": "at-floor 21.31: fixed-factor-2 nearest upscale = grouped ConvTranspose(W[10,1,2,2],group=10,stride=2,pads crop) mem-0 params=K*s^2=40. K=10+s=2 rule-forced. sibling of 223 (factor-3=90). data-dep-factor escapes to Gather but lands LOWER (~17.3). WALL"
  },
  {
   "task": 308,
