@@ -1219,14 +1219,15 @@
  {
   "task": 99,
   "arc_id": "444801d8",
-  "points": 16.84,
+  "points": 17.17,
   "memory": 0,
-  "params": 3510,
+  "params": 2510,
   "method": "ext:thbdh6285",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.33 (single-Conv kernel shrink 7x5->5x5 asymmetric pads, box-fill+lid)"
  },
  {
   "task": 100,
@@ -1802,7 +1803,7 @@
  {
   "task": 146,
   "arc_id": "662c240a",
-  "points": 17.2,
+  "points": 17.28,
   "memory": 2232,
   "params": 24,
   "method": "ext:kojimar6275",
@@ -1810,7 +1811,7 @@
   "sig": "-",
   "status": "done",
   "verdict": "",
-  "note": "subagent win +0.34 (output=fixed sub-block by symmetry predicate; within-block transpose via Reshape)"
+  "note": "already good net (17.28); agent 17.20 worse, rejected"
  },
  {
   "task": 147,

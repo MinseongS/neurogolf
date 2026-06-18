@@ -589,10 +589,10 @@
    "method": "conv3x3+b"
   },
   "99": {
-   "points": 16.836628683540088,
+   "points": 17.17196196787417,
    "memory": 0,
-   "params": 3510,
-   "method": "ext:thbdh6285"
+   "params": 2510,
+   "method": "custom:task099"
   },
   "100": {
    "points": 16.75094772582871,
