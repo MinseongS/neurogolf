@@ -1159,10 +1159,10 @@
    "method": "custom:task193"
   },
   "194": {
-   "points": 17.672876707740706,
-   "memory": 1440,
-   "params": 81,
-   "method": "ext:wguesdon6304"
+   "points": 18.139336328551714,
+   "memory": 900,
+   "params": 54,
+   "method": "custom:task194"
   },
   "195": {
    "points": 16.864067227995108,

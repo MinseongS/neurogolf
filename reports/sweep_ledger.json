@@ -2506,15 +2506,15 @@
  {
   "task": 194,
   "arc_id": "7fe24cdd",
-  "points": 17.67,
+  "points": 18.14,
   "memory": 1440,
   "params": 81,
   "method": "ext:wguesdon6304",
   "class": "CHECK",
   "sig": "-",
-  "status": "skip-marginal",
+  "status": "done",
   "verdict": "",
-  "note": "at-floor: C4 rotational symmetrization 3x3->6x6 = one GridSample(nearest)+small-grid+Pad; floor is fp32 sampled plane (10*36*4B=1440B), unshrinkable (GridSample inherits fp32). Agent tied import +0.006, no adopt."
+  "note": "RE-PROBE WIN +0.47 (17.67->18.14): GridSample-at-floor verdict WRONG. A FIXED full-coverage scatter where each output cell reads ONE input cell (C4 rotation) is NOT GridSample - invert to per-output-cell SOURCE-index map + ONE Gather. Multi-dim [6,6] index on flattened-spatial axis yields [1,10,6,6] in one op (no Reshape, dropped 1260->900). uint8 + free output. Handles non-separable rotation 2 axis-Gathers cant. fresh 200/200."
  },
  {
   "task": 195,
