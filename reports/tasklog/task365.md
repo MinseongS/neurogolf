@@ -16,9 +16,40 @@ global argmax over data-dependent-count components, so it lands in the run-sum /
 | 2 | + segmented-doubling run-sums (offsets 1,2,4) | B/det | 20314 | 674 | 15.05 | — | leaner |
 | 3 | + fp16 colour slice, drop redundant *nb / And / eqmax masks | B/det | 19614 | 674 | **15.08** | **200/200 + 500/500** | best, generalizes |
 
-## Best achieved
-15.0822 @ mem 19614 params 674 — adopted? N (orchestrator gates). Beats prior 14.81 by **+0.27 (MARGINAL, <+0.3)**.
-Fresh ISOLATED 200/200 AND 500/500 against freshly-generated instances (15 distinct output shapes seen) — GENERALIZES.
+## Best achieved (NEW SESSION 2026-06-19 — WIN, crosses +0.3)
+**15.455 @ mem 13282 params 691** — beats deployed 15.08 by **+0.38** (and prior 14.81 by +0.65).
+Fresh ISOLATED 200/200, 500/500, AND genverify.fresh_pass 200/200 — GENERALIZES.
+src/custom/task365.py. (Earlier session best was 15.0822 @ mem 19614, MARGINAL +0.27.)
+
+### What cracked it (BR-corner two-scan, NOT the 4-sweep segtotal)
+The 4-sweep box-red plane was the wall. KEY pivot: box-red is only needed at each
+box's BOTTOM-RIGHT corner, and the winner is the UNIQUE-max BR (distinct counts).
+So compute box-red at BR via TWO FORWARD segmented prefix scans (not 4 segtotals):
+  rH = H-fwd-prefix(red)  (= box-row red at the run's right end)
+  boxred = V-fwd-prefix(rH)  (= full box red at the box's BR cell)
+Then winner = ReduceMax over BR corners; brBR==M marks the unique winning BR.
+Box H,W come from TINY 1-D run-length scans of the winning row/col occupancy
+(gathered at r1/c1) — NOT full-plane wid/hei scans. TL = (r1-H+1, c1-W+1).
+
+### The plane-cost levers that stacked to -6.3KB
+- ⭐ SHIFT AS ONE fp16 MatMul with a constant [G,G] shift matrix (M_d @ v for rows,
+  v @ M_{-d} for cols): ONE plane per shift vs Pad+Slice (2) or Slice+Concat (2);
+  matrix is sparse params (100 ea, cheap). Zero-fill is automatic (shifted-in rows
+  of M are all-zero) — Gather can't zero-fill, MatMul can.
+- ⭐ GATED HILLIS-STEELE WITHOUT HEAD FLAGS: precompute g1,g2,g4 (g_d[i]=1 iff cells
+  i..i-d all occ) by idempotent doubling g2=g1*sh(g1,1), g4=g2*sh(g2,2) (occ in
+  {0,1} so squares vanish). Then v += g_d * shift(v,d). Far fewer ops than the
+  head-flag segmented scan; the >=1-cell gap means g_d alone stops cross-box bleed.
+- ⭐ NO 30x30 COLOUR PLANE: colours are only {0,1,2,8}. colf = Conv(input[:,0:3]
+  weights[0,1,2]) + 8*input[ch8], all on the 10x10 slice (1.2KB+small) — kills the
+  3600B full-canvas colour Conv. red=(colf==2), occ=(colf>0).
+- single-cell scalar reads via data-dependent Gather (occ row/col at r1/c1; run
+  length at c1/r1) instead of mask-mul + ReduceMax full planes.
+
+### Floor now
+mem 13282: ~38 fp16 [1,1,10,10] scan/gate planes (~7.6KB, the two red prefix scans
++ their gates = irreducible 2x3-step doubling), + fp32 10x10 colour-build planes
+(~2KB), inLo [1,3,10,10] 1.2KB, L uint8 30x30 900B (one-hot output carrier floor).
 
 ## Irreducible-floor analysis
 Dominant memory = 68 fp16 [1,1,10,10] planes (13600 B) from the FOUR contiguous-run all-reduce

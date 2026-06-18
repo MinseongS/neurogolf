@@ -4714,15 +4714,15 @@
  {
   "task": 365,
   "arc_id": "e50d258f",
-  "points": 14.81,
+  "points": 15.46,
   "memory": 26613,
   "params": 68,
   "method": "gen:vyank6322",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "skip-marginal",
+  "status": "done",
   "verdict": "FEASIBLE B ~16.8pt: e50d258f: output = the FIRST box (idx0) interior cropped (wides[0]xtal",
-  "note": "re-attack 15.08 vs 14.81 (+0.27 MARGINAL); solid-rect argmax+crop caps ~15.1 (2-D segmented sum=4 sweeps); B~16.8 needs CumSum integral image blocked by per-cell GatherND"
+  "note": "RE-PROBE WIN +0.65 (14.81->15.46): global-argmax over solid rects + variable crop = TWO FORWARD prefix scans (NOT 4-sweep segtotal wall). Compute box-red only at each box BOTTOM-RIGHT corner (unique max=winner via distinct counts); recover H,W from tiny 1-D run-length scans of winning row/col. Levers: shift=1 fp16 MatMul const shift matrix; gated Hillis-Steele WITHOUT head flags via idempotent g_d=occ-block products (>=1-cell gap blocks cross-box bleed); kill 3600B colour Conv for fixed colour set {0,1,2,8}. fresh 200/200."
  },
  {
   "task": 366,
