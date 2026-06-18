@@ -1189,7 +1189,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: output-size not derivable simply + overlay/aggregation of scattered concentric d"
+  "verdict": "INFEASIBLE: output-size not derivable simply + overlay/aggregation of scattered concentric d",
+  "note": "recovery wall: clipped-symmetric-sprite reassembly needs [10,12,19,19] fp32 matched-filter (173KB); exact net 12.54 < gen-import 12.97"
  },
  {
   "task": 97,
