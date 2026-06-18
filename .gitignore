@@ -20,3 +20,4 @@ scratch/
 
 # Submission archives are reproducible artifacts
 submission/*.zip
+.gstack/

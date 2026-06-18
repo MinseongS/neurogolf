@@ -61,6 +61,45 @@ IS positional).
 - 12 strict-correlation stamp passes with a RUNTIME-recovered sprite tile is the buildable backbone if
   recovery is solved.
 
+## ⭐ RECOVERY SOLVED + STAMP CORRECTED (2026-06-19 follow-up agent) — algorithm EXACT, ONNX not yet built
+The prior agent's "single blocker = recovery" is RESOLVED unique-by-construction, AND a correction was found
+to the stamp ("2000/2000 exact" was a sampling artifact). Full pipeline verified EXACT in numpy:
+**solver-prop 50000/50000, fixed-unroll(4-round) 30000/30000, naive-prop 20000/20000.**
+Reference solver lives in `src/custom/task158.py::solve()` (repo-import verified 5000/5000 fresh).
+
+THE RECOVERY (unique by construction — prior 46% "ceiling" was wrong):
+1. The REFERENCE is ALWAYS mag=1. Generator: `mag = 1 if not mags else randint(1,3)`; `mags` is empty on the
+   first mega ⇒ idx-0 reference is mag=1 every time. (verified)
+2. Body colour c2 appears ONLY inside the reference 3×3. (verified 3000/3000) Non-ref megas DRAW ONLY their
+   two corner blocks (c0/c1) — `if idx>0 and (row!=col or row==1): continue` keeps only canonical (0,0)&(2,2).
+   So c2 cells DETERMINISTICALLY locate the reference. NO window search, NO output needed.
+3. c2 = non-bg colour with MIN bbox span (confined to 3×3; c0/c1 spread across megas).
+4. Canonical sprite = unflip the ref 3×3 by its own (h,v): the valid unflip has c0@(0,0),c1@(2,2)
+   (distinct, ≠bg, ≠c2) and a transpose-symmetric c2 body. Unique. (180°-symmetric bodies → c0/c1 label
+   ambiguous, but IRRELEVANT: the 180-rotated canon is reached by the same 4 stamp passes.)
+
+THE STAMP CORRECTION (bare 12-pass is NOT exact, even with the ORACLE sprite):
+- Measured: bare 12-strict-correlation stamp with ORACLE canon = **19984/20000 (0.08% FAIL)**, NOT 2000/2000.
+  Prior agent's 2000-sample test was lucky (~1.6 expected fails). PHANTOM BRIDGES: a c0 corner-block of mega A
+  and a c1 corner-block of mega B can align as the two diagonal corners of a (false) tile with bg between.
+  Phantom rate after isolation alone = 142/300000 (0.047%), by phantom-mag {mag1:28, mag2:99, mag3:15}.
+  Sequential-overwrite stamp = 0.046% (no help); largest-mag-first consume = 0.0067%; exact-cover prop = 0.
+- bg via grid[0,0] is wrong 0.85% (a mega can sit at (0,0)) ⇒ use MODE colour.
+- FIX = isolation ring (reject footprints whose 1-cell border isn't all-bg) + EXACT-COVER: the true non-ref
+  megas are the unique set of isolated placements whose visible corner-block cells partition (all non-bg minus
+  the reference region). Resolve by NAKED-SINGLES propagation: pick every candidate that uniquely owns some
+  target cell, remove its cells, kill overlappers; repeat. Terminates in ≤3 rounds (≤3 non-ref megas).
+
+ONNX FEASIBILITY (proven): the ≤4-round propagation is BOUNDED ⇒ unrollable to a fixed tensor pipeline
+(stacked bool masks + sum-reductions + elementwise; no Loop/NonZero/argmax). Whole task is opset-10 buildable.
+Build plan in `src/custom/task158.py` docstring. NOT yet implemented (large graph: recovery + 12 stamps +
+4-round per-cell exact-cover). `build()` is a NotImplemented stub. Next agent: build the ONNX from solve().
+
+⚠️ CORRECTION to prior INSIGHT: "per-object variable-mag stamping is EXACT via 12 strict-correlation passes"
+is FALSE for tasks where corner-blocks of distinct objects can alias into a phantom tile. The stamp needs an
+EXACT-COVER over candidate placements (bounded naked-singles propagation, ≤K rounds for ≤K objects), not just
+correlation. The "rest is bg" + visible-cell match is necessary but NOT sufficient.
+
 ## INSIGHT (transferable)
 ⭐ "Per-object variable magnify + dihedral flip" reconstruction is **separable and exact via 12 fixed
 (mag×flip) strict-correlation stamp passes** — stamp T where window matches T on the VISIBLE cells AND is
