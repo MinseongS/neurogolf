@@ -1933,10 +1933,10 @@
    "method": "conv5x1+b"
   },
   "323": {
-   "points": 16.5810813778521,
-   "memory": 3887,
-   "params": 645,
-   "method": "ext:kojimar6275"
+   "points": 16.968289624677958,
+   "memory": 2421,
+   "params": 656,
+   "method": "custom:task323"
   },
   "324": {
    "points": 14.948437329398509,

@@ -3984,14 +3984,15 @@
  {
   "task": 323,
   "arc_id": "d06dbe63",
-  "points": 16.58,
-  "memory": 3887,
-  "params": 645,
+  "points": 16.97,
+  "memory": 2421,
+  "params": 656,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.39 (fixed-shape marker stamp via SAME Conv kernel; opset-13 bool Pad)"
  },
  {
   "task": 324,
