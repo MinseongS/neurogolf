@@ -1975,10 +1975,10 @@
    "method": "custom:task329"
   },
   "330": {
-   "points": 15.216591867794413,
-   "memory": 16604,
-   "params": 1133,
-   "method": "gen:thbdh6332"
+   "points": 15.87936554110831,
+   "memory": 8904,
+   "params": 238,
+   "method": "custom:task330"
   },
   "331": {
    "points": 18.186555400489105,

@@ -4261,14 +4261,15 @@
  {
   "task": 330,
   "arc_id": "d2abd087",
-  "points": 15.22,
+  "points": 15.88,
   "memory": 16604,
   "params": 1133,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: d2abd087: recolor each gray sprite red if size==6 else blue. per-object pixel-co"
+  "status": "done",
+  "verdict": "INFEASIBLE: d2abd087: recolor each gray sprite red if size==6 else blue. per-object pixel-co",
+  "note": "RE-PROBE WIN +0.66 (15.22->15.88): per-component counting NOT a wall when generator isolates sprites. 8-conn 3x3 MaxPool id-flood (re-gated by gray mask each iter) no cross-leak; per-component count = ScatterND(reduction=add) histogram + Gather-back on [101] buffer (opset-16 OK, scorer checks DOMAIN). Beats [100,100] all-pairs matrix + 37-offset conv ~2x. fp16 planes: 16604->8904. fresh 200/200."
  },
  {
   "task": 331,
