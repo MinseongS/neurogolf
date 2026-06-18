@@ -1073,7 +1073,7 @@
  {
   "task": 84,
   "arc_id": "3bd67248",
-  "points": 16.55,
+  "points": 17.0,
   "memory": 4362,
   "params": 300,
   "method": "custom:task084",
@@ -1081,7 +1081,7 @@
   "sig": "-",
   "status": "done",
   "verdict": "",
-  "note": "prior committed custom (ledger was stale)"
+  "note": "WIN 2026-06-19 (plane-free harvest): scalar-keyed fixed template 16.55->17.00 (+0.45, ADOPTED 500/500). n=sqrt(sum input), colour=ArgMax(masked counts) as scalars (no occ plane); ONE uint8 label routed to FREE output via Equal(L,chanramp); separable row/col vectors replace ingrid-AND; crop work block to [21,21]. Floor=900B uint8 label (colour channel runtime so 10-ch one-hot unprunable)."
  },
  {
   "task": 85,
@@ -2047,7 +2047,7 @@
   "sig": "overlaps",
   "status": "confirmed-infeasible",
   "verdict": "INFEASIBLE: diagonal-symmetry completion of sprite with per-instance flips/mags; object-leve",
-  "note": "DEEP RE-ATTACK 2026-06-19: prior 'variable-mag wall' reason was STALE \u2014 mag+flip ARE separable/exact (12 fixed mag\u00d7flip strict-correlation stamp passes = 2000/2000 given true sprite; mag=min solid run-length, body=min-bbox-span colour). The REAL wall is canonical-SPRITE RECOVERY: multiple (origin,mag) windows downsample to valid symmetric sprites; disambiguation needs the OUTPUT. numpy solver caps 918/2000=46%, min-contradiction flip-class only ~88%. Not Loop/NonZero/argmax-free. True wall but RE-LOCATED. One more recovery-only agent worth it IF a unique-by-construction recovery (phase=c2cells mod mag) is found."
+  "note": "2026-06-19 RECOVERY WALL SOLVED (but ONNX build unfinished): 158-recovery agent cracked the canonical-sprite recovery via '4-round per-cell exact-cover propagation' + 12 correlation stamps, verified exact in numpy (see src/custom/task158.py solve() + docstring). Projected ONNX ~14.5-15.3 = +1.7-2.5 over 12.85 -> BIGGEST single win available. Agent died before building the opset-10 graph (build() raises NotImplementedError). FOLLOW-UP: dispatch a finisher to build the ONNX from the solved algorithm."
  },
  {
   "task": 159,
