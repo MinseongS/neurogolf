@@ -1,10 +1,10 @@
 {
  "comment": "#29 CONFIRMED 6618.58 (proj 6618.58 EXACT, 25th near-exact). NEW BEST. gap 28.96==219+255. session +31.83.",
- "stored_at_submit": 6647.54,
+ "stored_at_submit": 6649.2,
  "lb": 6618.58,
  "time_utc": "2026-06-18 19:22",
- "pending": false,
- "pending_submit": "#29: 11 golf wins tail pool. proj 6618.58.",
- "prev_stored_at_submit": 6639.54,
- "prev_lb": 6610.58
+ "pending": true,
+ "pending_submit": "#30 session-final: 73/149/352. proj 6620.24.",
+ "prev_stored_at_submit": 6647.54,
+ "prev_lb": 6618.58
 }

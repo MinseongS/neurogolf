@@ -1432,8 +1432,9 @@
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "at-floor 21.60: fixed-canvas row remap (identity+partial reflection) = mem-0 Gather(axis=2,idx[H=30]), params=output-dim irreducible. sibling of GridSample-1800/mem-0-conv floors"
  },
  {
   "task": 114,
