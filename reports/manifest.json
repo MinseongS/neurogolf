@@ -2287,9 +2287,9 @@
    "method": "ext:ghiotto_conv4"
   },
   "382": {
-   "points": 13.99556954345748,
-   "memory": 59042,
-   "params": 1098,
+   "points": 14.612143741760242,
+   "memory": 31892,
+   "params": 571,
    "method": "custom:task382"
   },
   "383": {

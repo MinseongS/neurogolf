@@ -4895,15 +4895,15 @@
  {
   "task": 382,
   "arc_id": "f15e1fac",
-  "points": 14.0,
+  "points": 14.61,
   "memory": 59042,
   "params": 1098,
   "method": "custom:task382",
   "class": "CHECK",
   "sig": "-",
-  "status": "skip-marginal",
+  "status": "done",
   "verdict": "",
-  "note": "re-attack 14.155 vs 13.996 (+0.16 MARGINAL); orientation-equivariant reconstruction, dual 3600B fp32+int32 planes floor; +0.3 needs risky 1-D rewrite"
+  "note": "WIN +0.61 (beat own custom, 59042->31892): CROP-TO-ACTIVE (gen grid<=20 top-left) on already-fp16 net + uint8 opset-11 Pad-back, logic untouched. PITFALL: keep final off-grid sentinel mask in ORIGINAL orientation (canonical-frame rect wrong on un-transposed output). fresh 200/200."
  },
  {
   "task": 383,
