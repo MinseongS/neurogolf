@@ -2848,14 +2848,16 @@
  {
   "task": 229,
   "arc_id": "9565186b",
-  "points": 17.75,
+  "points": 18.25,
   "memory": 1364,
   "params": 45,
-  "method": "ext:kojimar6275",
+  "method": "custom:task229",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.50 (17.75->18.25): unique-mode grid recolor = per-channel COUNT (ReduceSum 2,3) + mode onehot Equal(cnt,ReduceMax) + 1x1 colour-index Conv on FIXED 3x3 grid; NO argmax/gather. off-grid=all-zero so pad the POST-Equal one-hot with 0 (not the index plane)"
  },
  {
   "task": 230,
