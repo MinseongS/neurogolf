@@ -1421,8 +1421,9 @@
   "method": "ext:kojimar6275",
   "class": "FEASIBLE?",
   "sig": "transpose",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "probe +0.02 over P (structural floor: 2x dir reductions for data-dep orientation+band order); insight: tiny top-left block routing in [1,10,4,4] + Pad up (tasklog115)"
  },
  {
   "task": 116,
