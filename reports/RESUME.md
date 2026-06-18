@@ -64,27 +64,38 @@ kaggle CLI: /opt/homebrew/Caskroom/miniconda/base/bin/kaggle.
    mislabeled "confirmed-infeasible" by judging +0.3 against the INFLATED stored — IGNORE that label and
    build a generalizing exact encoding. This alone is worth ~+25 LB from 219+255.~~ (NOTE: closeability disproven — all 3 walls)
 
-## ▶▶ RESUME HERE (handoff 2026-06-18 ~13:10 — subagent infra flaky; hand-build path proven)
-Confirmed LB **6561.68** at last confirmed submit (#20, proj-exact 18th). Session 6492.58→6561.68 = **+69.10**.
-Stored 6590.64, **gap 28.96 == EXACTLY the two walls 219(15.00)+255(13.95)** — gap is fully structural.
-20 submissions, ALL projections exact. **48 pending-pool wins + 2 GAP-CLOSERS (274,332) + 3 HAND-BUILT (60,292,78)**.
+## ▶▶ RESUME HERE (handoff 2026-06-18 ~15:30) — see NEXT_SESSION.md for the ready-to-paste loop prompt
+Confirmed LB **6578.01** at last CONFIRMED submit (#22, proj-exact 20th). **#23 PENDING at handoff (proj 6585.60).**
+Session 6492.58→proj 6585.60 = **+93.0**. Stored 6615.15, **gap 28.96 == EXACTLY the two walls 219(15.00)+255(13.95)**.
+23 submissions, ALL projections exact (±0.01). **~97 wins this session** + 2 gap-closers (274,332).
++0.59 unsubmitted (straggler re-adopts 9/182 after #23) rolls into next submit.
 
-⛔ SUBAGENT INFRA WAS DOWN: 7+ build agents stalled at the 600s stream watchdog (often before any work —
-infra-level streaming hang, not task difficulty). WORKAROUND PROVEN: build nets MYSELF in the main loop
-(my own bash/python tools never stall). Got 3 wins that way (task60 16.37→16.92, task292 16.32→17.18,
-task78 16.32→16.62), all proj-exact on #20. RESUME: re-run loop; dispatch 1 subagent probe — if it
-completes, infra recovered → use fast parallel subagent dispatch; if it stalls, keep hand-building.
+STEP 0 NEXT SESSION: poll `kaggle competitions submissions -c neurogolf-2026` to confirm #23 (proj 6585.60);
+set reports/lb_anchor.json pending=false + add submission_log row 23 with the real score.
 
-🛠️ HAND-BUILD RECIPE (when infra down): pick a FIXED-SIZE, simple recolor/fill/geometry task (small active
-region, NO full-channel read needed). `src.show N --gen` to read rule. Write src/custom/taskNNN.py using the
-idiom in task060/292/078: build a small color-index plane L on the active region (per-row/col color via
-channel-contract Σ k·input[:,k]; masks as consts; data-dep magnify via task159 two-gather), Cast uint8, Pad
-to 30x30 with SENTINEL 99 (off-grid MUST be all-False — convert_to_numpy leaves off-grid all-zero, in-grid
-bg = ch0=1), Equal(L,arange[1,10,1,1])→BOOL output. Verify: `solve_custom(load_task(N),task_num=N)` +
-`evaluate`. points=25−ln(mem+params); to beat current need mem+params lower. Then `python -m src.adopt N`,
-commit. NOTE many "pending" ledger entries already HAVE a committed src/custom/taskNNN.py (stale status, now
-cleaned). Truly-untouched pending (no custom file) are the HARD remainder: 41,302,30,353,10,28,136,336,226,
-394,160,323,291,130,115... — variable-size / data-dependent / encoding-based → need SUBAGENTS, not hand-build.
+🔑 TARGETING (the big lesson, late this session): rank candidates by **MANIFEST points**, NOT stale ledger points.
+`man=json.load(open('reports/manifest.json'))['tasks']`; pick lowest-points tasks with NO src/custom/taskNNN.py,
+skip walls{219,255,209,118,2,90,157,366,251,18,101}. SWEET SPOT = **mid-manifest 14-16.5 bloated gen-imports**
+(big wins: 191+2.24, 253+1.62, 325+1.55, 192+1.18, 338+1.08, 396+0.48...). LOWEST-manifest 11-13 are MOSTLY
+WALLS (158/286/133/96 confirmed-infeasible: multi-object scatter / unbounded flood / correspondence / matched-
+filter) though occasionally a +2 win (191). 16.x imports are near-optimal (marginal). ~38 mid-manifest left:
+9-done,182-done,89-done,338-done,325-done; next 80,14,44,185,387,17,319,253-done... regen the list each session.
+
+⚙️ OPERATIONAL NOTES: infra recovered (was down 7-stall streak mid-session; if it recurs, probe 1 agent then
+fall back to MAIN-LOOP hand-building — recipe below — which never stalls). Run `python -m src.adopt N`
+SEPARATELY and read its verdict BEFORE committing — adopt REJECTs when the deployed net already beats the
+candidate (many "pending"-by-ledger tasks already have good ext nets, e.g. 81/146/122); on REJECT rm the
+un-adopted src/custom file. Agents leave scratch in repo ROOT (build*.py/ref*.py/verify*.py) and task*.py.*
+backups in src/custom — `find . -maxdepth 1 -name '*.py' -delete` + `find src/custom -name 'task*.py.*' -delete`
+when idle. Agents often skip tasklog — stage only files that exist. Re-adopt if an agent's later report beats
+its adopted checkpoint. Scaled to ~10 concurrent agents fine.
+
+🛠️ HAND-BUILD RECIPE (main-loop fallback when subagent infra stalls): FIXED-SIZE simple recolor/fill/geometry
+(small active region). `src.show N --gen`; build a small color-index plane L (per-row/col color via channel-
+contract Σ k·input[:,k]; data-dep magnify via task159 two-gather), Cast uint8, Pad to 30x30 with SENTINEL 99
+(off-grid MUST be all-False — convert_to_numpy leaves off-grid all-zero, in-grid bg=ch0=1), Equal(L,arange)
+→BOOL output. Verify `solve_custom(load_task(N),task_num=N)`+`evaluate`; points=25−ln(mem+params). Proven on
+task060/292/078. Avoid variable-size tasks needing a full in-grid channel read (too memory-heavy by hand).
 
 🔑 BIGGEST FINDING THIS SESSION (see project memory neurogolf-gap-closers — UPDATED): the "gap is structural
 dead end" conclusion was WRONG. Non-gen base nets that score ~0 on real LB but are EXACTLY solvable are
