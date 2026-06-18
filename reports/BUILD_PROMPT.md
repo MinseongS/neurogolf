@@ -397,3 +397,16 @@ the current ORT build. Before paying fp32 (or bailing), run a 5-line ORT(ORT_DIS
 - Pad at opset-10 rejects uint8/bool → forces a 1800B fp16 pad-back plane; so CROP-TO-ACTIVE is NET-NEGATIVE
   whenever the output mask must be full 30×30 unless ≥6 large planes sit downstream of the pad point (64 wall).
 A task whose only blocker in the tasklog is a dtype-crash claim is a prime re-probe candidate.
+
+## ⭐ DATA-DEPENDENT PERIOD/LATTICE → BITMAP (80 +0.86 — a "documented wall" that was FALSE)
+A data-dependent block PERIOD or lattice spacing is NOT a runtime-control wall. Collapse it to bitmap resolution:
+1. DOWNSAMPLE via a runtime-stride Gather: sample block-top cells at indices i·p (p = recovered period) → tiny K×K plane. Every full-canvas 30×30 plane shrinks to ~10×10.
+2. Solve on the K×K bitmap.
+3. UPSCALE via a Gather with table index i//p back to 30×30.
+This is the task159/task195 magnify lever applied to a whole lattice. Recover p from a count/spacing scalar.
+⭐ TWO-SENTINEL-BLOCK upscale: fold "overlay grid lines" AND "off-grid→99 sentinel" INTO the upscale table
+itself (append a linecolor block at idx 10 and a 99 block at idx 11, padded LAST so it wins corners), then ONE
+double-Gather emits the whole final plane — no tail Where, no separate line/in-grid 30×30 masks (+0.27 alone).
+NOTE on dtype scoring: the harness counts a tensor at its DECLARED dtype × TRACE shape, NOT the ORT runtime-
+upcast dtype — so fp16 working planes DO score at half. BUT an fp16 plane feeding the graph-OUTPUT op (Equal)
+adds a counted fp32 PrecisionFreeCast plane; make that feeder uint8 to remove it (uint8 Gather/Equal run fine).
