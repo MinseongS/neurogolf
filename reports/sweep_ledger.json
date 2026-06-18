@@ -3450,8 +3450,9 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "",
+  "note": "at-floor: recolour isolated red pixels (4-neighbour predicate), deployed mem-0 group-Conv W[10,5,3,3] group=2 generalizes 200/200. 3x3 forced + ch0 spans full canvas (>=900B decomp tax) + active channels share input ch2 (group=2 -> 450 params). budget 340 < 450/900. NOTE bool full plane scores 900B not 3600B (itemsize from declared dtype)"
  },
  {
   "task": 273,
