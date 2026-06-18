@@ -187,3 +187,8 @@ Re-probe wave: 14 false-positive blank-note wins bundled (42,270,143,350,74,387,
 6620.24 -> 6628.62 = +8.38. KEY LESSON: "confirmed-infeasible"/"skip-marginal" ledger labels with a BLANK note
 (no documented reason) are ~80% FALSE-POSITIVES — re-probe lowest-points / highest-bloat first. True walls
 (279,277,361) and at-floor (64,48) all had DOCUMENTED or now-documented structural reasons.
+
+## #32 — 2026-06-18 23:06 — CONFIRMED 6635.63 (proj 6636.66, -1.03)
+Wave-2 re-probe (16 wins): 58,48,208,265,85,29,333,162,134,382,178,30,355,117,80,110. 6628.62 -> 6635.63 = +7.01.
+NOTE: proj was +1.03 HIGH (first non-proj-exact this session) — one wave-2 net passes arc-gen-fresh 200/200 but
+scores ~1pt less on Kaggle's exact held-out set (gap 28.95->29.98). Acceptable; Kaggle keeps best so no loss.
