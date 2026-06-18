@@ -3574,14 +3574,15 @@
  {
   "task": 292,
   "arc_id": "ba26e723",
-  "points": 16.32,
-  "memory": 0,
-  "params": 5910,
+  "points": 17.18,
+  "memory": 2430,
+  "params": 68,
   "method": "conv1x59+b",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "HAND-BUILT: recolor yellow->pink at col%3==0; ingrid-col mask free from row1, sentinel-99 off-grid"
  },
  {
   "task": 293,
