@@ -1047,7 +1047,7 @@
  {
   "task": 82,
   "arc_id": "3ac3eb23",
-  "points": 16.45,
+  "points": 16.88,
   "memory": 4800,
   "params": 363,
   "method": "custom:task082",
@@ -1055,7 +1055,7 @@
   "sig": "-",
   "status": "done",
   "verdict": "",
-  "note": "prior committed custom (ledger was stale)"
+  "note": "WIN 2026-06-19 (plane-free harvest): tiny-canvas per-column stripe 16.45->16.88 (+0.43, ADOPTED). Work on bounded h=6 active canvas, Pad to free output."
  },
  {
   "task": 83,
