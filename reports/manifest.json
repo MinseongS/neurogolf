@@ -1795,10 +1795,10 @@
    "method": "custom:task299"
   },
   "300": {
-   "points": 13.741373412351637,
-   "memory": 77438,
-   "params": 108,
-   "method": "gen:thbdh6332"
+   "points": 16.253601665890958,
+   "memory": 6176,
+   "params": 112,
+   "method": "custom:task300"
   },
   "301": {
    "points": 16.904096467038897,

@@ -3857,14 +3857,15 @@
  {
   "task": 300,
   "arc_id": "be94b721",
-  "points": 13.74,
+  "points": 16.25,
   "memory": 77438,
   "params": 108,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: be94b721: extract the largest (idx0) sprite into its own bbox-sized output; pick"
+  "status": "done",
+  "verdict": "INFEASIBLE: be94b721: extract the largest (idx0) sprite into its own bbox-sized output; pick",
+  "note": "RE-PROBE WIN +2.51 (13.74->16.25): task036 crop+translate idiom + max-pixel-COUNT channel selection. ArgMax(ReduceSum(input,[2,3])-bgpen*ch0) picks largest sprite (no flood); bbox from SINGLE gathered channel plane; NEVER cast full input (public net wasted 18000B). fresh 200/200."
  },
  {
   "task": 301,
