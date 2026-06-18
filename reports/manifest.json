@@ -1063,10 +1063,10 @@
    "method": "custom:task177"
   },
   "178": {
-   "points": 15.478065735525723,
-   "memory": 13569,
-   "params": 87,
-   "method": "gen:thbdh6332"
+   "points": 16.50035996783135,
+   "memory": 4791,
+   "params": 122,
+   "method": "custom:task178"
   },
   "179": {
    "points": 25.0,

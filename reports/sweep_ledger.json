@@ -2278,14 +2278,15 @@
  {
   "task": 178,
   "arc_id": "746b3537",
-  "points": 15.48,
+  "points": 16.5,
   "memory": 13569,
   "params": 87,
   "method": "gen:thbdh6332",
   "class": "FEASIBLE?",
   "sig": "transpose",
-  "status": "skip-marginal",
-  "verdict": "+0.25 < +0.3 bar (orientation-unify compaction)"
+  "status": "done",
+  "verdict": "+0.25 < +0.3 bar (orientation-unify compaction)",
+  "note": "WIN +1.02: false-pos skip-marginal; run-length compaction: read FIRST cross-axis line (holds all band colours in order), CumSum colour-change dedup, [1,10,1,LEN]@[1,1,LEN,SLOTS] MatMul to one-hot-per-slot, Pad tiny [1,10,5,5] to free output. -8.8KB. fresh 200/200."
  },
  {
   "task": 179,
