@@ -1817,14 +1817,15 @@
  {
   "task": 143,
   "arc_id": "63613498",
-  "points": 15.12,
+  "points": 15.63,
   "memory": 19384,
   "params": 57,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 63613498: move sprites matching the boxed (gray-outlined) sprite to it / recolor"
+  "status": "done",
+  "verdict": "INFEASIBLE: 63613498: move sprites matching the boxed (gray-outlined) sprite to it / recolor",
+  "note": "WIN +0.50: false-pos infeasible; match-ref-sprite NOT a wall when canvas gen-bounded (slice 10x10) + sprites monochrome in distinct channels; per-channel grouped-Conv corr + count-gate picks matching channel. fresh 200/200."
  },
  {
   "task": 144,
