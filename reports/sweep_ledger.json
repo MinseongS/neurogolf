@@ -4587,7 +4587,7 @@
  {
   "task": 355,
   "arc_id": "de1cd16c",
-  "points": 15.8,
+  "points": 17.06,
   "memory": 11706,
   "params": 89,
   "method": "gen:thbdh6332",
@@ -4595,7 +4595,7 @@
   "sig": "-",
   "status": "done",
   "verdict": "",
-  "note": "WIN +0.18: Gather with [1]-shaped index keeps singleton channel dim -> [1,1,H,W] direct (no Reshape, no double-materialize 7200B->3600B); route [1,10,1,1] one-hot to cell(0,0) via Cast->uint8 then Pad (bool Pad fails checker) declare output uint8. fresh 500/500."
+  "note": "WIN 2026-06-19 (plane-free harvest, BIG +1.26): 15.80->17.06 (ADOPTED 500/500). \u2b50LEVER AREA-COUNT IDENTITY: a marker that OVERWRITES solid disjoint regions => markers_k = area_k - cnt_k, NO spatial speck plane. area_k=(#rows occ)x(#cols occ) from two 1-D ReduceMax bands; cnt_k=ReduceSum(input,[2,3]); pure [1,10,1,1] scalar pipeline -> ArgMax -> 1x1 one-hot -> Pad into FREE output. Mask marker's own channel first. Floor=2400B two fp32 occupancy bands. Prior '3600B speck-Gather wall' was FALSE."
  },
  {
   "task": 356,

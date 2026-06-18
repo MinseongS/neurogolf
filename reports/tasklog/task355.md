@@ -8,9 +8,8 @@ single specks over block idx, the counts a DISTINCT sample of range(6). The 1×1
 (The hand-written `validate()` test uses 2×3 blocks with repeated colours, but `generate()`
 — what generalization is scored against — is always 2×2 with distinct colours.)
 
-**Current:** 15.624 pts, gen:thbdh6332, mem 11706, params 89
-**Target tier:** A — closed-form per-channel bbox count; blocked from a higher tier by the
-one irreducible fp32 30×30 gathered-pcolor plane.
+**Current best (this session):** 17.063 pts, mem 2772, params 26 — area−count identity, no speck plane.
+**Target tier:** A — closed-form per-channel scalar count via the `area = cnt + specks` partition.
 
 ## Attempts
 | # | angle | tier | mem | params | pts | fresh | outcome |
@@ -18,11 +17,24 @@ one irreducible fp32 30×30 gathered-pcolor plane.
 | 1 | per-channel bbox (first/last) + fp16 MatMul | A | 17588 | 44 | 15.22 | — | too many [1,10,*] planes |
 | 2 | occupancy-IS-the-band (drop first/last/fill), fp16 | A | 11388 | 72 | 15.65 | — | +0.03, big simplification |
 | 3 | same, fp32 MatMul (no speck fp16 copy) | A | 10168 | 72 | 15.77 | 200/200 | prior probe best; +0.14 |
-| 4 | Gather index-shape [1] (no Reshape dup) + uint8 Pad out + consolidated inits | A | 9840 | 25 | 15.803 | 500/500 | **NEW BEST +0.18**, written to src/custom |
+| 4 | Gather index-shape [1] (no Reshape dup) + uint8 Pad out + consolidated inits | A | 9840 | 25 | 15.803 | 500/500 | prior stored best (+0.18) — STILL carries the 3600B speck plane |
 | 5 | fp16 cast of speck+occ downstream | A | 11020 | 36 | 15.69 | — | net-NEGATIVE: fp32 occ from ReduceMax stays, fp16 adds planes |
+| 6 | **area−count identity (NO speck plane)** | A | **2772** | 26 | **17.063** | **500/500** | ⭐ **NEW BEST +1.26** — speck plane eliminated entirely, written to src/custom |
 
 ## Best achieved
-15.803 @ mem 9840 params 25 — src/custom/task355.py WRITTEN. Beats prior stored 15.624 by **+0.18**; beats prior probe 15.766 by +0.04. Below +0.3 → MARGINAL by the tier label but a real GENERALIZING gain (500/500) that adopt.py accepts.
+**17.063 @ mem 2772 params 26 — src/custom/task355.py WRITTEN. Beats prior stored 15.803 by +1.26 (500/500 fresh).**
+
+⭐ BREAKTHROUGH — the "irreducible 3600B speck Gather" wall in attempt #4's floor analysis was FALSE.
+A speck OVERWRITES the block colour, so inside block k's rectangle every cell is either
+block-colour-k or pcolor. Hence the EXACT partition `area_k = cnt_k + specks_k`, giving
+`specks_k = area_k − cnt_k` with NO speck plane and NO [1,10,30,*] projection at all:
+  - `cnt = ReduceSum(input,[2,3])` → [1,10,1,1] (per-channel pixel counts)
+  - `area_k = rowcount_k × colcount_k`, where rowcount/colcount = ReduceSum of the binary
+    occupancy bands `ReduceMax(input,[3])` / `ReduceMax(input,[2])`
+  - `specks_k = area_k − cnt_k`; mask pcolor (smallest nonzero cnt) & absent channels → ArgMax
+  - one-hot at (0,0), Cast uint8, Pad into the FREE output.
+The ONLY mid-size intermediates are the two occupancy bands ([1,10,30,1]/[1,10,1,30] f32 =
+1200B each); everything else is a [1,10,1,1] scalar. mem 2772 ≈ 2×1200 + ~370 misc.
 
 Key fixes over attempt #3: (a) Gather(input, pcolor) with a **[1]-shaped index** yields [1,1,30,30] directly — the old Squeeze-to-scalar + Reshape created a DUPLICATE 3600B speck plane (7200B). (b) uint8 Pad to route the one-hot to cell (0,0) (bool Pad fails onnx.checker full_check, so Cast→uint8, declare output uint8; harness scores out>0). (c) consolidated arange(10) inits + dropped redundant `present` Where (absent channels have boxcnt=0 so ArgMax never picks them; only the pcolor channel must be zeroed since its bbox spans all specks).
 
@@ -34,33 +46,33 @@ needed (verified 800/800). boxcnt[k] = rowband_k @ speck @ colband_k via two bat
 channels, ArgMax → mostest. Output = And(row0, And(col0, onehot(mostest))) routed into the
 FREE bool output (associative broadcast, no full label plane).
 
-## Irreducible-floor analysis
-Dominant intermediates (fp32): speck Gather [1,1,30,30] = 3600 (the 10→1 colour-index entry
-floor — cannot go below fp32 30×30 per FLOOR_RESEARCH); rowocc+colocc ReduceMax = 1200+1200;
-the two transposed bands + proj = 3×1200. The 3600 speck is the wall: counting pcolor specks
-per candidate-colour box REQUIRES isolating the pcolor channel first (Gather), because doing
-it without the gather couples input-channel × candidate-colour into a [10,10,30] ≈ 36KB
-intermediate. To beat +0.3 needs mem+params < 8763; removing any 3600 fp32 entry has no exact
-route. fp16-everything-downstream is a wash: it halves the 3 downstream planes (−1800) but
-forces a fp16 speck copy (+1800).
+## Irreducible-floor analysis (updated)
+Dominant intermediates are now just the two binary occupancy bands `ReduceMax(input,[3])` =
+[1,10,30,1] and `ReduceMax(input,[2])` = [1,10,1,30], 1200B each (300 elems × fp32). Born f32
+(ReduceMax rejects narrow dtypes) so fp16/uint8 cast only ADDS planes. The band is inherently
+10ch × 30 — slicing to present channels (≤5) or the ≤20×20 active region trips the symbolic-dim
+trap / costs a 10ch input slice (6000B+). Both bands are required (area = rows × cols). So
+~2400B of bands + ~370B scalars/misc ≈ 2772 is the practical floor for this identity. Pushing
+lower would need rowcount/colcount WITHOUT a per-row occupancy signal, with no known cheaper op.
 
-## OPEN ANGLES (re-attack backlog)
-- Quadrant approach: exploit the exact 2×2 layout. Contract speck to a [2,2] quadrant
-  histogram via tiny row/col split masks (split at r0=talls[0], c0=wides[0]) — kills ALL
-  per-channel [1,10,*] planes. BUT mapping winning-quadrant→block-colour needs a 2nd colour
-  readout; naive route adds a colf [1,1,30,30]=3600 plane (two 3600 planes = same wall).
-  Untried: read the 4 block colours as 4 SCALARS (ArgMax of input at 4 quadrant-centre cells
-  via Gather), avoiding a 2nd full plane — could land both speck-count and colour in scalars
-  and drop below the wall. Worth a focused attempt.
-- Active-region (≤20×20) slicing of the bands/proj after a fp16 cast — but the speck Gather
-  still emits the full 30×30 (3600), so no net win on the entry.
+The OLD "3600B speck-Gather wall" was a FALSE floor — it presumed you must spatially count the
+marker, but the area−count algebra needs only scalar per-channel counts.
 
 ## INSIGHT (transferable)
-⭐ "per-region count of a sparse marker colour, distinct solid block colours" needs NO bbox
-first/last/fill: a solid block occupies EVERY row & col in its range, so the raw 1-D
-per-channel occupancy `ReduceMax(input,[3])`/`[2]` IS the bbox band — feed it straight into
-`band_k @ marker @ band_kᵀ` (two batched MatMuls, broadcast 10-vs-1, no 10×H×W product). This
-collapsed an 8-plane bbox pipeline to 2 occ planes (17588→10168). The residual wall is the
-one fp32 Gather of the marker channel: any "count marker pixels per candidate colour" needs
-the marker isolated to ONE channel first, else input-ch × candidate-colour couples to a
-[10,10,W] plane.
+⭐⭐ MARKER-OVERWRITES-FILL → AREA−COUNT, NO SPATIAL COUNT: when a sparse marker colour is
+stamped ON TOP of solid coloured regions (overwriting the region colour) and you need the
+per-region marker COUNT, do NOT gather/project the marker plane (3600B). The marker punches
+holes in its host region, so for region k: `area_k = cnt_k + markers_k` EXACTLY (every cell in
+the region is either region-colour-k or marker). Thus `markers_k = area_k − cnt_k`, all scalars:
+`cnt_k = ReduceSum(input,[2,3])`, `area_k = (#rows occ)×(#cols occ)` from the two 1-D occupancy
+bands. This turns an apparent "count sparse pixels per region" task (which looks like it needs a
+full marker plane + per-region bbox projection) into a pure [1,10,1,1] scalar pipeline — the only
+mid planes are the two occupancy bands. Collapsed 9840→2772 (+1.26). Generalises to ANY
+"overlay-marker per-solid-region count / argmax / rank" where regions are solid & disjoint and
+the marker is a distinct colour. Mask the marker channel itself (its own bbox spans all markers
+→ huge spurious area−count) before the argmax.
+
+## OPEN ANGLES (minor)
+- The two occupancy bands (2400B) are the remaining cost. No cheaper per-channel-per-row
+  occupancy op is known (ReduceMax born f32; channel/region slicing trips symbolic dims). 2772
+  is effectively the floor.
