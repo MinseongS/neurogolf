@@ -3607,14 +3607,15 @@
  {
   "task": 280,
   "arc_id": "b527c5c6",
-  "points": 13.89,
+  "points": 14.25,
   "memory": 65626,
   "params": 905,
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: b527c5c6: aim a green/red beam from one box toward partner; geometry depends on "
+  "status": "done",
+  "verdict": "INFEASIBLE: b527c5c6: aim a green/red beam from one box toward partner; geometry depends on ",
+  "note": "RE-PROBE WIN +0.36 (13.89->14.25): shoot-beam-to-wall looked like multi-dir variable-span fill wall but is closed-form tier-A = beam is axis-aligned RECTANGLE = separable row-mask\u2297col-mask into free output. Gate per-object broadcast vectors by axis flag + OR-reduce over object axis BEFORE outer product (kills [K,30,30] planes). uint8 ArgMax+ScatterElements run under ORT_DISABLE_ALL (900B). 180KB->45.7KB. fresh 200/200."
  },
  {
   "task": 281,
