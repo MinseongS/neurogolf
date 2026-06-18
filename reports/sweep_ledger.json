@@ -3763,14 +3763,15 @@
  {
   "task": 305,
   "arc_id": "c3f564a4",
-  "points": 16.72,
-  "memory": 3668,
-  "params": 284,
+  "points": 17.38,
+  "memory": 1754,
+  "params": 285,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.66 (restore (r+c)%param+1 grid; recover param via max-color, fp16 Mod, sentinel pad)"
  },
  {
   "task": 306,
