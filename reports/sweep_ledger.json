@@ -3901,14 +3901,15 @@
  {
   "task": 316,
   "arc_id": "cdecee7f",
-  "points": 16.73,
-  "memory": 3748,
-  "params": 154,
+  "points": 17.64,
+  "memory": 1216,
+  "params": 352,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.91 (scattered pixels -> small grid via exclusive-CumSum compaction + scatter MatMul)"
  },
  {
   "task": 317,

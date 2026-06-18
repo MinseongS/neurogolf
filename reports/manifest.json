@@ -1891,10 +1891,10 @@
    "method": "ext:kojimar6275"
   },
   "316": {
-   "points": 16.730755478816945,
-   "memory": 3748,
-   "params": 154,
-   "method": "ext:kojimar6275"
+   "points": 17.642443799089648,
+   "memory": 1216,
+   "params": 352,
+   "method": "custom:task316"
   },
   "317": {
    "points": 18.197605236675688,
