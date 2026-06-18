@@ -1332,15 +1332,15 @@
  {
   "task": 109,
   "arc_id": "47c1f68c",
-  "points": 16.33,
-  "memory": 5395,
-  "params": 403,
+  "points": 16.69,
+  "memory": 3975,
+  "params": 108,
   "method": "custom:task109",
   "class": "CHECK",
   "sig": "-",
   "status": "done",
   "verdict": "",
-  "note": "already has committed custom (prior session)"
+  "note": "subagent win +0.355 (4-fold reflection symmetrize via two uint8 Gathers)"
  },
  {
   "task": 110,
