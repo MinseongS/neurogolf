@@ -1,6 +1,6 @@
 """task004 (ARC-AGI 025d127b) — un-slant each slanted parallelogram by a per-row +1 shear.
 
-Rule (from generator task_025d127b.py, verified exact 3000/3000 + fresh 200/200):
+Rule (from generator task_025d127b.py, verified exact + fresh 200/200):
   The grid (size 8..16, variable H,W) holds 0..4 axis-stacked slanted "parallelogram"
   outlines, one DISTINCT random colour each, separated by a full blank row (so the
   shapes are ROW-SEPARABLE — never share a row).  Each shape spans rows [row .. row+tall-1].
@@ -10,8 +10,8 @@ Rule (from generator task_025d127b.py, verified exact 3000/3000 + fresh 200/200)
     * AND the rightmost pixel of the SECOND-TO-LAST row also stays (shift 0)
   Colours simply COPY the input colours (random per shape) — no colour routing.
 
-  Reformulated as a per-INPUT-cell partition (verified 3000/3000, zero collisions):
-    occ          = colour-index plane > 0
+  Reformulated as a per-INPUT-cell partition (verified, zero collisions):
+    occ          = colour-index plane >= 1                   (a coloured pixel)
     rowany[r]    = ReduceMax(occ over cols)                  (per-row occupancy)
     below[r]     = rowany[r+1] ;  below2[r] = rowany[r+2]
     is_bottom[r] = rowany[r] AND NOT below[r]
@@ -22,15 +22,17 @@ Rule (from generator task_025d127b.py, verified exact 3000/3000 + fresh 200/200)
     L_out        = shiftR1(colf * shift_cell) + (colf * copy_cell)   (no collisions)
   Output one-hot = Equal(L_out, arange[0..9]) masked to the in-grid region.
 
-Encoding (single fp32 colour-index entry plane, everything else fp16/bool):
-  - colf = Conv(input, [0..9])  -> [1,1,30,30] f32 (the one irreducible 3600B entry).
-  - ingrid = ReduceMax(input over all 10 channels) -> in-grid (incl. bg) vs all-zero off-grid;
-    off-grid stays all-zero in the output by writing sentinel 255 there.
-  - all masks built on the fp16 occupancy plane (1800B planes); vertical neighbour shifts
-    via Slice+Pad on the row axis; horizontal +1 shift via Slice+Pad on the col axis.
-  - L_out collapsed to ONE [1,1,30,30] value plane; final Where(ingrid, L_out, 255)->uint8,
-    then Equal(L_u8, arange[1,10,1,1]) writes straight into the FREE BOOL output —
-    no [1,10,30,30] intermediate is ever materialized.
+Encoding (ONE fp32 colour-index entry plane; everything downstream narrow/cropped):
+  - colf30 = Conv(input, W) -> [1,1,30,30] f32 (the one irreducible 3600B entry).
+    Channel-0 weight is 0.5 (a SENTINEL), channels 1..9 are 1..9, so the SINGLE plane
+    encodes all three states off-grid=0 / in-grid-bg=0.5 / coloured pixel=k>=1 — there
+    is NO separate ReduceMax in-grid plane (the diagnosed redundant-plane elimination).
+  - Slice colf30 -> [1,1,17,17] active corner; all per-cell working planes are 17x17 f16.
+  - occ = colf>=0.75 (>0.5) ; ingrid = colf>=0.25 (>0) — both derived from the one plane.
+  - L_out collapsed to ONE 17x17 value plane; off-grid -> sentinel 255 via the ingrid mask.
+  - Cast the 17x17 value plane to int32 (1156B) FIRST, then Pad to 30x30 (the only 30x30
+    int32 plane), then Equal(.., arange) writes straight into the FREE BOOL output — no
+    intermediate 30x30 fp16 plane, no [1,10,30,30] expansion ever materialises.
 """
 
 import numpy as np
@@ -62,18 +64,25 @@ def build(task):
         nodes.append(helper.make_node(op, ins, [out], **attrs))
         return out
 
+    # WORK = active canvas: grid is at most 16x16 (generator randint(8,16)).  Measured
+    # over 30k fresh instances the coloured extent of BOTH input and output never exceeds
+    # col/row 15, and any +1 shift that would reach col 16 is a clamped no-op in the rule
+    # (ground truth has nothing at col 16), so a 16x16 crop captures the whole active
+    # region and harmlessly drops the off-grid col-16 shift overflow.
+    W = 16
+
     # ---- constants ----
-    init("kw", np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1), F32)  # colour-index conv
+    # colour-index conv weight: ch0 = 0.5 sentinel (in-grid background marker), ch_k = k.
+    kw = np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1)
+    kw[0, 0, 0, 0] = 0.5
+    init("kw", kw, F32)
     init("arange10", np.arange(10, dtype=np.int32).reshape(1, 10, 1, 1), I32)
-    init("zero_f16", np.array(0.0, np.float16), F16)
-    init("zero_f32", np.array(0.0, np.float32), F32)
+
+    init("quarter_f32", np.array(0.25, np.float32), F32)  # in-grid threshold (bg=0.5>0.25)
+    init("thr75_f32", np.array(0.75, np.float32), F32)    # occupancy threshold (>=1)
+    init("one_f16", np.array(1.0, np.float16), F16)
     init("sent255", np.array(255.0, np.float16), F16)
 
-    # WORK = active canvas: grid is at most 16x16 (generator randint(8,16)); +1 col of
-    # shift headroom -> 17 wide.  Crop colf/occ to WORK x WORK so every working fp16 plane
-    # is 17x17x2 = 578B instead of the full 30x30 (1800B).
-    W = 17
-    init("one_f16", np.array(1.0, np.float16), F16)
     # crop spec: rows 0..W, cols 0..W
     init("crop_st", np.array([0, 0], np.int64), I64)
     init("crop_en", np.array([W, W], np.int64), I64)
@@ -88,31 +97,36 @@ def build(task):
     init("enW1", np.array([W + 1], np.int64), I64)   # W+1 (after pad 1)
     init("enW2", np.array([W + 2], np.int64), I64)   # W+2 (after pad 2)
 
-    # ---- colour-index plane + in-grid mask on the full 30x30 input (these two
-    #      30x30 fp32 planes are the only full-size intermediates), then crop both
-    #      to the WxW active corner so all later working planes are WxW ----
-    n("Conv", ["input", "kw"], "colf30")            # [1,1,30,30] f32, value 0..9
+    # opset-11 Pad takes `pads` (and optional constant `value`) as INPUTS.
+    init("p_row1", np.array([0, 0, 0, 0, 0, 0, 1, 0], np.int64), I64)  # pad bottom row +1
+    init("p_row2", np.array([0, 0, 0, 0, 0, 0, 2, 0], np.int64), I64)  # pad bottom row +2
+    init("p_left1", np.array([0, 0, 0, 1, 0, 0, 0, 0], np.int64), I64)  # pad left col +1
+    init("p_final", np.array([0, 0, 0, 0, 0, 0, 30 - W, 30 - W], np.int64), I64)
+    init("v_zero_f16", np.array(0.0, np.float16), F16)
+    init("v_sent_i32", np.array(255, np.int32), I32)
+
+    # ---- ONE colour-index entry plane on the full 30x30 input, then crop to WxW.
+    #      The ch0=0.5 sentinel folds the in-grid mask into this single plane. ----
+    n("Conv", ["input", "kw"], "colf30")            # [1,1,30,30] f32 (the ONLY 30x30 fp32 plane)
     n("Slice", ["colf30", "crop_st", "crop_en", "crop_ax"], "colf")  # [1,1,W,W] f32
 
-    n("ReduceMax", ["input"], "ingrid30", axes=[1], keepdims=1)  # [1,1,30,30] f32 {0,1}
-    n("Slice", ["ingrid30", "crop_st", "crop_en", "crop_ax"], "ingrid_f")  # [1,1,W,W]
-    n("Greater", ["ingrid_f", "zero_f32"], "ingrid")             # bool [1,1,W,W]
+    # in-grid: in-grid-bg = 0.5, off-grid = 0  ->  ingrid = colf > 0.25
+    n("Greater", ["colf", "quarter_f32"], "ingrid")  # bool [1,1,W,W]: in-grid (bg or pixel)
 
-    # ---- occupancy (fp16) ----
-    n("Cast", ["colf"], "colf16", to=F16)           # [1,1,W,W] f16 value plane
-    n("Greater", ["colf16", "zero_f16"], "occ_b")   # bool
+    # ---- occupancy (fp16): occ = colf >= 1  <=>  colf > 0.75 ----
+    n("Greater", ["colf", "thr75_f32"], "occ_b")    # bool
     n("Cast", ["occ_b"], "occ", to=F16)             # [1,1,W,W] f16 {0,1}
+    # colour value plane in fp16 (coloured = k, bg/off = 0.5/0 -> masked out by occ)
+    n("Cast", ["colf"], "colf16", to=F16)           # [1,1,W,W] f16
 
     # ---- per-row occupancy ----
     n("ReduceMax", ["occ"], "rowany", axes=[3], keepdims=1)  # [1,1,W,1] f16
 
     # below[r]=rowany[r+1]: pad bottom by 1, slice off first row
-    n("Pad", ["rowany"], "rowany_p1", mode="constant", value=0.0,
-      pads=[0, 0, 0, 0, 0, 0, 1, 0])
+    n("Pad", ["rowany", "p_row1", "v_zero_f16"], "rowany_p1", mode="constant")
     n("Slice", ["rowany_p1", "st1", "enW1", "s_axis2"], "below")   # [1,1,W,1]
     # below2[r]=rowany[r+2]
-    n("Pad", ["rowany"], "rowany_p2", mode="constant", value=0.0,
-      pads=[0, 0, 0, 0, 0, 0, 2, 0])
+    n("Pad", ["rowany", "p_row2", "v_zero_f16"], "rowany_p2", mode="constant")
     n("Slice", ["rowany_p2", "st2", "enW2", "s_axis2"], "below2")  # [1,1,W,1]
 
     # is_bottom = rowany AND NOT below  = rowany * (1-below)
@@ -124,8 +138,7 @@ def build(task):
     n("Mul", ["rb", "notbelow2"], "is_2ndlast")     # [1,1,W,1] f16 {0,1}
 
     # occdown[r,c] = occ[r+1,c]: pad bottom by 1, slice off first row
-    n("Pad", ["occ"], "occ_p1", mode="constant", value=0.0,
-      pads=[0, 0, 0, 0, 0, 0, 1, 0])
+    n("Pad", ["occ", "p_row1", "v_zero_f16"], "occ_p1", mode="constant")
     n("Slice", ["occ_p1", "st1", "enW1", "s_axis2"], "occdown")    # [1,1,W,W]
 
     # special = occ * is_2ndlast(broadcast) * occdown
@@ -135,33 +148,34 @@ def build(task):
     # copy_cell = occ * max(is_bottom(broadcast), special)
     n("Max", ["is_bottom", "special"], "copy_sel")  # broadcast -> [1,1,W,W]
     n("Mul", ["occ", "copy_sel"], "copy_cell")      # [1,1,W,W] f16 {0,1}
-    # shift_cell = occ * (1-copy_cell)
-    n("Sub", ["one_f16", "copy_cell"], "notcopy")
-    n("Mul", ["occ", "notcopy"], "shift_cell")      # [1,1,W,W] f16 {0,1}
+    # shift_cell = occ AND NOT copy_cell.  copy_cell is a subset of occ, so
+    # shift_cell = occ - copy_cell exactly (saves the Sub+Mul of the 1-copy_cell route).
+    n("Sub", ["occ", "copy_cell"], "shift_cell")    # [1,1,W,W] f16 {0,1}
 
     # value contributions (fp16): copy stays, shift moves +1 col
     n("Mul", ["colf16", "copy_cell"], "copyval")    # [1,1,W,W]
     n("Mul", ["colf16", "shift_cell"], "shiftval")
     # shiftR1: pad left by 1, slice off last col
-    n("Pad", ["shiftval"], "shiftval_p", mode="constant", value=0.0,
-      pads=[0, 0, 0, 1, 0, 0, 0, 0])
+    n("Pad", ["shiftval", "p_left1", "v_zero_f16"], "shiftval_p", mode="constant")
     n("Slice", ["shiftval_p", "st0", "enW", "s_axis3"], "shiftedval")  # [1,1,W,W]
     n("Add", ["copyval", "shiftedval"], "Lout_f16")  # [1,1,W,W] f16 value 0..9
 
     # ---- route into free output ----
-    # mask off-grid-within-canvas to sentinel (fp16), pad to 30x30 with sentinel,
-    # then cast->int32 and Equal into the free output.
+    # mask off-grid-within-canvas to sentinel (fp16), Cast to int32 at WxW (1024B), then
+    # int32-Pad to 30x30 with sentinel 255 (the mandatory 3600B Equal input — opset-11
+    # Pad DOES accept int32, so we cast at WxW and skip the 1800B fp16 30x30 bridge
+    # plane), then Equal into the free BOOL output.  Off-grid -> 255 -> matches no colour
+    # -> all-zero one-hot, exactly the ground truth.
     n("Where", ["ingrid", "Lout_f16", "sent255"], "Lmask")  # [1,1,W,W] f16, off-grid -> 255
-    n("Pad", ["Lmask"], "L30", mode="constant", value=255.0,
-      pads=[0, 0, 0, 0, 0, 0, 30 - W, 30 - W])          # [1,1,30,30] f16
-    n("Cast", ["L30"], "L30_i32", to=I32)               # int32 (Equal needs int/bool)
-    n("Equal", ["L30_i32", "arange10"], "output")       # BOOL [1,10,30,30] = FREE output
+    n("Cast", ["Lmask"], "Lmask_i32", to=I32)               # [1,1,W,W] int32 (1024B)
+    n("Pad", ["Lmask_i32", "p_final", "v_sent_i32"], "L30_i32", mode="constant")  # [1,1,30,30] int32
+    n("Equal", ["L30_i32", "arange10"], "output")           # BOOL [1,10,30,30] = FREE output
 
     graph = helper.make_graph(
         nodes, "task004",
         [helper.make_tensor_value_info("input", F32, [1, 10, 30, 30])],
         [helper.make_tensor_value_info("output", BOOL, [1, 10, 30, 30])],
         inits)
-    model = helper.make_model(graph, opset_imports=[helper.make_opsetid("", 10)])
+    model = helper.make_model(graph, opset_imports=[helper.make_opsetid("", 11)])
     model.ir_version = IR_VERSION
     return model

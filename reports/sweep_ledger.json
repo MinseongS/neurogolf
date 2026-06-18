@@ -42,7 +42,7 @@
  {
   "task": 4,
   "arc_id": "025d127b",
-  "points": 14.87,
+  "points": 15.21,
   "memory": 54000,
   "params": 1020,
   "method": "custom:4 row-separable un-slant shear (local per-row shift, tier-A)",
@@ -50,7 +50,7 @@
   "sig": "memory",
   "status": "done",
   "verdict": "generalizing exact win (fresh 500/500)",
-  "note": "agent stalled 600s very early (no draft); retry next session"
+  "note": "WIN 2026-06-19 (structural plane-elim): entry-collapse \u2014 folded separate in-grid ReduceMax plane into the colour Conv via FRACTIONAL ch0 weight (0.5): off-grid=0/bg=0.5/pixel=k in ONE plane. +opset-11 int32 Pad (the 'Pad rejects int32' claim is opset-10-only). 14.87->15.21 (+0.34, ADOPTED 500/500). Two 3600B planes (fp32 Conv entry + int32 Equal input) are genuine floor."
  },
  {
   "task": 5,
@@ -2752,7 +2752,7 @@
  {
   "task": 213,
   "arc_id": "8e1813be",
-  "points": 14.84,
+  "points": 15.46,
   "memory": 25797,
   "params": 158,
   "method": "gen:thbdh6332",
@@ -2760,7 +2760,7 @@
   "sig": "transpose",
   "status": "done",
   "verdict": "",
-  "note": "adopted 14.49->14.84 stripe-compaction (strided Gather(linecolor,clip(off+3i)) kills prefix matrix chain; orientation=K_r<K_c, n=min); pending-pool win; generalizes 200+500"
+  "note": "WIN 2026-06-19 (structural plane-elim): eliminated two [1,10,30,30] And planes by routing 10-ch expansion into FREE bool output via Equal(cidx_int,arange). Orientation via scalar Where(horiz, colour_by_row[1,1,30,1], colour_by_col[1,1,1,30]) = ZERO candidate planes. 14.84->15.46 (+0.62, ADOPTED 500/500). Scout est +3.7 was OPTIMISTIC; two int32 [1,1,30,30] carriers resist fusion (Equal pins int32). NOTE scout estimates run ~4x high."
  },
  {
   "task": 214,

@@ -21,9 +21,17 @@ per-row shift collapsed into ONE colour-index value plane, no [1,10,H,W] product
 |---|---|---|---|---|---|---|---|
 | 1 | full-30 fp16 planes, single L plane + ingrid mask | A | 43926 | 32 | 14.31 | n/a | works, MARGINAL (+0.22) |
 | 2 | crop all working planes to 17×17 (active-region escape) | A | 25152 | 38 | 14.87 | 200/200 + 500/500 | ADOPT (+0.78) |
+| 3 | fold in-grid into the colour Conv (ch0 weight=0.5 sentinel) — kills the redundant 30×30 fp32 ReduceMax `ingrid30` (3600B) + `ingrid_f` (1156B) | A | 20396 | 38 | 15.075 | 200/200 | +0.21 vs #2 |
+| 4 | crop W=17→16 (measured input/output coloured extent ≤col15 over 30k fresh; col-16 shift overflow is a clamped no-op) | A | 19118 | 38 | 15.140 | 500/500 | +0.27 vs #2 |
+| 5 | opset-11 int32 `Pad` (ORT accepts it!) — Cast Lmask→int32 at 16×16 then int32-Pad, dropping the 1800B fp16 30×30 bridge plane `L30` | A | 18342 | 72 | 15.179 | 200/200 | +0.31 vs #2 |
+| 6 | `shift_cell = occ − copy_cell` (copy_cell⊆occ) drops the Sub(1)+Mul `notcopy` plane | A | 17830 | 72 | 15.207 | 500/500 | **ADOPT (+0.34)** |
 
 ## Best achieved
-14.87 @ mem 25152 params 38 — recommend adopt: Y. Beats prior 14.08? Y (+0.78, ≥ +0.3).
+15.207 @ mem 17830 params 72 — recommend adopt: Y. Beats prior 14.87 by +0.34 (≥ +0.3).
+Remaining dominant intermediates: `colf30` (3600B fp32 Conv entry — the one mandatory 10→1
+reduction, fp32 forced by fp32 input) and `L30_i32` (3600B int32 — the mandatory Equal input,
+opset-10/11 Equal accepts only int32/int64/bool). Everything else is a 16×16 fp16/bool working
+plane (≤1024B). The two 3600B planes are the irreducible floor of this encoding.
 
 ## Irreducible-floor analysis
 Dominant intermediates: colf30 (3600B fp32 Conv entry — the irreducible 10→1 colour-index
@@ -35,16 +43,17 @@ crop (generator bounds H,W ≤ 16, +1 col of shift headroom) is the lever that t
 44k → 25k.
 
 ## OPEN ANGLES (re-attack backlog)
-- Drop the separate ingrid30 ReduceMax (3600B): fold in-grid detection into the colour plane,
-  e.g. a single Conv with a marker weight that makes off-grid==exactly 0 while in-grid-bg ≥
-  some sentinel — would remove one full 30×30 fp32 plane (~3600B → score ~+0.15).
-- The L30_i32 cast (3600B) exists only because opset-10 Equal needs int32. If the final
-  expansion could run as Pad(uint8 one-hot)→FREE output instead of Equal(int32 plane), the
-  3600B int32 plane disappears — but Pad rejects bool and casting the [1,10,W,W] one-hot to
-  uint8 then padding (FREE output) measured WORSE here (two 2890B planes). Re-check with a
-  smaller W.
-- Could the two row-shift Pads (below/below2) be merged into one 18-row pad + two slices to
-  shave a 62B plane (marginal).
+- DONE in #3: folded in-grid into the colour Conv (ch0 weight=0.5 sentinel) — killed `ingrid30`
+  (3600B) + `ingrid_f` (1156B). off-grid=0 / in-grid-bg=0.5 / coloured=k from ONE plane.
+- DONE in #5: int32 `Pad` IS legal under opset-11 ORT (the tasklog claim "Pad rejects int32" is
+  opset-10-only) — Cast Lmask→int32 at WxW then int32-Pad, killing the 1800B fp16 30×30 bridge.
+- The two remaining 3600B planes (`colf30` fp32 entry, `L30_i32` int32 Equal-input) are the hard
+  floor: the entry must be fp32 (fp32 input → fp32 Conv), and opset-10/11 Equal accepts only
+  int32/int64/bool, so the final colour-index 30×30 plane must be int32. Routing the one-hot
+  expansion as a Concat-padded bool [1,10,WxW] measured WORSE (the 10-ch partial-pad bool plane
+  ≥5100B). No cheaper path to the 30×30 int32 Equal input than fp16-mask→cast-at-WxW→int32-Pad.
+- The fp32 `colf` (1024B WxW Slice) and `Lmask_i32` (1024B) are the next tier; both are
+  structurally needed (Slice preserves fp32; Where→Cast for the int32 Pad). Marginal.
 
 ## INSIGHT (transferable)
 ⭐ A per-shape geometric SHEAR/"un-slant" that looks like it needs shape segmentation is
