@@ -210,3 +210,12 @@ master key) cracked flood task 196. Session start LB 6635.63 -> 6644.18.
 ⭐ KEY: gap-region "skip-list walls" 251 & 090 (blank-note) were FALSE-POSITIVES — cracked via HARD_WALLS §1
 bounded-iteration unrolling (crop-to-gen-size-cap) and closed-form (suffix-min MaxPool). Rejected: 243 (self-reported
 1000/1000 but failed isolated adopt-gate). Walls documented this session: 046/319/118/366/187/076. Session start LB 6635.63.
+
+## #35 — 2026-06-19 — CONFIRMED 6661.38 (proj 6661.39, EXACT -0.01)
+6 skip-marginal floor-breaks (new levers overturned "at-floor" verdicts): 365(+0.65 global-argmax->two-forward-
+prefix-scans), 194(+0.47 GridSample->invert-to-source-index-Gather), 032(+0.63 colour-0==bg + crop-conv-on-free-
+input), 330(+0.66 ScatterND-histogram per-component), 108(+0.12 ConvTranspose upscale), 115(+0.07 centroid-rank),
+349(+0.08 fused variable-radius dilation), 381(+0.05 static-row-mask). 6658.65 -> 6661.38 = +2.73.
+SESSION TOTAL 2026-06-19: 6635.63 -> 6661.38 = +25.75 confirmed, 27 wins / 8 walls / 1 reject, 3 submissions all
+proj-exact. PRODUCTIVE RESERVOIR EXHAUSTED (blank-note + skip-list + skip-marginal + gap-closer all mined). Remaining
+= documented tight floors (18.19 mem-0-conv cluster, fixed-crop fp32-slice floors, 19.09+ near-optimal, 21.6 do-not-resweep).
