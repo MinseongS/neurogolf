@@ -2932,11 +2932,12 @@
   "points": 18.2,
   "memory": 0,
   "params": 900,
-  "method": null,
+  "method": "gen_conv900",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": "generalizes at stored 18.2 (isolated fresh 120/120); scan false-positive from single-process generator pollution. NOT a gap-closer."
+  "status": "confirmed-infeasible",
+  "verdict": "generalizes at stored 18.2 (isolated fresh 120/120); scan false-positive from single-process generator pollution. NOT a gap-closer.",
+  "note": "REJECT 16.49<18.20. agent claimed stored fresh=0.00 (non-gen) but src.adopt confirms current generalizes=True real=18.20 - agents fresh=0.00 was STALE-TRUEGEN FALSE ALARM (same [230,0.0] group as 317/282 which also re-verified 200/200). 16.49 would be -1.71 regression. validates 151 lesson: ALWAYS adopt-gate before trusting a fresh=0.00/gap-closer claim"
  },
  {
   "task": 231,
