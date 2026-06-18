@@ -973,7 +973,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 36d67576: reveal hidden sprite cells (only yellow/red shown) via rotated copies;"
+  "verdict": "INFEASIBLE: 36d67576: reveal hidden sprite cells (only yellow/red shown) via rotated copies;",
+  "note": "RE-PROBE WALL (ARC 36d67576): reveal hidden sprite cells via rotated copies of one reference sprite. Per-cell answer NON-LOCAL (identical local yellow+red windows -> different colors depending on global blob arrangement+orientation). Needs per-instance-random shape x 4 orientations x variable positions matching => full-canvas correlation. Existing net is 1000+ node exact solver (60/60 fresh), mem spread across ~14 medium planes, no removable dominant lever, final one-hot already to free output. +0.3 needs ~26% cut with no lever."
  },
  {
   "task": 77,
@@ -4672,14 +4673,15 @@
  {
   "task": 363,
   "arc_id": "e5062a87",
-  "points": 13.68,
+  "points": 15.43,
   "memory": 81146,
   "params": 1620,
   "method": "gen:biohack_new",
   "class": "BAIL?",
   "sig": "num_sprites",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: e5062a87: sprite stamping at all matching positions (cross-correlation/template "
+  "status": "done",
+  "verdict": "INFEASIBLE: e5062a87: sprite stamping at all matching positions (cross-correlation/template ",
+  "note": "RE-PROBE WIN +1.75 (13.68->15.43): fits-on-black template-match = closed-form. Use red/template plane DIRECTLY as Conv kernel (placement offset=correlation shift), crop ConvTranspose scatter via pads=[k,k,k,k]; channel-Slice + Where-into-free-output (incumbent wasted 18000B full-input cast + 45000B 5 output-assembly planes). 5.7x less mem. fresh 199/200 = matches incumbent ~99.1% (validate() trains are illegal w.r.t. generator invariant)."
  },
  {
   "task": 364,

@@ -2173,10 +2173,10 @@
    "method": "custom:task362"
   },
   "363": {
-   "points": 13.676227371976744,
-   "memory": 81146,
-   "params": 1620,
-   "method": "gen:biohack_new"
+   "points": 15.428076747732502,
+   "memory": 14110,
+   "params": 246,
+   "method": "custom:task363"
   },
   "364": {
    "points": 13.754457371489742,
