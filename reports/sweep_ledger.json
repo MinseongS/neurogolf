@@ -2223,7 +2223,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 72322fa7: reveal hidden cells of plus/x sprite type per show-mode; sprite-type c"
+  "verdict": "INFEASIBLE: 72322fa7: reveal hidden cells of plus/x sprite type per show-mode; sprite-type c",
+  "note": "REVERIFIED wall (was BLANK, now documented): per-instance random sprite-template dictionary; 4 shape types each w/ shuffled colour pair; ms=2 = multi-object 3x3 shape reconstruction keyed by recovered random colour. Needs per-instance reference dictionary, not fixed fn. True-positive."
  },
  {
   "task": 174,
