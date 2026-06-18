@@ -169,3 +169,5 @@ SESSION TOTAL: confirmed 6492.58 -> proj 6585.60 (+93.0). ~97 wins adopted. gap 
 NEXT SESSION: poll to confirm #23, then continue mid-manifest sweep (rank by MANIFEST points, ~38 left).
 
 - #24 (2026-06-18 15:40): **6586.75** (proj 6586.76, EXACT ±0.01). task017 adopt-gate said real=0.00 (FALSE-POSITIVE gap-closer) but Kaggle scored galaxy_v1 base ~full; gap UNCHANGED 28.96==219+255. LB +1.14 came from stragglers, not 017 (017 swap was -0.63 stored). LESSON: proj-exact after a "gap-closer" submit => it was NOT one; adopt real=0.00 disagrees with Kaggle held-out. Real gap-closers (274/332) made proj JUMP; 017 did not.
+
+- #25 (2026-06-18 16:12): **6595.39** (proj 6595.39, EXACT). 14 golf wins on the 17.45-18.2 ext-import pool (389,207,299,229,152,142,52,235,211,72,3,267,214,399). Driver = uint8 whole-pipeline dtype lever (out>0 threshold makes output dtype irrelevant, ~halves planes, often zero-algo) + closed-form rewrites of import argmax/gather/template-match. task399 +2.12 (count->fixed-pattern, mem 102B). Gap unchanged 28.96==219+255 (structural).

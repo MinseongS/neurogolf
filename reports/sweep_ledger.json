@@ -1325,8 +1325,9 @@
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "at-floor 16.84<17.94: stored kojimar net is optimal constant-GatherElements C4 symmetrization (flatten KxK->value vec + bg slot -> precomputed perm index per size). two 360B planes (fp32 entry slice + bool one-hot expansion) irreducible. MatMul-rotation idiom is ~1.1pt heavier (only for data-dep-centre full-canvas rotations)"
  },
  {
   "task": 107,
@@ -1418,14 +1419,16 @@
  {
   "task": 114,
   "arc_id": "49d1d64f",
-  "points": 17.87,
+  "points": 18.05,
   "memory": 1091,
   "params": 158,
-  "method": "ext:kojimar6275",
+  "method": "custom:task114",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.18 marginal (17.87->18.05): border/framing task - one-hot built ONLY over (h+2)x(w+2) so outside=all-zero, in-grid bg=ch0. build at fixed 5x5 max extent w/ -1 sentinel off-region vs 0 corners, opset16 Pad(bool,False)->30x30 free. fp16 Clip works under DISABLE_ALL (avoids banned Min/Max)"
  },
  {
   "task": 115,
