@@ -1488,15 +1488,15 @@
  {
   "task": 117,
   "arc_id": "4c5c2cf0",
-  "points": 15.22,
+  "points": 15.45,
   "memory": 17527,
   "params": 156,
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "skip-marginal",
+  "status": "done",
   "verdict": "FEASIBLE A ~17.0pt: 4c5c2cf0: build a 4-legged creature - reflect sprite into 4 diagonal c",
-  "note": "re-attack 15.25 vs 15.22 (+0.035 MARGINAL lateral; ext:biohack_new already generalizes 100/100); data-dependent 2-D reflection floor"
+  "note": "WIN +0.23: pack 3 per-cell predicates into ONE 1x1 Conv via disjoint magnitude bands in runtime weight (ingrid P>0, count5 P>=1000, colour P mod 1000); Cauchy-Schwarz 5*Conv(L2,Xk)==Conv(L,Xk)^2 locates X-centre; per-axis nearest-to-centre tie-break bulletproofs 10000/10000. fresh 200/200."
  },
  {
   "task": 118,

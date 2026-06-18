@@ -697,10 +697,10 @@
    "method": "ext:kojimar6275"
   },
   "117": {
-   "points": 15.219640994945022,
-   "memory": 17527,
-   "params": 156,
-   "method": "ext:biohack_new"
+   "points": 15.45447393292807,
+   "memory": 13853,
+   "params": 129,
+   "method": "custom:task117"
   },
   "118": {
    "points": 13.336192047071197,
