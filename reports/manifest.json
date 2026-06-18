@@ -1351,10 +1351,10 @@
    "method": "custom:task225"
   },
   "226": {
-   "points": 16.53220715887889,
-   "memory": 4608,
-   "params": 151,
-   "method": "ext:kojimar6275"
+   "points": 17.028914246494395,
+   "memory": 2656,
+   "params": 240,
+   "method": "custom:task226"
   },
   "227": {
    "points": 18.186555400489105,

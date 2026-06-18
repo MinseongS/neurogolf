@@ -2782,14 +2782,15 @@
  {
   "task": 226,
   "arc_id": "941d9a10",
-  "points": 16.53,
-  "memory": 4608,
-  "params": 151,
+  "points": 17.03,
+  "memory": 2656,
+  "params": 240,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.50 (separator-partition + diagonal blocks via prefix-count MatMul, middle=nsep/2)"
  },
  {
   "task": 227,
