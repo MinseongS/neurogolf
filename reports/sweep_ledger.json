@@ -1382,15 +1382,15 @@
  {
   "task": 108,
   "arc_id": "46f33fce",
-  "points": 17.5,
+  "points": 17.62,
   "memory": 0,
   "params": 1800,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "skip-marginal",
+  "status": "done",
   "verdict": "",
-  "note": "at-floor 17.26<17.50: 4x block-upscale of sparse lattice needs BOTH fp32 channel-collapse entry plane (~1000B, Conv-forced) AND uint8 expansion plane (~900B), unfusable. public import already below this dual-plane floor."
+  "note": "RE-PROBE WIN +0.12 (17.50->17.62, marginal but real): fixed odd-sublattice 4x block-upscale of one-hot = single mem-0 depthwise ConvTranspose (stride 2, pad_top=2 align 2r+1->block[4r..], asym pads crop 58->30); colour channels exact free; ch0 bg fixed by group=1 weight W[k,0]=-BIG subtracting colours. Floor=dense [10,10,4,4]=1600 (81 zero pairs counted, sparse-init broken by harness sanitizer). fresh 200/200."
  },
  {
   "task": 109,
