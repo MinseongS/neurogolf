@@ -1111,10 +1111,10 @@
    "method": "gen:thbdh6332"
   },
   "186": {
-   "points": 19.113895968549844,
-   "memory": 314,
-   "params": 46,
-   "method": "ext:biohack_new"
+   "points": 19.888012211643456,
+   "memory": 102,
+   "params": 64,
+   "method": "custom:task186"
   },
   "187": {
    "points": 13.654168620492959,

@@ -2354,14 +2354,16 @@
  {
   "task": 186,
   "arc_id": "794b24be",
-  "points": 19.11,
+  "points": 19.89,
   "memory": 314,
   "params": 46,
-  "method": "ext:biohack_new",
+  "method": "custom:task186",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.78 (19.11->19.89): COUNT->FIXED-PATTERN black+1 colour. store RED-ONLY bank[K,1,H,W], derive black=Equal(red,0) (trades bank params for tiny Concat+9B bool, net win since bank shrinks K x per dropped channel). int32 Gather index. one uint8 Pad zero-fills trailing channels + border"
  },
  {
   "task": 187,
