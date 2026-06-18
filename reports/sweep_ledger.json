@@ -1596,14 +1596,15 @@
  {
   "task": 130,
   "arc_id": "5614dbcf",
-  "points": 16.67,
-  "memory": 4122,
-  "params": 24,
+  "points": 17.14,
+  "memory": 2389,
+  "params": 207,
   "method": "ext:wguesdon6304",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.47 (fixed SxS tiling downsample via two strided Convs sum/count, color=round(sum/count))"
  },
  {
   "task": 131,
