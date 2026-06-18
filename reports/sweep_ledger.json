@@ -228,8 +228,9 @@
   "method": "custom:task019",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 20,
@@ -1005,8 +1006,9 @@
   "method": "custom:task082",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 83,
@@ -1029,8 +1031,9 @@
   "method": "custom:task084",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 85,
@@ -1545,8 +1548,9 @@
   "method": "custom:task126",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 127,
@@ -1909,8 +1913,9 @@
   "method": "custom:task156",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 157,
@@ -2414,8 +2419,9 @@
   "method": "custom:task197",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 198,
@@ -2488,8 +2494,9 @@
   "method": "custom:task203",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 204,
@@ -2638,8 +2645,9 @@
   "method": "custom:task215",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 216,
@@ -2701,8 +2709,9 @@
   "method": "custom:task220",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": "generalizes at stored 18.2 (isolated fresh 120/120); scan false-positive from single-process generator pollution. NOT a gap-closer."
+  "status": "done",
+  "verdict": "generalizes at stored 18.2 (isolated fresh 120/120); scan false-positive from single-process generator pollution. NOT a gap-closer.",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 221,
@@ -2713,8 +2722,9 @@
   "method": "custom:task221",
   "class": "BAIL?",
   "sig": "mega",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 222,
@@ -2933,8 +2943,9 @@
   "method": "custom:task239",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 240,
@@ -3143,8 +3154,9 @@
   "method": "custom:task256",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 257,
@@ -3523,8 +3535,9 @@
   "method": "custom:task287",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 288,
@@ -3622,8 +3635,9 @@
   "method": "custom:task295",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 296,
@@ -3646,8 +3660,9 @@
   "method": "custom:task297",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 298,
@@ -3732,8 +3747,9 @@
   "method": "custom:task304",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 305,
@@ -3828,8 +3844,9 @@
   "method": "custom:task312",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 313,
@@ -3840,8 +3857,9 @@
   "method": "custom:task313",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 314,
@@ -4220,8 +4238,9 @@
   "method": "custom:task344",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 345,
@@ -4617,8 +4636,9 @@
   "method": "custom:task376",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 377,
@@ -4716,8 +4736,9 @@
   "method": "custom:task384",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "prior committed custom (ledger was stale)"
  },
  {
   "task": 385,
