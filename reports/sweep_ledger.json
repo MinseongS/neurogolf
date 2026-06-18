@@ -4731,8 +4731,9 @@
   "method": "ext:ghiotto_conv4",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "probe +0.06 over deployed 16.84 (fill-between-reds; per-row ReduceMax==per-run when generator forbids re-entrant patterns)"
  },
  {
   "task": 382,
