@@ -1537,10 +1537,10 @@
    "method": "custom:task256"
   },
   "257": {
-   "points": 18.01806532284361,
-   "memory": 1024,
-   "params": 53,
-   "method": "ext:kojimar6275"
+   "points": 18.351015449975222,
+   "memory": 720,
+   "params": 52,
+   "method": "custom:task257"
   },
   "258": {
    "points": 19.924826184766175,

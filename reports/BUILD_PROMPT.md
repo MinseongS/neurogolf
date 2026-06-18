@@ -73,6 +73,12 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   set {0,1,…}; recover the odd block by a magnitude-BAND test on the count (e.g. cnt∈{1,4}). Because it's
   per-channel it reconstructs the odd block's full one-hot DIRECTLY — beats the public majority-vote+ArgMax+Gather
   net (task207: mem 1840→1000, +0.60). Generalizes: counts are exact regardless of which block is odd.
+- ⭐ COUNT→FIXED-PATTERN (output content is CONSTANT given a scalar count) = the cheapest tier (~100B, can hit
+  20+): when the whole output is determined by ONE scalar (e.g. # of red pixels), compute cnt=ReduceSum(input,[2,3])
+  (fp32 [1,K,1,1], 40B — ReduceSum rejects uint8), build the tiny K×K one-hot from CONSTANTS gated by ONE
+  Greater(schedule, cnt) threshold, then Pad that small [1,fewch,K,K] uint8 one-hot DIRECTLY into the free 30×30
+  output (one Pad zero-fills trailing colour channels AND the spatial border, and its output IS the graph output).
+  NO carrier/label/index plane ever materialises (task399 17.92→20.04, +2.12). Declare output uint8 (harness scores out>0).
 - ⭐ COUNT-RANK = pure rank function, NO sort/argmax-loop: "sort/label the K rare colours by count" → cnt=
   ReduceSum(input,[2,3]) [1,K,1,1]; rank_k=ReduceSum(Greater(cnt,cnt')) over a tiny [K,K]; route into FREE
   bool output via Equal(rank, target-ramp)∧mask. ⚠️ PITFALL: MUST mask channel-0 (canvas background) to 0

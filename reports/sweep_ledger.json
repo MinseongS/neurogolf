@@ -3217,14 +3217,16 @@
  {
   "task": 257,
   "arc_id": "a68b268e",
-  "points": 18.02,
+  "points": 18.35,
   "memory": 1024,
   "params": 53,
-  "method": "ext:kojimar6275",
+  "method": "custom:task257",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.33 (18.02->18.35): priority-overlay of K fixed-colour one-hot quadrants = pure BOOL logic out_hi=mask_hi, out_lo=mask_lo AND NOT(OR higher), ch0=NOT(OR all). And/Or/Not on 1B bool; Cast uint8 before Concat+Pad (Pad rejects bool). MUST emit ch0 for bg cells"
  },
  {
   "task": 258,

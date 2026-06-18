@@ -1,7 +1,9 @@
 {
  "comment": "#24 CONFIRMED 6586.75 (proj 6586.76, EXACT). 017 was a FALSE-POSITIVE gap-closer: adopt real=0.00 but Kaggle scored base ~full, gap UNCHANGED 28.96==219+255. proj-exact = gap did not close.",
- "stored_at_submit": 6615.71,
+ "stored_at_submit": 6624.35,
  "lb": 6586.75,
  "time_utc": "2026-06-18 15:40",
- "pending": false
+ "pending": true,
+ "pending_submit": "#25: 14 golf wins (uint8 lever + count/gather rewrites, incl task399 +2.12). stored_at_pack 6624.35, proj 6595.39, gap 28.96",
+ "prev_stored_at_submit": 6615.71
 }
