@@ -113,14 +113,15 @@
  {
   "task": 10,
   "arc_id": "08ed6ac7",
-  "points": 16.48,
-  "memory": 4939,
-  "params": 76,
+  "points": 17.19,
+  "memory": 2109,
+  "params": 349,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.71 (bar height-rank via Conv row-sum + pairwise-Greater rank, shape from r+h>=9)"
  },
  {
   "task": 11,

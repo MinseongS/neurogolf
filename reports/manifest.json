@@ -55,10 +55,10 @@
    "method": "ext:thbdh6285"
   },
   "10": {
-   "points": 16.479811299603966,
-   "memory": 4939,
-   "params": 76,
-   "method": "ext:kojimar6275"
+   "points": 17.19289670987402,
+   "memory": 2109,
+   "params": 349,
+   "method": "custom:task010"
   },
   "11": {
    "points": 15.93873985103797,
