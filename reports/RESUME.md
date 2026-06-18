@@ -1,6 +1,32 @@
 # RESUME — restart the autonomous sweep in a fresh session
 
-## ▶▶▶ RESUME HERE (handoff 2026-06-18 ~23:45 — pivot to HARD walls)
+## ▶▶▶ RESUME HERE (handoff 2026-06-19 — skip-list + skip-marginal floor-break session)
+Confirmed LB **6658.65** (#34, proj-exact +14.47). Session 6635.63→6644.18(#33)→6658.65(#34) = **+23.02 confirmed,
+27 wins / 8 walls / 1 reject**. **#35 PENDING at handoff (proj 6661.39, +2.74**: 6 skip-marginal floor-breaks) —
+NEXT SESSION STEP 0: poll kaggle to confirm #35, set lb_anchor pending=false + add submission_log row. Anchor
+stored_at_submit=6691.36; gap stable 29.97.
+
+⭐ **THREE BIG LESSONS this session (all graduated to BUILD_PROMPT.md / project memory neurogolf-hard-walls):**
+1. **The gap-region "skip-list walls" (219/255/209/118/2/90/157/366/251/18/101) with BLANK notes are NOT all walls.**
+   251 (+2.06 hole-fill, bounded-unroll) and 090 (+1.62 max-empty-rect, suffix-min MaxPool) were FALSE-POSITIVES.
+   Re-probe any blank-note wall with the hard protocol. (CONFIRMED true walls now documented: 018 info-bottleneck,
+   101 chaining-placements-need-runtime-SE, plus 046/319/366/118/187/076.)
+2. **"skip-marginal"/"at-floor" verdicts are ~40% wrong once new levers exist.** This session's new levers overturned:
+   194 (+0.47 GridSample→invert-to-source-index-Gather), 365 (+0.65 global-argmax→two-forward-prefix-scans),
+   032 (+0.63 colour-0==bg + crop-conv-on-free-input), 330 (+0.66 ScatterND-histogram per-component count),
+   069/169 (component label/count via gray-gated multi-res sum-conv), 183 (+2.38 GatherND batch_dims=2).
+3. **18.19 mem-0-Conv[10,10,3,3] cluster is GENUINE hard floor** (120/283/147/015 all confirmed): grouped-conv escape
+   gated by SPAN (need g|10 with g≥|out_ch−in_ch|+1 per coupled pair; high-index non-copy ch reading ch0 = floor) AND
+   CONTIGUITY (coupling component must be contiguous in channel order, else permutation Gather costs 9000B). Also:
+   sparse_initializer Conv-weight shrink PERMANENTLY blocked (check_model(full_check) rejects sparse_tensor(float)).
+
+🧱 **PRODUCTIVE RESERVOIR NOW EXHAUSTED.** Remaining no-custom skip-marginal are documented tight floors: 18.19 cluster
+{98,171,294} (mem-0 conv erosion/frame, GENERALIZE), tiny fixed-crop fp32-slice floors {87,140,135,326} (160-360B
+irreducible), 19.09+ near-optimal, 21.6 group {53,113,116,164} (do-not-resweep). 'pending' pool all ≥21.6 near-optimal.
+True walls remaining (skip): 219,255,209,233,173,285,077,005,054 + the documented ones above. Practical ceiling reached;
+the only runway is a deep custom effort on a genuine wall (research-grade), not the re-probe engine.
+
+## ▶▶▶ PRIOR HANDOFF (2026-06-18 ~23:45 — pivot to HARD walls)
 Confirmed LB **6635.63** (#32, +7.01). Session 6620.24→6628.62(#31)→6635.63(#32) = **+15.39, 30 wins / 11 walls**.
 Anchor stored_at_submit=6665.61, current stored 6665.61 (nothing banked). gap 29.98 (grew +1.03: one wave-2 net
 over-stored — find it among {58,48,208,265,85,29,333,162,134,382,178,30,355,117,80,110}).
