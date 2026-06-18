@@ -1,9 +1,9 @@
 {
- "comment": "#26 CONFIRMED 6594.85 (proj 6594.85 EXACT) -> task151 was FALSE-POSITIVE gap-closer (deployed conv3x3 scores full 18.19 on Kaggle despite adopt real=0.00). 151 REVERTED. Kaggle best=6595.39 (#25) still stands. gap 28.96.",
+ "comment": "#27 CONFIRMED 6602.46 (proj 6602.46 EXACT, 23rd near-exact). NEW BEST (was 6595.39 #25). gap 28.96==219+255. 151 revert + 7 golf wins translated 1:1.",
  "stored_at_submit": 6631.42,
- "lb": 6594.85,
- "time_utc": "2026-06-18 18:40",
- "pending": true,
+ "lb": 6602.46,
+ "time_utc": "2026-06-18 18:49",
+ "pending": false,
  "pending_submit": "#27: 151 reverted + 7 golf wins. proj 6602.46. expect proj-exact -> new best (clears #26 regression).",
  "prev_stored_at_submit": 6623.81,
  "prev_lb": 6594.85

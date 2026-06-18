@@ -4982,14 +4982,16 @@
  {
   "task": 395,
   "arc_id": "fafffa47",
-  "points": 18.51,
+  "points": 19.59,
   "memory": 621,
   "params": 35,
-  "method": "ext:wguesdon6304",
+  "method": "custom:task395",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +1.08 (18.51->19.59): twin of task227 - per-pixel NOR of two stacked 3x3 halves (top maroon/bottom blue), red=top_bg AND bot_bg. Slice ch0 each half->Mul->Pad tiny block free output. stacked-halves NOR lever"
  },
  {
   "task": 396,
