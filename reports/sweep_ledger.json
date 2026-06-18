@@ -1710,14 +1710,15 @@
  {
   "task": 139,
   "arc_id": "60b61512",
-  "points": 16.8,
-  "memory": 3456,
-  "params": 174,
+  "points": 17.53,
+  "memory": 1544,
+  "params": 207,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.79 (xpose flag scalar selects fixed per-layout label-map; Where(xp,M1,M0))"
  },
  {
   "task": 140,
@@ -4873,15 +4874,15 @@
  {
   "task": 394,
   "arc_id": "f9012d9b",
-  "points": 16.66,
-  "memory": 4103,
-  "params": 79,
+  "points": 17.02,
+  "memory": 2865,
+  "params": 70,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
   "status": "done",
   "verdict": "",
-  "note": "subagent win +0.13 marginal (adopt took it, free LB)"
+  "note": "subagent win +0.49 (periodic-occlusion = same-phase twin copy via 2 gathers; one-hot tile Pad into free uint8 output)"
  },
  {
   "task": 395,

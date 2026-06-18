@@ -8,29 +8,30 @@ the INPUT.  The OUTPUT is that `bs x bs` window holding the ORIGINAL pattern
 colours removed.  So output cell (r,c) = pattern value at phase
 `((row+r)%m, (col+c)%m)`.
 
-Construction — everything runs on a fixed 7x7 crop (size <= 7 always), so the
-largest tensor is the [1,10,7,7] crop (1960 B); NO 30x30 plane is built.
+Construction — everything runs on a fixed 7x7 crop (size <= 7 always); the only
+sizeable tensor is the [1,9,7,7] crop (1764 B).  NO 30x30 plane is ever built.
 
-1.  `xc = input[:, :, :7, :7]`.  Per-row/col reductions:
-    * `s3 = ReduceSum(xc, [3])` ([1,10,7,1]), `s2 = ReduceSum(xc, [2])`.
-    * in-grid count per row = `ReduceSum(s3,[1])` (each in-grid cell, colour or
-      black, contributes 1); >0 => in-grid.  `size` = max in-grid index + 1,
-      `m = 3 if size==7 else 2`.
-    * colored count per row = in-grid count - (channel-0/black count) = a hole
-      row loses exactly `bs` colours, so `0 < colored < size` flags hole rows;
-      `bs` = #hole rows, `row`/`col` = first hole row/col.
+1.  `xc = input[:, 1:10, :7, :7]` (drop black ch0; keep the 7x7 active region).
+    `colf = Conv(xc, k=1..9)` -> [1,1,7,7] value plane (1x1 conv collapses the 9
+    colour channels with no [1,9,7,7] product).  `crow/ccol = ReduceSum(xc,
+    [1,3]/[1,2])` = coloured count per row/col.
 
-2.  Pattern colour per phase WITHOUT a value plane: `Pr[pr,r] = (r%m==pr)`
-    ([3,7]); `sp = Pr@xc` ([1,10,3,7]) then `@Pc` ([1,10,3,3]) counts in-grid
-    cells of phase (pr,pc) and colour k.  `pat = (Sum_k k*cnt)/(Sum_{k>=1}cnt)`
-    (den clamped to >=1 so empty phases give 0 not NaN — NaN would poison the
-    gather MatMul).
+2.  Scalars (all tiny fp16): every in-grid row has >=1 coloured cell, so
+    in-grid <=> count>0 -> `size` = max in-grid index + 1, `m = 3 if size==7
+    else 2`.  A hole row loses exactly `bs` colours so `0 < count < size` flags
+    it; `bs` = #hole rows, `row`/`col` = first hole row/col.
 
-3.  Window read = double-MatMul gather from runtime scalars:
-    `Rsel[r,pr]=((row+r)%m==pr)`, `Csel[pc,c]=((col+c)%m==pc)`,
-    `out3 = Rsel@pat@Csel` ([3,3]); cells with r>=bs or c>=bs -> -1 sentinel;
-    Pad 3x3 -> 30x30 with -1; final `Equal(L, 0..9)` -> BOOL output (sentinel /
-    off-grid cells match no channel => background, exactly as required).
+3.  Window read = SPATIAL-SHIFT GATHER (no pattern matmul).  The bite cell
+    (row+r, col+c) is blacked, but the cell one PERIOD away shares its phase and
+    is intact & on-grid: since `size >= 2*m`, every index a in [0,size) has
+    `a>=m OR a<size-m`, so `srcR(a) = a-m if a>=m else a+m` always lands on an
+    intact non-black cell of identical colour.  Two Gathers of `colf` at
+    [srcR(row+r)] x [srcC(col+c)] read the 3x3 colours directly.
+
+4.  Output: cells with r>=bs or c>=bs are set to a 200 sentinel; `Equal(L34u,
+    0..9)` makes a [1,10,3,3] one-hot (sentinel/empty cells match no channel ->
+    all-zero background); `Pad` it (with 0) straight into the FREE [1,10,30,30]
+    uint8 output — so no 30x30 carrier plane is materialised at all.
 """
 
 import numpy as np
@@ -63,23 +64,25 @@ def build(task):
     init("CROP_AX", np.array([1, 2, 3], np.int64), np.int64)    # axes 1,2,3
     init("WK", np.arange(1, 10, dtype=np.float32).reshape(1, 9, 1, 1), np.float32)  # 1x1 conv: Sum k*ch (k=1..9)
     init("KOUTu", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
-    init("PADVALu", np.array(200, np.uint8), np.uint8)
-    init("SENT", np.array(200.0, np.float32), np.float32)
-    init("IDXSr", idxS.reshape(1, 1, S, 1), np.float32)         # per-row index
-    init("IDXSc", idxS.reshape(1, 1, 1, S), np.float32)         # per-col index
-    init("ONE", np.array(1.0, np.float32), np.float32)
-    init("TWO", np.array(2.0, np.float32), np.float32)
-    init("FIVE5", np.array(5.5, np.float32), np.float32)
-    init("EPS", np.array(0.5, np.float32), np.float32)
-    init("BIG99", np.array(99.0, np.float32), np.float32)
-    init("ZEROF", np.array(0.0, np.float32), np.float32)
-    init("SIXF", np.array(float(S - 1), np.float32), np.float32)
+    # pad [1,10,3,3] -> [1,10,30,30] on the spatial axes (bottom/right) with 0
+    init("PADS10", np.array([0, 0, 0, 0, 0, 0, 27, 27], np.int64), np.int64)
+    init("PADZERO", np.array(0, np.uint8), np.uint8)
+    H = np.float16
+    init("SENT", np.array(200.0, H), H)
+    init("IDXSr", idxS.reshape(1, 1, S, 1).astype(H), H)        # per-row index
+    init("IDXSc", idxS.reshape(1, 1, 1, S).astype(H), H)        # per-col index
+    init("ONE", np.array(1.0, H), H)
+    init("TWO", np.array(2.0, H), H)
+    init("FIVE5", np.array(5.5, H), H)
+    init("EPS", np.array(0.5, H), H)
+    init("BIG99", np.array(99.0, H), H)
+    init("ZEROF", np.array(0.0, H), H)
+    init("SIXF", np.array(float(S - 1), H), H)
     # output-index small consts
-    init("R3F", np.arange(3, dtype=np.float32).reshape(3, 1), np.float32)
-    init("C3F", np.arange(3, dtype=np.float32).reshape(1, 3), np.float32)
+    init("R3F", np.arange(3, dtype=H).reshape(3, 1), H)
+    init("C3F", np.arange(3, dtype=H).reshape(1, 3), H)
     init("SH3", np.array([3], np.int64), np.int64)
     init("SH_L3", np.array([1, 1, 3, 3], np.int64), np.int64)
-    init("PADS", np.array([0, 0, 0, 0, 0, 0, 27, 27], np.int64), np.int64)
 
     # ---- crop ----
     n("Slice", ["input", "CROP_S", "CROP_E", "CROP_AX"], "xc")   # [1,9,7,7] fp32 entry (ch1..9, 7x7)
@@ -88,14 +91,16 @@ def build(task):
 
     # ---- per-row / per-col coloured counts (every in-grid row has >=1 coloured cell) ----
     # xc holds only ch1..9 (coloured), so a direct ReduceSum is the coloured count.
-    n("ReduceSum", ["xc"], "crow", axes=[1, 3], keepdims=1)      # [1,1,7,1] coloured/row
-    n("ReduceSum", ["xc"], "ccol", axes=[1, 2], keepdims=1)      # [1,1,1,7]
+    n("ReduceSum", ["xc"], "crow32", axes=[1, 3], keepdims=1)    # [1,1,7,1] coloured/row
+    n("ReduceSum", ["xc"], "ccol32", axes=[1, 2], keepdims=1)    # [1,1,1,7]
+    n("Cast", ["crow32"], "crow", to=TensorProto.FLOAT16)        # counts 0..7 exact in fp16
+    n("Cast", ["ccol32"], "ccol", to=TensorProto.FLOAT16)
 
     # ---- size, m ----  (in-grid row/col <=> coloured count > 0)
     n("Greater", ["crow", "EPS"], "rhas_b")
-    n("Cast", ["rhas_b"], "rhas", to=TensorProto.FLOAT)
+    n("Cast", ["rhas_b"], "rhas", to=TensorProto.FLOAT16)
     n("Greater", ["ccol", "EPS"], "chas_b")
-    n("Cast", ["chas_b"], "chas", to=TensorProto.FLOAT)
+    n("Cast", ["chas_b"], "chas", to=TensorProto.FLOAT16)
     n("Mul", ["rhas", "IDXSr"], "rmaxv")
     n("ReduceMax", ["rmaxv"], "rmax", keepdims=0)
     n("Mul", ["chas", "IDXSc"], "cmaxv")
@@ -103,18 +108,18 @@ def build(task):
     n("Max", ["rmax", "cmax"], "maxidx")                         # size-1
     n("Add", ["maxidx", "ONE"], "sizef")
     n("Greater", ["maxidx", "FIVE5"], "is7b")
-    n("Cast", ["is7b"], "is7", to=TensorProto.FLOAT)
+    n("Cast", ["is7b"], "is7", to=TensorProto.FLOAT16)
     n("Add", ["is7", "TWO"], "mf")                               # m (2 or 3)
 
     # ---- hole: row,col,bs ----
     n("Less", ["crow", "sizef"], "rlt")
     n("Greater", ["crow", "EPS"], "rgt")
     n("And", ["rlt", "rgt"], "rhole_b")
-    n("Cast", ["rhole_b"], "rhole", to=TensorProto.FLOAT)        # [1,1,7,1]
+    n("Cast", ["rhole_b"], "rhole", to=TensorProto.FLOAT16)        # [1,1,7,1]
     n("Less", ["ccol", "sizef"], "clt")
     n("Greater", ["ccol", "EPS"], "cgt")
     n("And", ["clt", "cgt"], "chole_b")
-    n("Cast", ["chole_b"], "chole", to=TensorProto.FLOAT)
+    n("Cast", ["chole_b"], "chole", to=TensorProto.FLOAT16)
     n("ReduceSum", ["rhole"], "bsf", keepdims=0)                 # bitesize
     n("Sub", ["ONE", "rhole"], "rnoth")
     n("Mul", ["rnoth", "BIG99"], "rpen")
@@ -135,12 +140,12 @@ def build(task):
     n("Add", ["C3F", "colfs"], "ac")                             # [1,3] col+c
     # shift = -m where a>=m else +m ;  src = a + shift  (then clip to [0,6])
     n("Less", ["ar", "mf"], "arlt")                              # a<m
-    n("Cast", ["arlt"], "arltf", to=TensorProto.FLOAT)
+    n("Cast", ["arlt"], "arltf", to=TensorProto.FLOAT16)
     n("Mul", ["arltf", "twom"], "arsh")                          # (a<m)?2m:0
     n("Sub", ["arsh", "mf"], "arshift")                          # -m + (a<m)*2m
     n("Add", ["ar", "arshift"], "src_r")                         # srcR(row+r)
     n("Less", ["ac", "mf"], "aclt")
-    n("Cast", ["aclt"], "acltf", to=TensorProto.FLOAT)
+    n("Cast", ["aclt"], "acltf", to=TensorProto.FLOAT16)
     n("Mul", ["acltf", "twom"], "acsh")
     n("Sub", ["acsh", "mf"], "acshift")
     n("Add", ["ac", "acshift"], "src_c")
@@ -151,25 +156,28 @@ def build(task):
     n("Cast", ["src_cc"], "gc", to=TensorProto.INT32)            # [1,3]
     n("Reshape", ["gr", "SH3"], "gr1")                           # [3]
     n("Reshape", ["gc", "SH3"], "gc1")                           # [3]
-    n("Gather", ["colf", "gr1"], "g2", axis=2)                   # [1,1,3,7]
-    n("Gather", ["g2", "gc1"], "out3", axis=3)                   # [1,1,3,3] colours
+    n("Gather", ["colf", "gr1"], "g2", axis=2)                   # [1,1,3,7] fp32
+    n("Gather", ["g2", "gc1"], "out3f", axis=3)                  # [1,1,3,3] colours
+    n("Cast", ["out3f"], "out3", to=TensorProto.FLOAT16)         # to fp16 for masking
 
     # ---- sentinel mask (cells with r>=bs or c>=bs -> 200, matches no channel) ----
     n("Less", ["R3F", "bsf"], "rin")                             # [3,1]
     n("Less", ["C3F", "bsf"], "cin")                             # [1,3]
     n("And", ["rin", "cin"], "keep")                             # [3,3]
-    n("Cast", ["keep"], "keepf", to=TensorProto.FLOAT)
+    n("Cast", ["keep"], "keepf", to=TensorProto.FLOAT16)
     n("Reshape", ["keepf", "SH_L3"], "keepf4")                   # [1,1,3,3]
     n("Mul", ["out3", "keepf4"], "kept")
     n("Sub", ["ONE", "keepf4"], "notk")
     n("Mul", ["notk", "SENT"], "notks")                          # masked cells -> 200
     n("Add", ["kept", "notks"], "L34")                           # [1,1,3,3] keep?out3:200
-    n("Cast", ["L34"], "L34u", to=TensorProto.UINT8)             # uint8 carrier (900B plane)
-    n("Pad", ["L34u", "PADS", "PADVALu"], "L", mode="constant")  # [1,1,30,30] uint8
-    n("Equal", ["L", "KOUTu"], "output")                         # -> BOOL output
+    n("Cast", ["L34"], "L34u", to=TensorProto.UINT8)             # [1,1,3,3] uint8 colour index
+    # build the 3x3 one-hot, then Pad it (with 0) straight into the FREE output:
+    n("Equal", ["L34u", "KOUTu"], "oh3b")                        # [1,10,3,3] bool one-hot (90B)
+    n("Cast", ["oh3b"], "oh3", to=TensorProto.UINT8)             # uint8 (Pad rejects bool)
+    n("Pad", ["oh3", "PADS10", "PADZERO"], "output", mode="constant")  # [1,10,30,30] uint8 (FREE output)
 
     x = helper.make_tensor_value_info("input", TensorProto.FLOAT, [1, 10, 30, 30])
-    y = helper.make_tensor_value_info("output", TensorProto.BOOL, [1, 10, 30, 30])
+    y = helper.make_tensor_value_info("output", TensorProto.UINT8, [1, 10, 30, 30])
     graph = helper.make_graph(nodes, "graph", [x], [y], inits)
     return helper.make_model(
         graph, ir_version=IR_VERSION,
