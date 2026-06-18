@@ -730,14 +730,15 @@
  {
   "task": 58,
   "arc_id": "28e73c20",
-  "points": 15.31,
+  "points": 15.77,
   "memory": 9652,
   "params": 6426,
   "method": "ext:biohack_new",
   "class": "CHECK",
   "sig": "-",
-  "status": "skip-marginal",
-  "verdict": "our closed-form 15.10 < public 15.31; non-separable spiral ring-dist = genuine 30x30 fp32-plane floor. Public net kept."
+  "status": "done",
+  "verdict": "our closed-form 15.10 < public 15.31; non-separable spiral ring-dist = genuine 30x30 fp32-plane floor. Public net kept.",
+  "note": "WIN +0.46: false-pos skip-marginal from STALE fp16-crash claims (FALSE on this ORT); whole geometry fp16 dropped 37k->10k. COUNT->FIXED-PATTERN: blank input, spiral=f(N); L=min(r,c,N-1-r,N-1-c), green=L_even XOR special; 20x20 crop. fresh 200/200."
  },
  {
   "task": 59,

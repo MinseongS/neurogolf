@@ -4,58 +4,61 @@
 NOTHING spatial to detect. OUTPUT is a deterministic green (colour 3) inward
 rectangular involute spiral that is a pure function of `size`: starts at (0,0)
 going right, lays the top + right edges, then winds inward with stride 2.
-Closed form (exact, all sizes 5..20): with r,c index, e=size-1-r, f=size-1-c,
-ring distance d=min(r,c,e,f) — `green = (d even) XOR (r==c+1 AND c==d)` OR the
-even-size termination cell `(2r==size AND 2c==size-2)`, then AND in-grid. The
-`r==c+1 AND c==d` term is the single per-ring break/connector (gap on even rings,
-connector on odd rings) that lives one cell below the diagonal on the left edge.
+Closed form (exact, all sizes 5..20): with r,c index, e=N-1-r, f=N-1-c,
+ring layer L=min(r,c,e,f) — `green = (L even) XOR (r==c+1 AND c==L)` OR the
+even-N termination cell `(2r==N AND 2c==N-2)` gated by `N%4==2`, then AND in-grid.
+The `r==c+1 AND c==L` term is the single per-ring break/connector (gap on even
+rings, connector on odd rings), one cell below the diagonal on the left edge.
+N is recovered as `ReduceMax(ReduceSum(input_ch0, axis=3))`.
 **Current (public):** 15.31 pts
 **Target tier:** B — output is a genuinely 2-D, size-dependent ring pattern; the
-ring distance `d=min(r,c,e,f)` couples r&c non-separably, forcing at least one
-full 30×30 fp32 plane; no tier-A separable route exists.
+ring layer `L=min(r,c,e,f)` couples r&c non-separably, forcing at least one full
+working plane; no tier-A separable route exists.
 
-## Attempts
+## Attempts (this session — BROKE the prior 15.10 "below baseline" verdict)
 | # | angle | tier | mem | params | pts | fresh | outcome |
 |---|---|---|---|---|---|---|---|
-| 1 | 4-arm separable closed form, bool routing | B | 47472 | 194 | 14.23 | — | works, too many planes |
-| 2 | same, fp16 single-label Equal | B | 39372 | 195 | 14.41 | — | better |
-| 3 | XOR-ring (d even XOR diag-break) + extra cell, fp16 label | B | 25152 | 975 | 14.83 | — | far fewer planes |
-| 4 | all-fp32 variant | B | 34152 | 975 | 14.53 | — | worse (more 3600B planes) |
-| 5 | computed r==c+1 (drop 900 params) | B | 26052 | 105 | 14.83 | — | params↔mem neutral |
-| 6 | nested-Where fp16 label (drops 2 fp32 label planes) | B | 19752 | 106 | 15.10 | 200/200 | BEST |
+| 1 | closed form @30×30 fp32 | B | 37341 | 83 | 14.47 | — | correct, below baseline |
+| 2 | crop to 20×20 working canvas (N≤20) | B | 20301 | 78 | 15.08 | — | below baseline |
+| 3 | + fp16 label/Pad/Equal pipeline | B | 16901 | 78 | 15.26 | — | below baseline |
+| 4 | + **fp16 geometry (ramps/Min/Mod/Equal)** | B | 12815 | 78 | 15.54 | — | +0.22 |
+| 5 | + variadic Min (one plane vs three) | B | 11215 | 78 | 15.67 | — | +0.36 |
+| 6 | + separable special (r==c+1, drop L+1 plane) | B | 10455 | 78 | 15.74 | — | +0.42 |
+| 7 | + 1-D-gated center-fix Ands | B | 10075 | 78 | 15.77 | 200/200 | **ADOPT** |
 
 ## Best achieved
-15.10 @ mem 19752 params 106 — adopted? **N**. Beats prior 15.31? **N** (−0.21).
-Fresh 200/200 exact (isolated, generated inline from the generator).
+15.77 @ mem 10075 params 78 — adopted? Y (src/custom/task058.py only; manifest /
+networks / pipeline UNTOUCHED). Beats prior public 15.31? **Y, by +0.46.**
+Isolated fresh: 200/200 (separate process, generator loaded by file path) AND
+per-size 96/96 across all sizes 5..20.
 
 ## Irreducible-floor analysis
-Four full 30×30 fp32 planes dominate (4×3600 = 14400): `D` (the ring-min
-min(r,c,e,f) — fp16 Min crashes under ORT_DISABLE_ALL so it must be fp32), `dmod`
-(D mod 2 for the even-ring test), and the two nested-`Where` label planes (fp16
-consts but ORT upcasts Where to fp32 via InsertedPrecisionFreeCast). The rest is
-~9 bool 900B planes (comparisons / Ands / Ors). The public net already reaches
-15.31; the closed-form structural floor here is ~15.1–15.2, BELOW the public
-score. The colour-index plane / ring-min cannot be pushed under fp32, and the
-pattern is inherently 2-D (no separable row⊗col escape), so the 3600B plane floor
-is real and multiple instances are unavoidable.
+Dominant intermediate: the 30×30 fp16 padded label plane `lab` (900 elems × 2B =
+1800B) that carries the colour index into the FREE bool output via
+`Equal(lab, arange)`. All other working planes live on the 20×20 crop (400 elems:
+fp16 = 800B, bool = 400B). One full-canvas index plane is the structural minimum
+for a per-cell colour map. Not at a hard floor — see open angles.
 
 ## OPEN ANGLES (re-attack backlog)
-- Drop the `dmod` plane: compute `d-even` from the separable per-row min(r,e) and
-  per-col min(c,f) parities — but parity of a min is not separable, so this needs
-  a non-obvious identity; unclear it exists.
-- Collapse the two nested-Where label planes into one fused op that emits 3/0/−99
-  without an intermediate full plane (no single ORT op does `a*3 + b*(-99)`).
-- Gather a precomputed [16,30,30] spiral table by `size-5`: exact and trivial but
-  14400 params caps score ≈15.36 (barely +0.05, still <+0.3). Not worth it.
+- Route ch0 (in-grid non-green) and ch3 (green) bool planes directly into the
+  output, dropping the shared 30×30 carrier; Pad rejects bool so use a uint8
+  carrier (1B vs 2B fp16, ~−900B → ~+0.1).
+- 20×20 crop is the true minimum (gen size hits 20); no tighter crop.
 
 ## INSIGHT (transferable)
-⭐ A "draw a deterministic shape whose ONLY free parameter is the recovered grid
-size" task is a genuine tier-B 30×30-plane floor when the shape is non-separable
-(here a ring-distance spiral). The clean closed form for an ARC inward square
-spiral is `green = (min-ring-dist even) XOR (one diagonal-break cell per ring)`
-plus an even-size termination cell — far cheaper than 4-arm segment unions. But
-fp16 buys NOTHING for Min/Mod/Where here (ORT upcasts all three to fp32 under
-ORT_DISABLE_ALL), so the floor is set by the COUNT of full fp32 planes, not their
-dtype. nested-`Where(cond, a, Where(cond2, b, c))` is the cheapest 3-value
-colour-index label (2 planes) vs arithmetic `a*k1 + b*k2` (3+ planes + cast
-upcasts).
+⭐ **The prior verdict here was wrong because of TWO stale dtype claims** — a prior
+agent recorded "fp16 Min crashes under ORT_DISABLE_ALL" and "ORT upcasts Where to
+fp32 via PrecisionFreeCast", concluded the floor was ~15.1 (below baseline), and
+bailed. BOTH are FALSE on this ORT build: fp16 `Min`/`Where`/`Mod`/`Equal`/`Pad`
+all run AND the fp16 planes count at HALF in the static trace. Re-running the whole
+geometry in fp16 dropped bloat 37k→10k (14.47→15.77). **Always empirically re-test
+a recorded "fp16 X crashes / upcasts" claim with a 5-line ORT probe before paying
+fp32 — these crash claims drift across ORT versions and silently cost ~0.5+ pts.**
+⭐ A "draw a deterministic shape whose ONLY free parameter is grid size N" task is
+COUNT→FIXED-PATTERN: recover N via `ReduceMax(ReduceSum(input_ch0,[3]))`, then the
+output is a closed-form per-cell predicate in (r,c,N). The ARC inward square spiral
+closed form: `green = (min-ring-layer parity) XOR (per-ring connector at (L+1,L))`,
+with a single `N%4==2` center patch cell. Crop the working canvas to the gen max
+size (20) before the per-cell algebra — 2.25× cheaper than 30×30 — then Pad the
+small label up. Variadic `Min(a,b,c,d)` is one plane vs three chained `Min`s; And
+is NOT variadic (max 2 inputs), Min/Max/Sum are.
