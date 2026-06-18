@@ -228,7 +228,8 @@
   "class": "BAIL?",
   "sig": "continuous_creature",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: sprite + rotated clone where common color is hidden in clone; reconstruct by rot"
+  "verdict": "INFEASIBLE: sprite + rotated clone where common color is hidden in clone; reconstruct by rot",
+  "note": "SKIP-LIST RE-PROBE -> TRUE WALL (info-bottleneck, 219/255 family): per-clone rotation rotates[i] (+ 2-sprite marker-grouping) chosen UNIFORMLY RANDOM, NOT encoded in input. ~1-2% of fresh instances genuinely ambiguous (3 visible markers map identically under >=2 rotations giving different outputs). Ceiling ~98-99%; deployed net (P=13.34) already at it (496/500). No exact net possible. Unlike 251/090, this skip-list label was CORRECT."
  },
  {
   "task": 19,
