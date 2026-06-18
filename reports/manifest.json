@@ -2131,10 +2131,10 @@
    "method": "gen:thbdh6332"
   },
   "356": {
-   "points": 16.482606828581098,
-   "memory": 4880,
-   "params": 121,
-   "method": "ext:kojimar6275"
+   "points": 16.950892278673592,
+   "memory": 3100,
+   "params": 31,
+   "method": "custom:task356"
   },
   "357": {
    "points": 16.880899162362514,

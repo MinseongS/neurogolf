@@ -4555,14 +4555,15 @@
  {
   "task": 356,
   "arc_id": "ded97339",
-  "points": 16.48,
+  "points": 16.95,
   "memory": 4880,
   "params": 121,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: ded97339: connect cyan dots sharing row/col with cyan fill (pairwise connect / s"
+  "status": "done",
+  "verdict": "INFEASIBLE: ded97339: connect cyan dots sharing row/col with cyan fill (pairwise connect / s",
+  "note": "WIN +0.47: false-pos infeasible; collinear-fill = task350 prefix/suffix-OR on FIXED 10x10 (floor scales with active AREA so beats 350 floor); single-colour skips Where, uint8 {0,colour} index + 99-sentinel Pad + Equal(L,arange)->BOOL free. fresh 200/200."
  },
  {
   "task": 357,
