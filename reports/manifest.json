@@ -661,10 +661,10 @@
    "method": "gen:vyank6322"
   },
   "111": {
-   "points": 18.319145321209785,
-   "memory": 772,
-   "params": 25,
-   "method": "ext:kojimar6275"
+   "points": 18.39065075683262,
+   "memory": 716,
+   "params": 26,
+   "method": "custom:task111"
   },
   "112": {
    "points": 14.774175357263276,

@@ -1387,14 +1387,16 @@
  {
   "task": 111,
   "arc_id": "48d8fb45",
-  "points": 18.32,
+  "points": 18.39,
   "memory": 772,
   "params": 25,
-  "method": "ext:kojimar6275",
+  "method": "custom:task111",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.07 marginal (18.32->18.39): locate-marker + copy fixed 3x3x10 block. two-axis data-dependent Slice (declare crop value_info shape so mem measurable) beats per-axis Gather; crop IS free output so casts only add planes. near-floor"
  },
  {
   "task": 112,
