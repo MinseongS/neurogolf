@@ -177,3 +177,5 @@ NEXT SESSION: poll to confirm #23, then continue mid-manifest sweep (rank by MAN
 - #27 (2026-06-18 18:49): **6602.46** (proj 6602.46, EXACT). NEW BEST (+7.07 vs #25 6595.39). task151 false-positive REVERTED + 7 golf wins (339/386/167/026/249/318/380, all 18.2-18.5 ext pool) translated 1:1. Driver levers: COUNT->FIXED-PATTERN (339 strip +1.04, 167 nc-select +0.70) + uint8 whole-pipeline + stacked-halves NOR. gap unchanged 28.96==219+255.
 
 - #28 (2026-06-18 18:58): **6610.58** (proj 6610.58, EXACT). NEW BEST (+8.12 vs #27). 9 golf wins on 18.4-19.0 ext pool (155/236/334/347/150/129/395/6 + earlier), all 1:1. Levers: count->fixed-pattern, AND/NOR-of-stacked-halves, flip-via-Gather (side=sqrt pixelcount, neg-index-wrap clamp). gap 28.96==219+255.
+
+- #29 (2026-06-18 19:22): **6618.58** (proj 6618.58, EXACT). NEW BEST (+8.00 vs #28). 11 golf wins on 18.7-19.8 tail (314 dilated-conv +1.61, 67 crop-scalar +1.50, 150 flip-Gather +1.44, 334/129/186/103 count->fixed-pattern, 56 classifier-fingerprint, 322 gravity-conv, 144/393 etc). gap 28.96==219+255.
