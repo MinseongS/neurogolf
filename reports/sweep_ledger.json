@@ -2076,14 +2076,15 @@
  {
   "task": 162,
   "arc_id": "6cf79266",
-  "points": 13.94,
+  "points": 15.76,
   "memory": 63248,
   "params": 43,
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 6cf79266: find 3x3 all-black cutouts and stamp blue 3x3; detection of empty 3x3 "
+  "status": "done",
+  "verdict": "INFEASIBLE: 6cf79266: find 3x3 all-black cutouts and stamp blue 3x3; detection of empty 3x3 ",
+  "note": "WIN +1.82 (biggest; false-pos infeasible, 63291->10273): IN-PLACE row-major scan w/ overlapping 3x3 stamps collapses to LOCAL fire=cand AND NOT(causal-half 5x5 conv of cand). LESSON: parallel approx passed fresh-5000 but FAILED stored idx2 - must reproduce in-place scan exactly. fresh 200/200."
  },
  {
   "task": 163,
