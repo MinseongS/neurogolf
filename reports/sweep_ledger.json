@@ -2178,26 +2178,28 @@
  {
   "task": 169,
   "arc_id": "6e82a1ae",
-  "points": 15.16,
+  "points": 16.54,
   "memory": 18036,
   "params": 780,
   "method": "gen:vyank6322",
   "class": "BAIL?",
   "sig": "num_sprites",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 6e82a1ae: recolor each tetromino by (5 - its pixel count). label-map: per-object"
+  "status": "done",
+  "verdict": "INFEASIBLE: 6e82a1ae: recolor each tetromino by (5 - its pixel count). label-map: per-object",
+  "note": "RE-PROBE WIN +1.38 (15.16->16.54): per-connected-component pixel COUNT->recolour NOT flood wall when components >=2 chebyshev gap (window ops leak-free). Component size fingerprinted by repeated gray-gated 3x3 sum-conv (multi-res mass), per-component MAX broadcast by gray-gated MaxPool3x3 hops; add 2nd higher-radius MAX to split long-thin vs compact same-radius. Pad sentinel 99 off-grid + Equal(arange) free one-hot. fresh 200/200."
  },
  {
   "task": 170,
   "arc_id": "6ecd11f4",
-  "points": 13.98,
+  "points": 15.62,
   "memory": 60803,
   "params": 252,
   "method": "gen:vyank6322",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 6ecd11f4: copy magnified sprite content into a same-size box, recolored by color"
+  "status": "done",
+  "verdict": "INFEASIBLE: 6ecd11f4: copy magnified sprite content into a same-size box, recolored by color",
+  "note": "RE-PROBE WIN +1.64 (13.98->15.62): two-objects spatial-correspondence closed-form via scalar bboxes. ONE colour-index plane, each object (row,col,size,scale) via ReduceMax/Min on 1-D profiles, read both via chained Gather(colf,rows,ax2)->Gather(cols,ax3) into 4x4 block; smag=colspan/size float Div+Cast; gen guarantees unclipped col axis so off-grid gathers self-zero. fresh 500/500."
  },
  {
   "task": 171,
