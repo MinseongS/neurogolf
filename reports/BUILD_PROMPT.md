@@ -421,6 +421,14 @@ Several "at-floor"/"skip-marginal" verdicts were recorded against STALE ORT-dtyp
 the current ORT build. Before paying fp32 (or bailing), run a 5-line ORT(ORT_DISABLE_ALL) test of the op:
 - "fp16 Min/Max crashes under ORT_DISABLE_ALL" — FALSE now; whole-geometry fp16 dropped 58 from 37k→10k.
 - "ORT upcasts Where to fp32" — FALSE now; fp16 Where works.
+- ⭐ "fp16 CONV upcasts its output to fp32 (→ 0 pass / at-floor)" — FALSE now (task096 +0.23, RE-OPENED a documented-
+  INFEASIBLE task): an fp16 `Conv` KEEPS fp16 output under ORT_DISABLE_ALL, so the harness counts the dominant
+  matched-filter / correlation-bank plane at HALF. This HALVES the cost driver of every conv-at-floor verdict
+  (task096 matched-filter [10,11,20,20] 173KB→88KB, exact net 12.54→13.20). ⇒ ANY task bailed as "matched-filter/
+  grouped-Conv/correlation too big" or "single-Conv-at-floor" with an fp32 conv plane as the dominant intermediate
+  is a PRIME re-probe — cast the conv input+weight to fp16 (NOT the 10-ch ENTRY input; a per-colour mask slice is
+  fine) and re-measure. (uint8/int8 Conv stays ORT-unsupported, so fp16 is the conv dtype floor — but fp16 now
+  actually delivers the half.) Combine with crop-to-WORK + `sig=ingrid−2·mask` as one 1×1 conv (W=ones−2·I).
 - uint8 elementwise-max is missing → use `Where(Greater(a,b),a,b)` (900B, beats fp16 Max 1800B).
 - Pad at opset-10 rejects uint8/bool → forces a 1800B fp16 pad-back plane; so CROP-TO-ACTIVE is NET-NEGATIVE
   whenever the output mask must be full 30×30 unless ≥6 large planes sit downstream of the pad point (64 wall).
