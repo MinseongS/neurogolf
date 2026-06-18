@@ -1,5 +1,18 @@
 # RESUME — restart the autonomous sweep in a fresh session
 
+## ▶▶▶ RESUME HERE (handoff 2026-06-18 ~23:45 — pivot to HARD walls)
+Confirmed LB **6635.63** (#32, +7.01). Session 6620.24→6628.62(#31)→6635.63(#32) = **+15.39, 30 wins / 11 walls**.
+Anchor stored_at_submit=6665.61, current stored 6665.61 (nothing banked). gap 29.98 (grew +1.03: one wave-2 net
+over-stored — find it among {58,48,208,265,85,29,333,162,134,382,178,30,355,117,80,110}).
+**The easy reservoir is mined out**: 14–16pt blank-note "infeasible" false-positives are ~all done. ~6 remain
+(44 canary in flight, 185,319,174,196,46 — re-dispatch; got cut off by an API session limit). Finish those, then:
+**▶ THE NEXT PHASE IS HARD WALLS — read `reports/HARD_WALLS.md` FIRST.** The user explicitly wants the hard tasks
+worked with research / long thinking / diverse methods (NOT fast-bail). Master key = BOUNDED-ITERATION UNROLLING
+(flood=unrolled dilation D≈30, connected-components=label propagation, all expressible without Loop/Scan since
+grid ≤30×30; proven on task48). PRIORITY = gap-closer tasks (157,319,366,118 — cracking one = DIRECT +LB, not
+just +stored). Hard-wall agents get a LONG leash, ≥3 attack angles, may produce big nets (mem is fine: 25−ln(m+p)).
+Loop prompt below still works; for the hard campaign, swap the agent prompt to the HARD_WALLS.md §3 protocol.
+
 ## Step 0 — environment check (do this FIRST; the loop breaks without it)
 ```
 ls /tmp/arc-gen/tasks | wc -l        # must be ~901. If MISSING (reboot clears /tmp):
