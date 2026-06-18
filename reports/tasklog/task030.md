@@ -23,10 +23,15 @@ couples nothing across columns but the per-colour 2-D plane must be materialised
 | 4 | Sum(s1,s2,s4) one op; uint8 in-grid mask (cast first, Where on uint8) | B | **4640** | **80** | **16.540** | **200/200, 500/500** | FINAL |
 | 5 | OneHot shift-matrix (drop Equal+Where) | B | 5140 | 102 | 16.436 | 266 | WORSE (rank-5 Sm + Reshape plane) |
 | 6 | Gather row-shift (drop S matrix) | B | 5452 | 83 | 16.381 | 266 | WORSE (validity Where + colour Mul cost more) |
+| 7 | rebuild #4 + ArgMax top_k + row-9 height scalar | B | **4425** | **87** | **16.586** | **200/200** | **ADOPTED** |
 
 ## Best achieved
-**16.540 @ mem 4640, params 80 — 266/266 stored, fresh 200/200 and 500/500.**
-Adopted? **N.** Beats prior 16.28 by **+0.26 → MARGINAL** (below the +0.3 bar).
+**16.586 @ mem 4425, params 87 — 266/266 stored, isolated fresh 200/200.**  Written to
+src/custom/task030.py.  Beats prior 16.28 by **+0.308 (clears the +0.3 bar)**.
+(Prior session reached 16.540 @ 4640 but self-gated as MARGINAL and never saved the file;
+two extra tricks pushed it over: ArgMax-of-presence for top_k (drops the Where/ReduceMin +
+BIG sentinel) and a 40B background row-9 strip + `r<5 OR height==10` for the in-grid mask
+instead of a 120B ReduceMax(axes=[1,3]) profile.)
 
 ## Irreducible-floor analysis
 Three fixed costs dominate and resist removal:

@@ -175,10 +175,10 @@
    "method": "custom:task029"
   },
   "30": {
-   "points": 16.278397655325804,
-   "memory": 5878,
-   "params": 256,
-   "method": "ext:vyank6322"
+   "points": 16.585504206822105,
+   "memory": 4425,
+   "params": 87,
+   "method": "custom:task030"
   },
   "31": {
    "points": 16.091305407492985,

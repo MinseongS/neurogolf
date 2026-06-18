@@ -374,15 +374,15 @@
  {
   "task": 30,
   "arc_id": "1caeab9d",
-  "points": 16.28,
+  "points": 16.59,
   "memory": 5878,
   "params": 256,
   "method": "ext:vyank6322",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "skip-marginal",
+  "status": "done",
   "verdict": "FEASIBLE None ~16.3pt: 1caeab9d: align 3 colored clusters to a common row (megarows[0]); vert",
-  "note": "probe +0.26 (16.28->16.54) below +0.3 bar; generalizes 500/500. insight: per-colour vertical shift = color-folded bool MatMul S@in, S[R,r]=color*(r+delta==R), target-color delta-0 skips its MatMul (tasklog-style); Tier-B floor firm"
+  "note": "WIN +0.31: per-object pure-vertical shift to common target row = row-axis bool MatMul with COLOUR folded into matrix S[R,r]=colour*(r+delta==R); alignment-target (delta0) skips matrix, raw slice into Sum (disjoint cols exact); ArgMax-of-presence for top_k. fresh 200/200."
  },
  {
   "task": 31,
