@@ -2980,14 +2980,16 @@
  {
   "task": 236,
   "arc_id": "99b1bc43",
-  "points": 18.54,
+  "points": 19.31,
   "memory": 640,
   "params": 1,
-  "method": "ext:galaxy_v1",
+  "method": "custom:task236",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.77 (18.54->19.31): per-cell XOR of two 4x4 one-hot regions (params=1 net NOT at-floor, was fp32 Sub/Abs/Concat). XOR via match=Equal(L,R)(=bg ch0) + xor=Not(match)(=green ch3); Concat 2 needed channels + const zero, uint8 Pad free. 640B->256B"
  },
  {
   "task": 237,
