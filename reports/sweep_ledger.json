@@ -3547,7 +3547,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: flood-fill maze parity coloring (unbounded propagation)"
+  "verdict": "INFEASIBLE: flood-fill maze parity coloring (unbounded propagation)",
+  "note": "variable-size unbounded flood-fill connectivity wall (geodesic radius<=68); parity value is closed-form but seed-component reachability needs banned iterative connectivity. task198 family."
  },
  {
   "task": 287,
