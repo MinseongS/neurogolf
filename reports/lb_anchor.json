@@ -1,10 +1,10 @@
 {
  "comment": "#33 CONFIRMED 6644.18 = proj-exact (+8.55 over #32 6635.63). 6 re-probe wins 174/185/196/300/201/363. Clean 1:1 translation (gap stable 29.98). Blank-note false-positive re-probe + bounded-unroll-flood remains the engine.",
- "stored_at_submit": 6674.16,
+ "stored_at_submit": 6688.62,
  "lb": 6644.18,
- "time_utc": "2026-06-19 #33 confirmed",
- "pending": false,
- "pending_submit": "#33 CONFIRMED 6644.18 (proj-EXACT +8.55)",
- "prev_stored_at_submit": 6657.57,
- "prev_lb": 6635.63
+ "time_utc": "2026-06-19 submit#34",
+ "pending": true,
+ "pending_submit": "#34 PENDING (proj 6658.64, +14.46 over 6644.18): 13 re-probe wins incl 251/090 skip-list-wall-false",
+ "prev_stored_at_submit": 6674.16,
+ "prev_lb": 6644.18
 }
