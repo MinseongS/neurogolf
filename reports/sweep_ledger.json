@@ -916,14 +916,16 @@
  {
   "task": 73,
   "arc_id": "3618c87e",
-  "points": 20.5,
+  "points": 21.31,
   "memory": 0,
   "params": 90,
-  "method": "dwconv9x1",
+  "method": "custom:task073",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.81 (20.50->21.31): dwconvNx1 OVER-MODELLED - SAME-pad height set to widest channel reach but taps span less. decode nonzero offsets per channel, brute-search minimal offset set reproducing out>0, set conv height=span+1 asymmetric pad. 9->4 params 90->40 mem-0"
  },
  {
   "task": 74,

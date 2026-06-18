@@ -433,10 +433,10 @@
    "method": "custom:task072"
   },
   "73": {
-   "points": 20.500190329669735,
+   "points": 21.311120545886062,
    "memory": 0,
-   "params": 90,
-   "method": "dwconv9x1"
+   "params": 40,
+   "method": "custom:task073"
   },
   "74": {
    "points": 15.009188619292196,
