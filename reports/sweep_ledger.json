@@ -4986,14 +4986,16 @@
  {
   "task": 393,
   "arc_id": "f8ff0b80",
-  "points": 18.87,
+  "points": 19.41,
   "memory": 449,
   "params": 9,
-  "method": "ext:biohack_new",
+  "method": "custom:task393",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.54 (18.87->19.41): COUNT-RANK sort K colours by count -> Kx1. cheapest = iterative ArgMax over [1,10,1,1] counts w/ penalty Where(onehot,-1,cnt) (no onehot*Mul+Sub), Concat 3 one-hots [1,10,3,1] uint8, Pad free. NOT [10,10] rank matrix (200B). mask ch0 before ranking"
  },
  {
   "task": 394,
