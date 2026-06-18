@@ -1963,14 +1963,15 @@
  {
   "task": 160,
   "arc_id": "6c434453",
-  "points": 16.57,
-  "memory": 4520,
-  "params": 65,
+  "points": 16.94,
+  "memory": 3100,
+  "params": 51,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.37 (replace shape X with Y via ring-sum center detect + dilate erase/stamp kernels)"
  },
  {
   "task": 161,
