@@ -3718,14 +3718,16 @@
  {
   "task": 299,
   "arc_id": "bdad9b1f",
-  "points": 17.56,
+  "points": 17.77,
   "memory": 1644,
   "params": 62,
-  "method": "ext:biohack_new",
+  "method": "custom:task299",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "generalizing exact (adopt-gate fresh 200/200); marginal +0.21 but smaller+generalizes -> free LB",
+  "class_": "WIN",
+  "note": "golf +0.21 (17.56->17.77): complete-two-lines+mark-intersection = separable row-onehot[1,10,6,1] outer-prod col-onehot[1,10,1,6] -> ONE Mul packs all 4 live channels, Pad 6x6 onehot directly into FREE 30x30 output (no full-grid plane)"
  },
  {
   "task": 300,
