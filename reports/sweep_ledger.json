@@ -4220,8 +4220,9 @@
   "method": "conv3x3+b",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "",
+  "note": "at-floor 18.19: fixed multi-colour cross/plus stamp around blue seed = mem-0 Conv reading ch0(bg gate)+ch1(seed), 5 colours from centre+4 offsets. genuine dense 3x3 cross-channel + subtractive bg ch0. decomp pays >=900B carrier. distinct from task371 (const-colour plus via Where, not mem-0 conv = golfable)"
  },
  {
   "task": 332,
