@@ -2,14 +2,15 @@
  {
   "task": 1,
   "arc_id": "007bbfb7",
-  "points": 17.1,
-  "memory": 2666,
-  "params": 24,
+  "points": 17.68,
+  "memory": 1448,
+  "params": 62,
   "method": "ext:biohack_new",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.58 over manifest (fractal kron(S,S)*color via 4 index Gathers)"
  },
  {
   "task": 2,
@@ -462,14 +463,15 @@
  {
   "task": 38,
   "arc_id": "1fad071e",
-  "points": 17.32,
-  "memory": 2136,
-  "params": 38,
+  "points": 17.49,
+  "memory": 1744,
+  "params": 86,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.17 over manifest (count KxK blocks via all-ones Conv ==K^2 + ReduceSum)"
  },
  {
   "task": 39,
@@ -993,7 +995,7 @@
  {
   "task": 81,
   "arc_id": "3aa6fb7a",
-  "points": 17.18,
+  "points": 17.26,
   "memory": 2198,
   "params": 109,
   "method": "ext:kojimar6275",
@@ -1001,7 +1003,7 @@
   "sig": "-",
   "status": "done",
   "verdict": "",
-  "note": "subagent win +0.33 (L-tromino corner-complete via 4 corner-role 3x3 convs ==3, local OR)"
+  "note": "already good ext:kojimar6275 net (17.26); agent 17.18 worse, rejected"
  },
  {
   "task": 82,

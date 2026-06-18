@@ -1,10 +1,10 @@
 {
  "tasks": {
   "1": {
-   "points": 17.102703527404117,
-   "memory": 2666,
-   "params": 24,
-   "method": "ext:biohack_new"
+   "points": 17.680135070191028,
+   "memory": 1448,
+   "params": 62,
+   "method": "custom:task001"
   },
   "2": {
    "points": 13.514517676859928,
@@ -223,10 +223,10 @@
    "method": "custom:task037"
   },
   "38": {
-   "points": 17.315675932318847,
-   "memory": 2136,
-   "params": 38,
-   "method": "ext:kojimar6275"
+   "points": 17.487928754164535,
+   "memory": 1744,
+   "params": 86,
+   "method": "custom:task038"
   },
   "39": {
    "points": 16.346180211051937,
