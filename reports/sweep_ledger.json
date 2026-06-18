@@ -586,7 +586,8 @@
   "class": "CHECK",
   "sig": "-",
   "status": "confirmed-infeasible",
-  "verdict": "BAIL: connectivity-traced snake segmentation + per-segment data-dependent vertical roll + data-dependent column compaction = GatherND wall. Existing ~30640-mem solver near structural floor."
+  "verdict": "BAIL: connectivity-traced snake segmentation + per-segment data-dependent vertical roll + data-dependent column compaction = GatherND wall. Existing ~30640-mem solver near structural floor.",
+  "note": "RE-PROBE WALL: height-3 variable-width snake re-pack; per-segment data-dependent vertical roll (global randint, not locally recoverable, greedy caps ~53%) + gray-junction recolor needs path-traced segment identity (connectivity/Loop territory). Small canvas => CROP/fp16 levers inert. At structural floor."
  },
  {
   "task": 47,
@@ -1512,8 +1513,9 @@
   "method": "gen:seddik",
   "class": "BAIL",
   "sig": "memory",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE None ~13.3pt: recolor: maze cells flagged cyan are gray in input, output restores cy"
+  "status": "confirmed-infeasible",
+  "verdict": "FEASIBLE None ~13.3pt: recolor: maze cells flagged cyan are gray in input, output restores cy",
+  "note": "GAP-CLOSER PROBE -> WALL: information-loss. Fixed-arm crosses (L in 2,3) stamped on ~50% gray static; arm-over-gray becomes cyan, input erases cyan back to gray => repaint those grays. Invisible crosses (0.1%, zero red anchor) + L=2/3 endpoint ambiguity (~1.6%) cap EXACT reconstruction ~98-99.8% < 200/200 gate. Red-anchored bounded-unroll peel hits 99.8% (known L) but cannot reach exact-match. No adoptable generalizing net."
  },
  {
   "task": 119,
@@ -2233,14 +2235,15 @@
  {
   "task": 174,
   "arc_id": "72ca375d",
-  "points": 14.6,
+  "points": 15.28,
   "memory": 32787,
   "params": 81,
   "method": "gen:vyank6322",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 72ca375d: select the sprite that is vertically symmetric and crop it; symmetry t"
+  "status": "done",
+  "verdict": "INFEASIBLE: 72ca375d: select the sprite that is vertically symmetric and crop it; symmetry t",
+  "note": "RE-PROBE WIN +0.68 (14.60->15.28): odd-one-out by horizontal-mirror SYMMETRY among monochrome shapes = closed-form per-channel reflection MatMul (Cmat batched over channel axis) + overlap(A,Mf)==count(A) equality test; variable crop+translate via task036 Gather-shift + uint8 sentinel-Pad + Equal; fixed 10x10 canvas => slice to active region, fp16 working planes. fresh 500/500."
  },
  {
   "task": 175,
@@ -4102,7 +4105,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: ce602527: select the sprite matching a template at correct scale; correspondence"
+  "verdict": "INFEASIBLE: ce602527: select the sprite matching a template at correct scale; correspondence",
+  "note": "RE-PROBE WALL (also gap-attribution): output = small conway sprite whose 2x-upscaled copy appears elsewhere. ~88% fresh ceiling. Magnified blob edge-clipped+collidable (not clean 2x2-block image, ~6% unclean) AND sprite0 vs sprite1 same-distribution shapes (no count/size margin) => needs full 2-D cross-correlation+argmax. No closed-form/separable/bounded-unroll/PARTIAL escape."
  },
  {
   "task": 320,
