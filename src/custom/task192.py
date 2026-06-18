@@ -96,38 +96,49 @@ def build(task):
     init("HALFH", np.array(0.5, np.float16), np.float16)
     n("Greater", ["keepcnt", "HALFH"], "keep20_b")                 # [1,1,20,20] bool
 
-    # ---- boxcolor one-hot = Equal(cnt, max) over channels 1..9 -------------
-    # cnt = per-channel pixel count; zero ch0; one-hot the argmax channel.
+    # ---- boxcolor SCALAR bc = argmax-count channel index -------------------
+    # cnt = per-channel pixel count; zero ch0; one-hot the argmax channel; then
+    # contract against the channel ramp to a scalar colour index.
     n("ReduceSum", ["input"], "cnt_raw", axes=[2, 3], keepdims=1)  # [1,10,1,1] f32
-    # zero channel 0 so background can't win the argmax.
     mask0 = np.ones((1, 10, 1, 1), np.float32); mask0[0, 0, 0, 0] = 0.0
     init("MASK0", mask0, np.float32)
     n("Mul", ["cnt_raw", "MASK0"], "cnt")                          # [1,10,1,1] f32
     n("ReduceMax", ["cnt"], "cntmax", axes=[1], keepdims=1)        # [1,1,1,1] f32
     n("Equal", ["cnt", "cntmax"], "boxhot_b")                      # [1,10,1,1] bool
-    n("Cast", ["boxhot_b"], "boxhot", to=F16)                      # [1,10,1,1] f16 one-hot
-
-    # bg one-hot [1,0,...,0] f16 (ORT Where not implemented for bool branches).
-    bg = np.zeros((1, 10, 1, 1), np.float16); bg[0, 0, 0, 0] = 1.0
-    init("bg_onehot", bg, np.float16)
+    n("Cast", ["boxhot_b"], "boxhot", to=F32)                      # [1,10,1,1] f32 one-hot
+    ramp = np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1)
+    init("CRAMP", ramp, np.float32)
+    n("Mul", ["boxhot", "CRAMP"], "bchan")                         # [1,10,1,1] f32
+    n("ReduceSum", ["bchan"], "bc", axes=[1], keepdims=1)          # [1,1,1,1] f32 scalar
 
     # ---- in-grid mask (20x20): g > 0.5 (background==1, off-grid==0) ---------
     init("HALF32", np.array(0.5, np.float32), np.float32)
     n("Greater", ["g", "HALF32"], "ingrid_b")                      # [1,1,20,20] bool
+    n("Cast", ["ingrid_b"], "ingrid_f", to=F16)                    # [1,1,20,20] f16
+    n("Cast", ["keep20_b"], "keep_f", to=F16)                      # [1,1,20,20] f16
+    n("Cast", ["bc"], "bc16", to=F16)                              # scalar f16
 
-    # ---- output(20x20): keep -> boxcolor ; in-grid & !keep -> bg ; else 0 --
-    # the irreducible 3-way selection plane, kept at 20x20 fp16 (9000B).
-    zeros = np.zeros((1, 10, 1, 1), np.float16)
-    init("ZEROS", zeros, np.float16)
-    n("Where", ["ingrid_b", "bg_onehot", "ZEROS"], "bgval")        # [1,10,20,20] f16
-    n("Where", ["keep20_b", "boxhot", "bgval"], "out20")           # [1,10,20,20] f16
-    # pad to 30x30 with zeros (cells >=20 are always off-grid -> all-zero).
+    # ---- single colour-index plane L (20x20) ------------------------------
+    #   L = keep*bc - (1 - ingrid)
+    #     keep            -> bc   (box colour channel)
+    #     ingrid & !keep  -> 0    (background channel)
+    #     off-grid        -> -1   (matches no channel -> all-zero)
+    n("Mul", ["keep_f", "bc16"], "keep_bc")                        # [1,1,20,20] f16
+    init("ONE16", np.array(1.0, np.float16), np.float16)
+    n("Sub", ["ONE16", "ingrid_f"], "offg")                        # 1-ingrid
+    n("Sub", ["keep_bc", "offg"], "L20")                           # [1,1,20,20] f16
+    # pad L to 30x30 with -1 (cells >=20 are always off-grid -> match no channel)
     init("opads", np.array([0, 0, 0, 0, 0, 0, 10, 10], np.int64), np.int64)
-    init("ZEROH", np.array(0.0, np.float16), np.float16)
-    n("Pad", ["out20", "opads", "ZEROH"], "output", mode="constant")
+    init("NEG1H", np.array(-1.0, np.float16), np.float16)
+    n("Pad", ["L20", "opads", "NEG1H"], "L30", mode="constant")    # [1,1,30,30] f16
+    # expand to the 10-channel one-hot via Equal vs the channel ramp -> the
+    # 10-ch expansion lands ONLY in the FREE bool output (no full plane stored).
+    crampf = np.arange(10, dtype=np.float16).reshape(1, 10, 1, 1)
+    init("CRAMPF", crampf, np.float16)
+    n("Equal", ["L30", "CRAMPF"], "output")                        # [1,10,30,30] bool FREE
 
     x = helper.make_tensor_value_info("input", F32, [1, 10, 30, 30])
-    y = helper.make_tensor_value_info("output", F16, [1, 10, 30, 30])
+    y = helper.make_tensor_value_info("output", BOOL, [1, 10, 30, 30])
     g = helper.make_graph(nodes, "task192", [x], [y], inits)
     return helper.make_model(g, ir_version=IR_VERSION,
                              opset_imports=[helper.make_opsetid("", 11)])

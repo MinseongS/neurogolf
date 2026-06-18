@@ -2376,15 +2376,15 @@
  {
   "task": 192,
   "arc_id": "7e0986d6",
-  "points": 14.65,
-  "memory": 31314,
-  "params": 67,
+  "points": 15.32,
+  "memory": 15980,
+  "params": 68,
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
   "status": "done",
   "verdict": "INFEASIBLE: 7e0986d6: place small colored pixels INTO the box whose interior shape matches (",
-  "note": "subagent win mid-manifest (+0.51)"
+  "note": "subagent win mid-manifest (14.14->15.32 +1.18; box-fill keep-mask + scalar fill color)"
  },
  {
   "task": 193,
