@@ -3392,14 +3392,15 @@
  {
   "task": 265,
   "arc_id": "a8d7556c",
-  "points": 15.25,
+  "points": 15.61,
   "memory": 17100,
   "params": 50,
   "method": "custom:task265",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "skip-marginal",
-  "verdict": "+0.099 < +0.3 bar; 2-D product-of-counts paint condition forces ~7 bool planes. OPEN: base-3 band packing -> single Equal (~+0.39 if it lands)."
+  "status": "done",
+  "verdict": "+0.099 < +0.3 bar; 2-D product-of-counts paint condition forces ~7 bool planes. OPEN: base-3 band packing -> single Equal (~+0.39 if it lands).",
+  "note": "WIN +0.36 (beat own custom): HALF-WEIGHTED pair-conv(0.5,0.5)+Floor = {0,1} AND-indicator in fp16 no bool; banded [-1,1,1,-1] conv+bias-1+Relu folds pattern==target AND neither-side into ONE op; collapsed 3-plane Conv->Greater->Cast to 2/predicate. 17100->11916. fresh 500/500."
  },
  {
   "task": 266,
