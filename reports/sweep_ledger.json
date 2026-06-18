@@ -1400,14 +1400,15 @@
  {
   "task": 110,
   "arc_id": "484b58aa",
-  "points": 13.48,
+  "points": 13.83,
   "memory": 100033,
   "params": 350,
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: flood-fill / connected-region recolor (484b58aa is recolor-largest-region) - nee"
+  "status": "done",
+  "verdict": "INFEASIBLE: flood-fill / connected-region recolor (484b58aa is recolor-largest-region) - nee",
+  "note": "WIN +0.34: false-pos infeasible (13.x); periodic-background in-painting; period as SCALAR via masked-mismatch reduction on 12x12 window (global period); sentinel-row Pad routes out-of-range Gather; 3-pass MAX over +-period donors; whole pipeline uint8. fresh 3000/3000."
  },
  {
   "task": 111,

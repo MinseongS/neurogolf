@@ -655,10 +655,10 @@
    "method": "custom:task109"
   },
   "110": {
-   "points": 13.483251850806106,
-   "memory": 100033,
-   "params": 350,
-   "method": "gen:vyank6322"
+   "points": 13.826695724402676,
+   "memory": 69860,
+   "params": 1344,
+   "method": "custom:task110"
   },
   "111": {
    "points": 18.39065075683262,
