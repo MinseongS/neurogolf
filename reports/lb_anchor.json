@@ -1,10 +1,10 @@
 {
  "comment": "#34 CONFIRMED 6658.65 = proj-exact (+14.47 over #33 6644.18, off +0.01). 13 re-probe wins. Skip-list gap-region walls 251/090 were FALSE-POSITIVES (cracked via bounded-unroll/closed-form). gap stable 29.98.",
- "stored_at_submit": 6688.62,
+ "stored_at_submit": 6691.36,
  "lb": 6658.65,
- "time_utc": "2026-06-19 #34 confirmed",
- "pending": false,
- "pending_submit": "#34 CONFIRMED 6658.65 (proj-EXACT +14.47)",
- "prev_stored_at_submit": 6674.16,
- "prev_lb": 6644.18
+ "time_utc": "2026-06-19 submit#35",
+ "pending": true,
+ "pending_submit": "#35 PENDING (proj 6661.39, +2.74 over 6658.65): 6 skip-marginal floor-breaks",
+ "prev_stored_at_submit": 6688.62,
+ "prev_lb": 6658.65
 }
