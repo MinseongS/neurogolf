@@ -2164,14 +2164,15 @@
  {
   "task": 168,
   "arc_id": "6e19193c",
-  "points": 15.08,
+  "points": 16.32,
   "memory": 20218,
   "params": 185,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 6e19193c: extend arrows along their pointing direction to the edge (ray from eac"
+  "status": "done",
+  "verdict": "INFEASIBLE: 6e19193c: extend arrows along their pointing direction to the edge (ray from eac",
+  "note": "RE-PROBE WIN +1.24 (15.08->16.32): draw diagonal ray from detected feature = closed-form tier-B (NOT flood). Detect seed via banded L-shape Conv (+1 ON cells, -3 forbidden, Equal==3); propagate as bounded directional prefix-OR = 10x10 diagonal Conv asymmetric SAME pad >0 (task037 idiom); colour=40B scalar sum_k k*(cnt_k>0) via Where+Pad(255)+Equal into free bool output. Per-direction 10x10 beats centered 19x19. fresh 500/500."
  },
  {
   "task": 169,
