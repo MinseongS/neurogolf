@@ -644,14 +644,16 @@
  {
   "task": 52,
   "arc_id": "25d8a9c8",
-  "points": 17.89,
+  "points": 18.36,
   "memory": 1185,
   "params": 43,
-  "method": "ext:kojimar6275",
+  "method": "custom:task052",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.47 (17.89->18.36): per-row monochrome->gray, 3x3 grid. narrow [1,K,h,1] Where one-hot + Concat broadcast (Concat/Where accept uint8) + uint8 Pad to 30x30 (free output); killed 2 of 3 full fp32 planes"
  },
  {
   "task": 53,
@@ -2629,14 +2631,16 @@
  {
   "task": 211,
   "arc_id": "8d5021e8",
-  "points": 17.67,
+  "points": 17.94,
   "memory": 1440,
   "params": 81,
-  "method": "ext:wguesdon6304",
+  "method": "custom:task211",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.27 marginal (17.67->17.94): mirror+tile copy via GridSample on cast-fp16 slice of active 3x2 region (halves sample tensor 1440->720). NOTE GridSample opset>=16 taxes Slice/Pad amount-tensors as params - caps copy-task gains"
  },
  {
   "task": 212,
@@ -2931,14 +2935,16 @@
  {
   "task": 235,
   "arc_id": "995c5fa3",
-  "points": 17.89,
+  "points": 18.61,
   "memory": 1116,
   "params": 114,
-  "method": "ext:biohack_new",
+  "method": "custom:task235",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.73 (17.89->18.61): glyph decoder - replaced 16-elem template dot + ArgMax + Gather + OneHot with THREE discriminating cells read off gray channel via strided Slice (stride-5), scatter into channels {8,3,4,2} of [1,10,3,1], route to free output"
  },
  {
   "task": 236,
