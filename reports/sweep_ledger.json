@@ -1187,8 +1187,9 @@
   "method": "ext:wguesdon6304",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "",
+  "note": "AT-FLOOR: mem-0 single Conv[10,10,3,3]->output. gray dot->3x3 blue box. cross-channel spatial dilation that must emit subtractive bg channel-0: O=10 (bg required non-copy), I=10 (5->1 cross-channel breaks grouping), k=3 footprint -> params=100*k^2=900 irreducible. any decomp pays >=900B 30x30 plane, beats mem0 only below 18.20"
  },
  {
   "task": 96,

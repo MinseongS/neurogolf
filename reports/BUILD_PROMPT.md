@@ -17,6 +17,17 @@ variable-size crop" floors near ~13.4 for everyone — the public CumSum-scan ne
 (T,L)=(top-of-col-run,left-of-row-run) prefix/suffix-MAX scans give a unique per-box label and per-box
 red-counts reduce to a 2-D integral image (4 Gathers, no flood-fill), but the constant factor still lands
 at-floor; if the rule needs a global argmax across data-dependent-count components, BAIL fast (task216).
+⛔ MEM-0 SINGLE-CONV-AT-FLOOR (do NOT attempt): if the CURRENT net is a memory-0 single `Conv(input,W[10,10,k,k])`
+whose output IS the graph output (params=100·k², e.g. 910 incl bias for k=3), and the rule is a genuine
+cross-channel spatial neighbourhood op that must also emit the subtractive background channel-0 (interior-fill,
+dilation, edge/denoise, dot→box stamp), it is at HARD floor: O=10 (bg is a required non-copy channel), I=10
+(target→source cross-channel map breaks any group partition), k fixed by the footprint ⇒ params irreducible
+(params count ELEMENTS, fp16 doesn't help), and ANY decomposition pays a ≥900B 30×30 intermediate that only
+beats mem-0 BELOW the existing score (task120, task095). BAIL MARGINAL/INFEASIBLE. ⭐ BUT a conv3x3+b/conv9x1+b
+net is NOT always at-floor — if the rule is actually per-pixel logic the brute-forced conv over-modelled (e.g.
+conv9x1 that's really a per-pixel NOR of two stacked halves), decompose to tiny closed-form ops on the active
+region + uint8 + Pad-into-free-output for a big win (task227 18.19→19.07, +0.88). Test: does output[cell] truly
+depend on NEIGHBOURS (→floor) or only on that cell / a separable half (→golfable)?
 ⛔ GRIDSAMPLE-AT-FLOOR (do NOT attempt): if the CURRENT net is a memory-0 single `GridSample(input,grid[1,30,30,2])`
 with params≈1800 (=30·30·2), it's a FIXED-geometry full-canvas spatial remap (reflection/rotation/translation
 filling the whole 30×30 output) — already at HARD floor (~17.50). The 1800-elem grid is irreducible (params count
