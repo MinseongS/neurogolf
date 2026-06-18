@@ -2113,10 +2113,10 @@
    "method": "conv3x3+b"
   },
   "353": {
-   "points": 16.403810802357263,
-   "memory": 5186,
-   "params": 225,
-   "method": "ext:kojimar6275"
+   "points": 16.749641048522705,
+   "memory": 3110,
+   "params": 719,
+   "method": "custom:task353"
   },
   "354": {
    "points": 16.747553909753048,

@@ -4347,14 +4347,15 @@
  {
   "task": 353,
   "arc_id": "dc433765",
-  "points": 16.4,
-  "memory": 5186,
-  "params": 225,
+  "points": 16.75,
+  "memory": 3110,
+  "params": 719,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.35 (move green 1 cell toward yellow; 2 pixels via banded Conv profile, sign(delta))"
  },
  {
   "task": 354,
