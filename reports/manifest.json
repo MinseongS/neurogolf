@@ -2233,10 +2233,10 @@
    "method": "custom:task372"
   },
   "373": {
-   "points": 18.75972415482923,
-   "memory": 480,
-   "params": 33,
-   "method": "ext:wguesdon6304"
+   "points": 19.42027017401378,
+   "memory": 240,
+   "params": 25,
+   "method": "custom:task373"
   },
   "374": {
    "points": 16.27693149883607,

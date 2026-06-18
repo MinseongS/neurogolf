@@ -4715,14 +4715,16 @@
  {
   "task": 373,
   "arc_id": "e9afcf9a",
-  "points": 18.76,
+  "points": 19.42,
   "memory": 480,
   "params": 33,
-  "method": "ext:wguesdon6304",
+  "method": "custom:task373",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.66 (18.76->19.42): solid-row recolour by column parity. each row one constant colour -> single [1,10,2,1] col-0 fp32 slice, ONE broadcast Where vs fixed column-parity mask uint8, Pad free. small GridSample NOT at floor when source constant along sampled axis"
  },
  {
   "task": 374,
