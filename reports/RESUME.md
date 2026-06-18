@@ -64,14 +64,37 @@ kaggle CLI: /opt/homebrew/Caskroom/miniconda/base/bin/kaggle.
    mislabeled "confirmed-infeasible" by judging +0.3 against the INFLATED stored — IGNORE that label and
    build a generalizing exact encoding. This alone is worth ~+25 LB from 219+255.~~ (NOTE: closeability disproven — all 3 walls)
 
-## ▶▶ RESUME HERE (handoff 2026-06-18 ~15:30) — see NEXT_SESSION.md for the ready-to-paste loop prompt
-Confirmed LB **6578.01** at last CONFIRMED submit (#22, proj-exact 20th). **#23 PENDING at handoff (proj 6585.60).**
-Session 6492.58→proj 6585.60 = **+93.0**. Stored 6615.15, **gap 28.96 == EXACTLY the two walls 219(15.00)+255(13.95)**.
-23 submissions, ALL projections exact (±0.01). **~97 wins this session** + 2 gap-closers (274,332).
-+0.59 unsubmitted (straggler re-adopts 9/182 after #23) rolls into next submit.
+## ▶▶ RESUME HERE (handoff 2026-06-18 ~19:50 — evening session)
+Confirmed LB **6618.58** (#29, proj-exact 25th). **#30 PENDING at handoff (proj 6620.24** — session-final: 73/149/352).
+Evening session 6586.75→6618.58 confirmed (proj 6620.24) = **~+33.5**, **~49 golf wins**, 7 submissions (#24-#30) all proj-exact.
+gap stable **28.96 == walls 219(15.00)+255(13.95)** (structural, unrecoverable). STEP 0 NEXT SESSION: poll kaggle to
+confirm #30, set lb_anchor pending=false + submission_log row 30.
 
-STEP 0 NEXT SESSION: poll `kaggle competitions submissions -c neurogolf-2026` to confirm #23 (proj 6585.60);
-set reports/lb_anchor.json pending=false + add submission_log row 23 with the real score.
+🧱 **THE PRODUCTIVE POOL IS EXHAUSTED (verified this session).** The 14-19.0 bloated/decomposable ext-import golf
+pool is fully mined to near-optimal. Remaining ~17 fresh tasks are all **params≤40 near-optimal** (179/241=25.00
+perfect; 16/276/309/337=22.70; 21.60-group params30; 307=21.31; 326/258 mem-floor) — every one re-confirmed
+AT-FLOOR by a final probe batch (0 wins / 13 at-floor across the conv-group + params30-40 group). Plus the
+mem0/900-conv group {127,282,317,331,230,258} = mem-0-single-Conv genuine-neighbour walls. **Do NOT re-sweep
+these.** Only future runway: the 219+255 walls (confirmed infeasible) — i.e. none. Practical ceiling reached.
+
+⭐ **GAP-CLOSER FINAL VERDICT (017+151+230 ALL FALSE this session):** `src.adopt real=0.00` and agent "fresh=0.00"
+claims do NOT predict Kaggle — arc-gen fresh generators are harder/different than Kaggle held-out. ONLY a
+post-submit LB-jump-above-proj confirms a gap-closer (274/332 were the only real ones, ever). ALWAYS `src.adopt`-gate
+before trusting; bundle any test with golf wins so a false-positive nets ~0; Kaggle keeps BEST so standing never lost.
+truegen [t,0.0,18.19] flags are STALE — re-verify the live net (317/282/230 all re-verified generalizing 200/200).
+
+🔑 **NEW LEVERS this session (all in BUILD_PROMPT.md):** uint8 whole-pipeline (out>0 ⇒ output dtype irrelevant,
+Equal/Not/And/Or/Cast/Concat/Pad/Gather/Where accept uint8; Mul/Add/Sub/ReduceSum reject); COUNT→FIXED-PATTERN
+(tiny one-hot gated by Greater(schedule,cnt), Pad into free output, ~100B, hit 20+); COUNT-RANK iterative ArgMax;
+scalar-recovery (size²=total/3 crop, side=√pixelcount for filled squares); DILATED-CONV (dense conv at fixed stride
+→ small dilated kernel); dwconv-height-trim (offset-span brute-search); k-way-classifier (positional-Conv fingerprint
++ Equal-against-bank); GROUPED-CONV sub-floor escape (block-localised coupling → group=2, mem-0); Where-broadcast
+colour-router; flip-via-Gather (neg-index-wrap free off-grid clamp); stacked-halves AND/NOR; bool-Pad opset13.
+AT-FLOOR walls: mem-0 single/group-Conv genuine-neighbour-predicate emitting subtractive bg ch0 (params=elements,
+fp16/sparse don't help — sparse-conv DEAD); fp32 small-region crop ~360B (10ch·3x3, uint8 cast only adds); full-canvas
+GridSample params~1800; fixed-factor Kronecker grouped-ConvTranspose K·s²; full-width single-Gather copy params=output-dim.
+
+[superseded morning handoff 2026-06-18 ~15:30: confirmed LB 6578.01 (#22), #23 pending proj 6585.60, +93 morning session.]
 
 🔑 TARGETING (the big lesson, late this session): rank candidates by **MANIFEST points**, NOT stale ledger points.
 `man=json.load(open('reports/manifest.json'))['tasks']`; pick lowest-points tasks with NO src/custom/taskNNN.py,
