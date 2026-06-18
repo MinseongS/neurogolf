@@ -1470,8 +1470,9 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "at-floor 21.60: stack input + vertical mirror = single Gather(axis=2) mem-0, params=30=output row count (irreducible, dtype-free). off-grid rows free via index->all-zero row. full-canvas single-Gather copy already at-floor"
  },
  {
   "task": 117,
