@@ -102,14 +102,15 @@
  {
   "task": 9,
   "arc_id": "06df4c85",
-  "points": 14.23,
-  "memory": 47400,
-  "params": 79,
+  "points": 14.43,
+  "memory": 38682,
+  "params": 337,
   "method": "ext:thbdh6285",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 06df4c85: connect same-color dots with lines + add inferred dot; pairwise connec"
+  "status": "done",
+  "verdict": "INFEASIBLE: 06df4c85: connect same-color dots with lines + add inferred dot; pairwise connec",
+  "note": "subagent win mid-manifest (session-final harvest)"
  },
  {
   "task": 10,
@@ -1096,14 +1097,15 @@
  {
   "task": 89,
   "arc_id": "3e980e27",
-  "points": 14.26,
-  "memory": 46056,
-  "params": 98,
+  "points": 14.83,
+  "memory": 26082,
+  "params": 114,
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 3e980e27: reveal/mirror hidden cells of two sprites + recolor; reconstruction + "
+  "status": "done",
+  "verdict": "INFEASIBLE: 3e980e27: reveal/mirror hidden cells of two sprites + recolor; reconstruction + ",
+  "note": "subagent win mid-manifest (session-final harvest)"
  },
  {
   "task": 90,
@@ -2252,14 +2254,15 @@
  {
   "task": 182,
   "arc_id": "776ffc46",
-  "points": 14.23,
-  "memory": 46548,
-  "params": 1039,
+  "points": 14.3,
+  "memory": 44113,
+  "params": 253,
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "num_sprites",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 776ffc46: find the sprite matching the boxed one and recolor; template matching "
+  "status": "done",
+  "verdict": "INFEASIBLE: 776ffc46: find the sprite matching the boxed one and recolor; template matching ",
+  "note": "subagent win mid-manifest (session-final harvest)"
  },
  {
   "task": 183,
@@ -4036,14 +4039,15 @@
  {
   "task": 325,
   "arc_id": "d0f5fe59",
-  "points": 14.33,
-  "memory": 41120,
-  "params": 1902,
+  "points": 15.88,
+  "memory": 9064,
+  "params": 63,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "continuous_creature",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: d0f5fe59: output is len(brows)xlen(bcols) diagonal identity in cyan (output[i][i"
+  "status": "done",
+  "verdict": "INFEASIBLE: d0f5fe59: output is len(brows)xlen(bcols) diagonal identity in cyan (output[i][i",
+  "note": "subagent win mid-manifest (session-final harvest)"
  },
  {
   "task": 326,
@@ -4199,14 +4203,15 @@
  {
   "task": 338,
   "arc_id": "d5d6de2d",
-  "points": 14.29,
-  "memory": 43200,
-  "params": 1816,
+  "points": 15.37,
+  "memory": 14515,
+  "params": 667,
   "method": "ext:kojimar6275",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: d5d6de2d: recolor box interiors green - actually pure local recolor! interior of"
+  "status": "done",
+  "verdict": "INFEASIBLE: d5d6de2d: recolor box interiors green - actually pure local recolor! interior of",
+  "note": "subagent win mid-manifest (session-final harvest)"
  },
  {
   "task": 339,
