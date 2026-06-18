@@ -4470,14 +4470,15 @@
  {
   "task": 350,
   "arc_id": "dbc1a6ce",
-  "points": 15.11,
+  "points": 15.27,
   "memory": 19800,
   "params": 30,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: dbc1a6ce: connect blue dots sharing a row/col with cyan segments (gaps between p"
+  "status": "done",
+  "verdict": "INFEASIBLE: dbc1a6ce: connect blue dots sharing a row/col with cyan segments (gaps between p",
+  "note": "WIN +0.16: false-pos infeasible; directional prefix/suffix-OR = fp16 MaxPool full-len 1-D kernel + one-sided pad (0 params), beats triangular-MatMul. 4-scan structural floor. fresh 500/500."
  },
  {
   "task": 351,
