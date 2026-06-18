@@ -763,10 +763,10 @@
    "method": "ext:kojimar6275"
   },
   "128": {
-   "points": 18.603070344783852,
+   "points": 19.2962175253438,
    "memory": 0,
-   "params": 600,
-   "method": "dwconv59x1+b"
+   "params": 300,
+   "method": "custom:task128"
   },
   "129": {
    "points": 19.876036020596743,
