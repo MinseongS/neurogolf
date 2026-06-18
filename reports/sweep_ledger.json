@@ -2451,15 +2451,15 @@
  {
   "task": 198,
   "arc_id": "83302e8f",
-  "points": 14.4,
-  "memory": 39910,
+  "points": 14.67,
+  "memory": 30460,
   "params": 135,
   "method": "ext:thbdh6332",
   "class": "FEASIBLE",
   "sig": "-",
   "status": "done",
   "verdict": "",
-  "note": "subagent win mid-manifest (+0.20, intermediate)"
+  "note": "subagent win mid-manifest (14.20->14.67 +0.47); NOT a flood wall - one-pass permeable-line-grid via separable double-MatMul"
  },
  {
   "task": 199,

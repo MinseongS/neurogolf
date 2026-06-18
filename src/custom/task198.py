@@ -71,10 +71,6 @@ def build(task):
     n("Slice", ["input", "s0", "s1", "ax1"], "ch0")              # [1,1,30,30] f32
     init("HALF", np.array(0.5, np.float32), np.float32)
     n("Greater", ["ch0", "HALF"], "isblack_b")                   # bool [1,1,30,30] (in-grid black)
-    # anyset = sum over channels (1 in-grid, 0 off-grid) -> grid-extent signal
-    n("ReduceSum", ["input"], "anyset", axes=[1], keepdims=1)    # [1,1,30,30] f32 {0,1}
-    init("HALF2", np.array(0.5, np.float32), np.float32)
-    n("Greater", ["anyset", "HALF2"], "ingrid_pix_b")            # bool [1,1,30,30]
 
     # ============== recover pitch p ==============
     # colour-index plane only as a SCALAR per row: rowcolorcount = #cells == color per row
@@ -94,13 +90,11 @@ def build(task):
     n("Mul", ["colany", "rampC"], "cc")                          # [1,1,1,30]
     n("ReduceMax", ["cc"], "Wm1", axes=[3], keepdims=1)          # [1,1,1,1] = actual_size-1
 
-    # per-row nonblack count = sum over channels 1..9 and over cols (slice off ch0).
-    init("c1", np.array([1], np.int64), np.int64)
-    init("c10", np.array([10], np.int64), np.int64)
-    init("axc", np.array([1], np.int64), np.int64)
-    n("Slice", ["input", "c1", "c10", "axc"], "fg")              # [1,9,30,30] f32 (FREE-ish view)
-    n("ReduceSum", ["fg"], "rownb32", axes=[1, 3], keepdims=1)   # [1,1,30,1] f32
-    n("Cast", ["rownb32"], "rownb", to=F16)                      # [1,1,30,1] f16
+    # per-row nonblack count = (total occupied per row) - (black per row).
+    n("ReduceSum", ["input"], "totrow", axes=[1, 3], keepdims=1)  # [1,1,30,1] f32
+    n("ReduceSum", ["ch0"], "blkrow", axes=[3], keepdims=1)       # [1,1,30,1] f32
+    n("Sub", ["totrow", "blkrow"], "rownb32")                     # [1,1,30,1] f32
+    n("Cast", ["rownb32"], "rownb", to=F16)                       # [1,1,30,1] f16
     # A line row has many nonblack (>=10); a cell row has <=size-1 (<=6).  Threshold 6.5.
     init("THR", np.array(6.5, np.float16), np.float16)
     n("Greater", ["rownb", "THR"], "isline_r_b")                 # bool [1,1,30,1]
@@ -204,21 +198,19 @@ def build(task):
     n("Not", [n("Greater", ["rampC", "Wm1"], "cog")], "cingrid_b")  # [1,1,1,30]
     n("And", ["ringrid_b", "cingrid_b"], "ingrid_b")            # [1,1,30,30]
 
-    # Build colour-index L (f16) by priority:
-    #   if off-grid -> 0
-    #   elif online (line) -> permyellow? 4 : color
-    #   else (cell interior) -> Ypix? 4 : 3
+    # Build colour-index L (f16) with as few full fp16 planes as possible.
+    #   is4 = permyellow OR (interior-cell yellow)   [interior = NOT online]
+    #   base = online ? color : 3   ;  L0 = is4 ? 4 : base   ;  L = ingrid ? L0 : 99
     init("YEL", np.array(4.0, np.float16), np.float16)
     init("GRN", np.array(3.0, np.float16), np.float16)
     init("ZL", np.array(99.0, np.float16), np.float16)  # off-grid sentinel (no channel hot)
-    # interior value
-    n("Where", ["Ypix_b", "YEL", "GRN"], "interiorL")          # [1,1,30,30] f16
-    # line value: permyellow?4:color  (colorF is [1,1,1,1])
-    n("Where", ["permyellow_b", "YEL", "colorF"], "lineL")     # [1,1,30,30] f16
-    # combine line vs interior by online
-    n("Where", ["online_b", "lineL", "interiorL"], "gridL")    # [1,1,30,30]
-    # apply in-grid
-    n("Where", ["ingrid_b", "gridL", "ZL"], "L")               # [1,1,30,30] f16
+    # interior value: Ypix ? 4 : 3
+    n("Where", ["Ypix_b", "YEL", "GRN"], "interiorL")          # f16 [1,1,30,30]
+    # line value: permyellow ? 4 : color
+    n("Where", ["permyellow_b", "YEL", "colorF"], "lineL")     # f16 [1,1,30,30]
+    # combine line vs interior by online, then apply in-grid (off-grid -> 99 sentinel)
+    n("Where", ["online_b", "lineL", "interiorL"], "gridL")    # f16 [1,1,30,30]
+    n("Where", ["ingrid_b", "gridL", "ZL"], "L")               # f16 [1,1,30,30]
 
     # ============== route 10-ch expansion to FREE output ==============
     chan = np.arange(10, dtype=np.float16).reshape(1, 10, 1, 1)
