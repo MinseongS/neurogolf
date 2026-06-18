@@ -4385,14 +4385,16 @@
  {
   "task": 347,
   "arc_id": "dae9d2b5",
-  "points": 18.53,
+  "points": 19.45,
   "memory": 612,
   "params": 35,
-  "method": "ext:wguesdon6304",
+  "method": "custom:task347",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.92 (18.53->19.45): overlay two colour-keyed half-grids into fixed presence-colour = OR two source slices to bool fg, tiny [1,7,3,3] uint8 one-hot (bg@0,pink@6 via Concat zeros gap), Pad free. skips W[10,2,1,1] Conv"
  },
  {
   "task": 348,

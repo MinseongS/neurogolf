@@ -2077,10 +2077,10 @@
    "method": "custom:task346"
   },
   "347": {
-   "points": 18.527653705499098,
-   "memory": 612,
-   "params": 35,
-   "method": "ext:wguesdon6304"
+   "points": 19.447040415078384,
+   "memory": 189,
+   "params": 69,
+   "method": "custom:task347"
   },
   "348": {
    "points": 16.54234452129996,
