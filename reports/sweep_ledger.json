@@ -4026,7 +4026,7 @@
  {
   "task": 312,
   "arc_id": "c9f8e694",
-  "points": 16.35,
+  "points": 16.77,
   "memory": 5700,
   "params": 6,
   "method": "custom:task312",
@@ -4034,7 +4034,7 @@
   "sig": "overlaps",
   "status": "done",
   "verdict": "",
-  "note": "prior committed custom (ledger was stale)"
+  "note": "WIN 2026-06-19 (plane-free harvest): separable per-row recolour 16.35->16.77 (+0.42, ADOPTED 500/500). Where(gray_mask, col0[1,10,30,1], input) routes per-row colour vector x box-mask into FREE output, no carrier. CROP-TO-ACTIVE: slice ch5 AND 12x12 grid in ONE Slice (576B vs 3600B full channel slice), lift mask via uint8 Pad->Greater->bool. Floor=col0 1200B + two 900B uint8/bool pad-backs."
  },
  {
   "task": 313,
