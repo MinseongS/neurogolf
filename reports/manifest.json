@@ -1915,10 +1915,10 @@
    "method": "gen:thbdh6332"
   },
   "320": {
-   "points": 16.9893084608697,
-   "memory": 2880,
-   "params": 133,
-   "method": "ext:vyank6322"
+   "points": 17.206413196628418,
+   "memory": 2260,
+   "params": 165,
+   "method": "custom:task320"
   },
   "321": {
    "points": 17.882794496835658,

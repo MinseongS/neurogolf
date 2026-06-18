@@ -3953,14 +3953,15 @@
  {
   "task": 320,
   "arc_id": "ce9e57f2",
-  "points": 16.99,
-  "memory": 2880,
-  "params": 133,
+  "points": 17.21,
+  "memory": 2260,
+  "params": 165,
   "method": "ext:vyank6322",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.40 (recolor bottom floor(L/2) of run; \u00d72+1 folded into one triangular matrix)"
  },
  {
   "task": 321,
