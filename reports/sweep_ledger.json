@@ -1650,7 +1650,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: sprite reconstruction from 2 shown pixels at variable mags; correspondence + up-"
+  "verdict": "INFEASIBLE: sprite reconstruction from 2 shown pixels at variable mags; correspondence + up-",
+  "note": "multi-sprite reconstruction/correspondence wall: variable-count sprites, per-sprite runtime-mag Kronecker, cross-channel anchor matching = connectivity (banned). insight: marker pcolor=argmax(bbox_area/pixel_count)"
  },
  {
   "task": 134,
