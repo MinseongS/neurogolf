@@ -3300,8 +3300,9 @@
   "method": "custom:task269",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "already has committed magnify custom (16.4)"
  },
  {
   "task": 270,
