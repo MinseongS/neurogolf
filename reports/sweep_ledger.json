@@ -2411,7 +2411,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 7b6016b9: line/ray drawing through boxes with intersection rules; connectivity"
+  "verdict": "INFEASIBLE: 7b6016b9: line/ray drawing through boxes with intersection rules; connectivity",
+  "note": "RE-PROBE WALL: recolor bg->green, color pixels stay, BOX INTERIORS->red, where boxes are nested/edge-sharing rectangle outlines crossed by many color lines. 4-dir prefix/suffix-OR over-marks (lines give color all 4 dirs); border flood only 98.33% (line-pockets falsely painted, ~3.3 fail/200); rect-outline/bounding-ring detectors 0/400 (nested edge-sharing => no complete ring, interior lines spoof nearest-wall). Box-interior vs line-pocket not separable closed-form. Re-confirms task198/task255."
  },
  {
   "task": 188,
@@ -2583,14 +2584,15 @@
  {
   "task": 201,
   "arc_id": "846bdb03",
-  "points": 13.72,
+  "points": 15.46,
   "memory": 79002,
   "params": 308,
   "method": "gen:vyank6322",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 846bdb03: reconstruct/compare two conway sprites in a box; correspondence"
+  "status": "done",
+  "verdict": "INFEASIBLE: 846bdb03: reconstruct/compare two conway sprites in a box; correspondence",
+  "note": "RE-PROBE WIN +1.74 (13.72->15.46): looked like shape-correspondence but is pure SPATIAL COPY + optional 1-D MIRROR. 1-D-profile scalars (yellow-corner bbox=>output size; nonzero-outside-box=>sprite bbox; centroid=>flip); FIXED OHxOW colour plane via Gather source coords w/ per-axis flip Where; sentinel + Pad+Equal into free output. GOTCHA: set OH/OW from train+test+arc-gen, NOT generator sampling. fresh 200/200."
  },
  {
   "task": 202,
@@ -4714,7 +4716,8 @@
   "class": "BAIL?",
   "sig": "overlaps",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: e6721834: sprite extraction/placement by correspondence"
+  "verdict": "INFEASIBLE: e6721834: sprite extraction/placement by correspondence",
+  "note": "GAP-CLOSER PROBE -> WALL: in-context template matching. Extract 2-3 solid forecolor boxes (size 2-7, embedded dots) from FORE half, reconstruct in non-fore half by matching each scattered dot cluster to fore box whose dot stencil (color+geometry) coincides. Matching key = full dot stencil (not count/colorset). Non-fore dots non-adjacent => CC cannot group; grouping circular without variable-size template correlation. Best scipy reference ~92%, not even exact. Current net fails fresh (38/40) so contributes ~0 real LB but no generalizing replacement expressible."
  },
  {
   "task": 367,
