@@ -1226,8 +1226,9 @@
   "method": "conv3x3+b",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "at-floor: genuine 3x3 edge/erosion (hollow boxes keep 1px border), deployed conv GENERALIZES 200/200 (not gap-closer). mem-0 single Conv optimal, closed-form needs 3600B fp32 occupancy plane (cap 16.8)"
  },
  {
   "task": 99,
@@ -3697,8 +3698,9 @@
   "method": "conv3x3+b",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "at-floor: genuine 3x3 erosion (interior->red iff all 8 neighbours gray), deployed conv GENERALIZES 200/200. mem-0 single Conv optimal"
  },
  {
   "task": 295,
