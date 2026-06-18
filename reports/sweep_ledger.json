@@ -1610,8 +1610,9 @@
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "",
+  "note": "at-floor 18.20: dilate + cross-channel relabel (cell center k->fill 3x3 k+5) mem-0 Conv[10,10,3,3]. k->k+5 shift forbids grouping (verified groups 10/5/2/1), 3x3 forced, params=900 dense irreducible. sibling of 120/095/272"
  },
  {
   "task": 128,
