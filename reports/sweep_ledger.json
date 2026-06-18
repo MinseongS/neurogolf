@@ -842,7 +842,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 2dd70a9a: snake-path tracing along blue cells (orientation-equiv applied but pat"
+  "verdict": "INFEASIBLE: 2dd70a9a: snake-path tracing along blue cells (orientation-equiv applied but pat",
+  "note": "REVERIFIED wall: variable-length maze/staple path reconstruction; bend ambiguous from terminals (same terminals -> different bends), encoded only in cyan corner markers indistinguishable from 20% cyan noise; variable-length arm flood. True-positive."
  },
  {
   "task": 67,
