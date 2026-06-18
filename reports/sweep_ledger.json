@@ -671,8 +671,9 @@
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "at-floor 21.60: whole-grid row shift preserving bg ch0 = mem-0 single Gather(axis=2), params=30=output extent (irreducible). computed Range+Concat index cuts to ~6 params but materializes 456B int64 plane (18.9 worse). floor=30"
  },
  {
   "task": 54,
