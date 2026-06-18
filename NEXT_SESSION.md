@@ -54,3 +54,12 @@ Stop when the mid-manifest pool is exhausted + no productive work, or user inter
 gap 28.96 (219+255) is unrecoverable. Remaining runway = mid-manifest sweet spot (~38 untouched 14-16.5
 tasks, ~+0.5/win avg with occasional +1-2) + a few low-manifest solvables (like 191 +2.24). Once mined out,
 the practical ceiling is reached (avg ~17/task on solvables; 7500 not reachable per STRATEGY_7500.md).
+
+## UPDATE (handoff continued, ~15:40)
+- #23 CONFIRMED **6585.61** (proj 6585.60, 0.01). That is the live confirmed LB.
+- **+1.79 unsubmitted** sitting on top: task14 (+1.20, adopt showed current real=0.00 → MIGHT be a gap-closer
+  worth ~+15 real, or a false-neg like task105 — the next submit reveals which) + 9/182 stragglers.
+  → NEXT SESSION: this already exceeds nothing-special, but SUBMIT EARLY to (a) lock +1.79 and (b) resolve
+  whether task14 is a gap-closer (if LB jumps ~+15 over proj, it was). anchor.stored_at_submit=6614.56.
+- task80 confirmed-infeasible (data-dependent-period linegrid, runtime-stride wall). 349/387/17/44/185 left
+  pending (agents killed mid-run or rejected). Mid-manifest pool ~36 untouched remain.
