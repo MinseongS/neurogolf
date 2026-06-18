@@ -1,7 +1,7 @@
 {
- "comment": "#23 SESSION-FINAL PENDING (proj 6585.60). Next session STEP 0: poll kaggle to confirm + set pending=false + log. gap 28.96==219+255.",
+ "comment": "#23 CONFIRMED 6585.61 (proj 6585.60, 0.01; 21st near-exact). gap 28.96==219+255. +0.59 unsubmitted (9/182 stragglers).",
  "stored_at_submit": 6614.56,
- "lb": 6585.6,
+ "lb": 6585.61,
  "time_utc": "2026-06-18 15:30",
- "pending": true
+ "pending": false
 }

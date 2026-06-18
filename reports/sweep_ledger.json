@@ -4346,8 +4346,9 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: db93a21d: draw shadow (blue below) + green halo around maroon squares by radius;"
+  "status": "pending-retry",
+  "verdict": "INFEASIBLE: db93a21d: draw shadow (blue below) + green halo around maroon squares by radius;",
+  "note": "agent can not beat import 14.31 (best 13.22); near-wall, low priority"
  },
  {
   "task": 350,
