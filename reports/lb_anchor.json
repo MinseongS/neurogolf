@@ -1,9 +1,10 @@
 {
  "comment": "#25 CONFIRMED 6595.39 (proj 6595.39, EXACT; 22nd near-exact). gap 28.96==219+255. session 6586.75->6595.39 +8.64 (14 golf wins). +0.33 unsubmitted (task257) + agents 114/181 pending for #26.",
- "stored_at_submit": 6624.35,
+ "stored_at_submit": 6623.81,
  "lb": 6595.39,
  "time_utc": "2026-06-18 16:12",
- "pending": false,
- "pending_submit": "#25: 14 golf wins (uint8 lever + count/gather rewrites, incl task399 +2.12). stored_at_pack 6624.35, proj 6595.39, gap 28.96",
- "prev_stored_at_submit": 6615.71
+ "pending": true,
+ "pending_submit": "#26 GAP-CLOSER TEST task151. proj 6594.85. if LB>>proj(~+15) -> 151 real gap-closer (pivot to non-gen conv hunt); if LB==6594.85 -> false-pos, REVERT 151.",
+ "prev_stored_at_submit": 6624.35,
+ "prev_lb": 6595.39
 }
