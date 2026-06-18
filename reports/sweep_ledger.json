@@ -2094,8 +2094,9 @@
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "at-floor 21.60: fixed horizontal mirror-and-append = single Gather(axis=3) mem-0, params=30=output cols (irreducible, full 30-col canvas needs 30 indices). full-width-gather copy/mirror at params=30 = hard floor"
  },
  {
   "task": 165,
