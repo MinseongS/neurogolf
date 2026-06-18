@@ -469,10 +469,10 @@
    "method": "custom:task078"
   },
   "79": {
-   "points": 15.029648507210364,
-   "memory": 21138,
-   "params": 245,
-   "method": "gen:thbdh6332"
+   "points": 15.3865305797132,
+   "memory": 14844,
+   "params": 121,
+   "method": "custom:task079"
   },
   "80": {
    "points": 15.224743625360954,
