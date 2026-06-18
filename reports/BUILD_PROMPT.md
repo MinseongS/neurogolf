@@ -387,3 +387,13 @@ high-bloat task with NO documented reason, treat it as UNEXPLORED. Proven collap
   suffices. Recover m from pixel COUNT alone when count ranges don't overlap.
 TRUE WALL re-confirmed: 279 (variable-count correspondence — barnacles bridge closed+open boxes into one
 8-conn component needing 2 colours; flood/parity ceiling ~97.8% fresh).
+
+## ⚠️ STALE DTYPE CLAIMS — re-test before trusting an "at-floor" verdict (58 +0.46, 102, 237)
+Several "at-floor"/"skip-marginal" verdicts were recorded against STALE ORT-dtype claims that are FALSE on
+the current ORT build. Before paying fp32 (or bailing), run a 5-line ORT(ORT_DISABLE_ALL) test of the op:
+- "fp16 Min/Max crashes under ORT_DISABLE_ALL" — FALSE now; whole-geometry fp16 dropped 58 from 37k→10k.
+- "ORT upcasts Where to fp32" — FALSE now; fp16 Where works.
+- uint8 elementwise-max is missing → use `Where(Greater(a,b),a,b)` (900B, beats fp16 Max 1800B).
+- Pad at opset-10 rejects uint8/bool → forces a 1800B fp16 pad-back plane; so CROP-TO-ACTIVE is NET-NEGATIVE
+  whenever the output mask must be full 30×30 unless ≥6 large planes sit downstream of the pad point (64 wall).
+A task whose only blocker in the tasklog is a dtype-crash claim is a prime re-probe candidate.
