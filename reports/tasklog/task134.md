@@ -17,12 +17,22 @@ full-grid megacolor mask; that [1,1,30,30] plane is the floor.
 |---|---|---|---|---|---|---|---|
 | 1 | colf-Conv + 2×2-solid-block detect (dilated) + bbox-pool MatMul | B | 45715 | 218 | 14.27 | (stored ok) | too many full planes; fp16 doesn't help (ORT upcasts trace to fp32) |
 | 2 | density-by-bbox-area (per-channel ramp planes) + Equal mask + label-Pad-Equal | B | 24505 | 180 | 14.89 | — | per-channel ramp planes (8×1200) + fp32 colf + L all expensive |
-| 3 | **presence-density (cnt/(nrows·ncols)) + Gather mm + Floor-Equal selectors + 3×3 one-hot Pad** | **B** | **9459** | **110** | **15.83** | **400/400** | exact, generalizes; final |
+| 3 | presence-density (cnt/(nrows·ncols)) + Gather mm + Floor-Equal selectors + 3×3 one-hot Pad | B | 9459 | 110 | 15.83 | 400/400 | exact; prior probe, self-gated (not adopted) |
+| 4 | **same density ID; sample 3×3 by 2 chained scalar Gathers (block top-left), drop selector MatMul** | **B** | **7378** | **36** | **16.089** | **400/400** | **exact, generalizes — BEST, beats P by +0.51** |
 
 ## Best achieved
-15.834 @ mem 9459 params 110 — adopted? N (orchestrator gates). Beats prior 15.576 by
-**+0.26** → MARGINAL (below the +0.3 adopt bar) but a clean generalizing custom net
-replacing a non-custom `gen:` method. 266/266 stored, 400/400 fresh isolated (2 trials).
+**16.089 @ mem 7378 params 36 (attempt 4) — beats prior P=15.576 by +0.51 AND beats the
+earlier probe's +0.26.** 266/266 stored, 200/200 fresh isolated x2 (separate processes,
+generator loaded by file path). This is the net in src/custom/task134.py.
+
+Why attempt 4 beats attempt 3: the prior probe built block-selector matrices Srow/Scol and
+did P = Srow @ mm @ Scol (selector bool+float pairs + MatMul, ~3.4k overhead). Attempt 4
+recovers the SAME scalars (mega_idx, rmin, cmin, mag) then samples the 3×3 directly by two
+chained scalar-index Gathers at the fixed TOP-LEFT corner of each m×m block (each block is
+solid-or-empty so one sample per block is exact) — no selector planes, no MatMul. Tail
+overhead drops to ~1.4k; mem 9459 -> 7378.
+
+### Prior probe (attempt 3) best: 15.834 @ mem 9459 params 110 (NOT adopted, self-gated).
 
 Key exact pieces (all verified independently to 40k fresh instances):
 - **megacolor = argmax_k presence-density** `cnt[k] / (n_present_rows[k]·n_present_cols[k])`,
@@ -73,3 +83,13 @@ clustered-noise or noise>mega instances.
 - **Selector matrices for a regular block tiling can be a single Floor+Equal** when the
   underlying mask is zero outside the bbox: spurious out-of-range selector entries are
   annihilated by the zero mask in the MatMul, so no in-bbox gating is required.
+- ⭐ **A data-dependent K-block downsample need not MaxPool/MatMul-pool the whole block** —
+  sample the FIXED top-left corner of each m×m block via two chained scalar-index Gathers
+  (row_idx = rmin + m·[0,1,2], col_idx likewise) on the gathered single-channel plane. Each
+  block is solid-or-empty so one sample is exact; this drops the selector/MatMul pooling
+  overhead entirely (attempt 3 -> 4: 9459 -> 7378, +0.26 over the probe).
+- ⭐ **Proxy density cnt/(#occ_rows·#occ_cols) avoids the reversed-profile (rmax) plane**: for
+  a SOLID magnified sprite the conway "every-row/col-occupied" guarantee makes
+  occupied-row-count == row-SPAN, so the SAME two ReduceMax profiles give rmin/cmin (ArgMax)
+  AND span/mag (ReduceSum) — no third/reversed plane, and the proxy still separates mega
+  (≥0.33) from scatter (≤0.28) with 0/20000 overlap (worst gap 0.143).

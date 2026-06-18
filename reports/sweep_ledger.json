@@ -1708,15 +1708,15 @@
  {
   "task": 134,
   "arc_id": "5ad4f10b",
-  "points": 15.58,
+  "points": 16.09,
   "memory": 12300,
   "params": 80,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "mega",
-  "status": "skip-marginal",
+  "status": "done",
   "verdict": "FEASIBLE A ~17.0pt: 5ad4f10b: output 3x3 = downscale the magnified conway sprite (megacolo",
-  "note": "re-attack 15.83 vs 15.58 (+0.26 MARGINAL); conway sprite not separable, 3600B full-grid mask floor; gen 400/400+40k"
+  "note": "WIN +0.51: presence-DENSITY-argmax; PROXY density cnt/(#occ_rows*#occ_cols) exact (conway every-row/col-occupied => occ-row-count = row-span), dodges reversed-profile plane; data-dep K-block downsample via 2 chained scalar-index Gathers of block top-left (solid block => 1 sample exact). 9459->7378. fresh 200/200."
  },
  {
   "task": 135,
