@@ -2413,8 +2413,9 @@
   "method": "ext:wguesdon6304",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "at-floor: C4 rotational symmetrization 3x3->6x6 = one GridSample(nearest)+small-grid+Pad; floor is fp32 sampled plane (10*36*4B=1440B), unshrinkable (GridSample inherits fp32). Agent tied import +0.006, no adopt."
  },
  {
   "task": 195,
