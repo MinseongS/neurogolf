@@ -2518,14 +2518,15 @@
  {
   "task": 196,
   "arc_id": "810b9b61",
-  "points": 14.62,
+  "points": 15.25,
   "memory": 32175,
   "params": 66,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 810b9b61: recolor box outlines green if 'closed' (no gap and >=3x3) else blue, k"
+  "status": "done",
+  "verdict": "INFEASIBLE: 810b9b61: recolor box outlines green if 'closed' (no gap and >=3x3) else blue, k",
+  "note": "RE-PROBE WIN +0.63 (14.62->15.25): exterior flood = 11-iter MaxPool3x3+Mul-gate bounded unrolling (8-conn mandatory; 11=15x15 8-conn diameter). KEY: off-grid one-hot is ALL-ZERO so ch0=0 there; flood through notblue=1-ch1, mask to in-grid (ch0 OR ch1) + 99 sentinel. fresh 200/200."
  },
  {
   "task": 197,
