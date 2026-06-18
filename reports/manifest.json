@@ -2329,10 +2329,10 @@
    "method": "custom:task388"
   },
   "389": {
-   "points": 17.451444020830127,
-   "memory": 1856,
+   "points": 17.911591221324606,
+   "memory": 1156,
    "params": 42,
-   "method": "gen:thbdh6332"
+   "method": "custom:task389"
   },
   "390": {
    "points": 16.073084110222958,

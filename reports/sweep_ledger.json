@@ -4841,14 +4841,16 @@
  {
   "task": 389,
   "arc_id": "f76d97a5",
-  "points": 17.45,
+  "points": 17.91,
   "memory": 1856,
   "params": 42,
-  "method": "gen:thbdh6332",
+  "method": "custom:task389",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "generalizing exact (adopt-gate fresh 200/200)",
+  "class_": "WIN",
+  "note": "golf +0.46 (17.45->17.91): gray-dots->bg-color recolor = single 1x1 Conv, rank-2 [10,10,1,1] weight from fp16 outer-products + one fp32 Cast; 10ch output expansion into FREE output; removed redundant W_2d copies"
  },
  {
   "task": 390,
