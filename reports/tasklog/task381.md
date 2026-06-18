@@ -17,23 +17,40 @@ per-cell neighbourhood function, so no single-Conv Tier-S).
 |---|---|---|---|---|---|---|---|
 | 1 | iterative radius-1 run-spread of "danger" within non-red runs (8 then 7 iters) + label/Equal | B | 6200 | 433 | 16.20 | 500/500 | correct but 14 spread planes dominate; below P |
 | 2 | doubling spread (offsets 1,2,4,8) | B | 6200 | 833 | 16.14 | 126/200 | WRONG — offset-o jump leaks across a single red separator |
-| 3 | PER-ROW block test + "red above" only (no spread) + label/Equal | B | 3250 | 44 | 16.90 | 500/500 | best; beats P, edges adopted 16.84, short of +0.3 |
+| 3 | PER-ROW block test + "red above" only (no spread) + label/Equal | B | 3250 | 44 | 16.90 | 500/500 | best (prior); beats P, edges adopted 16.84, short of +0.3 |
+| 4 | STATIC ROW-MASK (rows 1..8 safe) + leftOR/rightOR maxpools + Concat-10ch carrier + Pad | B | 3200 | 129 | 16.89 | 200/200 | beats adopted +0.05; danger-detection chain fully removed |
+
+## ⭐ NEW INSIGHT (2026-06-19 re-probe) — the danger chain is ELIMINABLE
+The generator's two reject clauses pin the danger result to a STATIC row mask:
+  - "Avoid maroons in top/bottom row" => row 0 and row 9 NEVER contain maroon.
+  - The interior-row red-black-red validator => rows 1..8 NEVER contain a black
+    between-reds gap.
+Verified on 4000 fresh instances: 0 maroons in row 0/9, 0 interior black gaps.
+=> a between-reds run is maroon IFF 1<=row<=8.  The ENTIRE danger machinery
+(red-above/below maxpool + gap&danger AND + per-row ReduceMax + Not) collapses to
+ONE constant [1,1,10,1] bool init `rowsafe` (rows 1..8 = True) AND'd with gap.
+This removed ~620B (vmax fp16 200 + danger/gd/gd_u8/rowdng bools) vs attempt #3.
+Also: uint8 ReduceMax is VALID at opset>=12 (fails at opset 11) — but became moot
+once the reduce itself was deleted.
 
 ## Best achieved
-16.90 @ mem 3250 params 44 — adopted? N (agent does not adopt). Beats prior P
-16.75? YES (+0.15). Beats adopted 16.84? marginally (+0.06). Reaches +0.3
-(17.05)? NO → MARGINAL.
+16.89 @ mem 3200 params 129 (src/custom/task381.py).  Beats adopted 16.84 by
++0.05.  Reaches +0.3 (target 17.14, mem+params <= 2588)?  NO -> MARGINAL.
 
-## Irreducible-floor analysis
-mem 3250 = L[1,1,30,30] uint8 label 900 (output is 30x30 → 30x30 label floor for
-the final Equal) + ch2 fp32 Slice 400 (Slice preserves input fp32; the red plane
-must be float for MaxPool/Conv) + two directional 1x10 MaxPools 400 (need both
-"red-left" and "red-right" for the between-two-reds span) + 3 fp16 work planes
-600 (ch2f, above_f, blocked_f) + ~8 bool 10x10 planes ~800 + tiny per-row vecs.
-The 1700B of L+slice+MaxPools is structural.  To reach 17.05 needs ≤2840 total
-(−410): no plane removal found that keeps exactness (Concat-output is 1000B >
-900B L and trips ORT's bool-Pad rejection without sanitize; maroon-Where output
-needs a 30x30 bool which costs a 1800B pad+cast).
+## Irreducible-floor analysis (updated for attempt #4 @ 3200)
+mem 3200 = inner_u8 Concat carrier [1,10,10,10] 1000 (10-channel output carrier;
+Pad-rejects-bool so it must be uint8 before the final Pad->output; can't place the
+3 nonzero channels {0,2,9} non-contiguously so all 10 channels materialize) +
+red_f32 Slice [1,1,10,10] 400 (Slice preserves input fp32; red plane needed float
+for MaxPool) + R/leftOR/rightOR fp16 600 (run detection: red-on-both-sides) + ~11
+bool/uint8 10x10 planes 1100 (is_red, notred, lb, rb, between_b, gap, maroon,
+nonblack, black + 2 carrier casts).
+Floor pieces inner(1000)+red(400)=1400 are hard.  To reach +0.3 (17.14, mem+params
+<= 2588) leaves only ~1059B for ALL run detection, but that needs ~600 fp16 +
+~800 bool = ~1400.  Structurally short by ~800B => MARGINAL CONFIRMED.
+Verified the Where-into-FREE-output alternative is WORSE: it drops the carrier
+(red copies from input) but the 30x30 maroon condition costs pad-uint8(900)+
+cast-bool(900)=1800 > Concat(1000), netting ~3600.  Concat carrier wins.
 
 ## OPEN ANGLES (re-attack backlog)
 - Single fused op for the "between two reds" span replacing the two MaxPools

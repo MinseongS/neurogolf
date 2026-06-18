@@ -2281,10 +2281,10 @@
    "method": "custom:task380"
   },
   "381": {
-   "points": 16.840625263224574,
-   "memory": 3350,
-   "params": 146,
-   "method": "ext:ghiotto_conv4"
+   "points": 16.889572762424976,
+   "memory": 3200,
+   "params": 129,
+   "method": "custom:task381"
   },
   "382": {
    "points": 14.612143741760242,

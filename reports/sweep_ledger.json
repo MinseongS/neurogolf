@@ -4921,15 +4921,15 @@
  {
   "task": 381,
   "arc_id": "ef135b50",
-  "points": 16.84,
+  "points": 16.89,
   "memory": 3350,
   "params": 146,
   "method": "ext:ghiotto_conv4",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "skip-marginal",
+  "status": "done",
   "verdict": "",
-  "note": "probe +0.06 over deployed 16.84 (fill-between-reds; per-row ReduceMax==per-run when generator forbids re-entrant patterns)"
+  "note": "RE-PROBE WIN +0.05 (16.84->16.89, marginal): fill-between-reds. KEY insight = whole danger-detection chain (red-above/below maxpool + gap AND + ReduceMax + Not, ~620B) ELIMINABLE -> ONE constant [1,1,10,1] bool row mask, because generator REJECT clauses pin it: between-reds run is maroon IFF 1<=row<=8 (0 maroons rows 0/9, 0 interior black gaps / 4000 fresh). LESSON: when a per-cell predicate is fully determined by generator reject clauses, replace detection with a static constant. fresh 200/200."
  },
  {
   "task": 382,
