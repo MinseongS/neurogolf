@@ -690,7 +690,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 264363fd: star projected along box rows/cols + reflected onto other boxes; objec"
+  "verdict": "INFEASIBLE: 264363fd: star projected along box rows/cols + reflected onto other boxes; objec",
+  "note": "REVERIFIED wall: variable-count(<=4) marker->box correspondence + multi-object reconstruction; boxes overlap in cols 100% so box-spanning line NOT separable row(x)col; per-marker box bbox + reference-star shape readout + flip/xpose. True-positive."
  },
  {
   "task": 55,
@@ -982,7 +983,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "RE-TRIAGE FALSE-POSITIVE: not a recolor, position-dependent detection w/ >50% reconstruction ambiguity (brute-force fails 77%). Infeasible at any budget."
+  "verdict": "RE-TRIAGE FALSE-POSITIVE: not a recolor, position-dependent detection w/ >50% reconstruction ambiguity (brute-force fails 77%). Infeasible at any budget.",
+  "note": "REVERIFIED wall: variable-count 2-D component correspondence/flood; within-box red Chebyshev gaps (~6) exceed between-box gaps (>=2 diag-adj) so no fixed dilation/1-D projection groups boxes; needs banned flood-fill (Loop/Scan/NonZero). best buildable 165/200. True-positive."
  },
  {
   "task": 78,
