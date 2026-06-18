@@ -3595,8 +3595,9 @@
   "method": "ext:octavi6154",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": "generalizes at stored 18.2 (isolated fresh 120/120); scan false-positive from single-process generator pollution. NOT a gap-closer."
+  "status": "confirmed-infeasible",
+  "verdict": "generalizes at stored 18.2 (isolated fresh 120/120); scan false-positive from single-process generator pollution. NOT a gap-closer.",
+  "note": "at-floor 18.20: gray dot stamps 3x3 (ortho->blue diag->gray centre->bg). mem-0 Conv[10,10,3,3] cross-channel+subtractive bg ch0, params=900 floor. RE-VERIFIED fresh 200/200 (truegen real=0 STALE/false). sparse-conv dead (scorer rejects / Constant materializes 3600B)"
  },
  {
   "task": 283,
