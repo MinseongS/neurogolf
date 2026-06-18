@@ -1948,14 +1948,16 @@
  {
   "task": 155,
   "arc_id": "68b16354",
-  "points": 18.44,
+  "points": 19.26,
   "memory": 668,
   "params": 36,
-  "method": "ext:kojimar6275",
+  "method": "custom:task155",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.82 (18.44->19.26): vertical flip output[H-1-r][c]=input[r][c]. LEVER: fully-filled square grid -> side H=Sqrt(ReduceSum(input,all)) single 4B scalar (fp16 Sqrt exact for squares<=2048), avoids [1,30] per-row vector. idx fp16 arith->int32 cast->Gather(axis=2) routes free input to free output"
  },
  {
   "task": 156,
