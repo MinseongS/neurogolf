@@ -201,3 +201,12 @@ Re-probe wave (6 wins): 174 (+0.68 symmetry-MatMul), 185 (+1.23 line-lattice), 1
 366 (template-matching ~92%), 187 (box-vs-line-pocket fill), 76 (rotated-sprite reveal, golfed exact solver).
 KEY: blank-note "confirmed-infeasible" labels remain ~50% false-positive; bounded-iteration unrolling (HARD_WALLS
 master key) cracked flood task 196. Session start LB 6635.63 -> 6644.18.
+
+## #34 — 2026-06-19 — CONFIRMED 6658.65 (proj 6658.64, EXACT +0.01)
+13 re-probe wins: 069(+1.02 4-conn plus-min label), 071(+0.80 mirror-complete), 379(+0.99 ray-stop-on-cyan),
+280(+0.36 beam-as-rect), 251(+2.06 hole-fill bounded-unroll), 168(+1.24 diagonal-ray), 079(+0.36 most-copied-sprite),
+170(+1.64 2-obj correspondence), 169(+1.38 component-count recolor), 364(+0.32 shape-classify flag-floods),
+090(+1.62 maximal-empty-rect), 145(+0.31 guillotine-rect-area), 183(+2.38 GatherND tier-A). 6644.18 -> 6658.65 = +14.47.
+⭐ KEY: gap-region "skip-list walls" 251 & 090 (blank-note) were FALSE-POSITIVES — cracked via HARD_WALLS §1
+bounded-iteration unrolling (crop-to-gen-size-cap) and closed-form (suffix-min MaxPool). Rejected: 243 (self-reported
+1000/1000 but failed isolated adopt-gate). Walls documented this session: 046/319/118/366/187/076. Session start LB 6635.63.
