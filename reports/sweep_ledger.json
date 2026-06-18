@@ -728,14 +728,15 @@
  {
   "task": 60,
   "arc_id": "29c11459",
-  "points": 16.37,
-  "memory": 5400,
-  "params": 181,
+  "points": 16.92,
+  "memory": 3140,
+  "params": 74,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "HAND-BUILT (main-loop, subagents down): mirror-fill marked rows; per-row left/right color via channel-contract, Equal(L,arange), sentinel-99 pad"
  },
  {
   "task": 61,
