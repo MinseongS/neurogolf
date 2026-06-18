@@ -613,10 +613,10 @@
    "method": "ext:biohack_new"
   },
   "103": {
-   "points": 19.758252984940356,
-   "memory": 155,
-   "params": 34,
-   "method": "ext:biohack_new"
+   "points": 20.246409808893635,
+   "memory": 81,
+   "params": 35,
+   "method": "custom:task103"
   },
   "104": {
    "points": 17.313837696507093,
