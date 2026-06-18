@@ -1,10 +1,10 @@
 {
  "comment": "#32 CONFIRMED 6635.63 (+7.01 over #31; proj 6636.66 was +1.03 high -> one of the 16 wave-2 wins passes arc-gen-fresh but scores ~1pt less on Kaggle held-out, gap grew 28.95->29.98). Session 6620.24->6628.62->6635.63 = +15.39 confirmed. Blank-note false-pos re-probe is the engine.",
- "stored_at_submit": 6665.61,
+ "stored_at_submit": 6674.16,
  "lb": 6635.63,
- "time_utc": "2026-06-18 23:06",
- "pending": false,
- "pending_submit": "#32 CONFIRMED 6635.63 (proj 6636.66, -1.03; one wave-2 net under-translated)",
- "prev_stored_at_submit": 6657.57,
- "prev_lb": 6628.62
+ "time_utc": "2026-06-19 submit#33",
+ "pending": true,
+ "pending_submit": "#33 PENDING (proj 6644.18, +8.55 over 6635.63): 6 re-probe wins 174/185/196/300/201/363",
+ "prev_stored_at_submit": 6665.61,
+ "prev_lb": 6635.63
 }
