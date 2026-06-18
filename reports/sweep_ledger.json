@@ -3328,8 +3328,9 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "",
+  "note": "at-floor 19.70: cyan->red+1row shift = mem-0 Conv[10,10,2,1] subtractive bg ch0, params=200 floor. SPARSE-CONV DEAD: sparse_initializer fails scorer shape_inference (unsupported sparse_tensor); Constant sparse_value materializes dense 800B intermediate (18.31 worse). cannot 200p->4p"
  },
  {
   "task": 262,
