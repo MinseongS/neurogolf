@@ -17,10 +17,14 @@ one irreducible fp32 30×30 gathered-pcolor plane.
 |---|---|---|---|---|---|---|---|
 | 1 | per-channel bbox (first/last) + fp16 MatMul | A | 17588 | 44 | 15.22 | — | too many [1,10,*] planes |
 | 2 | occupancy-IS-the-band (drop first/last/fill), fp16 | A | 11388 | 72 | 15.65 | — | +0.03, big simplification |
-| 3 | same, fp32 MatMul (no speck fp16 copy) | A | 10168 | 72 | 15.77 | 200/200 | best; +0.14 = MARGINAL |
+| 3 | same, fp32 MatMul (no speck fp16 copy) | A | 10168 | 72 | 15.77 | 200/200 | prior probe best; +0.14 |
+| 4 | Gather index-shape [1] (no Reshape dup) + uint8 Pad out + consolidated inits | A | 9840 | 25 | 15.803 | 500/500 | **NEW BEST +0.18**, written to src/custom |
+| 5 | fp16 cast of speck+occ downstream | A | 11020 | 36 | 15.69 | — | net-NEGATIVE: fp32 occ from ReduceMax stays, fp16 adds planes |
 
 ## Best achieved
-15.766 @ mem 10168 params 72 — adopted? N (build agent does not adopt). Beats prior 15.624? YES by +0.14, but BELOW the +0.3 bar → MARGINAL.
+15.803 @ mem 9840 params 25 — src/custom/task355.py WRITTEN. Beats prior stored 15.624 by **+0.18**; beats prior probe 15.766 by +0.04. Below +0.3 → MARGINAL by the tier label but a real GENERALIZING gain (500/500) that adopt.py accepts.
+
+Key fixes over attempt #3: (a) Gather(input, pcolor) with a **[1]-shaped index** yields [1,1,30,30] directly — the old Squeeze-to-scalar + Reshape created a DUPLICATE 3600B speck plane (7200B). (b) uint8 Pad to route the one-hot to cell (0,0) (bool Pad fails onnx.checker full_check, so Cast→uint8, declare output uint8; harness scores out>0). (c) consolidated arange(10) inits + dropped redundant `present` Where (absent channels have boxcnt=0 so ArgMax never picks them; only the pcolor channel must be zeroed since its bbox spans all specks).
 
 Approach: cnt=ReduceSum(input,[2,3]); pcolor=argmin nonzero count; speck=Gather(input,pcolor)
 [1,1,30,30]. Key simplification: a SOLID block fills every row/col in its range, so the 1-D

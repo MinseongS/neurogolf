@@ -4553,15 +4553,15 @@
  {
   "task": 355,
   "arc_id": "de1cd16c",
-  "points": 15.62,
+  "points": 15.8,
   "memory": 11706,
   "params": 89,
   "method": "gen:thbdh6332",
   "class": "CHECK",
   "sig": "-",
-  "status": "skip-marginal",
+  "status": "done",
   "verdict": "",
-  "note": "probe +0.14 (15.62->15.77) below +0.3 bar; insight: 1-D occupancy IS bbox band, band_k@marker@band_kT 2 MatMuls (tasklog355)"
+  "note": "WIN +0.18: Gather with [1]-shaped index keeps singleton channel dim -> [1,1,H,W] direct (no Reshape, no double-materialize 7200B->3600B); route [1,10,1,1] one-hot to cell(0,0) via Cast->uint8 then Pad (bool Pad fails checker) declare output uint8. fresh 500/500."
  },
  {
   "task": 356,
