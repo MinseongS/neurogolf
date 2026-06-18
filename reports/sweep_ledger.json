@@ -401,15 +401,15 @@
  {
   "task": 32,
   "arc_id": "1e0a9b12",
-  "points": 16.87,
+  "points": 17.5,
   "memory": 3336,
   "params": 69,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "skip-marginal",
+  "status": "done",
   "verdict": "",
-  "note": "probe +0.04 over P (2-plane floor: per-column gravity colored region); public net already at floor"
+  "note": "RE-PROBE WIN +0.63 (16.87->17.50): per-column gravity. Missed escapes: (1) colour-0==background under out>0 scoring (colour-0 column indistinguishable from empty => self-handles, deletes bg-vs-c0 split plane); (2) CROP-TO-ACTIVE right: build 6x6 working planes but do NOT slice f32 input (1440B) - run colsum/cnt Conv on FULL free input to [1,2,1,30] vector, slice cheap vectors, route via ONE uint8 Where(coloured_6x6, Xonehot[1,10,1,6], Yonehot[1,10,6,1]) Pad back, off-grid via cnt2=100+colidx99=99 sentinels. fresh 200/200."
  },
  {
   "task": 33,

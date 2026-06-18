@@ -20,7 +20,32 @@ input colours → needs a colour-index route, not a fixed Conv).
 | 6 | #4 with 3-ch conv (drop ReduceMax) | B | 3034 | 952 | 16.71 | — | +300 params > saved mem |
 | 7 | #4, s from colin only (drop 2nd ReduceMax plane), f16 vectors | B | 2974 | 651 | **16.80** | 500/500 | BEST |
 
-## Best achieved
+## Best achieved (2026-06-19 re-attack — WIN)
+**17.50 @ mem 1160 params 648** — beats adopted P=16.867 by **+0.63**. fresh 200/200
+(truly isolated, independent generator load). src/custom/task032.py.
+
+The prior "2-plane floor → MARGINAL" verdict was WRONG: it never tried CROP-TO-ACTIVE
+nor the colour-0-is-bg observation. Two structural escapes broke it:
+1. **colour-0 == background** (scoring is out>0): a colour-0 column writes value 0 to
+   its active cells == bg, so it is indistinguishable from an empty column in BOTH
+   input and output. Handle ONLY colour>=1 columns; colour-0 columns fall out as
+   all-bg automatically. This removes the entire "distinguish bg from colour-0" plane.
+2. **CROP-TO-ACTIVE (grid <=6x6)**: build EVERY working plane at 6x6. coloured drops
+   900B->36B, the routed one-hot drops to a [1,10,6,6] u8 (360B) Pad'ed back to 30x30.
+3. **Do NOT slice the input** to [1,10,6,6] (1440B f32). Run the colsum/cnt Conv on the
+   FULL free input (W[2,10,30,1] -> [1,2,1,30], 240B) and slice only the cheap 30-wide
+   vectors to width 6. The 600 conv params cost far less than a 1440B input window.
+4. **ONE Where into the output, NO L plane**: coloured (6x6 bool) selects between
+   Xonehot[k,c]=(colidx99[c]==k) ([1,10,1,6]) and Yonehot[k,r]=(k==0 AND r<s)
+   ([1,10,6,1]); off-grid columns -> cnt2=100 (coloured) + colidx99=99 (sentinel) =>
+   all-zero; off-grid rows -> Yonehot=0. Where needs uint8 branches (bool Where is
+   NOT_IMPLEMENTED under ORT_DISABLE_ALL, still true on this build).
+
+Dominant cost now: conv params 600 (the full-height kernel) + the [1,10,6,6] u8 Where
+(360B). Remaining open angle: shave the 600 conv params (every cheaper colidx/cnt route
+costs a >=1200B presence plane, net worse).
+
+## (superseded) Best achieved
 16.80 @ mem 2974 params 651 — beats prior 16.76 by **+0.04** → MARGINAL (< +0.3).
 
 Key encoding (2 full 30×30 planes only):
