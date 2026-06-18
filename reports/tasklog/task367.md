@@ -1,0 +1,76 @@
+# task367 — e73095fd
+
+**Rule:** Grid W,H in [10,20] (fits 20x20). 2-4 gray(5) RECTANGLE OUTLINES (>=3x3, 1px gray
+perimeter, BLACK interior), non-overlapping. A box's column may be -1..W-wide+1 so a box can be
+CLIPPED by exactly ONE column at the LEFT (col=-1) or RIGHT (right wall off-grid); never clipped
+vertically. Straight 1px gray LINES connect box edges to other boxes / the grid border; lines stay
+gray. OUTPUT: every BLACK interior cell of a box outline -> YELLOW(4); gray & background unchanged.
+The hard part: line-formed loops fake a 4-direction enclosure, AND boxes can be edge-clipped.
+
+**Current (prior):** 13.14 pts, mem 141212, params 144 (public net). Prior agent: "INFEASIBLE".
+
+**Target tier:** B — interior fill is a closed-form per-box geometric predicate; not a flood wall.
+
+## EXACT rule found (verified 500/500 fresh, isolated)
+A black cell is a box interior iff, with the NEAREST gray wall in each of the 4 directions
+(rows rU/rD, cols cL/cR; a grid-border CLIP allowed for at most ONE of {left,right}), the rectangle
+[rU,rD]x[c0,c1] is a genuine box outline:
+- top & bottom walls fully gray across [c0..c1]   (row CumSum span == width)
+- left & right walls fully gray across [rU..rD]    (col CumSum span == height; skip a clipped side)
+- the HORIZONTAL walls TERMINATE at the box corners: g(rU,c1+1),g(rD,c1+1) NOT gray (right) and
+  g(rU,c0-1),g(rD,c0-1) NOT gray (left).  **Only the two HORIZONTAL corner-termination checks are
+  load-bearing** (vertical ones are redundant) — they are exactly what rejects a straight line wall
+  (a line extends PAST the corner; a box wall terminates AT it).
+Clip boundaries use the in-grid mask (grid = solid top-left rect, off-grid = ch0&ch5 both 0):
+left clip -> c0=0; right clip -> c1 = last in-grid col of the row (= ReduceSum(ing,row)-1).
+The sentinel-ring idea does NOT apply: a clipped box's interior is GENUINELY reachable from the
+border through the 1-col clip gap, so flood-from-border is wrong; rectangle-gate is the right tool.
+
+## Attempts
+| # | angle | mem | params | pts | fresh | outcome |
+|---|---|---|---|---|---|---|
+| 1 | naive 4-dir enclosure | - | - | - | 81/300 | line-loops over-fill |
+| 2 | rect-perimeter, no corner gate | - | - | - | 85/300 | line-loops fake rect |
+| 3 | + horizontal corner-termination | - | - | - | 1500/1500 | EXACT rule found (numpy) |
+| 4 | ONNX scans+CumSum+GatherND, 30x30 fp32 | 1150740 | 2355 | 11.04 | 104/104 | exact, too big |
+| 5 | crop to 20x20 | 386300 | 1124 | 12.13 | ok | |
+| 6 | fp16 working planes (CumSum stays fp32) | 262700 | 1124 | 12.52 | ok | |
+| 7 | gridRmax via ReduceSum (drop 2 scans) | 235580 | 1046 | 12.63 | ok | |
+| 8 | flat-index GatherND ([A,A,1] not [A,A,2]) | 192540 | 3486 | 12.81 | ok | |
+| 9 | reach-8 scans (3 doubling steps; walls <=5 away) | 177180 | 1541 | **12.91** | 500/500 | best, EXACT |
+
+## Best achieved
+**12.91 @ mem 177180 params 1541 — EXACT, isolated fresh 500/500.** Beats 13.14? **NO** (−0.23).
+
+## Irreducible-floor analysis
+The exact rule needs PER-CELL 2-D reads of CumSum/gray at the four wall positions (rU,rD,cL,cR)
+for the span + corner checks = 12 `GatherND`, 9 distinct flat indices. Each index is a mandatory
+`int64` plane (GatherND rejects int32 under onnx.checker full_check) of [A,A,1]=3200B + an int64
+Cast(3200B) = ~6.4KB/index x 9 ≈ 58KB of irreducible int64 machinery; the 20x20 crop is the
+SMALLEST exact canvas (34% of grids are >18 wide so A cannot drop below 20). Scans (~40KB) + shifts
+(~27KB) + fp16 arithmetic (~50KB) bring the floor to ~177KB → ~12.9 pts. Even maximal further fp16/
+bool packing lands ~12.95–13.1; **crossing 13.44 (=13.14+0.3, ≈105KB) is not reachable while the
+exact corner-termination requires the GatherND wall reads.**
+
+## OPEN ANGLES (re-attack backlog)
+- GATHER-FREE PROPAGATION (would remove ~58KB int64 + the gather machinery): top/bottom/left/right
+  wall validity via run-AND/run-OR along axes + down/inward propagation reached **97.3% (16/600)**.
+  The residual fails are NON-edge line-loops that fake a clipped box; the propagation's local
+  corner-termination (`g 1&2 cells past the corner`) cannot replicate the exact wall-span gate.
+  Closing it appears to require re-introducing the exact span read — i.e. the gathers. If a future
+  agent finds an EXACT gather-free corner gate, this likely drops to <100KB → a real win.
+- Replace col-span gathers with a vertical run-AND keyed on the wall column (needs identifying the
+  leftmost interior column gather-free) — untried, ~21KB potential.
+- Fold the 2 right-corner gathers into the row-span psum reads (share c1+1 index) — marginal.
+
+## INSIGHT (transferable)
+⭐ "fill box-outline interiors over line clutter" IS closed-form & exact (not a flood wall): the
+discriminator between a real box wall and a fake line-loop wall is **HORIZONTAL CORNER-TERMINATION**
+— a box wall's gray run STOPS at the corner; a line passes straight THROUGH (gray persists 1–2 cells
+past where the corner should be). Combine: nearest-gray walls (doubling prefix-max/min, capped at the
+generator's max box size so 3 steps suffice) + CumSum wall-span equality + the 2 horizontal
+corner-termination reads. Clipped boxes are NOT a sentinel-ring case (interior truly touches the
+border); detect clip via the in-grid mask and set the clipped side's boundary to the grid edge.
+⭐ FLAT-INDEX GatherND (index [N,1] over a flattened [H*W] tensor) HALVES the int64 index cost vs a
+2-coord [N,2] index AND removes the Concat — but int64 is still mandatory (full_check rejects int32),
+so 12 per-cell 2-D reads still floor a 20x20 net near ~12.9 pts.

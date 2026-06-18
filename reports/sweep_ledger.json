@@ -4748,7 +4748,7 @@
   "sig": "overlaps",
   "status": "confirmed-infeasible",
   "verdict": "INFEASIBLE: box-to-box line connectivity (which pairs are connected)",
-  "note": "REVERIFIED wall: fill interior of gray box-outlines over cluttered line graph; edge-clipped boxes break flood-from-edge (614/1000 fail) + binary_fill_holes (596/1000); gray lines fake 4-dir enclosure. needs banned flood. True-positive."
+  "note": "DEEP RE-ATTACK 2026-06-19: prior INFEASIBLE was WRONG -- it IS closed-form/exact. Built exact generalizing net (500/500 fresh) but 12.91 < gen-import 13.14, adopt REJECTED (current generalizes real=13.14). Line-vs-box discriminator = HORIZONTAL CORNER-TERMINATION (box wall's gray run stops at corner; line passes through). Clips are NOT a sentinel-ring problem (clipped interior is genuinely border-reachable -> flood-from-border is the WRONG tool). Floor set by 12 mandatory int64 GatherND wall-reads (~177KB; int64 forced since full_check rejects int32 GatherND) on irreducible 20x20 crop. OPEN ANGLE (potential WIN): gather-free wall-validity propagation reached 97.3% -- an exact gather-free corner gate drops mem <100KB and would beat 13.14. Worth ONE focused agent on the gather-free corner gate."
  },
  {
   "task": 368,
