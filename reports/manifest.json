@@ -1093,10 +1093,10 @@
    "method": "custom:task182"
   },
   "183": {
-   "points": 14.87922601563406,
-   "memory": 24816,
-   "params": 38,
-   "method": "gen:biohack_new"
+   "points": 17.263692903451716,
+   "memory": 2184,
+   "params": 106,
+   "method": "custom:task183"
   },
   "184": {
    "points": 15.70394075262128,

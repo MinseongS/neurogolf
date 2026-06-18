@@ -2361,14 +2361,15 @@
  {
   "task": 183,
   "arc_id": "77fdfe62",
-  "points": 14.88,
+  "points": 17.26,
   "memory": 24816,
   "params": 38,
   "method": "gen:biohack_new",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 77fdfe62: index into a palette grid (corners) by sprite pattern; map black-regio"
+  "status": "done",
+  "verdict": "INFEASIBLE: 77fdfe62: index into a palette grid (corners) by sprite pattern; map black-regio",
+  "note": "RE-PROBE WIN +2.38 (14.88->17.26): clean Tier-A. GatherND(batch_dims=2) reads K data-dep cells across all 10 ch with NO wide plane (index=Expand of scalar-built [1,1,K,2]); size=sqrt(ReduceSum(input,all))-const (4B scalar); equal-then-pad-into-output (720B) beats pad-then-equal (900B); nested-Where quadrant colour map. fresh 500/500."
  },
  {
   "task": 184,
