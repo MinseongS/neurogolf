@@ -46,11 +46,22 @@ The genuine wall: an EXACT solution must (a) search candidate centres × cells a
 centre recovery (median(y±x) ≈ 2650/3000; bbox/centroid all fail), so the search
 cannot be removed. Beating 15.35 by +0.3 needs mem+params ≤ 11342, ~half the floor.
 
+## RE-PROBE 2026-06-18 (blank-note "skip-marginal" wave) — WALL RE-CONFIRMED
+Re-attacked the one floor-breaking angle (closed-form centre to delete the search):
+- OUTPUT centroid == exact centre (C4-symmetric), but only INPUT is available.
+- INPUT bbox-midpoint differs from the true centre by up to ±1.0 per axis in 0.5
+  steps → 25 distinct half-integer offset cells (5×5), collapsing to ~13 integer
+  (s1,s2) candidates. Measured over 8000 fresh: all 25 offsets occur, ~uniformly.
+- ⇒ NO cheap statistic pins the centre; the candidate×cells orbit-consistency
+  search is structurally required, and the colour-index 3600B plane + the int32
+  Gather index over (candidates×cells) are both irreducible. Floor stands at ~15.0,
+  BELOW public 15.35. Beating +0.3 needs mem+params ≤ 11342 (~half the floor). INFEASIBLE.
+
 ## OPEN ANGLES (re-attack backlog)
 - Closed-form centre from a cheap robust statistic (would delete the whole search
   → could reach Tier-B ~16.8). Tried median(y+x)/median(y−x) (2650/3000), bbox-sum,
-  centroid, 180°-only argmax (2665/3000), single rot90 step (4948/5000) — none
-  exact. If a closed form exists it is the only path past the floor.
+  centroid, 180°-only argmax (2665/3000), single rot90 step (4948/5000), AND
+  (re-probe) input-bbox-mid (±1.0/axis, 25 offsets) — none exact. No closed form exists.
 - Eliminate Vbig: a Conv variant that emits only the 10×10 corner (stride/region)
   would save 3200 B but ORT Conv has no crop. ~0.15 pts.
 - Drop ScatterND: Pad the completion window to 30×30 with a dynamic offset (no ORT
