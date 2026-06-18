@@ -1149,14 +1149,15 @@
  {
   "task": 90,
   "arc_id": "3eda0437",
-  "points": 13.97,
+  "points": 15.6,
   "memory": 60840,
   "params": 578,
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: recolor + find-empty-rect: 3eda0437 finds the single largest all-empty rectangle"
+  "status": "done",
+  "verdict": "INFEASIBLE: recolor + find-empty-rect: 3eda0437 finds the single largest all-empty rectangle",
+  "note": "RE-PROBE WIN +1.62 (13.97->15.60): SKIP-LIST WALL WAS FALSE. Maximal empty rectangle fully closed-form when height small. ch0 in-grid black=0 off-grid => band-sum==band-height confines rects in-grid; run-length-to-next-occupied = ONE suffix-min via negated MaxPool (replaces 28-plane width-enum conv bank); cap next-occupied at W; gate runlen>=2. NOT a gap task. fresh 20000/20000 ORT + ReferenceEvaluator."
  },
  {
   "task": 91,
@@ -4695,14 +4696,15 @@
  {
   "task": 364,
   "arc_id": "e509e548",
-  "points": 13.75,
+  "points": 14.07,
   "memory": 75136,
   "params": 1402,
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: recolor by shape-class: e509e548 each green blob recolored by which letter sprit"
+  "status": "done",
+  "verdict": "INFEASIBLE: recolor by shape-class: e509e548 each green blob recolored by which letter sprit",
+  "note": "RE-PROBE WIN +0.32 (13.75->14.07): per-component shape-classify+recolor NOT at floor. Discriminating counts reduce to MAX-floodable BOOLEAN flags from LOCAL degree (junction deg>=3; endpoint-orientation deg==1 & vert|horiz==1) flooded per-seed BFS-measured iters, uint8 Where-priority chain. L-vs-U = hasVertEndpoint XOR hasHorizEndpoint (unique non-flood-internal discriminator). 75136->55900. fresh 200/200."
  },
  {
   "task": 365,
