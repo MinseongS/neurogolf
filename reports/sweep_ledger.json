@@ -891,14 +891,16 @@
  {
   "task": 72,
   "arc_id": "3428a4f5",
-  "points": 17.82,
+  "points": 18.43,
   "memory": 1260,
   "params": 49,
-  "method": "ext:kojimar6275",
+  "method": "custom:task072",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.61 (17.82->18.43): PURE DTYPE win 1260->660B, zero algo change. run_network thresholds (out>0) before compare so OUTPUT DTYPE IRRELEVANT - run whole post-reduction pipeline uint8 (Equal/Not/Cast/Concat/Pad accept uint8), declare uint8 output. XOR of masks = Not(Equal(a,b)), Equal doubles as bg mask"
  },
  {
   "task": 73,

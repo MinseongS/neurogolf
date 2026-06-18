@@ -427,10 +427,10 @@
    "method": "gen:thbdh6332"
   },
   "72": {
-   "points": 17.8229812340901,
-   "memory": 1260,
-   "params": 49,
-   "method": "ext:kojimar6275"
+   "points": 18.429117037660415,
+   "memory": 660,
+   "params": 54,
+   "method": "custom:task072"
   },
   "73": {
    "points": 20.500190329669735,
