@@ -421,10 +421,10 @@
    "method": "custom:task070"
   },
   "71": {
-   "points": 13.790235794330012,
-   "memory": 72704,
-   "params": 1144,
-   "method": "gen:thbdh6332"
+   "points": 14.586026881510985,
+   "memory": 29898,
+   "params": 3424,
+   "method": "custom:task071"
   },
   "72": {
    "points": 18.429117037660415,

@@ -902,14 +902,15 @@
  {
   "task": 71,
   "arc_id": "3345333e",
-  "points": 13.79,
+  "points": 14.59,
   "memory": 72704,
   "params": 1144,
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 3345333e: mirror sprite into box + reflect; reconstruction with box corresponden"
+  "status": "done",
+  "verdict": "INFEASIBLE: 3345333e: mirror sprite into box + reflect; reconstruction with box corresponden",
+  "note": "RE-PROBE WIN +0.80 (13.79->14.59): mirror-complete symmetric shape behind occluder = closed-form (NOT flood). Reflection-overlap over K axes = anti-diagonal sums of column-coincidence matrix C=Isp^T@valid, read by tiny matmul Cflat@D; reflection matrix=Equal(k+c,axis) from recovered scalar. Occlusion-robust axis = unique axis where every visible cell mirror lands on (shape OR occluder). fresh 200/200."
  },
  {
   "task": 72,
@@ -3137,7 +3138,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 9edfc990: flood-fill background reachable from edge (connectivity)"
+  "verdict": "INFEASIBLE: 9edfc990: flood-fill background reachable from edge (connectivity)",
+  "note": "RE-PROBE: agent built 28-iter 4-conn flood (68616->44352 mem golf via single-conv occupancy-packing) claiming fresh 1000/1000, but src.adopt ISOLATED fresh check says generalizes=False -> REJECTED. Likely data-required flood depth >28 on held-out, or occupancy-packing edge case. Current net (13.86) retained. Structural 4-conn flood floor."
  },
  {
   "task": 244,
