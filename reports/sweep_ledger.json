@@ -1889,14 +1889,16 @@
  {
   "task": 149,
   "arc_id": "6773b310",
-  "points": 19.54,
+  "points": 19.71,
   "memory": 144,
   "params": 91,
-  "method": "ext:kojimar6275",
+  "method": "custom:task149",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.17 marginal (19.54->19.71): board count>=2 -> blue. cast conv-output plane fp16 BEFORE Neg/Concat (144->108) + legacy opset-10 attribute-Pad (0 params vs 8). near-floor"
  },
  {
   "task": 150,
