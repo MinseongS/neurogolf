@@ -1773,8 +1773,9 @@
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "at-floor 19.09: rot180 fixed 3x3, arbitrary colours so all 10 one-hot channels pass -> 360B fp32 crop floor. uint8 cast only adds plane. position-dependent permutation cant fuse to free output without 3600B gather"
  },
  {
   "task": 141,
