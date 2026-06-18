@@ -4717,7 +4717,8 @@
   "class": "BAIL?",
   "sig": "overlaps",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: box-to-box line connectivity (which pairs are connected)"
+  "verdict": "INFEASIBLE: box-to-box line connectivity (which pairs are connected)",
+  "note": "REVERIFIED wall: fill interior of gray box-outlines over cluttered line graph; edge-clipped boxes break flood-from-edge (614/1000 fail) + binary_fill_holes (596/1000); gray lines fake 4-dir enclosure. needs banned flood. True-positive."
  },
  {
   "task": 368,
