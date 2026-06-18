@@ -283,10 +283,10 @@
    "method": "custom:task047"
   },
   "48": {
-   "points": 16.415335093468748,
-   "memory": 5283,
+   "points": 16.598666694678297,
+   "memory": 4387,
    "params": 66,
-   "method": "ext:biohack_new"
+   "method": "custom:task048"
   },
   "49": {
    "points": 16.46929845855897,

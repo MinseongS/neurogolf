@@ -602,14 +602,15 @@
  {
   "task": 48,
   "arc_id": "239be575",
-  "points": 16.42,
+  "points": 16.6,
   "memory": 5283,
   "params": 66,
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 239be575: output 1x1 = cyan if a path exists between red boxes through cyan (con"
+  "status": "done",
+  "verdict": "INFEASIBLE: 239be575: output 1x1 = cyan if a path exists between red boxes through cyan (con",
+  "note": "WIN +0.18 (golf, at structural floor): GENUINE connectivity wall (4-conn flood between 2 red boxes, 12-round BFS); op-folds Min(passable,count) drops bool/round + fuse reach\u2229red into last gate. 24 fp16 8x8 flood planes irreducible. fresh 200/200, 0/20000 disagree."
  },
  {
   "task": 49,
