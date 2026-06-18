@@ -28,6 +28,17 @@ sparse/off-centre group weight block silently corrupts OTHER groups' outputs. WO
 sparse group with dummy weights on a structurally-always-zero input channel (params count elements, so inert).
 ALWAYS cross-check grouped-Conv builds with `onnx.reference.ReferenceEvaluator` — the scorer's ORT can disagree
 with the spec.
+⭐ GROUPED-CONV ESCAPE — SPAN + CONTIGUITY GATE (2026-06-19, sharpened from 120/283/147/015 floors): the escape
+is feasible ONLY if BOTH hold: (1) SPAN — for every coupled (out-channel o ← in-channel i) pair, there exists a
+group size g|10 (g∈{1,2,5,10}) with g ≥ |o−i|+1 co-locating o and i in one block; a HIGH-index non-copy output
+(e.g. cyan ch8) reading bg ch0 has span 8 ⇒ needs g≥9, 9∤10 ⇒ HARD FLOOR (task120 cyan@8←0; task147 green-in3→cyan-out8;
+task283 gray-in5→{0,1,2,4}). (2) CONTIGUITY — even when the coupling component is the right SIZE for a group, it
+must be CONTIGUOUS in the fixed one-hot channel order; if not (task015 component {0,1,2,4,7} for group-2), the only
+fix is a channel permutation, but a full-canvas axis-1 10-ch reorder Gather traces 9000B fp32 (two reorders 72000B)
+and dwarfs any param saving. ⛔ SPARSE-INITIALIZER Conv-weight shrink is PERMANENTLY BLOCKED: a dense Conv weight
+with few nonzeros cannot be replaced by a `sparse_initializer` (which would count only nonzeros) because the
+harness `calculate_memory` calls `onnx.checker.check_model(full_check=True)`, which rejects Conv's sparse weight
+type ("unsupported type sparse_tensor(float)") even though ORT runs it. Do NOT spend agents on sparse-Conv shrink.
 ⛔ MEM-0 SINGLE-CONV-AT-FLOOR (do NOT attempt): if the CURRENT net is a memory-0 single `Conv(input,W[10,10,k,k])`
 whose output IS the graph output (params=100·k², e.g. 910 incl bias for k=3), and the rule is a genuine
 cross-channel spatial neighbourhood op that must also emit the subtractive background channel-0 (interior-fill,

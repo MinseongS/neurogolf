@@ -1901,7 +1901,7 @@
   "sig": "random_pixels",
   "status": "skip-marginal",
   "verdict": "",
-  "note": "at-floor tie 18.187: orthogonal-4-neighbour recolor (green count), deployed generalizes 200/200. {bg0,green3,cyan8} span 9 channels so no grouped-conv; 1x1 recolor inapplicable (depends on neighbour count)"
+  "note": "SKIP-MARGINAL re-confirmed FLOOR: green orthogonal-neighbour recolor (neighbour->cyan ch8, isolated->green ch3). mem-0 Conv[10,10,3,3]=910=18.19. Grouped-conv span-blocked (green in-ch3->cyan out-ch8 span 6, no group divisor of 10 co-locates 3 with 8). Sparse-init PERMANENTLY blocked: calculate_memory needs check_model(full_check=True) which rejects Conv sparse weight type (even though ORT runs it). Crop-decomp = 17.98 (<floor: spread output channels {0,3,8} force 9-ch carrier + 2 f32 6x6 slices)."
  },
  {
   "task": 148,
