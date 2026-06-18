@@ -3707,7 +3707,7 @@
  {
   "task": 287,
   "arc_id": "b8825c91",
-  "points": 15.61,
+  "points": 16.11,
   "memory": 11924,
   "params": 73,
   "method": "custom:task287",
@@ -3715,7 +3715,7 @@
   "sig": "-",
   "status": "done",
   "verdict": "",
-  "note": "prior committed custom (ledger was stale)"
+  "note": "WIN 2026-06-19 (plane-free harvest): D2 mirror unfold golfed 15.61->16.11 (+0.50, ADOPTED 500/500). Pure golf not rule change: uint8 orbit-max Where(Greater), CONV-THEN-CROP (run colour conv on full free input, slice single-ch RESULT not 10-ch input), separable 2-fold D2 (fold one axis then fold result on other, max associative). Floor = fp32 colour conv entry 3600B + 900B uint8 pad-back."
  },
  {
   "task": 288,
