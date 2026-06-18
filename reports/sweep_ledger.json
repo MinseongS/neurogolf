@@ -2259,14 +2259,16 @@
  {
   "task": 181,
   "arc_id": "760b3cac",
-  "points": 17.91,
+  "points": 18.06,
   "memory": 1108,
   "params": 86,
-  "method": "ext:kojimar6275",
+  "method": "custom:task181",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.15 marginal (17.91->18.06): relabel into free output. LEVER: bool Pad of one-hot REJECTED opset11 but ACCEPTED opset13 (Pad-13 added bool) - keep one-hot bool itemsize1 instead of Cast uint8 (avoids dup plane); trim to USED colour channels, recover zeros in SAME final Pad (+k channel-axis end)"
  },
  {
   "task": 182,
