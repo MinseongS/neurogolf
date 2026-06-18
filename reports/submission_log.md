@@ -143,3 +143,10 @@ n=40 missed -> more may exist, re-open hunt. If ~6551.5, 105 base is a rare-fail
 Wins since #18: 43,259,65,398,100,357,166,388,248,190,335,246,199,252,273 (+7.68 stored). gap pinned
 28.96 (==219+255 walls). Session total so far: 47 wins + 2 gap-closers (274,332). LB trajectory
 6492.58 -> 6501 -> 6524 -> 6543 -> 6551 -> (proj 6559). Pending pool floor now ~16.3, wins ~+0.4 steady.
+
+## Submission 20: proj 6561.68 PENDING. 3 HAND-BUILT wins (subagent infra down).
+Subagent streaming infra stalled 7 agents at 600s watchdog. Pivoted to building nets MYSELF in the
+main loop (my own tools work fine): task60 (16.37->16.92 mirror-fill), task292 (16.32->17.18 recolor),
+task78 (16.32->16.62 bar-stack) + task176 salvage. All fixed-size simple-recolor/fill (small active
+region, no full-channel read = beatable by hand). Variable-size tasks (256/353/109) need a full in-grid
+read -> too memory-heavy to beat the ~16.4 nets by hand. gap pinned 28.96.
