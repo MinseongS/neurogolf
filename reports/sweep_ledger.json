@@ -4039,8 +4039,9 @@
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": "generalizes at stored 18.2 (isolated fresh 120/120); scan false-positive from single-process generator pollution. NOT a gap-closer."
+  "status": "confirmed-infeasible",
+  "verdict": "generalizes at stored 18.2 (isolated fresh 120/120); scan false-positive from single-process generator pollution. NOT a gap-closer.",
+  "note": "at-floor 18.20: gray-center fills 3x3 block blue. dense mem-0 Conv[10,10,3,3] cross-channel(ch5->ch0,ch1)+subtractive bg ch0, params=900 floor (grouping impossible, 3x3 solid no dilation). RE-VERIFIED fresh 200/200 (NOT a gap-closer; truegen real=0 flag was STALE/false, per 151 lesson)"
  },
  {
   "task": 318,
