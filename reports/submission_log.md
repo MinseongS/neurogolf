@@ -179,3 +179,5 @@ NEXT SESSION: poll to confirm #23, then continue mid-manifest sweep (rank by MAN
 - #28 (2026-06-18 18:58): **6610.58** (proj 6610.58, EXACT). NEW BEST (+8.12 vs #27). 9 golf wins on 18.4-19.0 ext pool (155/236/334/347/150/129/395/6 + earlier), all 1:1. Levers: count->fixed-pattern, AND/NOR-of-stacked-halves, flip-via-Gather (side=sqrt pixelcount, neg-index-wrap clamp). gap 28.96==219+255.
 
 - #29 (2026-06-18 19:22): **6618.58** (proj 6618.58, EXACT). NEW BEST (+8.00 vs #28). 11 golf wins on 18.7-19.8 tail (314 dilated-conv +1.61, 67 crop-scalar +1.50, 150 flip-Gather +1.44, 334/129/186/103 count->fixed-pattern, 56 classifier-fingerprint, 322 gravity-conv, 144/393 etc). gap 28.96==219+255.
+
+- #30 (2026-06-18 19:46, session-final): **6620.24** (proj 6620.24, EXACT). +73 dwconv-height-trim, +149, +352 grouped-conv sub-floor escape. NEW BEST. Evening session total: 6586.75 -> 6620.24 = +33.49, ~49 golf wins (#24-#30, all proj-exact). gap 28.96==219+255 structural. Productive 14-19 ext-import golf pool now FULLY MINED to near-optimal (final 13/13 probe all at-floor).
