@@ -769,10 +769,10 @@
    "method": "dwconv59x1+b"
   },
   "129": {
-   "points": 18.855814365874355,
-   "memory": 448,
-   "params": 18,
-   "method": "ext:thbdh6285"
+   "points": 19.876036020596743,
+   "memory": 140,
+   "params": 28,
+   "method": "custom:task129"
   },
   "130": {
    "points": 17.13827292217602,
