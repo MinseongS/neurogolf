@@ -2254,9 +2254,9 @@
  {
   "task": 182,
   "arc_id": "776ffc46",
-  "points": 14.3,
-  "memory": 44113,
-  "params": 253,
+  "points": 14.76,
+  "memory": 27731,
+  "params": 250,
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "num_sprites",
