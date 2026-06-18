@@ -3291,8 +3291,9 @@
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "",
+  "note": "at-floor 19.92: gap-fill (red between two blue neighbours) mem-0 Conv[10,5,1,3]. bg ch0 required subtractive + red(ch2) reads blue(ch1) forces group<=2 in-dim=5, footprint 1x3 -> params=160 floor. decomp pays >=2700B plane. extends mem-0-single-conv-floor to gap-fill/between-neighbours stamp"
  },
  {
   "task": 259,
