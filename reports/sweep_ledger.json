@@ -3586,14 +3586,15 @@
  {
   "task": 291,
   "arc_id": "b9b7f026",
-  "points": 16.63,
-  "memory": 3396,
-  "params": 931,
+  "points": 16.97,
+  "memory": 2974,
+  "params": 90,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.34 (box-with-hole = unique color where cnt<bbox area; separable 1x1 output one-hot)"
  },
  {
   "task": 292,
