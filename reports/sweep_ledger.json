@@ -3653,14 +3653,15 @@
  {
   "task": 296,
   "arc_id": "bc1d5164",
-  "points": 16.68,
-  "memory": 3762,
-  "params": 345,
+  "points": 17.32,
+  "memory": 2096,
+  "params": 67,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.64 (fixed fold to small grid: one-hot tile then Pad(0) into free output)"
  },
  {
   "task": 297,
