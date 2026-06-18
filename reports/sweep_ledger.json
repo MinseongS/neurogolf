@@ -62,7 +62,8 @@
   "class": "BAIL",
   "sig": "memory",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 045e512c: replicate sprite along directions = object reconstruction + directiona"
+  "verdict": "INFEASIBLE: 045e512c: replicate sprite along directions = object reconstruction + directiona",
+  "note": "REVERIFIED wall (fast-bail): multi-direction sprite-ray extrapolation (045e512c); runtime 3x3 sprite transplanted into 2-3 random directions incl DIAGONALS (couple r,c, break separability), variable off-grid stamp counts, repeatable per-direction colours. No Loop/Scan/NonZero => no fixed graph. True-positive."
  },
  {
   "task": 6,
@@ -2993,7 +2994,8 @@
   "class": "BAIL?",
   "sig": "num_sprites",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: sprite placement-into-box by correspondence + rotation matching"
+  "verdict": "INFEASIBLE: sprite placement-into-box by correspondence + rotation matching",
+  "note": "REVERIFIED wall (fast-bail): variable-count(1-5) sprite shape-correspondence w/ 4-rotation matching; output recolors each inside black-shape by the OUTSIDE sprite whose shape matches under rotation; colour=random per-instance bijection, counts collide 4-8px. 518-node net is already brute-force matcher. True-positive."
  },
  {
   "task": 234,
