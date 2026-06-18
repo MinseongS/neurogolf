@@ -4941,14 +4941,15 @@
  {
   "task": 387,
   "arc_id": "f35d900a",
-  "points": 14.55,
+  "points": 15.19,
   "memory": 34358,
   "params": 79,
   "method": "ext:thbdh6285",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: f35d900a: expand/pulse colored pixels toward each other with gray bridge; pairwi"
+  "status": "done",
+  "verdict": "INFEASIBLE: f35d900a: expand/pulse colored pixels toward each other with gray bridge; pairwi",
+  "note": "WIN +0.64: false-pos infeasible (highest-bloat 34k); closed-form synthesis; CROP-TO-ACTIVE-REGION (gen grid<=18) run Where/mask on 18x18 then Pad back; in-grid mask folded into colour Conv ch0 weight 0.5. fresh 500/500."
  },
  {
   "task": 388,

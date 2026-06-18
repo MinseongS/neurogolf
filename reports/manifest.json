@@ -2317,10 +2317,10 @@
    "method": "custom:task386"
   },
   "387": {
-   "points": 14.553113153266393,
-   "memory": 34358,
-   "params": 79,
-   "method": "ext:thbdh6285"
+   "points": 15.187477082837965,
+   "memory": 18176,
+   "params": 85,
+   "method": "custom:task387"
   },
   "388": {
    "points": 16.74080063733372,
