@@ -701,14 +701,16 @@
  {
   "task": 56,
   "arc_id": "27a28665",
-  "points": 19.64,
+  "points": 20.43,
   "memory": 136,
   "params": 77,
-  "method": "ext:kojimar6275",
+  "method": "custom:task056",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.79 (19.64->20.43): k-way FIXED-SHAPE classifier = ONE [1,1,k,k] positional-weight Conv -> scalar fingerprint (distinct sums), [1,10,1,1] bank const holds each class fingerprint at OWN output channel so Equal(score,bank)=10ch one-hot DIRECTLY (no ArgMax/Gather/template-stack). run Conv on bg ch0 slice, fold weight-sum offset into bank"
  },
  {
   "task": 57,
