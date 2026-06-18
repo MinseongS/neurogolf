@@ -192,3 +192,12 @@ Re-probe wave: 14 false-positive blank-note wins bundled (42,270,143,350,74,387,
 Wave-2 re-probe (16 wins): 58,48,208,265,85,29,333,162,134,382,178,30,355,117,80,110. 6628.62 -> 6635.63 = +7.01.
 NOTE: proj was +1.03 HIGH (first non-proj-exact this session) — one wave-2 net passes arc-gen-fresh 200/200 but
 scores ~1pt less on Kaggle's exact held-out set (gap 28.95->29.98). Acceptable; Kaggle keeps best so no loss.
+
+## #33 — 2026-06-19 — CONFIRMED 6644.18 (proj 6644.18, EXACT)
+Re-probe wave (6 wins): 174 (+0.68 symmetry-MatMul), 185 (+1.23 line-lattice), 196 (+0.63 bounded-unroll-flood
+8-conn 11-iter), 300 (+2.51 crop+translate task036), 201 (+1.74 spatial-copy+mirror), 363 (+1.75 template-as-Conv).
+6635.63 -> 6644.18 = +8.55, PROJ-EXACT (clean 1:1, gap stable 29.98). Walls re-confirmed/documented this wave:
+046 (per-segment data-dep roll), 319 (magnified-sprite correspondence), 118 (cross information-loss ~99.8%),
+366 (template-matching ~92%), 187 (box-vs-line-pocket fill), 76 (rotated-sprite reveal, golfed exact solver).
+KEY: blank-note "confirmed-infeasible" labels remain ~50% false-positive; bounded-iteration unrolling (HARD_WALLS
+master key) cracked flood task 196. Session start LB 6635.63 -> 6644.18.
