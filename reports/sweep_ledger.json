@@ -1092,8 +1092,9 @@
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "at-floor tie 19.07~19.09: rot180 fixed 3x3 grid = ONE negative-step Slice. lands on fp32-slice floor (360B, all 10ch one-hot, uint8 cast only adds). same as GridSample/small-region floor. pure-copy 3x3 at mem~360 = AT FLOOR"
  },
  {
   "task": 88,
