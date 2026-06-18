@@ -3702,7 +3702,7 @@
   "sig": "memory",
   "status": "confirmed-infeasible",
   "verdict": "INFEASIBLE: flood-fill maze parity coloring (unbounded propagation)",
-  "note": "variable-size unbounded flood-fill connectivity wall (geodesic radius<=68); parity value is closed-form but seed-component reachability needs banned iterative connectivity. task198 family."
+  "note": "AT-FLOOR confirmed 2026-06-19 (deep re-attack): exact bounded-unroll flood (D=72, 200/200 fresh) scores 12.63 < current 13.10. The DEPLOYED net is already the optimal MaxPool+Min unroll at size cap. Prior 'unbounded flood' verdict wrong on mechanism, right on outcome. Flood-at-floor fast-bail rule graduated to BUILD_PROMPT. NOT adopted (net-negative). NB deployed net D may undershoot 8-conn geodesic 68 -> ~0.06% latent fresh-tail leak."
  },
  {
   "task": 287,

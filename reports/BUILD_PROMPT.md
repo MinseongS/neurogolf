@@ -274,6 +274,14 @@ with a per-cell rectangle read, blocked by needing a data-dependent GatherND (ta
   when the active canvas is FIXED-SMALL (size-10 → planes 9× smaller); a bounded flood across a VARIABLE-size
   region on the full 30×30 canvas is a WALL — the ~16-plane fp16 fill floor (~28.8KB) pins it near ~14.2
   regardless of other optimisation, and a data-dependent crop trips the symbolic-dim trap (task198 infeasible).
+  ⭐ FLOOD-AT-FLOOR FAST-BAIL (task286, 2026-06-19): a bounded-unrolled flood has a HARD score floor of
+  25−ln(2·D·2·Wk²) where D = unroll rounds (8-conn worst-case geodesic, ~size-cap) and Wk = active canvas side.
+  Per round you MUST pay one 3×3 MaxPool-dilate + one Min-remask (walls are 1-thick ⇒ multi-step/5×5 dilation
+  LEAKS; ORT has NO uint8/bool MaxPool or Conv ⇒ each plane is fp16 2B, not uint8). For Wk=25, even D≈59 caps at
+  ~13.10. ⇒ If the CURRENT deployed net is already a MaxPool+Min unrolled flood at the size cap, it is AT FLOOR —
+  BAIL fast; corridor-compaction trips the symbolic-dim trap and sub-fp16 is ORT-blocked, so there is no escape.
+  (Watch: a deployed flood net cut to D below the 8-conn worst-case geodesic SILENTLY fails ~0.06% fresh in the
+  D-tail; fixing D is net-negative — a non-issue for stored but note it as a latent gap-attribution micro-leak.)
 Solid-rect-interior (1px-outline → erode / no-coloured-within-1, FN=0) is closed-form ONLY when shapes sit on
 a noise-free or DIFFERENTLY-coloured background; when dense noise shares the shape's colour and abuts the
 outline, noise+outline merge into chance-eroded blobs 8-CONNECTED to the true region — reconstruction leaks
