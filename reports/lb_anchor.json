@@ -1,10 +1,10 @@
 {
- "comment": "#30 CONFIRMED 6620.24 (proj 6620.24 EXACT, 26th near-exact). NEW BEST. gap 28.96==219+255. SESSION END: 6586.75->6620.24 = +33.49, ~49 golf wins, pool EXHAUSTED.",
- "stored_at_submit": 6649.2,
+ "comment": "#31 PENDING proj 6628.61 (+8.37 over #30 anchor). REOPENED blank-note false-pos pool -> 14 wins this wave (42,270,143,350,74,387,369,51,247,148,102,356,50,237) + 4 walls reverified (279,277,361,64). gap 28.96 unchanged.",
+ "stored_at_submit": 6657.57,
  "lb": 6620.24,
- "time_utc": "2026-06-18 19:46",
- "pending": false,
- "pending_submit": "#30 session-final: 73/149/352. proj 6620.24.",
- "prev_stored_at_submit": 6647.54,
- "prev_lb": 6618.58
+ "time_utc": "2026-06-18 20:51",
+ "pending": true,
+ "pending_submit": "#31 re-probe wave: 14 false-pos blank-note wins; proj 6628.61",
+ "prev_stored_at_submit": 6649.2,
+ "prev_lb": 6620.24
 }
