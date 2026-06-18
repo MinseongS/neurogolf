@@ -347,7 +347,29 @@ intermediates + ~60 ramp params); a 1×1 Conv with an OUTSIZED weight on the mar
 w_k=k) does triple duty from ONE plane — locate (ArgMax), read the ±1 sprite window (Gather), recover the
 sprite colour (ReduceMax of window with marker zeroed) (task121).
 
+## 🔴 CORRECTION (2026-06-19, EMPIRICALLY RE-MEASURED against the real scorer — supersedes the section below)
+The scorer's `calculate_memory` (src/harness.py:102,133) counts each intermediate at its **DECLARED value_info dtype ×
+shape**, NOT the ORT runtime dtype. PROVEN by direct test: a 30×30 plane scores fp32=3600B, **fp16=1800B, uint8/bool/
+int8=900B** — the declaration is honored even if ORT upcasts internally. So "ORT upcasts everything to fp32 / the 3600B
+floor is universal / fp16 doesn't help full planes" is **FALSE as a law**. The ONLY real constraints are: (1) the op
+that PRODUCES the plane must legally emit that dtype under ORT_DISABLE_ALL (ReduceSum/ReduceMax reject uint8/bool →
+their output is fp32; but Conv KEEPS fp16 now — task096; Cast to uint8/bool works), and (2) `Cast`-ing an existing
+fp32 plane ADDS a second plane, so you only win if the plane is BORN narrow or every downstream consumer accepts the
+narrow dtype. RULE: declare EVERY working plane the smallest dtype its producer+consumers allow (bool for masks,
+uint8 for 0-9 indices via Cast where downstream ops accept uint8, fp16 otherwise); pay fp32 ONLY for a ReduceSum/Max
+output and Cast it narrow immediately. ⭐ The deeper lever (where the leaderboard gap lives): mem is dominated by
+WORKING PLANES, not params (params=2.7% of our total). The top nets average ~245B (mem+par) vs our ~4450B by
+ELIMINATING planes — route the full-grid result into the FREE `output` op (final Where/Equal/Pad) and keep only
+scalar/vector intermediates ([1,K,1,1] reductions, [1,1,30,1] profiles). Treat any net carrying ≥1 full-grid working
+plane as un-golfed until you've tried to fuse that plane into the output.
+⛔ SPARSE-INITIALIZER PARAMS EXPLOIT IS FULLY BLOCKED (re-confirmed 2026-06-19 for ALL ops, not just Conv):
+`calculate_params` DOES count a sparse initializer by NONZEROS only and ORT runs it, BUT `check_model(full_check=True)`
+(harness.py:49) rejects sparse_tensor(float) for MatMul/Gather/Add/Conv alike (TypeInferenceError / unsupported type).
+Do NOT spend agents trying to shrink params via sparse initializers on any op.
+
 ## ⭐ THE 3600B PLANE FLOOR IS REAL — break it by REMOVING the plane, never by narrowing it (FLOOR_RESEARCH.md)
+[⚠️ OUTDATED — read the CORRECTION block above first; the "narrowing never helps" claim here is wrong, only the
+"REMOVE the plane" advice survives and is now the PRIMARY lever]
 Rigorously ORT-measured: you CANNOT get a per-cell colour-index/value/Gather-index plane below fp32 3600B
 via dtype tricks. Declaring fp32-as-uint8 → TypeInferenceError; Cast/Quantize→uint8 ADDS a plane (3600→4500);
 Cast→fp16 (5400); ArgMax→int64 (7200); Gather indices reject uint8 (int32 30×30 = 3600 irreducible); a single
