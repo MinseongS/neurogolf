@@ -1707,14 +1707,15 @@
  {
   "task": 138,
   "arc_id": "5daaa586",
-  "points": 14.22,
-  "memory": 47770,
-  "params": 125,
+  "points": 14.38,
+  "memory": 39171,
+  "params": 1919,
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 5daaa586: trace ray from each pixel toward its matching border line, crop to inn"
+  "status": "done",
+  "verdict": "INFEASIBLE: 5daaa586: trace ray from each pixel toward its matching border line, crop to inn",
+  "note": "subagent win mid-manifest (+0.16, intermediate)"
  },
  {
   "task": 139,
@@ -2374,14 +2375,15 @@
  {
   "task": 192,
   "arc_id": "7e0986d6",
-  "points": 14.14,
-  "memory": 51898,
-  "params": 70,
+  "points": 14.65,
+  "memory": 31314,
+  "params": 67,
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 7e0986d6: place small colored pixels INTO the box whose interior shape matches ("
+  "status": "done",
+  "verdict": "INFEASIBLE: 7e0986d6: place small colored pixels INTO the box whose interior shape matches (",
+  "note": "subagent win mid-manifest (+0.51)"
  },
  {
   "task": 193,
@@ -2448,15 +2450,15 @@
  {
   "task": 198,
   "arc_id": "83302e8f",
-  "points": 14.2,
-  "memory": 47510,
-  "params": 1345,
+  "points": 14.4,
+  "memory": 39910,
+  "params": 135,
   "method": "ext:thbdh6332",
   "class": "FEASIBLE",
   "sig": "-",
-  "status": "confirmed-infeasible",
+  "status": "done",
   "verdict": "",
-  "note": "flood-fill wall: bounded fill across variable-size region on full 30x30 canvas; 16-plane fp16 fill floor ~28.8KB pins ~14.2 (best attempt 14.12 < stored 14.20)"
+  "note": "subagent win mid-manifest (+0.20, intermediate)"
  },
  {
   "task": 199,
@@ -3134,15 +3136,15 @@
  {
   "task": 253,
   "arc_id": "a61ba2ce",
-  "points": 15.54,
-  "memory": 12740,
-  "params": 139,
+  "points": 15.84,
+  "memory": 9393,
+  "params": 119,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "overlaps",
   "status": "done",
   "verdict": "INFEASIBLE: a61ba2ce: arrange 4 detected 2-cell sprite fragments into a fixed 4x4 layout by ",
-  "note": "subagent win +1.32 mid-manifest (14.22 bloated import)"
+  "note": "subagent win mid-manifest (14.22->15.84)"
  },
  {
   "task": 254,
