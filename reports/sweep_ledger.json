@@ -3030,14 +3030,15 @@
  {
   "task": 237,
   "arc_id": "99fa7670",
-  "points": 15.43,
+  "points": 16.15,
   "memory": 14283,
   "params": 41,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "skip-marginal",
-  "verdict": "+0.22 < +0.3 bar (suffix-fill MatMul)"
+  "status": "done",
+  "verdict": "+0.22 < +0.3 bar (suffix-fill MatMul)",
+  "note": "WIN +0.72: false-pos skip-marginal; rightward ray from per-row seed = CumSum along cols; forward-fill down sparse col = grp=CumSum(nonzero) then Equal(grp_i,grp_j)@values (no Scan); 9x9 gen-cap canvas. fresh 500/500."
  },
  {
   "task": 238,
