@@ -1226,15 +1226,15 @@
  {
   "task": 96,
   "arc_id": "4290ef0e",
-  "points": 12.97,
+  "points": 13.2,
   "memory": 167523,
   "params": 109,
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
+  "status": "done",
   "verdict": "INFEASIBLE: output-size not derivable simply + overlay/aggregation of scattered concentric d",
-  "note": "recovery wall: clipped-symmetric-sprite reassembly needs [10,12,19,19] fp32 matched-filter (173KB); exact net 12.54 < gen-import 12.97"
+  "note": "WIN 2026-06-19 (deep re-attack): prior INFEASIBLE rested on STALE 'fp16 Conv upcasts->0 pass' claim. RE-TESTED: fp16 Conv keeps fp16 output under ORT_DISABLE_ALL now -> dominant matched-filter plane [10,11,20,20] 173KB->88KB. + crop-WORK19, sig=ingrid-2*mask as one 1x1 conv (W=ones-2I), drop idx0 kernel, uint8 out -> exact net 12.54->13.20 (+0.23 over gen-import 12.97, ADOPTED generalizing 200/200). NOT orbit-symmetry (concentric figure recovered by per-(idx,L) matched filter; bbox/extent/corner all non-exact under clipping). K=max(visible idx)+1 (count-of-present wrong when bg in colours). Matched-filter 88KB is floor (uint8/int8 Conv unsupported -> fp16 dtype floor)."
  },
  {
   "task": 97,

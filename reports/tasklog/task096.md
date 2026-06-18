@@ -3,57 +3,58 @@
 **Rule:** Input H×W grid (13..19), bg = most-frequent colour. K (=4..6) non-bg colours each
 own a UNIQUE ring index idx∈0..K-1 (a permutation). Ring idx draws its colour at 4 corners
 (±idx,±idx) about a per-shape RANDOM centre, each corner with two inward arms of length L_idx;
-shapes are scattered and CLIPPED at edges (generator guarantees ≥2 quadrants drawn). Output is a
-(2K-1)² concentric reassembly: offset (a,b), m=max(|a|,|b|), n=min(|a|,|b|) → colours[m] iff
-n ≥ m−L_m+1 else bg. Diagonal out[K-1-i][K-1-i]=colours[i].
-**Current:** 12.97 pts, weak gen-import (248 nodes), the bar to beat is 13.27 (+0.3).
-**Target tier:** detection/B — synthesis is closed-form; the WALL is recovering (idx,L) per colour.
+shapes are scattered and CLIPPED at edges (gen guarantees ≥2 quadrants drawn). Output is a
+(2K-1)² concentric reassembly: offset (a,b) from centre (K-1,K-1), m=max(|a|,|b|), n=min(|a|,|b|)
+→ colours[m] iff (m<K and n ≥ m−L_m+1) else bg.
+**Prior bar:** 12.97 (weak gen-import, 248 nodes). +0.3 bar = 13.27.
 
-## Attempts
-| # | angle | tier | mem | params | pts | fresh | outcome |
-|---|---|---|---|---|---|---|---|
-| 1 | matched-filter conv NT=12, 2 convs + bool chain | — | 633k | 3409 | 11.64 | 200/200 | exact but heavy |
-| 2 | + fp16 ReduceMax of matchpos | — | 547k | 3410 | 11.78 | — | minor |
-| 3 | + drop cm>0 (present-gate tot>0) | — | 460k | 3412 | 11.95 | — | minor |
-| 4 | single conv cdo=Conv(ongrid−2·oh,K), dist=tot+min(cdo) | — | 256k | 1957 | 12.54 | 200/200 | best exact; still < 12.97 |
+## Result of THIS session
+**pts 13.196, mem 132013, params 1825, fresh 200/200, stored 4/4 → BEATS 12.97 by +0.226 (MARGINAL, <+0.3).**
+The prior agent's "INFEASIBLE — exact net floors at 12.54" verdict was based on a STALE fp32-conv
+claim. Re-tested: **fp16 Conv keeps fp16 output under ORT_DISABLE_ALL on the current ORT** (the
+"ORT upcasts fp16 conv → 0 pass" claim is false now). That + crop-to-WORK19 + sig-as-1×1-conv +
+type-0 drop + uint8 output dropped the exact net from 12.54 → 13.196.
 
-## Best achieved
-12.54 @ mem 255690 params 1957 — adopted? **N** (does NOT beat the existing 12.97; it is *below* it).
-The recovery is EXACT (fresh 200/200) — the blocker is purely memory.
+## The net (exact, 0-err over 2100+ fresh + 4 stored)
+1. Crop input to [0:19,0:19], cast fp16. `sig_k = ingrid − 2·mask_k` for all k in ONE 1×1 conv
+   (W = ones(10,10) − 2·I). Reshape channels→batch [10,1,19,19].
+2. Matched filter: `cdo = Conv(sig, K_t)` = og − 2cm, 11 type kernels (idx≥1), fp16, pads
+   [5,6,6,5] → [10,11,20,20] so centres reach 1 cell off the left/bottom edge (hand-authored ARC
+   examples place a centre at col −1 / row 19). `mind = ReduceMin(cdo)`; `dist = tot + mind`;
+   `match = (dist==0)`. **min-idx tiebreak**: ArgMax over the idx-ordered type axis returns the
+   first True (a clipped large stamp also fits smaller types; the true type is the MIN-idx match).
+3. idx0 = single-pixel colour (tot==1; the ≥2-quadrant rule gives idx≥1 ⇒ tot≥2), handled by a
+   Where override (its kernel dropped from the conv to save one type).
+4. Scatter (k, L_k) by recovered idx into length-6 ring vectors; K = max(visible idx)+1 (robust to
+   bg-coloured invisible inner rings in the hand-authored ARC examples — bg excluded by gen for
+   fresh). Invisible (bg-coloured) rings default to bg colour & L=6 so their cells render bg.
+5. Closed-form synthesis on an 11×11 centred canvas (gather ring colour/L by m=max(|a|,|b|), gate
+   by n>m−L), Where bg fill, crop/shift to (2K-1)² at top-left (Gather by srci = i+cen+1−K, clamp),
+   valid-mask off-grid → sentinel 99, uint8 Pad → Equal → BOOL one-hot.
 
-## Irreducible-floor analysis
-The ONLY recovery verified exact (0/400 op-level, fresh 200/200) is a **generative matched filter**:
-for each colour-channel k and each of the **12 distinct (idx,L) shape types**, test whether some
-translation makes the clipped stamp cover colour-k exactly — `cm==og AND cm==tot` (cm=Conv(mask,K_t),
-og=Conv(ingrid,K_t), tot=Σmask). Folded to ONE conv via `cdo=Conv(ongrid−2·oh,K)=og−2cm` and
-`min_space(dist)=tot+ReduceMin(cdo)`. The dominant intermediate is that single conv plane
-**`cdo` [10,12,19,19] fp32 = 173 280 B**, which is IRREDUCIBLE:
-- **channels 10**: per-colour masks are required; bg/absent colours can't be dropped statically.
-- **types 12**: every (idx,L) needs its own kernel — corner-only / min-L / max-L kernels are all
-  too permissive or too strict (tested 35–73 % idx error); only the full per-(idx,L) shape match is exact.
-- **W=19**: grid side is randint(13,19); the match centre can sit anywhere in-grid → SAME-pad 19×19.
-- **fp32**: ORT upcasts an fp16 Conv output back to fp32 in the trace (PrecisionFreeCast), so fp16
-  neither shrinks the plane nor stays correct (verified: fp16 conv → 0 pass, mem unchanged).
-173 KB alone ⇒ score ≤ ~12.8; with unavoidable overhead the exact net lands at 12.54.
-**The bar 13.27 needs mem+params ≤ ~124 KB, below the single conv plane.** ⇒ INFEASIBLE to beat +0.3.
+## Memory floor analysis (irreducible for the EXACT net)
+| plane | bytes | why irreducible |
+|---|---|---|
+| matched-filter conv [10,11,20,20] fp16 | **88000** | 10 ch (per-colour masks needed, bg/absent can't be dropped statically), 11 types (every (idx,L) needs its own kernel — corner-only=75% idx err, all 11 occur in fresh), 20×20 = centre range rows[0..19]×cols[−1..18] forced by the off-grid hand-authored centres; uint8/int8 Conv unsupported by ORT ⇒ fp16 is the dtype floor |
+| fp32 input Slice [1,10,19,19] | 14440 | the one fp32 entry plane (Slice preserves fp32; must feed the fp16 cast) |
+| sig chain (inwf cast + sig 1×1 conv + batch reshape), each [.,.,19,19] fp16 | 3×7220 | front-end; the reshape is layout-only but counts; a grouped conv would drop it but costs +11.9k params (net worse) |
+Total ≈ 132k. **+0.3 needs mem+params ≤ 124244** — the gap (~10.8k) is below the conv plane; no
+dtype/crop/type-drop trick closes it without breaking exactness.
 
-## OPEN ANGLES (re-attack backlog)
-- Profile-symmetry centre (palindromic 1-D row/col profile, integer centre, min-idx) recovers idx
-  on TINY [10,19] tensors and is exact ONLY when each candidate centre is VERIFIED by a full
-  shape-match; without verification it is 16–26 % wrong (spurious palindromic centres win min-idx).
-  If the per-candidate verification could be done on a [10,19,19] (≈14 KB) tensor instead of the
-  [10,12,19,19] conv, the net would drop to score ~15. The verification currently needs the 2-D stamp
-  ⇒ unresolved. This is the one angle that could break the floor.
-- Reduce types: if idx were recoverable from a cheap signal and only L needed the conv (or vice
-  versa), NT could drop. No cheap exact idx signal found.
+## OPEN ANGLES (could break the floor, all currently blocked)
+- Cheap exact idx recovery (to cut the 11-type conv): bbox/2 = 10% err (clip underestimate); rank
+  by extent = 18% instance err; corner-only matched filter = 75% err. The full per-(idx,L) 2-D
+  match is the only verified-exact recovery → conv channels×types is load-bearing.
+- Off-grid stored centres force conv 20×20 (vs 19×19 fresh-only). Special-casing the 3 boundary
+  centres could shrink to 19×19 (~−8.8k) but is fragile / not generalizing-clean.
+- Reducing 10 channels (only ≤7 present) needs a data-dependent gather-compact → symbolic-dim trap.
 
 ## INSIGHT (transferable)
-⭐ "Reassemble scattered CLIPPED symmetric sprites into a canonical figure" is a recovery WALL when
-the per-sprite (size,shape) parameter is only pinned by a full 2-D generative shape-match: the
-matched-filter conv plane `[colours × shape-types × W × W]` fp32 is irreducible (ORT upcasts fp16
-conv; channels/types/W all load-bearing) and floors the score *below* a generic gen-import. Cheap
-1-D symmetry/profile recoveries are NON-exact (clipping breaks symmetry; spurious palindromic
-centres), so they fail fresh-200 even though they pass ~99 %. ⭐ Useful op trick discovered:
-`og − 2·cm = Conv(ingrid − 2·oh, K)` collapses the two matched-filter convs + the (cm==og ∧ cm==tot)
-bool chain into ONE conv plane plus `tot + ReduceMin` (dist≥0, ==0 ⇔ exact placement) — halves mem
-for any "exact-stamp-placement" detector.
+⭐ **fp16 Conv now keeps fp16 output under ORT_DISABLE_ALL** — re-test before trusting any
+"fp32-conv-at-floor" verdict; halved the matched-filter plane (173k→88k). ⭐ **sig = ingrid−2·mask
+for all channels = ONE 1×1 conv** (W = ones − 2·I) — folds the cross-channel ingrid sum + the −2·mask
+into a single op, no per-channel Mul/Sub. ⭐ **min-idx tiebreak via ArgMax over an idx-ordered type
+axis** cleanly resolves the nested-stamp ambiguity (a clipped large stamp matches smaller types; the
+true one is the smallest-idx match). ⭐ For a permutation-indexed concentric figure, **K = max(visible
+idx)+1**, robust to an invisible (bg-coloured) inner ring — count-of-present is WRONG when bg ∈ colours
+(the hand-authored ARC examples) even though the random generator excludes bg.
