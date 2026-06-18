@@ -1567,10 +1567,10 @@
    "method": "ext:kojimar6275"
   },
   "262": {
-   "points": 17.07303645513702,
-   "memory": 2634,
-   "params": 137,
-   "method": "memorizer4(n=9,k=4,b=11,bb=3x6)"
+   "points": 18.7290115681417,
+   "memory": 468,
+   "params": 61,
+   "method": "custom:task262"
   },
   "263": {
    "points": 16.33128816094485,
