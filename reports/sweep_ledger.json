@@ -67,14 +67,16 @@
  {
   "task": 6,
   "arc_id": "0520fde7",
-  "points": 18.53,
+  "points": 19.55,
   "memory": 612,
   "params": 35,
-  "method": "ext:wguesdon6304",
+  "method": "custom:task006",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +1.02 (18.53->19.55): cellwise AND of two fixed 3x3 channel-1 slices. slice blue ch into two 3x3 fp32, bool AND, ONE uint8 Where(fg,redhot,bghot) over [1,10,3,3], Pad free. replaced [10,2,1,1] Conv + fp32 plane"
  },
  {
   "task": 7,

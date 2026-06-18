@@ -31,10 +31,10 @@
    "method": "gen:thbdh6332"
   },
   "6": {
-   "points": 18.527653705499098,
-   "memory": 612,
-   "params": 35,
-   "method": "ext:wguesdon6304"
+   "points": 19.5489615464343,
+   "memory": 189,
+   "params": 44,
+   "method": "custom:task006"
   },
   "7": {
    "points": 16.43363576457731,
