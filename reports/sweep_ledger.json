@@ -1814,14 +1814,16 @@
  {
   "task": 144,
   "arc_id": "6430c8c4",
-  "points": 18.94,
+  "points": 19.39,
   "memory": 384,
   "params": 46,
-  "method": "ext:kojimar6275",
+  "method": "custom:task144",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.45 (18.94->19.39): per-cell NOR of two stacked 4x4 halves. LEVER Where-broadcast colour router: Where(mask[1,1,H,W], onehotA[1,C,1,1], onehotB[1,C,1,1])->[1,C,H,W] emits ALL colour channels in ONE op routing each cell to its colour - replaces Concat-colour-channels + zero-channel inits + Not + casts"
  },
  {
   "task": 145,
