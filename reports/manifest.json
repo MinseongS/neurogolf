@@ -13,10 +13,10 @@
    "method": "gen:vyank6322"
   },
   "3": {
-   "points": 17.918291413894426,
-   "memory": 1172,
-   "params": 18,
-   "method": "ext:kojimar6275"
+   "points": 18.497209954084376,
+   "memory": 633,
+   "params": 34,
+   "method": "custom:task003"
   },
   "4": {
    "points": 14.865797630653343,

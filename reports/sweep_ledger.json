@@ -28,14 +28,16 @@
  {
   "task": 3,
   "arc_id": "017c7c7b",
-  "points": 17.92,
+  "points": 18.5,
   "memory": 1172,
   "params": 18,
-  "method": "ext:kojimar6275",
+  "method": "custom:task003",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.58 (17.92->18.50): periodic-EXTENSION = fixed lookup of input rows keyed by ONE period scalar (continuation rows byte-identical to existing rows w/ same offset-parity+flip). Detect period by exact SHIFT-by-3 match NOT period-2 tiling (flips break tiling). uint8 one-hot copy: bg=Equal(red,0)"
  },
  {
   "task": 4,
