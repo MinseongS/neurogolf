@@ -993,14 +993,15 @@
  {
   "task": 81,
   "arc_id": "3aa6fb7a",
-  "points": 17.26,
+  "points": 17.18,
   "memory": 2198,
   "params": 109,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.33 (L-tromino corner-complete via 4 corner-role 3x3 convs ==3, local OR)"
  },
  {
   "task": 82,
