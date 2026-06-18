@@ -293,6 +293,15 @@ into them, a true connectivity wall (task255 infeasible).
   (product-chain of shifted occupancy, resets at gaps) so key=dr·4+dc is per-cell with no flood-fill; the
   colour-by-offset 4×4 histogram is learned from the single coloured sprite via a double-MatMul over offset
   one-hots, propagated by a 1-D Gather (task368).
+- ⭐ PER-OBJECT MAGNIFY+DIHEDRAL stamping is SEPARABLE & EXACT — the wall is SPRITE RECOVERY, not stamping (task158):
+  reconstruct K magnified+flipped sprite copies via 12 FIXED (mag∈{1,2,3}×4 dihedral) strict-correlation stamp passes —
+  stamp tile T wherever the window matches T on the VISIBLE corner cells AND is strictly bg elsewhere in the
+  (3·mag)² footprint (a fully-drawn reference auto-excludes itself via the "rest is bg" test → no pairing/NonZero/
+  component-labelling). mag = min solid run-length of the body mask; body colour = min-bbox-span non-bg colour;
+  flip = which corner holds c0. ⛔ BUT if the canonical source sprite must be RECOVERED by a data-dependent window
+  search (multiple (origin,mag) windows downsample to valid symmetric sprites, disambiguated only by the OUTPUT),
+  that selection is NOT argmax/NonZero-free → WALL (task158 caps ~46% numpy). Verdict rule: separable stamping +
+  scalar-recoverable mag/flip = buildable backbone; ambiguous template recovery = the real blocker — check recovery FIRST.
 - per-colour bbox-FILL of disjoint instance-coloured boxes = L=MatMul(A[r,c]=c·rowband_c, B[c,c']=colband_c)
   contracts the 10-ch axis into ONE [1,1,H,W] colour-index plane, no [1,10,H,W] product (disjoint ⇒ no
   double-stamp, weight-0 bg falls out); recover the in-grid bg channel as rowany⊗colany for ~120B by

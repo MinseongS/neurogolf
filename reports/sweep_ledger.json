@@ -2047,7 +2047,7 @@
   "sig": "overlaps",
   "status": "confirmed-infeasible",
   "verdict": "INFEASIBLE: diagonal-symmetry completion of sprite with per-instance flips/mags; object-leve",
-  "note": "BAIL-class: multi-object reconstruction with per-object mag{1,2,3}+dihedral flip; variable-mag scatter needs Loop/Scan/NonZero (banned). low-manifest gen-import that is a genuine wall."
+  "note": "DEEP RE-ATTACK 2026-06-19: prior 'variable-mag wall' reason was STALE \u2014 mag+flip ARE separable/exact (12 fixed mag\u00d7flip strict-correlation stamp passes = 2000/2000 given true sprite; mag=min solid run-length, body=min-bbox-span colour). The REAL wall is canonical-SPRITE RECOVERY: multiple (origin,mag) windows downsample to valid symmetric sprites; disambiguation needs the OUTPUT. numpy solver caps 918/2000=46%, min-contradiction flip-class only ~88%. Not Loop/NonZero/argmax-free. True wall but RE-LOCATED. One more recovery-only agent worth it IF a unique-by-construction recovery (phase=c2cells mod mag) is found."
  },
  {
   "task": 159,
