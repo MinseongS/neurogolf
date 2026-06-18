@@ -3722,14 +3722,15 @@
  {
   "task": 302,
   "arc_id": "c0f76784",
-  "points": 16.04,
-  "memory": 7776,
-  "params": 20,
+  "points": 16.45,
+  "memory": 4932,
+  "params": 234,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE None ~16.0pt: c0f76784: recolor each square's interior by (gray + size-2) i.e. encod"
+  "status": "done",
+  "verdict": "FEASIBLE None ~16.0pt: c0f76784: recolor each square's interior by (gray + size-2) i.e. encod",
+  "note": "subagent win +0.41 (hole-size via proximity-Conv, ReduceProd enclosure)"
  },
  {
   "task": 303,

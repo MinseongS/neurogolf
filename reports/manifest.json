@@ -1807,10 +1807,10 @@
    "method": "custom:task301"
   },
   "302": {
-   "points": 16.03863393937255,
-   "memory": 7776,
-   "params": 20,
-   "method": "ext:kojimar6275"
+   "points": 16.450146026344214,
+   "memory": 4932,
+   "params": 234,
+   "method": "custom:task302"
   },
   "303": {
    "points": 16.33593973277421,
