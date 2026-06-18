@@ -3233,14 +3233,15 @@
  {
   "task": 251,
   "arc_id": "a5313dff",
-  "points": 13.48,
+  "points": 15.54,
   "memory": 100560,
   "params": 20,
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: flood-fill region coloring (a5313dff = find enclosed rectangle, fill blue) conne"
+  "status": "done",
+  "verdict": "INFEASIBLE: flood-fill region coloring (a5313dff = find enclosed rectangle, fill blue) conne",
+  "note": "RE-PROBE WIN +2.06 (13.48->15.54): SKIP-LIST WALL WAS FALSE. Textbook enclosure/hole-fill (a5313dff) via HARD_WALLS \u00a71 bounded unrolling. Flood from border through non-red cells; unreached BLACK = enclosed => BLUE (clipped boxes open side stays black). CROP to gen size cap (30->13) cut plane size AND rounds (D 24->11). reach=Min(passable,MaxPool3x3(reach)) 11 iters, blue=bg AND NOT reached into free Where output. fresh 1000/1000. LESSON: re-probe other skip-list walls too."
  },
  {
   "task": 252,

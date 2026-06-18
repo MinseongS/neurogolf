@@ -1501,10 +1501,10 @@
    "method": "custom:task250"
   },
   "251": {
-   "points": 13.481291290274044,
-   "memory": 100560,
-   "params": 20,
-   "method": "gen:thbdh6332"
+   "points": 15.540926305710611,
+   "memory": 12616,
+   "params": 208,
+   "method": "custom:task251"
   },
   "252": {
    "points": 16.655257245582455,
