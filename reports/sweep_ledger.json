@@ -191,7 +191,7 @@
   "sig": "-",
   "status": "skip-marginal",
   "verdict": "",
-  "note": "at-floor tie 18.20: copy+local-stamp (twinkling stars halo), deployed generalizes 200/200. mem-0 single Conv [10,10,3,3]=900 optimal. runtime-assembled weight forced fp32 = 3600B intermediate (net loss). BAIL"
+  "note": "SKIP-MARGINAL re-confirmed FLOOR: mem-0 dense Conv[10,10,3,3]=900=18.198. Grouped-conv lever fails: coupling component {0,1,2,4,7} is right SIZE for group-2 (5 ch) but NOT CONTIGUOUS in natural one-hot order (out7<-in1 crosses the 0-4|5-9 split). Permuting to fix is exact (265/265, 470 params) BUT each axis-1 10-ch reorder Gather traces 9000B fp32 => two reorders 72000B (13.81, far worse). 9x9 decomp forces fp32 [1,10,9,9] copy slice (16.19). CONTIGUITY RULE: grouped-conv escape needs coupling component contiguous in fixed channel order, else permutation cost dwarfs param saving."
  },
  {
   "task": 16,
@@ -1547,7 +1547,7 @@
   "sig": "overlaps",
   "status": "skip-marginal",
   "verdict": "",
-  "note": "at-floor: genuine 3x3-neighbourhood rule (interior->cyan/keep-border edge-class). single Conv [10,10,3,3]=910 params irreducible (params=ELEMENTS, 10ch out reads 10ch over 3x3). Where-route decomp=990>910 worse. 1x1 recolor NOT applicable (output depends on neighbourhood). conv3x3+b pool likely mostly at-floor"
+  "note": "SKIP-MARGINAL re-confirmed FLOOR (grouped-conv escape fails): outline-keep + interior->CYAN(8) for solid rects. mem-0 dense Conv[10,10,3,3]=910=18.19. Cyan output channel LOCKED at canonical ch8 but reads bg ch0 => coupling spans channel indices 0..8; no equal group<10 bridges span 9 (9 does not divide 10). Decomposition pays >=900B cyan plane (~17.8 worse). SPAN RULE: grouped-Conv feasible only if some g|10 with g>=span+1 where span = (target out-ch index - lowest needed in-ch index); high-index non-copy channel reading ch0 = structural floor."
  },
  {
   "task": 121,
@@ -3664,7 +3664,7 @@
   "sig": "transpose",
   "status": "skip-marginal",
   "verdict": "",
-  "note": "at-floor: per-pixel role-by-neighbour recolor (interior/edge/corner of rects), deployed generalizes 200/200. mem-0 single Conv routes both channel-onehot AND spatial output free; structured rebuild pays >=900B plane (ties at best)"
+  "note": "SKIP-MARGINAL re-confirmed FLOOR (b6afb2da): solid gray rects recolored by position (corner=blue/edge=yellow/interior=red) = pure local 3x3 fn of gray channel. mem-0 Conv[10,10,3,3]=910. Grouped-conv fails: gray INPUT ch5 -> outputs {0,1,2,4} crosses every equal-group boundary (no divisor of 10 co-locates index 5 with index 0). Decomp blocked by neighborhood-dependence + non-separable two-rect => >=1800B fp16 30x30 feeder. Load-bearing: bg ch=1x1 copy of input ch0 (bias -5), positive bias lights off-grid border."
  },
  {
   "task": 284,

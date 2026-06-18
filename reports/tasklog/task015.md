@@ -19,6 +19,8 @@ purely whether 900 params can be shrunk.
 | 2 | 9x9 block: slice 10 ch fp32 + dilation conv + bool overlay + Concat10 + Pad | B | 6318 | 91 | 16.23 | 265/265 | 10 fp32 9x9 slices (3240B) + cat10 uint8 (810B) floor it |
 | 3 | runtime-assembled rank-structured conv weight (3 distinct 10x10 planes -> Concat -> Reshape [10,10,3,3]) | S* | 10800 | 408 | 15.68 | 265/265 | assembled fp32 weight (3600B) + Concat (3600B) intermediates > 900-param saving |
 | 4 | single dense Conv [10,10,3,3] (= clean reimpl of public closed form) | S | 0 | 900 | 18.20 | 200/200 | ties prior; mem 0 |
+| 5 | (2026-06-19 re-attack) PERMUTED group=2 Conv [10,5,3,3] via 2 axis-1 Gathers | S* | 72000 | 470 | 13.81 | 265/265 | params drop to 470 but the two channel-reorder Gathers trace at 9000B each (fp32) = 72000B; reorder is fatal |
+| 6 | (2026-06-19) 9x9 active-region Slice + 2x Where(uint8,onehot) + Pad | B | 6480 | 221 | 16.19 | 265/265 | the copy "else" branch forces an fp32 [1,10,9,9] slice (>=3240B traced) > dense mem-0 floor |
 
 ## Best achieved
 18.197605 @ mem 0 params 900 — adopted? matches prior (no regression). Beats prior
@@ -47,6 +49,20 @@ gets the copy+halo logic under 665 without a >665B intermediate.
 - None with payoff. The only sub-900 single-op would need a Conv weight whose first
   two dims are < 10, which is impossible without slicing input channels (an
   intermediate) since I/O are fixed 10-channel one-hots. Confirmed dead.
+
+## 2026-06-19 RE-ATTACK with grouped-Conv sub-floor lever (task352 idiom) — CONFIRMED BAIL
+The cross-channel coupling component is {0,1,2,4,7}: ch0<-in1(rook)/in2(bishop),
+ch4<-in2(bishop), ch7<-in1(rook). For a group=2 Conv ([10,5,3,3]=450, the win) these
+5 channels must live in ONE contiguous 5-block. In the NATURAL one-hot order the
+forced split is 0-4 | 5-9, and out7<-in1 crosses it (ch7 in block2, ch1 in block1) —
+no valid natural group<10 exists (matches the prior verdict). PERMUTING channels so
+{0,1,2,4,7} are contiguous DOES make the grouped Conv exact (measured 265/265, 470
+params) but the two required axis-1 Gathers each trace a full [1,10,30,30] fp32 plane
+= 72000B -> 13.81 (attempt 5). There is no free 10-channel-reorder op. The decomposition
+route (attempt 6) is dominated by the fp32 [1,10,9,9] copy slice (>=3240B). Three
+distinct angles measured this session; all worse than the mem-0 dense floor 18.198.
+Budget to reach 18.5 is mem+params<=665 and nothing keeps the 10-ch copy at mem 0
+below 665 params. STAYS AT FLOOR 18.198.
 
 ## INSIGHT (transferable)
 ⭐ "Pure-param single-Conv" tasks (current net = one Conv, weight [10,10,3,3]=900,
