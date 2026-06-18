@@ -167,3 +167,5 @@ Mid-manifest wave: 253,192,198,138,396,325,338,89,9,182 (+191 in #22). Mid-manif
 imports are the productive frontier — big wins 191(+2.24),325(+1.55),253(+1.62),192(+1.18),338(+1.08).
 SESSION TOTAL: confirmed 6492.58 -> proj 6585.60 (+93.0). ~97 wins adopted. gap pinned 28.96==219+255.
 NEXT SESSION: poll to confirm #23, then continue mid-manifest sweep (rank by MANIFEST points, ~38 left).
+
+- #24 (2026-06-18 15:40): **6586.75** (proj 6586.76, EXACT ±0.01). task017 adopt-gate said real=0.00 (FALSE-POSITIVE gap-closer) but Kaggle scored galaxy_v1 base ~full; gap UNCHANGED 28.96==219+255. LB +1.14 came from stragglers, not 017 (017 swap was -0.63 stored). LESSON: proj-exact after a "gap-closer" submit => it was NOT one; adopt real=0.00 disagrees with Kaggle held-out. Real gap-closers (274/332) made proj JUMP; 017 did not.

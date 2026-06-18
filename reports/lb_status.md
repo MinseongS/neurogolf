@@ -1,26 +1,27 @@
 # LB status (stored ↔ real LB gap tracker)
 
 - **stored (local, optimistic):** 6615.71
-- **last confirmed LB:** 6585.61  (stored 6614.56 @ 2026-06-18 15:30 UTC)
-- **structural gap (stored−LB at anchor):** 28.95  ← base-net overcount, ~stable
-- **PROJECTED current LB:** 6586.76  (= stored − gap; +1.15 of un-submitted wins since anchor)
+- **last confirmed LB:** 6586.75  (stored 6615.71 @ 2026-06-18 15:40 UTC)
+- **structural gap (stored−LB at anchor):** 28.96  ← base-net overcount, ~stable
+- **PROJECTED current LB:** 6586.75  (= stored − gap; +0.00 of un-submitted wins since anchor)
 - next submit at +5 adopted wins re-anchors this.
 
 ## Gap attribution (genverify n=40 batch — rough, false-neg prone; isolated n=200 is truth)
-Estimated overcount across 12 sub-100% tasks ≈ **36.5** pts (cf. gap 28.95).
+Estimated overcount across 13 sub-100% tasks ≈ **35.6** pts (cf. gap 28.96).
 Top offenders (replacing these with generalizing nets closes the gap directly):
 
 | task | stored | fresh rate | est. overcount | method |
 |---|---|---|---|---|
 | 219 | 15.00 | 0.00 | 15.00 | None |
 | 255 | 13.95 | 0.00 | 13.95 | None |
-| 157 | 13.76 | 0.88 | 1.72 | gen:wguesdon6315 |
-| 118 | 13.34 | 0.88 | 1.67 | gen:seddik |
-| 23 | 13.86 | 0.93 | 1.04 | gen:galaxy |
-| 209 | 13.36 | 0.93 | 1.00 | gen:wguesdon6315 |
-| 277 | 15.53 | 0.97 | 0.39 | ext:biohack_new |
+| 157 | 13.76 | 0.93 | 1.03 | gen:wguesdon6315 |
+| 2 | 13.51 | 0.93 | 1.01 | gen:vyank6322 |
+| 319 | 14.58 | 0.95 | 0.73 | gen:thbdh6332 |
+| 366 | 13.50 | 0.95 | 0.68 | gen:vyank6322 |
+| 118 | 13.34 | 0.95 | 0.67 | gen:seddik |
+| 233 | 13.25 | 0.95 | 0.66 | gen:thbdh6332 |
+| 151 | 18.19 | 0.97 | 0.45 | gen:thbdh6332 |
+| 44 | 14.44 | 0.97 | 0.36 | gen:vyank6322 |
+| 23 | 13.86 | 0.97 | 0.35 | gen:galaxy |
 | 76 | 13.71 | 0.97 | 0.34 | gen:thbdh6332 |
-| 2 | 13.51 | 0.97 | 0.34 | gen:vyank6322 |
-| 366 | 13.50 | 0.97 | 0.34 | gen:vyank6322 |
 | 18 | 13.34 | 0.97 | 0.33 | gen:thbdh6332 |
-| 233 | 13.25 | 0.97 | 0.33 | gen:thbdh6332 |

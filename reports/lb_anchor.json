@@ -1,7 +1,7 @@
 {
- "comment": "#23 CONFIRMED 6585.61 (proj 6585.60, 0.01; 21st near-exact). gap 28.96==219+255. +0.59 unsubmitted (9/182 stragglers).",
- "stored_at_submit": 6614.56,
- "lb": 6585.61,
- "time_utc": "2026-06-18 15:30",
+ "comment": "#24 CONFIRMED 6586.75 (proj 6586.76, EXACT). 017 was a FALSE-POSITIVE gap-closer: adopt real=0.00 but Kaggle scored base ~full, gap UNCHANGED 28.96==219+255. proj-exact = gap did not close.",
+ "stored_at_submit": 6615.71,
+ "lb": 6586.75,
+ "time_utc": "2026-06-18 15:40",
  "pending": false
 }
