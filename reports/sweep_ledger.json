@@ -931,14 +931,15 @@
  {
   "task": 74,
   "arc_id": "3631a71a",
-  "points": 15.01,
+  "points": 15.41,
   "memory": 21780,
   "params": 45,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "skip-marginal",
-  "verdict": "15.19 vs 15.01 = +0.18 < +0.3 bar"
+  "status": "done",
+  "verdict": "15.19 vs 15.01 = +0.18 < +0.3 bar",
+  "note": "WIN +0.40: false-pos skip-marginal; full-canvas D4 symmetrization (3 maxes flipC/flipR/transpose about idx31); uint8 max via Where(Greater(a,b),a,b)=900B beats fp16; maroon-drop folded into Conv kernel w9=0. fresh 200/200."
  },
  {
   "task": 75,

@@ -439,10 +439,10 @@
    "method": "custom:task073"
   },
   "74": {
-   "points": 15.009188619292196,
-   "memory": 21780,
-   "params": 45,
-   "method": "ext:kojimar6275"
+   "points": 15.412113999913787,
+   "memory": 14520,
+   "params": 67,
+   "method": "custom:task074"
   },
   "75": {
    "points": 16.019827794274992,
