@@ -1475,15 +1475,15 @@
  {
   "task": 115,
   "arc_id": "4be741c5",
-  "points": 16.68,
+  "points": 16.75,
   "memory": 4042,
   "params": 77,
   "method": "ext:kojimar6275",
   "class": "FEASIBLE?",
   "sig": "transpose",
-  "status": "skip-marginal",
+  "status": "done",
   "verdict": "",
-  "note": "probe +0.02 over P (structural floor: 2x dir reductions for data-dep orientation+band order); insight: tiny top-left block routing in [1,10,4,4] + Pad up (tasklog115)"
+  "note": "RE-PROBE WIN +0.07 (16.68->16.75, marginal): two count-profiles -> count-weighted centroids as [1,10,1,1] via MatMul coord ramp -> orientation by centroid-spread -> pairwise rank -> uint8 [1,10,4,4] block + Pad. Levers: fold present-gate into rank (absent->rank+100); ONE Equal(rank,bgrid) with orientation-selectable sentinel grid. FLOOR (transpose-variant orientation needs BOTH axis profiles, 2400B; counts are transpose-invariant so carry no orientation). fresh 500/500."
  },
  {
   "task": 116,
