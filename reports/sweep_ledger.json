@@ -1286,14 +1286,15 @@
  {
   "task": 102,
   "arc_id": "44d8ac46",
-  "points": 15.67,
+  "points": 16.16,
   "memory": 10715,
   "params": 524,
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 44d8ac46: recolor box interior red if box is a perfect square (with junk attache"
+  "status": "done",
+  "verdict": "INFEASIBLE: 44d8ac46: recolor box interior red if box is a perfect square (with junk attache",
+  "note": "WIN +0.49: false-pos infeasible; square-ring detect on gray-only channel (2-colour => detect black=not-gray, halves fp32 entry); interior ConvTranspose STAMP carries colour value (kernel=2) so stamps ARE red-label plane, +5*gray = uint8 colour-index expanded FREE via Equal(lab,arange); sentinel-99 pad. fresh 500/500."
  },
  {
   "task": 103,
@@ -4623,8 +4624,9 @@
   "method": "ext:biohack_new",
   "class": "CHECK",
   "sig": "-",
-  "status": "skip-marginal",
-  "verdict": "14.99 candidate BELOW public 15.35 - NOT adopted. Confirms non-local symmetry-centre detection is near-floor for everyone. INSIGHT: rot-symmetry completion=orbit-consistency argmax about data-dep centre, no closed-form centre found"
+  "status": "confirmed-infeasible",
+  "verdict": "14.99 candidate BELOW public 15.35 - NOT adopted. Confirms non-local symmetry-centre detection is near-floor for everyone. INSIGHT: rot-symmetry completion=orbit-consistency argmax about data-dep centre, no closed-form centre found",
+  "note": "REVERIFIED floor: C4 symmetry-completion w/ data-dep centre; input bbox-mid off true centre by +-1.0/axis (25 offsets) so centre needs orbit-consistency search (irreducible 3600B colour plane + cand\u00d7cell int32 index); buildable floor 14.99 < import 15.35. True wall."
  },
  {
   "task": 362,
