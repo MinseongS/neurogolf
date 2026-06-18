@@ -165,14 +165,15 @@
  {
   "task": 14,
   "arc_id": "0b148d64",
-  "points": 14.43,
-  "memory": 38399,
-  "params": 650,
+  "points": 15.63,
+  "memory": 11626,
+  "params": 156,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 0b148d64: extract the differently-colored quadrant of a 4-fold symmetric grid; f"
+  "status": "done",
+  "verdict": "INFEASIBLE: 0b148d64: extract the differently-colored quadrant of a 4-fold symmetric grid; f",
+  "note": "win +1.20 (crop-one-colour); adopt showed current real=0.00 -> POSSIBLE gap-closer, next-session submit confirms (or false-neg like task105)"
  },
  {
   "task": 15,
