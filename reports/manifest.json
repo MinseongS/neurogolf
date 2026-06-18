@@ -2089,10 +2089,10 @@
    "method": "custom:task348"
   },
   "349": {
-   "points": 14.306261242455944,
-   "memory": 40500,
-   "params": 3579,
-   "method": "ext:kojimar6275"
+   "points": 14.389462361734935,
+   "memory": 39600,
+   "params": 960,
+   "method": "custom:task349"
   },
   "350": {
    "points": 15.270508755511836,

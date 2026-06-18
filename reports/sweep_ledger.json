@@ -4507,15 +4507,15 @@
  {
   "task": 349,
   "arc_id": "db93a21d",
-  "points": 14.31,
+  "points": 14.39,
   "memory": 40500,
   "params": 3579,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "pending-retry",
+  "status": "done",
   "verdict": "INFEASIBLE: db93a21d: draw shadow (blue below) + green halo around maroon squares by radius;",
-  "note": "agent can not beat import 14.31 (best 13.22); near-wall, low priority"
+  "note": "RE-PROBE WIN +0.08 (14.31->14.39, marginal but real): variable-radius square dilation dilate_r(run>=2r) collapses to ONE MaxPool per r = MaxPool(Conv(m,ones[1,2r]),kernel[2r+1,4r],asym-pad)>=2r (fuses full-run detect + 2D dilate, beats conical/cumulative). One fp32 1x1 Conv (ch0->1,ch9->2) gives colour AND in-grid mask. fresh 200/200."
  },
  {
   "task": 350,
