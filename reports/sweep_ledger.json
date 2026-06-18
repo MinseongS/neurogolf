@@ -1865,14 +1865,15 @@
  {
   "task": 145,
   "arc_id": "6455b5f5",
-  "points": 13.9,
+  "points": 14.21,
   "memory": 65224,
   "params": 935,
   "method": "gen:vyank6322",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: recolor by region-area-rank: 6455b5f5 recolors smallest-area region cyan, larges"
+  "status": "done",
+  "verdict": "INFEASIBLE: recolor by region-area-rank: 6455b5f5 recolors smallest-area region cyan, larges",
+  "note": "RE-PROBE WIN +0.31 (13.90->14.21): components+global-argmax+variable-crop NOT 13.4 floor when components are RECTANGLES from guillotine partition. per-cell AREA=(row free-run)x(col free-run) => global argmin/max becomes TWO ReduceMin/Max + Equal masks, no flood/label/NonZero. Nearest-wall dist via uint8 log-doubling cummax/min Where(Greater/Less) (400B); bake border into scan init. fresh 200/200."
  },
  {
   "task": 146,
