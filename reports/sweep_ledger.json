@@ -1887,14 +1887,16 @@
  {
   "task": 151,
   "arc_id": "67a423a3",
-  "points": 18.19,
+  "points": 15.42,
   "memory": 0,
   "params": 910,
-  "method": "gen:thbdh6332",
+  "method": "custom:task151",
   "class": "FEASIBLE?",
   "sig": "transpose",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "GAP-CLOSER?",
+  "note": "GAP-CLOSER TEST: deployed conv3x3+b (18.19) generalizes=False real=0.00 - overfits training colours, FAILS {5,8} pair (genverify 39/40). replaced w/ colour-agnostic detect-then-dilate 200/200 (15.42). STORED DROPS 18.19->15.42 BUT if real gap-closer (our-own-conv discriminator, like 274/332) LB GAINS ~+15.42. proj-exact poll resolves: LB>>proj=real, LB==proj=false-pos(revert)"
  },
  {
   "task": 152,

@@ -901,10 +901,10 @@
    "method": "ext:kojimar6275"
   },
   "151": {
-   "points": 18.186555400489105,
-   "memory": 0,
-   "params": 910,
-   "method": "gen:thbdh6332"
+   "points": 15.417337738508907,
+   "memory": 14400,
+   "params": 111,
+   "method": "custom:task151"
   },
   "152": {
    "points": 18.07538760395144,
