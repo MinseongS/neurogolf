@@ -337,14 +337,15 @@
  {
   "task": 28,
   "arc_id": "1bfc4729",
-  "points": 16.52,
-  "memory": 4510,
-  "params": 329,
+  "points": 17.06,
+  "memory": 2572,
+  "params": 239,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.54 (fixed template by recovered scalar colors, uint8 index plane)"
  },
  {
   "task": 29,
