@@ -2571,14 +2571,16 @@
  {
   "task": 207,
   "arc_id": "88a62173",
-  "points": 17.46,
+  "points": 18.06,
   "memory": 1840,
   "params": 35,
-  "method": "ext:kojimar6275",
+  "method": "custom:task207",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "generalizing exact (adopt-gate fresh 200/200)",
+  "class_": "WIN",
+  "note": "golf +0.60 (17.46->18.06): k-identical-blocks + 1 odd-one-out = closed-form per-channel COUNT over candidate blocks (band test cnt in {1,4}) -> reconstructs odd block one-hot directly; NO argmax/gather (replaced majority+ArgMax+Gather)"
  },
  {
   "task": 208,
