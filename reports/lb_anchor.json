@@ -1,10 +1,10 @@
 {
- "comment": "#35 CONFIRMED 6661.38 = proj-exact (+2.73 over #34 6658.65, off -0.01). 6 skip-marginal floor-breaks. Session 6635.63->6644.18(#33)->6658.65(#34)->6661.38(#35) = +25.75 confirmed, 27 wins. Productive reservoir exhausted; remaining = documented tight floors.",
- "stored_at_submit": 6691.36,
- "lb": 6661.38,
- "time_utc": "2026-06-19 #35 confirmed",
+ "comment": "#36 = 3 genuine-wall deep-custom wins (243 BFS-flood +0.20, 096 matched-filter-fp16 +0.23, 367 gather-free-corner-gate +0.32) = +0.74 confirmed over #35 6661.38. 3 false-INFEASIBLE overturned. Both lever-reservoirs (fp16-conv, directional-carry) scouted exhausted after.",
+ "stored_at_submit": 6692.09,
+ "lb": 6662.12,
+ "time_utc": "2026-06-19 #36 confirmed",
  "pending": false,
- "pending_submit": "#35 CONFIRMED 6661.38 (proj-exact -0.01)",
- "prev_stored_at_submit": 6688.62,
- "prev_lb": 6658.65
+ "pending_submit": "#36 CONFIRMED 6662.12 (proj 6662.11, +0.01)",
+ "prev_stored_at_submit": 6691.36,
+ "prev_lb": 6661.38
 }
