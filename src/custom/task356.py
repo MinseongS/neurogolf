@@ -70,28 +70,28 @@ def build(task):
     n("MaxPool", ["C"], "downOR", kernel_shape=[W, 1], pads=[0, 0, W - 1, 0])
     n("Mul", ["upOR", "downOR"], "vprod")     # >0 iff in v-span
 
-    # span = hprod>0 OR vprod>0
+    # span = (hprod>0 OR vprod>0).  Build directly as a uint8 colour-index
+    # plane L: 8 where cyan, 0 elsewhere.  max(hprod,vprod)>0 == in span; we use
+    # an fp16 Sum (both >=0, OR collapses to sum>0) then Greater into uint8.
+    n("Sum", ["hprod", "vprod"], "ssum")      # [1,1,W,W] f16, >0 iff in span
     init("ZH", np.array(0.0, np.float16), np.float16)
-    n("Greater", ["hprod", "ZH"], "hb")       # [1,1,W,W] bool
-    n("Greater", ["vprod", "ZH"], "vb")
-    n("Or", ["hb", "vb"], "span")             # [1,1,W,W] bool
+    n("Greater", ["ssum", "ZH"], "spanb")     # bool
+    init("EIGHT", np.array(8, np.uint8), np.uint8)
+    init("ZERO8", np.array(0, np.uint8), np.uint8)
+    n("Where", ["spanb", "EIGHT", "ZERO8"], "L")  # [1,1,W,W] uint8 (0 or 8)
 
-    # ---- pad back to 30x30 for the Where cond ------------------------------
-    n("Cast", ["span"], "span_u8", to=U8)
+    # ---- pad the colour-index plane back to 30x30 (uint8, ONE plane) --------
+    # pad with sentinel 99 so off-grid cells match NO channel (all-zero column)
     init("pads", np.array([0, 0, 0, 0, 0, 0, N - W, N - W], np.int64), np.int64)
-    init("ZU8", np.array(0, np.uint8), np.uint8)
-    n("Pad", ["span_u8", "pads", "ZU8"], "span30", mode="constant")  # [1,1,30,30] u8
-    n("Cast", ["span30"], "fill", to=BOOL)
+    init("Z99", np.array(99, np.uint8), np.uint8)
+    n("Pad", ["L", "pads", "Z99"], "L30", mode="constant")  # [1,1,30,30] u8
 
-    # ---- cyan one-hot (color 8) --------------------------------------------
-    oh = np.zeros((1, 10, 1, 1), np.float32)
-    oh[0, 8, 0, 0] = 1.0
-    init("cyan_oh", oh, np.float32)
-
-    n("Where", ["fill", "cyan_oh", "input"], "output")
+    # ---- one-hot expansion into the FREE bool output -----------------------
+    init("arange", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
+    n("Equal", ["L30", "arange"], "output")   # [1,10,30,30] bool (FREE output)
 
     x = helper.make_tensor_value_info("input", F32, [1, 10, N, N])
-    y = helper.make_tensor_value_info("output", F32, [1, 10, N, N])
+    y = helper.make_tensor_value_info("output", BOOL, [1, 10, N, N])
     graph = helper.make_graph(nodes, "task356", [x], [y], inits)
     return helper.make_model(graph, ir_version=IR_VERSION,
                              opset_imports=[helper.make_opsetid("", 11)])
