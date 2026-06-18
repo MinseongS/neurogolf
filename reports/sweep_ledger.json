@@ -627,14 +627,15 @@
  {
   "task": 50,
   "arc_id": "253bf280",
-  "points": 15.89,
+  "points": 16.24,
   "memory": 8775,
   "params": 250,
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: 253bf280: connect cyan dots sharing row/col with green segments (the classic). p"
+  "status": "done",
+  "verdict": "INFEASIBLE: 253bf280: connect cyan dots sharing row/col with green segments (the classic). p",
+  "note": "WIN +0.35: false-pos infeasible; strictly-between-two-marks needs ONE exclusive fwd CumSum/axis (0<before<linetotal), not fwd+rev; off-grid->sentinel in Pad/Equal route, recover in-grid rect from ReduceMax occupancy (drop bg fp32 slice). fresh 200/200."
  },
  {
   "task": 51,
