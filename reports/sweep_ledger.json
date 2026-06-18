@@ -836,14 +836,16 @@
  {
   "task": 67,
   "arc_id": "2dee498d",
-  "points": 19.25,
+  "points": 20.75,
   "memory": 282,
   "params": 33,
-  "method": "ext:kojimar6275",
+  "method": "custom:task067",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +1.50 (19.25->20.75): crop to first size cols. LEVER: recover size as SCALAR total=ReduceSum(all)=3*size^2; keep col c iff c^2<size^2 (CONSTANT squared col-ramp vs scalar, avoids Sqrt). eliminates ReduceMax-occupancy+cumsum-Conv+threshold idiom (two 240B planes). mem 282->38"
  },
  {
   "task": 68,

@@ -397,10 +397,10 @@
    "method": "gen:biohack_new"
   },
   "67": {
-   "points": 19.247427361174367,
-   "memory": 282,
-   "params": 33,
-   "method": "ext:kojimar6275"
+   "points": 20.75150475795064,
+   "memory": 38,
+   "params": 32,
+   "method": "custom:task067"
   },
   "68": {
    "points": 16.285104149751504,
