@@ -49,18 +49,15 @@ def build(task):
         nodes.append(helper.make_node(op, ins, [out], **attrs))
         return out
 
-    # ---- downsample input one-hot to bitmap scale [1,10,10,10] -------------
-    init("ds_s", np.array([0, 0], np.int64), np.int64)
-    init("ds_e", np.array([30, 30], np.int64), np.int64)
-    init("ds_ax", np.array([2, 3], np.int64), np.int64)
-    init("ds_st", np.array([3, 3], np.int64), np.int64)
-    n("Slice", ["input", "ds_s", "ds_e", "ds_ax", "ds_st"], "bm_f32")  # [1,10,10,10]
-    n("Cast", ["bm_f32"], "bm_all", to=F16)  # [1,10,10,10] f16
-    # zero channel 0 (background) so its full-grid span does not flood the fill.
-    chmask = np.ones((1, 10, 1, 1), np.float16)
-    chmask[0, 0, 0, 0] = 0.0
-    init("chmask", chmask, np.float16)
-    n("Mul", ["bm_all", "chmask"], "bm")  # ch0 -> 0
+    # ---- downsample input one-hot to bitmap scale, channels 1..9 ----------
+    # slice channels 1..9 only (channel 0 = background is excluded so its
+    # full-grid span cannot flood the fill); avoids the chmask Mul too.
+    init("ds_s", np.array([1, 0, 0], np.int64), np.int64)
+    init("ds_e", np.array([10, 30, 30], np.int64), np.int64)
+    init("ds_ax", np.array([1, 2, 3], np.int64), np.int64)
+    init("ds_st", np.array([1, 3, 3], np.int64), np.int64)
+    n("Slice", ["input", "ds_s", "ds_e", "ds_ax", "ds_st"], "bm_f32")  # [1,9,10,10]
+    n("Cast", ["bm_f32"], "bm", to=F16)  # [1,9,10,10] f16
 
     # ---- triangular prefix/suffix matrices (bitmap scale) ------------------
     LowTri = np.tril(np.ones((N, N), np.float16))  # LowTri[r,k]=1 iff k<=r
@@ -68,32 +65,24 @@ def build(task):
     init("LowTri", LowTri.reshape(1, 1, N, N), np.float16)
     init("UpTri", UpTri.reshape(1, 1, N, N), np.float16)
 
-    # row spans (along col axis, right-multiply):
-    #   pref_row[c]=sum_{k<=c} bm[k]  -> M[k,c]=[k<=c]=UpTri
-    #   suf_row[c] =sum_{k>=c} bm[k]  -> M[k,c]=[k>=c]=LowTri
-    n("MatMul", ["bm", "UpTri"], "pref_row")  # [1,10,10,10]
-    n("MatMul", ["bm", "LowTri"], "suf_row")
-    # col spans (along row axis, left-multiply):
-    #   pref_col[r]=sum_{k<=r} bm[k]  -> LowTri @ bm
-    #   suf_col[r] =sum_{k>=r} bm[k]  -> UpTri  @ bm
-    n("MatMul", ["LowTri", "bm"], "pref_col")
-    n("MatMul", ["UpTri", "bm"], "suf_col")
-
+    # A span-fill mask in one direction = (prefix>0) AND (suffix>0); since both
+    # are non-negative, prefix*suffix>0 is the same predicate -> one Greater.
+    n("MatMul", ["bm", "UpTri"], "pref_row")  # [1,9,10,10] pref over col axis
+    n("MatMul", ["bm", "LowTri"], "suf_row")  # suffix over col axis
+    n("Mul", ["pref_row", "suf_row"], "rowspan")  # >0 where in row span
+    n("MatMul", ["LowTri", "bm"], "pref_col")  # pref over row axis
+    n("MatMul", ["UpTri", "bm"], "suf_col")    # suffix over row axis
+    n("Mul", ["pref_col", "suf_col"], "colspan")  # >0 where in col span
+    n("Add", ["rowspan", "colspan"], "span")   # >0 where in any span
     init("Z", np.array(0.0, np.float16), np.float16)
-    n("Greater", ["pref_row", "Z"], "pr")
-    n("Greater", ["suf_row", "Z"], "sr")
-    n("Greater", ["pref_col", "Z"], "pc")
-    n("Greater", ["suf_col", "Z"], "sc")
-    n("And", ["pr", "sr"], "rowfill")   # [1,10,10,10] bool (ch0 all-False)
-    n("And", ["pc", "sc"], "colfill")
-    n("Or", ["rowfill", "colfill"], "fill_oh")  # connected one-hot (ch1-9) bool
+    n("Greater", ["span", "Z"], "fill_oh")  # [1,9,10,10] bool connected one-hot
 
     # ---- connected bitmap as a 1-channel COLOR-INDEX plane (bitmap scale) ---
     # L_bm[r,c] = sum_k k * fill_oh[k]  (>0 only on connected cells; bg cells 0)
-    n("Cast", ["fill_oh"], "fill_f", to=F16)              # [1,10,10,10] f16
-    idxvec = np.arange(10, dtype=np.float16).reshape(1, 10, 1, 1)
+    n("Cast", ["fill_oh"], "fill_f", to=F16)              # [1,9,10,10] f16
+    idxvec = np.arange(1, 10, dtype=np.float16).reshape(1, 9, 1, 1)  # colours 1..9
     init("idxvec", idxvec, np.float16)
-    n("Mul", ["fill_f", "idxvec"], "fill_idx")            # [1,10,10,10] f16
+    n("Mul", ["fill_f", "idxvec"], "fill_idx")            # [1,9,10,10] f16
     n("ReduceSum", ["fill_idx"], "L_bm", axes=[1], keepdims=1)  # [1,1,10,10] f16
 
     # ---- upsample L_bm -> pixel scale via Gather(axis2)·Gather(axis3) -------
@@ -117,7 +106,9 @@ def build(task):
     init("lc_ax", np.array([2, 3], np.int64), np.int64)
     n("Slice", ["input", "lc_s", "lc_e", "lc_ax"], "lc")  # [1,10,1,1] f32 one-hot
     n("Cast", ["lc"], "lc_f", to=F16)
-    n("Mul", ["lc_f", "idxvec"], "lc_idxv")               # [1,10,1,1] f16
+    idx10 = np.arange(10, dtype=np.float16).reshape(1, 10, 1, 1)
+    init("idx10", idx10, np.float16)
+    n("Mul", ["lc_f", "idx10"], "lc_idxv")                # [1,10,1,1] f16
     n("ReduceSum", ["lc_idxv"], "lc_idx", axes=[1], keepdims=1)  # [1,1,1,1] f16
 
     # ---- final color-index plane -> one-hot bool output (FREE) -------------

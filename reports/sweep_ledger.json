@@ -102,9 +102,9 @@
  {
   "task": 9,
   "arc_id": "06df4c85",
-  "points": 14.43,
-  "memory": 38682,
-  "params": 337,
+  "points": 14.55,
+  "memory": 34182,
+  "params": 340,
   "method": "ext:thbdh6285",
   "class": "BAIL",
   "sig": "memory",
