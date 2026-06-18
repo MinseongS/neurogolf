@@ -2361,14 +2361,15 @@
  {
   "task": 191,
   "arc_id": "7df24a62",
-  "points": 11.53,
-  "memory": 709177,
-  "params": 165,
+  "points": 13.77,
+  "memory": 74258,
+  "params": 1122,
   "method": "pub6372:base",
   "class": "BAIL?",
   "sig": "num_sprites",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: shape-correspondence: find all rot/transpose matches of reference sprite across "
+  "status": "done",
+  "verdict": "INFEASIBLE: shape-correspondence: find all rot/transpose matches of reference sprite across ",
+  "note": "subagent win +2.24 (8-orientation dihedral template match as one stacked Conv; weak base 11.53)"
  },
  {
   "task": 192,
