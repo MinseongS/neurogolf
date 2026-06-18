@@ -4152,14 +4152,15 @@
  {
   "task": 336,
   "arc_id": "d4f3cd78",
-  "points": 16.52,
-  "memory": 4484,
-  "params": 343,
+  "points": 16.86,
+  "memory": 3372,
+  "params": 55,
   "method": "ext:vyank6322",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.34 (container fill + drip = separable rect interior UNION rank-1 drip lines, no flood)"
  },
  {
   "task": 337,
