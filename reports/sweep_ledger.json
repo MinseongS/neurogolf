@@ -368,8 +368,9 @@
   "method": "ext:vyank6322",
   "class": "BAIL?",
   "sig": "connect",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE None ~16.3pt: 1caeab9d: align 3 colored clusters to a common row (megarows[0]); vert"
+  "status": "skip-marginal",
+  "verdict": "FEASIBLE None ~16.3pt: 1caeab9d: align 3 colored clusters to a common row (megarows[0]); vert",
+  "note": "probe +0.26 (16.28->16.54) below +0.3 bar; generalizes 500/500. insight: per-colour vertical shift = color-folded bool MatMul S@in, S[R,r]=color*(r+delta==R), target-color delta-0 skips its MatMul (tasklog-style); Tier-B floor firm"
  },
  {
   "task": 31,
