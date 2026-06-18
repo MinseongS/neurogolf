@@ -576,14 +576,15 @@
  {
   "task": 47,
   "arc_id": "23581191",
-  "points": 16.99,
-  "memory": 2988,
-  "params": 36,
+  "points": 17.22,
+  "memory": 2349,
+  "params": 52,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.42 (two-line crossing = f(rowval+colval) Gather table; opset-13 bool Pad)"
  },
  {
   "task": 48,
