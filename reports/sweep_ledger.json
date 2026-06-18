@@ -4920,14 +4920,15 @@
  {
   "task": 396,
   "arc_id": "fcb5c309",
-  "points": 14.01,
-  "memory": 58199,
-  "params": 1115,
+  "points": 14.49,
+  "memory": 36407,
+  "params": 190,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: fcb5c309: extract box[0] content with its scattered pixels into box-sized output"
+  "status": "done",
+  "verdict": "INFEASIBLE: fcb5c309: extract box[0] content with its scattered pixels into box-sized output",
+  "note": "subagent win mid-manifest (14.01->14.49; largest-box recolor via same-color pair-run on colf plane)"
  },
  {
   "task": 397,

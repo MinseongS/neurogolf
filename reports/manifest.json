@@ -2371,10 +2371,10 @@
    "method": "ext:wguesdon6304"
   },
   "396": {
-   "points": 14.009399355188783,
-   "memory": 58199,
-   "params": 1115,
-   "method": "gen:thbdh6332"
+   "points": 14.492278451183152,
+   "memory": 36407,
+   "params": 190,
+   "method": "custom:task396"
   },
   "397": {
    "points": 15.587453747924487,
