@@ -499,14 +499,15 @@
  {
   "task": 41,
   "arc_id": "22168020",
-  "points": 15.63,
-  "memory": 11740,
-  "params": 29,
+  "points": 15.97,
+  "memory": 8294,
+  "params": 73,
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "overlaps",
-  "status": "retriage-feasible",
-  "verdict": "FEASIBLE None ~15.6pt: 22168020: complete the 'V'/triangle shapes by filling above each diago"
+  "status": "done",
+  "verdict": "FEASIBLE None ~15.6pt: 22168020: complete the 'V'/triangle shapes by filling above each diago",
+  "note": "subagent win +0.34 (nearest-pixel-in-direction via packed suffix-MaxPool)"
  },
  {
   "task": 42,
