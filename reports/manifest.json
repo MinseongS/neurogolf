@@ -2269,10 +2269,10 @@
    "method": "custom:task378"
   },
   "379": {
-   "points": 13.819767920510943,
-   "memory": 69969,
-   "params": 1730,
-   "method": "gen:thbdh6332"
+   "points": 14.812123290712885,
+   "memory": 26511,
+   "params": 68,
+   "method": "custom:task379"
   },
   "380": {
    "points": 18.679231705749416,

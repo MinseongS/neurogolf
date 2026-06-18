@@ -4881,14 +4881,15 @@
  {
   "task": 379,
   "arc_id": "ecdecbb3",
-  "points": 13.82,
+  "points": 14.81,
   "memory": 69969,
   "params": 1730,
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
-  "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: ecdecbb3: draw rays from red dots to cyan lines and cap with cyan square; ray-st"
+  "status": "done",
+  "verdict": "INFEASIBLE: ecdecbb3: draw rays from red dots to cyan lines and cap with cyan square; ray-st",
+  "note": "RE-PROBE WIN +0.99 (13.82->14.81): ray-with-stop-on-cyan + 3x3 stamp = closed-form (NOT flood). stop-on-cyan => nearest-line each dir: Ldown=min line>dot via Where(lineB,rowidx,+-BIG)->ReduceMin/Max over [1,1,WK,1] LINE VECTOR (no WKxWK plane); 2-level Where on dot-row vector; colour via nested UINT8 Where priority (no fp32 value plane); xpose=uint8 transpose+select. fresh 200/200."
  },
  {
   "task": 380,
