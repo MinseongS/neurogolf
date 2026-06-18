@@ -1708,15 +1708,15 @@
  {
   "task": 138,
   "arc_id": "5daaa586",
-  "points": 14.38,
-  "memory": 39171,
-  "params": 1919,
+  "points": 14.6,
+  "memory": 31331,
+  "params": 1475,
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "random_pixels",
   "status": "done",
   "verdict": "INFEASIBLE: 5daaa586: trace ray from each pixel toward its matching border line, crop to inn",
-  "note": "subagent win mid-manifest (+0.16, intermediate)"
+  "note": "subagent win mid-manifest (14.22->14.60; box+axis-rays+variable-crop, triangular MatMul ray)"
  },
  {
   "task": 139,
