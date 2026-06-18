@@ -2675,14 +2675,16 @@
  {
   "task": 214,
   "arc_id": "8e5a5113",
-  "points": 17.76,
+  "points": 18.06,
   "memory": 1320,
   "params": 75,
-  "method": "ext:wguesdon6304",
+  "method": "custom:task214",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.30 (17.76->18.06): non-separable 2-D one-hot remap beat small-block GridSample via Slice(coloured corner)->Cast uint8->Reshape flat->ONE Gather w/ 2-D index [H,W]->Pad(free). 2-D Gather on rank-3 = rank-4 directly. constant gray separators = synthetic source cell via Concat"
  },
  {
   "task": 215,
