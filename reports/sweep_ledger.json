@@ -3543,7 +3543,8 @@
   "class": "BAIL?",
   "sig": "continuous_creature",
   "status": "confirmed-infeasible",
-  "verdict": "INFEASIBLE: b230c067: classify each sprite as 'has a column removed' (idx1) vs whole (idx0) "
+  "verdict": "INFEASIBLE: b230c067: classify each sprite as 'has a column removed' (idx1) vs whole (idx0) ",
+  "note": "REVERIFIED wall: variable connectivity-correspondence; odd-one-out made by DELETING a column fragments sprite into disjoint-bbox pieces (~0.5% split rate), flood/bbox segmentation cannot 200/200. Public net itself fails 4/200 fresh. True-positive."
  },
  {
   "task": 278,
