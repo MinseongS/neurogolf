@@ -321,6 +321,16 @@ fp16 `Equal(diff,0)` is EXACT for integer operands and collapses a Sub+Abs+thres
 (but fp16 Min/Max crashes ORT under ORT_DISABLE_ALL — do clipping in fp32). A +1 bias on a colour-index
 plane lets a SINGLE value-carrying Where plane double as both colour-readout and occupancy mask, removing
 the separate {0,1} mask plane (task205).
+⭐ DIRECTIONAL MAXPOOL-CARRY REPLACES int64 GatherND PER-CELL READS (task367 v2, 13.14→13.46 +0.32, killed ~58KB
+of int64 GatherND machinery): when each cell needs "the value/source at the nearest marked cell in direction d"
+(nearest wall, run endpoint, nearest gray, prior-colour to the left, etc.), do NOT GatherND (forces int64 — full_check
+rejects int32 GatherND — and a 30×30 int64 plane is 7200B+). Instead PACK `prio·BIG + (val+OFF)` ONLY at marked
+cells (a sentinel elsewhere), take a directional PREFIX-MAX via a ONE-SIDED full-length 1-D `MaxPool` kernel (ZERO
+params, task350 idiom), then DECODE `val = pack mod BIG − OFF`, `src = floor(pack/BIG)`. On a cropped A×A active
+region (A≈20) every packed integer stays <2048 so fp16 is EXACT (pick BIG/OFF so prio·BIG+val+OFF < 2048). Run
+endpoints = prefix-max of edge-marks; suffix-min = −prefix-max of −ramp. Share the packed source plane across all
+carries; drop dead `src` outputs from value-only carries. This turns any "per-cell nearest-marker lookup" from an
+int64-GatherND floor into a stack of cheap fp16 directional carries.
 GOTCHAS: ORT ReduceMax/Sum reject uint8/bool (need float); ORT Mul/And/Mod reject uint8 (combines stay bool);
 ORT Where/Equal implemented for uint8 but NOT int8/int16; ORT Pad rejects bool; Clip rejects int64 (clip in
 float then Cast); Slice preserves the input float dtype; opset-11 has no GreaterOrEqual (use Not(Less(...)));
