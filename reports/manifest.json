@@ -1885,10 +1885,10 @@
    "method": "ext:wguesdon6304"
   },
   "315": {
-   "points": 16.87230014718223,
-   "memory": 3348,
-   "params": 39,
-   "method": "ext:kojimar6275"
+   "points": 17.444094906388653,
+   "memory": 1710,
+   "params": 202,
+   "method": "custom:task315"
   },
   "316": {
    "points": 17.642443799089648,
@@ -2359,10 +2359,10 @@
    "method": "ext:biohack_new"
   },
   "394": {
-   "points": 16.53346872338599,
-   "memory": 4718,
-   "params": 35,
-   "method": "ext:kojimar6275"
+   "points": 16.66145512001142,
+   "memory": 4103,
+   "params": 79,
+   "method": "custom:task394"
   },
   "395": {
    "points": 18.51383921105591,

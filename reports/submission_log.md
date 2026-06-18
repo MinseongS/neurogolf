@@ -151,7 +151,7 @@ task78 (16.32->16.62 bar-stack) + task176 salvage. All fixed-size simple-recolor
 region, no full-channel read = beatable by hand). Variable-size tasks (256/353/109) need a full in-grid
 read -> too memory-heavy to beat the ~16.4 nets by hand. gap pinned 28.96.
 
-## ⭐ Submission 21: proj 6569.81 PENDING. 16-win wave after infra recovery.
+## ⭐ Submission 21: LB 6569.81 CONFIRMED (proj 6569.81 EXACT, 19th). 16-win wave after infra recovery.
 Subagent infra recovered (probes 109/10 cleared). Wave: 109,10,28,353,41,136,226,302,160,291,305,104,
 323,130,123,316 (all generalizing, ~+0.4-0.9 each; 305/123/316 +0.66-0.91). Truly-untouched pending pool
 (no prior custom) is the productive frontier now. gap pinned 28.96. Session: 6492.58 -> proj 6569.81 (+77).

@@ -3890,14 +3890,15 @@
  {
   "task": 315,
   "arc_id": "cce03e0d",
-  "points": 16.87,
-  "memory": 3348,
-  "params": 39,
+  "points": 17.44,
+  "memory": 1710,
+  "params": 202,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.57"
  },
  {
   "task": 316,
@@ -4872,14 +4873,15 @@
  {
   "task": 394,
   "arc_id": "f9012d9b",
-  "points": 16.53,
-  "memory": 4718,
-  "params": 35,
+  "points": 16.66,
+  "memory": 4103,
+  "params": 79,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.13 marginal (adopt took it, free LB)"
  },
  {
   "task": 395,

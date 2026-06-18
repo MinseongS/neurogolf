@@ -1,7 +1,7 @@
 {
- "comment": "#21 PENDING. proj 6569.81. 16-win infra-recovered wave (incl 3 hand-built already in #20). gap 28.96==219+255.",
+ "comment": "#21 CONFIRMED 6569.81 (proj 6569.81 EXACT, 19th). gap 28.96==219+255. Re-anchor next submit.",
  "stored_at_submit": 6598.77,
  "lb": 6569.81,
  "time_utc": "2026-06-18 13:55",
- "pending": true
+ "pending": false
 }
