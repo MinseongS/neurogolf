@@ -1075,14 +1075,15 @@
  {
   "task": 85,
   "arc_id": "3bdb4ada",
-  "points": 15.31,
+  "points": 15.61,
   "memory": 14880,
   "params": 1201,
   "method": "custom:task085",
   "class": "CHECK",
   "sig": "-",
-  "status": "skip-marginal",
-  "verdict": "+0.065 < bar; fp32 occupancy entry plane (3600B) is binding floor. (small real cut found: mod-K prefix subsumes occupancy gate)"
+  "status": "done",
+  "verdict": "+0.065 < bar; fp32 occupancy entry plane (3600B) is binding floor. (small real cut found: mod-K prefix subsumes occupancy gate)",
+  "note": "WIN +0.30 (beat own custom, floor-break): at-most-one-run-per-row => horiz offset-parity is per-ROW scalar (ReduceMax(occ*ramp) start-parity, Xor) kills 900-param prefix MatMix; occupancy as Cast->BOOL 30x30 (900B) beats fp16; Concat(mask_bool,zeros_bool) pads dodging u8-Pad. 16081->12012. fresh 500/500."
  },
  {
   "task": 86,
