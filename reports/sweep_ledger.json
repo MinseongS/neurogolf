@@ -1031,8 +1031,9 @@
   "method": "ext:kojimar6275",
   "class": "BAIL?",
   "sig": "random_pixels",
-  "status": "pending",
-  "verdict": ""
+  "status": "confirmed-infeasible",
+  "verdict": "",
+  "note": "AT-FLOOR: full-canvas spatial remap = single GridSample(input,grid[1,30,30,2]) mem=0 params=1800 (=30*30*2), HARD floor (cannot shrink grid for 30x30 output; fp16 grid also 1800 elems). Slice/Concat rebuild >=1920B worse. NOT beatable."
  },
  {
   "task": 84,
@@ -1342,8 +1343,9 @@
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "at-floor 17.26<17.50: 4x block-upscale of sparse lattice needs BOTH fp32 channel-collapse entry plane (~1000B, Conv-forced) AND uint8 expansion plane (~900B), unfusable. public import already below this dual-plane floor."
  },
  {
   "task": 109,
@@ -1763,14 +1765,16 @@
  {
   "task": 142,
   "arc_id": "62c24649",
-  "points": 17.67,
+  "points": 18.61,
   "memory": 1440,
   "params": 81,
-  "method": "ext:wguesdon6304",
+  "method": "custom:task142",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.94 (17.67->18.61): size-3 grid -> 6x6 4-fold mirror. LEVER: small-output-block GridSample - Slice input to active channels+corner [1,4,3,3] BEFORE gather, Cast fp16, GridSample->[1,4,6,6], Pad zeros into free output. off-grid all-zero (no ch0=1)"
  },
  {
   "task": 143,
@@ -1884,14 +1888,16 @@
  {
   "task": 152,
   "arc_id": "67e8384a",
-  "points": 17.67,
+  "points": 18.08,
   "memory": 1440,
   "params": 81,
-  "method": "ext:wguesdon6304",
+  "method": "custom:task152",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "class_": "WIN",
+  "note": "golf +0.41 (17.67->18.08): D2 4-fold mirror copy = Slice->Cast uint8->Gather(rows)->Gather(cols)->Pad. LEVER: one-hot output is {0,1} so run WHOLE pipeline uint8 + uint8 output (harness scores out>0), ~4x mem cut vs fp32"
  },
  {
   "task": 153,

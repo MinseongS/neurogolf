@@ -847,10 +847,10 @@
    "method": "custom:task141"
   },
   "142": {
-   "points": 17.672876707740706,
-   "memory": 1440,
-   "params": 81,
-   "method": "ext:wguesdon6304"
+   "points": 18.613120680637355,
+   "memory": 504,
+   "params": 90,
+   "method": "custom:task142"
   },
   "143": {
    "points": 15.12486048297936,
@@ -907,10 +907,10 @@
    "method": "gen:thbdh6332"
   },
   "152": {
-   "points": 17.672876707740706,
-   "memory": 1440,
-   "params": 81,
-   "method": "ext:wguesdon6304"
+   "points": 18.07538760395144,
+   "memory": 990,
+   "params": 27,
+   "method": "custom:task152"
   },
   "153": {
    "points": 15.96258546317741,

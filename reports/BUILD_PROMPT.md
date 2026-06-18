@@ -17,6 +17,23 @@ variable-size crop" floors near ~13.4 for everyone — the public CumSum-scan ne
 (T,L)=(top-of-col-run,left-of-row-run) prefix/suffix-MAX scans give a unique per-box label and per-box
 red-counts reduce to a 2-D integral image (4 Gathers, no flood-fill), but the constant factor still lands
 at-floor; if the rule needs a global argmax across data-dependent-count components, BAIL fast (task216).
+⛔ GRIDSAMPLE-AT-FLOOR (do NOT attempt): if the CURRENT net is a memory-0 single `GridSample(input,grid[1,30,30,2])`
+with params≈1800 (=30·30·2), it's a FIXED-geometry full-canvas spatial remap (reflection/rotation/translation
+filling the whole 30×30 output) — already at HARD floor (~17.50). The 1800-elem grid is irreducible (params count
+ELEMENTS not bytes, so fp16 doesn't help; output canvas is fixed 30×30); any Slice/Concat/Pad rebuild floors at
+≥1920B (~17.43, strictly worse). BAIL INFEASIBLE immediately (task083). NB: a SMALL-region GridSample (e.g.
+[1,10,6,6]) is also at floor — its fp32 sampled plane (channels·out_cells·4B) is unshrinkable since GridSample
+inherits the fp32 input dtype (task194 C4-symmetrize tie). ⭐ BUT a GridSample making a SMALL OUTPUT BLOCK from
+the full 30×30 fp32 input is NOT at floor — shrink the dominant sampled plane 3-4× by (1) Slicing the input to
+the ACTIVE colour-channel subset AND active spatial corner in ONE Slice BEFORE the gather (input is free; a
+36-elem slice costs nothing vs sampling all 10ch×full grid), then (2) Cast that tiny block to fp16 and gather in
+fp16. The "don't cast the input" rule only bites the full 30×30 ENTRY plane, not a tiny working block (task142
+17.67→18.61, +0.94). So: full-canvas-OUTPUT GridSample = floor (BAIL); small-output-block GridSample fed by full
+input = pre-slice+fp16 win.
+- ⭐ UINT8 WHOLE-PIPELINE FOR ONE-HOT COPY/RELABEL: a one-hot output is exactly {0,1} and the harness scores
+  (out>0), so for any pure-copy / permutation / mirror / one-hot-relabel task, Cast EVERY working plane to UINT8
+  (itemsize 1) and declare the OUTPUT uint8 — passes identically, ~4× mem cut vs fp32 and 2× vs the fp16 trick
+  (task152: 2520→1620→990B, 17.67→18.08). uint8 Gather AND Pad both run under ORT_DISABLE_ALL.
 BUT the OPPOSITE case is closed-form & tier-A, NOT a BAIL: "emit the FIXED-SIZE (e.g. 3×3) box with the
 most X pixels" — a 3×3 all-ones sum-Conv gives per-top-left counts AND box-validity (occ-conv==9) in one
 pass; the UNIQUE-argmax position recovers as a scalar (minrow,mincol)=ReduceMax(iswin·rowramp)/
