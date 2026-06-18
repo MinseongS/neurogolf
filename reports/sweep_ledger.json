@@ -1802,14 +1802,15 @@
  {
   "task": 146,
   "arc_id": "662c240a",
-  "points": 17.28,
+  "points": 17.2,
   "memory": 2232,
   "params": 24,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.34 (output=fixed sub-block by symmetry predicate; within-block transpose via Reshape)"
  },
  {
   "task": 147,
