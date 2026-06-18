@@ -1509,14 +1509,15 @@
  {
   "task": 123,
   "arc_id": "539a4f51",
-  "points": 16.68,
-  "memory": 3155,
-  "params": 948,
+  "points": 17.59,
+  "memory": 1499,
+  "params": 157,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "done",
+  "verdict": "",
+  "note": "subagent win +0.91 (color=f(max(r,c)) -> const-index Gather of band vector, palette from col0)"
  },
  {
   "task": 124,

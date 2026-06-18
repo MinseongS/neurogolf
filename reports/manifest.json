@@ -733,10 +733,10 @@
    "method": "conv5x5+b"
   },
   "123": {
-   "points": 16.680526307557813,
-   "memory": 3155,
-   "params": 948,
-   "method": "ext:kojimar6275"
+   "points": 17.587839665054794,
+   "memory": 1499,
+   "params": 157,
+   "method": "custom:task123"
   },
   "124": {
    "points": 16.036455708003256,
