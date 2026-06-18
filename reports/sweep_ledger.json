@@ -1705,8 +1705,9 @@
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
-  "status": "pending",
-  "verdict": ""
+  "status": "skip-marginal",
+  "verdict": "",
+  "note": "at-floor 19.11: top-right 3x3 crop, published Slice+Pad attribute-style (params=0) already optimal. fp32 input forces 360B fp32 [1,10,3,3] crop; uint8 path adds Cast=450B worse. uint8 lever does NOT help pure fixed-crop (only wins w/ downstream working planes)"
  },
  {
   "task": 136,
