@@ -4378,7 +4378,7 @@
   "sig": "memory",
   "status": "done",
   "verdict": "INFEASIBLE: d5d6de2d: recolor box interiors green - actually pure local recolor! interior of",
-  "note": "subagent win mid-manifest (session-final harvest)"
+  "note": "subagent win mid-manifest (session-final harvest) | re-golf AT-FLOOR (+0.04): column-parity ray-cast HARD ~13.9KB floor = fp32 channel-entry(2500B)+wall-detect(Conv+Relu 2 planes)+parity(MatMul+Mod 2 planes) all full-grid; only carrier-fusion left (cant clear +0.3). PATTERN: forced fp32 entry/Conv/Slice = at-floor; removable carrier = winnable"
  },
  {
   "task": 339,
