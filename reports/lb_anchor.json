@@ -1,10 +1,10 @@
 {
- "comment": "pure kojimar 7113.80 audited blend submitted AS-IS = CONFIRMED 7113.80 (our best; +6.79 over our keep-best 7107.01). subB pure-sajayr=7092.28 (worse, proving our keep-best+fresh-gate was correct). Next: merge_E = kojimar base + our fresh-verified overlays to BEAT 7113.80.",
- "stored_at_submit": 7135.87,
- "lb": 7113.8,
- "time_utc": "2026-06-19 kojimar-7113.80 confirmed",
+ "comment": "merge_E CONFIRMED 7121.23 = kojimar 7113.80 audited base + 14 fresh-verified OUR overlays (beat kojimar AND pass fresh-200) + 5 ours-fallback (koji broke our examples). +7.43 over pure-kojimar, ABOVE public crowd 7113.80. Progression today: 6667->7107(7k-harvest keep-best)->7113.80(kojimar)->7121.23(E).",
+ "stored_at_submit": 7152.05,
+ "lb": 7121.23,
+ "time_utc": "2026-06-19 merge_E 7121.23 confirmed",
  "pending": false,
- "pending_submit": "kojimar 7113.80 CONFIRMED",
+ "pending_submit": "merge_E 7121.23 CONFIRMED",
  "prev_stored_at_submit": 6697.39,
  "prev_lb": 6667.42
 }
