@@ -4678,14 +4678,15 @@
  {
   "task": 362,
   "arc_id": "e48d4e1a",
-  "points": 16.33,
-  "memory": 11894,
-  "params": 45,
+  "points": 17.15,
+  "memory": 1849,
+  "params": 721,
   "method": "ext:kojimar6275",
   "class": "CHECK",
   "sig": "-",
   "status": "done",
-  "verdict": "16.33 adopted (15.61->16.33, +0.72); floor 5685. INSIGHT: offset-shifted cross closed-form, line positions = colored-count==gridside"
+  "verdict": "16.33 adopted (15.61->16.33, +0.72); floor 5685. INSIGHT: offset-shifted cross closed-form, line positions = colored-count==gridside",
+  "note": "re-golf +0.82: replaced 3600B fp32 channel-collapse plane with TWO no-pad profile Convs (full-width [1,10,1,30]->per-row count 120B, full-height [1,10,30,1]->per-col 120B); fp16 ramp planes; mem 5685->1849. Floor: 900B uint8 L (3-state off-grid/bg/line carrier feeding Equal-to-output)"
  },
  {
   "task": 363,

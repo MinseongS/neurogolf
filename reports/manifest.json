@@ -2167,9 +2167,9 @@
    "method": "ext:biohack_new"
   },
   "362": {
-   "points": 16.331631980786646,
-   "memory": 5685,
-   "params": 131,
+   "points": 17.148338822110734,
+   "memory": 1849,
+   "params": 721,
    "method": "custom:task362"
   },
   "363": {
