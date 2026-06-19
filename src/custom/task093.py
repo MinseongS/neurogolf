@@ -12,18 +12,26 @@ Rule (from the generator, size=14 grid anchored top-left):
     (rotates band horizontal<->vertical) may be applied.
   * OUTPUT colour is always GRAY: band + stacked cells -> 5, else 0.
 
-Recovery (closed-form, reduction/broadcast-based, NO flood-fill):
-  Work on a 14x14 canvas.  V = value plane (sum_k k*input_k).  G = gray(V==5),
-  C = coloured (V>0 & V!=5).  Detect a fully-gray ROW (horizontal band) vs COL.
-  HORIZONTAL: band rows [r0,r1].  Per-column counts na=sum_{r<r0}C,
-  nb=sum_{r>r1}C.  gray(r,c) = band OR (1<=(r0-r)<=na[c]) OR (1<=(r-r1)<=nb[c]);
-  each side is a broadcast of a per-row distance [1,1,14,1] against a per-column
-  count [1,1,1,14] -> [1,1,14,14] (separable, no 2-D scan).  VERTICAL: rows<->cols.
-  Select by a scalar horiz flag using bool And/Or (no fp Where).
+Recovery — OCCUPANCY-ONLY + ORIENTATION-EQUIVARIANCE (task341 lever) + CONTIGUOUS-SPAN.
+  The actual gray value (5) is irrelevant: in the INPUT the band line is the ONLY
+  fully-occupied line, the stack counts are occupied-pixel counts, and the OUTPUT
+  gray region is one contiguous run per perpendicular line.  So we work purely on
+  occupancy occ = (sum_k k*input_k > 0), a single bool/fp16 14x14 plane.
 
-  Entry value plane is one fp32 [1,1,30,30] (3600 B, irreducible 10->1 floor);
-  everything downstream runs on fp16 [1,1,14,14] (392 B) or bool (196 B) planes.
-  Output: L_u8 (5 where gray) -> Pad to 30x30 sentinel -> Equal([0..9]) -> BOOL.
+  The rule is transpose-equivariant, so canonicalise to a horizontal band:
+  horiz = (some row is fully occupied);  C = horiz ? occ : occ^T.  Band rows
+  [r0,r1] = rows with rowSum(C)==CW.  Per-column counts na=Sum_{r<r0}C[r,c],
+  nb=Sum_{r>r1}C[r,c] via masked-sum MatMul (contract the row axis; no 2-D product
+  plane).  KEY: above-stack [r0-na,r0-1], band [r0,r1], below-stack [r1+1,r1+nb]
+  are CONTIGUOUS, so gray(r,c) = (r0-na[c]) <= r <= (r1+nb[c]) — just two compares
+  against the row ramp gated by tiny column-indexed thresholds.  De-canonicalise
+  (uint8 5/0 then horiz?LcH:LcH^T) and route to the FREE bool output via
+  Pad(255 sentinel)+Equal([0..9]) — ch5=gray, ch0=in-grid bg, off-grid all-zero.
+
+  ONLY fp16 14x14 planes are occ, occ^T, C (occupancy + canonicalisation); ORT has
+  fp16 Where (NOT bool Where) under ORT_DISABLE_ALL.  Entry is one fp32 [1,1,30,30]
+  Conv (3600B, irreducible 10->1 floor) + one fp32 14x14 crop (784B) + one uint8
+  30x30 output carrier (900B).  ~15.97 pts (vs the two-branch value-plane net 15.67).
 """
 
 import numpy as np
@@ -51,18 +59,16 @@ def build(task):
     U8 = TensorProto.UINT8
     B = TensorProto.BOOL
 
-    # ---- constants (fp16 for the small-canvas comparisons) ----
+    # ---- constants ----
     init("colW", np.arange(10).reshape(1, 10, 1, 1), np.float32)   # value conv
     init("half", np.array(0.5, np.float16), np.float16)
-    init("c45", np.array(4.5, np.float16), np.float16)
-    init("c55", np.array(5.5, np.float16), np.float16)
+    init("half32", np.array(0.5, np.float32), np.float32)
+    init("cwm", np.array(CW - 0.5, np.float16), np.float16)  # CW-0.5: "row fully occupied"
     init("BIG", np.array(1e4, np.float16), np.float16)
     init("nBIG", np.array(-1e4, np.float16), np.float16)
     init("rowidx", np.arange(CW).reshape(1, 1, CW, 1).astype(np.float16), np.float16)
-    init("colidx", np.arange(CW).reshape(1, 1, 1, CW).astype(np.float16), np.float16)
-    # ramps along the CONTRACTED axis for masked-sum MatMuls
-    init("rowidxC", np.arange(CW).reshape(1, 1, 1, CW).astype(np.float16), np.float16)  # row ramp on last axis
-    init("colidxC", np.arange(CW).reshape(1, 1, CW, 1).astype(np.float16), np.float16)  # col ramp on row axis
+    # row ramp laid out on the LAST axis (for the contract-row MatMul)
+    init("rowidxC", np.arange(CW).reshape(1, 1, 1, CW).astype(np.float16), np.float16)
     init("chan", np.arange(10).reshape(1, 10, 1, 1), np.uint8)
     init("c5u8", np.array(5, np.uint8), np.uint8)
     init("c0u8", np.array(0, np.uint8), np.uint8)
@@ -70,90 +76,60 @@ def build(task):
     init("padO", np.array([0, 0, 0, 0, 0, 0, 30 - CW, 30 - CW], np.int64), np.int64)
     init("sentU8", np.array(255, np.uint8), np.uint8)
 
-    # ---- value plane V (one fp32 30x30 = the irreducible 3600B entry) ----
-    n("Conv", ["input", "colW"], "V32")          # [1,1,30,30] fp32
+    # ---- OCCUPANCY is all we need (gray value 5 is irrelevant): the band line is
+    #      the only fully-occupied line in the INPUT, counts are occupied pixels,
+    #      and the output gray span is a contiguous run.  occBool = (V32>0.5),
+    #      cropped to the 14x14 grid in one Pad. ----
+    n("Conv", ["input", "colW"], "V32")          # [1,1,30,30] fp32 (the 3600B entry)
     n("Pad", ["V32", "crop"], "Vc")              # [1,1,CW,CW] fp32
-    n("Cast", ["Vc"], "V", to=F16)               # fp16 from here on
+    n("Greater", ["Vc", "half32"], "occBool")    # [1,1,CW,CW] bool occupancy
+    n("Cast", ["occBool"], "occF", to=F16)       # fp16 {0,1}
 
-    # gray mask G (V==5), coloured mask C (V>0 & V!=5)
-    n("Greater", ["V", "c45"], "g_lo")
-    n("Less", ["V", "c55"], "g_hi")
-    n("And", ["g_lo", "g_hi"], "Gb")             # gray bool
-    n("Greater", ["V", "half"], "occB")          # any non-bg
-    n("Not", ["Gb"], "notGb")
-    n("And", ["occB", "notGb"], "Cb")            # coloured bool
-    n("Cast", ["Cb"], "C", to=F16)               # fp16 {0,1}
+    # ---- orientation: the band is a fully-occupied ROW iff some row sums to CW. ----
+    n("ReduceSum", ["occF"], "rowOccV", axes=[3], keepdims=1)   # [1,1,CW,1]
+    n("ReduceMax", ["rowOccV"], "maxRowOcc", axes=[2, 3], keepdims=1)
+    n("Greater", ["maxRowOcc", "cwm"], "horizB")               # scalar: band is a row?
 
-    # ---- orientation: a fully-gray ROW has min-over-cols == 5 (all cells gray);
-    #      any non-band row contains a bg(0) cell -> min < 5. Reuses V (no G plane). ----
-    n("ReduceMin", ["V"], "rowVmin", axes=[3], keepdims=1)   # [1,1,CW,1]
-    n("ReduceMin", ["V"], "colVmin", axes=[2], keepdims=1)   # [1,1,1,CW]
-    n("Greater", ["rowVmin", "c45"], "rowFullB")   # min >= 5  => all gray
-    n("Greater", ["colVmin", "c45"], "colFullB")
-    n("Cast", ["rowFullB"], "rowFull", to=F16)
-    n("ReduceMax", ["rowFull"], "horizScore", axes=[2, 3], keepdims=1)  # scalar
-    n("Greater", ["horizScore", "half"], "horizB")          # scalar bool
+    # ---- canonicalise occupancy: C = horiz ? occF : occF^T (band always a row).
+    #      ORT has fp16 Where (NOT bool Where) under ORT_DISABLE_ALL. ----
+    n("Transpose", ["occF"], "occFt", perm=[0, 1, 3, 2])
+    n("Where", ["horizB", "occF", "occFt"], "C")  # [1,1,CW,CW] fp16 canonical occ
 
-    # ================= HORIZONTAL branch =================
-    n("Where", ["rowFullB", "rowidx", "BIG"], "hr0_t")
-    n("ReduceMin", ["hr0_t"], "hr0", axes=[2, 3], keepdims=1)   # scalar fp16
-    n("Where", ["rowFullB", "rowidx", "nBIG"], "hr1_t")
-    n("ReduceMax", ["hr1_t"], "hr1", axes=[2, 3], keepdims=1)
-    # per-column counts via masked-sum MatMul (contract the row axis): no 2-D product plane
-    n("Less", ["rowidxC", "hr0"], "h_aboveRowB")   # [1,1,1,CW] (row ramp on last axis)
-    n("Cast", ["h_aboveRowB"], "h_aboveRow", to=F16)
-    n("Greater", ["rowidxC", "hr1"], "h_belowRowB")
-    n("Cast", ["h_belowRowB"], "h_belowRow", to=F16)
-    n("MatMul", ["h_aboveRow", "C"], "h_na")       # [1,1,1,CW] = sum_r C[r,c]*1[r<r0]
-    n("MatMul", ["h_belowRow", "C"], "h_nb")       # [1,1,1,CW]
-    n("Add", ["h_na", "half"], "h_naH")            # [1,1,1,CW] tiny: na+0.5
-    n("Add", ["h_nb", "half"], "h_nbH")
-    n("Sub", ["hr0", "rowidx"], "h_distA")         # [1,1,CW,1] = r0-r (tiny)
-    n("Greater", ["h_distA", "half"], "h_distApos")  # dist>=1
-    n("Less", ["h_distA", "h_naH"], "h_aLE")       # dist<=na  -> bool plane direct
-    n("And", ["h_distApos", "h_aLE"], "h_grayAboveB")
-    n("Sub", ["rowidx", "hr1"], "h_distB")
-    n("Greater", ["h_distB", "half"], "h_distBpos")
-    n("Less", ["h_distB", "h_nbH"], "h_bLE")
-    n("And", ["h_distBpos", "h_bLE"], "h_grayBelowB")
-    n("Or", ["Gb", "h_grayAboveB"], "h_g1")
-    n("Or", ["h_g1", "h_grayBelowB"], "h_grayB")   # [1,1,CW,CW] bool
+    # ---- band rows [r0,r1] on the canonical plane: a band row is fully occupied. ----
+    n("ReduceSum", ["C"], "rowOcc", axes=[3], keepdims=1)   # [1,1,CW,1]
+    n("Greater", ["rowOcc", "cwm"], "rowBandB")            # [1,1,CW,1] bool (==CW)
+    n("Where", ["rowBandB", "rowidx", "BIG"], "r0_t")
+    n("ReduceMin", ["r0_t"], "hr0", axes=[2, 3], keepdims=1)  # scalar fp16
+    n("Where", ["rowBandB", "rowidx", "nBIG"], "r1_t")
+    n("ReduceMax", ["r1_t"], "hr1", axes=[2, 3], keepdims=1)
 
-    # ================= VERTICAL branch =================
-    n("Where", ["colFullB", "colidx", "BIG"], "vc0_t")
-    n("ReduceMin", ["vc0_t"], "vc0", axes=[2, 3], keepdims=1)
-    n("Where", ["colFullB", "colidx", "nBIG"], "vc1_t")
-    n("ReduceMax", ["vc1_t"], "vc1", axes=[2, 3], keepdims=1)
-    # per-row counts via masked-sum MatMul (contract the col axis)
-    n("Less", ["colidxC", "vc0"], "v_leftColB")    # [1,1,CW,1] (col ramp on row axis)
-    n("Cast", ["v_leftColB"], "v_leftCol", to=F16)
-    n("Greater", ["colidxC", "vc1"], "v_rightColB")
-    n("Cast", ["v_rightColB"], "v_rightCol", to=F16)
-    n("MatMul", ["C", "v_leftCol"], "v_nl")        # [1,1,CW,1] = sum_c C[r,c]*1[c<c0]
-    n("MatMul", ["C", "v_rightCol"], "v_nr")       # [1,1,CW,1]
-    n("Add", ["v_nl", "half"], "v_nlH")            # [1,1,CW,1] tiny
-    n("Add", ["v_nr", "half"], "v_nrH")
-    n("Sub", ["vc0", "colidx"], "v_distL")         # [1,1,1,CW] tiny
-    n("Greater", ["v_distL", "half"], "v_distLpos")
-    n("Less", ["v_distL", "v_nlH"], "v_lLE")       # bool plane direct
-    n("And", ["v_distLpos", "v_lLE"], "v_grayLeftB")
-    n("Sub", ["colidx", "vc1"], "v_distR")
-    n("Greater", ["v_distR", "half"], "v_distRpos")
-    n("Less", ["v_distR", "v_nrH"], "v_rLE")
-    n("And", ["v_distRpos", "v_rLE"], "v_grayRightB")
-    n("Or", ["Gb", "v_grayLeftB"], "v_g1")
-    n("Or", ["v_g1", "v_grayRightB"], "v_grayB")
+    # per-column counts via masked-sum MatMul (contract the row axis)
+    n("Less", ["rowidxC", "hr0"], "aboveRowB")   # [1,1,1,CW]
+    n("Cast", ["aboveRowB"], "aboveRow", to=F16)
+    n("Greater", ["rowidxC", "hr1"], "belowRowB")
+    n("Cast", ["belowRowB"], "belowRow", to=F16)
+    n("MatMul", ["aboveRow", "C"], "na")         # [1,1,1,CW] count above band
+    n("MatMul", ["belowRow", "C"], "nb")         # [1,1,1,CW] count below band
 
-    # ================= select by scalar horiz flag (bool ops only) =====
-    n("And", ["horizB", "h_grayB"], "sel_h")        # broadcast scalar over plane
-    n("Not", ["horizB"], "vertB")
-    n("And", ["vertB", "v_grayB"], "sel_v")
-    n("Or", ["sel_h", "sel_v"], "grayB")            # [1,1,CW,CW] bool
+    # KEY: above-stack [r0-na, r0-1], band [r0,r1], below-stack [r1+1, r1+nb] are
+    # CONTIGUOUS, so the full gray span in column c is just  lo <= r <= hi  with
+    # lo=r0-na[c], hi=r1+nb[c] (tiny vectors).  Only TWO full compares + one And.
+    n("Sub", ["hr0", "na"], "lo")                # [1,1,1,CW] = r0 - na[c]
+    n("Add", ["hr1", "nb"], "hi")                # [1,1,1,CW] = r1 + nb[c]
+    n("Sub", ["lo", "half"], "loM")              # lo-0.5
+    n("Add", ["hi", "half"], "hiP")              # hi+0.5
+    n("Greater", ["rowidx", "loM"], "geLo")      # [1,1,CW,CW] bool: r >= lo
+    n("Less", ["rowidx", "hiP"], "leHi")         # [1,1,CW,CW] bool: r <= hi
+    n("And", ["geLo", "leHi"], "grayH")          # [1,1,CW,CW] canonical gray
 
-    # ================= output: L_u8 -> Pad -> Equal =================
-    n("Where", ["grayB", "c5u8", "c0u8"], "Lc")     # [1,1,CW,CW] uint8 (5 / 0)
+    # ---- canonical L (uint8 5/0); de-canonicalise via uint8 Where (ORT OK) ----
+    n("Where", ["grayH", "c5u8", "c0u8"], "LcH")     # [1,1,CW,CW] uint8 canonical
+    n("Transpose", ["LcH"], "LcHt", perm=[0, 1, 3, 2])
+    n("Where", ["horizB", "LcH", "LcHt"], "Lc")      # uint8 (5 / 0)
+
+    # ---- output: Lc -> Pad(255) -> Equal([0..9]) -> BOOL ----
     n("Pad", ["Lc", "padO", "sentU8"], "L", mode="constant")  # [1,1,30,30]
-    n("Equal", ["L", "chan"], "output")              # [1,10,30,30] BOOL
+    n("Equal", ["L", "chan"], "output")          # [1,10,30,30] BOOL
 
     x = helper.make_tensor_value_info("input", F, [1, 10, 30, 30])
     y = helper.make_tensor_value_info("output", B, [1, 10, 30, 30])

@@ -1191,14 +1191,15 @@
  {
   "task": 93,
   "arc_id": "4093f84a",
-  "points": 15.67,
-  "memory": 15400,
-  "params": 58,
+  "points": 15.98,
+  "memory": 8217,
+  "params": 72,
   "method": "custom:93 stack-toward-barrier (dist<=count broadcast, masked-sum MatMul)",
   "class": "BAIL?",
   "sig": "random_pixels",
   "status": "done",
-  "verdict": "generalizing exact win (fresh 500/500)"
+  "verdict": "generalizing exact win (fresh 500/500)",
+  "note": "re-golf +0.31: OCCUPANCY-ONLY collapse (value/marker colour is red-herring, work on Greater(V,0.5)) kills value-comparison masks; CONTIGUOUS-SPAN fusion (above-stack U band U below-stack = ONE run lo<=r<=hi, 7-plane OR-chain -> 2 compares+1 And). fp16 Where/Equal/Min work under ORT_DISABLE_ALL but bool Where does NOT (uint8 branches). 11176->8217"
  },
  {
   "task": 94,

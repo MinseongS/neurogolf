@@ -19,7 +19,35 @@ count comparison — no flood-fill, no scan).
 | 4 | per-line counts via masked-sum MatMul (kill 4 fp16 product planes) | A | 11568 | 101 | 15.64 | 200/200 | improved |
 | 5 | orientation/band detect via ReduceMin(V) (kill fp16 G plane) | A | 11176 | 100 | **15.67** | 500/500 | BEST |
 
+## Attempts (RE-GOLF session 2026-06-19, occupancy-only + equivariance)
+| # | angle | tier | mem | params | pts | fresh | outcome |
+|---|---|---|---|---|---|---|---|
+| 6 | orientation-equivariance: canonicalise V via transpose, solve 1 branch | A | 10247 | 72 | 15.76 | — | kept |
+| 7 | fp16 Equal gray mask (1 op); occupancy-direct count (no colored mask) | A | 9463 | 72 | 15.84 | — | kept |
+| 8 | CONTIGUOUS-SPAN: gray = r0-na <= r <= r1+nb (above+band+below is one run) | A | 8651 | 71 | 15.93 | — | kept |
+| 9 | occupancy via Min(Vh,1) (1 fp16 op, no bool occ plane) | A | 8455 | 72 | 15.95 | — | kept |
+| 10 | OCCUPANCY-ONLY: drop value plane entirely, canonicalise occupancy, band=fullocc-row | A | 8259 | 72 | 15.97 | — | kept |
+| 11 | orientation via ReduceMax(rowOccV) (drop rowFull cast chain) | A | 8217 | 72 | **15.977** | 200/200 | **BEST** |
+
 ## Best achieved
+15.977 @ mem 8217 params 72 — adopted? N (build-agent does not adopt). Beats deployed 15.670 by **+0.307**.
+(Prior session best was 15.670 @ 11176; this session re-golfed it.)
+
+### RE-GOLF floor analysis
+Same 3 structural floors (3600 entry Conv + 784 fp32 crop + 900 uint8 output carrier = 5284B). The win came
+from eliminating ~3000B of working planes: (a) OCCUPANCY-ONLY — the gray value is irrelevant, so the whole
+pipeline runs on `(V>0.5)` presence (band = the only fully-occupied INPUT line; counts = occupied pixels),
+killing every value-comparison mask and letting band detection reuse the occupancy reduction (rowSum==CW);
+(b) CONTIGUOUS-SPAN — above-stack ∪ band ∪ below-stack is ONE contiguous run `lo<=r<=hi` (lo=r0-na, hi=r1+nb),
+collapsing the 7-plane band/above/below OR-chain into 2 compares + 1 And; (c) single transpose-canonicalised
+branch (task341 equivariance) instead of the two h/v branches. Remaining working set: 3 fp16 occupancy planes
+(occ, occ^T, C) + 7 bool/uint8 14x14 planes + tiny per-line vectors. ⚠️ Two-branch and bool-select
+canonicalisations both measured equal-or-worse — the orientation transpose tax (~1764B) resists further cuts.
+
+---
+### (prior session below)
+
+## Best achieved (prior session)
 15.670 @ mem 11176 params 100 — adopted? N (build-agent does not adopt). Beats prior 15.354? Y (+0.316).
 
 ## Irreducible-floor analysis
