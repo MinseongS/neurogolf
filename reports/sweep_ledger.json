@@ -2039,15 +2039,15 @@
  {
   "task": 158,
   "arc_id": "6aa20dc0",
-  "points": 12.85,
-  "memory": 189350,
-  "params": 366,
+  "points": 13.01,
+  "memory": 152769,
+  "params": 8902,
   "method": "gen:biohack_new",
-  "class": "BAIL?",
+  "class": "CHECK",
   "sig": "overlaps",
-  "status": "confirmed-infeasible",
+  "status": "done",
   "verdict": "INFEASIBLE: diagonal-symmetry completion of sprite with per-instance flips/mags; object-leve",
-  "note": "2026-06-19 RECOVERY WALL SOLVED (but ONNX build unfinished): 158-recovery agent cracked the canonical-sprite recovery via '4-round per-cell exact-cover propagation' + 12 correlation stamps, verified exact in numpy (see src/custom/task158.py solve() + docstring). Projected ONNX ~14.5-15.3 = +1.7-2.5 over 12.85 -> BIGGEST single win available. Agent died before building the opset-10 graph (build() raises NotImplementedError). FOLLOW-UP: dispatch a finisher to build the ONNX from the solved algorithm."
+  "note": "WALL CRACKED +0.16 (exact, fresh 200/200): sprite-recovery wall illusory \u2014 canon recovers closed-form (min-bbox-span colour locates fully-drawn ref, 1 hflip fixes orient); per-object magnify+dihedral STAMP = 12 fixed strict-correlation passes; exact-cover = ONE spatial footprint-confirm pass (no Loop/NonZero). Levers: forward-spread Conv (180-flip kernel + asym pad, no (N+k-1)^2 plane); config-axis-contracting Conv; data-indep 26x25 crop"
  },
  {
   "task": 159,
