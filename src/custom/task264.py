@@ -108,24 +108,29 @@ def build(task):
     n("Slice", ["colorval30", "c_st", "c_en", "c_ax"], "colorval32")  # [1,1,16,16] f32
     n("Cast", ["colorval32"], "colorval", to=TensorProto.FLOAT16)     # fp16
 
-    # ---- detector conv: gray (x) F_k  (8 filters, valid) ----
-    Fw = np.stack([comps[k] - 9.0 * glyphs[k] for k in KIDX])      # [8,3,3]
-    Fw = Fw.reshape(NK, 1, 3, 3).astype(np.float16)
-    init("Fw", Fw, np.float16)
-    n("Conv", ["gray", "Fw"], "resp", pads=[0, 0, 0, 0])           # [1,8,28,28] f16
-    # detector D_k = (resp == cnt_comp_k)
-    init("cntcomp", cnt_comp.reshape(1, NK, 1, 1).astype(np.float16), np.float16)
-    n("Equal", ["resp", "cntcomp"], "det")                        # [1,8,28,28] bool
-
-    # ---- colorsum conv: colorval (x) glyph_k (8 filters, valid) ----
-    Gw = np.stack([glyphs[k] for k in KIDX]).reshape(NK, 1, 3, 3).astype(np.float16)
-    init("Gw", Gw, np.float16)
-    n("Conv", ["colorval", "Gw"], "colorsum", pads=[0, 0, 0, 0])   # [1,8,28,28] f16
-
-    # ---- color[k] = sum_space( det_k ? colorsum_k : 0 ) / cnt_gly_k ----
-    init("zero16", np.array(0.0, np.float16), np.float16)
-    n("Where", ["det", "colorsum", "zero16"], "picked")           # [1,8,14,14] f16
-    n("ReduceSum", ["picked"], "csum", axes=[2, 3], keepdims=1)   # [1,8,1,1]
+    # ---- FUSED single-conv combined-max recovery ----
+    # Stack [colorval; gray] -> [1,2,16,16] and run ONE 8-output Conv whose
+    # per-channel kernel is (glyph_k on the colorval plane, BIG*F_k on the gray
+    # plane).  The conv yields  colorsum_k + BIG*resp_k  at every window.  The
+    # gray matched filter F_k = comp_k - 9*glyph_k satisfies resp_k <= cnt_comp_k
+    # with EQUALITY ONLY at sprite k's true top-left, so subtracting BIG*cnt_comp
+    # leaves combined_k = cnt_gly_k*color[k] at that one cell and a large negative
+    # value everywhere else.  Then ReduceMax over space recovers cnt_gly_k*color[k]
+    # with no detector/Where/picked plane (kills the bool det + picked planes and
+    # the separate resp/colorsum planes -> ONE [1,8,14,14] plane total).
+    # BIG must exceed (max non-hit colorsum 36) - (min hit value 3) = 33; pick 40
+    # so every packed value |BIG*resp| <= 40*36 = 1440 stays fp16 integer-exact.
+    BIG = 40.0
+    n("Concat", ["colorval", "gray"], "stk", axis=1)               # [1,2,16,16] f16
+    Kw = np.zeros((NK, 2, 3, 3), np.float32)
+    for j, k in enumerate(KIDX):
+        Kw[j, 0] = glyphs[k]                       # colorsum part
+        Kw[j, 1] = BIG * (comps[k] - 9.0 * glyphs[k])  # BIG * F_k
+    init("Kw", Kw.astype(np.float16), np.float16)
+    # fold the -BIG*cnt_comp offset into the Conv BIAS -> no separate Sub plane
+    init("Kb", (-BIG * cnt_comp).astype(np.float16), np.float16)
+    n("Conv", ["stk", "Kw", "Kb"], "combined", pads=[0, 0, 0, 0])  # [1,8,14,14] f16
+    n("ReduceMax", ["combined"], "csum", axes=[2, 3], keepdims=1)  # [1,8,1,1]
     init("cntgly", cnt_gly.reshape(1, NK, 1, 1).astype(np.float16), np.float16)
     n("Div", ["csum", "cntgly"], "color")                         # [1,8,1,1] f16 colors
 
@@ -137,9 +142,15 @@ def build(task):
         br, bc = (k // 3) * 3, (k % 3) * 3
         placed[j, br:br + 3, bc:bc + 3] = glyphs[k]
         union[br:br + 3, bc:bc + 3] = np.maximum(union[br:br + 3, bc:bc + 3], glyphs[k])
-    init("placed", placed.reshape(1, NK, 9, 9), np.float16)
-    n("Mul", ["color", "placed"], "tparts")                       # [1,8,9,9] f16
-    n("ReduceSum", ["tparts"], "Tcol", axes=[1], keepdims=1)      # [1,1,9,9] f16
+    # Tcol = color contracted with placed over the 8 glyph channels via a tiny
+    # MatMul (color[1,8] @ placed[8,81] -> [1,81]) -> reshape [1,1,9,9].  No
+    # [1,8,9,9] tparts plane materialises.
+    init("placedmat", placed.reshape(NK, 81), np.float16)         # [8,81]
+    init("cshape", np.array([1, NK], np.int64), np.int64)
+    n("Reshape", ["color", "cshape"], "colrow")                   # [1,8] f16
+    n("MatMul", ["colrow", "placedmat"], "tflat")                 # [1,81] f16
+    init("t9shape", np.array([1, 1, 9, 9], np.int64), np.int64)
+    n("Reshape", ["tflat", "t9shape"], "Tcol")                    # [1,1,9,9] f16
     # mask of glyph cells (constant): bool initializer, no runtime op
     init("Mg", (union > 0.5).reshape(1, 1, 9, 9), np.bool_)        # [1,1,9,9] bool
     # L = where(Mg, round(Tcol) as uint8, 5)

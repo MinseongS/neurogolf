@@ -3420,14 +3420,15 @@
  {
   "task": 264,
   "arc_id": "a8c38be5",
-  "points": 15.04,
-  "memory": 138584,
-  "params": 852,
+  "points": 15.51,
+  "memory": 12266,
+  "params": 949,
   "method": "pub6372:base",
   "class": "BAIL?",
   "sig": "overlaps",
   "status": "done",
-  "verdict": "15.04 adopted (13.15->15.04, +1.89) mislabeled-feasible #5"
+  "verdict": "15.04 adopted (13.15->15.04, +1.89) mislabeled-feasible #5",
+  "note": "re-golf +0.47: FUSE gray-detector + colour-readout into ONE Conv on 2-ch [colorval;gray] stack (kernel ch0=glyph colour-sum, ch1=BIG*matched-filter), fold -BIG*cnt offset into Conv BIAS -> ReduceMax recovers cnt*color in one plane (combined-max via bias offset, generalises matched-filter+value-readout when response<=0 off-target). Floor: 3600B fp32 colour-index entry + 3136B fp16 8-glyph filter bank"
  },
  {
   "task": 265,
