@@ -5,7 +5,8 @@ import sys, pathlib, collections
 import onnx
 from onnx import shape_inference
 
-ITEMSIZE = {1:4, 2:8, 3:1, 4:2, 5:2, 6:4, 7:8, 9:1, 10:2, 11:8, 12:4, 13:8, 16:2}
+# onnx elem_type -> bytes: f32=4,u8=1,i8=1,u16=2,i16=2,i32=4,i64=8,bool=1,f16=2,f64=8,u32=4,u64=8,bf16=2
+ITEMSIZE = {1:4, 2:1, 3:1, 4:2, 5:2, 6:4, 7:8, 9:1, 10:2, 11:8, 12:4, 13:8, 16:2}
 DT = {1:"f32",2:"u8",3:"i8",4:"u16",5:"i16",6:"i32",7:"i64",9:"bool",10:"f16",11:"f64",12:"u32",16:"bf16"}
 
 def main():
