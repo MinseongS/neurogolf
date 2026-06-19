@@ -3561,14 +3561,15 @@
  {
   "task": 275,
   "arc_id": "b190f7f5",
-  "points": 15.11,
-  "memory": 51133,
-  "params": 98,
+  "points": 15.72,
+  "memory": 9075,
+  "params": 1622,
   "method": "gen:thbdh6332",
   "class": "BAIL?",
   "sig": "connect",
   "status": "done",
-  "verdict": "15.11 adopted (14.16->15.11, +0.95) mislabeled-feasible #3. Variable-size Kronecker (Tier-A/B, mem 18091). INSIGHT: per-size macro/micro flat-index tables [K,256] + scalar Gather"
+  "verdict": "15.11 adopted (14.16->15.11, +0.95) mislabeled-feasible #3. Variable-size Kronecker (Tier-A/B, mem 18091). INSIGHT: per-size macro/micro flat-index tables [K,256] + scalar Gather",
+  "note": "re-golf +0.61: stale full-canvas floor was WRONG. Kronecker/two-subgrid s<=4: active region in top-left (2s)x(2s)<=8x8 (origin-anchored) -> CROP-TO-ACTIVE input to [1,*,8,8] ONCE collapses value Conv + profiles 3600->256B; split channel slice to signal channels only as separate small planes. Real floor: runtime 16x16 int32 index tables"
  },
  {
   "task": 276,

@@ -19,8 +19,25 @@ for the one combined value plane). Reached 15.11 @ mem 18091.
 | 3 | Conv colour-value plane (params not mem) | B | 26163 | 1687 | 14.77 | — | — |
 | 4 | merge colour+cyan into ONE combined plane (disjoint halves) | B | 20403 | 1687 | 15.00 | — | — |
 | 5 | scalar-index size-table Gather (drops [1,256] dup) | A/B | 18091 | 1685 | 15.11 | 5000/5000 | ADOPT-READY |
+| 6 | CROP input to top-left 8×8 (max dim 2s≤8); 8×8 Conv+profiles | B | 12467 | 1625 | 15.45 | — | win |
+| 7 | + fp16 the value plane → fp16 [256] out_col/out_plus | B | 11315 | 1625 | 15.53 | — | win |
+| 8 | + derive profiles from value plane (drop 10-ch profiles) | B | 10227 | 1623 | 15.62 | — | win |
+| 9 | + split slice to {colour ch1:5}+{cyan ch8} only, separate planes | B | 9075 | 1622 | 15.72 | 200/200 | ADOPT |
 
-## Best achieved
+## Best achieved (re-golf 2026-06-19)
+**15.7223 @ mem 9075, params 1622** — beats prior adopted 15.11 by **+0.61** (≥+0.3 ✓). fresh 200/200.
+
+## Re-golf floor analysis
+The old "cplane 3600B is the genuine floor" was WRONG: the active region is bounded to the
+top-left (2s)×(2s) ≤ 8×8 (size s≤4, grid anchored at (0,0)), so the value Conv plane and all
+profiles run at 8×8 (256B) not 30×30 (3600B). Channels 5,6,7 carry no signal → slice only
+{colour 1:5}=1024B and {cyan 8:9}=256B as two tight fp32 entries, keep them as separate small
+value planes (no value-8 merge needed). New dominant: macro_v/micro_v int32 [256]=1024B each
+(Gather indices reject narrower dtypes), out_col/out_plus fp16 [256]=512B each, L uint8 30×30
+=900B (pad-back floor), colslice fp32 1024B (entry, Slice keeps fp32). The 16×16 canvas index
+tables are the true remaining floor.
+
+## Best achieved (prior)
 **15.11 @ mem 18091, params 1685** — beats prior 14.2 by **+0.91** (≥+0.3 YES). fresh 5000/5000.
 
 ## Irreducible-floor analysis
