@@ -1687,14 +1687,15 @@
  {
   "task": 131,
   "arc_id": "56dc2b01",
-  "points": 15.6,
-  "memory": 14668,
-  "params": 1940,
+  "points": 15.93,
+  "memory": 7960,
+  "params": 728,
   "method": "custom:131 xpose+flip canonical-frame assembly (18x18 green crop)",
   "class": "BAIL?",
   "sig": "continuous_creature",
   "status": "done",
-  "verdict": "generalizing exact win (fresh 500/500)"
+  "verdict": "generalizing exact win (fresh 500/500)",
+  "note": "re-golf +0.33: (1) pack 2 mutually-excl per-line counts into ONE Conv channel via disjoint magnitude (red*1+green*6); (2) fixed-origin shape: replace 18x18 transpose-square with TWO non-square crops A=in[0:HR,0:WR], B=T(in[0:WR,0:HR]) selected by orientation scalar; (3) keep pipeline 4D so Pad consumes transposed directly"
  },
  {
   "task": 132,

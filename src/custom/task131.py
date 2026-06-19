@@ -14,9 +14,19 @@ Rule (recovered EXACTLY on all 266 generator examples):
     green right of red (cmin>rc): shift s = rc+1-cmin ; cyan col = cmax+s+1
   Horizontal-red is the transpose of the vertical case.
 
-Lean encoding (mem 10791 / params 1326 -> 15.60, vs the prior 14668/1940 -> 15.28):
+Lean encoding (mem 7960 / params 728 -> 15.93, vs the prior 10791/1326 -> 15.60):
   NO 2-D colour/value planes are materialised.  All rule scalars come from cheap 1-D
   line aggregates, and ALL 2-D assembly runs on a SMALL canonical canvas.
+  Re-golf wins over the 15.60 version:
+    * RED+GREEN per-line counts PACKED into ONE Conv output channel (packed =
+      1*redcount + 6*greencount; mutually exclusive, both <6) -> halves the wide
+      Conv kernels (1200 -> 600 params).  green present <=> packed>=6;
+      red line <=> packed==in-grid-count AND packed>0.
+    * canonical GREEN built WITHOUT an 18x18 square: green always starts at row 0,
+      so the two orientation candidates are NON-SQUARE crops
+      (input[ch3,0:HR,0:WR] and transpose(input[ch3,0:WR,0:HR])) selected by xpose
+      -> drops the 1296B fp32 18x18 slice + 3 uint8 squares.
+    * label finalisation stays 4D (no final Reshape plane); int32 Gather index.
     * Red(2)+Green(3) per-line counts: ONE 2-output-channel Conv per axis (kernel
       spans the full long axis -> per-line sum).  In-grid per-line counts: a
       zero-param ReduceSum over the FREE 10-ch input.  The squeezed [30] line
@@ -81,74 +91,65 @@ def build(task):
     # ===== 1-D aggregates via wide Convs (no 2-D red / in-grid plane) =======
     # column aggregate kernel [1,10,30,1] (sum over 30 rows) -> [1,1,1,30].
     # row    aggregate kernel [1,10,1,30] (sum over 30 cols) -> [1,1,30,1].
-    # Red(2) and Green(3) per-line counts come from one 2-output-channel Conv per
-    # axis (kernel spans the full long spatial axis -> sum, no 2-D colour plane).
+    # Red(2) and Green(3) per-line counts are PACKED into ONE output channel:
+    #   packed = 1*redcount + 6*greencount  (kernel [1,10,L,1]=300 params/axis).
+    # Red is a FULL line (count == height) and green sits on one side, so red and
+    # green are never on the same line; both counts <= height <= 5 < 6, so:
+    #   * green present  <=> packed >= 6   (green-only line => 6*g, g>=1)
+    #   * red line       <=> packed == in-grid-count AND packed > 0
+    #         (red col: packed=h=ingrid; green col: packed=6g != g=ingrid for g>0).
     # In-grid per-line counts are a zero-param ReduceSum over the FREE input.
     def rgker(over_rows):
         if over_rows:
-            w = np.zeros((2, 10, N, 1), np.float32)   # [out=R,G ; 10 ; 30 rows ; 1]
+            w = np.zeros((1, 10, N, 1), np.float32)   # [out=1 ; 10 ; 30 rows ; 1]
             w[0, 2, :, 0] = 1.0   # red, per column
-            w[1, 3, :, 0] = 1.0   # green, per column
+            w[0, 3, :, 0] = 6.0   # green, per column (packed *6)
         else:
-            w = np.zeros((2, 10, 1, N), np.float32)
+            w = np.zeros((1, 10, 1, N), np.float32)
             w[0, 2, 0, :] = 1.0
-            w[1, 3, 0, :] = 1.0
+            w[0, 3, 0, :] = 6.0
         return w
 
-    init("kcolRG", rgker(True), np.float32)    # [2,10,30,1]
-    init("krowRG", rgker(False), np.float32)   # [2,10,1,30]
+    init("kcolRG", rgker(True), np.float32)    # [1,10,30,1]
+    init("krowRG", rgker(False), np.float32)   # [1,10,1,30]
+    init("five5", np.array(5.5, np.float32), np.float32)
 
     def aggregates(over_rows, tag):
         kRG = "kcolRG" if over_rows else "krowRG"
-        n("Conv", ["input", kRG], f"{tag}RGc")   # [1,2,1,30] or [1,2,30,1]
+        n("Conv", ["input", kRG], f"{tag}Pc")   # [1,1,1,30] or [1,1,30,1] packed
         # in-grid count per line: sum over channels AND the long spatial axis.
         igaxes = [1, 2] if over_rows else [1, 3]
         n("ReduceSum", ["input"], f"{tag}IGc", axes=igaxes, keepdims=1)  # [1,1,1,30]/[1,1,30,1]
-        # split R / G channels
-        if over_rows:
-            n("Slice", [f"{tag}RGc", "rg_s0", "rg_e1", "rg_ax1"], f"{tag}Rc")
-            n("Slice", [f"{tag}RGc", "rg_s1", "rg_e2", "rg_ax1"], f"{tag}Gc")
-            sq = [0, 1, 2]
-        else:
-            n("Slice", [f"{tag}RGc", "rg_s0", "rg_e1", "rg_ax1"], f"{tag}Rc")
-            n("Slice", [f"{tag}RGc", "rg_s1", "rg_e2", "rg_ax1"], f"{tag}Gc")
-            sq = [0, 1, 3]
-        n("Squeeze", [f"{tag}Rc"], f"{tag}Rv0", axes=sq)    # [30]
-        n("Squeeze", [f"{tag}Gc"], f"{tag}Gv0", axes=sq)
+        sq = [0, 1, 2] if over_rows else [0, 1, 3]
+        n("Squeeze", [f"{tag}Pc"], f"{tag}Pv0", axes=sq)    # [30]
         n("Squeeze", [f"{tag}IGc"], f"{tag}IGv0", axes=sq)
         # crop the [30] line vectors to the active extent [WR]=18 (cols/rows<=18,
         # red<=16; positions >=18 are always background) -> halve every scalar plane.
-        n("Slice", [f"{tag}Rv0", "lv_s", "lv_e", "lv_ax"], f"{tag}Rv")
-        n("Slice", [f"{tag}Gv0", "lv_s", "lv_e", "lv_ax"], f"{tag}Gv")
+        n("Slice", [f"{tag}Pv0", "lv_s", "lv_e", "lv_ax"], f"{tag}Pv")
         n("Slice", [f"{tag}IGv0", "lv_s", "lv_e", "lv_ax"], f"{tag}IGv")
-        return f"{tag}Rv", f"{tag}IGv", f"{tag}Gv"
+        return f"{tag}Pv", f"{tag}IGv"
 
-    init("rg_s0", np.array([0], np.int64), np.int64)
-    init("rg_e1", np.array([1], np.int64), np.int64)
-    init("rg_s1", np.array([1], np.int64), np.int64)
-    init("rg_e2", np.array([2], np.int64), np.int64)
-    init("rg_ax1", np.array([1], np.int64), np.int64)
     init("lv_s", np.array([0], np.int64), np.int64)
     init("lv_e", np.array([WR], np.int64), np.int64)
     init("lv_ax", np.array([0], np.int64), np.int64)
 
-    vR, vIG, vG = aggregates(True, "v")    # vertical-red: per-column aggregates
-    hR, hIG, hG = aggregates(False, "h")   # horizontal-red: per-row aggregates
+    vP, vIG = aggregates(True, "v")    # vertical-red: per-column packed aggregates
+    hP, hIG = aggregates(False, "h")   # horizontal-red: per-row packed aggregates
 
     init("linev", np.arange(WR, dtype=np.float32), np.float32)  # [WR]
 
-    def scalars(Rv, IGv, Gv, tag):
-        # redcol indicator over the 30 line positions
-        n("Greater", [Rv, "zero"], f"{tag}rpos")
-        n("Sub", [Rv, IGv], f"{tag}rd"); n("Abs", [f"{tag}rd"], f"{tag}rda")
+    def scalars(Pv, IGv, tag):
+        # packed = redcount + 6*greencount.  Red line: packed==ingrid AND packed>0.
+        n("Greater", [Pv, "zero"], f"{tag}rpos")
+        n("Sub", [Pv, IGv], f"{tag}rd"); n("Abs", [f"{tag}rd"], f"{tag}rda")
         n("Less", [f"{tag}rda", "half"], f"{tag}req")
         n("And", [f"{tag}rpos", f"{tag}req"], f"{tag}redln_b")  # [30]
         n("Cast", [f"{tag}redln_b"], f"{tag}redln", to=F)
         n("ReduceMax", [f"{tag}redln"], f"{tag}has", axes=[0], keepdims=1)  # [1]
         n("Mul", [f"{tag}redln", "linev"], f"{tag}rcw")
         n("ReduceSum", [f"{tag}rcw"], f"{tag}rc", axes=[0], keepdims=1)  # [1]
-        # green bbox (Gv is a count; convert to 0/1 presence)
-        n("Greater", [Gv, "zero"], f"{tag}gp_b")
+        # green present per line <=> packed >= 6 (green-only line => 6*g).
+        n("Greater", [Pv, "five5"], f"{tag}gp_b")   # >5 i.e. >=6
         n("Cast", [f"{tag}gp_b"], f"{tag}gp", to=F)
         n("Mul", [f"{tag}gp", "linev"], f"{tag}cmaxw")
         n("ReduceMax", [f"{tag}cmaxw"], f"{tag}cmax", axes=[0], keepdims=1)
@@ -169,8 +170,8 @@ def build(task):
         n("Add", [f"{tag}cycLm", f"{tag}cycRm"], f"{tag}cyc")  # [1]
         return f"{tag}has", f"{tag}s", f"{tag}cyc", f"{tag}rc"
 
-    vhas, vs, vcyc, vrc = scalars(vR, vIG, vG, "vs_")
-    hhas, hs, hcyc, hrc = scalars(hR, hIG, hG, "hs_")
+    vhas, vs, vcyc, vrc = scalars(vP, vIG, "vs_")
+    hhas, hs, hcyc, hrc = scalars(hP, hIG, "hs_")
 
     # grid extent (original): in-grid present per column (vIGv) / per row (hIGv).
     # W_orig = max in-grid column index +1 ; H_orig = max in-grid row index +1.
@@ -193,23 +194,29 @@ def build(task):
     # canonical grid height (short, perpendicular to red): vertical=Horig, horizontal=Worig.
     n("Where", ["usev", Horig, Worig], "Hc")  # canonical height (rows)
 
-    # ===== canonical GREEN plane (cropped to [HR,WR]) =======================
-    # Green can sit anywhere in the WR=18 width (flip moves it to the far side),
-    # so the square that supports the xpose canonicalising transpose must be SQ=18.
+    # ===== canonical GREEN plane [HR,WR] WITHOUT an 18x18 square ============
+    # The green creature ALWAYS starts at row 0 (continuous_creature begins at (0,0)
+    # and is placed at grid[r][c+offset]), so in the canonical (red-vertical) frame
+    # green occupies rows 0..HR-1 and some columns in 0..WR-1.  Build the two
+    # orientation candidates as NON-SQUARE crops and select -- no [18,18] plane:
+    #   xpose=0 canonical green  = input[ch3, 0:HR, 0:WR]            -> [HR,WR]
+    #   xpose=1 canonical green  = transpose(input[ch3, 0:WR, 0:HR]) -> [HR,WR]
     init("u0", np.array(0, np.uint8), np.uint8)
-    init("sl_starts", np.array([0, 3, 0, 0], np.int64), np.int64)
-    init("sl_ends", np.array([1, 4, SQ, SQ], np.int64), np.int64)
-    init("sl_axes", np.array([0, 1, 2, 3], np.int64), np.int64)
-    n("Slice", ["input", "sl_starts", "sl_ends", "sl_axes"], "Gpc")  # [1,1,SQ,SQ] float
-    n("Cast", ["Gpc"], "Gpu", to=U8)
-    n("Squeeze", ["Gpu"], "Gpu2", axes=[0, 1])       # [SQ,SQ]
-    n("Transpose", ["Gpu2"], "GpuT", perm=[1, 0])    # transpose brings xpose=1 -> canonical
     n("Reshape", ["usev", "s11"], "usev11")
-    n("Where", ["usev11", "Gpu2", "GpuT"], "Gsq")    # [SQ,SQ] canonical green
-    init("gc_s", np.array([0, 0], np.int64), np.int64)
-    init("gc_e", np.array([HR, WR], np.int64), np.int64)
-    init("gc_ax", np.array([0, 1], np.int64), np.int64)
-    n("Slice", ["Gsq", "gc_s", "gc_e", "gc_ax"], "G")   # [HR,WR] uint8
+    # candidate A (xpose=0): rows 0..HR, cols 0..WR
+    init("gA_s", np.array([0, 3, 0, 0], np.int64), np.int64)
+    init("gA_e", np.array([1, 4, HR, WR], np.int64), np.int64)
+    init("gAB_ax", np.array([0, 1, 2, 3], np.int64), np.int64)
+    n("Slice", ["input", "gA_s", "gA_e", "gAB_ax"], "GApc")  # [1,1,HR,WR] float
+    n("Cast", ["GApc"], "GAu", to=U8)
+    n("Squeeze", ["GAu"], "GA", axes=[0, 1])                 # [HR,WR] uint8
+    # candidate B (xpose=1): rows 0..WR, cols 0..HR, then transpose -> [HR,WR]
+    init("gB_e", np.array([1, 4, WR, HR], np.int64), np.int64)
+    n("Slice", ["input", "gA_s", "gB_e", "gAB_ax"], "GBpc")  # [1,1,WR,HR] float
+    n("Cast", ["GBpc"], "GBu", to=U8)
+    n("Squeeze", ["GBu"], "GB0", axes=[0, 1])                # [WR,HR] uint8
+    n("Transpose", ["GB0"], "GB", perm=[1, 0])               # [HR,WR] uint8
+    n("Where", ["usev11", "GA", "GB"], "G")                  # [HR,WR] canonical green
 
     # in-grid (canonical): rows < Hc AND cols < Wc (separable, broadcast to [HR,WR]).
     init("colW", np.arange(WR, dtype=np.float32).reshape(1, WR), np.float32)  # [1,WR]
@@ -224,9 +231,9 @@ def build(task):
     init("zerof", np.array(0.0, np.float32), np.float32)
     init("maxf", np.array(float(WR - 1), np.float32), np.float32)
     n("Clip", ["idxf", "zerof", "maxf"], "idxc")
-    n("Cast", ["idxc"], "idx", to=I64)
+    n("Cast", ["idxc"], "idx", to=TensorProto.INT32)
     n("Gather", ["G", "idx"], "Gs", axis=1)        # [HR,WR] uint8, Gs[r,c']=G[r,c'-s]
-    n("Greater", ["Gs", "u0"], "Gs_b")
+    n("Greater", ["Gs", "u0"], "Gs_b")             # [HR,WR] bool presence
     n("Greater", ["idxf", "neghalf"], "ge0")
     init("mmhalf", np.array(float(WR) - 0.5, np.float32), np.float32)
     n("Less", ["idxf", "mmhalf"], "le0")
@@ -255,15 +262,18 @@ def build(task):
     n("Where", ["Gfin_b", "u3", "Lrc"], "Lcanon")  # [HR,WR] green on top
 
     # pad canonical [HR,WR] up to [SQ,SQ] (rows -> SQ with off-grid sentinel 10),
-    # transpose, and select orientation -> uncanonicalize.
-    init("lpad", np.array([0, 0, SQ - HR, 0], np.int64), np.int64)  # pad bottom rows
-    n("Pad", ["Lcanon", "lpad", "u10"], "Lcsq", mode="constant")    # [SQ,WR]=[SQ,SQ]
-    n("Transpose", ["Lcsq"], "LcsqT", perm=[1, 0])                  # [SQ,SQ]
-    n("Where", ["usev11", "Lcsq", "LcsqT"], "Lsel")                # [SQ,SQ]
-    init("Mshape", np.array([1, 1, SQ, SQ], np.int64), np.int64)
-    n("Reshape", ["Lsel", "Mshape"], "Lr")  # [1,1,SQ,SQ]
+    # transpose, and select orientation -> uncanonicalize.  Stay 4D so no final
+    # Reshape plane is needed (the 30x30 Pad consumes a [1,1,SQ,SQ] tensor).
+    init("Lc4", np.array([1, 1, HR, WR], np.int64), np.int64)
+    n("Reshape", ["Lcanon", "Lc4"], "Lcanon4")                      # [1,1,HR,WR]
+    init("lpad", np.array([0, 0, 0, 0, 0, 0, SQ - HR, 0], np.int64), np.int64)
+    n("Pad", ["Lcanon4", "lpad", "u10"], "Lcsq", mode="constant")   # [1,1,SQ,SQ]
+    n("Transpose", ["Lcsq"], "LcsqT", perm=[0, 1, 3, 2])            # [1,1,SQ,SQ]
+    n("Reshape", ["usev", "Mr4"], "usev4")
+    n("Where", ["usev4", "Lcsq", "LcsqT"], "Lsel")                  # [1,1,SQ,SQ]
+    init("Mr4", np.array([1, 1, 1, 1], np.int64), np.int64)
     init("padcfg", np.array([0, 0, 0, 0, 0, 0, N - SQ, N - SQ], np.int64), np.int64)
-    n("Pad", ["Lr", "padcfg", "u10"], "L", mode="constant")  # [1,1,N,N]
+    n("Pad", ["Lsel", "padcfg", "u10"], "L", mode="constant")  # [1,1,N,N]
 
     chan = np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1)
     init("chan", chan, np.uint8)
