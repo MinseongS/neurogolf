@@ -1,13 +1,13 @@
 # LB status (stored ↔ real LB gap tracker)
 
 - **stored (local, optimistic):** 7135.87
-- **last confirmed LB:** 6667.42  (stored 6697.39 @ 2026-06-19 #37 confirmed UTC)
-- **structural gap (stored−LB at anchor):** 29.97  ← base-net overcount, ~stable
-- **PROJECTED current LB:** 7105.90  (= stored − gap; +438.48 of un-submitted wins since anchor)
+- **last confirmed LB:** 7107.01  (stored 7135.87 @ 2026-06-19 7k-harvest confirmed UTC)
+- **structural gap (stored−LB at anchor):** 28.86  ← base-net overcount, ~stable
+- **PROJECTED current LB:** 7107.01  (= stored − gap; +-0.00 of un-submitted wins since anchor)
 - next submit at +5 adopted wins re-anchors this.
 
 ## Gap attribution (genverify n=40 batch — rough, false-neg prone; isolated n=200 is truth)
-Estimated overcount across 13 sub-100% tasks ≈ **35.7** pts (cf. gap 29.97).
+Estimated overcount across 13 sub-100% tasks ≈ **35.7** pts (cf. gap 28.86).
 Top offenders (replacing these with generalizing nets closes the gap directly):
 
 | task | stored | fresh rate | est. overcount | method |
