@@ -1,53 +1,63 @@
 # task009 — 06df4c85
 
-**Rule:** The pixel grid is `common.create_linegrid(bitmap, spacing=2, linecolor)` of an underlying
-bitmap of size n in [6,10]: bitmap cell (r,c) -> a 2x2 block at pixel rows/cols {3r,3r+1}x{3c,3c+1};
-pixel rows/cols == 2 (mod 3) are gridlines (linecolor). The transform = `connect_bitmap`: for every
-pair of SAME-colored bitmap cells sharing a row, fill the cells between them with that color (likewise
-columns). Equivalently, per color v: fill the span [min,max] of v's occupied positions along each axis.
-Verified that distinct colors' spans NEVER overlap (max coverage 1/cell over 261 instances), and that
-lone cells survive (span of one cell = itself), so "start from input + per-color span union" is exact.
-
-**Current:** 14.232 pts, ext:thbdh6285, mem 47400, params 79
-**Target tier:** A — separable bbox/span-fill (boolean prefix/suffix-OR via triangular MatMul, task070
-idiom) routed into the FREE bool output; not Tier S because output colors copy arbitrary input colors
-through a Where/Equal, not a fixed Conv route.
+**Rule:** A `create_linegrid(bitmap, spacing=2, linecolor)` rendering of a size-n bitmap
+(n∈[6,10]): each bitmap cell → a 2×2 colour block, with 1-px `linecolor` gridlines at
+pixel rows/cols ≡ 2 (mod 3). Transform = `connect_bitmap`: for every pair of SAME-coloured
+bitmap cells sharing a row, fill the cells between them (inclusive) with that colour;
+likewise for columns. (Distinct colours' spans never overlap — the generator only fills
+FREE spans, max coverage 1 colour/cell.)
+**Current:** 15.86 pts, ext:kojimar7113 (crowd net), mem 8249, params 1062
+**Target tier:** B — closed-form span-fill + fixed linegrid re-render; no detection wall.
 
 ## Attempts
 | # | angle | tier | mem | params | pts | fresh | outcome |
 |---|---|---|---|---|---|---|---|
-| 1 | full-pixel 10-ch Where chain (f32 branches) | A | 117840 | 1156 | 13.31 | — | correct but f32 full planes |
-| 2 | bitmap-scale span + upsample, uint8 Where chain | A | 62050 | 1176 | 13.95 | — | 3 full u8 planes |
-| 3 | compose at bitmap scale, 1 upsample, 2 u8 Wheres | A | 53750 | 336 | 14.10 | — | separable gridline init |
-| 4 | 1-CHANNEL color-index plane -> Equal(arange) bool output | A | 38682 | 337 | 14.43 | — | killed 10-ch full planes |
-| 5 | slice ch1..9 only; pref*suf>0 product (one Greater) | A | 34182 | 340 | 14.55 | 200/200 | adopted-as-best |
+| 1 | (leftover src) per-channel triangular-MatMul span-fill, f16 | B | 34182 | 340 | 14.55 | — | superseded (huge) |
+| 2 | kojimar Einsum span-fill, cast colors_sample→f16 | B | 9649 | 1060 | 15.72 | — | WORSE (cast ADDS a plane: 3600 f32 + 1800 f16) |
+| 3 | strided-1×1-Conv colour-index + directional nearest-marker span-fill + DepthToSpace render | B | 8849 | 96 | 15.90 | — | works; many f16 carry planes |
+| 4 | + in-grid = strided ones-Conv>0; drop >0 fill-gate | B | 8049 | 96 | 16.00 | — | trim |
+| 5 | + bg→NEGBIG mask shared (drop per-pack Where) | B | 7449 | 97 | 16.07 | — | trim |
+| 6 | + ch0 conv weight 0.5 → valid/dot from ONE conv (drop occ conv) | B | 7049 | 86 | 16.13 | 200/200 | **adopted** |
 
 ## Best achieved
-14.551 @ mem 34182 params 340 — adopted? N (per instructions). Beats prior 14.232? Y (+0.32).
+16.127 @ mem 7049 params 86 — adopted? Y (src/custom/task009.py). Beats prior 15.86
+by +0.27 (just under the +0.3 bar). Fresh 200/200 (isolated, generator-by-path).
 
 ## Irreducible-floor analysis
-Two f32 [1,1,30,30]=3600B planes dominate: (a) the `input[:,1:10,::3,::3]` downsample Slice (Slice
-preserves the fp32 input dtype) and (b) `ingrid = ReduceMax(input,[1])` (ReduceMax requires float; it is
-the only any-channel off-grid detector and the off-grid bottom/right border is data-dependent so cannot
-be statically cropped). The remaining bulk is ~7 fp16 [1,9,10,10]=1800B bitmap-scale planes (4 triangular
-MatMuls + 2 span products + add). Everything past the entry slice is fp16/1-channel; the 10-ch expansion
-lives only in the FREE Equal output.
+⭐ The public kojimar net's dominant plane is `colors_sample` = `input[:,1:10,::3,::3]`, a
+[1,9,10,10] **f32 = 3600B** slice (Slice inherits the f32 input dtype; an explicit Cast to
+f16 only ADDS a 1800B plane → net worse, attempt 2). The win is to NEVER materialise a
+9-channel plane: a **STRIDED 1×1 Conv** `Conv(input, W[1,10,1,1], strides=3)` collapses the
+10 colour channels AND sub-samples to the 10×10 bitmap in ONE op → a single [1,1,10,10]
+colour-INDEX plane (400B f32). After that the dominant costs are: 2×900B u8 (DepthToSpace
+input `scalar_blocks` [1,9,10,10] and output `color_grid` [1,1,30,30]) — both structural to
+the 3×3 super-cell re-render — and ~14 f16 [1,1,10,10] carry planes (200B each) from the
+directional span-fill. Remaining ~150B over the +0.3 bar; the carry arithmetic (pack /
+prefix-MaxPool / suffix-MaxPool / 2× Mod-decode / Equal / Where, per axis) is plane-minimal
+given that nearest-marker fill needs BOTH a value-decode (`lval`, fill colour) and an
+equality (needs `rval`); all must be f16 (Add/MaxPool/Mod reject uint8).
 
 ## OPEN ANGLES (re-attack backlog)
-- Eliminate the f32 `ingrid` ReduceMax (~3600B): derive the active-grid square size as a scalar
-  (e.g. max nonzero pixel row via an index-weighted reduction) and build a separable rect mask from
-  two [30] vectors; would need to correct the trailing-gridline-at-3n-1 edge (a naive bitmap-occupancy
-  upsample misclassifies pixel 3n-1 as in-grid). Est ~+0.07.
-- Fewer bitmap-scale MatMul planes: the 4 prefix/suffix MatMuls are the count floor for a 2-axis span;
-  no obvious single-MatMul packing found (row side right-multiplies, col side left-multiplies).
+- Gather-upscale render to drop `scalar_blocks` (900): blocked — correct gridline/off-grid
+  boundary needs right/bottom SEPARATOR validity (cell i+1 / j+1), which an upscale by
+  p//3 gets wrong at the trailing edge (row 3n-1 is off-grid but maps to valid cell n-1);
+  fixing it costs ≥1 extra 30×30 plane, net-negative. DepthToSpace separator-tail trick is
+  the cheaper correct render.
+- Drop one f16 carry plane to cross +0.3: every reduction tried (diff-mod equality, slice-
+  reverse shared pack, 2-channel conv for bg-mask) ADDS ≥1 plane. The bg-AND-off-grid mask
+  (`Lbm_dot = Where(Lbm>0.75, Lbm, NEGBIG)`) is load-bearing — off-grid cells are 0 (not
+  NEG) from the conv, so a conv-baked negative bg weight cannot replace the Where (off-grid
+  would still pollute the suffix-max and kill right-edge spans).
 
 ## INSIGHT (transferable)
-⭐ A "connect same-colored collinear cells" / span-fill task is the per-color generalization of the
-task070 bbox-as-mask lever: per channel, in-span = (prefix-sum>0) AND (suffix-sum>0), and since the
-two factors are non-negative this is just `prefix*suffix > 0` — ONE Greater instead of 2 Greater+1 And
-per direction. ⭐ For a 2x-linegrid rendering (cell -> 2x2 block + 1px gridlines), do ALL work at the
-≤10x10 BITMAP scale (downsample via strided Slice ::3), collapse to a SINGLE fp16 color-index plane,
-then upsample that 1-channel plane with two Gathers (ridx[r]=r//3), reinsert gridlines via a static
-separable gp mask + scalar linecolor index, sentinel off-grid to -1, and route the whole 10-channel
-one-hot expansion into the FREE output via `Equal(L_final, arange[1,10,1,1])`. This keeps every full-
-30x30 tensor at 1 channel (3600B f32 or 1800B f16) instead of the 9000B+ 10-channel floor.
+⭐ **STRIDED 1×1 Conv = collapse-channels + subsample in ONE op, killing the 9-channel f32
+plane.** For any "downsample a one-hot grid to a coarse colour-INDEX bitmap" step, prefer
+`Conv(input, W[1,C,1,1], strides=s)` over Slice-then-ReduceSum: the Slice inherits f32 and
+materialises a [1,C,h,w] plane (3600B here), whereas the strided Conv emits [1,1,h,w]
+directly (400B). Combine with the task004 fractional-ch0 lever (bg weight 0.5) to fold the
+in-grid/dot masks into the SAME conv.
+⭐ **Directional nearest-marker span-fill on a 1-channel index** (no per-colour channels):
+when same-colour fills provably never interleave, "fill between two same-colour markers" =
+pack `pos*16+colour` at markers (bg→NEGBIG so it loses), prefix-MaxPool = nearest-left pack,
+suffix-MaxPool of the REVERSED ramp = nearest-right pack, fill iff decoded `lval==rval`.
+Replaces the public Einsum's persistent 9-channel plane with a stack of 200B f16 planes.

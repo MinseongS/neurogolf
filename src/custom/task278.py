@@ -21,13 +21,21 @@ The scorer accepts channel k iff output[k] > 0, so we route the 10-channel
 one-hot expansion into the FREE `output` tensor via a final `Equal`
 (opset-11 op; scorer checks DOMAIN not VERSION) producing a BOOL output.
 
-Encoding (all integer-valued math, exact). mem 9684, params 138 -> 15.81 pts:
-  ocount = Conv(input)   ONE plane carrying in-grid (band 100), red (band 500),
-           olive (red + red-neighbor, band 501+) AND the red-neighbor count.
-  crop ocount 30x30 -> 18x18 (grid is anchored top-left, size <=18).
+Encoding (all integer-valued math, exact). The generator sets width,height in
+[15,18] and anchors the grid top-left, so the whole grid + olives + the green
+3x3 dilation lie in the top-left 18x18 block.  We SLICE the FREE input to its two
+populated colour channels {0,2} over that 18x18 block FIRST (the only colours that
+ever appear are black ch0 and red ch2 -- green was erased to black), then run a
+single Conv on that tiny [1,2,18,18] block.  This avoids the full [1,1,30,30]
+3600B Conv plane (the previous version's dominant cost).
+
+  ocount = Conv(input{0,2}[18x18])  ONE plane carrying in-grid (band 100),
+           red (band 500), olive (red + red-neighbor, band 501+) AND the
+           red-neighbor count -- the three signals sit in disjoint magnitude
+           bands so a single plane separates them by thresholds.
   ingrid/red/olive  = three thresholds on the single ocount plane.
   dil    = Conv(olive, 3x3 ones)  (fp16)   -> green = dil & in-grid.
-  L      = uint8 label (red=2, green=3, bg=0, off-grid=10), built by 3 Wheres.
+  L      = uint8 label (red=2, green=3, bg=0, off-grid=10), built by Wheres.
   L      = Pad(L, 30x30, value=10)         off-grid sentinel -> all-zero output.
   output = Equal(L, [0..9])  (BOOL)        the 10-ch expansion lands in free output.
 """
@@ -40,6 +48,8 @@ from ..harness import GRID_SHAPE, IR_VERSION
 # opset 11 so the final float `Equal` (which yields a BOOL output we route into
 # the free `output` tensor) loads in ORT. The scorer checks op DOMAIN not VERSION.
 OPSET_IMPORTS = [helper.make_opsetid("", 11)]
+
+S = 18  # active region side (generator width,height in [15,18], anchored top-left)
 
 
 def build(task):
@@ -54,48 +64,59 @@ def build(task):
         nodes.append(helper.make_node(op, ins, [out], **attrs))
         return out
 
-    # ---- collapse the 10-channel input (FREE) to ONE single-channel feature
-    # plane via Conv, THEN crop. The generator sets width,height in [15,18] and
-    # anchors the grid top-left, so the whole grid + olives + green dilation lie
-    # in the top-left S x S block (S=18). Collapsing 10->1 channel before the
-    # Slice avoids a costly [1,10,18,18] crop; all downstream work is 18x18. ----
-    S = 18
-
-    # ONE Conv yields ocount, which simultaneously encodes red, olive, AND
-    # in-grid -- with the three signals in disjoint magnitude bands so a single
-    # plane separates them by thresholds.  The INPUT only ever contains black
-    # (ch0) and red (ch2) (green was erased to black), so an in-grid cell has
-    # ch0=1 or ch2=1, off-grid is all 0.  The in-grid / red tags come ONLY from
-    # the CENTER (large weights); the red-neighbor count (weight 1) is small so
-    # it can never lift an off-grid cell (which has no center) past the in-grid
-    # threshold even when it sits next to in-grid red.
-    #   ocount = 100*center_bg + 500*center_red + 1*(#red 4-neighbors)
-    # Value bands:
-    #   off-grid (no center): 0..4       (#red nbrs only)
-    #   in-grid background:   100..104   (100 + #red nbrs)
-    #   static red center:    500        (red, no red nbr)
-    #   olive red center:     501..504   (red, >=1 red nbr)
-    # => in-grid IFF ocount>50 ; red IFF ocount>250 ; olive IFF ocount>500.5
-    Wo = np.zeros((1, 10, 3, 3), np.float32)
-    Wo[0, 0, 1, 1] = 100.0                     # center background (in-grid tag)
-    Wo[0, 2, 1, 1] = 500.0                     # center red
-    for r, c in [(0, 1), (2, 1), (1, 0), (1, 2)]:
-        Wo[0, 2, r, c] = 1.0                   # plus-neighbor red count
-    init("Wo", Wo)
-    node("Conv", ["input", "Wo"], "ocount30", pads=[1, 1, 1, 1])  # [1,1,30,30]
-
-    # crop the single feature plane to the top-left 18x18 active region.
-    init("st", np.array([0, 0, 0, 0], np.int64))
-    init("en", np.array([1, 1, S, S], np.int64))
+    # ---- Slice the FREE input to JUST the red channel (ch2) over the 18x18
+    # active region in ONE Slice.  Only black (ch0) and red (ch2) ever appear,
+    # and the grid is anchored top-left with size <=18, so red lives entirely in
+    # this [1,1,18,18] block.  Running the Conv on this single-channel block (vs
+    # the full 30x30 input, or a 2-channel slice) keeps the dominant working
+    # plane minimal. ----
+    init("st", np.array([0, 2, 0, 0], np.int64))
+    init("en", np.array([1, 3, S, S], np.int64))
     init("ax", np.array([0, 1, 2, 3], np.int64))
-    node("Slice", ["ocount30", "st", "en", "ax"], "ocount")  # [1,1,18,18]
+    node("Slice", ["input", "st", "en", "ax"], "redblk")  # [1,1,18,18] f32
 
-    init("t50", np.array(50.0, np.float32))
+    # ONE Conv on the red block yields ocount, encoding red-center AND
+    # red-neighbor count in disjoint magnitude bands.  The center weight (500) is
+    # large; the 4-neighbour count (weight 1) is small so it can never lift a
+    # non-red cell past the red threshold.
+    #   ocount = 500*center_red + 1*(#red 4-neighbors)
+    # Value bands:
+    #   non-red cell:       0..4       (#red nbrs only)
+    #   static red center:  500        (red, no red nbr)
+    #   olive red center:   501..504   (red, >=1 red nbr)
+    # => red IFF ocount>250 ; olive IFF ocount>500.5
+    Wo = np.zeros((1, 1, 3, 3), np.float32)
+    Wo[0, 0, 1, 1] = 500.0                     # center red
+    for r, c in [(0, 1), (2, 1), (1, 0), (1, 2)]:
+        Wo[0, 0, r, c] = 1.0                   # plus-neighbor red count
+    init("Wo", Wo)
+    node("Conv", ["redblk", "Wo"], "ocount", pads=[1, 1, 1, 1])  # [1,1,18,18] f32
+
     init("t250", np.array(250.0, np.float32))
     init("t500", np.array(500.5, np.float32))
-    node("Greater", ["ocount", "t50"], "ingridb")      # bool in-grid
     node("Greater", ["ocount", "t250"], "redb")        # bool red center
     node("Greater", ["ocount", "t500"], "oliveb")      # bool olive_red
+
+    # ---- in-grid rectangle from cheap 1-D occupancy profiles of the FREE input.
+    # The grid is a solid rectangle anchored top-left whose every interior cell is
+    # either background (ch0) or red (ch2), so the populated rows/cols are exactly
+    # the in-grid extent.  ReduceMax over (channel, one-spatial) axes recovers the
+    # per-row / per-col occupancy as tiny [1,1,S,1] / [1,1,1,S] vectors; their
+    # outer AND is the in-grid mask -- no 2-D occupancy plane, no ch0 in the Conv.
+    init("rs", np.array([0, 0, 0, 0], np.int64))
+    init("re", np.array([1, 1, S, 1], np.int64))
+    init("rax", np.array([0, 1, 2, 3], np.int64))
+    init("zero", np.array(0.0, np.float32))
+    # Threshold to bool BEFORE slicing so the sliced occupancy vectors are bool
+    # (1 byte) rather than fp32 -- the slice never materialises an fp32 [1,1,S,1].
+    node("ReduceMax", ["input"], "rowprof30", axes=[1, 3], keepdims=1)  # [1,1,30,1]
+    node("Greater", ["rowprof30", "zero"], "rowin30")  # bool [1,1,30,1]
+    node("Slice", ["rowin30", "rs", "re", "rax"], "rowin")              # [1,1,18,1]
+    init("ce", np.array([1, 1, 1, S], np.int64))
+    node("ReduceMax", ["input"], "colprof30", axes=[1, 2], keepdims=1)  # [1,1,1,30]
+    node("Greater", ["colprof30", "zero"], "colin30")  # bool [1,1,1,30]
+    node("Slice", ["colin30", "rs", "ce", "rax"], "colin")              # [1,1,1,18]
+    node("And", ["rowin", "colin"], "ingridb")         # bool [1,1,18,18] in-grid
 
     # dilate olive 3x3 (Chebyshev-1) -> green region. Done in fp16 (olive counts
     # are tiny ints, exact in fp16) to halve the cast + conv plane bytes.

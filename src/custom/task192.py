@@ -1,32 +1,43 @@
-"""task192 (ARC-AGI 7e0986d6) — "remove the isolated static pixels, keep the boxes".
+"""task192 (ARC-AGI 7e0986d6) — "remove the isolated noise pixels, keep the boxes,
+recolour the boxes to the box colour".
 
 Rule (from the generator):
-  Background = colour 0, grid size 10..20 in each axis.  The grid holds 3..5 SOLID
-  rectangular boxes of one colour `boxcolor` (each >=3 wide & >=3 tall, mutually
-  separated by a >=1 gap) plus a sprinkling of single "static" pixels of a SECOND
-  colour `color` (no two 4-adjacent; a static pixel MAY overwrite a box cell or sit
-  next to a box).  OUTPUT = the boxes only, rendered in `boxcolor`: every static
-  pixel deleted, every punched box hole re-filled with `boxcolor`.
+  The grid holds 3..5 SOLID rectangular boxes of one colour `boxcolor` (each
+  wides/talls in [3,10] so every box is >=3x3) plus a sprinkling of single isolated
+  "noise" pixels of a DIFFERENT colour `color` (generator runs remove_neighbors so
+  no two noise pixels are 4-adjacent and none bridges two shapes; a noise pixel MAY
+  land ON a box cell, overwriting its colour in the INPUT, but the OUTPUT keeps the
+  box colour there).  OUTPUT = the boxes only, every box cell painted `boxcolor`,
+  every noise pixel deleted (-> background), off-grid -> all background.
 
-  Two deterministic facts (verified over 1000 fresh instances):
-   * KEEP MASK is closed-form local: keep(r,c) iff cell (r,c) is part of at least
-     one fully OCCUPIED 2x2 square (occupancy = any non-background colour).  A box
-     cell (>=3x3, static-on-box still occupied) is always inside a filled 2x2; an
-     isolated static pixel is never inside a filled 2x2.  Exact: 0/500.
-   * VALUE is the scalar `boxcolor` = most-frequent non-background colour (each box
-     >=9 cells; static pixels sparse), = argmax over ch 1..9 of pixel COUNT. 0/1000.
+  Closed-form local discriminator (verified exact 500/500 fresh, derived empirically):
+    occ(r,c) = any colour (>0) present.  Let vsum = occ(up)+occ(down),
+    hsum = occ(left)+occ(right).  A cell is a BOX cell IFF
+        occ(r,c) AND vsum>=1 AND hsum>=1.
+    (Box cells, being inside a >=3x3 solid, always have >=1 vertical AND >=1
+     horizontal occupied neighbour; an isolated noise pixel — even one sitting on a
+     box, even abutting a box on one side — never has BOTH.)
+    This is captured by ONE 3x3 Conv with kernel  [[0,3,0],[1,6,1],[0,3,0]] applied
+    to every colour channel 1..9 (ch0 weight 0):
+        score = 6*occ + 3*vsum + 1*hsum
+      box cells take score in {10,11,13,14}; noise cells in {6,7,8,9,12}.
+      => box  <=>  score>9.5 AND score!=12 .  (the lone collision value is 12 =
+         6+3+3 = a vertical sliver with no horizontal support = noise.)
+    boxcolor = most-frequent non-background colour = ArgMax over channels 1..9 of
+    the per-channel pixel COUNT (boxes >=9 cells each, noise sparse).
+    in-grid rectangle = row/col SUM-profiles >0 (rowany (X) colany), so no 30x30
+    in-grid plane is needed.
 
-RE-GOLF (this version, plane-elimination per BUILD_PROMPT CORRECTION 2026-06-19):
-  Old net: 15980B / 15.32 pts.  Dominant intermediates were the 30x30 f32 entry
-  Conv plane (3600B) and the f16 pad-back L30 plane (1800B).  Fixes:
-   * Slice the INPUT to the 20x20 active region FIRST (free), so the entry Conv
-     emits [1,1,20,20] f32 (1600B) directly — no 3600B g30 + no separate 1600B crop.
-   * Carry the whole tail in UINT8: build the colour-index plane L20 (uint8) by a
-     nested Where, Pad it to 30x30 with a 99 sentinel (uint8 Pad works on this ORT),
-     then ONE Equal(L30_uint8, ramp) -> BOOL output.  L30 is 900B not 1800B, and
-     Equal accepts uint8 here.  No fp16 bridge / arithmetic planes.
-  All working planes are 20x20 (grid<=20).  Dominant residual = the 1600B f32 entry
-  Conv plane (Conv on fp32 input must emit fp32; fp16 needs an 8000B input cast).
+Encoding (route the 10-ch one-hot into the FREE bool output, keep <=4 full planes):
+  score   [1,1,30,30] f32 (3600B) -- the single forced full f32 plane.
+  kov_b = score>9.5         (keep-or-vgap, bool 900B)
+  vgap_b = score==12        (the noise-sliver collision, bool 900B)
+  bg_or_out_u8 = Where(rowany, Where(colany, BG, OUT), OUT)  -- in-grid bg vs outside,
+                 broadcast from tiny [1,1,30,1]/[1,1,1,30] profiles (uint8 900B).
+  target_u8 = Where(kov_b, Where(vgap_b, bg_or_out, boxcode), bg_or_out)  -- box cells
+              (kov & !vgap) -> boxcode; vgap or !kov -> bg/outside (uint8 900B).
+  output = Equal(channel_codes, target_u8) -> BOOL [1,10,30,30] (FREE).
+  Dominant intermediate: the 3600B f32 score plane (Conv inherits the fp32 input).
 """
 
 import numpy as np
@@ -36,7 +47,6 @@ from onnx import helper, numpy_helper, TensorProto
 from ..harness import IR_VERSION
 
 F32 = TensorProto.FLOAT
-F16 = TensorProto.FLOAT16
 BOOL = TensorProto.BOOL
 U8 = TensorProto.UINT8
 I64 = TensorProto.INT64
@@ -54,77 +64,63 @@ def build(task):
         nodes.append(helper.make_node(op, ins, [out], **attrs))
         return out
 
-    # ---- ONE 1x1 Conv packs BOTH signals into a single 30x30 plane -----------
-    #   weights: ch0(background)=1, ch_k(k>=1)=10+k.
-    #     g==0  off-grid (all-zero one-hot)
-    #     g==1  in-grid background
-    #     g in [11..19] in-grid coloured cell
-    #   ingrid   = g > 0.5      occupied = g > 9.5
-    # (Conv on the free fp32 input emits ONE 3600B plane; a 10-ch input crop would
-    #  cost 16000B, so crop the 1-channel packed plane instead.)
-    wpack = np.zeros((1, 10, 1, 1), np.float32)
-    wpack[0, 0, 0, 0] = 1.0
-    for k in range(1, 10):
-        wpack[0, k, 0, 0] = 10.0 + k
-    init("WPACK", wpack, np.float32)
-    n("Conv", ["input", "WPACK"], "g30", kernel_shape=[1, 1])     # [1,1,30,30] f32
-    # crop the packed plane to the 20x20 active region (grid<=20).
-    init("cs", np.array([0, 0], np.int64), np.int64)
-    init("ce", np.array([20, 20], np.int64), np.int64)
-    init("cax", np.array([2, 3], np.int64), np.int64)
-    n("Slice", ["g30", "cs", "ce", "cax"], "g")                   # [1,1,20,20] f32
+    # ---- score = single 3x3 Conv: 6*occ + 3*vsum + 1*hsum --------------------
+    # kernel [[0,3,0],[1,6,1],[0,3,0]] on every colour channel 1..9 (ch0 = 0).
+    k = np.array([[0, 3, 0], [1, 6, 1], [0, 3, 0]], np.float32)
+    w = np.zeros((1, 10, 3, 3), np.float32)
+    for ch in range(1, 10):
+        w[0, ch] = k
+    init("SCORE_W", w, np.float32)
+    n("Conv", ["input", "SCORE_W"], "score",
+      kernel_shape=[3, 3], pads=[1, 1, 1, 1])                     # [1,1,30,30] f32
 
-    init("NINE5", np.array(9.5, np.float32), np.float32)
-    n("Greater", ["g", "NINE5"], "occ_b")                         # coloured cell bool
-    n("Cast", ["occ_b"], "occ", to=F16)                           # [1,1,20,20] f16 {0,1}
+    init("NINE5", np.array(9.5, np.float32).reshape(1), np.float32)
+    init("TWELVE", np.array(12.0, np.float32).reshape(1), np.float32)
+    n("Greater", ["score", "NINE5"], "kov_b")                     # [1,1,30,30] bool
+    n("Equal", ["score", "TWELVE"], "vgap_b")                     # [1,1,30,30] bool
 
-    # ---- keep = part-of-a-filled-2x2 (task193 idiom) -------------------------
-    Wk = np.ones((1, 1, 2, 2), np.float16)
-    init("Wsum", Wk, np.float16)
-    n("Conv", ["occ", "Wsum"], "blockcnt",
-      kernel_shape=[2, 2], pads=[0, 0, 1, 1])                     # [1,1,20,20] f16
-    init("THREE5", np.array(3.5, np.float16), np.float16)
-    n("Greater", ["blockcnt", "THREE5"], "blockfull_b")           # full 2x2 (==4)
-    n("Cast", ["blockfull_b"], "blockfull", to=F16)
-    init("Wsum2", Wk, np.float16)
-    n("Conv", ["blockfull", "Wsum2"], "keepcnt",
-      kernel_shape=[2, 2], pads=[1, 1, 0, 0])                     # [1,1,20,20] f16
-    init("HALFH", np.array(0.5, np.float16), np.float16)
-    n("Greater", ["keepcnt", "HALFH"], "keep_b")                  # [1,1,20,20] bool
+    # ---- in-grid rectangle from row/col sum-profiles (no 30x30 ingrid plane) --
+    # row_f[1,1,30,1] = sum over channels 1..9 & cols of occupancy; >0.5 -> row has
+    # an in-grid cell.  Same for cols.  (Background ch0 excluded by axis-1 sum incl
+    # ch0? -> use ReduceSum over ALL channels: off-grid cells are all-zero so they
+    # don't contribute; in-grid bg cells set ch0=1 so the row/col is marked in-grid.)
+    n("ReduceSum", ["input"], "row_f", axes=[1, 3], keepdims=1)   # [1,1,30,1] f32
+    n("ReduceSum", ["input"], "col_f", axes=[1, 2], keepdims=1)   # [1,1,1,30] f32
+    init("HALF", np.array(0.5, np.float32).reshape(1), np.float32)
+    n("Greater", ["row_f", "HALF"], "row_b")                      # [1,1,30,1] bool
+    n("Greater", ["col_f", "HALF"], "col_b")                      # [1,1,1,30] bool
 
-    # ---- boxcolor SCALAR (uint8) = argmax-count channel index ----------------
-    # cnt = per-channel pixel count (ch0 zeroed); ArgMax over the channel axis
-    # gives the box-colour channel index directly as an int64 scalar -> Cast uint8
-    # (drops the one-hot/ramp/ReduceSum chain: ~90B mem + 10 params).
-    n("ReduceSum", ["input"], "cnt_raw", axes=[2, 3], keepdims=1)  # [1,10,1,1] f32
-    mask0 = np.ones((1, 10, 1, 1), np.float32); mask0[0, 0, 0, 0] = 0.0
-    init("MASK0", mask0, np.float32)
-    n("Mul", ["cnt_raw", "MASK0"], "cnt")                          # zero ch0
-    n("ArgMax", ["cnt"], "bc_i64", axis=1, keepdims=1)             # [1,1,1,1] i64
-    n("Cast", ["bc_i64"], "bc", to=U8)                             # [1,1,1,1] uint8
+    # bg_or_out: in-grid bg cell -> BG code (9), off-grid -> OUT code (10).
+    init("BG_U8", np.array(9, np.uint8).reshape(1), np.uint8)
+    init("OUT_U8", np.array(10, np.uint8).reshape(1), np.uint8)
+    n("Where", ["col_b", "BG_U8", "OUT_U8"], "col_bg_u8")         # [1,1,1,30] uint8
+    n("Where", ["row_b", "col_bg_u8", "OUT_U8"], "bg_or_out_u8")  # [1,1,30,30] uint8
 
-    # ---- in-grid mask (20x20, uint8 via bool) --------------------------------
-    init("HALF32", np.array(0.5, np.float32), np.float32)
-    n("Greater", ["g", "HALF32"], "ingrid_b")                      # [1,1,20,20] bool
+    # ---- boxcolor SCALAR = argmax over channels 1..9 of pixel counts ----------
+    n("ReduceSum", ["input"], "cnt_all", axes=[2, 3], keepdims=1)  # [1,10,1,1] f32
+    init("cc_s", np.array([1], np.int64), np.int64)
+    init("cc_e", np.array([10], np.int64), np.int64)
+    init("cc_ax", np.array([1], np.int64), np.int64)
+    n("Slice", ["cnt_all", "cc_s", "cc_e", "cc_ax"], "cnt19")      # [1,9,1,1] f32
+    n("ArgMax", ["cnt19"], "boxcode0", axis=1, keepdims=1)         # [1,1,1,1] i64 (0..8)
+    n("Cast", ["boxcode0"], "boxcode", to=U8)                      # [1,1,1,1] uint8 (0..8)
 
-    # ---- single uint8 colour-index plane L20 ---------------------------------
-    #   keep            -> bc   (box colour channel)
-    #   ingrid & !keep  -> 0    (background channel)
-    #   off-grid        -> 99   (matches no channel -> all-zero)
-    init("ZERO_U8", np.array(0, np.uint8), np.uint8)
-    init("SENT_U8", np.array(99, np.uint8), np.uint8)
-    n("Where", ["ingrid_b", "ZERO_U8", "SENT_U8"], "bg_or_off")    # [1,1,20,20] uint8
-    n("Where", ["keep_b", "bc", "bg_or_off"], "L20")               # [1,1,20,20] uint8
+    # ---- target colour-index plane (uint8) -----------------------------------
+    #   box (kov & !vgap)        -> boxcode (0..8 -> colour channel 1..9)
+    #   vgap OR !kov, in-grid    -> 9  (background channel 0)
+    #   off-grid                 -> 10 (matches no channel -> all-zero)
+    n("Where", ["vgap_b", "bg_or_out_u8", "boxcode"], "box_or_bg") # [1,1,30,30] uint8
+    n("Where", ["kov_b", "box_or_bg", "bg_or_out_u8"], "target_u8")# [1,1,30,30] uint8
 
-    # pad L to 30x30 with 99 (cells >=20 are always off-grid -> match no channel)
-    init("opads", np.array([0, 0, 0, 0, 0, 0, 10, 10], np.int64), np.int64)
-    n("Pad", ["L20", "opads", "SENT_U8"], "L30", mode="constant")  # [1,1,30,30] uint8
-
-    # expand to the 10-channel one-hot via Equal vs the channel ramp -> the
-    # 10-ch expansion lands ONLY in the FREE bool output (no full plane stored).
-    crampu = np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1)
-    init("CRAMPU", crampu, np.uint8)
-    n("Equal", ["L30", "CRAMPU"], "output")                        # [1,10,30,30] bool FREE
+    # ---- expand to one-hot via Equal vs channel codes -> FREE bool output -----
+    # channel c is on where target == channel_codes[c].
+    # code 9 -> ch0 (bg); code j (0..8) -> ch (j+1); code 10 -> none.
+    codes = np.empty((1, 10, 1, 1), np.uint8)
+    codes[0, 0, 0, 0] = 9
+    for j in range(9):
+        codes[0, j + 1, 0, 0] = j
+    init("CODES", codes, np.uint8)
+    n("Equal", ["CODES", "target_u8"], "output")                  # [1,10,30,30] bool FREE
 
     x = helper.make_tensor_value_info("input", F32, [1, 10, 30, 30])
     y = helper.make_tensor_value_info("output", BOOL, [1, 10, 30, 30])

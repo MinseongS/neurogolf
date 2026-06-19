@@ -58,6 +58,30 @@ mem 13085 is spread, no single dominant plane:
 - Trim the ~35 tiny run-mask vectors by computing the moved-axis run as a single
   banded predicate — sub-200 B, marginal.
 
+## SESSION 2026-06-19 re-probe (current P recorded as 16.16 ext:kojimar7113)
+The recorded current is now the **16.16 kojimar crowd net** (mem+par ≈ 6905),
+NOT the prior 15.21 custom. Re-built combining the Gather-channel lever (prior +0.30)
+WITH the tongue-detector identification (drop the bbox-area span test): fly = the
+colour whose min-positive per-line count == 1 (the 1-wide tongue; frog min-dim ≥ 3).
+Result: **15.43 @ mem 14266 / par 97, stored 266/266, fresh 200/200.** Still BELOW
+the crowd net.
+
+Remaining buckets at 14266: 5400 (box/L) + 2400 (2 fp32 sums) + 2400 (rowSum/colSum
+fp16 + rwPos/cwPos tongue planes) + 2280 (≈38 tiny [1,1,*] edge/run-mask vectors).
+The 2400 fp16+detector bucket resists collapse: Gather needs an fp16 sum source AND
+the tongue detector needs a per-channel min-positive-count plane — both [1,10,30,*].
+Dropping rowSum to Gather off fp32 makes the gathered slices fp32 (net wash); the
+detector plane cannot go below 600 (Equal/ReduceMin need a per-channel full plane).
+
+**VERDICT: INFEASIBLE to beat 16.16 by +0.3.** The label-map reconstruction
+paradigm floors at ≈ 13–15 KB ⇒ ~15.5 pts (the prior +0.30 win peaked at 15.513,
+this session 15.43). The crowd net at ≈6905 B sits ~2× below this floor, so it is
+NOT a label-map reconstruction — it likely exploits a leaner formulation (e.g. a
+direct Gather-shift copy of the fly with the tongue dropped, routed into the FREE
+output, never building 3 box masks + 3 L planes). That formulation was not found
+this session and is the ONLY open path to beating 16.16. Custom file left at 15.43
+(correct, generalizes) but offers NO gain over the recorded crowd net — do NOT adopt.
+
 ## INSIGHT (transferable)
 ⭐ **When exactly K colours/objects each occupy their own one-hot CHANNEL and the
 channel index equals the colour, recover that index as a runtime int32 `[1]`

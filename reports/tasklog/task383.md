@@ -27,3 +27,41 @@ Dominant intermediate is the one fp32 colour-index entry plane `colf32` [1,1,30,
 
 ## INSIGHT (transferable)
 "Markers as pattern-breakers projecting perpendicular stripes" decoder: a single anomalous pixel ON a structural ring encodes a full line perpendicular to that ring — detect via (colour==C1) reduced over a ring-line mask, NOT as a 2-D correspondence problem. The whole task is separable into 1-D ibr/ibc/ringrow/ringcol/SC/SR vectors and only materializes ~4 unavoidable 30x30 Where planes for the piecewise {bg,C0,C1,off-grid} label. ⭐ Reusable micro-lever: for a masked argmax/max over a 30x30 plane, `Where(mask_bool, colf, sentinel)` then ReduceMax FUSES the mask+select into ONE plane vs Cast(mask)->Mul->ReduceMax (saves a full fp16 plane each, ~1800B per recovery). Also: when excluding one colour for a max, you often don't need a separate "nonbg" gate — bg/off-grid cells carry value 0 which loses to any real colour >=1 in the ReduceMax.
+
+---
+
+## 2026-06-19 re-golf from ext:kojimar7113 (16.10) — NEW FINAL: 16.29 (+0.19)
+The 14.77 src above is SUPERSEDED — kojimar7113 (mem 7246) was adopted and is far better than
+our 30x30-fp16 separable build (27664). Re-golfed FROM kojimar's net:
+
+**Kept kojimar's front-end** (the real win vs the old src): a dilated 2x2 Conv (only [0,0] weight
+nonzero, dilations=[6,6]) emits the colour-index plane CROPPED to the **24x24 active region**
+(width/height <= 16+randint(4,8) <= 24): bg->10, off-grid->11, colour c->c. This makes the forced
+fp32 entry plane only **2304B** (24x24) instead of 3600B (30x30) — crop-to-active applied via the
+dilated conv. bbox via ArgMax of per-row/col occupancy; C0/C1 corner reads; marker indicators
+row_select_u8/col_select_u8.
+
+**Replaced kojimar's back-end** (TopK + ScatterND + GatherElements/ScatterElements = 3 sequential
+24x24 colour planes + index/scatter machinery, total 7246) with a **plane-lean separable Where**:
+1. in_row/in_col come FREE from the box-occupancy vectors `row_any_b`/`col_any_b` (box contiguous
+   => "row has a box cell" == "in-box row") — kills the whole ramp+compare in-box machinery.
+2. Fold the in-grid gate INTO tiny 1-D stripe-colour VECTORS rowval[1,1,1,24]/colval[1,1,24,1]
+   (off-grid->11 sentinel, in-box->C0, out-box->C1), so the stripe MASK stays a 1-D marker
+   broadcast (rowmark/colmark) — **no full 24x24 And-mask plane**.
+3. final = Where(rowmark, rowval, Where(colmark, colval, color)) => only **3 sequential uint8
+   24x24 colour planes** (color, final0, final), Pad to 30x30 (900B), Equal -> FREE bool output.
+
+mem 7246 -> **5974** (params 96). **opset 12** required (uint8 ReduceMin/Max need opset>=12;
+scorer checks domain not version). Verified stored 266/266 + ISOLATED fresh **200/200**.
+
+**Floor / why +0.3 (16.40) is infeasible:** entry fp32 2304 (input fp32 => can't be born fp16;
+casting input = 18000B) + Pad-to-30x30 output plane 900 + 3 sequential uint8 24x24 colour planes
+1728 (two-AXIS stripe painting needs base+after-col+after-row; rowmark[r]|colmark[c] is 2-D-coupled
+=> min 2 nested Wheres) + irreducible bbox/marker/colour-read machinery ~950 + 96 params ~= 5974.
+Even machinery->~300 lands ~5328 -> 16.34, still short of 16.40. WORK=24 is hard (gen can hit 24x24).
+
+**INSIGHT:** A "stripe/line-union painted with position-dependent colour" task beats scatter via the
+separable Where ONLY if you (1) reuse the box-occupancy ArgMax vectors AS the in-box masks (free)
+and (2) fold the in-grid gate into the tiny per-axis colour VECTOR so the stripe condition stays a
+1-D broadcast (zero full And planes). But two AXES still force 3 sequential colour planes; with a
+forced fp32 entry + 30x30 output the floor sits ~16.3 — re-golf buys +0.19, not +0.3.

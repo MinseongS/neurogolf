@@ -6,7 +6,51 @@ own a UNIQUE ring index idx∈0..K-1 (a permutation). Ring idx draws its colour 
 shapes are scattered and CLIPPED at edges (gen guarantees ≥2 quadrants drawn). Output is a
 (2K-1)² concentric reassembly: offset (a,b) from centre (K-1,K-1), m=max(|a|,|b|), n=min(|a|,|b|)
 → colours[m] iff (m<K and n ≥ m−L_m+1) else bg.
-**Prior bar:** 12.97 (weak gen-import, 248 nodes). +0.3 bar = 13.27.
+
+## SESSION 2026-06-19 (P=15.88, deployed = ext:kojimar7113 profile net) — INFEASIBLE
+**Current champion** is the external kojimar net `networks/task096.onnx` (124 nodes, **15.884 pts,
+mem 8278, params 817**) — a fully closed-form PROFILE recovery (no matched-filter conv). It vastly
+beats the prior exact-conv build in `src/custom/task096.py` (13.196, mem 132013, which is now stale).
+**+0.3 bar = 16.18 (mem+par ≤ 6770).**
+
+**Verdict: INFEASIBLE (+0.3). Best achievable here = ZERO net gain over 15.88.**
+
+### Where the kojimar mem lives (exact, shape_inference × declared-dtype)
+| plane | bytes | role |
+|---|---|---|
+| `row_sum_full` f32 [10,30] | **1200** | ReduceSum(input,[0,3]) per-(channel,row) sum |
+| `col_sum_full` f32 [10,30] | **1200** | ReduceSum(input,[0,2]) per-(channel,col) sum |
+| `padded_color` u8 [1,1,30,30] | 900 | 30×30 colour-index plane fed to output Equal (fixed) |
+| `radius_i32` int32 [11,11] | 484 | Gather index for synthesis canvas (int-only, fixed) |
+| `row/col_present_full` bool [10,30] | 300+300 | Greater(sum>0) presence |
+| ~14× [11,11] synthesis + [5,19] profile planes | ≤121 each | all load-bearing |
+
+The **two f32 profile planes (2400B = 29% of mem)** are the only ≥1kB targets. The math: removing
+BOTH (−2400) → 16.19 (+0.31, would just clear the bar); removing/halving ONE (−1200) → 16.03 (+0.14).
+**Neither is achievable** — every shrink route was tested and blocked:
+- **fp16-declared reduce output** → ORT type-checker REJECTS (ReduceSum/ReduceMax on f32 input MUST
+  emit f32; declaring the value_info fp16 = "Type ... does not match expected type" load failure).
+  ⇒ the stale-dtype re-probe lever does NOT apply to reduces (only to Conv, which keeps fp16).
+- **width-19 crop** (grid ≤19) → needs `Slice(input,…0:19)` = ≥5700B new f32 plane, net loss; the
+  reduce output shape [10,30] is fixed by its input, can't crop post-hoc.
+- **Gather-select-then-reduce** (only K≤5 channels used) → `Gather(input, top_colors, axis=1)` =
+  [1,5,30,30] f32 4500B before reduce, net loss; selection is data-dependent (TopK) so no static
+  channel pre-slice.
+- **grouped/no-pad Conv profile** → depthwise `Conv(input, W[10,1,1,30])` keeps f32, same 1200B.
+- **fp16-input cast** → [1,10,30,30] fp16 = 18000B + cascading Where/Equal type errors.
+- **channel_count redirect** to direct `ReduceSum(input,[0,2,3])` [10] (40B): valid + still 266/266
+  stored, but ZERO mem change (the sums are still needed for presence) ⇒ not worth writing.
+
+Outside the sums there is NO removable 2325B mass: `padded_color` (900) is the mandatory 30×30 Equal
+input; `radius_i32` (484) is an int-only Gather index on the fixed 11×11 max canvas; the rest are
+≤121B and all consumed. So the only path to +0.3 is the two f32 reduce planes, and they are a HARD
+floor of any profile-based recovery on the full 10-ch 30-wide input.
+
+**Prior-session content below is HISTORICAL (the 13.196 exact-conv build, now superseded by kojimar).**
+
+---
+
+**Prior bar (session 1):** 12.97 (weak gen-import, 248 nodes). +0.3 bar = 13.27.
 
 ## Result of THIS session
 **pts 13.196, mem 132013, params 1825, fresh 200/200, stored 4/4 → BEATS 12.97 by +0.226 (MARGINAL, <+0.3).**

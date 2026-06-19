@@ -1,41 +1,31 @@
 """task383 (ARC-AGI f1cefba8) — barnacle stripes through a coloured box.
 
-Rule (from the generator): the grid holds ONE axis-aligned box at (brow,bcol),
-size tall x wide, with a 2-px OUTER ring in colour C0 and a SOLID inner block in
-colour C1.  A handful of "barnacle" markers are placed as single C1 pixels ON
-the C0 ring (the inner ring line: rows brow+1 / brow+tall-2, cols bcol+1 /
-bcol+wide-2).  Each marker projects a STRIPE perpendicular to the ring it sits
-on:
-  * a marker on the TOP/BOTTOM ring -> a full COLUMN stripe through its column;
-  * a marker on the LEFT/RIGHT ring -> a full ROW stripe through its row.
-The output draws the clean box PLUS, for every stripe line:
-  * INSIDE the box, the whole crossed column/row becomes C0 (the inner C1 flips
-    to C0, ring stays C0);
-  * OUTSIDE the box, the crossed column/row is filled C1 across the full grid
-    extent (only along the perpendicular direction; a stripe column only paints
-    the rows outside the box, a stripe row only the cols outside the box).
+Rule: ONE axis-aligned box at (top,left)..(bottom,right) with a 2-px OUTER ring
+in colour C0 and a SOLID inner block in colour C1.  A few "barnacle" markers are
+single C1 pixels sitting on the inner ring line (rows top+1 / bottom-1, cols
+left+1 / right-1).  Each marker projects a STRIPE perpendicular to the ring:
+  * a marker on the TOP/BOTTOM ring -> a full COLUMN stripe in its column;
+  * a marker on the LEFT/RIGHT ring -> a full ROW stripe in its row.
+Output = the clean box, plus every stripe line:
+  * INSIDE the box the crossed cell -> C0;
+  * OUTSIDE the box but IN-GRID -> C1 (off-grid stays background).
 
-Everything is SEPARABLE into 1-D row/col vectors, so no [1,10,30,30] or
-[1,1,30,30] box plane is ever built.  Per-cell label among {bg=0, C0, C1}:
-    bothbox = ibr[r] & ibc[c]                  (ibr=rowhas, ibc=colhas)
-    trig    = (ringrow[r]|SR[r]) | (ringcol[c]|SC[c])
-    isC0    = bothbox & trig
-    isC1    = (bothbox & ~trig) | (~bothbox & (SC[c]|SR[r]))
-where ibr/ibc are the box-occupancy profiles, ringrow/ringcol = ibr/ibc eroded
-by 2 (MinPool window 5) then XOR, and SC/SR are stripe-column/row flags found by
-reducing (colf==C1) over the ring rows/cols.
+FRONT-END (reused, kojimar7113): a 1x1-effective dilated 2x2 Conv emits the
+colour-index plane `color` cropped to the 24x24 active region (bg->10,
+off-grid->11, colour c->c) as uint8; bbox top/bottom/left/right come from ArgMax
+of per-row/col occupancy; C0/C1 from corner reads; the marker indicators
+row_select_u8[1,24] / col_select_u8[1,24] mark which rows/cols carry a barnacle.
 
-Scalars:
-    C1 = max colour over the inner block (solid C1, markers only live on ring);
-    C0 = max colour over non-bg cells whose colour != C1.
+BACK-END (this rewrite, plane-lean): everything separable into 1-D vectors so the
+old TopK + ScatterND + GatherElements/ScatterElements machinery (3 sequential
+24x24 colour planes + index planes) collapses to just 2 extra 24x24 planes:
+    paint = (rowmark[r] & ingrid_col[c]) | (colmark[c] & ingrid_row[r])
+    final = Where(paint, Where(in_row & in_col, C0, C1), color)
+then Pad to 30x30 and Equal(channel_values) into the FREE bool output.
 
-Output = Where(isC0, onehot(C0), Where(isC1, onehot(C1), bg_onehot)) routed into
-the FREE bool output; onehot(C0/C1) are [1,10,1,1] one-hots built by Equal on the
-recovered scalar colours.
-
-Dominant intermediates: the one fp32 colour-index plane colf [1,1,30,30] (3600B,
-the irreducible 10->1 entry) and the fp16 isC1 plane (1800B); everything else is
-1-D [1,1,30,1]/[1,1,1,30] vectors or [1,10,1,1] scalars.
+Dominant intermediate: the forced fp32 colour-index entry plane color_f
+[1,1,24,24]=2304B (10->1 Conv inherits fp32; input is fp32 so it cannot be born
+fp16 without an 18000B input cast).  Everything else is uint8 24x24 or 1-D.
 """
 
 import numpy as np
@@ -45,9 +35,11 @@ from onnx import helper, numpy_helper, TensorProto
 from ..harness import IR_VERSION
 
 F32 = TensorProto.FLOAT
-F16 = TensorProto.FLOAT16
 U8 = TensorProto.UINT8
 B = TensorProto.BOOL
+I64 = TensorProto.INT64
+
+WORK = 24  # active-region crop (grid width/height <= 16+8 = 24)
 
 
 def build(task):
@@ -62,111 +54,115 @@ def build(task):
         nodes.append(helper.make_node(op, ins, [out], **attrs))
         return out
 
-    # ---- colour-index plane colf = sum_k k*input_k via a 1x1 Conv (no [1,10,..]
-    # intermediate) -> [1,1,30,30] fp32 (the one irreducible entry plane). -------
-    cw = np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1)
-    init("cw", cw, np.float32)
-    n("Conv", ["input", "cw"], "colf32")            # [1,1,30,30] f32 (entry plane)
-    # cast to fp16 immediately; all downstream full-canvas ops run in fp16
-    # (colours/indices < 100 are fp16-exact).  task377 lever.
-    n("Cast", ["colf32"], "colf", to=F16)           # [1,1,30,30] f16 (1800B)
+    # ---- colour-index entry plane (kojimar dilated-conv trick) --------------
+    # color = 11 + sum_k w_k*input_k  with w=[-1,-10,..,-2] -> bg->10, c->c,
+    # off-grid (all-zero channels)->11.  Dilated 2x2 kernel (only [0,0] nonzero)
+    # crops the output to 24x24 = the max active grid.
+    cw = np.zeros((1, 10, 2, 2), np.float32)
+    cw[0, 0, 0, 0] = -1.0
+    for c in range(1, 10):
+        cw[0, c, 0, 0] = -(11 - c)
+    init("color_weights", cw, np.float32)
+    init("color_bias", np.array([11.0], np.float32), np.float32)
+    n("Conv", ["input", "color_weights", "color_bias"], "color_f",
+      dilations=[6, 6], kernel_shape=[2, 2])              # [1,1,24,24] f32 (entry)
+    n("Cast", ["color_f"], "color", to=U8)                 # [1,1,24,24] u8 (576B)
 
-    # ---- in-grid mask (separable, NO 30x30 plane): ig_row[r]=1 iff row r has any
-    # channel (incl. bg) set = ReduceMax(input, axes=[1,3]); ig_col via [1,2]. ---
-    n("ReduceMax", ["input"], "ig_row", axes=[1, 3], keepdims=1)  # [1,1,30,1] f32
-    n("ReduceMax", ["input"], "ig_col", axes=[1, 2], keepdims=1)  # [1,1,1,30] f32
+    init("ten_u8", np.array([10], np.uint8), np.uint8)
+    init("eleven_u8", np.array([11], np.uint8), np.uint8)
+    init("rev_work", np.arange(WORK - 1, -1, -1, np.int64), np.int64)
+    init("last_work_idx", np.array([WORK - 1], np.int64), np.int64)
+    init("one", np.array([1], np.int64), np.int64)
+    init("two", np.array([2], np.int64), np.int64)
 
-    # ---- box occupancy profiles --------------------------------------------
-    # non-bg cell <=> colf > 0 ; box rows/cols are contiguous & solid so
-    # ibr[r] = rowhas[r] = any nonbg in row r ; ibc = colhas.
-    init("half", np.array(0.5, np.float32), np.float32)
-    init("half16", np.array(0.5, np.float16), np.float16)
-    init("zero16f", np.array(0.0, np.float16), np.float16)
-    n("ReduceMax", ["colf"], "rowmax", axes=[3], keepdims=1)   # [1,1,30,1] f16
-    n("ReduceMax", ["colf"], "colmax", axes=[2], keepdims=1)   # [1,1,1,30] f16
-    n("Greater", ["rowmax", "half16"], "ibr")                  # [1,1,30,1] bool
-    n("Greater", ["colmax", "half16"], "ibc")                  # [1,1,1,30] bool
-    n("Cast", ["ibr"], "ibr_f", to=F16)
-    n("Cast", ["ibc"], "ibc_f", to=F16)
+    # ---- in-grid extents (per-row / per-col min < 11 -> row/col touches grid) -
+    n("ReduceMin", ["color"], "row_min", axes=[1, 3], keepdims=0)  # [1,24]
+    n("ReduceMin", ["color"], "col_min", axes=[1, 2], keepdims=0)  # [1,24]
+    n("Less", ["row_min", "eleven_u8"], "ingr_b")          # [1,24] bool (in-grid row)
+    n("Less", ["col_min", "eleven_u8"], "ingc_b")          # [1,24] bool (in-grid col)
+    # box occupancy (min < 10 -> row/col has a coloured/box cell)
+    n("Less", ["row_min", "ten_u8"], "row_any_b")          # [1,24] bool
+    n("Less", ["col_min", "ten_u8"], "col_any_b")          # [1,24] bool
+    n("Cast", ["row_any_b"], "row_any", to=U8)
+    n("Cast", ["col_any_b"], "col_any", to=U8)
 
-    # ---- erode the profiles by 2 (MinPool window 5) to get inner rows/cols ----
-    # MinPool = -MaxPool(-x).  pads=2 each side, kernel 5, stride 1 -> same length.
-    n("Neg", ["ibr_f"], "nibr")
-    n("MaxPool", ["nibr"], "mibr", kernel_shape=[5, 1], pads=[2, 0, 2, 0],
-      strides=[1, 1])
-    n("Neg", ["mibr"], "innerr_f")                             # [1,1,30,1] f32 {0,1}
-    n("Neg", ["ibc_f"], "nibc")
-    n("MaxPool", ["nibc"], "mibc", kernel_shape=[1, 5], pads=[0, 2, 0, 2],
-      strides=[1, 1])
-    n("Neg", ["mibc"], "innerc_f")                             # [1,1,1,30] f32 {0,1}
-    n("Greater", ["innerr_f", "half16"], "innerr")             # bool
-    n("Greater", ["innerc_f", "half16"], "innerc")
-    # ringrow = ibr & ~innerr ; ringcol = ibc & ~innerc
-    n("Not", ["innerr"], "ninnerr")
-    n("And", ["ibr", "ninnerr"], "ringrow")                    # [1,1,30,1] bool
-    n("Not", ["innerc"], "ninnerc")
-    n("And", ["ibc", "ninnerc"], "ringcol")                    # [1,1,1,30] bool
+    # ---- bbox scalars via ArgMax of the occupancy vectors -------------------
+    n("ArgMax", ["row_any"], "top", axis=1, keepdims=0)    # [1] i64
+    n("Gather", ["row_any", "rev_work"], "row_any_rev", axis=1)
+    n("ArgMax", ["row_any_rev"], "bottom_rev", axis=1, keepdims=0)
+    n("Sub", ["last_work_idx", "bottom_rev"], "bottom")
+    n("ArgMax", ["col_any"], "left", axis=1, keepdims=0)
+    n("Gather", ["col_any", "rev_work"], "col_any_rev", axis=1)
+    n("ArgMax", ["col_any_rev"], "right_rev", axis=1, keepdims=0)
+    n("Sub", ["last_work_idx", "right_rev"], "right")
+    n("Add", ["top", "one"], "top1")                       # inner ring rows
+    n("Sub", ["bottom", "one"], "bottom1")
+    n("Add", ["left", "one"], "left1")                     # inner ring cols
+    n("Sub", ["right", "one"], "right1")
+    n("Add", ["top", "two"], "top2")                       # inner block corner
+    n("Add", ["left", "two"], "left2")
 
-    # ---- recover colour scalars C1 (inner) and C0 (ring) ---------------------
-    # innermask2d = innerr & innerc.  C1 = max colf over inner cells.
-    init("neg1", np.array(-1.0, np.float16), np.float16)
-    n("And", ["innerr", "innerc"], "innermask")                # [1,1,30,30] bool
-    # C1 = max colf over inner cells (Where fuses mask+select, no extra Cast plane)
-    n("Where", ["innermask", "colf", "neg1"], "colf_inner")    # [1,1,30,30] f16
-    n("ReduceMax", ["colf_inner"], "C1", axes=[2, 3], keepdims=1)  # [1,1,1,1] f16
-    # C0 = max colf over cells with colf != C1 (bg/off-grid contribute 0 < C0,
-    # inner C1 cells are excluded) -> picks the ring colour with NO nonbg gate.
-    n("Equal", ["colf", "C1"], "isC1")                         # [1,1,30,30] bool
-    n("Not", ["isC1"], "notC1")
-    n("Where", ["notC1", "colf", "neg1"], "colf_c0")           # [1,1,30,30] f16
-    n("ReduceMax", ["colf_c0"], "C0", axes=[2, 3], keepdims=1)  # [1,1,1,1] f16
+    # ---- C0 (outer/ring) and C1 (inner) colours -----------------------------
+    n("Gather", ["color", "top"], "outer_row", axis=2)
+    n("Gather", ["outer_row", "left"], "outer_color", axis=3)   # [1,1] u8 -> C0
+    n("Gather", ["color", "top2"], "inner_row", axis=2)
+    n("Gather", ["inner_row", "left2"], "inner_color", axis=3)  # [1,1] u8 -> C1
 
-    # ---- stripe detection: SC[c] = ibc[c] & any(isC1 & ringrow over rows) ----
-    # SR[r] = ibr[r] & any(isC1 & ringcol over cols).  Where fuses the mask.
-    n("Cast", ["ringrow"], "ringrow_f16", to=F16)              # [1,1,30,1]
-    n("Cast", ["ringcol"], "ringcol_f16", to=F16)              # [1,1,1,30]
-    n("Where", ["isC1", "ringrow_f16", "zero16f"], "c1ring_r")  # [1,1,30,30] f16
-    n("ReduceMax", ["c1ring_r"], "sc_raw", axes=[2], keepdims=1)  # [1,1,1,30] f16
-    n("Where", ["isC1", "ringcol_f16", "zero16f"], "c1ring_c")  # [1,1,30,30] f16
-    n("ReduceMax", ["c1ring_c"], "sr_raw", axes=[3], keepdims=1)  # [1,1,30,1] f16
-    n("Greater", ["sc_raw", "half16"], "sc_hit")               # [1,1,1,30] bool
-    n("Greater", ["sr_raw", "half16"], "sr_hit")               # [1,1,30,1] bool
-    n("And", ["sc_hit", "ibc"], "SC")                          # [1,1,1,30] bool
-    n("And", ["sr_hit", "ibr"], "SR")                          # [1,1,30,1] bool
+    # ---- marker indicators (which cols carry a top/bottom barnacle, etc.) ----
+    n("Concat", ["top1", "bottom1"], "marker_rows_idx", axis=0)
+    n("Gather", ["color", "marker_rows_idx"], "marker_rows_color", axis=2)
+    n("Equal", ["marker_rows_color", "inner_color"], "marker_rows_b")
+    n("Cast", ["marker_rows_b"], "marker_rows_u8", to=U8)
+    n("ReduceMax", ["marker_rows_u8"], "col_select_u8", axes=[1, 2], keepdims=0)  # [1,24]
+    n("Concat", ["left1", "right1"], "marker_cols_idx", axis=0)
+    n("Gather", ["color", "marker_cols_idx"], "marker_cols_color", axis=3)
+    n("Equal", ["marker_cols_color", "inner_color"], "marker_cols_b")
+    n("Cast", ["marker_cols_b"], "marker_cols_u8", to=U8)
+    n("ReduceMax", ["marker_cols_u8"], "row_select_u8", axes=[1, 3], keepdims=0)  # [1,24]
 
-    # ---- per-cell label L among {bg=0, C0, C1, off-grid=99} -------------------
-    # Build from 1-D row/col vectors with the MINIMUM number of 30x30 planes:
-    #   inbox: L = (Ar|Ac) ? C0 : C1     (Ar=ringrow|SR, Ac=ringcol|SC)
-    #   outbox in-grid: L = (SC|SR) ? C1 : 0
-    #   off-grid: L = 99
-    # All combining ops below produce one 30x30 plane each; keep it to ~7 total.
-    n("Or", ["ringrow", "SR"], "Ar")                           # [1,1,30,1] bool
-    n("Or", ["ringcol", "SC"], "Ac")                           # [1,1,1,30] bool
-    n("And", ["ibr", "ibc"], "bothbox")                        # [1,1,30,30] bool
-    n("Or", ["Ar", "Ac"], "AorB")                              # [1,1,30,30] bool
-    n("Or", ["SC", "SR"], "scORsr")                            # [1,1,30,30] bool
-    # in-grid mask from the cheap fp32 axis-reductions
-    n("Greater", ["ig_row", "half"], "igr")                    # [1,1,30,1] bool
-    n("Greater", ["ig_col", "half"], "igc")                    # [1,1,1,30] bool
-    n("And", ["igr", "igc"], "ingrid")                         # [1,1,30,30] bool
+    # ---- reshape the 1-D vectors to broadcastable [1,1,24,1] / [1,1,1,24] -----
+    # in_row / in_col come FREE from the box-occupancy vectors (row_any_b is
+    # exactly "row r contains a box cell" = top<=r<=bottom since the box is
+    # contiguous) -> no ramp + compare machinery needed.
+    init("shp_row", np.array([1, 1, WORK, 1], np.int64), np.int64)
+    init("shp_col", np.array([1, 1, 1, WORK], np.int64), np.int64)
+    n("Reshape", ["col_select_u8", "shp_col"], "colmark_u8")   # marker COLUMN flag
+    n("Reshape", ["row_select_u8", "shp_row"], "rowmark_u8")   # marker ROW flag
+    n("Cast", ["colmark_u8"], "colmark", to=B)                 # [1,1,1,24]
+    n("Cast", ["rowmark_u8"], "rowmark", to=B)                 # [1,1,24,1]
+    n("Reshape", ["ingr_b", "shp_row"], "ingr")                # [1,1,24,1]
+    n("Reshape", ["ingc_b", "shp_col"], "ingc")                # [1,1,1,24]
+    n("Reshape", ["row_any_b", "shp_row"], "in_row")           # [1,1,24,1] bool
+    n("Reshape", ["col_any_b", "shp_col"], "in_col")           # [1,1,1,24] bool
 
-    init("sent99", np.array(99.0, np.float16), np.float16)
-    # out-of-box value: ingrid ? (scORsr ? C1 : 0) : 99
-    # NB: a stripe col/row would otherwise paint C1 into the off-grid padding,
-    # so the in-grid gate is OUTERMOST.
-    n("Where", ["scORsr", "C1", "zero16f"], "out_ig")          # [1,1,30,30] f16
-    n("Where", ["ingrid", "out_ig", "sent99"], "out_val")      # [1,1,30,30] f16
-    # in-box value: AorB ? C0 : C1
-    n("Where", ["AorB", "C0", "C1"], "in_val")                 # [1,1,30,30] f16
-    # combine by box membership
-    n("Where", ["bothbox", "in_val", "out_val"], "L")          # [1,1,30,30] f16
-    # one-hot expand into the FREE bool output.
-    chan = np.arange(10, dtype=np.float16).reshape(1, 10, 1, 1)
-    init("chan", chan, np.float16)
-    n("Equal", ["L", "chan"], "output")                        # [1,10,30,30] BOOL
+    # ---- per-axis stripe colour VECTORS (SMALL 1-D, no full mask plane) ------
+    # A horizontal stripe sits on a marker ROW; the value at col c is:
+    #   off-grid col          -> 11 (sentinel; pads to background in output)
+    #   in-grid, inside box   -> C0
+    #   in-grid, outside box  -> C1
+    # Folding the in-grid gate INTO the value vector removes the full And mask:
+    # the stripe mask is then just rowmark (a 1-D broadcast), no 24x24 plane.
+    n("Where", ["in_col", "outer_color", "inner_color"], "rowval_ig")  # [1,1,1,24]
+    n("Where", ["ingc", "rowval_ig", "eleven_u8"], "rowval")           # [1,1,1,24]
+    # A vertical stripe sits on a marker COL; value at row r (same structure):
+    n("Where", ["in_row", "outer_color", "inner_color"], "colval_ig")  # [1,1,24,1]
+    n("Where", ["ingr", "colval_ig", "eleven_u8"], "colval")           # [1,1,24,1]
+
+    # ---- final colour plane (only 2 extra 24x24 planes) ---------------------
+    # vertical stripes first, horizontal stripes win at crossings.
+    n("Where", ["colmark", "colval", "color"], "final0")      # [1,1,24,24] u8 (576)
+    n("Where", ["rowmark", "rowval", "final0"], "final")      # [1,1,24,24] u8 (576)
+
+    # ---- pad to 30x30 (off-grid -> 11 sentinel, never equals a channel) ------
+    init("pad_to_30", np.array([0, 0, 0, 0, 0, 0, 6, 6], np.int64), np.int64)
+    n("Pad", ["final", "pad_to_30", "eleven_u8"], "padded")   # [1,1,30,30] u8 (900)
+    init("channel_values",
+         np.array([10, 1, 2, 3, 4, 5, 6, 7, 8, 9], np.uint8).reshape(1, 10, 1, 1),
+         np.uint8)
+    n("Equal", ["padded", "channel_values"], "output")        # [1,10,30,30] BOOL
 
     x = helper.make_tensor_value_info("input", F32, [1, 10, 30, 30])
     y = helper.make_tensor_value_info("output", B, [1, 10, 30, 30])
     graph = helper.make_graph(nodes, "task383", [x], [y], inits)
     return helper.make_model(graph, ir_version=IR_VERSION,
-                             opset_imports=[helper.make_opsetid("", 11)])
+                             opset_imports=[helper.make_opsetid("", 12)])

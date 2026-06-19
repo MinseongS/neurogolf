@@ -49,10 +49,10 @@
    "method": "ext:kojimar7113"
   },
   "9": {
-   "points": 15.861048224111471,
-   "memory": 8249,
-   "params": 1062,
-   "method": "ext:kojimar7113"
+   "points": 16.127232470089062,
+   "memory": 7049,
+   "params": 86,
+   "method": "custom:task009"
   },
   "10": {
    "points": 18.00606702477681,
@@ -1663,10 +1663,10 @@
    "method": "ext:kojimar7113"
   },
   "278": {
-   "points": 15.957486738667319,
-   "memory": 7776,
-   "params": 679,
-   "method": "ext:kojimar7113"
+   "points": 16.039532239080053,
+   "memory": 7716,
+   "params": 73,
+   "method": "custom:task278"
   },
   "279": {
    "points": 16.37754629792627,
@@ -2293,10 +2293,10 @@
    "method": "ext:kojimar7113"
   },
   "383": {
-   "points": 16.09863343594322,
-   "memory": 7246,
+   "points": 16.288886115946454,
+   "memory": 5974,
    "params": 96,
-   "method": "ext:kojimar7113"
+   "method": "custom:task383"
   },
   "384": {
    "points": 18.584903040828404,
