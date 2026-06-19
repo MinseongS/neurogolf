@@ -222,3 +222,4 @@ proj-exact. PRODUCTIVE RESERVOIR EXHAUSTED (blank-note + skip-list + skip-margin
 - 2026-06-19 #36: 6662.12 (+0.74 vs #35 6661.38) — 3 deep-custom wall wins 243/096/367; proj 6662.11 exact
 - 2026-06-19 #37: 6667.42 (+5.30 vs #36 6662.12) — 11-win structural plane-free re-golf wave; 306 +1.25, 355 +1.26; proj-exact
 - 2026-06-19 7k-HARVEST: 7107.01 (+439.59 vs #37 6667.42) — adopted 313 fresh-verified sajayr/neurogolf-7k public nets (keep-best + fresh-200 gate, 4 rejected non-general); ABOVE sajayr LB 7015 by ~92 (kept our better models on tasks we won). 400/400 solved.
+- 2026-06-19 kojimar-7113.80: 7113.80 (+6.79 vs our 7107.01) — submitted public kojimar audited blend (neurogolf-7113-80-minimal-onnx-assets-v1) AS-IS. subB pure-sajayr=7092.28 (WORSE than our keep-best, confirming our fresh-gate+keep-best is sound). New best=7113.80. NEXT: overlay our fresh-verified wins (merge_E) to exceed.

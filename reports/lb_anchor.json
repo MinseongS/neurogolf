@@ -1,10 +1,10 @@
 {
- "comment": "7k-HARVEST: adopted 313 fresh-verified sajayr/neurogolf-7k public nets (keep-best over ours + fresh-200 gate; 4 rejected for failing fresh generalization). Local stored 7135.87, 400/400 solved. LB jumped 6667.42->7107.01 (+439.59), ABOVE sajayr 7015 (kept our better models). No scoring exploit exists; their notebook is a zip packager, real nets in public dataset.",
+ "comment": "pure kojimar 7113.80 audited blend submitted AS-IS = CONFIRMED 7113.80 (our best; +6.79 over our keep-best 7107.01). subB pure-sajayr=7092.28 (worse, proving our keep-best+fresh-gate was correct). Next: merge_E = kojimar base + our fresh-verified overlays to BEAT 7113.80.",
  "stored_at_submit": 7135.87,
- "lb": 7107.01,
- "time_utc": "2026-06-19 7k-harvest confirmed",
+ "lb": 7113.8,
+ "time_utc": "2026-06-19 kojimar-7113.80 confirmed",
  "pending": false,
- "pending_submit": "7k-harvest CONFIRMED 7107.01",
+ "pending_submit": "kojimar 7113.80 CONFIRMED",
  "prev_stored_at_submit": 6697.39,
  "prev_lb": 6667.42
 }
