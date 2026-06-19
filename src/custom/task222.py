@@ -14,19 +14,21 @@ Exact local rule (brute-verified 0 fails / 50000 fresh instances):
   Why this is exact AND robust:
     * Every valid box (area>=9, both dims>=2) CONTAINS such a sub-block: a box with a
       dimension==2 must be >=2x5 (area>=9) so it contains a 2x4 (or 4x2); otherwise both
-      dims>=3 so it contains a 3x3.  Every box cell lies inside one of these windows
-      (3x3/2x4/4x2 windows tile a solid rectangle fully).
-    * Noise occasionally forms a spurious solid 2x2 (~1/60) and very rarely a 2x3
-      (~1/20000); requiring a 3x3 / 2x4 / 4x2 (>=8 same-colour pixels in that exact
-      shape among ~50%-density random noise) drives false positives to ~0.
+      dims>=3 so it contains a 3x3.  Every box cell lies inside one of these windows.
+    * Noise occasionally forms a spurious solid 2x2 (~1/60) and very rarely a 2x3; a
+      3x3 / 2x4 / 4x2 (>=8 same-colour pixels in that exact shape among ~50%-density
+      random noise) drives false positives to ~0.
 
-Encoding (floor-break -- route the 10-ch expansion into the FREE output, task193 idiom):
-  colf[1,1,30,30] f32 = Conv1x1(input,[0,1,..,9]) -> per-cell colour index (bg/off-grid=0).
-  crop to the 16x16 active region, cast f16.  For each block shape (h,w):
-    mx = MaxPool(v,(h,w))      ; mn = -MaxPool(-v,(h,w))         (TL-anchored, no pad)
-    seed = (mx==mn) AND (mn>0)  -> window is uniform & non-background
-    pad seed back to 16x16 (TL); dilate = MaxPool(seed,(h,w)) bottom-right anchored
-  keep = OR of the three dilations; pad to 30x30 (False outside the 16x16 grid).
+Encoding (floor-break: route the 10-ch expansion into the FREE output, task193 idiom):
+  colf30[1,1,30,30] f32 = Conv1x1(input,[0,1,..,9])  -> per-cell colour index (bg=0).
+  Crop to the WxW active grid (the box lives in rows/cols 1..14), cast f16.
+  For each block shape (h,w):
+    mx = MaxPool(v,(h,w))      ; nmn = MaxPool(-v,(h,w))    (TL-anchored, no pad)
+    seed = (mx + nmn == 0) AND (nmn < 0)   -> window uniform & non-background
+    dil  = MaxPool(seed_f16,(h,w), pads=[h-1,w-1,0,0])      -> BR dilation back to WxW
+           (MaxPool zero-pads, so this one op fuses the pad-restore + footprint dilation)
+  keep = OR of the three dilations; Pad to 30x30 (True off-grid since input is all-zero
+         there -> Where selects the all-zero input, not the bg one-hot).
   output = Where(keep, input, bg_onehot).
 """
 
@@ -39,6 +41,16 @@ from ..harness import IR_VERSION
 F32 = TensorProto.FLOAT
 F16 = TensorProto.FLOAT16
 BOOL = TensorProto.BOOL
+U8 = TensorProto.UINT8
+
+# Detection window.  The 16x16 grid's solid box is placed strictly interior
+# (row,col >= 1 ; row+height,col+width <= 15) so every box cell AND every covering
+# 3x3 / 2x4 / 4x2 window lies in rows/cols 1..14 -> a 14x14 crop at OFF=1 contains all
+# detectable structure.  Noise outside that crop is never part of a valid block, so the
+# keep mask is simply False there (in-grid border rows 0,15 blanked; off-grid >=16
+# padded True so Where picks the all-zero input rather than the bg one-hot).
+OFF = 1
+W = 14
 
 
 def build(task):
@@ -53,62 +65,67 @@ def build(task):
         nodes.append(helper.make_node(op, ins, [out], **attrs))
         return out
 
-    # ---- colour-index plane (entry f32 read of the input) ------------------
+    # ---- colour-index plane (the one forced f32 entry read of the input) ---
     wpack = np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1)  # [0,1,..,9]
     init("WPACK", wpack, np.float32)
     n("Conv", ["input", "WPACK"], "colf30", kernel_shape=[1, 1])  # [1,1,30,30] f32
 
-    # crop to the 16x16 active region (grid size is fixed 16; box is interior).
-    init("c_s", np.array([0, 0], np.int64), np.int64)
-    init("c_e", np.array([16, 16], np.int64), np.int64)
+    # crop to the WxW detection window at offset OFF.
+    init("c_s", np.array([OFF, OFF], np.int64), np.int64)
+    init("c_e", np.array([OFF + W, OFF + W], np.int64), np.int64)
     init("c_ax", np.array([2, 3], np.int64), np.int64)
-    n("Slice", ["colf30", "c_s", "c_e", "c_ax"], "colf16")        # [1,1,16,16] f32
-    n("Cast", ["colf16"], "v", to=F16)                            # [1,1,16,16] f16
-    n("Neg", ["v"], "nv")                                         # for min via max
+    n("Slice", ["colf30", "c_s", "c_e", "c_ax"], "colf", )         # [1,1,W,W] f32
+    n("Cast", ["colf"], "v", to=F16)                               # [1,1,W,W] f16
 
-    init("NHALF", np.array(-0.5, np.float16), np.float16)
     init("ZERO0", np.array(0.0, np.float16), np.float16)
-    init("ZERO5", np.array(0.5, np.float16), np.float16)
 
     keep_terms = []
-    SZ = 16
     for h, w in [(3, 3), (2, 4), (4, 2)]:
         tag = f"{h}x{w}"
-        oh, ow = SZ - h + 1, SZ - w + 1
-        # TL-anchored window max(v) and max(-v) = -min(v)   (no padding).
+        k = float(h * w)
+        # A TL-anchored h x w window is a fully-filled single-colour block iff every
+        # cell equals the window max, i.e. sum == k*max, AND the colour is non-bg
+        # (max>0).  Window sum via a no-pad ones-Conv (values <=81 -> fp16 exact); this
+        # drops the shared Neg plane and the per-shape min-via-max MaxPool.
         n("MaxPool", ["v"], f"mx_{tag}", kernel_shape=[h, w], strides=[1, 1])
-        n("MaxPool", ["nv"], f"nmn_{tag}", kernel_shape=[h, w], strides=[1, 1])
-        # range = max - min = mx + nmn ; uniform-colour window iff range == 0
-        # (Add keeps a plane the same size min-via-Neg would, so no extra cost).
-        n("Add", [f"mx_{tag}", f"nmn_{tag}"], f"rng_{tag}")       # [1,1,oh,ow] f16
-        n("Equal", [f"rng_{tag}", "ZERO0"], f"uni_{tag}")        # max==min
-        # non-background: min > 0  <=>  nmn (=-min) < -0.5
-        n("Less", [f"nmn_{tag}", "NHALF"], f"nz_{tag}")
+        init(f"ONES_{tag}", np.ones((1, 1, h, w), np.float16), np.float16)
+        n("Conv", ["v", f"ONES_{tag}"], f"S_{tag}", kernel_shape=[h, w])  # window sum
+        init(f"K_{tag}", np.array(k, np.float16), np.float16)
+        n("Mul", [f"mx_{tag}", f"K_{tag}"], f"kmx_{tag}")          # k*max
+        n("Equal", [f"S_{tag}", f"kmx_{tag}"], f"uni_{tag}")      # sum == k*max
+        n("Greater", [f"mx_{tag}", "ZERO0"], f"nz_{tag}")         # colour non-bg
         n("And", [f"uni_{tag}", f"nz_{tag}"], f"seedb_{tag}")     # [1,1,oh,ow] bool
         n("Cast", [f"seedb_{tag}"], f"seed_{tag}", to=F16)        # f16 {0,1}
-        # pad seed back to 16x16 (place at top-left, fill 0).
-        pad = np.array([0, 0, 0, 0, 0, 0, SZ - oh, SZ - ow], np.int64)
-        init(f"spad_{tag}", pad, np.int64)
-        init(f"z16_{tag}", np.array(0.0, np.float16), np.float16)
-        n("Pad", [f"seed_{tag}", f"spad_{tag}", f"z16_{tag}"], f"seedpad_{tag}",
-          mode="constant")                                        # [1,1,16,16] f16
-        # dilate over the window footprint: bottom-right anchored MaxPool.
-        n("MaxPool", [f"seedpad_{tag}"], f"dil_{tag}",
-          kernel_shape=[h, w], strides=[1, 1], pads=[h - 1, w - 1, 0, 0])
+        # bottom-right-anchored MaxPool spreads each window-TL seed over the h x w cells
+        # it certifies AND restores SZxSZ in ONE op: with symmetric pads=[h-1,..] the
+        # output index o reads seed[o-h+1 .. o] (MaxPool zero-pads), so out[r,c] fires
+        # iff some covering window (TL in r-h+1..r) was a valid seed.  No separate Pad
+        # plane (saves a full SZxSZ f16 carrier per shape).
+        n("MaxPool", [f"seed_{tag}"], f"dil_{tag}",
+          kernel_shape=[h, w], strides=[1, 1],
+          pads=[h - 1, w - 1, h - 1, w - 1])                      # [1,1,W,W] f16
         keep_terms.append(f"dil_{tag}")
 
-    # keep = ANY block-shape dilation fired: Max over the three f16 maps, one Greater.
-    n("Max", [keep_terms[0], keep_terms[1]], "dil01")             # [1,1,16,16] f16
-    n("Max", ["dil01", keep_terms[2]], "dilmax")
-    n("Greater", ["dilmax", "ZERO5"], "keep16b")                  # [1,1,16,16] bool
-    n("Cast", ["keep16b"], "keep16_u8", to=TensorProto.UINT8)
-    # pad to 30x30 with True outside the 16x16 grid: those off-grid cells are all-zero
-    # in the input, so selecting `input` there yields the all-zero target (NOT the
-    # bg one-hot, which would wrongly set channel-0 high off-grid).  task193 idiom:
-    # selcond = keep OR off-grid.
-    init("kpad", np.array([0, 0, 0, 0, 0, 0, 14, 14], np.int64), np.int64)
+    # keep = ANY block-shape dilation fired: ONE variadic Max over the three f16 maps.
+    # The maps are exactly {0,1} (seeds cast 0/1 then MaxPool'd), so Cast f16->uint8 is
+    # the keep mask directly -- no Greater/threshold plane needed.
+    n("Max", keep_terms, "dilmax")                                # [1,1,W,W] f16 {0,1}
+    n("Cast", ["dilmax"], "keep_u8", to=U8)                       # [1,1,W,W] uint8
+    # Two-stage pad of the WxW keep window back to 30x30:
+    #  (a) pad the OFF-cell in-grid border (rows/cols < OFF and the trailing in-grid
+    #      rows up to 15) with 0/False -> noise there is blanked (keep=False).
+    #  (b) pad the off-grid tail (>=16) with 1/True so Where selects the all-zero input
+    #      there instead of the bg one-hot (task193 idiom).  uint8 Pad (opset-11) is
+    #      allowed; bool Pad is not.
+    end_pad = 16 - (OFF + W)
+    pad_a = [0, 0, OFF, OFF, 0, 0, end_pad, end_pad]               # -> 16x16
+    init("kpad_a", np.array(pad_a, np.int64), np.int64)
+    init("ZEROU8", np.array(0, np.uint8), np.uint8)
+    n("Pad", ["keep_u8", "kpad_a", "ZEROU8"], "keep16_u8", mode="constant")
+    pad_b = [0, 0, 0, 0, 0, 0, 14, 14]                            # 16x16 -> 30x30
+    init("kpad_b", np.array(pad_b, np.int64), np.int64)
     init("ONEU8", np.array(1, np.uint8), np.uint8)
-    n("Pad", ["keep16_u8", "kpad", "ONEU8"], "keep30_u8", mode="constant")
+    n("Pad", ["keep16_u8", "kpad_b", "ONEU8"], "keep30_u8", mode="constant")
     n("Cast", ["keep30_u8"], "keep_b", to=BOOL)                   # [1,1,30,30] bool
 
     # ---- single Where -> FREE [1,10,30,30] output --------------------------

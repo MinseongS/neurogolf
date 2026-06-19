@@ -2877,14 +2877,15 @@
  {
   "task": 222,
   "arc_id": "91714a58",
-  "points": 15.17,
-  "memory": 29344,
-  "params": 973,
+  "points": 15.5,
+  "memory": 13326,
+  "params": 73,
   "method": "custom:222 uniform-colour window detect+dilate (MaxPool range==0, task193 generalized)",
   "class": "BAIL?",
   "sig": "random_pixels",
   "status": "done",
-  "verdict": "generalizing exact win"
+  "verdict": "generalizing exact win",
+  "note": "re-golf +0.33: MaxPool symmetric pads=[h-1,..] fuses pad-restore AND BR-footprint dilation (kills carrier/shape); sum-Conv uniformity (sum==k*max AND max>0) fp16-exact drops Neg plane; crop 14x14 interior; dilation maps exactly {0,1} so Cast=keep mask. 18502->13326"
  },
  {
   "task": 223,
