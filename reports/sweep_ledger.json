@@ -4764,7 +4764,7 @@
   "sig": "memory",
   "status": "done",
   "verdict": "FEASIBLE A ~17.0pt: e76a88a6: recover the colored sprite shown once and stamp (recolored) ",
-  "note": "adopted 14.69->15.37 recolour-by-offset (local run-length key=dr*4+dc, 4x4 histogram double-MatMul, no flood-fill); generalizes 265+500"
+  "note": "adopted 14.69->15.37 recolour-by-offset (local run-length key=dr*4+dc, 4x4 histogram double-MatMul, no flood-fill); generalizes 265+500 | RE-GOLF skip-marginal (+0.05 only): colf30 3600B fp32 Conv entry plane is HARD floor (check_model rejects fp16-declared Conv output); bool/uint8 narrowing of Mul/Add/Sum chains net-NEGATIVE (cast planes cost > 1-byte saving); only plane-COUNT fusion left = +0.05"
  },
  {
   "task": 369,
