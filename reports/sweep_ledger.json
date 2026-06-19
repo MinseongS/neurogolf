@@ -793,7 +793,8 @@
   "class": "FEASIBLE?",
   "sig": "transpose",
   "status": "done",
-  "verdict": "generalizing exact win (fresh 200/200)"
+  "verdict": "generalizing exact win (fresh 200/200)",
+  "note": " | re-golf AT-FLOOR: C30 3600B fp32 channel-contraction occupancy plane irreducible (Conv cant spatial-crop; input slice 4000B / fp16 cast 18000B worse); reflection Gather needs 2-D occupancy. Already lifted to 15.94 via Pad-small-block-as-output"
  },
  {
   "task": 63,
