@@ -1,0 +1,22 @@
+  task021: OURS 16.74 > koji 16.01 (fresh OK) -> overlay ours
+  task055: OURS 15.92 > koji 14.83 (fresh OK) -> overlay ours
+  task080: OURS 15.61 > koji 14.60 (fresh OK) -> overlay ours
+  task128: OURS 19.30 > koji 18.83 (fresh OK) -> overlay ours
+  task202: OURS 15.15 > koji 14.70 (fresh OK) -> overlay ours
+  task205: OURS 14.26 > koji 14.06 (fresh OK) -> overlay ours
+  task215: OURS 17.26 > koji 17.15 (fresh OK) -> overlay ours
+  task220: koji FAILS examples -> KEEP ours (18.20)
+  task230: koji FAILS examples -> KEEP ours (18.20)
+  task250: OURS 16.77 > koji 16.28 (fresh OK) -> overlay ours
+  task267: OURS 18.36 > koji 18.35 (fresh OK) -> overlay ours
+  task283: koji FAILS examples -> KEEP ours (18.19)
+  task294: koji FAILS examples -> KEEP ours (18.19)
+  task338: OURS 15.37 > koji 15.21 (fresh OK) -> overlay ours
+  task347: OURS 20.04 > koji 18.53 (fresh OK) -> overlay ours
+  task349: OURS 14.39 > koji 14.31 (fresh OK) -> overlay ours
+  task352: koji FAILS examples -> KEEP ours (18.87)
+  task355: OURS 17.06 > koji 16.34 (fresh OK) -> overlay ours
+  task398: OURS 16.75 > koji 16.37 (fresh OK) -> overlay ours
+
+=== E: 381 kojimar + 14 ours-overlay + 5 ours-fallback(koji broken) ===
+TOTAL local: 7152.05 pts, 400/400 solved
