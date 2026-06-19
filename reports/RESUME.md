@@ -16,13 +16,25 @@ sajayr) → 7113.80 (pure kojimar audited blend) → **7121.23 (merge_E)**. The 
   examples but fail held-out (caught sajayr's ~4, kojimar's wall-overrides). NEVER blind-merge public nets.
 - Tools: `reports/compare_7k.py` (score any external onnx dir vs our manifest), `reports/onnx_inspect.py`
   (structure dump, `--theirs` reads /tmp dirs), `src.merge_external` (built-in keep-best, but NO fresh-gate).
-**▶ NEXT SESSION = PUSH PAST 7121 toward 7800:** (1) WATCH for newer/higher public blends (the LB moves fast —
-re-pull kojimar's latest + check `kaggle datasets list -s neurogolf --sort-by updated`; re-run merge_E with the
-new base). (2) RE-GOLF FROM the adopted nets: `onnx_inspect <task>` the high-mem ext:kojimar7113 nets, dispatch
-the 8-wide plane-elim agent fleet to beat them (our re-golf beat "already-optimized" nets all session) → any win
-is a fresh overlay that pushes past 7121. (3) 14.9-min-floor walls (219/255/233/...) still ~22-30 gap but mostly
-true walls. STEP 0: lb_status (confirmed 7121.23, nothing pending); check for newer public blend FIRST.
-Submission budget: ~5/day, transient 400s on submit → retry after 60s via submission/submission.zip.
+**LB CONTEXT (2026-06-19 07:13):** top = 7843 / 7832 / 7800 / 7737 / 7687 / 7651 / 7634 / 7600 (top-14 all ≥7500).
+Public-blend CEILING = 7113.80 (kojimar; no newer one yet). So the **7121→7800 gap (~720) is PURELY original
+per-task golf** — the top teams hand-built it over months; public can't reach it. 400 tasks × ~+1.8/task avg needed.
+
+**▶ NEXT SESSION PLAN (push past 7121 toward 上位권 7500+):**
+1. **STEP 0:** lb_status (confirmed 7121.23, nothing pending). FIRST re-check for a newer/higher public blend
+   (`kaggle datasets list -s neurogolf --sort-by updated`; `kaggle competitions leaderboard -c neurogolf-2026 --show`).
+   If a higher public blend exists, re-run `reports/merge_E.py` with it as the new base (cheap +N, free).
+2. **MAIN ENGINE = re-golf-from-adopted-nets at scale (this is what reaches 7800).** The 8-wide plane-elim agent
+   fleet, but baseline = the current adopted nets (mostly ext:kojimar7113). Per iteration: rank tasks by scored mem
+   (manifest), `python -m reports.onnx_inspect <task>` to classify dominant plane (REMOVABLE carrier=winnable vs
+   FORCED fp32 entry=floor — the session's proven discriminator), dispatch agents on the removable-carrier ones.
+   Each fresh-verified win → `src.adopt` (keep-best vs current) → it becomes a merge_E overlay → submit pushes LB.
+   Levers all in BUILD_PROMPT (nested-Where, profile-Conv, occupancy-only, combined-max-via-bias, BitwiseOr=u8-max,
+   crop-to-active, orientation-folded-Max). We beat "already-optimized" public nets ~50-80% of the time this session.
+3. **Submission discipline:** ~5/day. Recipe = merge_E (public base + fresh-verified our overlays). Re-golf wins
+   accumulate in manifest; submit when enough stored gain. Transient 400s on submit → retry 60s via submission/submission.zip.
+4. **Hard walls (low EV, deprioritize):** 219/255/233/173/285/77/2/319/366/118 — ~22-30 gap, mostly true walls.
+Realistic target next session: +30-80 LB from a re-golf wave (7121→~7180); reaching 7500+ is a multi-session grind.
 
 ## ▶▶▶▶▶ (superseded) RESUME (2026-06-19 — 7k-HARVEST: LB 6667.42 → 7107.01, ABOVE sajayr 7015)
 **Confirmed LB 7107.01** (400/400 solved, stored 7135.87, gap 28.86). Two things happened this session:
