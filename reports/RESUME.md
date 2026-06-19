@@ -1,6 +1,42 @@
 # RESUME — restart the autonomous sweep in a fresh session
 
-## ▶▶▶▶▶▶ RESUME HERE (handoff 2026-06-19 LATE — 🚀 LB 6667.42 → **7121.23**, ABOVE public crowd 7113.80)
+## ▶▶▶▶▶▶▶ RESUME HERE (handoff 2026-06-19 NIGHT — ⚠️ MARGINAL-OVERLAY RE-GOLF IS LB-NEUTRAL/NEGATIVE; best LB still 7121.23)
+**Confirmed best LB 7121.23 (UNCHANGED).** This session ran 3× 8-agent plane-elim waves on the top un-regolfed
+kojimar mid-tier targets → **9 stored wins, +2.42 local** (017+0.32, 191+0.37, 396+0.57, 009+0.27, 251+0.22,
+278+0.08, 340+0.16, 377+0.24, 383+0.19). Submitted via merge_E v2 (23 overlays). **RESULT: LB 7121.00 = −0.23 vs
+prior 7121.23** despite +2.42 local. Best LB still 7121.23 (Kaggle keeps best; the 7121.00 sub is just worse-than-best).
+
+⛔⛔ **THE CORE LESSON (graduate to BUILD_PROMPT + memory): marginal kojimar-overlay re-golf does NOT help LB and
+can hurt.** Two mechanisms, both verified:
+1. **LEAK that the fresh-200 gate missed.** task017 net leaks 1/3000 on arc-gen (flagged 99.9%@4000 at build);
+   fresh-200 (and src.adopt's 120-gate) PASSED it, but private penalizes the accuracy. → **REVERTED 017 to kojimar;
+   renamed src/custom/task017.py → .leaky.** NEW RULE: **high-count (≥3000) fresh test before ANY adopt** (the
+   one-liner is in this session's transcript / reuse fresh_ok_path at n=3000). Don't trust 120/200.
+2. **arc-gen ≠ private.** The other 8 overlays are arc-gen-clean 3000/3000 yet the batch still netted −0.23. Our
+   low-mem rebuilds can be arc-gen-perfect but private-imperfect, while kojimar's nets are LB-battle-tested. So even
+   a "clean" marginal mem win is a GAMBLE on LB — the mem gain (~+0.2) is smaller than the private-accuracy risk.
+
+▶ **STATE STAGED FOR NEXT SESSION (do this FIRST, it's a 1-submission experiment):** the 8 arc-gen-clean overlays
+(017 reverted) are committed; stored 7154.15, PROJ 7123.33. STEP 0: lb_status; then **submit the current merge_E
+state ONCE** (re-run `reports/merge_E.py`, then `python -c "from src.pipeline import pack; pack()"` — ⚠️ NEVER
+`python -m src.pipeline --pack`, that RE-SOLVES & overwrites the merge_E networks; kill it if you ever start it —
+then `kaggle competitions submit`). **MEASURE vs 7121.23:**
+  - If **>7121.23**: the 8 clean B-type wins DO help; 017-leak was the whole drag. Resume re-golf but ONLY the
+    fundamentally-cheaper-RULE (B) wins (396 single-axis-rule, 191 grouped-SUM, 009 strided-1×1-conv), high-count-gated;
+    SKIP pure dtype-shaving (+0.08–0.16) marginals — they're not worth the private risk.
+  - If **≤7121.23**: kojimar-overlay re-golf is a DEAD LEVER. Pivot entirely to (a) NEW public blends (free +N — check
+    `kaggle datasets list -s neurogolf --sort-by updated`; kojimar 7113.80 was still the ceiling tonight) and (b) the
+    13 sub-100% GAP tasks (~35.7 pts: 219/255/157/2/319/366/118/233) where accuracy gain = direct LB with NO
+    mem-vs-accuracy tradeoff — these are the only place stored gains map 1:1 to LB. Most are walls (HARD_WALLS.md).
+
+NEW LEVERS captured this session (real, transferable): ReduceSum/ReduceMax are PINNED to f32 output (the
+fp16-Conv-keeps-fp16 lever does NOT extend to reduces ⇒ any profile/reduce net has a hard 4·C·W floor — task096);
+strided 1×1 Conv collapses 10ch + subsample in ONE op killing the f32 sample slice (task009); small-ring tail =
+rebuild a bullseye index on a tiny W×W canvas vs full 30×30 (task377); single-axis run-length when target maximizes
+BOTH axes + 1-D edge probe for the other (task396). FLOORS confirmed (don't re-attempt): 158/145/110/138/198/64/367/
+29/174/192/14/234/324/96/222 — kojimar mid-tier nets are genuinely tight (forced fp32 entry / irreducible matched-filter banks).
+
+## ▶▶▶▶▶▶ (superseded) RESUME (handoff 2026-06-19 LATE — 🚀 LB 6667.42 → **7121.23**, ABOVE public crowd 7113.80)
 **Confirmed LB 7121.23** (stored 7152.05, 400/400). Progression today: 6667.42 → 7107.01 (7k-harvest keep-best of
 sajayr) → 7113.80 (pure kojimar audited blend) → **7121.23 (merge_E)**. The winning recipe + key lessons:
 - PUBLIC NETS ARE THE LEVER NOW. Best public blend = `kojimar/neurogolf-7113-80-minimal-onnx-assets-v1` dataset
