@@ -2621,7 +2621,8 @@
   "class": "FEASIBLE?",
   "sig": "transpose",
   "status": "done",
-  "verdict": "generalizing exact win (fresh 500/500)"
+  "verdict": "generalizing exact win (fresh 500/500)",
+  "note": " | re-golf AT-FLOOR (+0.135): carrier slack removed (unify both orientations to prod=A@B, select 2 small operands by scalar, ONE matmul -2400B) but residual dominant = forced 6000B fp32 entry trio (1 slice + 2 ReduceMax occupancy, both orientations need both)"
  },
  {
   "task": 203,
