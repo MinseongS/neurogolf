@@ -4535,15 +4535,15 @@
  {
   "task": 351,
   "arc_id": "dc0a314f",
-  "points": 15.81,
-  "memory": 9752,
-  "params": 16,
+  "points": 16.42,
+  "memory": 5292,
+  "params": 44,
   "method": "gen:thbdh6332",
   "class": "CHECK",
   "sig": "-",
   "status": "done",
   "verdict": "",
-  "note": "adopted 14.53->15.81 D2-symmetric 5x5 fill = pure spatial copy (mirror gather, ArgMax-first-occ row/col, 0 ramp params); pending-pool win; generalizes 200"
+  "note": "re-golf +0.61 (TierS): pure-copy = collapse to 1-ch colour-index plane (1x1 Conv sum k*input_k, 3600B once), data-dep Gathers on 1-ch, expand to one-hot ONLY on small 5x5 gathered block -> Equal->uint8->Pad into FREE output; no [1,10,*] plane. WARN: stored stress examples use larger offsets than naive gen bound"
  },
  {
   "task": 352,
