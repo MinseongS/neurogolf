@@ -1,6 +1,24 @@
 # RESUME — restart the autonomous sweep in a fresh session
 
-## ▶▶▶▶▶▶▶▶ RESUME HERE (handoff 2026-06-19 NIGHT v2 — ⛔ BOTH LOCAL BUILD-LEVERS EMPIRICALLY DEAD; best LB 7121.23)
+## ▶▶▶▶▶▶▶▶▶ RESUME HERE (handoff 2026-06-19 NIGHT v3 — ✅ NEW BEST 7121.60 via blend-rebase; local build dead, BLENDS ALIVE)
+**NEW BEST LB 7121.60** (+0.37 over 7121.23). HOW: kojimar published a newer public blend `kojimar/neurogolf-7114-66`
+(7114.66, +0.86 over the 7113.80 base) — REBASED merge_E onto it (KOJI=/tmp/koji_7114, promoted to /tmp/koji_final)
+keeping the 14 PROVEN original overlays, DROPPING today's 9 marginal re-golf overlays (measured LB-negative). The
+crowd's base improvement transferred to LB EXACTLY as the local delta predicted (+0.37 local → +0.37 LB). ⭐ THE
+REPEATABLE LIVE LEVER: **whenever kojimar (or anyone) uploads a blend > current base, download it, rebuild
+/tmp/koji_final from its base_submission+overrides (overrides = full 400-net solution), re-run merge_E with the 14
+proven overlays as "ours", pack(), submit → free +N.** kojimar went 7113.80→7114.66 in ~3.5h, so CHECK OFTEN:
+`kaggle datasets list -s neurogolf --sort-by updated | head`. This is how 7113.80→7121.23→7121.60 happened.
+DOWNLOAD recipe: `kaggle datasets download <ref> -p /tmp/dl`, unzip, `/tmp/koji_final` = overrides/ (full 400).
+SUBMIT recipe: restore "ours" to the 7121.x overlay state if needed (`git checkout <pre-marginal commit> -- networks/
+reports/manifest.json`), run `reports/merge_E.py`, then `python -c "from src.pipeline import pack; pack()"` (NEVER
+`src.pipeline --pack` — re-solves+overwrites), then `kaggle competitions submit`. Daily submission slots are NOT
+just 5 — more are available (submitted 3× this session after the "5 used" point), so MEASURE freely.
+
+⛔ DO NOT re-run local plane-elim / overlay re-golf — MEASURED DEAD (below). Spend effort on (1) blend monitoring
+(above, the only positive lever) and (2) deep research for a reproducible 7800-tier technique.
+
+## ▶▶▶▶▶▶▶▶ (superseded same night) — ⛔ BOTH LOCAL BUILD-LEVERS EMPIRICALLY DEAD; was best LB 7121.23
 **DECISIVE MEASUREMENT (3 submissions, all COMPLETE public):** 7121.23 (kojimar+14 original overlays) → 7121.00
 (+9 new overlays incl leaky 017) → 7121.00 (+8 CLEAN overlays, 017 reverted). **Removing 017 changed NOTHING** ⇒
 the −0.23 was NOT the leak; the 8 clean B-type overlays (incl the "big" wins 396+0.57/191+0.37/009+0.27) collectively
