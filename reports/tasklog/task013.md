@@ -1,51 +1,64 @@
-# task013 — 0a938d79
+# task013 — 0a938d79 (alternating periodic stripes from two seeds)
 
-**Rule:** Grid W×H (W∈20..30, H∈6..12). Two seed pixels: `grid[bottoms[0]*(H-1)][start]=colors[0]`,
-`grid[bottoms[1]*(H-1)][start+sep+1]=colors[1]`, start∈[1,W//2], sep∈[1,5] (period p=sep+1∈[2,6]).
-Output paints FULL vertical stripes (whole columns) at start, start+p, start+2p, … (<W), alternating
-colors[0],colors[1],colors[0],… If `xpose`, transpose (stripes become full rows).
-**Current (prior):** 15.43 pts.
-**Target tier:** A/B — closed-form separable reconstruction; no flood-fill, no global argmax.
+**Rule:** Grid W×H (W∈20..30, H∈6..12). Two seed pixels at columns `start` and
+`start+sep+1` (period p=sep+1∈2..6), each in row 0 or H-1, colours c0,c1∈1..9.
+Output paints FULL vertical stripes at cols start, start+p, start+2p,… (<W),
+alternating c0,c1,c0,…  If `xpose`, the whole grid (in & out) is transposed →
+stripes become full rows. Orientation recoverable: xpose=1 IFF both seed columns
+lie in {0,W-1}. Closed-form, fully separable: recover period-axis colour vector
+pvec[30] from two no-pad colour-weighted profile Convs, alternate by (t-first)%2p,
+gate to the in-grid rect, route the 10-ch expansion into the FREE bool output.
+
+**Current (prior):** 15.77 pts, closed-form separable net, mem 10101, params 65
+(ledger 'memory' was STALE — real scored mem was 10101, not the ~1800 in docstring).
+**Target tier:** A (separable row⊗col into free output; the orientation swap forces
+one fp16 combine plane, see floor analysis).
 
 ## Attempts
 | # | angle | tier | mem | params | pts | fresh | outcome |
 |---|---|---|---|---|---|---|---|
-| 1 | separable: per-axis colour profiles → period scalars → fp16 Lcolor plane → Equal→bool output | A/B | 13581 | 65 | 15.48 | 200/200 | fp32 Lcolor plane dominated |
-| 2 | cast perpendicular vecs to fp16 BEFORE the broadcast Where (Lcolor born fp16) | A/B | 10101 | 65 | 15.77 | 500/500 | adopted |
+| 0 | prior net (3 full fp16/bool planes + 2×1200B ReduceSum) | A | 10101 | 65 | 15.77 | — | baseline |
+| 1 | ROW/COL-SUM-PROFILE-AS-ONE-CONV (kill perch_row/col 1200B planes) | A | 8991 | 656 | 15.83 | — | partial |
+| 2 | uint8 (255-sentinel) for the 3 full planes | A | 6021 | 656 | 16.19 | — | partial |
+| 3 | single fp16-Max combine plane (orientation folded into vectors) | A | 5841 | 655 | 16.22 | — | partial |
+| 4 | fp16 the whole position/colour recovery vector chain | A | 5115 | 657 | 16.34 | — | partial |
+| 5 | drop fp32-cast-for-reduce (ReduceSum/Max/Min accept fp16 now) | A | 4379 | 655 | 16.48 | 200/200, 300/300 | ADOPT |
 
 ## Best achieved
-15.77 @ mem 10101 params 65 — beats prior 15.43 by **+0.34** (≥+0.3 ✓).
-
-## Key construction
-- Orientation: **xpose=1 IFF both seed columns ∈ {0, W-1}** (verified 0/3000 mismatches; in xpose=0
-  seed cols are start≥1, never 0, never both at edges).
-- Period-axis colour-weighted profile pval (colval for xpose=0 / rowval for xpose=1) — each seed sits at
-  a distinct position (p≥2), so the profile value IS the seed colour index.
-- firstpos/lastpos via masked-arange ReduceMax / Where-BIG ReduceMin; p=last-first; colours via Gather.
-- stripe colour: m=(t-firstpos) mod 2p (fp16 Mod, exact); m==0→c0, m==p→c1, else bg=0; gate t≥firstpos.
-- pvec[30] placed as colvec[1,1,1,30] or rowvec[1,1,30,1], **cast fp16 then ONE Where broadcasts the two
-  perpendicular vectors to the [1,1,30,30] Lcolor plane directly in fp16** (the key 3600→1800 win).
-- in-grid rect mask (rowin∧colin); off-grid→ -1 so `Equal(L16, arange[1,10,1,1])` → all-zero off-grid,
-  channel-0 for in-grid bg, routing the 10-ch expansion into the FREE bool output.
+16.48 @ mem 4379 params 655 — beats prior 15.77 by **+0.70** (≥+0.3 ✓).
+Stored 267/267, isolated fresh 500/500 (200+300 batches).
 
 ## Irreducible-floor analysis
-Dominant intermediates: two fp16 [1,1,30,30] planes — Lcolor16 (1800B, the broadcast build) and L16
-(1800B, the off-grid-sentinel Where) — plus the in-grid bool plane (900B) and the two per-channel
-column/row profiles perch_col/perch_row ([1,10,1,30] & [1,10,30,1], 1200B each). The two perch planes
-are needed because pval=Where(xpose,rowval,colval) requires BOTH colour profiles in a static graph;
-the second fp16 plane is the off-grid sentinel gate (a 2-D gate the perpendicular vectors can't encode).
+Dominant intermediate: **L16, the single fp16 [1,1,30,30] combine plane (1800B)**.
+The output is `Equal(L16, arange_ch)`; L16 must be a full-grid colour-index plane.
+It cannot drop to uint8 (900B): the combine of "colour on the period axis" with
+"in-grid gate on the cross axis" needs a uint8 `Max`/`Add`, both ORT-unsupported,
+and the orientation (xpose) SWAPS the row/col roles so a single uint8 `Where`
+(whose 3 args have fixed axis roles) cannot serve both orientations — a `Where`
+per orientation + a select = THREE uint8 planes (2700B) > one fp16 Max (1800B).
+Remaining 4×120B fp32 are the two profile Convs + two ReduceMax occupancy outputs
+(born fp32, immediately Cast→fp16). ~28×60B fp16 [30] recovery vectors + 13×30B
+bool make up the rest; each is already minimal-dtype. Params 655 = the two
+[1,10,30,1]/[1,10,1,30] profile kernels (600 elems, must span 30 rows for arbitrary
+grid heights; replacing with ReduceSum reintroduces 2×1200B planes = net worse).
 
 ## OPEN ANGLES (re-attack backlog)
-- Collapse Lcolor16+L16 into one plane: bake the period-axis extent (-1 for ≥extent) into pvec and apply
-  only the perpendicular gate, but the orientation-select of the perpendicular gate itself materializes a
-  [1,1,30,30] bool — net-neutral as tried in head; may yield ~900B if the gate can ride the FREE output.
-- Replace perch_col (1200B) with cheap colored-occupancy [1,1,1,30] (120B) for orientation only — but the
-  colour VALUES still require a full profile on the chosen axis; no win unless orientation can be resolved
-  before computing any colour profile (circular today).
+- uint8 single combine plane (900B): would need a uint8 Max OR an orientation-free
+  formulation. A Transpose-of-one-canonical-plane route still costs 3 planes. If a
+  future ORT build adds uint8 Max, the combine drops 1800→900 (+~0.13).
+- Smaller profile kernel: xpose=1 grids are up to 30 tall so the 30-row kernel is
+  required; no saving available.
 
 ## INSIGHT (transferable)
-⭐ When a per-cell colour-index plane is built by broadcasting TWO PERPENDICULAR vectors via a single
-Where(scalar, rowvec[1,1,30,1], colvec[1,1,1,30]), CAST THE VECTORS TO fp16 BEFORE the Where so the
-[1,1,30,30] plane is born fp16 (1800B) — casting AFTER leaves the fp32 3600B plane in the trace
-(task013: 13581→10101, +0.29 pts). Orientation (xpose) for "seeds-on-perpendicular-edges" tasks is
-cleanly `both perpendicular-axis seed coords ∈ {0, extent-1}`, no spread/argmax heuristics.
+⭐ When orientation (xpose) swaps the row/col roles of a separable row⊗col output,
+the cross-axis gate + period-axis colour can be combined into ONE plane with a
+broadcast `Max` of two perpendicular [30] vectors (off-grid→200 sentinel on EITHER
+axis, in-grid→max(colour,0)=colour), selecting each vector's CONTENT (not axis) by
+`Where(xpose,…)`. This collapses the usual 3-plane "build L0, build L1, select"
+into a SINGLE fp16 combine plane. The combine is pinned at fp16 (1800B) because ORT
+has no uint8 Max/Add and the role-swap blocks a single uint8 `Where`.
+⭐ ReduceSum/ReduceMax/ReduceMin ACCEPT fp16 under ORT_DISABLE_ALL on the current
+build (the "reduce ops reject fp16" gotcha is STALE) — so the whole integer
+position/colour recovery chain runs in fp16 with NO fp32 bridge casts, halving every
+[30] working vector (120→60B). Only Conv and the input-ReduceMax outputs are forced
+fp32 (born from the fp32 input); Cast them to fp16 immediately.

@@ -158,14 +158,15 @@
  {
   "task": 13,
   "arc_id": "0a938d79",
-  "points": 15.77,
-  "memory": 14103,
-  "params": 221,
+  "points": 16.48,
+  "memory": 4379,
+  "params": 655,
   "method": "custom:13",
   "class": "FEASIBLE?",
   "sig": "transpose",
   "status": "done",
-  "verdict": "generalizing win"
+  "verdict": "generalizing win",
+  "note": "re-golf +0.70: (1) profile-Conv replaces two 1200B ReduceSum; (2) orientation-swapping separable row-col folds cross-gate+period-colour into ONE fp16 Max of two perpendicular [30] vectors (off-grid->200 sentinel), select CONTENT by Where(xpose) not axis - collapses 3 planes->1; (3) ReduceSum/Max/Min ACCEPT fp16 under ORT_DISABLE_ALL (stale gotcha) so full fp16 chain no fp32 bridge"
  },
  {
   "task": 14,
