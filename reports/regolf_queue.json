@@ -1,0 +1,1512 @@
+{
+ "note": "Re-golf target queue for next session. Excludes known true walls + already-excellent (pts>=18.5). Ranked by headroom (lowest pts first). For each: onnx_inspect to classify removable-carrier(winnable) vs forced-fp32-entry(floor); dispatch plane-elim agent on removable ones; fresh-verify; src.adopt keep-best; merge_E overlay; submit.",
+ "count": 244,
+ "walls_excluded": [
+  2,
+  5,
+  18,
+  23,
+  44,
+  46,
+  54,
+  66,
+  76,
+  77,
+  83,
+  95,
+  101,
+  118,
+  127,
+  133,
+  157,
+  173,
+  187,
+  209,
+  216,
+  219,
+  223,
+  230,
+  233,
+  255,
+  258,
+  261,
+  272,
+  277,
+  279,
+  282,
+  285,
+  286,
+  307,
+  317,
+  319,
+  331,
+  361,
+  366
+ ],
+ "targets": [
+  {
+   "task": 191,
+   "pts": 14.25,
+   "mem": 46318,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 205,
+   "pts": 14.26,
+   "mem": 46074,
+   "method": "custom:task205"
+  },
+  {
+   "task": 349,
+   "pts": 14.39,
+   "mem": 39600,
+   "method": "custom:task349"
+  },
+  {
+   "task": 158,
+   "pts": 14.53,
+   "mem": 33059,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 364,
+   "pts": 14.54,
+   "mem": 34320,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 396,
+   "pts": 14.72,
+   "mem": 28545,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 367,
+   "pts": 14.77,
+   "mem": 22036,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 243,
+   "pts": 14.97,
+   "mem": 22608,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 202,
+   "pts": 15.15,
+   "mem": 18963,
+   "method": "custom:task202"
+  },
+  {
+   "task": 198,
+   "pts": 15.17,
+   "mem": 18483,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 17,
+   "pts": 15.3,
+   "mem": 13500,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 338,
+   "pts": 15.37,
+   "mem": 14515,
+   "method": "custom:task338"
+  },
+  {
+   "task": 138,
+   "pts": 15.42,
+   "mem": 14386,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 25,
+   "pts": 15.43,
+   "mem": 14072,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 110,
+   "pts": 15.46,
+   "mem": 13275,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 64,
+   "pts": 15.49,
+   "mem": 13368,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 145,
+   "pts": 15.51,
+   "mem": 13104,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 80,
+   "pts": 15.61,
+   "mem": 11468,
+   "method": "custom:task080"
+  },
+  {
+   "task": 222,
+   "pts": 15.62,
+   "mem": 11451,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 204,
+   "pts": 15.62,
+   "mem": 11364,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 350,
+   "pts": 15.63,
+   "mem": 11700,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 379,
+   "pts": 15.66,
+   "mem": 10134,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 340,
+   "pts": 15.69,
+   "mem": 10910,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 377,
+   "pts": 15.69,
+   "mem": 10887,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 29,
+   "pts": 15.71,
+   "mem": 10776,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 370,
+   "pts": 15.74,
+   "mem": 9475,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 174,
+   "pts": 15.77,
+   "mem": 10067,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 251,
+   "pts": 15.82,
+   "mem": 8741,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 9,
+   "pts": 15.86,
+   "mem": 8249,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 74,
+   "pts": 15.86,
+   "mem": 7462,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 96,
+   "pts": 15.88,
+   "mem": 8278,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 324,
+   "pts": 15.9,
+   "mem": 7330,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 55,
+   "pts": 15.92,
+   "mem": 8760,
+   "method": "custom:task055"
+  },
+  {
+   "task": 192,
+   "pts": 15.94,
+   "mem": 8515,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 278,
+   "pts": 15.96,
+   "mem": 7776,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 182,
+   "pts": 16.0,
+   "mem": 8043,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 14,
+   "pts": 16.0,
+   "mem": 7989,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 383,
+   "pts": 16.1,
+   "mem": 7246,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 165,
+   "pts": 16.1,
+   "mem": 7036,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 89,
+   "pts": 16.11,
+   "mem": 7092,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 92,
+   "pts": 16.11,
+   "mem": 7075,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 234,
+   "pts": 16.16,
+   "mem": 6869,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 328,
+   "pts": 16.16,
+   "mem": 4972,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 148,
+   "pts": 16.25,
+   "mem": 6195,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 368,
+   "pts": 16.26,
+   "mem": 6134,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 264,
+   "pts": 16.28,
+   "mem": 5438,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 280,
+   "pts": 16.28,
+   "mem": 5386,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 208,
+   "pts": 16.29,
+   "mem": 5974,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 4,
+   "pts": 16.32,
+   "mem": 5812,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 382,
+   "pts": 16.34,
+   "mem": 5648,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 8,
+   "pts": 16.36,
+   "mem": 5561,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 387,
+   "pts": 16.37,
+   "mem": 5466,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 85,
+   "pts": 16.41,
+   "mem": 4500,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 359,
+   "pts": 16.44,
+   "mem": 5220,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 161,
+   "pts": 16.44,
+   "mem": 5189,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 363,
+   "pts": 16.46,
+   "mem": 4843,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 196,
+   "pts": 16.53,
+   "mem": 4725,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 37,
+   "pts": 16.53,
+   "mem": 4614,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 201,
+   "pts": 16.53,
+   "mem": 4491,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 378,
+   "pts": 16.57,
+   "mem": 4420,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 358,
+   "pts": 16.59,
+   "mem": 4332,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 132,
+   "pts": 16.61,
+   "mem": 3990,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 265,
+   "pts": 16.62,
+   "mem": 4328,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 335,
+   "pts": 16.63,
+   "mem": 3666,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 206,
+   "pts": 16.65,
+   "mem": 4150,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 117,
+   "pts": 16.66,
+   "mem": 3922,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 162,
+   "pts": 16.69,
+   "mem": 4024,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 365,
+   "pts": 16.69,
+   "mem": 3932,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 107,
+   "pts": 16.69,
+   "mem": 2928,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 50,
+   "pts": 16.71,
+   "mem": 3915,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 131,
+   "pts": 16.71,
+   "mem": 3312,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 69,
+   "pts": 16.73,
+   "mem": 3848,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 21,
+   "pts": 16.74,
+   "mem": 3786,
+   "method": "custom:task021"
+  },
+  {
+   "task": 177,
+   "pts": 16.75,
+   "mem": 3692,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 284,
+   "pts": 16.75,
+   "mem": 3166,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 398,
+   "pts": 16.75,
+   "mem": 2624,
+   "method": "custom:task398"
+  },
+  {
+   "task": 193,
+   "pts": 16.77,
+   "mem": 3700,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 250,
+   "pts": 16.77,
+   "mem": 3664,
+   "method": "custom:task250"
+  },
+  {
+   "task": 268,
+   "pts": 16.8,
+   "mem": 3368,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 93,
+   "pts": 16.82,
+   "mem": 3480,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 137,
+   "pts": 16.83,
+   "mem": 3433,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 125,
+   "pts": 16.85,
+   "mem": 3434,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 310,
+   "pts": 16.9,
+   "mem": 3208,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 330,
+   "pts": 16.92,
+   "mem": 3000,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 333,
+   "pts": 16.92,
+   "mem": 2792,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 86,
+   "pts": 16.94,
+   "mem": 2956,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 79,
+   "pts": 16.95,
+   "mem": 3065,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 105,
+   "pts": 16.95,
+   "mem": 3022,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 35,
+   "pts": 16.95,
+   "mem": 2994,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 90,
+   "pts": 16.96,
+   "mem": 3011,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 19,
+   "pts": 16.96,
+   "mem": 2997,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 42,
+   "pts": 16.96,
+   "mem": 2792,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 390,
+   "pts": 16.96,
+   "mem": 2624,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 354,
+   "pts": 16.97,
+   "mem": 2998,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 270,
+   "pts": 16.97,
+   "mem": 2742,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 91,
+   "pts": 16.98,
+   "mem": 2853,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 70,
+   "pts": 16.99,
+   "mem": 2977,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 397,
+   "pts": 17.0,
+   "mem": 2774,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 256,
+   "pts": 17.01,
+   "mem": 2902,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 246,
+   "pts": 17.03,
+   "mem": 2478,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 224,
+   "pts": 17.05,
+   "mem": 2460,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 355,
+   "pts": 17.06,
+   "mem": 2772,
+   "method": "custom:task355"
+  },
+  {
+   "task": 190,
+   "pts": 17.06,
+   "mem": 2480,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 394,
+   "pts": 17.06,
+   "mem": 1871,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 245,
+   "pts": 17.07,
+   "mem": 2644,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 154,
+   "pts": 17.08,
+   "mem": 2661,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 94,
+   "pts": 17.09,
+   "mem": 2662,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 71,
+   "pts": 17.1,
+   "mem": 2643,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 197,
+   "pts": 17.14,
+   "mem": 2586,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 62,
+   "pts": 17.16,
+   "mem": 2465,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 170,
+   "pts": 17.16,
+   "mem": 2220,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 184,
+   "pts": 17.17,
+   "mem": 2460,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 102,
+   "pts": 17.17,
+   "mem": 2414,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 388,
+   "pts": 17.17,
+   "mem": 2288,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 238,
+   "pts": 17.17,
+   "mem": 2067,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 281,
+   "pts": 17.22,
+   "mem": 2321,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 163,
+   "pts": 17.22,
+   "mem": 2283,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 30,
+   "pts": 17.22,
+   "mem": 2248,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 34,
+   "pts": 17.23,
+   "mem": 2198,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 212,
+   "pts": 17.23,
+   "mem": 2178,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 348,
+   "pts": 17.25,
+   "mem": 2257,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 185,
+   "pts": 17.25,
+   "mem": 1651,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 134,
+   "pts": 17.26,
+   "mem": 2270,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 374,
+   "pts": 17.26,
+   "mem": 2262,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 22,
+   "pts": 17.26,
+   "mem": 2004,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 215,
+   "pts": 17.26,
+   "mem": 1512,
+   "method": "custom:task215"
+  },
+  {
+   "task": 336,
+   "pts": 17.26,
+   "mem": 1092,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 12,
+   "pts": 17.28,
+   "mem": 2076,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 168,
+   "pts": 17.29,
+   "mem": 2096,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 381,
+   "pts": 17.3,
+   "mem": 2128,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 36,
+   "pts": 17.31,
+   "mem": 2140,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 323,
+   "pts": 17.31,
+   "mem": 1521,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 273,
+   "pts": 17.32,
+   "mem": 2109,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 325,
+   "pts": 17.33,
+   "mem": 2010,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 11,
+   "pts": 17.33,
+   "mem": 1859,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 260,
+   "pts": 17.34,
+   "mem": 1804,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 213,
+   "pts": 17.38,
+   "mem": 1979,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 343,
+   "pts": 17.38,
+   "mem": 1929,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 84,
+   "pts": 17.38,
+   "mem": 1797,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 63,
+   "pts": 17.39,
+   "mem": 1728,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 275,
+   "pts": 17.39,
+   "mem": 1374,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 287,
+   "pts": 17.4,
+   "mem": 1699,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 392,
+   "pts": 17.41,
+   "mem": 1626,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 124,
+   "pts": 17.42,
+   "mem": 1879,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 13,
+   "pts": 17.43,
+   "mem": 1869,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 99,
+   "pts": 17.43,
+   "mem": 1649,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 237,
+   "pts": 17.44,
+   "mem": 1778,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 400,
+   "pts": 17.45,
+   "mem": 1864,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 88,
+   "pts": 17.47,
+   "mem": 1791,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 199,
+   "pts": 17.48,
+   "mem": 1749,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 41,
+   "pts": 17.5,
+   "mem": 1750,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 51,
+   "pts": 17.5,
+   "mem": 1702,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 109,
+   "pts": 17.52,
+   "mem": 1686,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 112,
+   "pts": 17.52,
+   "mem": 1616,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 302,
+   "pts": 17.52,
+   "mem": 1216,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 156,
+   "pts": 17.54,
+   "mem": 1697,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 61,
+   "pts": 17.58,
+   "mem": 1633,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 169,
+   "pts": 17.58,
+   "mem": 1500,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 45,
+   "pts": 17.58,
+   "mem": 1050,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 351,
+   "pts": 17.59,
+   "mem": 1632,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 226,
+   "pts": 17.6,
+   "mem": 1613,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 33,
+   "pts": 17.6,
+   "mem": 1606,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 303,
+   "pts": 17.61,
+   "mem": 1598,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 295,
+   "pts": 17.62,
+   "mem": 1557,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 342,
+   "pts": 17.62,
+   "mem": 1530,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 369,
+   "pts": 17.62,
+   "mem": 1300,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 159,
+   "pts": 17.64,
+   "mem": 1419,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 20,
+   "pts": 17.66,
+   "mem": 1356,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 141,
+   "pts": 17.68,
+   "mem": 1404,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 345,
+   "pts": 17.69,
+   "mem": 1431,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 308,
+   "pts": 17.69,
+   "mem": 1385,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 31,
+   "pts": 17.7,
+   "mem": 1434,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 240,
+   "pts": 17.7,
+   "mem": 1393,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 75,
+   "pts": 17.7,
+   "mem": 1326,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 217,
+   "pts": 17.71,
+   "mem": 1429,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 304,
+   "pts": 17.73,
+   "mem": 1404,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 341,
+   "pts": 17.73,
+   "mem": 1394,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 232,
+   "pts": 17.75,
+   "mem": 0,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 297,
+   "pts": 17.76,
+   "mem": 1350,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 119,
+   "pts": 17.78,
+   "mem": 1244,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 160,
+   "pts": 17.8,
+   "mem": 1264,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 123,
+   "pts": 17.8,
+   "mem": 403,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 356,
+   "pts": 17.82,
+   "mem": 1300,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 27,
+   "pts": 17.82,
+   "mem": 1262,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 78,
+   "pts": 17.84,
+   "mem": 1260,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 293,
+   "pts": 17.84,
+   "mem": 1249,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 175,
+   "pts": 17.85,
+   "mem": 340,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 254,
+   "pts": 17.86,
+   "mem": 1241,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 346,
+   "pts": 17.87,
+   "mem": 1224,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 244,
+   "pts": 17.89,
+   "mem": 1120,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 183,
+   "pts": 17.89,
+   "mem": 1008,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 136,
+   "pts": 17.9,
+   "mem": 1179,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 188,
+   "pts": 17.9,
+   "mem": 1146,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 271,
+   "pts": 17.92,
+   "mem": 1141,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 48,
+   "pts": 17.95,
+   "mem": 1038,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 203,
+   "pts": 17.96,
+   "mem": 1114,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 301,
+   "pts": 17.96,
+   "mem": 1077,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 1,
+   "pts": 17.98,
+   "mem": 1095,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 10,
+   "pts": 18.01,
+   "mem": 750,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 329,
+   "pts": 18.03,
+   "mem": 1029,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 115,
+   "pts": 18.05,
+   "mem": 980,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 225,
+   "pts": 18.06,
+   "mem": 926,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 58,
+   "pts": 18.06,
+   "mem": 252,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 60,
+   "pts": 18.08,
+   "mem": 0,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 108,
+   "pts": 18.12,
+   "mem": 864,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 228,
+   "pts": 18.13,
+   "mem": 849,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 194,
+   "pts": 18.14,
+   "mem": 900,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 288,
+   "pts": 18.14,
+   "mem": 769,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 239,
+   "pts": 18.15,
+   "mem": 897,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 259,
+   "pts": 18.16,
+   "mem": 910,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 195,
+   "pts": 18.17,
+   "mem": 882,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 189,
+   "pts": 18.18,
+   "mem": 866,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 139,
+   "pts": 18.19,
+   "mem": 765,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 32,
+   "pts": 18.19,
+   "mem": 0,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 97,
+   "pts": 18.19,
+   "mem": 0,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 120,
+   "pts": 18.19,
+   "mem": 0,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 171,
+   "pts": 18.19,
+   "mem": 0,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 283,
+   "pts": 18.19,
+   "mem": 0,
+   "method": "conv3x3+b"
+  },
+  {
+   "task": 294,
+   "pts": 18.19,
+   "mem": 0,
+   "method": "conv3x3+b"
+  },
+  {
+   "task": 344,
+   "pts": 18.19,
+   "mem": 0,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 15,
+   "pts": 18.2,
+   "mem": 0,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 98,
+   "pts": 18.2,
+   "mem": 0,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 114,
+   "pts": 18.2,
+   "mem": 0,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 151,
+   "pts": 18.2,
+   "mem": 0,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 220,
+   "pts": 18.2,
+   "mem": 0,
+   "method": "custom:task220"
+  },
+  {
+   "task": 327,
+   "pts": 18.22,
+   "mem": 810,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 106,
+   "pts": 18.23,
+   "mem": 776,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 47,
+   "pts": 18.24,
+   "mem": 826,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 143,
+   "pts": 18.27,
+   "mem": 591,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 122,
+   "pts": 18.3,
+   "mem": 0,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 221,
+   "pts": 18.31,
+   "mem": 451,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 153,
+   "pts": 18.32,
+   "mem": 741,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 43,
+   "pts": 18.32,
+   "mem": 588,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 320,
+   "pts": 18.35,
+   "mem": 448,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 214,
+   "pts": 18.36,
+   "mem": 726,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 267,
+   "pts": 18.36,
+   "mem": 724,
+   "method": "custom:task267"
+  },
+  {
+   "task": 178,
+   "pts": 18.36,
+   "mem": 702,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 200,
+   "pts": 18.37,
+   "mem": 570,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 218,
+   "pts": 18.38,
+   "mem": 653,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 289,
+   "pts": 18.39,
+   "mem": 618,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 269,
+   "pts": 18.43,
+   "mem": 685,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 372,
+   "pts": 18.43,
+   "mem": 0,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 263,
+   "pts": 18.47,
+   "mem": 565,
+   "method": "ext:kojimar7113"
+  },
+  {
+   "task": 57,
+   "pts": 18.5,
+   "mem": 638,
+   "method": "ext:kojimar7113"
+  }
+ ]
+}

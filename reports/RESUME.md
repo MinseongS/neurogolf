@@ -20,21 +20,34 @@ sajayr) → 7113.80 (pure kojimar audited blend) → **7121.23 (merge_E)**. The 
 Public-blend CEILING = 7113.80 (kojimar; no newer one yet). So the **7121→7800 gap (~720) is PURELY original
 per-task golf** — the top teams hand-built it over months; public can't reach it. 400 tasks × ~+1.8/task avg needed.
 
-**▶ NEXT SESSION PLAN (push past 7121 toward 上位권 7500+):**
-1. **STEP 0:** lb_status (confirmed 7121.23, nothing pending). FIRST re-check for a newer/higher public blend
-   (`kaggle datasets list -s neurogolf --sort-by updated`; `kaggle competitions leaderboard -c neurogolf-2026 --show`).
-   If a higher public blend exists, re-run `reports/merge_E.py` with it as the new base (cheap +N, free).
-2. **MAIN ENGINE = re-golf-from-adopted-nets at scale (this is what reaches 7800).** The 8-wide plane-elim agent
-   fleet, but baseline = the current adopted nets (mostly ext:kojimar7113). Per iteration: rank tasks by scored mem
-   (manifest), `python -m reports.onnx_inspect <task>` to classify dominant plane (REMOVABLE carrier=winnable vs
-   FORCED fp32 entry=floor — the session's proven discriminator), dispatch agents on the removable-carrier ones.
-   Each fresh-verified win → `src.adopt` (keep-best vs current) → it becomes a merge_E overlay → submit pushes LB.
-   Levers all in BUILD_PROMPT (nested-Where, profile-Conv, occupancy-only, combined-max-via-bias, BitwiseOr=u8-max,
-   crop-to-active, orientation-folded-Max). We beat "already-optimized" public nets ~50-80% of the time this session.
-3. **Submission discipline:** ~5/day. Recipe = merge_E (public base + fresh-verified our overlays). Re-golf wins
-   accumulate in manifest; submit when enough stored gain. Transient 400s on submit → retry 60s via submission/submission.zip.
-4. **Hard walls (low EV, deprioritize):** 219/255/233/173/285/77/2/319/366/118 — ~22-30 gap, mostly true walls.
-Realistic target next session: +30-80 LB from a re-golf wave (7121→~7180); reaching 7500+ is a multi-session grind.
+**⚠️ STRATEGY REFINEMENT (verified by inspecting kojimar nets): GENERIC plane-elim is NEAR-EXHAUSTED.** kojimar's
+mid-range nets already use OUR general levers (profile-sum, free-output routing, fp16/uint8 tails, small
+intermediates) — independently discovered, same competition meta. So blanket re-golf has a LOWER hit-rate now.
+Two kinds of our insight: (A) general golf levers = mostly already baked into kojimar's nets; (B) task-specific
+cheaper RULES (documented in tasklog/ledger) = still differentiated. The 720-pt gap to 7800 is mostly (B) +
+wall-cracking (new algorithms), NOT generic byte-shaving.
+
+**▶ NEXT SESSION = AUTONOMOUS LOOP (just paste the loop prompt; it reads this + BUILD_PROMPT + HARD_WALLS):**
+STEP 0: `ls /tmp/arc-gen/tasks|wc -l` (~901; restore if missing); `PYTHONPATH=. .venv/bin/python reports/lb_status.py`
+(confirmed 7121.23, nothing pending). Then FIRST check for a newer/higher PUBLIC blend (free +N):
+`kaggle datasets list -s neurogolf --sort-by updated | head` and `kaggle competitions leaderboard -c neurogolf-2026 --show | head`;
+if a higher public blend dataset exists, download it, point `reports/merge_E.py` KOJI dir at it, re-run, submit.
+THEN the re-golf engine, per iteration:
+1. **Targets are pre-ranked in `reports/regolf_queue.json`** (244 non-wall tasks, lowest-pts-first = most headroom;
+   40 true walls already excluded). Take the top untried N.
+2. For each, `python -m reports.onnx_inspect <task>` (byte-accurate now) → classify dominant plane: REMOVABLE
+   carrier (mask/union/candidate/extra colour plane / oversized output-routable) = WINNABLE; FORCED fp32 entry
+   (10→1 colour Conv, single-ch fp32 Slice, flood/correspondence stack) = FLOOR, skip. This is the session's
+   proven discriminator (don't waste agents on forced floors).
+3. Dispatch the 8-wide plane-elim agent fleet (BUILD_PROMPT levers) on the removable-carrier targets. Build a NEW
+   `src/custom/taskNNN.py` that BEATS the current (kojimar) net. Prefer (B): is there a fundamentally CHEAPER RULE
+   than kojimar's approach (check the generator + our tasklog)? That's where real points are.
+4. Each fresh-200-verified win → `python -m src.adopt N` (keep-best vs current kojimar net) → accumulates in manifest.
+5. **Submit via merge_E recipe** when enough stored gain: keep current public base, overlay our fresh-verified wins
+   (`reports/merge_E.py` already encodes this). ~5 submissions/day; transient 400 on submit → retry 60s via
+   `submission/submission.zip`. Re-anchor `reports/lb_anchor.json` + log `reports/submission_log.md` each confirmed submit.
+6. Mark tried tasks (won/at-floor) in regolf_queue.json / ledger so the loop doesn't re-attempt floors.
+Realistic: +30-80 LB per re-golf wave (7121→~7180); 7500+ is a multi-session grind on (B)-type rule breakthroughs.
 
 ## ▶▶▶▶▶ (superseded) RESUME (2026-06-19 — 7k-HARVEST: LB 6667.42 → 7107.01, ABOVE sajayr 7015)
 **Confirmed LB 7107.01** (400/400 solved, stored 7135.87, gap 28.86). Two things happened this session:
