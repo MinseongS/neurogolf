@@ -65,3 +65,39 @@ Also: runtime-tensor **Slice leaves symbolic output dims** → `calculate_memory
 data-dependent border lines so shapes stay static. And: scoring compares the FULL 10-channel
 one-hot — channel 0 must be 1 at in-grid background, so background-bearing outputs are
 label-map (Tier B), not separable paint masks.
+
+---
+
+## RE-GOLF session (2026-06-19) — plane-elimination pass on the 10293 baseline
+
+| # | angle | mem | params | pts | fresh | outcome |
+|---|---|---|---|---|---|---|
+| r0 | re-measured baseline (deployed) | 10293 | 84 | 15.753 | 200/200 | reference |
+| r1 | colcount/rowcount presence + 3rd line for cHW corner | 11333 | 83 | 15.657 | 200/200 | WORSE (added planes) |
+| r2 | keep 4 lines, drop the 4 ReduceMax (use count>0 presence) | 10133 | 83 | 15.768 | 200/200 | +0.015 |
+| r3 | **fold row⊗col Or INTO nested Where** (delete linemask plane) | 9263 | 83 | 15.857 | 200/200 | +0.105 |
+| r4 | threshold-to-bool before reshape (rowmask/colmask) | **9083** | **83** | **15.877** | **500/500** | **+0.124 BEST** |
+
+**Result: 15.877 @ mem 9083 — beats deployed 15.753 by +0.124 only → MARGINAL (< +0.3).**
+
+**Corrects line 48's "4 planes is the floor":** the label IS reducible to **3 planes
+(2700B)** by folding the row/col Or into the nested Where —
+`paint_r = Where(rowmask[1,1,30,1], mc, bg)` (tiny [1,1,30,1]) then
+`L0 = Where(colmask[1,1,1,30], mc, paint_r)` broadcasts to `(rowmask|colmask)?mc:bg`
+in ONE [1,1,30,30] plane, no separate linemask carrier; the two broadcast-condition
+sentinel Wheres (c_in, r_in) add the off-grid sentinel without an ingrid-And plane.
+
+**Confirmed hard floors (why +0.3 is unreachable):**
+- **4 border-line Gathers = 4800B** is structural (4 sides × [1,10,30] fp32, each
+  carrying that side's count+presence+2 corners, col0/row0 also the laser mask).
+  colcount/rowcount collapse (r1) leaves cHW + both laser masks needing 2 more line
+  reads ⇒ net ≥4 line-planes; Gather inherits fp32 so narrowing needs an 18000/9000B
+  input cast (worse). 4-corner double-count correction is load-bearing (dropping cHW
+  adds +3 ambiguity fails/30k).
+- **3-plane label = 2700B** (laser-paint L0 + col-sentinel + row-sentinel); off-grid
+  sentinel can't be dropped (post-Equal in-grid And forces a 9000B 10-ch intermediate).
+- Floor ≈ 4800 + 2700 + ~600 scalars/profiles ≈ 8100–8740 ⇒ pts ceiling ≈ 15.92.
+
+⭐ NEW transferable lever: **fold a row⊗col Or into nested Where to delete the union
+carrier plane** — `Where(rowmask, v, bg)` (small) → `Where(colmask, v, that)` (full) =
+`(rowmask|colmask)?v:bg` in one plane. Generalises to any rect/cross paint task.

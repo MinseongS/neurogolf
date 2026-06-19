@@ -2078,15 +2078,15 @@
  {
   "task": 161,
   "arc_id": "6cdd2623",
-  "points": 15.75,
-  "memory": 10293,
-  "params": 84,
+  "points": 15.88,
+  "memory": 9083,
+  "params": 83,
   "method": "ext:thbdh6285",
   "class": "BAIL?",
   "sig": "mega",
   "status": "done",
   "verdict": "FEASIBLE A ~17.0pt: 6cdd2623: lasers (megarows/megacols) drawn full-length across grid; ou",
-  "note": "adopted 14.67->15.75 laser rows/cols (both-ends presence AND, Gather border-lines); generalizes 266+500+12000"
+  "note": "re-golf +0.12 (marginal but exact 500/500): nested-Where deletes row-col union carrier; both-ends presence from side counts (count>0); threshold-to-bool before reshape. FLOOR: 4x[1,10,30] fp32 border-line Gathers=4800B irreducible (Gather inherits fp32)"
  },
  {
   "task": 162,

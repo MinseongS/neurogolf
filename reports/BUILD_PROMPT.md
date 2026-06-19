@@ -377,6 +377,23 @@ it. The ONLY way to a zero-cost full-grid result is to NAME the producing node's
 single-op net like `Sqrt(input)->output` scores mem=0/25.00. Our 36 proj-exact submissions confirm the live LB uses
 this trace-based scorer, so local harness == real LB; there is no scoring-divergence free lunch.
 ⭐ NEW STRUCTURAL-RE-GOLF LEVERS (2026-06-19 plane-elimination wave):
+- NESTED-WHERE DELETES A row⊗col UNION CARRIER (task161): to paint `(rowmask|colmask)?v:bg` (cross/laser/rect),
+  do NOT materialise the `Or(rowmask[1,1,30,1],colmask[1,1,1,30])` [1,1,30,30] linemask then Where — chain
+  `Where(rowmask,v, Where(colmask,v,bg))` so the union is implicit in ONE output plane (saves ~900B). Also derive
+  both-ends/side presence from the side COUNTS you already need for the interior test (`count>0`==present), and
+  threshold a [1,30] mask to bool BEFORE reshaping. (Floor hit: 4-side border-line Gathers stay 4×[1,10,30] fp32
+  =4800B since Gather inherits the fp32 input dtype — narrowing needs a strictly-worse 9000B+ input cast.)
+- ROW/COL-SUM-PROFILE-AS-ONE-CONV retrofit (task362 +0.82): any net that builds a full-grid channel-collapse plane
+  (`Σk·input_k` 1×1 Conv = 3600B) ONLY to take per-row/col reductions off it should replace that plane with TWO
+  no-pad profile Convs — full-width `W[1,10,1,30]`→per-row count [1,1,30,1] (120B) and full-height `W[1,10,30,1]`→
+  per-col [1,1,1,30] (120B), each folding "drop bg/gray channels + collapse one spatial axis" into one op. Trades
+  3600B mem for ~600 params (params are cheap in log score). Pair with fp16 on the downstream ramp planes.
+- PURE-COPY ROUTE (task351 +0.61, TierS): a pure spatial copy/mirror of a 10-ch one-hot must NOT Gather the 10-ch
+  input (forces a [1,10,*] fp32 plane). Collapse to a 1-ch colour-index plane first (1×1 Conv, 3600B once), do the
+  data-dependent Gathers on the 1-channel index (≈6× cheaper), then expand to one-hot ONLY on the SMALL gathered
+  block via `Equal(block, arange_ch[1,10,1,1])`→bool→uint8→Pad straight into the FREE output — no [1,10,*] full
+  plane ever materialises. (Equal accepts fp32 operands under ORT_DISABLE_ALL, dropping an int32 cast. ⚠️ check the
+  STORED stress examples' coordinate range, not just the generator bound — stored offsets can exceed naive gen clamp.)
 - FRACTIONAL ch0 WEIGHT folds two planes into one (task004 +0.34): a separate in-grid/off-grid mask plane
   (ReduceMax(input)) is UNNECESSARY — set the colour-index Conv's channel-0 weight to 0.5 so ONE plane encodes
   off-grid=0 / in-grid-bg=0.5 / coloured-pixel=k≥1; recover `occ=colf>0.75`, `ingrid=colf>0.25`. Kills a full 3600B+crop.
