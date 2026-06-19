@@ -1,12 +1,12 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-19 16:11_
+_Updated: 2026-06-19 18:02_
 
-**Total: 7152.05 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 7154.47 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
-| ext:kojimar7113 | 381 | 6827.44 |
+| ext:kojimar7113 | 372 | 6688.05 |
 | conv3x3+b | 2 | 36.37 |
 | ext:sajayr7k | 1 | 20.04 |
 | custom:task128 | 1 | 19.30 |
@@ -19,10 +19,19 @@ _Updated: 2026-06-19 16:11_
 | custom:task250 | 1 | 16.77 |
 | custom:task398 | 1 | 16.75 |
 | custom:task021 | 1 | 16.74 |
+| custom:task383 | 1 | 16.29 |
+| custom:task009 | 1 | 16.13 |
+| custom:task251 | 1 | 16.04 |
+| custom:task278 | 1 | 16.04 |
+| custom:task377 | 1 | 15.93 |
 | custom:task055 | 1 | 15.92 |
+| custom:task340 | 1 | 15.85 |
+| custom:task017 | 1 | 15.62 |
 | custom:task080 | 1 | 15.61 |
 | custom:task338 | 1 | 15.37 |
+| custom:task396 | 1 | 15.29 |
 | custom:task202 | 1 | 15.15 |
+| custom:task191 | 1 | 14.62 |
 | custom:task349 | 1 | 14.39 |
 | custom:task205 | 1 | 14.26 |
 
@@ -38,7 +47,7 @@ _Updated: 2026-06-19 16:11_
 | 006 | ext:kojimar7113 | 126 | 27 | 19.97 |
 | 007 | ext:kojimar7113 | 0 | 127 | 20.16 |
 | 008 | ext:kojimar7113 | 5561 | 66 | 16.36 |
-| 009 | ext:kojimar7113 | 8249 | 1062 | 15.86 |
+| 009 | custom:task009 | 7049 | 86 | 16.13 |
 | 010 | ext:kojimar7113 | 750 | 340 | 18.01 |
 | 011 | ext:kojimar7113 | 1859 | 285 | 17.33 |
 | 012 | ext:kojimar7113 | 2076 | 188 | 17.28 |
@@ -46,7 +55,7 @@ _Updated: 2026-06-19 16:11_
 | 014 | ext:kojimar7113 | 7989 | 89 | 16.00 |
 | 015 | ext:kojimar7113 | 0 | 900 | 18.20 |
 | 016 | ext:kojimar7113 | 0 | 10 | 22.70 |
-| 017 | ext:kojimar7113 | 13500 | 2827 | 15.30 |
+| 017 | custom:task017 | 9182 | 2679 | 15.62 |
 | 018 | ext:kojimar7113 | 67838 | 3940 | 13.82 |
 | 019 | ext:kojimar7113 | 2997 | 103 | 16.96 |
 | 020 | ext:kojimar7113 | 1356 | 178 | 17.66 |
@@ -220,7 +229,7 @@ _Updated: 2026-06-19 16:11_
 | 188 | ext:kojimar7113 | 1146 | 60 | 17.90 |
 | 189 | ext:kojimar7113 | 866 | 49 | 18.18 |
 | 190 | ext:kojimar7113 | 2480 | 320 | 17.06 |
-| 191 | ext:kojimar7113 | 46318 | 160 | 14.25 |
+| 191 | custom:task191 | 31276 | 844 | 14.62 |
 | 192 | ext:kojimar7113 | 8515 | 107 | 15.94 |
 | 193 | ext:kojimar7113 | 3700 | 70 | 16.77 |
 | 194 | ext:kojimar7113 | 900 | 49 | 18.14 |
@@ -280,7 +289,7 @@ _Updated: 2026-06-19 16:11_
 | 248 | ext:kojimar7113 | 122 | 29 | 19.98 |
 | 249 | ext:kojimar7113 | 248 | 39 | 19.34 |
 | 250 | custom:task250 | 3664 | 85 | 16.77 |
-| 251 | ext:kojimar7113 | 8741 | 973 | 15.82 |
+| 251 | custom:task251 | 7101 | 672 | 16.04 |
 | 252 | ext:kojimar7113 | 0 | 260 | 19.44 |
 | 253 | ext:kojimar7113 | 600 | 50 | 18.52 |
 | 254 | ext:kojimar7113 | 1241 | 20 | 17.86 |
@@ -307,7 +316,7 @@ _Updated: 2026-06-19 16:11_
 | 275 | ext:kojimar7113 | 1374 | 640 | 17.39 |
 | 276 | ext:kojimar7113 | 0 | 10 | 22.70 |
 | 277 | ext:kojimar7113 | 5442 | 22 | 16.39 |
-| 278 | ext:kojimar7113 | 7776 | 679 | 15.96 |
+| 278 | custom:task278 | 7716 | 73 | 16.04 |
 | 279 | ext:kojimar7113 | 5508 | 47 | 16.38 |
 | 280 | ext:kojimar7113 | 5386 | 753 | 16.28 |
 | 281 | ext:kojimar7113 | 2321 | 67 | 17.22 |
@@ -369,7 +378,7 @@ _Updated: 2026-06-19 16:11_
 | 337 | ext:kojimar7113 | 0 | 10 | 22.70 |
 | 338 | custom:task338 | 14515 | 667 | 15.37 |
 | 339 | ext:kojimar7113 | 40 | 100 | 20.06 |
-| 340 | ext:kojimar7113 | 10910 | 158 | 15.69 |
+| 340 | custom:task340 | 9244 | 163 | 15.85 |
 | 341 | ext:kojimar7113 | 1394 | 37 | 17.73 |
 | 342 | ext:kojimar7113 | 1530 | 75 | 17.62 |
 | 343 | ext:kojimar7113 | 1929 | 115 | 17.38 |
@@ -406,13 +415,13 @@ _Updated: 2026-06-19 16:11_
 | 374 | ext:kojimar7113 | 2262 | 42 | 17.26 |
 | 375 | ext:kojimar7113 | 108 | 242 | 19.14 |
 | 376 | ext:kojimar7113 | 144 | 42 | 19.77 |
-| 377 | ext:kojimar7113 | 10887 | 180 | 15.69 |
+| 377 | custom:task377 | 8581 | 134 | 15.93 |
 | 378 | ext:kojimar7113 | 4420 | 148 | 16.57 |
 | 379 | ext:kojimar7113 | 10134 | 1275 | 15.66 |
 | 380 | ext:kojimar7113 | 0 | 99 | 20.40 |
 | 381 | ext:kojimar7113 | 2128 | 71 | 17.30 |
 | 382 | ext:kojimar7113 | 5648 | 135 | 16.34 |
-| 383 | ext:kojimar7113 | 7246 | 96 | 16.10 |
+| 383 | custom:task383 | 5974 | 96 | 16.29 |
 | 384 | ext:kojimar7113 | 558 | 53 | 18.58 |
 | 385 | ext:kojimar7113 | 0 | 30 | 21.60 |
 | 386 | ext:kojimar7113 | 180 | 31 | 19.65 |
@@ -425,7 +434,7 @@ _Updated: 2026-06-19 16:11_
 | 393 | ext:kojimar7113 | 125 | 19 | 20.03 |
 | 394 | ext:kojimar7113 | 1871 | 934 | 17.06 |
 | 395 | ext:kojimar7113 | 144 | 21 | 19.89 |
-| 396 | ext:kojimar7113 | 28545 | 511 | 14.72 |
+| 396 | custom:task396 | 16323 | 149 | 15.29 |
 | 397 | ext:kojimar7113 | 2774 | 204 | 17.00 |
 | 398 | custom:task398 | 2624 | 1201 | 16.75 |
 | 399 | ext:kojimar7113 | 71 | 20 | 20.49 |
