@@ -16,12 +16,19 @@ Low-memory label-map (Tier B) design:
   and projection per-line counts = ohT@(csc|rsr) -> [2,30]. "interior present"
   = count>=2 (the border line itself contributes exactly 1 to its own edge
   channel in every interior column/row).
-- placement assembled with ONE packed MatMul A[30,8]@B[8,30]: cols 0..3 are
-  row-selectors x col-value-vectors (column-indexed lines at rows 0,1,H-2,H-1),
-  cols 4..7 are row-value-vectors x col-selectors (row-indexed lines at cols
-  0,1,W-2,W-1); the 8 disjoint lines sum into one colour-index plane (no Add),
-  masked to the in-grid rectangle, then Equal(L,arange) into the FREE bool
-  output. All canvas-sized math is float16.
+- placement assembled with ONE packed 4-D MatMul Acol[1,1,30,10]@Brow[1,1,10,30]
+  (batched contraction of the packed-line axis -> NO [30,*]/[*,30] reshapes):
+  lines 0..3 are row-selectors x col-value-vectors (column-indexed lines at rows
+  0,1,H-2,H-1), lines 4..7 are row-value-vectors x col-selectors (row-indexed
+  lines at cols 0,1,W-2,W-1); the 8 disjoint lines sum into one colour-index
+  plane. Lines 8..9 fold the OFF-GRID sentinel straight into the same MatMul
+  (col 8 = 10*(r>=H) x all-ones, col 9 = all-ones x 10*(c>=W)) so og>=10 off-grid
+  and no separate in-grid mask / Where plane materialises.
+- Equal(og_fp16, channel-ramp) routes the 10-channel one-hot expansion into the
+  FREE bool output (fp16 Equal is exact for integer operands under ORT_DISABLE_ALL,
+  no extra cast plane). Line selectors are direct fp16 Equal(idx,target) (integer-
+  exact, no int32 cast/Sub planes). Projection presence(count>=2) AND per-direction
+  edge colour fuse into ONE Where each. All canvas-sized math is float16.
 """
 
 import numpy as np
@@ -52,7 +59,6 @@ def build(task):
     init("one16", np.array(1.0, np.float16))
     init("two16", np.array(2.0, np.float16))
     init("c1p5", np.array(1.5, np.float16))   # threshold for count>=2
-    init("zeroi", np.array(0, np.int32))
     init("arow", np.arange(30, dtype=np.float16).reshape(1, 1, 30, 1))
     init("acol", np.arange(30, dtype=np.float16).reshape(1, 1, 1, 30))
     # ---- occupancy / H,W (no colour-index plane) ----
@@ -82,9 +88,9 @@ def build(task):
     n("Cast", ["rowsum32"], "rowsum", to=F16)   # [1,10,30,1] per-row channel counts
 
     def line_eq(idx, target, tag):
-        n("Sub", [idx, target], f"{tag}_d")
-        n("Cast", [f"{tag}_d"], f"{tag}_di", to=I32)
-        n("Equal", [f"{tag}_di", "zeroi"], f"{tag}_b")
+        # idx and target are integer-valued fp16 -> Equal is exact (no int32 cast,
+        # no Sub plane).
+        n("Equal", [idx, target], f"{tag}_b")
         return f"{tag}_b"
 
     init("zeroh", np.array(0.0, np.float16))
@@ -143,26 +149,27 @@ def build(task):
     n("Transpose", ["Coh"], "CohT", perm=[1, 0])   # [2,10]
     n("MatMul", ["RohT", "csc"], "TB")   # [2,30]: row0=top per-col, row1=bottom per-col
     n("MatMul", ["CohT", "rsr"], "LR")   # [2,30]: row0=left per-row, row1=right per-row
-    # presence: count >= 2 (border line itself contributes exactly 1)
-    n("Greater", ["TB", "c1p5"], "TB_b"); n("Cast", ["TB_b"], "TBp", to=F16)  # [2,30]
-    n("Greater", ["LR", "c1p5"], "LR_b"); n("Cast", ["LR_b"], "LRp", to=F16)  # [2,30]
-    # split rows to per-direction vectors and shape for placement
+    # FUSE presence(count>=2) AND per-direction edge colour in ONE Where each:
+    #   TBval[d,c] = (TB[d,c]>1.5) ? Rcol[d] : 0    (Rcol=[topc,botc] as [2,1])
+    n("Reshape", ["Rcol", "shp21"], "Rcol2")            # [2,1]
+    n("Reshape", ["Ccol", "shp21"], "Ccol2")            # [2,1]
+    init("shp21", np.array([2, 1], np.int64))
+    init("zeroh2", np.array(0.0, np.float16))
+    n("Greater", ["TB", "c1p5"], "TB_b")
+    n("Where", ["TB_b", "Rcol2", "zeroh2"], "TBval")    # [2,30]
+    n("Greater", ["LR", "c1p5"], "LR_b")
+    n("Where", ["LR_b", "Ccol2", "zeroh2"], "LRval")    # [2,30]
+    # split rows -> per-direction value vectors (already carrying the colour)
     init("shp1130", np.array([1, 1, 1, 30], np.int64))
     init("shp1301", np.array([1, 1, 30, 1], np.int64))
     init("ax0", np.array([0], np.int64))
     def rowvec(src, lo, hi, shp, tag):
         n("Slice", [src, lo, hi, "ax0"], f"{tag}_s")   # [1,30]
         return n("Reshape", [f"{tag}_s", shp], tag)
-    rowvec("TBp", "zi", "ti", "shp1130", "tp")   # [1,1,1,30] top presence per col
-    rowvec("TBp", "ti", "twoi", "shp1130", "bp")
-    rowvec("LRp", "zi", "ti", "shp1301", "lp")   # [1,1,30,1] left presence per row
-    rowvec("LRp", "ti", "twoi", "shp1301", "rp")
-
-    # value lines for projections (colour where present)
-    n("Mul", ["tp", topc], "tval")       # [1,1,1,30]
-    n("Mul", ["bp", botc], "bval")
-    n("Mul", ["lp", leftc], "lval")      # [1,1,30,1]
-    n("Mul", ["rp", rightc], "rval")
+    rowvec("TBval", "zi", "ti", "shp1130", "tval")   # [1,1,1,30] top projection values
+    rowvec("TBval", "ti", "twoi", "shp1130", "bval")
+    rowvec("LRval", "zi", "ti", "shp1301", "lval")   # [1,1,30,1] left projection values
+    rowvec("LRval", "ti", "twoi", "shp1301", "rval")
 
     # ---- border line value vectors (in interior extent: 1 <= idx <= dim-2) ----
     init("neg_half", np.array(-0.5, np.float16))
@@ -185,35 +192,41 @@ def build(task):
     #   (rows 0,1,H-2,H-1 carry topline, tval, bval, botline)
     # k=4..7: row-indexed lines     -> A[r,k]=rowvalvec_k(r), B[k,c]=(c==C_k)
     #   (cols 0,1,W-2,W-1 carry leftline, lval, rval, rightline)
-    init("shpA", np.array([30, 8], np.int64))
-    init("shpB", np.array([8, 30], np.int64))
+    # Pack the off-grid sentinel directly into the colour-index MatMul so no
+    # separate in-grid mask plane / Where ever materialises:
+    #   extra col 8 of A = 10*(r>=H), B row 8 = all-ones  -> +10 on off-grid rows
+    #   extra col 9 of A = all-ones,  B row 9 = 10*(c>=W)  -> +10 on off-grid cols
+    # so og >= 10 anywhere off-grid (Equal-to-channel false => background), while
+    # in-grid cells keep their colour index 0..9.
+    init("ten16", np.array(10.0, np.float16))
     # row selectors: r==0 (selR0f, reuse), r==1, r==H-2, r==H-1 (selH1f, reuse)
     sr1 = line_eq("arow", "one16", "r1"); n("Cast", [sr1], "r1f", to=F16)
     srH2 = line_eq("arow", "Hm2", "rH2"); n("Cast", [srH2], "rH2f", to=F16)
-    # A columns (over rows): row-selectors then row-value-vectors  -> [1,1,30,8]
-    n("Concat", ["selR0f", "r1f", "rH2f", "selH1f", "leftline", "lval", "rval", "rightline"],
-      "Acol", axis=3)
-    n("Reshape", ["Acol", "shpA"], "Amat")                          # [30,8]
+    # off-grid row vector: 10*(r>=H) == 10*(H-r < 0.5)
+    n("Sub", ["H", "arow"], "H_r"); n("Less", ["H_r", "half"], "roff_b")
+    n("Where", ["roff_b", "ten16", "zeroh"], "roff")               # [1,1,30,1]
+    # off-grid col vector: 10*(c>=W)
+    n("Sub", ["W", "acol"], "W_c"); n("Less", ["W_c", "half"], "coff_b")
+    n("Where", ["coff_b", "ten16", "zeroh"], "coff")               # [1,1,1,30]
+    init("ones30r", np.ones((1, 1, 30, 1), np.float16))
+    init("ones30c", np.ones((1, 1, 1, 30), np.float16))
+    # A columns (over rows): row-selectors, row-value-vectors, then 2 off-grid cols
+    n("Concat", ["selR0f", "r1f", "rH2f", "selH1f", "leftline", "lval", "rval", "rightline",
+                 "roff", "ones30r"], "Acol", axis=3)                 # [1,1,30,10]
     # col selectors: c==0 (selC0f, reuse), c==1, c==W-2, c==W-1 (selW1f, reuse)
     sc1 = line_eq("acol", "one16", "c1"); n("Cast", [sc1], "c1f", to=F16)
     scW2 = line_eq("acol", "Wm2", "cW2"); n("Cast", [scW2], "cW2f", to=F16)
-    # B rows (over cols): col-value-vectors then col-selectors      -> [1,1,8,30]
-    n("Concat", ["topline", "tval", "bval", "botline", "selC0f", "c1f", "cW2f", "selW1f"],
-      "Brow", axis=2)
-    n("Reshape", ["Brow", "shpB"], "Bmat")                          # [8,30]
-    n("MatMul", ["Amat", "Bmat"], "og")                             # [30,30] f16 colour index
+    # B rows (over cols): col-value-vectors, col-selectors, then 2 off-grid rows
+    n("Concat", ["topline", "tval", "bval", "botline", "selC0f", "c1f", "cW2f", "selW1f",
+                 "ones30c", "coff"], "Brow", axis=2)                 # [1,1,10,30]
+    # batched 4-D MatMul contracts the packed-line axis directly -> no reshapes
+    n("MatMul", ["Acol", "Brow"], "og")                             # [1,1,30,30] f16
 
-    # ---- in-grid mask (row<H & col<W) ----
-    n("Sub", ["H", "arow"], "H_r"); n("Greater", ["H_r", "half"], "rin_b")
-    n("Sub", ["W", "acol"], "W_c"); n("Greater", ["W_c", "half"], "cin_b")
-    n("And", ["rin_b", "cin_b"], "gm_b")                            # [1,1,30,30] bool
-
-    # ---- label map L (uint8) then Equal -> free bool output ----
-    n("Cast", ["og"], "og_u8", to=U8)
-    init("v10", np.array(10, np.uint8), np.uint8)
-    n("Where", ["gm_b", "og_u8", "v10"], "L")                       # [1,1,30,30] u8
-    init("chan", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
-    n("Equal", ["L", "chan"], "output")                             # free BOOL
+    # ---- Equal(og, channel-ramp) straight into the FREE bool output ----
+    # og is fp16 with integer values 0..9 in-grid and >=10 off-grid; Equal
+    # accepts fp16 under ORT_DISABLE_ALL with no extra counted cast plane.
+    init("chan", np.arange(10, dtype=np.float16).reshape(1, 10, 1, 1))
+    n("Equal", ["og", "chan"], "output")                            # free BOOL
 
     x = onnx.helper.make_tensor_value_info("input", DATA_TYPE, GRID_SHAPE)
     y = onnx.helper.make_tensor_value_info("output", onnx.TensorProto.BOOL, GRID_SHAPE)

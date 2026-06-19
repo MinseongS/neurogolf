@@ -4402,14 +4402,15 @@
  {
   "task": 340,
   "arc_id": "d687bc17",
-  "points": 15.22,
-  "memory": 28784,
-  "params": 1307,
+  "points": 15.55,
+  "memory": 11932,
+  "params": 773,
   "method": "custom:340 copy-colour label map (depthwise count Convs + MatMul channel-contract, floor-break 28784->16904)",
   "class": "CHECK",
   "sig": "-",
   "status": "done",
-  "verdict": "generalizing exact win (fresh 200/200, large floor-break)"
+  "verdict": "generalizing exact win (fresh 200/200, large floor-break)",
+  "note": "re-golf +0.33 (removable carrier): (1) fold off-grid sentinel into packed colour MatMul as 2 rank-1 line terms (col8=10*(r>=H), col9=10*(c>=W)) -> kills in-grid mask+Where+uint8-label; (2) batched 4D MatMul drops both reshapes; (3) Equal(og_fp16,ramp) straight to BOOL output (fp16 Equal exact here); (4) fp16 Equal line selectors drop int32 casts. 16904->11932"
  },
  {
   "task": 341,
