@@ -1021,15 +1021,15 @@
  {
   "task": 80,
   "arc_id": "39e1d7f9",
-  "points": 15.22,
-  "memory": 41638,
-  "params": 217,
+  "points": 15.61,
+  "memory": 11468,
+  "params": 467,
   "method": "ext:biohack_new",
   "class": "BAIL?",
   "sig": "overlaps",
   "status": "done",
   "verdict": "FEASIBLE None ~14.4pt: 39e1d7f9: in a magnified line-grid, complete the cross/corner decorati",
-  "note": "WIN +0.86: documented data-dep-PERIOD wall was FALSE; period collapses to BITMAP via runtime-stride downsample Gather (block-top idx i*p) -> KxK ops -> upscale Gather (i//p); TWO-SENTINEL-BLOCK upscale folds gridlines+99-offgrid into table (one double-Gather, no tail Where). fresh 500/500."
+  "note": "re-golf +0.39: bitmap stage all uint8/bool (one fp32 entry Conv->uint8 once), fp16 3x3 convs replace shift+logic stencils (center occ-conv==4, seed-dilation cross/X kernels); 17106->11468 mem -33%"
  },
  {
   "task": 81,
