@@ -1,6 +1,33 @@
 # RESUME — restart the autonomous sweep in a fresh session
 
-## ▶▶▶▶▶▶▶ RESUME HERE (handoff 2026-06-19 NIGHT — ⚠️ MARGINAL-OVERLAY RE-GOLF IS LB-NEUTRAL/NEGATIVE; best LB still 7121.23)
+## ▶▶▶▶▶▶▶▶ RESUME HERE (handoff 2026-06-19 NIGHT v2 — ⛔ BOTH LOCAL BUILD-LEVERS EMPIRICALLY DEAD; best LB 7121.23)
+**DECISIVE MEASUREMENT (3 submissions, all COMPLETE public):** 7121.23 (kojimar+14 original overlays) → 7121.00
+(+9 new overlays incl leaky 017) → 7121.00 (+8 CLEAN overlays, 017 reverted). **Removing 017 changed NOTHING** ⇒
+the −0.23 was NOT the leak; the 8 clean B-type overlays (incl the "big" wins 396+0.57/191+0.37/009+0.27) collectively
+**cost −0.23 on real LB.** CONCLUSION (now data, not inference): our lower-mem rebuilds DIVERGE from the private test
+(arc-gen ≠ private) — accuracy loss > mem gain even at 100%-local-clean. **OVERLAY RE-GOLF IS A DEAD LEVER. STOP IT.**
+Combined with the gap-closer wave (5/5 = info-theoretic walls, see below), **BOTH local build-levers are exhausted for LB.**
+- Best LB 7121.23 UNCHANGED (Kaggle keeps best; the two 7121.00 subs are just worse-than-best, harmless). DO NOT
+  resubmit overlays. The committed manifest has the 8-clean overlays adopted but they DON'T help — optionally
+  `git revert` them to keep the repo == the 7121.23 LB state (or leave; merge_E fallback still ≥ kojimar base).
+- **GAP-CLOSER WAVE RESULT (all 5 INFEASIBLE — true walls, do NOT retry):** 219 (input→output not a function,
+  collision 1/2174), 209 (non-deterministic gen, ceiling 99.4%), 118 (info-loss: cyan→gray erasure), 255
+  (statistically non-identifiable: box==chance-noise-rect, global oracle 0/80), 2 (97.7% ceiling: noise-completed
+  thin boxes locally identical to real). The 30.82 gap is STRUCTURAL/irreversible, NOT buildable.
+- ⭐ NEW LEVER (graduate to BUILD_PROMPT/HARD_WALLS): **collision scan BEFORE building** — `dict[input.tobytes()]→
+  set(output.tobytes())` over 50k–100k fresh; nonzero collision rate = hard oracle ceiling ⇒ INFEASIBLE no matter
+  the encoding. Run it FIRST on any suspected info-bottleneck task to bail in minutes.
+
+▶▶ **THE ONLY LEVER NOT DISPROVEN = NEW PUBLIC BLENDS (free +N) + RESEARCH.** Local re-golf cannot move LB.
+NEXT-SESSION PRIORITIES: (1) **Monitor for a public blend > 7113.80** — `kaggle datasets list -s neurogolf
+--sort-by updated | head` + `kaggle competitions leaderboard -c neurogolf-2026 --show | head`; if one beats 7113.80,
+download it, point merge_E KOJI at it, submit (this is how we got 7113.80→7121.23 before — public is THE lever).
+(2) **Deep research** the 7800-tier technique (Kaggle discussions/notebooks for neurogolf-2026; the CompressARC
+paper arxiv 2512.06104) for any REPRODUCIBLE method — local plane-elim is proven not to close the 720-pt gap.
+(3) If re-golfing at all, ONLY for tasks where the DEPLOYED net fails LOCAL fresh AND the map is a function (collision
+scan clean) — those are the only locally-verifiable, private-safe wins; this session found NONE among the gap set.
+
+## ▶▶▶▶▶▶▶ (superseded same night) — MARGINAL-OVERLAY RE-GOLF IS LB-NEUTRAL/NEGATIVE; best LB still 7121.23
 **Confirmed best LB 7121.23 (UNCHANGED).** This session ran 3× 8-agent plane-elim waves on the top un-regolfed
 kojimar mid-tier targets → **9 stored wins, +2.42 local** (017+0.32, 191+0.37, 396+0.57, 009+0.27, 251+0.22,
 278+0.08, 340+0.16, 377+0.24, 383+0.19). Submitted via merge_E v2 (23 overlays). **RESULT: LB 7121.00 = −0.23 vs

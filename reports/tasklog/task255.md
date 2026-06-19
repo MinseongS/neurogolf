@@ -50,3 +50,41 @@ outline into chance-eroded blobs that are CONNECTED to the true region. That con
 morphological reconstruction. ⭐ Discriminator: solid-rect-interior tasks are closed-form ONLY when the
 shapes sit on a noise-free / differently-colored background; dense same-as-box-color noise abutting the
 outline makes it a true connectivity WALL.
+
+## GAP-CLOSER RE-ATTACK (2026-06-19) — deployed net = ext:kojimar7113 (341 nodes, mem 58710, scores ~95% fresh)
+Re-attacked under the gap-closer framing (deployed net scores 190/200, fixing→100% would adopt). VERDICT: INFEASIBLE confirmed by a stronger, decisive test than the prior round.
+
+**New characterization of the deployed net's 5% failure mode** (measured over 2000 fresh):
+- 3.3–3.5% failure rate. Of 69 failures: **19 edge-only, 50 INTERIOR-involving**. So it is NOT a fixable
+  off-grid/edge bug — most failures are genuine interior rectangle-reconstruction mistakes (the FP are
+  contiguous off-grid-vein extent errors, ±1–2 rows on box boundaries near grid edges, plus interior leaks).
+
+**Structural facts newly established:**
+- Green region is ALWAYS a single 8-connected component (300/300) — all veins attach to the artery.
+- erode3 set decomposes into: avg **1.00 "mixed" component** (green LEAKED to abutting noise via 8-conn
+  bridge) + avg **1.24 pure-noise components** (separable). Reconstruction kills the pure-noise blobs but
+  the 1 leak/inst is unfixable by any bounded local op.
+- NO input→output collisions in 20000 instances ⇒ output IS a deterministic function of input (NOT a pure
+  information wall); the wall is that the function is statistically non-identifiable by the box-defining feature.
+
+**DECISIVE TEST — global maximal-solid-rectangle ORACLE (full numpy, NO op-set constraints):**
+mark the 1-eroded interior of EVERY all-black rectangle of box size (w≥6, h≥3, off-grid padded). Result:
+**FN=0, avg 16 FP/instance, 0/80 exact.** Even an unconstrained global solver with perfect rectangle-fitting
+fails 100% — because in 50%-black noise, box-sized all-black rectangles occur ~16×/instance BY CHANCE. So
+the master-key (bounded-iteration unrolling / flood / label-prop) CANNOT help: the blocker is not
+Loop/Scan-expressibility, it is that "solid black rect with 1px outline" does not statistically separate
+true boxes from chance noise rectangles.
+
+**Angles tried this round (6 distinct, all fail):** (1) erode3 FN=0/19FP; (2) run-length/max-run thresholding
+— noise runs ≥23 exceed box widths; (3) component bbox-fill solid-rect filter — leak destroys rect property,
+277 FN; (4) seed-erode + geodesic reconstruction in erode-mask — 100% leak; (5) **global max-solid-rect oracle
+— 16FP, 0% (decisive)**; (6) artery-anchored reconstruction — leak bridges flood artery→noise, 17FP, 0%.
+
+**Why the deployed kojimar net still hits 95%:** it does artery-anchored disambiguation with structured
+outline/profile heuristics (ArgMax/ConvTranspose/Mod over row-col structure) that exploit the generator's
+*placement* regularities — but it is itself inexact (50/69 interior failures), so it is fundamentally a
+heuristic, not an exact rule. An EXACT generalizing net would have to recover the same placement priors the
+generator used, which are not present in the input pixels (only their stochastic black realization is).
+
+**FINAL: INFEASIBLE** — no closed-form / bounded-unrolling / candidate-enumeration net can beat 95% here.
+The connectivity-wall verdict stands and is now backed by the global-oracle 0%-exact proof.

@@ -1,12 +1,12 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-19 18:02_
+_Updated: 2026-06-19 19:41_
 
-**Total: 7154.47 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 7154.15 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
-| ext:kojimar7113 | 372 | 6688.05 |
+| ext:kojimar7113 | 373 | 6703.35 |
 | conv3x3+b | 2 | 36.37 |
 | ext:sajayr7k | 1 | 20.04 |
 | custom:task128 | 1 | 19.30 |
@@ -26,7 +26,6 @@ _Updated: 2026-06-19 18:02_
 | custom:task377 | 1 | 15.93 |
 | custom:task055 | 1 | 15.92 |
 | custom:task340 | 1 | 15.85 |
-| custom:task017 | 1 | 15.62 |
 | custom:task080 | 1 | 15.61 |
 | custom:task338 | 1 | 15.37 |
 | custom:task396 | 1 | 15.29 |
@@ -55,7 +54,7 @@ _Updated: 2026-06-19 18:02_
 | 014 | ext:kojimar7113 | 7989 | 89 | 16.00 |
 | 015 | ext:kojimar7113 | 0 | 900 | 18.20 |
 | 016 | ext:kojimar7113 | 0 | 10 | 22.70 |
-| 017 | custom:task017 | 9182 | 2679 | 15.62 |
+| 017 | ext:kojimar7113 | 13500 | 2827 | 15.30 |
 | 018 | ext:kojimar7113 | 67838 | 3940 | 13.82 |
 | 019 | ext:kojimar7113 | 2997 | 103 | 16.96 |
 | 020 | ext:kojimar7113 | 1356 | 178 | 17.66 |

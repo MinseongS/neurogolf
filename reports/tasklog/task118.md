@@ -54,6 +54,28 @@ ceiling and the expressibility make it infeasible.
   to a per-pixel accuracy threshold (it is not), the 4× unrolled peel with known L would be the
   build to attempt.
 
+## 2026-06-19 GAP-CLOSER RE-VERIFICATION (definitive — confirms INFEASIBLE)
+Re-ran the DEPLOYED `networks/task118.onnx` (kojimar peel net, 51 nodes, params 4866, output
+[1,10,30,30] one-hot) on fresh isolated instances: **491/500 and 1963/2000 ≈ 98.2%** — matches the
+"194/200 / 97%" gap-closer claim. Failure attribution over 2000 fresh: 37 fails = {phantom (net
+paints extra cyan) 20, invisible-cross 16, L-amb 1}.
+KEY: the 20 phantom failures are NOT information loss — a smarter (less over-firing) detector could
+avoid them. BUT the irreducible floor stands:
+- A numpy ORACLE allowed to try BOTH L∈{2,3} and accept EITHER match also caps at **1965/2000 =
+  98.25%** — same ceiling as the deployed net despite cheating on L.
+- INVISIBLE-CROSS rate measured = **18/3000 = 0.60%** of instances. DEFINITIVE PROOF captured: an
+  invisible cross yields an input arm `[5,5,5,5,5,5,5,5,5,5]` (plain gray static) that MUST map to
+  output `[8,8,8,8,8,8,8,8,8,8]` (cyan plus). The input is pixel-identical to ordinary gray static,
+  so NO function of the input can paint it correctly. Information destroyed by the generator's
+  cyan→gray erasure (`grid[r][c]=cyan` then input recolors cyan→gray).
+- 20k-instance input-hash collision test found 0 exact dup inputs (grids too large/random to collide),
+  so the collision test can't fire — but the invisible-cross arm proof above is a direct, sufficient
+  demonstration of non-functionality at the ~0.6% level.
+GATE: `src/genverify.fresh_pass` scores exact `(pred==tgt).all()` per instance; docstring states any
+fresh failure ⇒ treated as 0 on Kaggle held-out. The mandate requires ≥3000/3000. With a hard 0.6%
+unrecoverable floor, NO net (not even a phantom-free 99.4% one) reaches 3000/3000, and the adopt
+gate gives NO partial credit. **INFEASIBLE for an exact generalizing net — re-confirmed, final.**
+
 ## INSIGHT (transferable)
 ⭐ DISTINGUISH "buried-pattern reconstruction" from a flood/connectivity wall: when the generator
 OVERWRITES a marker onto random static and the input ERASES the marker color back to the static
