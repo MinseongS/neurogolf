@@ -15,7 +15,7 @@ reports/manifest.json`), run `reports/merge_E.py`, then `python -c "from src.pip
 `src.pipeline --pack` — re-solves+overwrites), then `kaggle competitions submit`. Daily submission slots are NOT
 just 5 — more are available (submitted 3× this session after the "5 used" point), so MEASURE freely.
 
-⛔ DO NOT re-run local plane-elim / overlay re-golf — MEASURED DEAD (below). Spend effort on (1) blend monitoring
+⛔ sajayr/neurogolf-7k harvest vs current 7114.66 base = 0 tasks win (kojimar dominates everywhere; verified 2026-06-19 night). DO NOT re-harvest sajayr. DO NOT re-run local plane-elim / overlay re-golf — MEASURED DEAD. Spend effort on (1) blend monitoring
 (above, the only positive lever) and (2) deep research for a reproducible 7800-tier technique.
 
 ## ▶▶▶▶▶▶▶▶ (superseded same night) — ⛔ BOTH LOCAL BUILD-LEVERS EMPIRICALLY DEAD; was best LB 7121.23
