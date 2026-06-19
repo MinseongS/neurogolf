@@ -1,10 +1,10 @@
 {
- "comment": "merge_E CONFIRMED 7121.23 = kojimar 7113.80 audited base + 14 fresh-verified OUR overlays (beat kojimar AND pass fresh-200) + 5 ours-fallback (koji broke our examples). +7.43 over pure-kojimar, ABOVE public crowd 7113.80. Progression today: 6667->7107(7k-harvest keep-best)->7113.80(kojimar)->7121.23(E).",
- "stored_at_submit": 7152.05,
- "lb": 7121.23,
- "time_utc": "2026-06-19 merge_E 7121.23 confirmed",
+ "comment": "REBASE CONFIRMED 7121.60 = new public kojimar 7114.66 blend base + 14 proven original overlays (NOT today's marginal re-golf, which was MEASURED LB-negative). +0.37 over prior 7121.23, purely from the crowd's base improvement (7113.80->7114.66) transferring to LB. CONFIRMS: new public blends are the live lever; local re-golf overlays are dead (clean-8 batch = 7121.00, -0.23).",
+ "stored_at_submit": 7152.42,
+ "lb": 7121.60,
+ "time_utc": "2026-06-19 rebase-7114.66 7121.60 confirmed",
  "pending": false,
- "pending_submit": "merge_E 7121.23 CONFIRMED",
- "prev_stored_at_submit": 6697.39,
- "prev_lb": 6667.42
+ "pending_submit": "rebase onto kojimar 7114.66 CONFIRMED 7121.60",
+ "prev_stored_at_submit": 7152.05,
+ "prev_lb": 7121.23
 }
