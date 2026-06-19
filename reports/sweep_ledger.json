@@ -446,7 +446,8 @@
   "class": "CHECK",
   "sig": "-",
   "status": "done",
-  "verdict": "16.20 adopted (15.36->16.20, +0.84); floor 6548. INSIGHT: apparent detection was border-pixel slide-copy along own line -> Tier-B, no detection"
+  "verdict": "16.20 adopted (15.36->16.20, +0.84); floor 6548. INSIGHT: apparent detection was border-pixel slide-copy along own line -> Tier-B, no detection",
+  "note": " | re-golf AT-FLOOR (+0.02): OVERLAY (base passthrough free + line-overrides whose VALUES copy border cells) needs per-cell colour index = forced 3600B fp32 Conv entry + 900B uint8 carrier. index-collapse 10x cheaper than one-hot full plane; ceiling ~16.2 real"
  },
  {
   "task": 36,
@@ -4409,14 +4410,15 @@
  {
   "task": 341,
   "arc_id": "d6ad076f",
-  "points": 15.77,
-  "memory": 14976,
-  "params": 289,
+  "points": 16.08,
+  "memory": 7423,
+  "params": 63,
   "method": "ext:biohack_new",
   "class": "CHECK",
   "sig": "-",
   "status": "done",
-  "verdict": "15.77 adopted (15.37->15.77, +0.40); mem 10109 RE-ATTACK-LOW (fp16 10x10 planes + drop band-products -> ~16.5). INSIGHT: apply_gravity=orientation-equivariance, select axis by internal-empty-run; cyan span=nested band intersection"
+  "verdict": "15.77 adopted (15.37->15.77, +0.40); mem 10109 RE-ATTACK-LOW (fp16 10x10 planes + drop band-products -> ~16.5). INSIGHT: apply_gravity=orientation-equivariance, select axis by internal-empty-run; cyan span=nested band intersection",
+  "note": "re-golf +0.31: equivariance branch-select was ALREADY scalar-Where (no 2 candidate planes); win=dtype/plane fusion - all 10x10 planes+scalars fp16 (0-9 & sentinels integer-exact), colour-index as uint8 Vu8 (serves mask Vu8>0 AND label), fold cyan via one uint8 Where pad-ready. 10109->7423"
  },
  {
   "task": 342,

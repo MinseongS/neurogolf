@@ -28,12 +28,19 @@ anchored top-left).  Let M[1,1,10,10] = "any non-background colour" mask.
   * Select the branch by the gap flag; build rowmask[1,1,10,1] &
     colmask[1,1,1,10] index-range gates; cyan = rowmask (x) colmask AND
     background.
-  * L[1,1,10,10] uint8 = colour index V + 8*cyan (cyan lands only on background
-    where V==0).  Pad to 30x30 with sentinel 15, final Equal(L,[0..9]) -> BOOL
-    into the FREE output.  No [1,10,*,*] plane is ever materialised.
+  * L[1,1,10,10] uint8 = colour index V where NOT cyan, else 8 (cyan lands only
+    on background where V==0).  Pad to 30x30 with sentinel 15, final
+    Equal(L,[0..9]) -> BOOL into the FREE output.  No [1,10,*,*] plane.
 
-Memory: a handful of [1,1,10,10] (=100) planes; the dominant survivor is the
-uint8 L padded to [1,1,30,30] (900 B) just before the Equal.
+RE-GOLF (this revision): every working 10x10 / scalar plane is fp16 (the colour
+values 0-9 and the +-1e4 sentinels are all integer-exact in fp16, and
+ReduceMax/Min/Sum + Where + Mul all run fp16 under ORT_DISABLE_ALL).  The cyan
+value plane is folded into the label map with a single Where (cyan cells sit on
+background V==0, so Lcol = Where(cyanB, 8, V) is exact), removing the separate
+cyan/cyanv float planes + Cast + Mul.  Only the colour-index Conv entry (V32
+[1,1,30,30] fp32 = 3600 B, forced fp32 by the fp32 one-hot input) and the
+uint8 label pad L (900 B) remain full-grid; everything else is fp16 10x10
+(200 B) or scalar (<=20 B).
 """
 
 import numpy as np
@@ -57,20 +64,22 @@ def build(task):
         return out
 
     F = TensorProto.FLOAT
+    F16 = TensorProto.FLOAT16
     U8 = TensorProto.UINT8
-    B = TensorProto.BOOL
 
     # ---- constants ----
-    # colour index conv weight [1,10,1,1] = [0,1,..,9]
+    # colour index conv weight [1,10,1,1] = [0,1,..,9]  (fp32 — matches input)
     init("colW", np.arange(10).reshape(1, 10, 1, 1), np.float32)
-    init("half", np.array(0.5), np.float32)
-    init("one", np.array(1.0), np.float32)
-    init("BIG", np.array(1e4), np.float32)
-    init("nBIG", np.array(-1e4), np.float32)
-    init("rowidx", np.arange(CW).reshape(1, 1, CW, 1).astype(np.float32), np.float32)
-    init("colidx", np.arange(CW).reshape(1, 1, 1, CW).astype(np.float32), np.float32)
+    # fp16 working constants
+    init("half", np.array(0.5), np.float16)
+    init("one", np.array(1.0), np.float16)
+    init("BIG", np.array(1e4), np.float16)
+    init("nBIG", np.array(-1e4), np.float16)
+    init("rowidx", np.arange(CW).reshape(1, 1, CW, 1).astype(np.float16), np.float16)
+    init("colidx", np.arange(CW).reshape(1, 1, 1, CW).astype(np.float16), np.float16)
     init("chan", np.arange(10).reshape(1, 10, 1, 1), np.uint8)
-    init("v8", np.array(8.0), np.float32)
+    init("zeroU8", np.array(0), np.uint8)
+    init("eightU8", np.array(8), np.uint8)
     # crop a [1,1,30,30] plane -> [1,1,CW,CW] via negative Pad
     init("crop", np.array([0, 0, 0, 0, 0, 0, CW - 30, CW - 30], np.int64), np.int64)
     # pad L [1,1,CW,CW] -> [1,1,30,30] with sentinel
@@ -79,13 +88,17 @@ def build(task):
 
     # ---- colour index V (cropped to CWxCW); colour mask M = (V > 0) ----
     n("Conv", ["input", "colW"], "V32")          # [1,1,30,30] fp32
-    n("Pad", ["V32", "crop"], "V")               # [1,1,CW,CW]
-    n("Greater", ["V", "half"], "Mb")            # bool colour mask
-    n("Cast", ["Mb"], "M", to=F)                 # [1,1,CW,CW] {0,1}
+    n("Pad", ["V32", "crop"], "V")               # [1,1,CW,CW] fp32 (entry)
+    # collapse the colour-index plane to uint8 (0..9) immediately: it serves
+    # both the mask (Vu8>0) and the label value (Where below), so neither the
+    # fp32 Lcol nor a separate Lc cast plane ever materialises.
+    n("Cast", ["V"], "Vu8", to=U8)               # [1,1,CW,CW] uint8 0..9
+    n("Greater", ["Vu8", "zeroU8"], "Mb")        # bool colour mask
+    n("Cast", ["Mb"], "M", to=F16)               # [1,1,CW,CW] {0,1} fp16
 
     # ---- 1-D occupancy ----
-    n("ReduceMax", ["M"], "rowocc", axes=[3], keepdims=1)   # [1,1,CW,1]
-    n("ReduceMax", ["M"], "colocc", axes=[2], keepdims=1)   # [1,1,1,CW]
+    n("ReduceMax", ["M"], "rowocc", axes=[3], keepdims=1)   # [1,1,CW,1] fp16
+    n("ReduceMax", ["M"], "colocc", axes=[2], keepdims=1)   # [1,1,1,CW] fp16
     n("Greater", ["rowocc", "half"], "rowoccB")
     n("Greater", ["colocc", "half"], "coloccB")
 
@@ -98,7 +111,6 @@ def build(task):
     # gap flag: (rmax-rmin+1) > nrows
     n("Sub", ["rmax", "rmin"], "rext0"); n("Add", ["rext0", "one"], "rext")
     n("Greater", ["rext", "nrows"], "rgapB")                     # scalar bool
-    n("Cast", ["rgapB"], "rgap", to=F)
 
     # occupied col extent
     n("Where", ["coloccB", "colidx", "BIG"], "cmin_t")
@@ -119,10 +131,10 @@ def build(task):
     n("ReduceMax", ["gr1_t"], "gr1", axes=[2, 3], keepdims=1)    # last gap row
     # split M into band above the gap (rows < gr0) and below (rows > gr1)
     n("Less", ["rowidx", "gr0"], "aboveB")                       # [1,1,CW,1] bool
-    n("Cast", ["aboveB"], "above", to=F)
+    n("Cast", ["aboveB"], "above", to=F16)
     n("Greater", ["rowidx", "gr1"], "belowB")
-    n("Cast", ["belowB"], "below", to=F)
-    n("Mul", ["M", "above"], "Mabove")                           # [1,1,CW,CW]
+    n("Cast", ["belowB"], "below", to=F16)
+    n("Mul", ["M", "above"], "Mabove")                           # [1,1,CW,CW] fp16
     n("Mul", ["M", "below"], "Mbelow")
     # each band's column occupancy -> column extents
     n("ReduceMax", ["Mabove"], "acol", axes=[2], keepdims=1)     # [1,1,1,CW]
@@ -141,7 +153,6 @@ def build(task):
     n("Max", ["amin", "bmin"], "rg_cmin"); n("Add", ["rg_cmin", "one"], "rg_c0")
     n("Min", ["amax", "bmax"], "rg_cmax"); n("Sub", ["rg_cmax", "one"], "rg_c1")
     # row span of cyan = gap rows themselves: r0=gr0, r1=gr1
-    # (rg_r0 = gr0, rg_r1 = gr1)
 
     # ================= COL-GAP branch (transpose) =================
     n("Less", ["colidx", "cmin"], "clt"); n("Not", ["clt"], "cge")
@@ -153,8 +164,8 @@ def build(task):
     n("ReduceMin", ["gc0_t"], "gc0", axes=[2, 3], keepdims=1)
     n("Where", ["cemptyB", "colidx", "nBIG"], "gc1_t")
     n("ReduceMax", ["gc1_t"], "gc1", axes=[2, 3], keepdims=1)
-    n("Less", ["colidx", "gc0"], "leftB"); n("Cast", ["leftB"], "left", to=F)
-    n("Greater", ["colidx", "gc1"], "rightB"); n("Cast", ["rightB"], "right", to=F)
+    n("Less", ["colidx", "gc0"], "leftB"); n("Cast", ["leftB"], "left", to=F16)
+    n("Greater", ["colidx", "gc1"], "rightB"); n("Cast", ["rightB"], "right", to=F16)
     n("Mul", ["M", "left"], "Mleft")
     n("Mul", ["M", "right"], "Mright")
     n("ReduceMax", ["Mleft"], "lrow", axes=[3], keepdims=1)      # [1,1,CW,1]
@@ -191,21 +202,17 @@ def build(task):
     # cyan lands only on background cells (M == 0)
     n("Not", ["Mb"], "bgB")
     n("And", ["rectB", "bgB"], "cyanB")
-    n("Cast", ["cyanB"], "cyan", to=F)
 
     # ================= label map L and final Equal =================
-    n("Mul", ["cyan", "v8"], "cyanv")                            # 8 where cyan
-    n("Add", ["V", "cyanv"], "Lcol")                             # colour value plane
-    # off-grid (outside the 10x10 active grid is background -> ch0; V==0 there;
-    # cyan is bounded inside the grid).  Cells that are background & not cyan keep
-    # value 0 -> match channel 0, which is correct (output bg).  Pad fills 30x30
-    # border with sentinel 15 so those never match a channel.
-    n("Cast", ["Lcol"], "Lc", to=U8)                             # [1,1,CW,CW] uint8
+    # cyan cells sit on background (Vu8==0 there) -> value 8; elsewhere keep Vu8.
+    # One uint8 Where folds the cyan value in AND yields the pad-ready label map
+    # (no fp32 Lcol, no extra Cast).
+    n("Where", ["cyanB", "eightU8", "Vu8"], "Lc")                # [1,1,CW,CW] uint8
     n("Pad", ["Lc", "padO", "sentU8"], "L", mode="constant")     # [1,1,30,30]
     n("Equal", ["L", "chan"], "output")                          # [1,10,30,30] BOOL
 
     x = helper.make_tensor_value_info("input", F, [1, 10, 30, 30])
-    y = helper.make_tensor_value_info("output", B, [1, 10, 30, 30])
+    y = helper.make_tensor_value_info("output", TensorProto.BOOL, [1, 10, 30, 30])
     g = helper.make_graph(nodes, "task341", [x], [y], inits)
     return helper.make_model(g, ir_version=IR_VERSION,
                              opset_imports=[helper.make_opsetid("", 11)])

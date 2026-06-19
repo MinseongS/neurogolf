@@ -8,17 +8,19 @@
 | # | angle | tier | mem | params | pts | fresh | outcome |
 |---|---|---|---|---|---|---|---|
 | 1 | reduction label-map: detect gap axis via occupancy hole; cyan rect = gap span (gap axis) × nested-intersection interior (perp axis); L=V+8·cyan; final Equal | B/detection | 10109 | 62 | 15.77 | 200/200 | WIN (+0.40) |
+| 2 | RE-GOLF: all working 10×10/scalar planes → fp16 (0..9 + ±1e4 integer-exact); collapse colour-index plane to **uint8 Vu8** (serves mask `Vu8>0` AND label value); fold cyan value via ONE uint8 `Where(cyanB, 8, Vu8)` → pad-ready Lc (kills fp32 cyan/cyanv/Lcol + Mul + Cast) | B/detection | 7423 | 63 | 16.08 | 200/200 | WIN (+0.31) |
 
 ## Best achieved
-15.77 @ mem 10109 params 62 — adopted? N (agent writes file only). Beats prior 15.37? **Y (+0.40)**.
+16.08 @ mem 7423 params 63 — adopted? N (agent writes file only). Beats prior 15.77? **Y (+0.31)**.
 
-## Irreducible-floor analysis
-Dominant intermediate = the colour-index Conv output **V32 [1,1,30,30] fp32 = 3600 B** (the Conv is forced to emit full 30×30 from the fixed 30×30 one-hot input). The 10×10 working-canvas masks (M, band products Mabove/Mbelow/Mleft/Mright, cyan, Lcol) are ~400 B each (≈4–5 kB total); L padded back to [1,1,30,30] uint8 = 900 B; output [1,10,30,30] is FREE. So the floor here is "one 30×30 colour-index Conv + a label map". Cannot drop below ~3600 without abandoning the colour-index Conv (input is fp32 so an fp16 Conv would need an 18 kB fp16 cast of the whole one-hot input — strictly worse).
+## Irreducible-floor analysis (after RE-GOLF, mem 7423)
+Dominant survivors: **V32 [1,1,30,30] fp32 = 3600 B** (colour-index Conv entry, forced fp32 by the fp32 one-hot input) + **V [1,1,10,10] fp32 = 400 B** (the Pad-crop bridge of V32 — Pad inherits the fp32 input dtype, so the cropped colour-index plane is unavoidably fp32 before its single Cast→uint8). Together V32+V = 4000 B is the colour-index ENTRY floor: cropping the *input* to 10×10 first costs 4000 B (10 ch × 100 fp32), and casting V32→uint8 *before* cropping costs a 900 B uint8 30×30 plane — both strictly worse. **L [1,1,30,30] uint8 = 900 B** is the final-Equal pad floor (output is fixed 30×30, label needs 0..9+sentinel ⇒ uint8 minimal). The 5 mask planes (M, Mabove/Mbelow/Mleft/Mright) are pinned at fp16 200 B each — they feed ReduceMax which rejects uint8/bool. Net floor ≈ 4000 (entry) + 900 (pad) + 1000 (masks) + ~900 (scalar/profile fp16) ≈ 6.8 kB ⇒ ceiling ~16.2.
 
-## OPEN ANGLES (re-attack backlog)
-- Convert the 10×10 working-canvas float planes (M, the 4 band products, cyan, Lcol) to fp16/bool to shave ~1.5–2 kB → ~+0.15–0.2 pts. Care needed: all dtypes must match across Where/Mul/ReduceMax (ORT ReduceMax rejects bool; Where cond must be bool). Marginal; deferred.
-- Eliminate the 4 band-product [1,1,10,10] planes (Mabove/Mbelow/Mleft/Mright) by computing band column/row extents without the full Mul (e.g. masked-min/max via index arithmetic on `colocc` restricted to the band) — would remove ~1.6 kB.
-- Per-cell single-Conv (Tier S) is blocked: the cyan width is the *nested-interior* of one block, which is non-local (needs both blocks' spans + the gap), so no local hyperplane recovers it.
+## OPEN ANGLES (re-attack backlog, post-RE-GOLF)
+- DONE: fp16 working planes + uint8 colour-index collapse + cyan-value Where fold (mem 10109→7423, +0.31).
+- Eliminate the V [1,1,10,10] fp32 crop bridge (400 B): would need the colour index to be born narrow at 10×10. Pad/Slice inherit fp32 from V32; no cheaper path found (every alternative ≥ +500 B). The only escape is killing V32 itself, which requires an fp16 Conv ⇒ 18 kB fp16 input cast. Floor.
+- Eliminate the 4 band-product [1,1,10,10] fp16 planes (Mabove/Mbelow/Mleft/Mright, 800 B): the band split is data-dependent (gap row at runtime) so it can't fold into a fixed row/col-sum Conv. A masked-min/max via index arithmetic on the per-line occupancy restricted to the band could in principle avoid the Mul, but the band membership is itself a runtime gate ⇒ still a 10×10 product. Likely marginal.
+- Per-cell single-Conv (Tier S) is blocked: cyan width = *nested-interior* of one block, non-local (needs both spans + gap), no local hyperplane recovers it.
 
 ## INSIGHT (transferable)
 `apply_gravity` in ARC-GEN is NOT physical gravity — it is a transpose/reflection applied IDENTICALLY to input and output, so the input→output rule is orientation-equivariant; handle it by computing BOTH axis branches and selecting via "which axis has the occupancy hole". ⭐ For two-block gap-fill tasks: the gap axis is the one whose 1-D occupancy has an internal empty run ((extent_len) > (#occupied lines)); the perpendicular cyan span is the nested intersection of the two flanking bands' extents (max-of-mins, min-of-maxes), shrunk by 1 — recoverable purely from ReduceMax/ReduceMin/Where on band-masked occupancy, no per-channel block identification needed.
