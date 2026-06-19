@@ -1,38 +1,42 @@
-"""task251 (ARC-AGI a5313dff) — fill the enclosed band of in-grid red boxes with blue.
+"""task251 (ARC-AGI a5313dff) — "fill the black gap inside each in-grid red box with blue".
 
-Rule (from the generator):
-  A size x size (size in 8..12) black canvas holds 1..4 axis-aligned red boxes
-  (each 4..6 wide/tall, possibly clipped one cell off any edge, non-overlapping).
-  Each box is drawn as: a 1px RED outer outline, a 1px BLACK band just inside it,
-  then a RED inner core.  In the OUTPUT, the 1px black band of every box that is
-  FULLY inside the grid is recoloured BLUE; clipped boxes (any side off-grid) keep
-  the black band black.  Everything else (red, exterior background) is unchanged.
+Rule (from the generator task_a5313dff.py):
+  Input: a black(0) canvas carrying 1px-thick RED(2) rectangle outlines (boxes), each
+  of width/height in {4,5,6}. Each box may also carry an inner red core (a smaller red
+  rect inset 2 cells). Between the outer red outline and the inner area the cells are
+  black -- this is the 1-cell-wide "gap" ring just inside the outline.
+  Output: every gap cell of a FULLY-IN-GRID box becomes BLUE(1); red stays red; boxes
+  that are clipped by the grid edge (drawn with row/col = -1) keep their gap black.
+  Boxes may abut/overlap, so a pure 4-direction ray-enclosure / flood test FALSE-POSITIVES
+  on spurious cells between boxes -> the rule must MATCH the actual box outline template.
 
-  This is exactly the classic ENCLOSURE / hole-fill predicate:
-    flood-fill from the grid border through all non-red cells; any BLACK cell that
-    the flood does NOT reach is enclosed by red -> recolour it BLUE.
-  A clipped box has an off-grid (hence open) side, so its band is reachable from the
-  border and stays black.  Verified 0 mismatches over 3000+ fresh instances.
+Approach (re-golf of the public kojimar template-match net to the true active canvas):
+  Grids are always <=12x12 (size=randint(8,12)), so slice black(ch0) and red(ch2) to a
+  WxW work region (W=12, vs the public 14), cast fp16, and form a SINGLE-channel detector
+  input combo = red - black (red->+1, in-grid-black->-1, off-grid->0). One Conv with 9
+  output channels (the 9 (wide,tall) in {4,5,6}^2 box-outline templates, 6x6 footprint;
+  outline +1/(2*nred), gap -1/(2*ngap)) scores exactly 1.0 only at the top-left of a box
+  whose RED outline is complete AND whose 1-cell gap ring is BLACK; the conv is padded
+  bottom/right by 2 so every in-grid anchor (up to size-4) is reachable from the WxW slice.
+  Greater(scores,0.99) lights true boxes (max partial 0.9375 << 0.99); a clipped box is
+  missing part of its outline so never fires. A ConvTranspose with the matching 9 paint
+  stamps (gap ring) deposits the blue frame, output-cropped via pads=[0,0,2,2] to WxW.
+  Recombine [black-fill, fill(blue), red] and Pad DIRECTLY into the FREE output (off-canvas
+  stays bg via ch0=0; no 30x30 intermediate).
 
-Encoding (bounded-iteration unrolled flood, the HARD-WALL master key):
-  - The generator caps size at 12, so the whole task lives in the top-left WORK x WORK
-    (WORK=13, one padding ring margin) corner.  The 30x30 padding is all background
-    (channel 0) and connects to the border, so seeding the WORK-crop border reproduces
-    "connected to the exterior" exactly.
-  - passable = 1 - red(ch2), cropped to WORK x WORK, fp16.
-  - reach0  = (border frame of the crop) AND passable.
-  - per round:  reach = Min(passable, MaxPool3x3(reach, SAME))   -- 8-connected
-                dilation; corners are red so 8-conn never leaks (verified == 4-conn).
-                Min(passable in {0,1}, count>=0) == passable AND dilated, stays in {0,1}.
-    D=11 rounds (empirical max needed 9 at WORK=13, margin 2).
-  - blue = (input ch0 == 1) AND (reach == 0), padded back to 30x30.
-  - output = Where(blue, blue_onehot[1,10,1,1], input)  -- one op into the FREE output.
+  vs the public 14-base net: combo replaces the 2-ch concat (1 channel), every working plane
+  is 12x12 not 14x14, and the ConvTranspose crop removes the fill slice -> 8741 -> 7101 mem,
+  score 15.82 -> 16.04.
 
-Dominant intermediate: the 11 fp16 [1,1,13,13] reach/dil planes (~338B each) — irreducible:
-the flood is inherently iterative (no closed-form), the canvas is already cropped to the
-generator bound, MaxPool needs float, and 9 dilations can be required so D can't shrink.
-
-Fresh generalization: ISOLATED arc-gen-fresh 200/200 (and 3000+ in dev).
+Dominant intermediate (the WALL): the detection bank scores[1,9,9,9] fp16 (1458) +
+  detect_bool[1,9,9,9] bool (729) + detect[1,9,9,9] fp16 (1458) = 3645B. Irreducible:
+  (1) all 9 (wide,tall) combos occur with equal probability and each needs its own template
+  + paint stamp (no channel can be dropped/merged); (2) the 9x9 anchor grid is the exact set
+  of valid in-grid top-lefts for a width-4 box (0..size-4=8) -> spatial size pinned;
+  (3) ORT Conv/ConvTranspose have NO uint8/int8 kernel, so scores+detect are fp16 (the floor),
+  and the hard threshold Greater MUST emit a bool intermediate before the fp16 cast that the
+  ConvTranspose consumes. Bank floors at 3645; with the minimal cropped surround (~3456) the
+  whole net floors near 7101 -> 16.04, +0.22 over 15.82 (MARGINAL, < +0.3).
 """
 
 import numpy as np
@@ -40,12 +44,50 @@ from onnx import helper, numpy_helper, TensorProto
 
 from ..harness import IR_VERSION
 
+F32 = TensorProto.FLOAT
 F16 = TensorProto.FLOAT16
-I64 = TensorProto.INT64
 BOOL = TensorProto.BOOL
+I64 = TensorProto.INT64
 
-WORK = 13
-N_ROUNDS = 11
+W = 12   # active work region (grids are always <=12x12)
+K = 6    # box-outline footprint (max wide/tall = 6)
+
+
+def _templates():
+    """9 detector templates + 9 paint stamps for (wide,tall) in {4,5,6}^2.
+
+    detector_weights[t, {black,red}, K, K]:  linear correlation that == 1.0 only at the
+      top-left of a red outline of exactly (wide,tall) whose 1-cell gap ring is black.
+      red-on-outline contributes 1/(2*nred), black-on-gap contributes 1/(2*ngap), so a
+      perfect match sums to 0.5+0.5 == 1.0; threshold 0.99 demands near-perfect on both.
+    paint_weights[t, 1, K, K]: 1.0 on the gap-ring cells, so ConvTranspose stamps blue.
+    """
+    sizes = [4, 5, 6]
+    combos = [(w, t) for w in sizes for t in sizes]  # 9
+    # SINGLE-CHANNEL detector over combo = red - black: red->+1, black->-1, else 0.
+    # outline cell (+1) weight +1/(2*nred); gap cell (-1) weight -1/(2*ngap) so a black
+    # gap contributes +1/(2*ngap). A perfect match (full red outline AND black gap) sums
+    # to 0.5+0.5 == 1.0; clipped boxes (missing outline) or non-black gaps fall short.
+    det = np.zeros((9, 1, K, K), np.float32)
+    paint = np.zeros((9, 1, K, K), np.float32)
+    for i, (wide, tall) in enumerate(combos):
+        red_cells, gap_cells = [], []
+        for r in range(tall):
+            for c in range(wide):
+                if r == 0 or r == tall - 1 or c == 0 or c == wide - 1:
+                    red_cells.append((r, c))
+        for r in range(1, tall - 1):
+            for c in range(1, wide - 1):
+                if r == 1 or r == tall - 2 or c == 1 or c == wide - 2:
+                    gap_cells.append((r, c))
+        nred, ngap = len(red_cells), len(gap_cells)
+        for (r, c) in red_cells:
+            det[i, 0, r, c] += 1.0 / (2.0 * nred)
+        for (r, c) in gap_cells:
+            det[i, 0, r, c] += -1.0 / (2.0 * ngap)
+        for (r, c) in gap_cells:
+            paint[i, 0, r, c] = 1.0
+    return det.astype(np.float16), paint.astype(np.float16)
 
 
 def build(task):
@@ -60,63 +102,54 @@ def build(task):
         nodes.append(helper.make_node(op, ins, [out], **attrs))
         return out
 
-    # ---- crop red (ch2) and background (ch0) to the WORK x WORK active corner ----
-    init("axes", np.array([1, 2, 3], np.int64), np.int64)
-    init("steps", np.array([1, 1, 1], np.int64), np.int64)
-    init("red_s", np.array([2, 0, 0], np.int64), np.int64)
-    init("red_e", np.array([3, WORK, WORK], np.int64), np.int64)
-    init("bg_s", np.array([0, 0, 0], np.int64), np.int64)
-    init("bg_e", np.array([1, WORK, WORK], np.int64), np.int64)
+    det_w, paint_w = _templates()
 
-    n("Slice", ["input", "red_s", "red_e", "axes", "steps"], "red_f")   # [1,1,W,W] f32
-    n("Slice", ["input", "bg_s", "bg_e", "axes", "steps"], "bg_f")      # [1,1,W,W] f32
-    n("Cast", ["red_f"], "red", to=F16)
-    n("Cast", ["bg_f"], "bg", to=F16)
+    # ---- slice black (ch0) and red (ch2) to the WxW work region ------------
+    # A 4x4 box can anchor at top-left col/row up to W-4 (=8); a no-pad 6x6 conv only
+    # reaches positions 0..W-6, so pad the conv bottom/right by 2 to make every valid
+    # top-left detectable (effective 14-window) while the materialized slices stay WxW.
+    init("ax", np.array([1, 2, 3], np.int64), np.int64)
+    init("b_s", np.array([0, 0, 0], np.int64), np.int64)
+    init("b_e", np.array([1, W, W], np.int64), np.int64)
+    n("Slice", ["input", "b_s", "b_e", "ax"], "black")        # [1,1,W,W] f32
+    init("r_s", np.array([2, 0, 0], np.int64), np.int64)
+    init("r_e", np.array([3, W, W], np.int64), np.int64)
+    n("Slice", ["input", "r_s", "r_e", "ax"], "red")          # [1,1,W,W] f32
 
-    # passable = 1 - red  (everything that is not red)
-    init("one", np.array(1.0, np.float16), np.float16)
-    n("Sub", ["one", "red"], "passable")                                # [1,1,W,W] f16
+    n("Cast", ["black"], "black16", to=F16)                   # [1,1,W,W] f16
+    n("Cast", ["red"], "red16", to=F16)                       # [1,1,W,W] f16
+    # single-channel detector input: combo = red - black (red->+1, black->-1, else 0)
+    n("Sub", ["red16", "black16"], "combo")                   # [1,1,W,W] f16
 
-    # ---- seed = border frame of the crop, intersected with passable -------------
-    frame = np.zeros((1, 1, WORK, WORK), np.float16)
-    frame[0, 0, 0, :] = 1.0
-    frame[0, 0, -1, :] = 1.0
-    frame[0, 0, :, 0] = 1.0
-    frame[0, 0, :, -1] = 1.0
-    init("frame", frame, np.float16)
-    n("Min", ["passable", "frame"], "reach0")                           # [1,1,W,W] f16
+    # ---- detection bank: 9 box-outline templates -------------------------
+    # pad bottom/right by 2 -> effective (W+2)=14 window -> scores [1,9,9,9]
+    init("detector_weights", det_w, np.float16)
+    n("Conv", ["combo", "detector_weights"], "scores",
+      pads=[0, 0, 2, 2])                                      # [1,9,9,9] f16
 
-    # ---- bounded BFS: reach = Min(passable, MaxPool3x3(reach)) -------------------
-    cur = "reach0"
-    for i in range(N_ROUNDS):
-        dil = n("MaxPool", [cur], f"dil{i}", kernel_shape=[3, 3],
-                pads=[1, 1, 1, 1], strides=[1, 1])
-        cur = n("Min", ["passable", dil], f"reach{i + 1}")
+    init("threshold", np.array([0.99], np.float16), np.float16)
+    n("Greater", ["scores", "threshold"], "detect_bool")      # [1,9,9,9] bool
+    n("Cast", ["detect_bool"], "detect", to=F16)              # f16
 
-    # ---- blue = background cell AND not reached ---------------------------------
-    # not_reached = (reach == 0); blue = bg AND not_reached
-    init("zero16", np.array(0.0, np.float16), np.float16)
-    n("Equal", [cur, "zero16"], "not_reached")                          # [1,1,W,W] bool
-    n("Cast", ["bg"], "bg_bool", to=BOOL)                              # bg in {0,1}
-    n("And", ["bg_bool", "not_reached"], "blue_small")                  # [1,1,W,W] bool
+    # ---- paint blue interior frame via ConvTranspose -----------------------
+    # transpose-conv of [1,9,9,9] with 6x6 kernel naturally yields 14x14; ConvTranspose
+    # `pads` CROP the output, so pads=[0,0,2,2] emits the WxW canvas directly (the blue
+    # only ever lands in the <=12 grid) -> no 14x14 / extra slice plane.
+    init("paint_weights", paint_w, np.float16)
+    n("ConvTranspose", ["detect", "paint_weights"], "fill",
+      pads=[0, 0, 2, 2])                                      # [1,1,W,W] f16
 
-    # ---- pad blue mask back to 30x30 -------------------------------------------
-    pad_amt = 30 - WORK
-    init("pads", np.array([0, 0, 0, 0, 0, 0, pad_amt, pad_amt], np.int64), np.int64)
-    # Pad rejects bool -> pad a uint8 cast, then re-cast to bool for Where.
-    n("Cast", ["blue_small"], "blue_u8", to=TensorProto.UINT8)
-    init("zero_u8", np.array(0, np.uint8), np.uint8)
-    n("Pad", ["blue_u8", "pads", "zero_u8"], "blue_pad_u8")             # [1,1,30,30] u8
-    n("Cast", ["blue_pad_u8"], "blue_mask", to=BOOL)                    # [1,1,30,30] bool
+    # ---- recombine channels: black' = black - fill, blue = fill, red = red --
+    # Pad the 3-channel small canvas DIRECTLY into the FREE output -> no 30x30
+    # intermediate ever materialises (ch3..9 zero-pad, off-grid stays bg via ch0=0).
+    n("Sub", ["black16", "fill"], "out_black")                # [1,1,W,W] f16
+    n("Concat", ["out_black", "fill", "red16"], "small3", axis=1)  # [1,3,W,W] f16
 
-    # ---- output = Where(blue, blue_onehot, input) ------------------------------
-    blue_oh = np.zeros((1, 10, 1, 1), np.float32)
-    blue_oh[0, 1, 0, 0] = 1.0   # blue == colour 1
-    init("blue_oh", blue_oh, np.float32)
-    n("Where", ["blue_mask", "blue_oh", "input"], "output")            # [1,10,30,30] f32
+    init("pads", np.array([0, 0, 0, 0, 0, 7, 30 - W, 30 - W], np.int64), np.int64)
+    n("Pad", ["small3", "pads"], "output", mode="constant")   # [1,10,30,30] f16
 
-    x = helper.make_tensor_value_info("input", TensorProto.FLOAT, [1, 10, 30, 30])
-    y = helper.make_tensor_value_info("output", TensorProto.FLOAT, [1, 10, 30, 30])
-    graph = helper.make_graph(nodes, "task251", [x], [y], inits)
-    return helper.make_model(graph, ir_version=IR_VERSION,
+    x = helper.make_tensor_value_info("input", F32, [1, 10, 30, 30])
+    y = helper.make_tensor_value_info("output", F16, [1, 10, 30, 30])
+    g = helper.make_graph(nodes, "task251", [x], [y], inits)
+    return helper.make_model(g, ir_version=IR_VERSION,
                              opset_imports=[helper.make_opsetid("", 11)])

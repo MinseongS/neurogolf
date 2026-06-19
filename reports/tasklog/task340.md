@@ -1,70 +1,60 @@
 # task340 — d687bc17
 
-**Rule:** Same-size grid. A coloured border frame is drawn: top row = ec0, bottom
-row = ec2, left col = ec3, right col = ec1 (edgecolors = 4 distinct random colours;
-corners stay background). Interior contains scattered coloured pixels (plus 1-3
-garbage pixels of a non-edge colour). In the output every interior pixel whose
-colour equals one of the four edge colours is PROJECTED onto the inner ring toward
-its matching edge: ec0→output[1][col], ec1→output[row][W-2], ec2→output[H-2][col],
-ec3→output[row][1]. Garbage pixels (no edge-colour match) vanish; the border is
-preserved. The four projection sets and the border ring occupy DISJOINT cells.
-Width,height ∈ [10,20].
-**Current:** 14.69 pts, custom:task340 (prior version, mem 28784), pending (not adopted).
-**Target tier:** B (label map) — output colours COPY arbitrary input edge colours
-(random per instance) so Tier S/A colour-routing is blocked; the per-cell colour is
-a deterministic function (single colour-index plane) ⇒ label-map + final Equal is
-the natural minimal tier.
+**Rule:** H×W rectangle (H,W∈[10,20]) anchored at (0,0); 4 solid one-colour DISTINCT walls
+(top=tc row0, bottom=bc row H-1, left=lc col0, right=rc col W-1). Interior scattered single
+pixels; each interior pixel of colour v shoots to its matching wall, landing just inside it:
+v==tc→(1,c), v==bc→(H-2,c), v==lc→(r,1), v==rc→(r,W-2); non-matching colours vanish; walls
+kept; interior otherwise cleared. Verified exactly (0/266). The real generator places interior
+pixels at distance ≥2 from every wall (never on the inner ring) ⇒ NO cross/same-colour routing
+collisions, so an ADDITIVE single index plane is exact.
+**Current (prior deployed):** 15.69 pts, ext:kojimar7113 (crowd net, not re-golfed by us).
+**Target tier:** A — separable row/col routing into a single index plane → FREE bool output.
 
 ## Attempts
 | # | angle | tier | mem | params | pts | fresh | outcome |
 |---|---|---|---|---|---|---|---|
-| 0 | prior file: cg32 colour-Conv + 4 dir Convs + 2 MatMuls | B | 28784 | 1307 | 14.69 | 200/200 | baseline (correct but heavy) |
-| 1 | drop cg32 (H/W via ReduceMax[1,3]/[1,2]); 2 Convs only | B | 24274 | 708 | 14.87 | 40/40 | improve |
-| 2 | fuse the 2 placement MatMuls into ONE A[30,8]@B[8,30] (no Add) | B | 20674 | 708 | 15.03 | 40/40 | improve |
-| 3 | derive 4 edge one-hots from rowsum/colsum (kill row0all/row1all slices) | B | 19408 | 692 | 15.09 | 40/40 | improve |
-| 4 | contract 10-ch axis with small MatMuls (kill all [1,10,30] Mul planes) | B | 16904 | 715 | 15.22 | 200/200 | **best** |
+| 0 | leftover (8-line packed MatMul, fp32 Conv counts + edge-MatMul machinery) | A | 11932 | 773 | 15.55 | — | below P |
+| 1 | single packed MatMul Acol[30,10]@Brow[10,30] + wall colours from per-ch counts | A | 9304 | 163 | 15.844 | 500/500 | beats P +0.15 |
+| 2 | reuse occupancy for off-grid sentinel | A | 9244 | 163 | 15.851 | 500/500 | best |
 
 ## Best achieved
-**15.22 @ mem 16904 params 715 — 200/200 fresh, evaluate ok.** Beats prior 14.69 by
-**+0.53** (and a large floor-break 28784→16904). Adopt-recommend **Y**.
+15.851 @ mem 9244 params 163. Beats prior 15.69 by **+0.16 → MARGINAL (< +0.3)**.
 
-## Irreducible-floor analysis (at this structure)
-Dominant intermediates: og [30,30] fp16 = 1800 (the packed placement MatMul output —
-a colour-index plane is unavoidable for a copy-colour label map); the two depthwise
-count Convs colsum32/rowsum32 [1,10,1,30]/[1,10,30,1] fp32 = 1200 each (conv outputs
-are forced fp32; BOTH axes are needed — top/bottom use per-column, left/right use
-per-row); their [10,30] fp16 working copies rsr/csc = 600 each; the three label
-planes og_u8 / L / gm_b = 900 each (uint8/bool — the in-grid sentinel mask gm_b is
-load-bearing because off-grid og=0 would otherwise emit ch0=background as TRUE).
-All per-channel selection/Mul planes ([1,10,30,*], the old ~4800B bloat) were removed
-by contracting the channel axis with tiny MatMuls ([10,2], [2,30]) instead of
-Mul+ReduceSum. The remaining ~16.9KB is near the structural floor for a copy-colour
-label map that needs per-row AND per-column channel counts.
+## Irreducible-floor analysis
+Dominant intermediates (all forced by an fp32 10-channel input):
+- `colcount` [1,10,1,30] **1200 fp32** + `rowcount` [1,10,30,1] **1200 fp32** — per-channel
+  column/row pixel counts. Needed for BOTH the 4 wall colours (border-line slices) AND the
+  interior-presence test (`count>1` cancels the wall's own +1). ReduceSum/Conv/MatMul all emit
+  fp32 from the fp32 input; casting to fp16 only ADDS a plane (fp32 producer still counts);
+  cropping to the ≤20 active region adds a Slice plane on top of the full one. ⇒ 2400B hard floor.
+- `og` index plane [1,1,30,30] **1800 fp16** — the one full-canvas plane; MatMul emits fp16,
+  Equal needs ≥fp16, a uint8 cast adds a plane. ⇒ 1800B floor.
+- `Acol`[1,1,30,10] + `Brow`[1,1,10,30] **600+600 fp16** — the MatMul's two operands; the 10
+  pre-Concat line vectors duplicate ~1200B more (operand build is unavoidable).
+Sum ≈ 7800; remaining ~1450 is line-construction small tensors (selectors, interior masks,
+presence, off-grid sentinel, wall-colour argmax). Reaching +0.3 needs mem+params ≤ 8184; the
+count floor (2400) + og (1800) + MatMul operands (1200) + build vectors leave no room. The
+deployed kojimar net (~11050B) IS beaten on stored, just not by the +0.3 bar.
 
 ## OPEN ANGLES (re-attack backlog)
-- Kill one of the two count Convs: if per-row counts could be derived from per-col
-  counts (they can't in general — different reductions), or if a single 2-D
-  integral image served both, ~1200-2400B could drop. No clean route found.
-- Fuse rsr/csc reshape with the conv cast to avoid the duplicate fp16 view
-  (currently conv32→colsum16→csc16, two 600B tensors per axis). Reshape-before-cast
-  trades fp16 for fp32 at equal cost; no net win located.
-- Merge og_u8 into the Where (Cast then Where currently = 1800B for two planes).
-  A fp16 Where carrier is 1800 (worse); uint8 path is already minimal.
-- Theoretical Tier-A would need the output to be a row⊗col separable one-hot, but
-  the placement is a UNION of 8 thin lines on different rows/cols whose colours are
-  arbitrary input copies — only the disjoint label map collapses it, so B is the cap.
+- Eliminate ONE count plane: needs per-row AND per-column wall-colour presence from a single
+  reduction — appears impossible (orthogonal 2-D reductions). If an fp16-output count op ever
+  lands under ORT_DISABLE_ALL the 2400→1200 clears +0.3 immediately.
+- Fuse Acol/Brow operand build via batched Equal/Mul (~300-400B) — measured ~byte-neutral.
 
 ## INSIGHT (transferable)
-⭐ For tasks that need per-channel per-row AND per-column statistics, do NOT build
-`Mul(counts[1,10,*], onehot)` then `ReduceSum` over channels — that materializes a
-[1,10,30] plane (600 fp16 / 1200 fp32) for every selection. Instead RESHAPE the
-depthwise-count tensors to [10,30] once and CONTRACT the 10-channel axis with tiny
-MatMuls: `counts[10,30] @ selector[30,k]` picks border lines, `onehotT[k,10] @
-counts[10,30]` reads per-line per-axis profiles, `krow[1,10] @ onehot[10,k]` reads
-colour indices — all outputs are [≤10, ≤k] (tens of bytes). This collapsed ~4800B of
-selection planes to a handful of small MatMuls here (19408→16904). Also: H/W and the
-in-grid mask come free from `ReduceMax(input, axes=[1,3]/[1,2])` (bg ch0=1 in-grid,
-0 off-grid) — no colour-index Conv needed at all. And N disjoint thin output lines
-pack into ONE placement MatMul A[30,2N]@B[2N,30] (row-selectors×col-values for
-column-indexed lines stacked with row-values×col-selectors for row-indexed lines),
-eliminating a separate Add of two MatMul grids.
+- ⭐ "Shoot interior pixels to their matching wall" = SEPARABLE per-direction routing, NOT a
+  detection wall. Per-wall presence (does this column/row carry an interior pixel of the wall
+  colour) = per-channel column/row COUNT with `count>1`: the wall line itself contributes exactly
+  +1 to every interior column/row, so the threshold cancels it with NO interior masking and NO
+  variable-row slice. Wall COLOURS come from the SAME count planes via tiny border-line slices
+  (rowcount@row0/@Hidx, colcount@col0/@Widx) + per-channel argmax — no extra 10-ch slice planes.
+- ⭐ ONE packed outer-product MatMul `Acol[1,1,30,K] @ Brow[1,1,K,30]` assembles K disjoint
+  row/col lines AND folds an off-grid `+10` sentinel into the same plane, so the whole sparse
+  output (4 walls + 4 routed lines) is a single fp16 index plane → Equal → FREE bool output.
+  Off-grid index 0 would falsely fire channel-0; the +10 sentinel is load-bearing.
+- ⚠️ A self-written fresh generator MUST replicate the real generator's placement constraints
+  (here: interior pixels ≥2 from walls). A naive generator created impossible inner-ring
+  collisions and produced phantom "failures"; the net is exact on the real distribution (500/500).
+  Always read the constraint off the STORED data (min pixel-to-wall distance) before trusting a
+  fresh-gen fail.

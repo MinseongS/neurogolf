@@ -10,7 +10,9 @@ COLUMN lies in the box's col-span does the same vertically. A dot in a corner re
 Equivalently: in a box-row the fill is `[leftmost-left-dot .. box_left-1] U
 [box_right .. rightmost-right-dot]` (rays all terminate at the box, so per-side runs
 union to one span); same per box-column. The box itself and the original dots remain.
-**Current:** 14.99 pts, custom:task064, mem 22104, params 66.
+**Current:** 15.49 pts, ext:kojimar7113, mem 13368, params 68 (crowd net; SUPERSEDED
+our old 22104/14.99 custom via keep-best). Re-golf attempt 2026-06-19 (Opus): replicated
+kojimar's formulation exactly (15.494/13368, fresh 200/200) and could not beat +0.3.
 **Target tier:** detection/fill (4-direction box-blocked prefix/suffix). NOT S
 (output color per cell is not a fixed linear/permutation of input — it is a
 data-dependent directional fill). NOT A (row⊗col separable): horizontal fill in a
@@ -49,6 +51,32 @@ Reaching the +0.3 bar (15.29) needs mem+params <= ~16450 — i.e. dropping ~5700
 roughly three full fp16 planes. There is no reformulation that removes a direction,
 the entry plane, or the exact rect detector, so the floor for a CORRECT net sits at
 ~21-22k => ~14.99. This is the public/incumbent floor and it is already reached.
+
+## 2026-06-19 re-golf vs kojimar7113 (15.49, mem 13368) — AT FLOOR, no +0.3
+kojimar uses a DIFFERENT, leaner formulation than our old 4-conv prefix net:
+TopK(3) on per-ch counts -> rect candidate = count==row_count*col_count (Equal);
+marker channel = the other candidate. Box bounds = ArgMax(first/last) of rect
+row/col presence. Per box-row horizontal span = [min(first_dot_col,box_left),
+max(last_dot_col,box_right)] with box COLUMNS punched out (coord->255 via
+Where(rect_col_bool,255,colcoord)); symmetric per box-col. All band tests on the
+24x24 active region, OR'd, Pad back to 30x30, one final Where. Replicated exactly
+(src form) = 15.494 / mem 13368 / params 69, fresh 200/200.
+Per-plane floor (13368, every plane structurally required):
+- 3600 marker_grid fp32 [1,1,30,30] = Gather(input,marker_idx). The 4 ArgMaxes
+  (first/last dot per row AND per col) NEED this 2D plane; Gather inherits input
+  fp32; a uint8/fp16 copy only ADDS a plane (3600+900). IRREDUCIBLE.
+- 2400 rowp+colp fp32 [1,10,30,1]+[1,10,1,30] = ReduceMax(input). Serve double duty
+  (rect row/col mask + marker row/col mask + box bounds). Cropping to 24 is
+  NET-NEGATIVE (reduce gives 30 then Slice adds the 24 plane; both count).
+- 4032 = 7 bool 24x24: per-direction band = (coord>=low) AND (coord_punched<=high)
+  = 3 planes (ge,le,and) x2 directions + 1 OR. Tried Clip+Equal to fuse the AND
+  into 2 planes: ORT Clip REQUIRES SCALAR min/max (per-row [1,1,24,1] bounds crash
+  "min should be a scalar") -> cannot fuse. Band block is minimal.
+- 960 = 4 ArgMax int64 [1,1,30,1]/[1,1,1,30] (first/last dot positions). int64 is
+  forced by ArgMax; cropping marker_grid first to shrink these adds 2304 > saved.
+- 900 fill_mask bool [1,1,30,30] (Pad accepts bool at opset 13) — needed for output.
++0.3 bar (15.79) needs mem+par <= ~10010 = cut 3358B = delete one whole large block
+(marker_grid / presence / band). None is removable without breaking the rule. AT FLOOR.
 
 ## OPEN ANGLES (re-attack backlog)
 - Drop R,C (2400) only if a single small Conv could prove "solid rect" exactly —

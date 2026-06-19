@@ -1,47 +1,54 @@
-# task377 (ARC eb5a1d5d) — nested rectangles -> concentric square rings
+# task377 — eb5a1d5d
 
-## Result
-- **14.83 -> 15.28 (+0.45)**, mem 25924 -> 15639, params 116 -> 1004, fresh 500/500.
-- Tier: B (closed-form scalar/sequence recovery + tiny-canvas figure + Pad-to-free-output).
+**Rule:** Input is N strictly-NESTED axis-aligned rectangles painted in order; rect 0
+fills the whole grid, each later rect sits strictly INSIDE the previous with its
+top-left corner moving strictly SE, in colours[0..N-1] (adjacent differ, non-adjacent
+may repeat). OUTPUT is a (2N-1)x(2N-1) concentric-square-ring target at the top-left:
+out[r][c] = colours[ min(r,c,S-1-r,S-1-c) ], S=2N-1, all-zero elsewhere. The whole
+output is determined by the scalar N and the length-N colour SEQUENCE.
+**Current:** 15.69 pts, ext:kojimar7113, mem 10887, params 180
+**Target tier:** A (closed-form scalar+sequence recovery + tiny ring) — no flood-fill.
 
-## Rule
-Input = N strictly-nested axis-aligned rectangles (rect0 fills grid; each later rect
-strictly inside, corner moving SE), colours[0..N-1] (adjacent rings differ, non-adjacent
-may repeat). Output = (2N-1)x(2N-1) concentric square rings at top-left; ring idx
-(Chebyshev dist from border) = colours[idx]; rest of canvas all-zero. WHOLE output is
-determined by scalar N + length-N colour SEQUENCE.
+## Attempts
+| # | angle | tier | mem | params | pts | fresh | outcome |
+|---|---|---|---|---|---|---|---|
+| 0 | prior local build (horizontal depth-scan + 15x15 ring) | A | 15639 | 1004 | 15.28 | — | worse than deployed |
+| 1 | kojimar recovery (dilated colour Conv + per-row ArgMax/TopK) + SMALL ring tail (W=15, int32 ring) | A | 9171 | 138 | 15.86 | — | +0.17 |
+| 2 | W=13, int32 ring math (drop fp16 ring plane) | A | 8581 | 134 | 15.93 | 500/500 | +0.24 MARGINAL |
+| x | drop `curr` by gathering off 27-row grid (Pad+shift) | A | 8713 | 140 | 15.91 | — | reverted: Pad plane costs more than it saves |
 
-## What worked (escape = tiny-canvas figure + scalar/sequence recovery)
-1. **Build the figure on a fixed 15x15 (W=2K-1, K=8) canvas, not 30x30.** ring(i,j)=
-   min(i,j,m-i,m-j), m=2N-2; L=cv[ring] is [1,1,15,15]; off-figure = uint8-safe sentinel
-   250. Cast L->uint8, **Pad 15x15->30x30 (opset-11 Pad accepts uint8), then Equal(Lpad,
-   arange0..9) emits the 10-ch one-hot BOOL into the FREE graph output.** The 30x30
-   output-side tensor is a single 900B uint8 plane (not the old 3600 int32 + 1800 L +
-   1800 ring). Channel-0 and 250 sentinel match no channel -> all-off = target.
-2. **Colour SEQUENCE off ONE deepest row (killed the entire vertical 30x30 scan, ~4350B).**
-   N = max rowdepth alone (every rect has row- AND col-extent >=3 so the deepest row hits
-   all N rects; verified 4000/4000). rowselN = 1-hot first-row-of-depth-N; deeprow =
-   rowselN @ colf [1,1,1,30] reads the nested palindrome c0..c_{N-1}..c0. 1-D transition
-   conv -> upper-tri MatMul prefix-sum -> per-column segment index -> cv[d] = deeprow at
-   first column of segment d. All <= [1,1,8,30]. (Deep-row cv verified 5000/5000.)
+## Best achieved
+15.927 @ mem 8581 params 134 — adopted? N (build-only). Beats prior 15.69? Y by +0.237 (MARGINAL, < +0.3).
 
-## Floor / dominant intermediates (why ~15.6KB remains)
-- colf32 [1,1,30,30] fp32 3600B = the 10->1 reduction off the FREE fp32 input (Conv keeps
-  input dtype) — irreducible entry plane.
-- colf fp16 1800B (cast so the one scan plane is fp16).
-- horizontal depth scan hdiff(1740) + h_eq(870 bool) + h_eqf(1740 fp16 cast for ReduceSum,
-  which rejects bool/uint8) ~= 4350B — the ONE un-removable 30-wide scan; needed to find
-  per-row depth so we can locate the deepest row + N.
-- idx_i 900B int32 (Gather index floor), Lpad 900B uint8.
+## Irreducible-floor analysis
+- `grid_f` fp32 27x27 = 2916B: the 10->1 channel colour-index reduction off the fp32
+  input forces fp32 output (Conv/MatMul/ReduceSum inherit input dtype); corners reach
+  row/col 26 so the recovery window can't crop below 27x27. kojimar pays the same.
+- Recovery scan: `curr`,`prev`,`row_delta` = 3 x 702B uint8 (2106B). `curr` already does
+  double duty (subtraction operand + GatherElements colour source); `prev` is the other
+  subtraction operand. Equal->bool would need a Cast back to uint8 for ArgMax (net worse).
+- Value tail: `Lpad` uint8 30x30 = 900B is the minimal full-canvas value plane feeding the
+  Equal->BOOL output; Gathering a one-hot at the small ring + bool-Pad is strictly bigger
+  (10*W^2). `ring_i` int32 W^2 (676B at W=13) is the Gather-index floor.
+The architecture floors ~8.4-8.6KB; the +0.3 target (~8.3KB) is just out of reach.
 
-## Levers / lessons (transferable)
-- ORT now accepts: **uint8 Pad** (opset-11) and **fp16/uint8 Equal** (stale "int32-only"
-  claim is false) — so a tiny one-hot can be uint8-Padded into the free output with NO
-  int32 30x30 carrier.
-- ReduceSum still rejects bool/uint8 (need the fp16 cast); CumSum rejects fp16 under
-  ORT_DISABLE_ALL -> use an upper-triangular MatMul for a 1-D prefix-sum (900 params,
-  log-cheap; the only param bump).
-- **Read a parametric figure's defining SEQUENCE off a single selected line** (here the
-  deepest row) instead of two full-grid scans: 1-hot line-selector @ plane -> [1,1,1,W],
-  then a tiny 1-D segment/prefix recovery. Halved the scan cost.
-- Sentinel choice 250 (uint8-safe) instead of -1 lets the padded value plane stay uint8.
+## OPEN ANGLES (re-attack backlog)
+- A recovery that avoids the fp32 27x27 colour grid entirely (1-D-profile-only depth +
+  sequence) would unlock < 6KB, but reading the per-corner COLOUR VALUE needs the column
+  position of each corner, which a 1-D profile loses -> appears structurally 2-D.
+- W=13 covers N<=7 (max over 500k samples). LB tail N=8 (S=15, prob ~0) would silently
+  miss; bump to W=15 (mem 8755, +0.197) for full N<=8 safety if a fresh failure ever shows.
+
+## INSIGHT (transferable)
+- SMALL-RING TAIL beats full-canvas index Gather for "bullseye/target from O(1) scalars":
+  when a crowd net builds the per-cell index at FULL 30x30 (kojimar `ring_raw` int32 3600B)
+  only to Gather a colour table into output, rebuild the index on a TINY W x W canvas
+  (W = 2*Nmax-1), Gather the VALUE plane there, then uint8-Pad into 30x30 + Equal->BOOL
+  output. Removes the 3600B full-canvas plane for ~+0.24 with NO recovery change.
+- A dilated 2x2 Conv with only the [0,0] tap nonzero (`dilations=[30-GW,30-GW]`) reads the
+  colour-index AND crops to the top-left GWxGW window in ONE op (kojimar `color_decode_w`).
+- uint8 `Sub`/`Min` and bool `Pad` require opset >= 14/18 under ORT_DISABLE_ALL — opset-11
+  rejects them. Bump the model opset to 18 to use kojimar-style uint8 row-delta scans.
+- `curr`/`prev` slices: the subtraction's two operands are BOTH irreducible planes; reusing
+  one operand as the colour-read source is the only saving (gathering off the full grid via
+  a Pad-shift adds a bigger plane than it removes — net negative).

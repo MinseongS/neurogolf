@@ -90,6 +90,33 @@ exact corner-termination requires the GatherND wall reads.**
   leftmost interior column gather-free) — untried, ~21KB potential.
 - Fold the 2 right-corner gathers into the row-span psum reads (share c1+1 index) — marginal.
 
+## 2026-06-19 re-probe vs kojimar (P=14.77, ext:kojimar7113) — INFEASIBLE to beat +0.3
+kojimar SUPERSEDED our 13.46 carry net with a MATCHED-FILTER BANK: mem 22036, params 5667, pts 14.77.
+Structure (15 nodes): crop ch0(black)+ch5(gray) to 20x20 -> Concat(2,20,20) -> **QLinearConv rect_w[25,2,9,9]
+int8 -> v9 u8 (1,25,20,20)=10000B** (the dominant plane) -> QLinearConv fill_w[1,25,5,5] -> v10 fill ->
+Where/Concat into the 10-ch output. The 25 channels = **5 wides x 5 talls (w,t in 3..7)**: channel
+k=(t-3)*5+(w-3) is the exact 9x9 outline template for a (w,t) box anchored at its TOP-LEFT INTERIOR CORNER.
+Each template: +1 on interior cells, -64 flanking the gray walls + at corner-termination positions (one cell
+past the corner). bias=-(interior count); valid response = interior_count>0. fill_w[k] stamps the (w-2)x(t-2)
+interior, padded [4,4,0,0] to dilate up-left from the anchor. Replicated EXACT in numpy 300/300.
+
+WHY +0.3 IS UNREACHABLE (proven, not estimated):
+- mem ALONE = 22036 caps the score at 25-ln(22036)=**15.00**, i.e. params=0 (impossible) only reaches +0.23.
+  +0.3 needs total mem+params <= 20537; realistic best (~mem 17600 + params 4700) = 14.99. Short.
+- The dominant `v9` (25ch x 20x20 u8 = 10000B) is IRREDUCIBLE: the box-vs-line-loop discriminator needs
+  FULL-OUTLINE verification (gray wall span + horizontal corner-termination). Confirmed NON-SEPARABLE: naive
+  4-dir enclosure = 46/150 (line-loops fake it); a single size-agnostic linear filter can't verify 25 distinct
+  wall configurations (-64 penalties at one size's wall positions kill valid larger boxes). So all 25 (w,t)
+  templates are mandatory; the full 9x9 footprint is used (largest 7-wide box + corner-term reach).
+- The only documented alternative (directional MaxPool-carry, this tasklog attempt #10) is 102880B == FAR worse.
+- Param-only trims (zero_full 900 const, smaller kernels) cap at ~14.84; cannot cross 15.07.
+- Corner-L observation (lines are axis-aligned/straight -> L-corner = box corner) is true and cheaply detectable,
+  BUT fill from a corner seed needs variable-extent propagation = a bounded flood (~12-16 fp16 planes ~ 25KB+) or
+  the enumerate-sizes bank; neither beats kojimar's 10000B u8 bank. (4-corner-cell + term predicate = 238/400,
+  insufficient without full wall-span check.)
+
+VERDICT: kojimar's net is at the practical floor for this rule. No structural lever crosses +0.3.
+
 ## INSIGHT (transferable)
 ⭐ "fill box-outline interiors over line clutter" IS closed-form & exact (not a flood wall): the
 discriminator between a real box wall and a fake line-loop wall is **HORIZONTAL CORNER-TERMINATION**

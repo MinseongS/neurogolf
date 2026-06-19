@@ -46,6 +46,34 @@ Everything else is tiny (1-D [1,10,1,1] scalars, the WORK=5 crop window, the 900
   bbox were gathered first, shrinking every plane ~4x — but the window position is itself per-channel
   data-dependent (circular: need the box to crop the box), so it cannot precede identification.
 
+## 2026-06-19 re-probe vs LB P=15.77 (kojimar7113) — MARGINAL/INFEASIBLE for +0.3
+Current LB adopted a crowd net `ext:kojimar7113` at **15.77** (mem 10067, dominant plane `colors4_1`
+f32 [1,9,10,10]=3600B, TopK+ArgMax×5 selection). To beat by +0.3 → need pts ≥ **16.07** → mem+params ≤ **~7546**.
+
+⭐ FOUND a SINGLE-PLANE escape from the 10-channel reflection MatMul (NEW, built + verified exact 266/266):
+collapse the one-hot to a colour-index plane `colf` [1,1,10,10] and reflect THAT one plane per-pixel —
+  AX = Gather(a_vec, colf)  (per-pixel reflection axis a_{colf[r,c]}, a_k = cmin_k+cmax_k)
+  mc = AX − c ;  refl = GatherElements(colf, clip(mc), axis=3)   (column reflection on ONE plane)
+  bad = fg ∧ (refl≠colf ∨ mc∉[0,9]) ;  box-0 = the unique present colour (c≠0) with ZERO bad cells.
+This eliminates the four [1,10,10,10] MatMul planes (A/Cmat/Mf/AMf = 9000B); all reflection work is on
+single-channel [1,1,10,10] planes. BUT it STILL cannot reach 16.07 — two irreducible rocks remain (measured):
+- **fp32 entry A [1,10,10,10] = 4000B** — the Conv (→colf) AND the per-channel presence/bbox ReduceMaxes all
+  need the 10-channel active region; Slice inherits fp32. Slicing the active region ONCE and deriving
+  everything from it (4000B) beats three separate full-canvas reductions (6000B): restructure dropped
+  mem 18279→16199.
+- **per-channel "which colour is symmetric" reduce = 3000B** — mapping the single-plane `bad` result back to a
+  [1,10,1,1] per-colour verdict needs `Equal(badcolf, arange_ch)` [1,10,10,10] bool (1000B) → Cast fp16
+  (2000B) → ReduceMax. ORT ReduceMax/Sum/Conv/MaxPool ALL reject bool & uint8, so the fp16 10-ch plane is
+  forced; no scalar route exists (two distinct bad colours can't be summed/deduped without per-channel).
+Floor = A 4000 + reduce 3000 + L 900 = **7900B BEFORE any of the ~25 working planes** ⇒ best-case ≈15.96,
+measured build **16199B/15.30**. 7900 > the 7546 needed for 16.07 ⇒ **+0.3 INFEASIBLE**. Single-plane is
+~+0.0 vs the restored MatMul 15.28 and MARGINAL (below) vs kojimar 15.77.
+- 1-D column-profile-palindrome proxy uniquely picks target 260/266 (6 fail); rot180 263/266; only exact
+  2-D hflip(mask)==mask is 266/266 — no cheap 1-D collapse.
+LEFT ON DISK: the proven MatMul net (15.28, mem 16500, 266/266) — cleaner and same score class as the
+single-plane variant; neither beats the adopted kojimar 15.77 by +0.3. To beat 15.77 one must golf kojimar's
+OWN 9-ch fp32 TopK/ArgMax selection plane (3600→≤900B uint8), but that source isn't editable here.
+
 ## INSIGHT (transferable)
 ⭐ "Odd-one-out by SYMMETRY among monochrome shapes" is NOT a symmetry-search wall: per-channel
 horizontal-mirror symmetry is a closed-form **reflection MatMul** — reflect each channel's columns about

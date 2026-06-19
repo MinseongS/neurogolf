@@ -65,3 +65,45 @@ a plain 2×2 (FP ~1/60) or 2×3 (FP ~1/20000) leaks. The off-grid handling is th
 `selcond = keep OR off-grid` idiom: pad the keep mask with **True** outside the active
 grid so the final Where selects the input's all-zero off-grid cells (NOT the bg one-hot,
 which would wrongly set channel-0 high → silent fail on every fresh instance).
+
+## RE-VISIT 2026-06-19 (baseline now ext:kojimar7113 = 15.616, mem 11451 par 444)
+The prior 15.17 custom (re-measured 15.50/13326) is BELOW the adopted kojimar crowd net.
+Target to beat = 15.616 + 0.3 = 15.92  =>  mem+par <= exp(25-15.92) ~= 8806.
+
+kojimar net = colour-channel route: Slice(input, ch1..9, r/c 1..14) -> **f32 [1,9,14,14]
+= 7056B** (its dominant plane) + uint8 cast 1764 + a 6x7 patch QLinearConv (colour argmax)
++ a 3x3 cross degree QLinearConv (deg>4 == cell with >=2 same-colour neighbours) + Pad.
+The 7056 f32 Slice + its 1764 uint8 cast (8820B) ARE the floor of the one-hot route (Slice
+inherits f32; casting the input first is 9000B, worse).
+
+OUR colour-INDEX route avoids that 8820: colf30 1x1-Conv = **3600B f32** entry instead.
+Cuts applied this pass (sum-conv 3-shape detector): dropped the per-shape non-bg gate
+(mx>0) entirely -- an all-bg uniform window dilates only over bg cells and a "kept" bg
+cell routes Where->input==bg == the false branch, so it is HARMLESS (re-verified 0 fails/
+12000). That removed 6 bool planes. Result: **15.563 @ mem 12466 par 72, 266/266 stored,
+200/200 isolated fresh.** Still 0.05 BELOW kojimar and 0.36 below the +0.3 bar.
+
+## Verdict: MARGINAL / effectively at floor for this rule
+Irreducible budget: colf30 (3600 f32, the 10->1 colour-index reduction MUST be f32 -- fp16
+needs an 18000B input cast) + colf slice (784) + the two final 30x30 carriers (keep30_u8
+900 + keep_b 900: Where needs bool, Pad rejects bool, off-grid must be kept-True to pick the
+all-zero input while in-grid border must be kept-False -> two pad values -> two planes) =
+**6184B fixed**, leaving only ~2550B for ALL detection to reach 8806. The 3-shape solid-block
+detector needs ~6 small fp16/bool 14x14 planes (~6000B); the alternative degree+colour-argmax
+route (Rule C, proven 0/8000: keep = (colf==bc) AND deg_bc>=2, bc = argmax_k count of colour-k
+cells with >=2 same-colour nbrs) needs a per-colour 9-channel reduction for the argmax that is
+>=3528B fp16 (ReduceSum/Max reject bool+uint8, so the histogram cannot stay narrow) -- both
+blow the ~2550B budget. Separable-bbox output does NOT help: the Where false-branch must be
+"ch0 in-grid / 0 off-grid", which is not a constant, so the input-based Where + full keep mask
+is already optimal. ⇒ no path to mem+par <= 8806; kojimar's 11451 is essentially the structural
+floor and our 12466 ties it. BEATS-BY-0.3 = INFEASIBLE.
+
+## NEW transferable insights
+- ⭐ HARMLESS-FALSE-POSITIVE GATE-DROP: when the final op is `Where(keep, input, bg_onehot)`,
+  any keep=True on a BACKGROUND cell is free (Where picks input == bg == the false branch).
+  So a detector's "non-background" gate can be DELETED whenever its only spurious hits are
+  bg cells -- removed 6 planes here (15.50->15.56). Generalises to any keep/input/bg Where.
+- (colf==boxcolour) AND degree>=2 == the box EXACTLY (deg>=1 fails ~50%: a single box-colour
+  noise pixel may abut the box edge -> deg 1; every true box cell incl corners has deg>=2).
+  boxcolour = argmax_k count(colour-k cells with deg>=2) is robust 0/8000 (argmax-by-max-degree
+  is NOT: noise can hit deg 4, 73/10000 fail).

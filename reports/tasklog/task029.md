@@ -23,6 +23,39 @@ colour-id plane is the minimal admissible form.
 **15.326 @ mem 15773 params 129 — fresh 500/500.** Beats prior 15.206 by **+0.12**.
 Adopt-recommend: **N** (MARGINAL, < +0.3 threshold).
 
+## 2026-06-19 re-golf vs kojimar7113 (deployed = ext:kojimar7113, P=15.7118, mem 10776)
+The deployed crowd net (kojimar) is LEANER than our prior custom: it skips the
+colour-id plane entirely and does the translate-crop via **one Einsum**
+`bcrs,ir,js->bcij` straight into the FREE 10-ch output, with TWO 30x30 fp32
+OneHot selectors (3600 each) as the only big carriers, plus per-channel row/col
+counts (1200 each) for ring detection. Total 10776.
+- Re-derived the EXACT kojimar breakdown: row_selector 3600 + col_selector 3600
+  + row_counts 1200 + col_counts 1200 + tiny = 10776 (anchored via evaluate()).
+- Built a count-detection + **colorid double-Gather** variant (reuse kojimar's
+  lean count/ArgMax detection, swap Einsum for a sentinel-padded uint8 colorid
+  crop). Measured: **mem 10883, pts 15.6994, fresh 200/200** — TIES, does not beat.
+  Reason: the crop carrier costs ~7200 EITHER way: Einsum needs two fp32
+  selectors (7200, pinned fp32 because Einsum must match the FREE fp32 10-ch
+  input); colorid needs the f32 entry plane (3600, ReduceSum/Conv channel
+  reduction is fp32-pinned) + u8 gather chain (colorid 900 + pad 961 + crop_r
+  930 + L 900 = 3691) ⇒ 7291. The two approaches are within 1% of each other.
+
+## VERDICT: MARGINAL — cannot beat +0.3 (need mem<=8008; floor ~9600)
+Two structurally irreducible cost centres:
+1. **Crop carrier ~7200 fp32.** A data-dependent translate+crop of a 10-ch grid
+   into the free output is either (a) Einsum with two fp32 OneHot selectors
+   (fp32 forced to match the free fp32 input; fp16 selectors need an fp16 input
+   = 18000B cast, net loss — VERIFIED Einsum rejects mixed dtype), or (b) an
+   fp32 colorid entry + uint8 gather chain. Both ~7200. The interior is small
+   but its POSITION is data-dependent ⇒ no static Slice (symbolic-dim trap).
+2. **Detection counts 2400 fp32.** Ring colour = unique channel with
+   total==2*rowmax+2*colmax-4 AND max row/col occurring >=2x. Needs BOTH
+   per-channel axis-count planes [1,10,30,1]+[1,10,1,30] (1200 each); ReduceSum
+   output is fp32-pinned and both axes are required for the bbox + perimeter test.
+Floor ~9600 -> best achievable ~15.82 (+0.11). Even an idealized mem-9000
+(drop one count plane via a colorid ring-mask, save ~300) only reaches +0.18.
+The deployed kojimar net is already at the practical floor; KEEP it.
+
 ## Irreducible-floor analysis
 Dominant intermediates (measured via ORT profile trace, ORT_DISABLE_ALL):
 - **colorid_f 3600 B** fp32 [1,1,30,30] — the 10→1 colour-index entry plane.
