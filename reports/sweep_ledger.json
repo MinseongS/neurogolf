@@ -1019,7 +1019,7 @@
   "sig": "num_sprites",
   "status": "done",
   "verdict": "INFEASIBLE: 39a8645d: output 3x3 = the sprite-type that is the most COMMON among placed spri",
-  "note": "RE-PROBE WIN +0.36 (15.03->15.39): output 3x3 shape of most-COPIED sprite type. Trap: NOT most-pixels - copy_count=total_pixels/sprite_size where sprite_size=MAX 3x3-window pixel count. depthwise 3x3 sum-conv + per-channel ReduceMax = every colour sprite_size in one pass; argmax(cnt/size); 3x3 crop via flat ArgMax over block-count plane. Drop bg ch0 (9 not 10 ch) free ~10% cut. fresh 500/500."
+  "note": "RE-PROBE WIN +0.36 (15.03->15.39): output 3x3 shape of most-COPIED sprite type. Trap: NOT most-pixels - copy_count=total_pixels/sprite_size where sprite_size=MAX 3x3-window pixel count. depthwise 3x3 sum-conv + per-channel ReduceMax = every colour sprite_size in one pass; argmax(cnt/size); 3x3 crop via flat ArgMax over block-count plane. Drop bg ch0 (9 not 10 ch) free ~10% cut. fresh 500/500. | re-golf AT-FLOOR: argmax over per-colour normalized counts (norm=per-colour 2D max"
  },
  {
   "task": 80,
