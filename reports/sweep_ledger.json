@@ -3078,15 +3078,15 @@
  {
   "task": 238,
   "arc_id": "9aec4887",
-  "points": 15.34,
-  "memory": 15612,
-  "params": 129,
+  "points": 15.68,
+  "memory": 11143,
+  "params": 69,
   "method": "gen:thbdh6332",
   "class": "CHECK",
   "sig": "-",
   "status": "done",
   "verdict": "",
-  "note": "adopted 13.93->15.34 closed-form sprite+box (channel-8 bbox, box-sides via per-side argmin/argmax, positional quadrant recolour); pending-pool win; generalizes 200+300"
+  "note": "re-golf +0.34: per-channel column-count (ReduceSum of occupancy profile, 40B) classifies orientation+L; bbox-min=ArgMax(profile) directly (drops where-source planes); 7x7 work canvas fp16 range-tests. mem 15612->11143"
  },
  {
   "task": 239,
