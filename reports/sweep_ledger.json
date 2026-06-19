@@ -2818,14 +2818,15 @@
  {
   "task": 218,
   "arc_id": "90c28cc7",
-  "points": 15.62,
-  "memory": 16438,
-  "params": 46,
+  "points": 15.94,
+  "memory": 8434,
+  "params": 178,
   "method": "custom:218 quilt->block-grid double-MatMul downsample (2-weight signature boundaries)",
   "class": "CHECK",
   "sig": "-",
   "status": "done",
-  "verdict": "generalizing exact win (fresh 200/200 +800/800)"
+  "verdict": "generalizing exact win (fresh 200/200 +800/800)",
+  "note": "re-golf +0.31: all downstream ops off single fp32 entry plane (per-block AREA=ReduceSum(Rsel)*ReduceSum(Csel) replaces Rsel@occ@Csel); expand 10-ch one-hot on tiny KxK then Pad into FREE uint8 output (kills 900B carrier); bool-And channel-slices, cumsum-1 folded into selector ramp"
  },
  {
   "task": 219,

@@ -69,3 +69,34 @@ WEIGHTED SIGNATURE vectors: sig[r]=Σ_c w[c]·colf[r,c] via ONE MatMul (contract
 (W[N,2]) and flag a boundary if EITHER differs; collapses the collision rate to ~0 (verified
 800/800). ⭐ When cropping a colour-index plane to a smaller fixed active canvas, slice the
 SINGLE-channel Conv output (1764B), NEVER the 10-channel input (17640B).
+
+---
+
+## RE-GOLF 2026-06-19 (plane elimination) — 15.62 -> 15.94 (+0.31)
+
+Re-measured prior adopted net: mem 11651, params 146, pts 15.6244 (266/266).
+
+| # | angle | mem | par | pts | fresh | outcome |
+|---|---|---|---|---|---|---|
+| 1 | sigs+downsample+occupancy all off the ONE colf30 plane (kill colf32/colf/occ); area from selectors not occ | 9626 | 237 | 15.803 | 200 | kept |
+| 2 | ReduceSum for area (drop ones inits) | 9626 | 177 | 15.810 | 200 | kept |
+| 3 | expand 10-ch on KxK then Pad into FREE output (kill 900B carrier L) | 8906 | 177 | 15.886 | 200 | kept |
+| 4 | grouped-Conv finite-diff for boundary | 9096 | 187 | 0.0 | 0 | REVERTED (ORT grouped-Conv bug + bigger) |
+| 5 | bool And-of-channel-slices replaces fp16 ReduceMin bridge | 8674 | 179 | 15.911 | 200 | kept |
+| 6 | fold -1 into selector ramp Equal(cumsum,R+1) -> kill bri/bci | 8434 | 178 | 15.939 | 500 | **ADOPTED** |
+
+**Best: 15.939 @ mem 8434 params 178**, +0.3147 over prior. Fresh 500/500 all 4 shapes.
+
+**Dominant irreducible intermediate:** colf30 3600B fp32 [1,1,30,30] — the 10->1 colour-index
+entry plane. Conv output inherits fp32 input dtype; every downstream contraction (sig MatMuls
+AND Snum=Rsel@colf30@Csel) taps this exact plane, so it is materialised once at full fp32.
+Folding the colour reduction into the downsample on raw input keeps 10 channels -> also 3600B.
+
+**Transferable lever (compounded):** on an already-working downsample net, (1) run EVERY
+downstream op off the single fp32 colour-index entry plane (no 2nd cropped colour plane, no
+occupancy plane — per-block AREA = ReduceSum(Rsel)*ReduceSum(Csel) replaces Rsel@occ@Csel);
+(2) expand the 10-ch one-hot on the TINY KxK colour grid then Pad it into the FREE uint8
+"output" (kills the 900B 30x30 carrier an Equal-to-output usually pins). Micro: bool And of
+two channel-slices beats the fp16-ReduceMin "any-hash-differs" bridge; fold cumsum's -1 into
+the selector ramp (Equal(cumsum,R+1)) to delete the bri/bci index planes. Grouped-Conv
+finite-diff "shortcut" backfired (ORT 1.26 grouped-Conv bug) — verify grouped-Conv before use.

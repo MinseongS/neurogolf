@@ -16,12 +16,19 @@ Encoding (plane-eliminated re-golf, 2026-06-19):
     - row/col block boundaries via two weighted SIGNATURE MatMuls straight off colf30
       (tiny [1,2,30,1] / [1,2,1,30] results); a boundary is where the signature changes.
     - in-quilt extent from ReduceMax(colf30) 1-D profiles (no occupancy plane).
-    - block index bri/bci = inclusive-cumsum(newblock)-1, gated to in-quilt.
+    - block index = inclusive-cumsum(newblock); the 0-basing -1 is FOLDED into the
+      selector ramp (Equal(cumsum, R+1)) so no bri/bci plane is materialised; gated
+      to in-quilt rows/cols to drop trailing-bg rows that retain the cumsum value.
     - downsample colour: Snum = Rsel @ colf30 @ Csel  (Rsel [1,1,K,30] fp32, the extra
       off-quilt rows/cols are zeroed by the in-quilt gate). The per-block AREA (divisor)
-      comes from the selectors themselves — Sden = (Rsel @ ones) * (ones @ Csel) — so NO
-      occupancy plane is needed. block colour = round(Snum/Sden); empty -> 99 sentinel.
-    - KxK colour -> Pad(99) -> Equal(arange) lands the 10-ch expansion in the FREE output.
+      comes from the selectors themselves — Sden = ReduceSum(Rsel) * ReduceSum(Csel) —
+      so NO occupancy plane is needed. block colour = round(Snum/Sden); empty -> 99.
+    - the 10-ch one-hot is expanded on the TINY KxK colour grid (Equal vs arange) and
+      that small one-hot is Pad-ed straight into the FREE 30x30 uint8 output — no 30x30
+      carrier/label plane is ever materialised (invalid blocks -> 99 -> all-zero).
+  Mem 11651->8434, params 146->178, pts 15.62->15.94 (+0.31). Fresh 500/500 (all 4
+  tall x wide shapes). Dominant intermediate: colf30 3600B fp32 (the irreducible
+  10->1 colour-index entry plane; Conv output inherits fp32 input dtype).
 """
 
 import numpy as np
@@ -120,32 +127,31 @@ def build(task):
     n("And", ["newcol_b", "cq_b"], "newcol_q_b")
     n("Cast", ["newcol_q_b"], "newcol_f", to=F32)
 
-    # ---- block index = inclusive cumsum(newblock) - 1  -----------------------
+    # ---- block index = inclusive cumsum(newblock); the -1 (0-basing) is folded
+    # into the selector ramp constants below, so no separate bri/bci plane. -----
     init("AX2", np.array(2, np.int64), np.int64)
     init("AX3", np.array(3, np.int64), np.int64)
-    init("ONEF", np.array(1.0, np.float32), np.float32)
     n("CumSum", ["newrow_f", "AX2"], "cr")                    # inclusive, [1,1,30,1] f32
-    n("Sub", ["cr", "ONEF"], "bri")                           # 0-based (bg rows -> -1)
     n("CumSum", ["newcol_f", "AX3"], "cc")
-    n("Sub", ["cc", "ONEF"], "bci")
 
     # ---- selector matrices Rsel[R,r] (R axis2), Csel[c,C] (C axis3) ----------
     init("rshp4r", np.array([1, 1, 1, M], np.int64), np.int64)  # -> [1,1,1,30]
     init("rshp4c", np.array([1, 1, M, 1], np.int64), np.int64)  # -> [1,1,30,1]
-    init("RidxR", np.arange(K, dtype=np.float32).reshape(1, 1, K, 1), np.float32)
-    init("RidxC", np.arange(K, dtype=np.float32).reshape(1, 1, 1, K), np.float32)
+    # ramps are arange(K)+1 so Equal(inclusive_cumsum, R+1) == (block_index==R)
+    init("RidxR", (np.arange(K, dtype=np.float32) + 1.0).reshape(1, 1, K, 1), np.float32)
+    init("RidxC", (np.arange(K, dtype=np.float32) + 1.0).reshape(1, 1, 1, K), np.float32)
 
     # block-row selector (R on axis2, r on axis3); gate to in-quilt rows so a
     # trailing bg row (which retains the last inclusive-cumsum value) is excluded.
-    n("Reshape", ["bri", "rshp4r"], "bri_1r")                 # [1,1,1,30] f32
-    n("Equal", ["bri_1r", "RidxR"], "Reqb")                   # bool [1,1,K,30]
+    n("Reshape", ["cr", "rshp4r"], "cr_1r")                   # [1,1,1,30] f32
+    n("Equal", ["cr_1r", "RidxR"], "Reqb")                    # bool [1,1,K,30]
     n("Reshape", ["rq_b", "rshp4r"], "rq_1r")                 # bool [1,1,1,30]
     n("And", ["Reqb", "rq_1r"], "Rsel_b")                     # bool [1,1,K,30]
     n("Cast", ["Rsel_b"], "RselF", to=F32)                    # f32 [1,1,K,30]
 
     # block-col selector transposed (c on axis2, C on axis3)
-    n("Reshape", ["bci", "rshp4c"], "bci_c1")                 # [1,1,30,1] f32
-    n("Equal", ["bci_c1", "RidxC"], "Ceqb")                   # bool [1,1,30,K]
+    n("Reshape", ["cc", "rshp4c"], "cc_c1")                   # [1,1,30,1] f32
+    n("Equal", ["cc_c1", "RidxC"], "Ceqb")                    # bool [1,1,30,K]
     n("Reshape", ["cq_b", "rshp4c"], "cq_c1")                 # bool [1,1,30,1]
     n("And", ["Ceqb", "cq_c1"], "Csel_b")                     # bool [1,1,30,K]
     n("Cast", ["Csel_b"], "CselF", to=F32)
