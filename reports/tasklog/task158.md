@@ -69,3 +69,24 @@ INDEPENDENT crop to the generator's max grid (here 26x25) shrinks every working 
 ORT_DISABLE_ALL — declare every full-grid plane fp16. ⭐ np.ascontiguousarray inflates a 0-dim numpy
 scalar to shape [1]; build Gather index scalars WITHOUT it (true 0-dim init; prod([])=1, params-safe)
 so the gathered axis is REMOVED (a [1]-index keeps a stray dim → out-of-bounds on the next Gather).
+
+---
+
+## 2026-06-19 RE-PROBE (current deployed = ext:kojimar7113, 14.53 pts) — MARGINAL, did not beat
+The crowd net SUPERSEDED our 13.01 EXACT build: kojimar mem=33059 params=2343 (vs our 152769/8902)
+by running the 12-pass stamp pipeline on SMALL all-uint8 per-config blocks (`pair_u81/82/83`
+[1,4,24,23]/[1,4,21,20]/[1,4,18,17] — one per mag, 4 flips in the channel axis — not our four
+[1,12,26,25] fp16 planes). It PASSES fresh 200/200 (re-verified). So kojimar already applied the
+uint8 + plane-reduction levers past our recorded "architectural floor."
+
+To beat +0.3 from 14.525 needs total ≤ 26226 ⇒ cut 9176B. Measured cost (static value_info):
+- `color_f` f32 [1,1,30,30]=3600B — the colour-index ENTRY, `Conv(input,w_color)`, consumed ONLY
+  by `Cast->color_u8`. **fp32-LOCKED**: Conv reads the fixed fp32 graph input, ORT forces weight
+  dtype==input dtype, output inherits fp32; fp16 would need an 18000B input cast. IRREDUCIBLE here.
+  (The "Conv keeps fp16" lever needs the Conv input to already be a narrow WORKING plane, not entry.)
+- `pair_u8*` (2208+1680+1224) + `ab_u8` 1300 + ~90 small 650B/552B uint8/bool planes = the 12
+  (mag×dihedral) stamp passes; already uint8, the documented sole buildable backbone.
+ONLY safe lever = dedup ~3 bool/u8 near-duplicate pairs (nonbg_bool+nonbg_u8, mask_a_*, mask_b_*)
+≈1950B ⇒ pts ~14.58, gain ~+0.057 << +0.3.
+⇒ MARGINAL. Algorithm is SOLVED + generalizing; this is a MEM floor, not an accuracy wall, and the
+fp32 entry plane plus the irreducible 12-pass uint8 stamp planes pin it. No beating net written.

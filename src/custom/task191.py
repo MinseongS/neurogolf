@@ -11,24 +11,25 @@ Rule (from generator task_7df24a62.py, size=23 fixed):
   no extra yellow inside the oriented bbox), draw a blue box = oriented-bbox dilated by 1.
   Then overlay the yellow dots on top. (The reference sprite region reproduces itself.)
 
-Encoding (template-matching as a stacked Conv; verified 500/500 fresh, pts 13.77):
-  - Y = input channel 4 (yellow presence); B = channel 1 (blue).
-  - Extract the sprite: brow=(min blue row)+1, bcol=(min blue col)+1; tall/wide from the blue
-    bbox extent.  K3raw = 3x3 yellow window at (brow,bcol); MASK rows>=tall, cols>=wide
-    (the 3x3 window can otherwise capture a noise yellow just outside the t x w sprite) -> K3.
-    npat = sum(K3) (= max(tall,wide)).
-  - 8 oriented 3x3 kernels Ko = FIXED index-permutations of K3's 9 flat elements
-    (rot90(K3,k) optionally transposed). mask3_o = bbox-fill of Ko (triangular-MatMul
-    prefix/suffix-OR per axis, outer-product).  Stack both as Conv weights [8,1,3,3].
-  - COMBINED match kernel folds the "no-extra-yellow" test into ONE Conv:
-      combk = Ko*(1+B) - B*mask3   (pattern-yellow -> 1+B, extra-yellow-in-bbox -> -B)
-      match M = Equal(Conv(Yp, combk), npat)   ([1,8,Hm,Hm] bool) -- corr==npat iff all npat
-      pattern cells present AND zero extras.  This removes the separate `tot` Conv plane.
-  - box: ConvTranspose(M, mask3 [8,1,3,3], group=8) stamps each oriented content bbox at its
-    window; ReduceMax over the 8 orientations -> 1 plane; one 3x3 MaxPool dilates by 1.
-  - Working planes (Yp/corr/M/placed) are fp16 (fp16-exact for these small integers); the Y
-    conv canvas is cropped to the fixed 23x23 active grid first.
-  - output: ch4 = yellow; ch1 = box AND NOT yellow; ch0 = ingrid AND NOT box AND NOT yellow.
+Encoding (template-matching as a stacked Conv; verified 500/500 fresh, mem 31276, pts 14.62):
+  - Y = channel 4 sliced AND cropped to the fixed 23x23 active grid in ONE Slice (fp32 2116B).
+  - Extract the sprite: brow=(min blue row)+1, bcol=(min blue col)+1 and tall/wide from the blue
+    bbox extent — all recovered as SCALARS from two no-pad blue-channel profile Convs (per-row /
+    per-col blue counts), no full blue plane. K3 = 3x3 yellow window at (brow,bcol) gathered from
+    Y (gather indices CLAMPED to [0,22] since the window can run off the 23x23 grid at bottom/right;
+    the clamped duplicate row/col is masked out by rows>=tall / cols>=wide). npat = sum(K3).
+  - 8 oriented 3x3 kernels Ko = FIXED index-permutations of K3's 9 flat elements (PERMS).
+    mask3_o = bbox-fill of Ko (triangular-MatMul prefix/suffix-OR per axis, outer-product).
+  - COMBINED, BIASED match Conv (ONE plane each for scores+indicator):
+      combk encodes "pattern-yellow present AND no extra yellow in the oriented bbox"; corr<=npat
+      with equality exactly at a match. We BIAS the Conv by -(npat-0.5) (runtime per-channel bias)
+      so its output is corr-(npat-0.5) = +0.5 at a match, <=-0.5 otherwise; ONE Relu yields the
+      fp16 {0,0.5} match indicator M directly — no separate Equal-bool nor fp16 Cast plane.
+  - box: forward grouped-SUM Conv stamps mask3_o (spatially flipped) at every match anchor and
+    collapses the 8 orientations into ONE [1,1,23,23] plane; one 3x3 MaxPool dilates by 1.
+  - output: ONE uint8 colour-index plane (yellow=4 > blue=1 > bg=0) built with two uint8 Where ops
+    at 23x23, Pad-99 to 30x30 (uint8 Pad; off-grid sentinel 99 matches no channel -> all-off), then
+    Equal(colidx, arange[1,10,1,1]) routes the 10-ch one-hot into the FREE bool output.
 """
 
 import numpy as np
@@ -41,11 +42,10 @@ F32 = TensorProto.FLOAT
 F16 = TensorProto.FLOAT16
 BOOL = TensorProto.BOOL
 I64 = TensorProto.INT64
+U8 = TensorProto.UINT8
 
 H = 30
-G = 23  # fixed active grid size
-PAD = 2  # all-sides pad
-CROP0 = 2  # boxsum grid-coord offset (placed q-PAD)
+G = 23  # fixed active grid size (generator size=23; grid is the top-left 23x23 of the 30x30 canvas)
 BVAL = 100.0  # extra-yellow penalty in the combined match kernel (fp16-exact, < 2048)
 
 # orientation permutations of flattened 3x3 (row-major), Ko[i] = K3[perm[i]]
@@ -64,7 +64,8 @@ PERMS = [
 def build(task):
     inits, nodes = [], []
 
-    np_of = {F32: np.float32, F16: np.float16, BOOL: np.bool_, I64: np.int64}
+    np_of = {F32: np.float32, F16: np.float16, BOOL: np.bool_, I64: np.int64,
+             U8: np.uint8}
 
     def init(name, arr, dtype):
         npd = np_of.get(dtype, dtype)
@@ -76,20 +77,29 @@ def build(task):
         nodes.append(helper.make_node(op, ins, [out], **attrs))
         return out
 
-    # ===== yellow / blue planes =====
-    init("c4_s", np.array([4], np.int64), np.int64)
-    init("c4_e", np.array([5], np.int64), np.int64)
-    init("ax1", np.array([1], np.int64), np.int64)
-    n("Slice", ["input", "c4_s", "c4_e", "ax1"], "Y")        # [1,1,30,30] fp32
-
-    init("c1_s", np.array([1], np.int64), np.int64)
-    init("c1_e", np.array([2], np.int64), np.int64)
-    n("Slice", ["input", "c1_s", "c1_e", "ax1"], "B")        # [1,1,30,30] blue fp32
+    # ===== yellow plane: slice channel 4 AND crop to the fixed 23x23 active grid in ONE Slice =====
+    # (the grid is always the top-left 23x23, so off-grid yellow never exists -> 23x23 is exact).
+    init("y_s", np.array([4, 0, 0], np.int64), np.int64)     # ch4, row0, col0
+    init("y_e", np.array([5, G, G], np.int64), np.int64)     # ch5, row23, col23
+    init("y_ax", np.array([1, 2, 3], np.int64), np.int64)
+    n("Slice", ["input", "y_s", "y_e", "y_ax"], "Y")         # [1,1,23,23] fp32
 
     # ===== brow, bcol from blue bbox =====
-    # rowhas[1,1,30,1], colhas[1,1,1,30]
-    n("ReduceMax", ["B"], "rowhas", axes=[1, 3], keepdims=1)  # [1,1,30,1]
-    n("ReduceMax", ["B"], "colhas", axes=[1, 2], keepdims=1)  # [1,1,1,30]
+    # rowhas[1,1,30,1], colhas[1,1,1,30] via no-pad profile Convs that pick the BLUE channel and
+    # collapse one spatial axis in ONE op — avoids slicing the full [1,1,30,30] blue plane (3600B).
+    wrow = np.zeros((1, 10, 1, H), np.float32)
+    wrow[0, 1, 0, :] = 1.0      # sum over columns of the blue channel -> per-row count
+    wcol = np.zeros((1, 10, H, 1), np.float32)
+    wcol[0, 1, :, 0] = 1.0      # per-col count
+    init("wrow", wrow, F32)
+    init("wcol", wcol, F32)
+    n("Conv", ["input", "wrow"], "rowcnt")   # [1,1,30,1] fp32
+    n("Conv", ["input", "wcol"], "colcnt")   # [1,1,1,30] fp32
+    n("Greater", ["rowcnt", "zero1111b"], "rowhas_b")
+    n("Greater", ["colcnt", "zero1111b"], "colhas_b")
+    init("zero1111b", np.array([0.0], np.float32).reshape(1, 1, 1, 1), F32)
+    n("Cast", ["rowhas_b"], "rowhas", to=F32)   # [1,1,30,1] {0,1}
+    n("Cast", ["colhas_b"], "colhas", to=F32)   # [1,1,1,30]
     # min index with blue = min over r of (r if has else BIG)
     ramp_r = np.arange(H, dtype=np.float32).reshape(1, 1, H, 1)
     ramp_c = np.arange(H, dtype=np.float32).reshape(1, 1, 1, H)
@@ -122,8 +132,15 @@ def build(task):
     n("Reshape", ["minc", "scalar1"], "minc_s")
     init("scalar1", np.array([1], np.int64), np.int64)
     init("off012", np.array([1.0, 2.0, 3.0], np.float32), F32)  # +1 for brow then 0,1,2
-    n("Add", ["minr_s", "off012"], "ridx_f")   # [3]
-    n("Add", ["minc_s", "off012"], "cidx_f")   # [3]
+    n("Add", ["minr_s", "off012"], "ridx_f0")   # [3]
+    n("Add", ["minc_s", "off012"], "cidx_f0")   # [3]
+    # Clamp gather indices to [0, G-1]: Y is the 23x23 grid; when the 3x3 window's last row/col
+    # would exceed the grid (sprite near the bottom/right edge, tall<3 or wide<3), that out-of-range
+    # row/col is masked OUT below (rows>=tall / cols>=wide) so clamping to a duplicate edge is safe.
+    init("gmax", np.array([G - 1.0], np.float32), F32)
+    init("gzero", np.array([0.0], np.float32), F32)
+    n("Clip", ["ridx_f0", "gzero", "gmax"], "ridx_f")
+    n("Clip", ["cidx_f0", "gzero", "gmax"], "cidx_f")
     n("Cast", ["ridx_f"], "ridx", to=I64)
     n("Cast", ["cidx_f"], "cidx", to=I64)
 
@@ -206,75 +223,64 @@ def build(task):
     n("Mul", ["Mconv", "Bneg"], "Mw")
     n("Sub", ["Kw", "Mw"], "combk")              # [8,1,3,3]
 
-    # ===== crop Y to the fixed 23x23 active grid, pad, single Conv =====
-    init("gs", np.array([0, 0], np.int64), np.int64)
-    init("ge", np.array([G, G], np.int64), np.int64)
-    init("gax", np.array([2, 3], np.int64), np.int64)
-    n("Slice", ["Y", "gs", "ge", "gax"], "Yg")   # [1,1,23,23]
-    init("padY", np.array([0, 0, PAD, PAD, 0, 0, PAD, PAD], np.int64), np.int64)
-    n("Pad", ["Yg", "padY"], "Yp32")   # [1,1,23+2PAD,23+2PAD]
-    n("Cast", ["Yp32"], "Yp", to=F16)
+    # ===== Y is already the 23x23 active grid; cast to fp16 for the match Conv =====
+    n("Cast", ["Y"], "Yg", to=F16)                 # [1,1,23,23] fp16
     n("Cast", ["combk"], "combk16", to=F16)
-    n("Cast", ["Mconv"], "Mconv16", to=F16)
-    n("Cast", ["npat"], "npat16", to=F16)
-    n("Conv", ["Yp", "combk16"], "corr")   # [1,8,Hp-2,Hp-2] fp16
-    n("Equal", ["corr", "npat16"], "Mb")   # [1,8,Hm,Hm] bool
-    n("Cast", ["Mb"], "M", to=F16)
+    # Match WITHOUT a separate bool + fp16 plane: bias the Conv by -(npat-0.5) so its output is
+    # already corr-(npat-0.5) (=+0.5 exactly at a match since corr<=npat is integer-valued, <=-0.5
+    # otherwise), then ONE Relu yields the fp16 {0,0.5} indicator directly. This replaces the
+    # corr(8.5KB)+Equal-bool(4.2KB)+Cast-fp16(8.5KB) trio with corr'(8.5KB)+Relu(8.5KB).
+    # Conv accepts a runtime per-output-channel bias [8]; build it as (0.5 - npat) broadcast to 8.
+    init("half", np.array([0.5], np.float32).reshape(1, 1, 1, 1), F32)
+    n("Sub", ["half", "npat"], "negnpat")            # [1,1,1,1] = 0.5 - npat
+    n("Reshape", ["negnpat", "scalar1"], "negnpat1")  # [1]
+    init("ones8", np.ones((8,), np.float32), F32)
+    n("Mul", ["negnpat1", "ones8"], "bias8_f")        # [8] broadcast
+    n("Cast", ["bias8_f"], "bias8", to=F16)
+    # SAME-pad Conv directly on the 23x23 crop (pads=[1,1,1,1]) avoids a separate padded Yp plane.
+    n("Conv", ["Yg", "combk16", "bias8"], "corrm", pads=[1, 1, 1, 1])  # [1,8,23,23] fp16
+    n("Relu", ["corrm"], "M")                          # fp16 {0, 0.5}; >0 iff match
 
-    # ===== stamp the (undilated) content bbox per orientation, collapse, dilate ONCE =====
-    # ConvTranspose places mask3 (3x3) at each anchor -> [1,8,Hm+2,Hm+2]; ReduceMax over the
-    # 8 orientations -> [1,1,Hm+2,Hm+2]; then a single 3x3 MaxPool dilates by 1 (the box border).
-    n("ConvTranspose", ["M", "Mconv16"], "placed", group=8,
-      kernel_shape=[3, 3], strides=[1, 1])     # [1,8,Hm+2,Hm+2] fp16
-    n("ReduceMax", ["placed"], "placed1", axes=[1], keepdims=1)  # [1,1,Hm+2,Hm+2]
+    # spatially-flip Mconv [8,1,3,3] -> reshape to [1,8,3,3] sum-Conv weight (fp16).
+    init("flip_s", np.array([2, 2], np.int64), np.int64)        # start last idx (size3)
+    init("flip_e", np.array([-4, -4], np.int64), np.int64)      # to before 0
+    init("flip_step", np.array([-1, -1], np.int64), np.int64)
+    init("flip_ax", np.array([2, 3], np.int64), np.int64)
+    n("Slice", ["Mconv", "flip_s", "flip_e", "flip_ax", "flip_step"], "Mconv_f")
+    init("sh1833", np.array([1, 8, 3, 3], np.int64), np.int64)
+    n("Reshape", ["Mconv_f", "sh1833"], "Mconv_flip")
+    n("Cast", ["Mconv_flip"], "sumk16", to=F16)
+
+    # ===== stamp each oriented content bbox at every match anchor, collapse, dilate by 1 =====
+    # A forward grouped-SUM Conv collapses the 8 orientation channels into ONE [1,1,23,23] plane
+    # (SUM is fine — we only test >0). It reproduces the old per-orientation ConvTranspose stamp by
+    # spatially flipping the mask (forward Conv correlates with the un-flipped kernel) and SAME pad=1
+    # so the stamp stays centred on the anchor. Then ONE 3x3 MaxPool dilates the bbox by 1 = the box.
+    n("Conv", ["M", "sumk16"], "placed1", pads=[1, 1, 1, 1])  # [1,1,23,23] fp16
     n("MaxPool", ["placed1"], "boxsum", kernel_shape=[3, 3], pads=[1, 1, 1, 1],
       strides=[1, 1])                          # dilate by 1
 
-    # boxsum coordinates: anchor a in [0..Hm-1] maps to padded-Y coord a, stamp top-left a-1.
-    # ConvTranspose output index = a + (kernel index). With stamp top-left meaning offset 0..4,
-    # and we want absolute padded coord = (a-1)+i. ConvTranspose gives out[a+i].
-    # So out index o corresponds to padded coord o-1? We must align: padded coord p = o + ?.
-    # We'll Slice the final box to recover the 30x30 grid below after determining offset.
-
-    # ===== assemble output =====
-    # box>0 indicator on the boxsum plane; need to crop to 30x30 grid coords.
-    # We'll handle cropping with a Slice (offsets determined empirically; see CROP below).
-    n("Greater", ["boxsum", "zero16"], "box_b")  # [1,1,Hb,Hb] bool
+    # ===== assemble output entirely at 23x23, then Pad-99 to 30x30 (uint8 Pad keeps off-grid off) =====
     init("zero16", np.array([0.0], np.float16).reshape(1, 1, 1, 1), F16)
     init("zero1111", np.array([0.0], np.float32).reshape(1, 1, 1, 1), F32)
-    # crop box_b to the 23x23 grid then pad to 30x30 (off-grid box = 0)
-    init("cs_s", np.array([CROP0, CROP0], np.int64), np.int64)
-    init("cs_e", np.array([CROP0 + G, CROP0 + G], np.int64), np.int64)
-    init("cs_ax", np.array([2, 3], np.int64), np.int64)
-    n("Slice", ["box_b", "cs_s", "cs_e", "cs_ax"], "box23")  # [1,1,23,23] bool
-    n("Cast", ["box23"], "box23f", to=F16)
-    init("padbox", np.array([0, 0, 0, 0, 0, 0, H - G, H - G], np.int64), np.int64)
-    n("Pad", ["box23f", "padbox"], "box30f")   # [1,1,30,30] fp16
-    n("Greater", ["box30f", "zero16"], "box30")  # bool
+    # box (bool) and yellow (bool) both at 23x23 — no full-30x30 fp16 plane needed.
+    n("Greater", ["boxsum", "zero16"], "box23")   # [1,1,23,23] bool
+    n("Greater", ["Y", "zero1111"], "yel23")      # [1,1,23,23] bool (Y is the 23x23 yellow slice)
 
-    # yellow mask bool
-    n("Greater", ["Y", "zero1111"], "yel_b")   # [1,1,30,30]
-    # in-grid mask: off-grid cells are all-zero one-hot (no channel set)
-    n("ReduceMax", ["input"], "ingrid_f", axes=[1], keepdims=1)  # [1,1,30,30]
-    n("Greater", ["ingrid_f", "zero1111"], "ingrid")            # bool
-    # box must be in-grid (matches only occur in-grid)
-    n("And", ["box30", "ingrid"], "box_ig")
-    # blue out = box AND NOT yellow
-    n("Not", ["yel_b"], "nyel")
-    n("And", ["box_ig", "nyel"], "blue_out")     # ch1
-    # bg out = in-grid AND NOT box AND NOT yellow
-    n("Not", ["box_ig"], "nbox")
-    n("And", ["nbox", "nyel"], "bg_a")
-    n("And", ["bg_a", "ingrid"], "bg_out")       # ch0
-
-    # build 10-channel output: ch0=bg, ch1=blue, ch4=yellow, others 0
-    # output = And(chsel[1,10,1,1], ...) approach: use Where chain via concat of bools.
-    # Simpler: make each channel plane then Concat along channel axis -> [1,10,30,30] bool.
-    init("false30", np.zeros((1, 1, H, H), np.bool_), BOOL)
-    # ch2,3 = false; ch5..9 = false
-    n("Concat", ["bg_out", "blue_out", "false30", "false30",
-                 "yel_b", "false30", "false30", "false30", "false30", "false30"],
-      "output", axis=1)
+    # Route the 10-ch output via ONE uint8 colour-index plane + a final Equal into the FREE output
+    # (Equal & Where both run on uint8 under ORT_DISABLE_ALL). Priority yellow(4) > blue(1) > bg(0).
+    init("c0u", np.array([0], np.uint8).reshape(1, 1, 1, 1), U8)
+    init("c1u", np.array([1], np.uint8).reshape(1, 1, 1, 1), U8)
+    init("c4u", np.array([4], np.uint8).reshape(1, 1, 1, 1), U8)
+    n("Where", ["box23", "c1u", "c0u"], "idx_bb")     # blue or bg [1,1,23,23] uint8
+    n("Where", ["yel23", "c4u", "idx_bb"], "colidx23")  # yellow overrides [1,1,23,23] uint8
+    # Pad to 30x30 with sentinel 99 -> off-grid cells match no channel (required all-off one-hot).
+    init("pad99", np.array([0, 0, 0, 0, 0, 0, H - G, H - G], np.int64), np.int64)
+    init("cv99", np.array(99, np.uint8), U8)
+    n("Pad", ["colidx23", "pad99", "cv99"], "colidx", mode="constant")  # [1,1,30,30] uint8
+    arange_ch = np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1)
+    init("arange_ch", arange_ch, U8)
+    n("Equal", ["colidx", "arange_ch"], "output")       # [1,10,30,30] bool (FREE output)
 
     graph = helper.make_graph(nodes, "task191", [
         helper.make_tensor_value_info("input", F32, [1, 10, H, H])],

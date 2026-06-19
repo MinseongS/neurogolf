@@ -10,7 +10,13 @@ region is a SOLID RECTANGLE bounded by red/border, area = (horizontal free-run l
 Run length = (nearest wall right) - (nearest wall left) - 1; a "wall" is red, off-grid, or
 the grid border. Then amin/amax are two scalar reductions and selection is two Equal masks.
 
-**Current:** 13.90 pts (blank-note "confirmed-infeasible", ~66KB Gather/Sum net)
+**Current:** 15.51 pts (DEPLOYED = adopted **ext:kojimar7113**, mem 13104 / params 111).
+This crowd net SUPERSEDES all our prior log-doubling attempts below (best 14.21 / mem 48424).
+It uses the directional MaxPool prefix-carry (task350/367 lever) — the same insight our open
+angles were groping toward — at near-zero param cost. RE-GOLF VERDICT (2026-06-19): INFEASIBLE
+to beat by +0.3. Need mem+params <= 9799; the directional-MaxPool design floors at ~13104.
+Every plane is irreducible (see analysis at bottom). Our src/custom/task145.py is the OLD
+14.21 net — do NOT adopt it (it would REGRESS 15.51 -> 14.21). Keep kojimar7113.
 **Target tier:** B/detection — connectivity+global-argmax form, but the rectangle structure
 collapses it to closed-form per-cell area + two reductions (well above the ~13.4 floor).
 
@@ -54,3 +60,30 @@ ReduceMax(area) needs no free-mask (generator guarantees a region of area>1), bu
 must mask walls. Big mem wins came from: input only has colours {0,2} -> slice ch0/ch2 on the
 WxW active region instead of a full-30 Conv/ReduceSum; and a single uint8 colour-index plane
 -> Pad(uint8) -> Equal(arange) BOOL output (no [1,10,30,30] intermediate ever materialised).
+
+## RE-GOLF of kojimar7113 (2026-06-19) — at directional-MaxPool floor
+Deployed net: Slice ch0 -> z_f32 [1,1,20,20] fp32 (1600B entry, FORCED — Slice inherits
+fp32 input dtype). 4 directional MaxPool prefix-carries find nearest-red position per dir
+(zero-param 1x20/20x1 kernels w/ one-sided pad): Where(z_bool,0,pos)->src (4x400) ->
+MaxPool->marker (4x400) -> Add lr/ud (2x400) -> DequantizeLinear(zp=20) folds u8 sum ->
+fp16 neg_width/neg_height in ONE op (2x800) -> Mul area (800) -> ReduceMax + Where-mask
+area_for_min (800) + ReduceMin -> Equal max/min masks (2x400) -> 4-Where color chain
+(0/2/offgrid10/blue1/cyan8, 4x400) -> Pad uint8 color30 (900) -> Equal(arange) BOOL output.
+Total 13104B, every plane distinct-purpose.
+
+Per-plane irreducibility:
+- z_f32 1600 fp32: Slice of fp32 input; a 1x1 Conv->fp16 entry costs 1800(30x30)+800(slice)=worse.
+- 4 src + 4 markers (3200): MaxPool needs a placed-pos plane per direction; left/right use
+  opposite pos arrays + opposite pad sides (no min-pool in ORT) so cannot share. 8 planes inherent.
+- u8->fp16 width/height: DequantizeLinear(zp=20) already fuses Add-offset+cast in one op; the
+  uint8-width alternative needs extra Casts (Mul rejects uint8) -> strictly worse.
+- area_for_min 800: wall/red cells have area=1 (pollute ReduceMin); the Where-mask is the
+  single cheapest mask. ReduceMax needs no mask (walls<max) but ReduceMin does.
+- inside chain ~600: off-grid (all-zero one-hot) vs in-grid-red BOTH have z_bool=False, so an
+  in-grid mask is mandatory to send off-grid -> sentinel 10 (else off-grid prints red).
+- color30 900: the Equal-to-output feeder; a pre-Equal expansion would be [1,10,20,20]=4000B.
+- Width/height are genuinely 2-D (per-cell): guillotine partition makes each row band have a
+  different vertical segmentation, so row/col PROFILES cannot replace the area plane.
+
+To reach +0.3 needs cutting ~3.4KB (~8.5 of the 400B planes) — no such slack exists.
+VERDICT: INFEASIBLE. Keep ext:kojimar7113.

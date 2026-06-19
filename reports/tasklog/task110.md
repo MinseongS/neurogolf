@@ -1,55 +1,88 @@
 # task110 — 484b58aa
 
-**Rule:** A 29×29 grid is a doubly-periodic colour tiling (colours 1..9). The
-ROW period rp and COLUMN period cp are INDEPENDENT scalars; on FRESH random
-instances rp==cp ∈ {2,4,5,6,7,8,9} (never 1 or 3, verified 16k axes), but the
-fixed validate() cases reach cp=18 / no col period. The INPUT additionally has
-up to five black (colour-0) rectangular cutouts (≤5×5). The OUTPUT removes the
-cutouts, restoring every black cell to its periodic colour. Off-grid (row/col
-29) is the ALL-ZERO one-hot.
-**Current:** 13.48 pts, gen:vyank6322, mem 100033, params 350 (labelled
-"confirmed-infeasible" BLANK note — FALSE POSITIVE).
-**Target tier:** detection→closed-form periodic in-painting; B-ish.
+**Rule:** A `size×size` grid is a DOUBLY-PERIODIC colour tiling (colours 1..9, no
+0 in-grid). FRESH instances (`generate()` with no args, the only thing genverify
+exercises) use the `colors is None` branch: `v=(R²+C²)%mod+1` with
+`R=(offset+row)%length−length//2`, so the ROW and COL period are BOTH `length∈{4..9}`
+(rp==cp). The 4 fixed `validate()` stored examples use the `colors` branch where
+row-period = `len(colors)//mod` and col-period = `mod` differ (rp∈{6,7,8,9},
+cp∈{6,8,18,none}). The INPUT overlays ≤5 black (colour-0) rectangular cutouts
+(≤5×5). The OUTPUT restores every black cell to its periodic colour.
+
+**Current:** 15.46 pts, `ext:kojimar7113` (crowd net), mem 13275, params 650.
+**Target tier:** B (tile-detect + re-tile Gather). Reconstruction is closed-form
+(no flood/connectivity wall) — but the deployed crowd net is already near floor.
+
+## What the kojimar net actually does (decoded from networks/task110.onnx)
+- `labels_f = Conv(input,[0..9])` → colour-index plane (f32, **3600B**).
+- `inv30_f  = Conv(input,[0,9,8,..,1])` → "inverted" index = (10−colour) at
+  nonblack, 0 at black (f32, **3600B**). These TWO f32 planes = 7200B = 54% of mem.
+- For each candidate period q∈{5,6,7,8,9}: a **dilated MaxPool (dilation=q)** of
+  `labels_f` takes the max over ALL periodic copies of each residue class → the
+  clean fundamental tile in ONE op (output tiny, ≤9×9). The matching dilated
+  MaxPool of `inv30_f` gives max(10−colour). **Validity = ReduceMax(label_tile)+
+  ReduceMax(inv_tile)==10** ⟺ every copy in that residue agrees (min==max
+  uniformity). This picks the correct period as a scalar.
+- Re-tile: `Gather(selected_tile, arange mod p)` rebuilds the 30×30 → output Equal.
+  All per-candidate planes are ≤324B; only the two entry f32 planes + final
+  gather (uint8 900B) are large.
+
+## Reconstruction algorithm verified (numpy, my rebuild reference)
+Separable dilated-MaxPool, **no inv plane needed for correctness** — detection
+replaced by scalar period: row-clean MaxPool(dil=rp) → re-tile rows by `arange%rp`;
+col-clean MaxPool(dil=cp) ONLY for cp∈{4..9} → re-tile cols by `arange%cp`, else
+leave row-cleaned plane. **0 fails / 40000 fresh + all 4 stored.** (ks=max(1,30//p)
+copies, black→−1 sentinel so black loses the max.) Confirmed buildable & exact.
 
 ## Attempts
 | # | angle | tier | mem | params | pts | fresh | outcome |
 |---|---|---|---|---|---|---|---|
-| 1 | per-q full-plane detect + ±p iter fill (fp16, single period) | — | 996k | 2593 | — | 200/200 fresh but stored fail (rp≠cp) | wrong: assumed one period |
-| 2 | separate rp/cp detect (q≤18) + gating | B | 775k | 3039 | 11.43 | — | correct, huge |
-| 3 | windowed bool detect (WIN15) + uint8 fill | B | 134k | 1468 | 13.18 | 200/200 | |
-| 4 | sentinel one-hot, frozen-cur fill, pad-sentinel boundary | B | 80k | 1382 | 13.69 | 500/500 | |
-| 5 | max-of-4-donors fill + qcands skip(3) + WIN12 | B | 69860 | 1344 | **13.83** | 3000/3000 | ADOPTED |
+| 0 | prior committed src/custom/task110.py (period-detect + 3-pass directional Gather fill) | B | 69860 | 1344 | 13.83 | 4/4 stored | WORSE than deployed 15.46 — never adopted |
+| — | rebuild as separable dilated-MaxPool tile, drop inv30 | B | est ≥16k | — | <15.5 | — | detection planes cost MORE than the 3600 they would save (see floor) |
 
 ## Best achieved
-13.83 @ mem 69860 params 1344 — beats prior 13.48 by **+0.34** (≥+0.3 ✅).
-Stored 266/266, isolated fresh 200/200 (and 3000/3000, 50000/50000 detect-axis).
+No improvement. Deployed `ext:kojimar7113` 15.46 stands. **MARGINAL — provably
+cannot reach +0.3.**
 
-## Irreducible-floor analysis
-Not at floor. Dominant residuals: the 3600B fp32 Conv entry plane (colour-index
-Σk·input_k — irreducible 10→1 reduction), then ~22KB windowed period detection
-(7 q-candidates × 2 axes × ~8 tiny WIN×WIN planes) and ~45KB fill (3 passes ×
-4 padded-Gather donors, all uint8 900B planes). Everything full-canvas is uint8.
+## Irreducible-floor analysis (decisive)
+Two mandatory f32 30×30 planes:
+1. `labels_f` (3600) — the colour-index value plane; needed for the dilated
+   MaxPool tiles AND the final re-tile Gather → output. Unremovable.
+2. The "negated value" plane `inv30_f` (3600) — load-bearing for the MaxPool-tile
+   **uniformity validation** (max(v)+max(10−v)==10 ⟺ min==max ⟺ residue uniform),
+   which is how the correct period is selected. inv=10−v at nonblack is itself a
+   full-grid f32 plane (Conv, or Sub+Where = same 3600B); a window slice would
+   need a [1,10,18,18] input slice = 12960B (worse). Irreducible at 3600.
 
-## OPEN ANGLES
-- Period detection via 1-D autocorrelation/MatMul instead of per-q full-window
-  planes (would drop the ~22KB detection block).
-- Fewer fill passes if a cheap multi-hop donor (±2p) could be made robust at 2
-  passes (mults=[1,2] niters=1 failed 5/3000; niters=2 = 16 gathers, worse).
-- WIN=11 reaches 13.87 but had 1/30000 detect-axis disagreement — rejected for
-  robustness; WIN=12 is 0/50000.
+**The scoring math kills it even in the impossible best case:** removing inv30 with
+ZERO replacement cost gives mem 9675 → 25−ln(9675+650) = **15.758 = +0.299 < +0.3**.
+Any real replacement detection (per-candidate shift-compare on a window ≈ 6 q ×
+2 axes × ~3 planes × ~324B ≈ 11.7KB, OR a re-projection Gather per candidate ~900B
+full-grid) adds FAR more than the 3600 it saves, pushing a from-scratch rebuild to
+≥16KB (worse than the deployed 13275). No detection is cheaper than the inv-plane
+uniformity trick kojimar already uses. ⇒ structurally below the +0.3 bar.
+
+## OPEN ANGLES (re-attack backlog)
+- ONLY viable path: hand-edit the deployed onnx to remove inv30 AND ALSO shave
+  ~700B+ from its ~6KB of small per-candidate planes — BOTH must land together to
+  clear total ≤9650 (→15.76, +0.30). High effort, razor-thin margin, requires
+  surgical edits to the external safe-named graph. Not a from-scratch rebuild
+  (detection reintroduces the cost).
 
 ## INSIGHT (transferable)
-⭐ "BLANK-note confirmed-infeasible" periodic in-painting was a FALSE POSITIVE.
-⭐ Period in-painting = (a) detect period as a SCALAR via smallest-q masked
-   mismatch reduction on a SMALL TOP-LEFT WINDOW (global period needs no full
-   canvas — WIN=12 matched full detection 0/50000 axes, planes shrink 6×); (b)
-   route out-of-range Gather donors to a Pad-appended BLACK sentinel index (30)
-   so one Greater(donor,0) test rejects them — no per-cell validity masks; (c)
-   gate a missing-period axis by p_eff = found?p:99 (all donors → sentinel);
-   (d) fill all black cells with elementwise MAX of the ±period donors (all
-   valid donors carry the identical periodic colour, so max=correct, 0=none) —
-   collapses a 4-way Where chain to one fill. Whole pipeline uint8 (Greater/
-   And/Where/Equal/Gather/Pad all run uint8 under ORT_DISABLE_ALL); only the
-   one fp32 Conv entry and the fp16 detection-count cast stay non-uint8.
-⭐ When skipping non-contiguous q-candidates, map ArgMax index back through a
-   Gather(qtab, idx) — NOT idx+offset (silent period-off-by-skip bug).
+⭐ DILATED-MAXPOOL = PERIODIC TILE RECONSTRUCTION IN ONE OP: for a doubly-periodic
+in-paint, a MaxPool with **dilation = period q** takes the max over every periodic
+copy of each residue class, yielding the clean fundamental tile in a single tiny
+plane (black=0 loses the max, so no mask). Re-tile via `Gather(tile, arange%q)`.
+Period is a static attribute → run one MaxPool per candidate q and select by a
+scalar. This is the cheap escape from the plane-heavy iterative "copy ±p donor"
+fill (which materialises ~14 full planes/pass). Separable (row-clean then
+col-clean, col only when cp∈{4..9}) is exact (0/40000 fresh).
+⭐ MAXPOOL-TILE UNIFORMITY = max(v)+max(K−v)==K (K=10 here): a "negated value"
+plane lets a dilated MaxPool prove every periodic copy agrees, selecting the true
+period as a SCALAR with only ≤9×9 working planes — but that negated plane is itself
+a full 3600B f32 carrier and is the cheapest known period detector, so it pins the
+floor at TWO f32 planes.
+⭐ FEASIBILITY-MATH FIRST: when the only lever is removing ONE 3600B plane from a
+~13.3KB net, compute 25−ln(mem−3600+par) BEFORE building — here it's 15.758, below
+the +0.3 bar even at zero replacement cost. Bail fast.

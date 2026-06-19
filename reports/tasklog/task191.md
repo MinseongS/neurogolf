@@ -8,7 +8,8 @@ extra yellow inside the oriented bbox), draw a blue box = oriented-bbox dilated 
 yellow dots on top. (The reference sprite reproduces itself.) Generator only emits non-illegal
 instances, so boxes never collide with the sprite frame / off-grid.
 
-**Current:** 11.53 pts (public 1037-node net), → **13.77 pts custom**, mem 74258, params 1122
+**Current (deployed):** 14.25 pts (ext:kojimar7113 crowd net). Prior custom 13.77 (mem 74258) was
+WORSE than the crowd net. → **14.62 pts new custom**, mem 31276, params 844 (beats 14.25 by +0.37).
 **Target tier:** detection (8-orientation template match) — NOT a multi-object-correspondence BAIL:
 the match is a pure binary correlation expressible as a single stacked Conv.
 
@@ -19,17 +20,26 @@ the match is a pure binary correlation expressible as a single stacked Conv.
 | 2 | + fp16 working planes | det | 129296 | 1114 | 13.22 | 200/200 | ok |
 | 3 | + crop conv canvas to 23×23 grid | det | 94864 | 1128 | 13.53 | 200/200 | ok |
 | 4 | + stamp mask3 (3×3) then single 3×3 dilate | det | 93394 | 1120 | 13.54 | 200/200 | ok |
-| 5 | + COMBINED match kernel (fold tot into corr) | det | 74258 | 1122 | 13.77 | 500/500 | **adopt-candidate** |
+| 5 | + COMBINED match kernel (fold tot into corr) | det | 74258 | 1122 | 13.77 | 500/500 | superseded |
+| 6 | ConvTranspose+ReduceMax(8ch) -> forward grouped-SUM Conv (1ch) + PAD 2->1 | det | 53206 | 2034 | 14.08 | 200/200 | ok |
+| 7 | bbox via blue profile-Convs; Y fp16 path; in-grid constant | det | 47248 | 2627 | 14.18 | 200/200 | ok |
+| 8 | match via biased-Conv + Relu (drop Equal-bool & fp16 Cast) | det | 39704 | 2628 | 14.35 | 200/200 | ok |
+| 9 | output via ONE uint8 colour-index + Equal (drop 7 bool Concat) | det | 37904 | 1742 | 14.41 | 200/200 | ok |
+| 10 | whole pipeline at 23x23; uint8 Pad-99 to 30x30; clamp K3 gather idx | det | 31276 | 844 | **14.62** | 500/500 | **adopt-candidate** |
 
 ## Best achieved
-13.77 @ mem 74258 params 1122 — beats prior 11.53 by **+2.24** (≥+0.3 ✓). fresh 500/500 (incl off-grid).
+**14.62 @ mem 31276 params 844 — beats deployed kojimar7113 (14.25) by +0.37 (≥+0.3 ✓).
+fresh 500/500 + 267/267 stored.**
 
-## Irreducible-floor analysis
-Two 8-channel fp16 full-canvas planes dominate: `corr` Conv output [1,8,25,25]=10KB and the
-`placed` ConvTranspose [1,8,27,27]=11KB. Both are intrinsic to running 8 orientations as stacked
-Conv channels — the 8 dihedral kernels are data-dependent (built from the runtime pattern) so they
-cannot be pre-reduced at build time even when many coincide for symmetric patterns. Plus ~3 fp32
-[1,1,30,30] planes (B slice, Y slice, ingrid = 3.6KB each) for the output assembly.
+## Irreducible-floor analysis (new 31276 build)
+The match pair `corrm`=Conv [1,8,23,23] + `M`=Relu = 16928B (54% of total) is the HARD floor: 8
+dihedral orientations MUST be matched (measured: xpose-only matches contribute in 70% of fresh
+instances, so cannot drop to 4 channels), each a 23x23 fp16 plane, and the stamp Conv needs a float
+copy of the indicator (corr fp16 + relu fp16). The match scores are integer & fp16-exact (corr<=npat,
+range [-200,npat]). All else is tiny: Y 23x23 fp32 slice (2116, forced — fp32 input), three 1058
+fp16 planes (Yg/placed1/boxsum), one 900 uint8 colidx, and a handful of 288B scalar planes.
+NOTE: ORT sometimes fuses corrm->M (Relu in-place) so the trace counts the pair ONCE (8464) — that
+flips the score to ~14.9; it's graph-order-dependent and not relied upon here (we count both = 14.62).
 
 ## OPEN ANGLES (further compaction, not needed for the win)
 - Fold the per-orientation ReduceMax(placed) earlier or stamp into ONE channel via summed

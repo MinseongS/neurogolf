@@ -1,48 +1,46 @@
-# task396 — fcb5c309
+# task396 (ARC-AGI fcb5c309) — crop largest hollow box, recolour to static colour
 
-**Rule:** A 12-18 square grid holds 2-3 hollow rectangular boxes (1px outline in `colors[0]`,
-black interior) plus scattered single-pixel "static" in `colors[1]` (some static lands inside
-the boxes). `wides`/`talls` are each sorted DESCENDING, so box 0 is the LARGEST box (max width
-AND max height). Output is a `tall0 x wide0` grid = box 0's region, but EVERY non-black cell of
-that region (outline + interior static) is painted with the STATIC colour `colors[1]`; black
-interior stays black. Exactly: `out[r][c] = c1 if input[brow0+r][bcol0+c]!=0 else 0`.
-**Current:** 14.009 pts, gen:thbdh6332, mem 58199, params 1115 (bloated import)
-**Target tier:** A — closed-form crop + recolour; no flood-fill / connectivity / global-argmax.
+P (ext:kojimar7113) = 14.72 → **15.29** (mem 16323, params 149), fresh 300/300.
+(Supersedes a leftover src/custom/task396.py that scored 14.49 with a k=2..7 run-conv army +
+full vertical+horizontal run-length on fp32 18×18 planes.)
 
-## Attempts
-| # | angle | tier | mem | params | pts | fresh | outcome |
-|---|---|---|---|---|---|---|---|
-| 1 | per-channel adjacency (fp32) + run-convs (fp32 30x30) | A | 333664 | 229 | 12.28 | — | works but bloated |
-| 2 | adjacency fp16 on 18x18 slice | A | 180944 | 235 | 12.89 | — | better |
-| 3 | run-convs fp16 on 18x18 | A | 94976 | 211 | 13.54 | — | better |
-| 4 | grouped-conv adjacency | A | 88856 | 248 | 13.60 | — | marginal |
-| 5 | **colf-only equal-pair run-length (drop per-channel)** | A | 38465 | 189 | 14.44 | 200/200 | adopt-worthy |
-| 6 | fp16 label/output carrier | A | **36407** | 190 | **14.49** | 200/200 | BEST |
+## Rule
+2-3 hollow rectangular boxes (1px outline colour c0, black interior) + scattered single-pixel
+static (colour c1, some inside boxes). `wides`/`talls` sorted DESC ⇒ box 0 is the LARGEST
+(max width AND max height). Output = tall0×wide0 crop of box 0 with every NON-BLACK cell
+(outline + interior static) painted c1, black interior stays black.
 
-## Best achieved
-14.49 @ mem 36407 params 190 — beats prior 14.009 by +0.48 (>= +0.3). Fresh 200/200 (x2 runs).
+## Encoding (single-direction run-length, plane-eliminated)
+- colf30 = Σk·input_k (1×1 Conv, fp32 entry 3600B), Slice→18×18, Cast→fp16 colf.
+- HORIZONTAL same-colour adjacency pairs eqh = (colf[:, :-1]==colf[:, 1:]) & colf>0 (uint8).
+- **Run-length-ending-here via CUMSUM-RESET** (replaces the old k=2..7 conv army): pad a leading
+  zero, cs=CumSum(eq, axis); reset=where(eq, -BIG, cs); rl = cs − prefixmax(reset) where
+  prefixmax = one-sided full-length MaxPool (ZERO params). maxH = ReduceMax(rl) = wide0−1.
+  CumSum needs fp32 (rejects fp16/uint8/int8; int32 same size) → pay ONE fp32 cumsum + one
+  fp32 cast-up, everything else fp16.
+- Position from the horizontal map only: bcol0 = (min col with per-col max-run==maxH) − maxH;
+  brow0 = min row with per-row max-run==maxH (top edge). Both reduced to [1,1,1,18]/[1,1,18,1]
+  BEFORE masking (no full-plane Where).
+- **tall0 by a 1-D probe** down box-0's left-edge column (Gather col bcol0 from colf →
+  [1,1,18,1]): tall0 = (first row ≥ brow0 where colvec != c0) − brow0. ⚠️ box may reach the
+  grid bottom edge ⇒ the no-stop fallback MUST be A(=18), not BIG, else tall0 overshoots by 1.
+  This **kills the entire vertical cumsum machinery (~5KB, 9 planes)** — box 0 has BOTH max
+  width and max height (same sorted index 0), so one direction + a column probe suffices.
+- c0 = colf at (brow0,bcol0); c1 = present non-bg colour ≠ c0 (ArgMax over masked chramp).
+- Gather-shift colf to (brow0,bcol0), crop WORK×WORK, paint non-black→c1, **uint8 sentinel-99
+  Pad to 30×30** (opset-11 Pad+Equal accept uint8 → 900B not fp16 1800B), Equal(L30, chan u8)
+  → FREE BOOL one-hot output.
 
-## Irreducible-floor analysis
-Dominant intermediates: `colf30` [1,1,30,30] fp32 = 3600B (the one mandatory 10->1 colour-index
-entry plane; ORT forces fp32 here) and `L30` [1,1,30,30] fp16 = 1800B (the output carrier, padded
-30x30 so the final `Equal(L,arange)` can route the 10-ch expansion into the FREE bool output).
-Everything else lives on a 18x18 fp16 working canvas (~600B planes). The key lever was realising
-the box geometry needs NO per-channel [1,10,..] planes: run-length runs entirely on the single
-colf plane via same-colour equal-PAIR detection (`Equal(colf,shift) AND colf>0`), so a horizontal
-run of length L = L-1 consecutive pairs; the global max pair-run = box 0's edge (largest box).
+## Dominant intermediates (irreducible)
+Conv entry 3600B (input is fp32 ⇒ Conv can't keep fp16); cumsum cast-up+cumsum 2×1296B
+(fp32-only op); colff slice 1296B (transient fp32 18×18 before fp16 cast); output Pad 900B.
 
-## OPEN ANGLES (re-attack backlog)
-- `colf18f` (1296B fp32 slice) is redundant with `colf30`; a fused Slice-then-Cast still
-  materialises it. A direct fp16 1x1 Conv on an 18x18 input slice could drop the fp32 18x18 copy.
-- The six per-k run-conv presence planes (~600B each x ~24 tensors) could collapse to ~2 planes
-  via a single cumulative/doubling run-length instead of per-k convs (would shave ~8-10kB).
-- `Vr` [1,1,8,30] (960B) is the row-gathered colf before the col-gather; gathering cols first on
-  the 18-canvas (then rows) would be smaller.
-
-## INSIGHT (transferable)
-⭐ "max same-colour run length" and "which colour forms the boxes" both come from the SINGLE colf
-colour-index plane via same-colour EQUAL-PAIR maps — `eqh = Equal(colf[:,:,:,:-1], colf[:,:,:,1:])
-AND colf>0`, run-of-length-L = L-1 consecutive eqh pairs (per-k 1xk valid conv == k, summed). No
-per-channel [1,10,H,W] adjacency plane is ever needed. The "largest box" is just the global
-max-pair-run, and the box colour falls out by reading colf at the winning run's top-left cell —
-so a multi-box "pick the biggest & recolour" task is closed-form tier-A, NOT a correspondence wall.
+## Levers used / transferable
+- ⭐ Single-axis run-length suffices when the target object maximises BOTH axes (sorted DESC):
+  detect on one axis, recover the other dimension by a tiny 1-D edge-column run probe.
+- ⭐ CUMSUM-RESET run-length (1 fp32 cumsum + one-sided MaxPool, 0 params) replaces a k-value
+  conv army for max-contiguous-run; conv-sum overcounts across gaps, cumsum-reset does not.
+- uint8 sentinel-99 Pad+Equal for the output one-hot (opset-11) → 900B vs fp16 1800B.
+- Reduce a full-plane argmin to a per-row/col profile BEFORE the masking Where.
+- Pitfall: a "first stop below" probe must fall back to the canvas EDGE, not a huge sentinel,
+  when the object touches the grid boundary (+1 overshoot bug, caught at 263/266).
