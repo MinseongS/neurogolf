@@ -2480,15 +2480,15 @@
  {
   "task": 192,
   "arc_id": "7e0986d6",
-  "points": 15.32,
-  "memory": 15980,
-  "params": 68,
+  "points": 15.62,
+  "memory": 11789,
+  "params": 58,
   "method": "gen:thbdh6332",
   "class": "BAIL",
   "sig": "memory",
   "status": "done",
   "verdict": "INFEASIBLE: 7e0986d6: place small colored pixels INTO the box whose interior shape matches (",
-  "note": "subagent win mid-manifest (14.14->15.32 +1.18; box-fill keep-mask + scalar fill color)"
+  "note": "re-golf +0.30: uint8 index-plane tail (Equal+Pad uint8 run under ORT_DISABLE_ALL = 900B not 1800B); crop PACKED 1-ch plane after Conv not 10-ch input (input slice is counted); ArgMax channel-count = scalar colour idx. Floor: 3600+1600B fp32 entry pair"
  },
  {
   "task": 193,
