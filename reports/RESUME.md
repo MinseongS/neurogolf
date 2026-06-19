@@ -1,6 +1,30 @@
 # RESUME — restart the autonomous sweep in a fresh session
 
-## ▶▶▶▶▶ RESUME HERE (handoff 2026-06-19 — 🚀 7k-HARVEST: LB 6667.42 → 7107.01 (+439.59), ABOVE sajayr 7015)
+## ▶▶▶▶▶▶ RESUME HERE (handoff 2026-06-19 LATE — 🚀 LB 6667.42 → **7121.23**, ABOVE public crowd 7113.80)
+**Confirmed LB 7121.23** (stored 7152.05, 400/400). Progression today: 6667.42 → 7107.01 (7k-harvest keep-best of
+sajayr) → 7113.80 (pure kojimar audited blend) → **7121.23 (merge_E)**. The winning recipe + key lessons:
+- PUBLIC NETS ARE THE LEVER NOW. Best public blend = `kojimar/neurogolf-7113-80-minimal-onnx-assets-v1` dataset
+  (base_submission.zip + overrides.zip; overrides = full 400-net 7113.80 solution). Pull via `kaggle datasets
+  download`. Other sources: sajayr/neurogolf-7k (7092 raw), octaviograu 6154, jsrdcht 6029, konbu17 blends.
+- **EMPIRICAL RANKING (submitted & confirmed):** pure-sajayr-where-valid=7092.28 < our keep-best=7107.01 <
+  pure-kojimar=7113.80 < **merge_E=7121.23**. Lesson: our keep-best+fresh-gate is SOUND (beat pure-sajayr); the
+  crowd's 7113.80 is kojimar's audited blend (NOT sajayr's raw).
+- **merge_E = THE WINNING METHOD (reports/merge_E.py):** base = best public blend (kojimar); OVERLAY our net ONLY
+  where ours scores strictly higher on our examples AND passes fresh-200 (fresh-pass ⇒ generalizes ⇒ LB-safe);
+  fall back to ours where kojimar's net fails our examples. 14 overlays + 5 fallbacks → +7.43 over pure-kojimar.
+- **Fresh-gate is load-bearing** (reports/merge_7k_fresh.py): rejects overfit public nets that pass stored
+  examples but fail held-out (caught sajayr's ~4, kojimar's wall-overrides). NEVER blind-merge public nets.
+- Tools: `reports/compare_7k.py` (score any external onnx dir vs our manifest), `reports/onnx_inspect.py`
+  (structure dump, `--theirs` reads /tmp dirs), `src.merge_external` (built-in keep-best, but NO fresh-gate).
+**▶ NEXT SESSION = PUSH PAST 7121 toward 7800:** (1) WATCH for newer/higher public blends (the LB moves fast —
+re-pull kojimar's latest + check `kaggle datasets list -s neurogolf --sort-by updated`; re-run merge_E with the
+new base). (2) RE-GOLF FROM the adopted nets: `onnx_inspect <task>` the high-mem ext:kojimar7113 nets, dispatch
+the 8-wide plane-elim agent fleet to beat them (our re-golf beat "already-optimized" nets all session) → any win
+is a fresh overlay that pushes past 7121. (3) 14.9-min-floor walls (219/255/233/...) still ~22-30 gap but mostly
+true walls. STEP 0: lb_status (confirmed 7121.23, nothing pending); check for newer public blend FIRST.
+Submission budget: ~5/day, transient 400s on submit → retry after 60s via submission/submission.zip.
+
+## ▶▶▶▶▶ (superseded) RESUME (2026-06-19 — 7k-HARVEST: LB 6667.42 → 7107.01, ABOVE sajayr 7015)
 **Confirmed LB 7107.01** (400/400 solved, stored 7135.87, gap 28.86). Two things happened this session:
 1. **Plane-elim re-golf wave (14 wins, +~6 stored)** before the harvest: 080/218/362/351/161/192/238/341/131/013/
    275/340/093/264/222 etc. New levers graduated to BUILD_PROMPT (nested-Where union-carrier, profile-Conv,
