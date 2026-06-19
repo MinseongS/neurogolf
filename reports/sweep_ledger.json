@@ -1096,7 +1096,7 @@
   "sig": "-",
   "status": "done",
   "verdict": "+0.065 < bar; fp32 occupancy entry plane (3600B) is binding floor. (small real cut found: mod-K prefix subsumes occupancy gate)",
-  "note": "WIN +0.30 (beat own custom, floor-break): at-most-one-run-per-row => horiz offset-parity is per-ROW scalar (ReduceMax(occ*ramp) start-parity, Xor) kills 900-param prefix MatMix; occupancy as Cast->BOOL 30x30 (900B) beats fp16; Concat(mask_bool,zeros_bool) pads dodging u8-Pad. 16081->12012. fresh 500/500."
+  "note": "WIN +0.30 (beat own custom, floor-break): at-most-one-run-per-row => horiz offset-parity is per-ROW scalar (ReduceMax(occ*ramp) start-parity, Xor) kills 900-param prefix MatMix; occupancy as Cast->BOOL 30x30 (900B) beats fp16; Concat(mask_bool,zeros_bool) pads dodging u8-Pad. 16081->12012. fresh 500/500. | re-golf AT-FLOOR (+0.075): occ32 3600B fp32 forced 10->1 channel-collapse entry irreducible; already crops to 16-row active + bool/fp16 downstream. ArgMax-parity micro-opt "
  },
  {
   "task": 86,
