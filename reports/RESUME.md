@@ -1,6 +1,27 @@
 # RESUME — restart the autonomous sweep in a fresh session
 
-## ▶▶▶▶ RESUME HERE (handoff 2026-06-19 LATE — STRUCTURAL session; NEXT SESSION = OPTION 2 HARD-TASK CAMPAIGN)
+## ▶▶▶▶▶ RESUME HERE (handoff 2026-06-19 — 🚀 7k-HARVEST: LB 6667.42 → 7107.01 (+439.59), ABOVE sajayr 7015)
+**Confirmed LB 7107.01** (400/400 solved, stored 7135.87, gap 28.86). Two things happened this session:
+1. **Plane-elim re-golf wave (14 wins, +~6 stored)** before the harvest: 080/218/362/351/161/192/238/341/131/013/
+   275/340/093/264/222 etc. New levers graduated to BUILD_PROMPT (nested-Where union-carrier, profile-Conv,
+   pure-copy route, uint8 index-tail, occupancy-only collapse, combined-max-via-Conv-bias, BitwiseOr=uint8-max).
+2. **🚀 7k-HARVEST (the big jump):** user flagged public notebook kaggle.com/code/sajayr/neurogolf-7015 (LB 7015).
+   The NOTEBOOK is just a zip packager — NO scoring exploit (re-confirmed). The actual nets are in the PUBLIC
+   DATASET `sajayr/neurogolf-7k` (395 onnx). Pulled via `kaggle datasets download sajayr/neurogolf-7k`. Scored
+   all 395 vs ours (reports/compare_7k.py → compare_7k.json: 317 beat ours, raw +436). Adopted via
+   `reports/merge_7k_fresh.py` = merge_external + a FRESH-200 GENERALIZATION GATE (critical — sajayr admits ~4-5
+   fail private; our gate REJECTED 4 overfits, protecting real LB). Result: **313 adopted, keep-best kept OUR
+   better models** (our re-golfs 284/165/387 correctly lost to their better nets). method tag `ext:sajayr7k`.
+   We ended ABOVE sajayr's 7015 by ~92 because of the kept-better-models.
+**▶ NEXT SESSION = PUSH PAST 7107 toward 7800.** The user's plan: sajayr's nets are ALSO just onnx → analyze their
+   structure (`python -m reports.onnx_inspect <task> ` reads networks/, `--theirs` reads /tmp/ng7k/extracted) and
+   RE-GOLF FROM THEM with our plane-elim levers (we beat "already-optimized" nets all session). Dispatch the same
+   8-wide re-golf agent fleet but baseline = the now-adopted ext:sajayr7k nets; target the highest-mem ones first
+   (inspect to find removable carriers vs forced fp32 entries — the session's hit/floor discriminator). Also the
+   13 remaining sub-100% gap tasks (~28.86 pts: 219/255/157/2/319/366/118/233 — mostly true walls; 157 NOW has a
+   working generalizing net from sajayr at 15.35). STEP 0: lb_status; nothing pending (7107.01 confirmed, anchor set).
+
+## ▶▶▶▶ (superseded) RESUME HERE (handoff 2026-06-19 LATE — STRUCTURAL session; NEXT SESSION = OPTION 2 HARD-TASK CAMPAIGN)
 Confirmed LB **6662.12** (#36). This session pivoted to a STRUCTURAL investigation after the user noted the top
 of the leaderboard broke **7800** (we are ~6662 → a ~1140-pt gap that is NOT a ceiling). Session wins (proj LB
 **6663.09**, +0.97 unsubmitted at handoff, 5 wins): 243 BFS-flood +0.20, 096 matched-filter-fp16 +0.23, 367
