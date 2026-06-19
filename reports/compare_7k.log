@@ -1,0 +1,458 @@
+  1 ours= 17.68 theirs= 17.98 d= +0.30 fail=0 eq
+  2 ours= 13.51 theirs= 13.51 d= -0.01 fail=0 eq
+  3 ours= 18.50 theirs= 19.29 d= +0.79 fail=0 WIN
+  4 ours= 15.21 theirs= 16.32 d= +1.11 fail=0 WIN
+  5 ours= 13.51 theirs= 15.82 d= +2.31 fail=0 WIN
+  6 ours= 19.55 theirs= 19.97 d= +0.42 fail=0 WIN
+  7 ours= 16.43 theirs= 20.16 d= +3.72 fail=0 WIN
+  8 ours= 15.12 theirs= 16.36 d= +1.24 fail=0 WIN
+  9 ours= 14.55 theirs= 15.86 d= +1.31 fail=0 WIN
+ 10 ours= 17.19 theirs= 18.01 d= +0.81 fail=0 WIN
+ 11 ours= 15.94 theirs= 17.33 d= +1.39 fail=0 WIN
+ 12 ours= 16.64 theirs= 17.28 d= +0.64 fail=0 WIN
+ 13 ours= 16.48 theirs= 17.43 d= +0.96 fail=0 WIN
+ 14 ours= 15.63 theirs= 16.00 d= +0.38 fail=0 WIN
+ 15 ours= 18.20 theirs= 17.06 d= -1.14 fail=0 eq
+ 16 ours= 22.70 theirs= 22.70 d= +0.00 fail=0 eq
+ 17 ours= 13.94 theirs= 15.30 d= +1.36 fail=0 WIN
+ 18 ours= 13.34 theirs= 13.22 d= -0.11 fail=0 eq
+ 19 ours= 16.84 theirs= 16.96 d= +0.12 fail=0 eq
+ 20 ours= 16.38 theirs= 17.66 d= +1.29 fail=0 WIN
+ 22 ours= 15.78 theirs= 17.26 d= +1.48 fail=0 WIN
+ 23 ours= 13.86 theirs= 16.31 d= +2.45 fail=0 WIN
+ 24 ours= 16.71 theirs= 20.30 d= +3.59 fail=0 WIN
+ 25 ours= 13.74 theirs= 15.43 d= +1.70 fail=0 WIN
+ 26 ours= 19.07 theirs= 19.70 d= +0.63 fail=0 WIN
+ 27 ours= 16.66 theirs= 17.82 d= +1.16 fail=0 WIN
+ 28 ours= 17.06 theirs= 19.88 d= +2.82 fail=0 WIN
+ 29 ours= 15.45 theirs= 15.71 d= +0.26 fail=0 eq
+ 30 ours= 16.59 theirs= 17.22 d= +0.63 fail=0 WIN
+ 31 ours= 16.09 theirs= 17.70 d= +1.61 fail=0 WIN
+ 32 ours= 17.50 theirs= 18.19 d= +0.69 fail=0 WIN
+ 33 ours= 16.14 theirs= 17.60 d= +1.45 fail=0 WIN
+ 34 ours= 16.36 theirs= 17.23 d= +0.87 fail=0 WIN
+ 35 ours= 16.20 theirs= 16.95 d= +0.75 fail=0 WIN
+ 36 ours= 15.66 theirs= 17.31 d= +1.65 fail=0 WIN
+ 37 ours= 14.84 theirs= 16.53 d= +1.69 fail=0 WIN
+ 38 ours= 17.49 theirs= 19.64 d= +2.15 fail=0 WIN
+ 39 ours= 16.35 theirs= 18.83 d= +2.48 fail=0 WIN
+ 40 ours= 16.34 theirs= 19.08 d= +2.74 fail=0 WIN
+ 41 ours= 15.97 theirs= 17.50 d= +1.53 fail=0 WIN
+ 42 ours= 16.44 theirs= 16.96 d= +0.51 fail=0 WIN
+ 43 ours= 17.33 theirs= 18.32 d= +0.99 fail=0 WIN
+ 44 ours= 14.44 theirs= 15.55 d= +1.12 fail=0 WIN
+ 45 ours= 16.55 theirs= 17.58 d= +1.03 fail=0 WIN
+ 46 ours= 14.64 theirs= 17.15 d= +2.50 fail=0 WIN
+ 47 ours= 17.22 theirs= 18.24 d= +1.02 fail=0 WIN
+ 48 ours= 16.60 theirs= 17.95 d= +1.35 fail=0 WIN
+ 49 ours= 16.47 theirs= 19.04 d= +2.57 fail=0 WIN
+ 50 ours= 16.24 theirs= 16.71 d= +0.47 fail=0 WIN
+ 51 ours= 15.90 theirs= 17.50 d= +1.60 fail=0 WIN
+ 52 ours= 18.36 theirs= 19.58 d= +1.22 fail=0 WIN
+ 53 ours= 21.60 theirs= 21.60 d= +0.00 fail=0 eq
+ 54 ours= 13.50 theirs= 14.76 d= +1.26 fail=0 WIN
+ 56 ours= 20.43 theirs= 21.47 d= +1.05 fail=0 WIN
+ 57 ours= 17.36 theirs= 18.50 d= +1.13 fail=0 WIN
+ 58 ours= 15.77 theirs= 18.06 d= +2.29 fail=0 WIN
+ 59 ours= 15.97 theirs= 18.68 d= +2.71 fail=0 WIN
+ 60 ours= 16.92 theirs= 18.08 d= +1.16 fail=0 WIN
+ 61 ours= 17.25 theirs= 17.58 d= +0.33 fail=0 WIN
+ 62 ours= 15.94 theirs= 17.16 d= +1.22 fail=0 WIN
+ 63 ours= 16.65 theirs= 17.39 d= +0.74 fail=0 WIN
+ 64 ours= 14.99 theirs= 15.49 d= +0.50 fail=0 WIN
+ 65 ours= 16.59 theirs= 18.54 d= +1.94 fail=0 WIN
+ 66 ours= 13.51 theirs= 15.03 d= +1.53 fail=0 WIN
+ 67 ours= 20.75 theirs= 21.15 d= +0.40 fail=0 WIN
+ 68 ours= 16.29 theirs= 18.57 d= +2.28 fail=0 WIN
+ 69 ours= 14.86 theirs= 16.73 d= +1.86 fail=0 WIN
+ 70 ours= 16.25 theirs= 16.99 d= +0.74 fail=0 WIN
+ 71 ours= 14.59 theirs= 17.10 d= +2.51 fail=0 WIN
+ 72 ours= 18.43 theirs= 18.96 d= +0.53 fail=0 WIN
+ 73 ours= 21.31 theirs= 21.31 d= +0.00 fail=0 eq
+ 74 ours= 15.41 theirs= 15.86 d= +0.45 fail=0 WIN
+ 75 ours= 16.02 theirs= 17.70 d= +1.68 fail=0 WIN
+ 76 ours= 13.71 theirs= 14.80 d= +1.09 fail=0 WIN
+ 77 ours= 13.48 theirs= 15.39 d= +1.91 fail=0 WIN
+ 78 ours= 16.62 theirs= 17.84 d= +1.22 fail=0 WIN
+ 79 ours= 15.39 theirs= 16.95 d= +1.56 fail=0 WIN
+ 81 ours= 17.26 theirs= 18.86 d= +1.60 fail=0 WIN
+ 82 ours= 16.88 theirs= 19.75 d= +2.87 fail=0 WIN
+ 83 ours= 17.50 theirs= 18.90 d= +1.39 fail=0 WIN
+ 84 ours= 17.00 theirs= 17.38 d= +0.38 fail=0 WIN
+ 85 ours= 15.61 theirs= 16.41 d= +0.80 fail=0 WIN
+ 86 ours= 15.67 theirs= 16.94 d= +1.27 fail=0 WIN
+ 87 ours= 19.09 theirs= 20.50 d= +1.41 fail=0 WIN
+ 88 ours= 15.53 theirs= 17.47 d= +1.93 fail=0 WIN
+ 89 ours= 14.83 theirs= 16.11 d= +1.28 fail=0 WIN
+ 90 ours= 15.60 theirs= 16.96 d= +1.36 fail=0 WIN
+ 91 ours= 16.23 theirs= 16.98 d= +0.75 fail=0 WIN
+ 92 ours= 14.87 theirs= 16.11 d= +1.24 fail=0 WIN
+ 93 ours= 15.98 theirs= 16.82 d= +0.84 fail=0 WIN
+ 94 ours= 16.76 theirs= 17.09 d= +0.34 fail=0 WIN
+ 95 ours= 18.20 theirs= 19.16 d= +0.96 fail=0 WIN
+ 96 ours= 13.20 theirs= 15.88 d= +2.69 fail=0 WIN
+ 97 ours= 16.57 theirs= 18.19 d= +1.62 fail=0 WIN
+ 98 ours= 18.19 theirs= 18.20 d= +0.01 fail=0 eq
+ 99 ours= 17.17 theirs= 17.43 d= +0.26 fail=0 eq
+100 ours= 16.75 theirs= 18.66 d= +1.91 fail=0 WIN
+101 ours= 12.68 theirs= 15.14 d= +2.45 fail=0 WIN
+102 ours= 16.16 theirs= 17.17 d= +1.00 fail=0 WIN
+103 ours= 20.25 theirs= 20.91 d= +0.66 fail=0 WIN
+104 ours= 17.31 theirs= 19.46 d= +2.15 fail=0 WIN
+105 ours= 16.37 theirs= 16.95 d= +0.58 fail=0 WIN
+106 ours= 17.94 theirs= 18.23 d= +0.29 fail=0 eq
+107 ours= 15.61 theirs= 16.69 d= +1.08 fail=0 WIN
+108 ours= 17.62 theirs= 18.12 d= +0.50 fail=0 WIN
+109 ours= 16.69 theirs= 17.52 d= +0.83 fail=0 WIN
+110 ours= 13.83 theirs= 15.46 d= +1.63 fail=0 WIN
+111 ours= 18.39 theirs= 18.72 d= +0.33 fail=0 WIN
+112 ours= 14.77 theirs= 17.52 d= +2.74 fail=0 WIN
+113 ours= 21.60 theirs= 21.60 d= +0.00 fail=0 eq
+114 ours= 18.05 theirs= 18.20 d= +0.15 fail=0 eq
+115 ours= 16.75 theirs= 18.05 d= +1.30 fail=0 WIN
+116 ours= 21.60 theirs= 21.60 d= +0.00 fail=0 eq
+117 ours= 15.45 theirs= 16.66 d= +1.21 fail=0 WIN
+118 ours= 13.34 theirs= 14.17 d= +0.84 fail=0 WIN
+119 ours= 16.12 theirs= 17.78 d= +1.66 fail=0 WIN
+120 ours= 18.19 theirs= 18.19 d= +0.00 fail=0 eq
+121 ours= 16.57 theirs= 19.17 d= +2.60 fail=0 WIN
+122 ours= 17.17 theirs= 18.30 d= +1.13 fail=0 WIN
+123 ours= 17.59 theirs= 17.80 d= +0.21 fail=0 eq
+124 ours= 16.04 theirs= 17.42 d= +1.39 fail=0 WIN
+125 ours= 15.87 theirs= 16.85 d= +0.98 fail=0 WIN
+126 ours= 17.09 theirs= 18.59 d= +1.50 fail=0 WIN
+127 ours= 18.20 theirs= 19.02 d= +0.82 fail=0 WIN
+128 ours= 19.30 theirs= 18.83 d= -0.47 fail=0 eq
+129 ours= 19.88 theirs= 20.62 d= +0.74 fail=0 WIN
+130 ours= 17.14 theirs= 21.60 d= +4.46 fail=0 WIN
+131 ours= 15.93 theirs= 16.71 d= +0.78 fail=0 WIN
+132 ours= 15.84 theirs= 16.61 d= +0.77 fail=0 WIN
+133 ours= 12.84 theirs= 14.58 d= +1.74 fail=0 WIN
+134 ours= 16.09 theirs= 17.26 d= +1.17 fail=0 WIN
+135 ours= 19.11 theirs= 19.70 d= +0.59 fail=0 WIN
+136 ours= 16.86 theirs= 17.90 d= +1.04 fail=0 WIN
+137 ours= 16.74 theirs= 16.83 d= +0.10 fail=0 eq
+138 ours= 14.60 theirs= 15.42 d= +0.81 fail=0 WIN
+139 ours= 17.53 theirs= 18.19 d= +0.66 fail=0 WIN
+140 ours= 19.09 theirs= 23.39 d= +4.30 fail=0 WIN
+141 ours= 16.56 theirs= 17.68 d= +1.13 fail=0 WIN
+142 ours= 18.61 theirs= 19.36 d= +0.74 fail=0 WIN
+143 ours= 15.63 theirs= 18.27 d= +2.64 fail=0 WIN
+144 ours= 19.39 theirs= 20.36 d= +0.96 fail=0 WIN
+145 ours= 14.21 theirs= 15.51 d= +1.30 fail=0 WIN
+146 ours= 17.28 theirs= 18.80 d= +1.52 fail=0 WIN
+147 ours= 18.19 theirs= 18.72 d= +0.54 fail=0 WIN
+148 ours= 15.67 theirs= 16.25 d= +0.58 fail=0 WIN
+149 ours= 19.71 theirs= 19.90 d= +0.19 fail=0 eq
+150 ours= 19.88 theirs= 19.94 d= +0.06 fail=0 eq
+151 ours= 18.19 theirs= 18.20 d= +0.01 fail=0 eq
+152 ours= 18.08 theirs= 18.56 d= +0.48 fail=0 WIN
+153 ours= 15.96 theirs= 18.32 d= +2.36 fail=0 WIN
+154 ours= 15.85 theirs= 17.08 d= +1.22 fail=0 WIN
+155 ours= 19.26 theirs= 19.94 d= +0.68 fail=0 WIN
+156 ours= 16.80 theirs= 17.54 d= +0.74 fail=0 WIN
+157 ours= 13.76 theirs= 15.35 d= +1.59 fail=0 WIN
+158 ours= 13.01 theirs= 13.84 d= +0.83 fail=0 WIN
+159 ours= 16.03 theirs= 17.64 d= +1.62 fail=0 WIN
+160 ours= 16.94 theirs= 17.80 d= +0.86 fail=0 WIN
+161 ours= 15.88 theirs= 16.44 d= +0.56 fail=0 WIN
+162 ours= 15.76 theirs= 16.69 d= +0.93 fail=0 WIN
+163 ours= 15.98 theirs= 17.22 d= +1.24 fail=0 WIN
+164 ours= 21.60 theirs= 21.60 d= +0.00 fail=0 eq
+165 ours= 15.04 theirs= 16.10 d= +1.05 fail=0 WIN
+166 ours= 16.89 theirs= 21.82 d= +4.93 fail=0 WIN
+167 ours= 19.17 theirs= 20.00 d= +0.84 fail=0 WIN
+168 ours= 16.32 theirs= 17.29 d= +0.96 fail=0 WIN
+169 ours= 16.54 theirs= 17.58 d= +1.04 fail=0 WIN
+170 ours= 15.62 theirs= 17.16 d= +1.54 fail=0 WIN
+171 ours= 18.19 theirs= 18.19 d= +0.00 fail=0 eq
+172 ours= 21.60 theirs= 21.60 d= +0.00 fail=0 eq
+173 ours= 13.55 theirs= 14.78 d= +1.23 fail=0 WIN
+174 ours= 15.28 theirs= 15.77 d= +0.48 fail=0 WIN
+175 ours= 16.76 theirs= 17.85 d= +1.09 fail=0 WIN
+176 ours= 17.04 theirs= 19.52 d= +2.48 fail=0 WIN
+177 ours= 16.13 theirs= 16.75 d= +0.62 fail=0 WIN
+178 ours= 16.50 theirs= 18.36 d= +1.86 fail=0 WIN
+179 ours= 25.00 theirs= 25.00 d= +0.00 fail=0 eq
+180 ours= 17.74 theirs= 19.65 d= +1.91 fail=0 WIN
+181 ours= 18.06 theirs= 19.09 d= +1.03 fail=0 WIN
+182 ours= 14.76 theirs= 16.00 d= +1.23 fail=0 WIN
+183 ours= 17.26 theirs= 17.89 d= +0.62 fail=0 WIN
+184 ours= 15.70 theirs= 17.17 d= +1.46 fail=0 WIN
+185 ours= 15.75 theirs= 17.25 d= +1.49 fail=0 WIN
+186 ours= 19.89 theirs= 20.37 d= +0.48 fail=0 WIN
+187 ours= 13.65 theirs= 13.68 d= +0.02 fail=0 eq
+188 ours= 17.13 theirs= 17.90 d= +0.77 fail=0 WIN
+189 ours= 16.89 theirs= 18.18 d= +1.29 fail=0 WIN
+190 ours= 16.69 theirs= 17.06 d= +0.37 fail=0 WIN
+191 ours= 13.77 theirs= 13.93 d= +0.16 fail=0 eq
+192 ours= 15.62 theirs= 15.94 d= +0.32 fail=0 WIN
+193 ours= 15.49 theirs= 16.77 d= +1.27 fail=0 WIN
+194 ours= 18.14 theirs= 18.14 d= +0.01 fail=0 eq
+195 ours= 16.86 theirs= 18.17 d= +1.31 fail=0 WIN
+196 ours= 15.25 theirs= 16.53 d= +1.28 fail=0 WIN
+197 ours= 16.36 theirs= 17.14 d= +0.78 fail=0 WIN
+198 ours= 14.67 theirs= 15.17 d= +0.49 fail=0 WIN
+199 ours= 16.70 theirs= 17.48 d= +0.79 fail=0 WIN
+200 ours= 16.91 theirs= 18.37 d= +1.46 fail=0 WIN
+201 ours= 15.46 theirs= 16.53 d= +1.07 fail=0 WIN
+203 ours= 16.64 theirs= 17.96 d= +1.31 fail=0 WIN
+204 ours= 15.26 theirs= 15.62 d= +0.37 fail=0 WIN
+205 ours= 14.26 theirs= 12.86 d= -1.40 fail=0 eq
+206 ours= 15.89 theirs= 16.65 d= +0.76 fail=0 WIN
+207 ours= 18.06 theirs= 19.54 d= +1.48 fail=0 WIN
+208 ours= 15.47 theirs= 16.29 d= +0.81 fail=0 WIN
+209 ours= 13.36 theirs= 13.56 d= +0.21 fail=0 eq
+210 ours= 21.60 theirs= 21.60 d= +0.00 fail=0 eq
+211 ours= 17.94 theirs= 19.02 d= +1.08 fail=0 WIN
+212 ours= 16.32 theirs= 17.23 d= +0.92 fail=0 WIN
+213 ours= 15.46 theirs= 17.38 d= +1.93 fail=0 WIN
+214 ours= 18.06 theirs= 18.36 d= +0.30 fail=0 eq
+215 ours= 17.26 theirs= 17.15 d= -0.11 fail=0 eq
+216 ours= 13.56 theirs= 15.87 d= +2.31 fail=0 WIN
+217 ours= 16.33 theirs= 17.71 d= +1.37 fail=0 WIN
+218 ours= 15.94 theirs= 18.38 d= +2.44 fail=0 WIN
+219 ours= 15.00 theirs= 14.61 d= -0.39 fail=0 eq
+220 ours= 18.20 theirs=  0.00 d=-18.20 fail=267 FAILEX
+221 ours= 17.08 theirs= 18.31 d= +1.23 fail=0 WIN
+222 ours= 15.50 theirs= 15.62 d= +0.12 fail=0 eq
+223 ours= 20.50 theirs= 23.39 d= +2.89 fail=0 WIN
+224 ours= 16.11 theirs= 17.05 d= +0.94 fail=0 WIN
+225 ours= 16.16 theirs= 18.06 d= +1.90 fail=0 WIN
+226 ours= 17.03 theirs= 17.60 d= +0.57 fail=0 WIN
+227 ours= 19.07 theirs= 20.39 d= +1.33 fail=0 WIN
+228 ours= 16.32 theirs= 18.13 d= +1.82 fail=0 WIN
+229 ours= 18.25 theirs= 19.52 d= +1.27 fail=0 WIN
+230 ours= 18.20 theirs=  0.00 d=-18.20 fail=266 FAILEX
+231 ours= 17.08 theirs= 19.61 d= +2.53 fail=0 WIN
+232 ours= 16.20 theirs= 17.75 d= +1.54 fail=0 WIN
+233 ours= 13.25 theirs= 12.53 d= -0.72 fail=0 eq
+234 ours= 15.51 theirs= 16.16 d= +0.65 fail=0 WIN
+235 ours= 18.61 theirs= 19.86 d= +1.25 fail=0 WIN
+236 ours= 19.31 theirs= 19.53 d= +0.22 fail=0 eq
+237 ours= 16.15 theirs= 17.44 d= +1.29 fail=0 WIN
+238 ours= 15.68 theirs= 17.17 d= +1.50 fail=0 WIN
+239 ours= 16.88 theirs= 18.15 d= +1.27 fail=0 WIN
+240 ours= 16.85 theirs= 17.70 d= +0.86 fail=0 WIN
+241 ours= 25.00 theirs= 25.00 d= +0.00 fail=0 eq
+242 ours= 15.77 theirs= 18.88 d= +3.11 fail=0 WIN
+243 ours= 14.06 theirs= 13.66 d= -0.40 fail=0 eq
+244 ours= 16.00 theirs= 17.89 d= +1.89 fail=0 WIN
+245 ours= 16.58 theirs= 17.07 d= +0.49 fail=0 WIN
+246 ours= 16.62 theirs= 17.03 d= +0.41 fail=0 WIN
+247 ours= 17.29 theirs= 18.79 d= +1.50 fail=0 WIN
+248 ours= 16.54 theirs= 19.98 d= +3.44 fail=0 WIN
+249 ours= 18.94 theirs= 19.34 d= +0.40 fail=0 WIN
+250 ours= 16.77 theirs= 16.28 d= -0.49 fail=0 eq
+251 ours= 15.54 theirs= 15.82 d= +0.28 fail=0 eq
+252 ours= 16.66 theirs= 19.44 d= +2.78 fail=0 WIN
+253 ours= 15.84 theirs= 18.52 d= +2.68 fail=0 WIN
+254 ours= 17.52 theirs= 17.86 d= +0.34 fail=0 WIN
+255 ours= 13.95 theirs= 14.00 d= +0.04 fail=0 eq
+256 ours= 16.39 theirs= 17.01 d= +0.62 fail=0 WIN
+257 ours= 18.35 theirs= 18.99 d= +0.64 fail=0 WIN
+258 ours= 19.92 theirs= 19.92 d= +0.00 fail=0 eq
+259 ours= 16.80 theirs= 18.16 d= +1.36 fail=0 WIN
+260 ours= 16.47 theirs= 17.34 d= +0.87 fail=0 WIN
+261 ours= 19.70 theirs= 19.70 d= +0.00 fail=0 eq
+262 ours= 18.73 theirs= 20.34 d= +1.61 fail=0 WIN
+263 ours= 16.33 theirs= 18.47 d= +2.14 fail=0 WIN
+264 ours= 15.51 theirs= 16.28 d= +0.77 fail=0 WIN
+265 ours= 15.61 theirs= 16.62 d= +1.01 fail=0 WIN
+266 ours= 18.88 theirs= 19.14 d= +0.27 fail=0 eq
+267 ours= 18.36 theirs= 18.35 d= -0.01 fail=0 eq
+268 ours= 15.50 theirs= 16.80 d= +1.30 fail=0 WIN
+269 ours= 16.40 theirs= 18.43 d= +2.03 fail=0 WIN
+270 ours= 15.97 theirs= 16.97 d= +1.00 fail=0 WIN
+271 ours= 17.01 theirs= 17.92 d= +0.91 fail=0 WIN
+272 ours= 18.87 theirs= 19.00 d= +0.13 fail=0 eq
+273 ours= 16.65 theirs= 17.32 d= +0.67 fail=0 WIN
+274 ours= 17.21 theirs= 19.53 d= +2.32 fail=0 WIN
+275 ours= 15.72 theirs= 17.39 d= +1.67 fail=0 WIN
+276 ours= 22.70 theirs= 22.70 d= +0.00 fail=0 eq
+277 ours= 15.53 theirs= 16.39 d= +0.86 fail=0 WIN
+278 ours= 15.81 theirs= 15.96 d= +0.15 fail=0 eq
+279 ours= 14.82 theirs= 16.38 d= +1.56 fail=0 WIN
+280 ours= 14.25 theirs= 16.28 d= +2.03 fail=0 WIN
+281 ours= 16.01 theirs= 17.22 d= +1.22 fail=0 WIN
+282 ours= 18.20 theirs= 18.90 d= +0.70 fail=0 WIN
+283 ours= 18.19 theirs=  0.00 d=-18.19 fail=265 FAILEX
+284 ours= 15.29 theirs= 16.75 d= +1.47 fail=0 WIN
+285 ours= 13.27 theirs= 14.83 d= +1.55 fail=0 WIN
+286 ours= 13.10 theirs= 13.10 d= +0.00 fail=0 eq
+287 ours= 16.11 theirs= 17.40 d= +1.29 fail=0 WIN
+288 ours= 16.44 theirs= 18.14 d= +1.69 fail=0 WIN
+289 ours= 17.30 theirs= 18.39 d= +1.09 fail=0 WIN
+290 ours= 17.48 theirs= 19.13 d= +1.65 fail=0 WIN
+291 ours= 16.97 theirs= 20.78 d= +3.81 fail=0 WIN
+292 ours= 17.18 theirs= 18.93 d= +1.75 fail=0 WIN
+293 ours= 16.79 theirs= 17.84 d= +1.05 fail=0 WIN
+294 ours= 18.19 theirs=  0.00 d=-18.19 fail=265 FAILEX
+295 ours= 17.11 theirs= 17.62 d= +0.51 fail=0 WIN
+296 ours= 17.32 theirs= 19.20 d= +1.88 fail=0 WIN
+297 ours= 16.42 theirs= 17.76 d= +1.34 fail=0 WIN
+298 ours= 16.22 theirs= 20.09 d= +3.87 fail=0 WIN
+299 ours= 17.77 theirs= 21.09 d= +3.32 fail=0 WIN
+300 ours= 16.25 theirs= 18.70 d= +2.45 fail=0 WIN
+301 ours= 16.90 theirs= 17.96 d= +1.06 fail=0 WIN
+302 ours= 16.45 theirs= 17.52 d= +1.07 fail=0 WIN
+303 ours= 16.34 theirs= 17.61 d= +1.27 fail=0 WIN
+304 ours= 17.30 theirs= 17.73 d= +0.43 fail=0 WIN
+305 ours= 17.38 theirs= 18.54 d= +1.17 fail=0 WIN
+306 ours= 17.09 theirs= 19.30 d= +2.20 fail=0 WIN
+307 ours= 21.31 theirs= 23.39 d= +2.08 fail=0 WIN
+308 ours= 15.42 theirs= 17.69 d= +2.28 fail=0 WIN
+309 ours= 22.70 theirs= 22.70 d= +0.00 fail=0 eq
+310 ours= 15.60 theirs= 16.90 d= +1.30 fail=0 WIN
+311 ours= 21.60 theirs= 21.60 d= +0.00 fail=0 eq
+312 ours= 16.77 theirs= 22.00 d= +5.23 fail=0 WIN
+313 ours= 16.55 theirs= 19.74 d= +3.19 fail=0 WIN
+314 ours= 20.39 theirs= 20.39 d= +0.00 fail=0 eq
+315 ours= 17.44 theirs= 19.56 d= +2.12 fail=0 WIN
+316 ours= 17.64 theirs= 18.95 d= +1.30 fail=0 WIN
+317 ours= 18.20 theirs= 20.02 d= +1.82 fail=0 WIN
+318 ours= 18.95 theirs= 20.39 d= +1.45 fail=0 WIN
+319 ours= 14.58 theirs= 14.94 d= +0.36 fail=0 WIN
+320 ours= 17.21 theirs= 18.35 d= +1.15 fail=0 WIN
+321 ours= 17.88 theirs= 19.30 d= +1.41 fail=0 WIN
+322 ours= 19.26 theirs= 19.70 d= +0.44 fail=0 WIN
+323 ours= 16.97 theirs= 17.31 d= +0.35 fail=0 WIN
+324 ours= 14.95 theirs= 15.90 d= +0.96 fail=0 WIN
+325 ours= 15.88 theirs= 17.33 d= +1.45 fail=0 WIN
+326 ours= 19.92 theirs= 21.60 d= +1.67 fail=0 WIN
+327 ours= 17.56 theirs= 18.22 d= +0.66 fail=0 WIN
+328 ours= 14.94 theirs= 16.16 d= +1.22 fail=0 WIN
+329 ours= 17.80 theirs= 18.03 d= +0.24 fail=0 eq
+330 ours= 15.88 theirs= 16.92 d= +1.04 fail=0 WIN
+331 ours= 18.19 theirs= 18.19 d= +0.00 fail=0 eq
+332 ours= 17.00 theirs= 18.66 d= +1.66 fail=0 WIN
+333 ours= 16.01 theirs= 16.92 d= +0.91 fail=0 WIN
+334 ours= 19.56 theirs= 19.72 d= +0.15 fail=0 eq
+335 ours= 16.60 theirs= 16.63 d= +0.03 fail=0 eq
+336 ours= 16.86 theirs= 17.26 d= +0.40 fail=0 WIN
+337 ours= 22.70 theirs= 22.70 d= +0.00 fail=0 eq
+338 ours= 15.37 theirs= 15.21 d= -0.17 fail=0 eq
+339 ours= 19.26 theirs= 20.06 d= +0.80 fail=0 WIN
+340 ours= 15.55 theirs= 15.69 d= +0.14 fail=0 eq
+341 ours= 16.08 theirs= 17.73 d= +1.65 fail=0 WIN
+342 ours= 16.04 theirs= 17.62 d= +1.58 fail=0 WIN
+343 ours= 17.23 theirs= 17.38 d= +0.14 fail=0 eq
+344 ours= 18.19 theirs= 18.19 d= +0.00 fail=0 eq
+345 ours= 15.95 theirs= 17.69 d= +1.74 fail=0 WIN
+346 ours= 16.26 theirs= 17.87 d= +1.61 fail=0 WIN
+347 ours= 19.45 theirs= 20.04 d= +0.59 fail=0 WIN
+348 ours= 16.54 theirs= 17.25 d= +0.71 fail=0 WIN
+349 ours= 14.39 theirs= 14.17 d= -0.22 fail=0 eq
+350 ours= 15.27 theirs= 15.48 d= +0.20 fail=0 eq
+351 ours= 16.42 theirs= 17.59 d= +1.17 fail=0 WIN
+352 ours= 18.87 theirs=  0.00 d=-18.87 fail=53 FAILEX
+353 ours= 16.75 theirs= 19.19 d= +2.44 fail=0 WIN
+354 ours= 16.75 theirs= 16.97 d= +0.22 fail=0 eq
+355 ours= 17.06 theirs= 16.11 d= -0.96 fail=0 eq
+356 ours= 16.95 theirs= 17.82 d= +0.86 fail=0 WIN
+357 ours= 16.88 theirs= 19.33 d= +2.45 fail=0 WIN
+358 ours= 15.56 theirs= 16.59 d= +1.03 fail=0 WIN
+359 ours= 16.27 theirs= 16.42 d= +0.15 fail=0 eq
+360 ours= 16.30 theirs= 19.17 d= +2.88 fail=0 WIN
+361 ours= 15.35 theirs= 16.49 d= +1.13 fail=0 WIN
+362 ours= 17.15 theirs= 18.74 d= +1.60 fail=0 WIN
+363 ours= 15.43 theirs= 16.46 d= +1.03 fail=0 WIN
+364 ours= 14.07 theirs= 13.93 d= -0.14 fail=0 eq
+365 ours= 15.46 theirs= 16.69 d= +1.24 fail=0 WIN
+367 ours= 13.46 theirs= 14.77 d= +1.31 fail=0 WIN
+368 ours= 15.37 theirs= 16.26 d= +0.89 fail=0 WIN
+369 ours= 16.58 theirs= 17.62 d= +1.04 fail=0 WIN
+370 ours= 13.95 theirs= 15.74 d= +1.78 fail=0 WIN
+371 ours= 16.69 theirs= 18.85 d= +2.17 fail=0 WIN
+372 ours= 16.44 theirs= 18.43 d= +1.99 fail=0 WIN
+373 ours= 19.42 theirs= 20.91 d= +1.49 fail=0 WIN
+374 ours= 16.28 theirs= 17.26 d= +0.98 fail=0 WIN
+375 ours= 16.91 theirs= 19.14 d= +2.23 fail=0 WIN
+376 ours= 19.43 theirs= 19.77 d= +0.34 fail=0 WIN
+377 ours= 15.28 theirs= 15.69 d= +0.41 fail=0 WIN
+378 ours= 15.90 theirs= 16.57 d= +0.68 fail=0 WIN
+379 ours= 14.81 theirs= 15.66 d= +0.85 fail=0 WIN
+380 ours= 18.68 theirs= 20.40 d= +1.73 fail=0 WIN
+381 ours= 16.89 theirs= 17.30 d= +0.41 fail=0 WIN
+382 ours= 14.61 theirs= 16.34 d= +1.73 fail=0 WIN
+383 ours= 14.77 theirs= 16.10 d= +1.33 fail=0 WIN
+384 ours= 16.91 theirs= 18.58 d= +1.67 fail=0 WIN
+385 ours= 21.60 theirs= 21.60 d= +0.00 fail=0 eq
+386 ours= 19.26 theirs= 19.65 d= +0.39 fail=0 WIN
+387 ours= 15.19 theirs= 16.37 d= +1.19 fail=0 WIN
+388 ours= 16.74 theirs= 17.17 d= +0.43 fail=0 WIN
+389 ours= 17.91 theirs= 20.06 d= +2.15 fail=0 WIN
+390 ours= 16.07 theirs= 16.96 d= +0.89 fail=0 WIN
+391 ours= 17.98 theirs= 19.93 d= +1.95 fail=0 WIN
+392 ours= 15.97 theirs= 17.41 d= +1.44 fail=0 WIN
+393 ours= 19.41 theirs= 20.03 d= +0.62 fail=0 WIN
+394 ours= 17.02 theirs= 17.06 d= +0.05 fail=0 eq
+395 ours= 19.59 theirs= 19.89 d= +0.30 fail=0 WIN
+396 ours= 14.49 theirs= 12.48 d= -2.02 fail=0 eq
+397 ours= 15.59 theirs= 17.00 d= +1.41 fail=0 WIN
+398 ours= 16.75 theirs= 16.37 d= -0.38 fail=0 eq
+399 ours= 20.04 theirs= 20.49 d= +0.44 fail=0 WIN
+400 ours= 15.56 theirs= 17.45 d= +1.89 fail=0 WIN
+
+=== 317 candidate wins (theirs passes our examples & beats by >=0.3) ===
+total potential stored gain (pre-fresh-verify): +436.3
+  312 ours= 16.77 theirs= 22.00 +5.23
+  166 ours= 16.89 theirs= 21.82 +4.93
+  130 ours= 17.14 theirs= 21.60 +4.46
+  140 ours= 19.09 theirs= 23.39 +4.30
+  298 ours= 16.23 theirs= 20.09 +3.87
+  291 ours= 16.97 theirs= 20.78 +3.81
+    7 ours= 16.43 theirs= 20.16 +3.72
+   24 ours= 16.71 theirs= 20.30 +3.59
+  248 ours= 16.54 theirs= 19.98 +3.44
+  299 ours= 17.77 theirs= 21.09 +3.32
+  313 ours= 16.55 theirs= 19.74 +3.19
+  242 ours= 15.77 theirs= 18.88 +3.11
+  223 ours= 20.50 theirs= 23.39 +2.89
+  360 ours= 16.30 theirs= 19.17 +2.88
+   82 ours= 16.88 theirs= 19.75 +2.87
+   28 ours= 17.06 theirs= 19.88 +2.82
+  252 ours= 16.66 theirs= 19.44 +2.78
+  112 ours= 14.77 theirs= 17.52 +2.74
+   40 ours= 16.34 theirs= 19.08 +2.74
+   59 ours= 15.97 theirs= 18.68 +2.71
+   96 ours= 13.20 theirs= 15.88 +2.69
+  253 ours= 15.84 theirs= 18.52 +2.68
+  143 ours= 15.63 theirs= 18.27 +2.64
+  121 ours= 16.57 theirs= 19.17 +2.60
+   49 ours= 16.47 theirs= 19.04 +2.58
+  231 ours= 17.08 theirs= 19.61 +2.53
+   71 ours= 14.59 theirs= 17.10 +2.51
+   46 ours= 14.64 theirs= 17.14 +2.50
+   39 ours= 16.35 theirs= 18.83 +2.48
+  176 ours= 17.04 theirs= 19.52 +2.48
+  101 ours= 12.68 theirs= 15.14 +2.45
+   23 ours= 13.86 theirs= 16.31 +2.45
+  300 ours= 16.25 theirs= 18.70 +2.45
+  357 ours= 16.88 theirs= 19.33 +2.45
+  218 ours= 15.94 theirs= 18.38 +2.44
+  353 ours= 16.75 theirs= 19.19 +2.44
+  153 ours= 15.96 theirs= 18.32 +2.36
+  274 ours= 17.21 theirs= 19.53 +2.32
+    5 ours= 13.51 theirs= 15.82 +2.31
+  216 ours= 13.56 theirs= 15.87 +2.31
+   58 ours= 15.77 theirs= 18.06 +2.29
+   68 ours= 16.29 theirs= 18.57 +2.28
+  308 ours= 15.42 theirs= 17.70 +2.28
+  375 ours= 16.91 theirs= 19.14 +2.23
+  306 ours= 17.09 theirs= 19.30 +2.20
+  371 ours= 16.69 theirs= 18.85 +2.17
+   38 ours= 17.49 theirs= 19.64 +2.15
+  104 ours= 17.31 theirs= 19.46 +2.15
+  389 ours= 17.91 theirs= 20.06 +2.15
+  263 ours= 16.33 theirs= 18.48 +2.14
+  315 ours= 17.44 theirs= 19.56 +2.12
+  307 ours= 21.31 theirs= 23.39 +2.08
+  280 ours= 14.25 theirs= 16.28 +2.03
+  269 ours= 16.40 theirs= 18.43 +2.03
+  372 ours= 16.44 theirs= 18.43 +1.99
+  391 ours= 17.98 theirs= 19.93 +1.95
+   65 ours= 16.59 theirs= 18.54 +1.94
+   88 ours= 15.53 theirs= 17.46 +1.93
+  213 ours= 15.46 theirs= 17.38 +1.93
+   77 ours= 13.48 theirs= 15.39 +1.92
