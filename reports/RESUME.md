@@ -1,6 +1,30 @@
 # RESUME — restart the autonomous sweep in a fresh session
 
-## ▶▶▶▶▶▶▶▶▶▶▶ RESUME HERE (handoff 2026-06-21 LATE — ✅ NEW BEST 7133.77 via CODE-AUDITED exact overlays)
+## ▶▶▶▶▶▶▶▶▶▶▶▶ RESUME HERE (handoff 2026-06-22 — ✅ NEW BEST 7134.40; cheap-EXACT-overlay vein EXHAUSTED)
+**NEW BEST LB 7134.40** (+10.97 over session-start 7123.43). Added 4 more code-audited EXACT overlays
+(191+0.33/379+0.12/204+0.10/324+0.07) → 22-net deployed exact set on the kokinnwakashuu 7125.30 base. FIFTH ~1:1
+confirmation. ⭐ task191: the historically-"dead" overlay was MISATTRIBUTED — it's provably exact (94k differential
+cases; touches-all-4-edges invariant makes the off-grid leak impossible); the −0.23 was a bundled batch, never 191.
+⛔⛔ **THE CHEAP-EXACT-OVERLAY VEIN IS NOW EXHAUSTED.** A 6-agent build-from-scratch batch on the most-bloated
+non-wall targets returned **0 wins / 4 NO_GO** (158=12-template exact-cover 4.6× base mem; 243=flood needs ~323
+unrolled rounds; 367=true input→output collision; 198=exact but ~13 full-canvas planes = memory-floored). HARD
+LESSON: a bloated low-score public base net is bloated because the TASK is hard (info-theoretic wall OR near the
+memory floor), NOT because it's an easy golf target — the public base is near-optimal wherever the task is solvable.
+All the cheap EXACT wins this session were EXISTING custom solvers we simply hadn't overlaid (22 total now deployed).
+DEPLOYED EXACT SET (22): 396,174,340,222,377,364,250,055,080,355,352,202,128,398,267,338,215,349,191,379,204,324.
+▶ NEXT — only two real levers remain (both already documented):
+ (1) **Newer public base** = free +N with zero build effort. Monitor often: `kaggle datasets list -s neurogolf
+     --sort-by updated | head` AND `kaggle kernels list -s neurogolf --sort-by dateRun | head`. franksunp/kojimar/
+     ricardo/kokinnwakashuu publish ~daily (franksunp Mark B 7124.49 + kojimar 7116.91 appeared 06-20/21). When one
+     beats 7125.30, decode it (notebooks embed base64 zips; datasets via `kaggle datasets download`) and re-overlay
+     the 22 exact nets onto it (rebuild zip = base 400 onnx with our 22 swapped in, see /tmp snippet in transcript).
+ (2) **7800-tier ORIGINAL algorithms** (see [[neurogolf-7800-research]] / reports/RESEARCH_7800.md) — the remaining
+     ~382 tasks' headroom is hard walls; closing them needs new methods (bit-packing sweep, directional-cummax global
+     propagation), NOT golf. This is the multi-session research grind; cheap wins are gone.
+DO NOT re-run build-from-scratch on bloated low-score nets (measured 0/6 — they're walls/floors). DO NOT overlay
+arc-gen-fit nets (only CODE-AUDITED-exact transfer). SUBMIT recipe + base-decode recipe are below / in transcript.
+
+## ▶▶▶▶▶▶▶▶▶▶▶ (superseded same day) NEW BEST 7133.77 via CODE-AUDITED exact overlays
 **NEW BEST LB 7133.77** (+10.34 over session-start 7123.43; +6.67 over the 7127.10 step). HOW: on the
 kokinnwakashuu 7125.30 base, found 13 of our custom solvers beating it on examples, then **dispatched 13 parallel
 agents to CODE-AUDIT each for PROVABLE exactness over the FULL generator input space**. 12 verified EXACT → overlaid;

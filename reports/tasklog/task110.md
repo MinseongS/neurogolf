@@ -39,6 +39,32 @@ copies, black→−1 sentinel so black loses the max.) Confirmed buildable & exa
 |---|---|---|---|---|---|---|---|
 | 0 | prior committed src/custom/task110.py (period-detect + 3-pass directional Gather fill) | B | 69860 | 1344 | 13.83 | 4/4 stored | WORSE than deployed 15.46 — never adopted |
 | — | rebuild as separable dilated-MaxPool tile, drop inv30 | B | est ≥16k | — | <15.5 | — | detection planes cost MORE than the 3600 they would save (see floor) |
+| 1 | 2026-06-21: FULLY-DERIVED general algo — per-axis dilated-MaxPool residue tile + inv-uniformity, LARGEST-valid period over {5,6,7,8,9}, re-tile via Mod+Gather; rows then cols | B | 73073 | 285 | 13.80 | 0/3000 fresh + 266/266 stored | EXACT & generalizes but BELOW kojimar 15.46. The general (non-hardcoded) col-period machinery floors here. |
+
+## 2026-06-21 — robust general algorithm DERIVED (no hardcoding) but still sub-floor
+The real rule is now fully reverse-engineered AND a clean ONNX build exists (0/3000
+fresh, 266/266 stored, src/custom/task110.py):
+- ENTRY V = Conv(input,[0..9]) fp32 3600; INV = (10−V) at nonblack.
+- Per axis INDEPENDENTLY, candidate p∈{5,6,7,8,9}: residue-class max-tiles tv,ti via
+  dilated MaxPool (kernel=ceil(29/p), dilation=p, stride=1 → first p positions =
+  residue max). Uniformity `tv+ti==10` everywhere ⟺ class uniform&black-free.
+- {5,6,7,8,9} covers EVERY observed true period 2..9 via an in-range MULTIPLE (period
+  2→6/8, 4→8); pick the LARGEST valid p — robust to cutouts that fake a smaller false
+  period (smallest-valid LEAKS ~0.1% fresh; verified). No valid p → axis identity (a
+  doubly-periodic grid is fully recovered as long as ONE axis has a period; train#2 cp
+  absent is filled by the row axis). Re-tile clean[i]=tile[i%p] via Mod+Gather.
+- Decoded kojimar (networks/task110.onnx): it uses 2-D SAME-period tiles (9×9, tiny)
+  for the rp==cp path + a Where priority chain picking the LARGEST of {5..9}, AND
+  HARDCODES the 4 stored rp≠cp answers (`row7_public_table`,`row9_public_table`,
+  is_public_pixel gate). That hardcoding is what keeps it at 13275.
+
+WHY a general build can't reach +0.3: my separable per-axis approach pays ~20 residue
+tiles of size p×29 (≈640–840B each, fp16) — kojimar's 2-D same-period tiles are 9×9
+(~160B). The stored rp≠cp cases FORCE separable (or hardcoding). Even ignoring ALL
+tiles, the unavoidable planes (fp32 entry 3600 + V/INV/cleaned ~1682×5) ≈ 12010 →
+25−ln(12295) = 15.58 = ONLY +0.12. With the real tile cost it lands 13.80. ⇒ a
+non-fitted derivation is structurally **below** kojimar; the +0.3 bar is unreachable
+without the 2-D-tile-plus-hardcoded-stored hack (which is fitting → rejected).
 
 ## Best achieved
 No improvement. Deployed `ext:kojimar7113` 15.46 stands. **MARGINAL — provably

@@ -250,3 +250,15 @@ NEW exact set: 250(+1.16)/055(+1.09)/080(+1.01)/355(+0.72)/352(+0.68)/202(+0.62)
 267(+0.24)/338(+0.17)/215(+0.11)/349(+0.02). local +8.48 over base -> LB +8.47 (7125.30->7133.77, vs prior
 7127.10 = +6.67). FOURTH ~1:1 confirmation. Code-audit exactness gate is the durable discriminator; ~390 tasks
 remain as a mining field. Silver ~7150 = +16.2 away.
+
+## #NEW-BEST 2026-06-22 — CONFIRMED 7134.40 (+4 more EXACT overlays; build-from-scratch batch = walls)
+Continued mining: 2 WIP solvers audited (204/379 both EXACT) + 6 build-from-scratch agents on bloated non-wall
+targets (191/158/243/367/198/324). RESULTS: 4 EXACT wins overlaid = 191(+0.33)/379(+0.12)/204(+0.10)/324(+0.07);
+4 NO_GO = 158 (12-template exact-cover, 4.6x base mem), 243 (flood-fill needs ~323 unrolled rounds), 367 (true
+input->output collision, base only passes via non-exact approx), 198 (exact but ~13 full-canvas planes = mem-floored).
+local +9.10 over base -> LB 7134.40 (+0.63 over 7133.77), FIFTH ~1:1 confirmation. ⭐ task191 FINDING: the
+historically-'dead' 191 overlay was MISATTRIBUTED -- provably exact (94k differential cases, touches-all-4-edges
+invariant kills the suspected leak); the old -0.23 was a bundled batch, never isolated to 191. ⛔ BUILD-FROM-SCRATCH
+LESSON: bloated low-score base nets are bloated because the task is HARD (wall/memory-floored), not easy -- 0/6 new
+builds. Cheap EXACT overlay vein now EXHAUSTED (22 nets deployed). Further gains need NEW algorithms or a newer
+public base. Total deployed exact set (22): 396,174,340,222,377,364,250,055,080,355,352,202,128,398,267,338,215,349,191,379,204,324.
