@@ -2179,10 +2179,10 @@
    "method": "ext:kojimar7113"
   },
   "364": {
-   "points": 14.542512398314084,
-   "memory": 34320,
-   "params": 484,
-   "method": "ext:kojimar7113"
+   "points": 14.606675554136366,
+   "memory": 32580,
+   "params": 61,
+   "method": "custom:task364"
   },
   "365": {
    "points": 16.692294033450487,
@@ -2371,10 +2371,10 @@
    "method": "ext:kojimar7113"
   },
   "396": {
-   "points": 14.72301971859898,
-   "memory": 28545,
-   "params": 511,
-   "method": "ext:kojimar7113"
+   "points": 15.290582751292375,
+   "memory": 16323,
+   "params": 149,
+   "method": "custom:task396"
   },
   "397": {
    "points": 17.000992786756044,

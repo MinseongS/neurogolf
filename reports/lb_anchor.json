@@ -1,10 +1,10 @@
 {
- "comment": "REBASE CONFIRMED 7121.60 = new public kojimar 7114.66 blend base + 14 proven original overlays (NOT today's marginal re-golf, which was MEASURED LB-negative). +0.37 over prior 7121.23, purely from the crowd's base improvement (7113.80->7114.66) transferring to LB. CONFIRMS: new public blends are the live lever; local re-golf overlays are dead (clean-8 batch = 7121.00, -0.23).",
- "stored_at_submit": 7152.42,
- "lb": 7121.60,
- "time_utc": "2026-06-19 rebase-7114.66 7121.60 confirmed",
+ "comment": "NEW BEST 7122.23 = 7121.60 + EXACT closed-form rebuilds 396(14.72->15.29)+364(14.54->14.61). DECISIVE: stored +0.63 -> LB +0.63 EXACTLY = provably-EXACT closed-form wins (fresh-3000/0) transfer 1:1 to LB. This OVERTURNS the clean-8 -0.23 attribution: that drag was a non-exact net (017 leak/dtype-shave), NOT the exact wins like 396 (which transfers fine). EXACT-CAMPAIGN PREMISE PROVEN: stack provably-exact closed-form wins -> 1:1 LB. Silver target ~7150 (#109/2188), need +27.4 more. Low-point tasks are kojimar-floored (hit rate ~0); target MID-range 15.5-17pt.",
+ "stored_at_submit": 7153.05,
+ "lb": 7122.23,
+ "time_utc": "2026-06-21 EXACT 396+364 adopt CONFIRMED 7122.23",
  "pending": false,
- "pending_submit": "rebase onto kojimar 7114.66 CONFIRMED 7121.60",
- "prev_stored_at_submit": 7152.05,
- "prev_lb": 7121.23
+ "pending_submit": "EXACT 396+364 CONFIRMED 7122.23 (+0.63 = exact 1:1 transfer)",
+ "prev_stored_at_submit": 7152.42,
+ "prev_lb": 7121.60
 }
