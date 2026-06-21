@@ -238,3 +238,15 @@ Overlaid ONLY our 6 proven-EXACT closed-form wins where ours strictly beats base
 396(14.72->15.29)/174(15.77->16.12)/340(15.69->16.00)/222(15.62->15.92)/377(15.69->15.93)/364(14.58->14.61).
 local +1.81 -> LB +1.80 (7125.30->7127.10). THIRD ~1:1 confirmation: exact closed-form overlays are
 base-independent & stack on ANY public base. +3.67 over prior 7123.43. Repeatable lever intact.
+
+## #NEW-BEST 2026-06-21 — CONFIRMED 7133.77 (12 MORE EXACT-audited overlays via parallel code-audit)
+Pursuing "mine MORE exact overlays" on the kokinnwakashuu 7125.30 base. Found 13 custom solvers beating the
+base on examples (+7.03 potential). KEY METHOD UPGRADE: dispatched 13 parallel agents to CODE-AUDIT each for
+PROVABLE exactness over the FULL generator input space (passing 3000-fresh is NOT proof of exactness — the old
+dead overlays 191/009/251/278/383 passed fresh yet leaked private via edge-case bugs). Result: 12 EXACT (all
+recommended overlay), 1 RISKY DROPPED (task205: ~0.0075% structural box-detection failure when noise forms
+spurious boxcolor runs — exactly the leak class the audit targets). Overlaid 6 prior + 12 new = 18 EXACT nets.
+NEW exact set: 250(+1.16)/055(+1.09)/080(+1.01)/355(+0.72)/352(+0.68)/202(+0.62)/128(+0.47)/398(+0.38)/
+267(+0.24)/338(+0.17)/215(+0.11)/349(+0.02). local +8.48 over base -> LB +8.47 (7125.30->7133.77, vs prior
+7127.10 = +6.67). FOURTH ~1:1 confirmation. Code-audit exactness gate is the durable discriminator; ~390 tasks
+remain as a mining field. Silver ~7150 = +16.2 away.

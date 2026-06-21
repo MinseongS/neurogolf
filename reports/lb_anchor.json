@@ -1,10 +1,10 @@
 {
- "comment": "NEW BEST 7127.10. REBASE onto public kokinnwakashuu '7125.30 audit-trail' notebook (= Ricardo [7120 LB] base + 11 Frank-7116.79 task overrides: 364,338,366,255,191,349,080,187,174,350,050) — payload embedded as base64 in the .ipynb, sha256 6c3c21875cf822f0ba34d236a6cd6654a175484a42e95f0fda0066422c351db9, 400 onnx. OVERLAID our 6 proven-EXACT closed-form wins where ours strictly beats their base on examples (all smaller-mem): 396(+0.57)/174(+0.36)/340(+0.31)/222(+0.30)/377(+0.24)/364(+0.03). local +1.81 -> LB +1.80 (7125.30->7127.10): THIRD consecutive ~1:1 confirmation that provably-EXACT closed-form overlays transfer 1:1 and stack on ANY public base (base-independent because exact). LEVER: (1) new public blend > current base = free rebase; (2) overlay ONLY exact closed-form wins (NOT arc-gen re-golf = LB-dead). Silver ~7150 needs +22.9 more.",
- "stored_at_submit": 7076.47,
- "lb": 7127.10,
- "time_utc": "2026-06-21 REBASE kokinnwakashuu-7125.30 + 6 EXACT overlays CONFIRMED 7127.10",
+ "comment": "NEW BEST 7133.77. REBASE onto public kokinnwakashuu 7125.30 base (Ricardo [7120 LB] + 11 Frank-7116.79 overrides) + OVERLAY 18 EXACT-AUDITED closed-form nets. 6 prior (396/174/340/222/377/364) + 12 NEW this session (250/055/080/355/352/202/128/398/267/338/215/349). Each NEW net was CODE-AUDITED by a dedicated agent for PROVABLE exactness over the full generator input space (not just fresh-pass), corroborated with 5k-120k fresh + exhaustive edge sweeps. local +8.48 over base -> LB +8.47 (7125.30->7133.77): FOURTH ~1:1 confirmation. CRITICAL METHOD: passing 3000-fresh is NOT exactness (the old 'dead overlays' 191/009/251/278/383 passed fresh yet leaked private via edge-case bugs). The reliable discriminator is CODE AUDIT of the onnx net vs the generator's FULL input space. This session's audit DROPPED task205 (RISKY: ~0.0075% structural box-detect failure on noise) and KEPT 12 provably-exact -> all transferred 1:1. LEVER (repeatable): rebase onto newest public base + overlay ONLY code-audited-EXACT wins. Silver ~7150 needs +16.2 more; ~390 tasks remain as a mining field for cheaper EXACT rules.",
+ "stored_at_submit": 7083.14,
+ "lb": 7133.77,
+ "time_utc": "2026-06-21 REBASE kokinnwakashuu-7125.30 + 18 EXACT-audited overlays CONFIRMED 7133.77",
  "pending": false,
- "pending_submit": "CONFIRMED 7127.10 (+1.80 over 7125.30 base; +3.67 over prior 7123.43)",
- "prev_stored_at_submit": 7154.25,
- "prev_lb": 7123.43
+ "pending_submit": "CONFIRMED 7133.77 (+8.47 over 7125.30 base; +6.67 over prior 7127.10; +10.34 over session-start 7123.43)",
+ "prev_stored_at_submit": 7076.47,
+ "prev_lb": 7127.10
 }

@@ -1,6 +1,31 @@
 # RESUME — restart the autonomous sweep in a fresh session
 
-## ▶▶▶▶▶▶▶▶▶▶ RESUME HERE (handoff 2026-06-21 — ✅ NEW BEST 7127.10 via blend-rebase + EXACT overlays)
+## ▶▶▶▶▶▶▶▶▶▶▶ RESUME HERE (handoff 2026-06-21 LATE — ✅ NEW BEST 7133.77 via CODE-AUDITED exact overlays)
+**NEW BEST LB 7133.77** (+10.34 over session-start 7123.43; +6.67 over the 7127.10 step). HOW: on the
+kokinnwakashuu 7125.30 base, found 13 of our custom solvers beating it on examples, then **dispatched 13 parallel
+agents to CODE-AUDIT each for PROVABLE exactness over the FULL generator input space**. 12 verified EXACT → overlaid;
+1 (task205) flagged RISKY (~0.0075% structural box-detect leak) → DROPPED. local +8.48 → LB +8.47 = FOURTH ~1:1
+confirmation. ⭐⭐ THE DURABLE METHOD UPGRADE: **passing 3000-fresh is NOT proof of exactness** — the old "dead
+overlays" (191/009/251/278/383) passed fresh yet leaked private via edge-case bugs. The reliable gate is a CODE
+AUDIT: read src/custom/taskNNN.py (the onnx graph) vs the generator's full input space; is it correct for EVERY
+producible input (min/max sizes, counts, ties, color perms, degenerate cases) — not just typical samples?
+CURRENT DEPLOYED EXACT OVERLAY SET (18): 396,174,340,222,377,364 + 250,055,080,355,352,202,128,398,267,338,215,349.
+⭐ NEXT (the mining field — user wants more, "score still way short"): ~382 tasks NOT yet overlaid. Two veins:
+ (1) **More existing custom solvers vs the base** — re-run the compare (below) for ANY method type, audit, overlay.
+ (2) **BUILD NEW exact closed-form solvers** for tasks where the base net is bloated AND the rule is exactly
+     expressible (mid-range 15.5-16.5pt tasks have the best hit-rate; sub-15 tend to be info-theoretic walls).
+COMPARE RECIPE (find candidates): extract base to /tmp/nb7125 (decode notebook base64, see below), then score each
+networks/taskNNN.onnx vs /tmp/nb7125/taskNNN.onnx on load_task(n).evaluate; list where ours>base & smaller-mem.
+AUDIT RECIPE: one agent per candidate, prompt = "is the onnx net provably exact for the FULL generator input space?
+run 5k+ fresh + exhaustive edge sweep; VERDICT EXACT/RISKY". Overlay only EXACT. BUILD RECIPE: src/custom/taskNNN.py
+constructs the onnx graph; fresh-verify; the agents' audit reports this session show the closed-form patterns that work.
+SUBMIT RECIPE: build zip = /tmp/nb_7125.zip entries with our exact nets swapped in (see /tmp build snippet in transcript),
+`cp to /tmp/submission.zip`, `kaggle competitions submit -c neurogolf-2026 -f`. Base re-extract: decode cell-8 B64 of
+the kokinnwakashuu .ipynb (`kaggle kernels pull kokinnwakashuu/7125-30-lb-neurogolf-audit-trail`), sha 6c3c21...
+ALSO keep monitoring for newer public bases (`kaggle datasets list -s neurogolf --sort-by updated`,
+`kaggle kernels list -s neurogolf --sort-by dateRun`) — rebase the 18-overlay set onto any higher one = free +N.
+
+## ▶▶▶▶▶▶▶▶▶▶ (superseded same day) NEW BEST 7127.10 via blend-rebase + 6 EXACT overlays
 **NEW BEST LB 7127.10** (+3.67 over prior 7123.43). HOW: user flagged public notebook
 `kaggle.com/code/kokinnwakashuu/7125-30-lb-neurogolf-audit-trail` (LB 7125.30). The .ipynb **EMBEDS the full
 400-onnx submission.zip as base64** (decode cell 8: `B64=''.join([...])`; sha256 6c3c21875cf822f0ba34d236a6cd6654a175484a42e95f0fda0066422c351db9,
