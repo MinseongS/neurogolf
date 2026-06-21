@@ -10,19 +10,24 @@ Rule (reconstructed exactly from 266 stored examples, 0 mismatches):
      v matches no wall -> VANISHES.  Walls kept; interior otherwise cleared.
 
 Encoding (ONE fp16 index plane -> Equal -> FREE bool output; no [1,10,30,30] full plane):
-  Hidx=H-1, Widx=W-1 from ramp*occupancy ReduceMax. Wall colours tc/bc/lc/rc =
-  chramp.(per-channel max of the relevant border row/col). Per-channel column/row pixel
-  COUNTS (ReduceSum of the FREE input); a wall colour's count is exactly 1 on its own wall
-  line, so "column c carries an INTERIOR tc pixel"  ==  colcount[tc,c] > 1  (the +1 wall
-  contribution cancels) -- no interior masking nor any variable-row slice needed.
-  ONE packed outer-product MatMul Acol[1,1,30,10] @ Brow[1,1,10,30] sums all 8 lines AND
-  folds an off-grid +10 sentinel into the same plane:
+  H = #occupied rows = Sum(rowocc16) (grid is a SOLID origin-anchored rect, no gaps),
+  Hidx=H-1, Widx=W-1.  Wall colour = Sum_k k*(border-line count_k > 0): a solid wall line
+  holds ONLY its own colour (interior/garbage pixels are >=2 cells from every wall), so the
+  weighted sum recovers the wall's k directly (no ReduceMax/Equal argmax).  Per-channel
+  column/row pixel COUNTS (ReduceSum of FREE input); a wall colour's count is exactly 1 on
+  its own wall line, so "column c carries an INTERIOR tc pixel" == colcount[tc,c] > 1 (the
+  +1 wall contribution cancels) -- no interior masking nor any variable-row slice.
+  ONE packed outer-product MatMul Acol[1,1,30,9] @ Brow[1,1,9,30] sums 8 lines AND folds a
+  uniform in-grid +1 into the same plane:
     k0..3 (rows 0,1,H-2,H-1): row-selectors x col-value-vectors {tc-wall, tc-topline,
            bc-botline, bc-wall}
     k4..7 (cols 0,1,W-2,W-1): row-value-vectors {lc-wall, lc-leftline, rc-rightline,
            rc-wall} x col-selectors
-    k8 = 10*(r>Hidx) x ones ; k9 = ones x 10*(c>Widx)  -> og>=10 off-grid -> Equal false.
-  output one-hot = Equal(og_fp16, chramp[1,10,1,1]) -> BOOL (fp16 Equal exact for ints).
+    k8 = rowocc16 x colocc16  -> +1 on every in-grid cell.
+  Then output one-hot = Equal(og, colour+1 ramp) -> BOOL: in-grid bg og=1 -> ch0; coloured
+  cell colour k -> og=k+1 -> ch k; off-grid og=0 -> matches no channel (ramp starts at 1)
+  -> all-false (the empty off-grid one-hot the generator emits).  Value vectors are built
+  with Where(mask_bool, colour, 0) so no fp16 mask planes are materialised.
 """
 
 import numpy as np
@@ -53,22 +58,23 @@ def build(task):
     # ---- ramps / constants -------------------------------------------------
     init("arow", np.arange(N, dtype=np.float16).reshape(1, 1, N, 1))   # [1,1,30,1]
     init("acol", np.arange(N, dtype=np.float16).reshape(1, 1, 1, N))   # [1,1,1,30]
-    init("chramp", np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1))
     init("one16", np.array(1.0, np.float16))
     init("half16", np.array(0.5, np.float16))
-    init("ten16", np.array(10.0, np.float16))
     init("zero16", np.array(0.0, np.float16))
     init("c1p5", np.array(1.5, np.float32))   # threshold for count>=2 (fp32 counts)
 
     # ---- grid extent scalars Hidx (=H-1), Widx (=W-1) ----------------------
+    # The grid is a SOLID H x W rectangle anchored at origin, so rows 0..H-1 and
+    # cols 0..W-1 are all occupied (no gaps) -> H = #occupied rows = Sum(rowocc16),
+    # Hidx = H-1.  This drops the rowx/colx (rowocc*ramp) Mul planes entirely.
     n("ReduceMax", ["input"], "rowocc", axes=[1, 3], keepdims=1)   # [1,1,30,1] f32
     n("ReduceMax", ["input"], "colocc", axes=[1, 2], keepdims=1)   # [1,1,1,30] f32
     n("Cast", ["rowocc"], "rowocc16", to=F16)
     n("Cast", ["colocc"], "colocc16", to=F16)
-    n("Mul", ["rowocc16", "arow"], "rowx")
-    n("Mul", ["colocc16", "acol"], "colx")
-    n("ReduceMax", ["rowx"], "Hidx", axes=[2, 3], keepdims=1)      # [1,1,1,1] = H-1 (f16)
-    n("ReduceMax", ["colx"], "Widx", axes=[2, 3], keepdims=1)      # [1,1,1,1] = W-1
+    n("ReduceSum", ["rowocc16"], "Hcnt", axes=[2, 3], keepdims=1)  # [1,1,1,1] = H (f16)
+    n("ReduceSum", ["colocc16"], "Wcnt", axes=[2, 3], keepdims=1)  # [1,1,1,1] = W
+    n("Sub", ["Hcnt", "one16"], "Hidx")   # H-1
+    n("Sub", ["Wcnt", "one16"], "Widx")   # W-1
     n("Sub", ["Hidx", "one16"], "Hm1")    # H-2
     n("Sub", ["Widx", "one16"], "Wm1")    # W-2
 
@@ -96,14 +102,17 @@ def build(task):
     n("Gather", ["rowcount", "Hidx_s"], "botw_a", axis=2)  # [1,10,1,1] (row Hidx)
     n("Gather", ["colcount", "Widx_s"], "rightw_a", axis=3)  # [1,10,1,1] (col Widx)
 
-    # colour scalar = sum_k k * argmax_onehot_k
+    # colour scalar = sum_k k * (count_k > 0).  A solid wall line contains ONLY
+    # its own colour (garbage/interior pixels are >=2 cells from every wall), so
+    # exactly one channel has count>0 there -> the weighted sum recovers its k.
+    # Everything past the bool test runs in fp16 (the 10-ch [1,10,1,1] working
+    # planes halve to 20B; values are 0-9 so fp16 is exact).
+    init("zero32", np.array(0.0, np.float32))
+    init("chramp16", np.arange(10, dtype=np.float16).reshape(1, 10, 1, 1))
     def wall_color(src, tag):
-        n("ReduceMax", [src], tag + "_mx", axes=[1], keepdims=1)   # [1,1,1,1]
-        n("Equal", [src, tag + "_mx"], tag + "_oh")                # [1,10,1,1] bool
-        n("Cast", [tag + "_oh"], tag + "_ohf", to=F32)
-        n("Mul", [tag + "_ohf", "chramp"], tag + "_kc")
-        n("ReduceSum", [tag + "_kc"], tag + "_c32", axes=[1], keepdims=1)  # [1,1,1,1]
-        n("Cast", [tag + "_c32"], tag + "_c", to=F16)
+        n("Greater", [src, "zero32"], tag + "_pos")               # [1,10,1,1] bool
+        n("Where", [tag + "_pos", "chramp16", "zero16"], tag + "_kc")  # k where present
+        n("ReduceSum", [tag + "_kc"], tag + "_c", axes=[1], keepdims=1)  # [1,1,1,1] f16
         return tag + "_c"
     tc = wall_color("topw", "topw")
     bc = wall_color("botw_a", "botw")
@@ -120,7 +129,7 @@ def build(task):
     lci = chan_scalar(lc, "lci")
     rci = chan_scalar(rc, "rci")
 
-    # ---- interior-presence per column/row of each wall colour --------------
+    # ---- interior-presence per column/row of each wall colour (kept BOOL) --
     n("Gather", ["colcount", tci], "tc_cc", axis=1)   # [1,1,1,30] f32
     n("Gather", ["colcount", bci], "bc_cc", axis=1)
     n("Gather", ["rowcount", lci], "lc_rr", axis=1)   # [1,1,30,1] f32
@@ -129,23 +138,15 @@ def build(task):
     n("Greater", ["bc_cc", "c1p5"], "botcol_b")
     n("Greater", ["lc_rr", "c1p5"], "leftrow_b")      # [1,1,30,1] bool
     n("Greater", ["rc_rr", "c1p5"], "rightrow_b")
-    n("Cast", ["topcol_b"], "topcol", to=F16)
-    n("Cast", ["botcol_b"], "botcol", to=F16)
-    n("Cast", ["leftrow_b"], "leftrow", to=F16)
-    n("Cast", ["rightrow_b"], "rightrow", to=F16)
 
-    # ---- interior extent vectors (1 <= idx <= dim-2) -----------------------
-    init("neg_half", np.array(-0.5, np.float16))
+    # ---- interior extent masks (kept BOOL) --------------------------------
+    # c<=W-2  ==  c<W-1  ==  Less(c, Widx);  no Sub-vector plane needed.
     n("Greater", ["acol", "half16"], "ci_lo")                 # c>=1
-    n("Sub", ["Wm1", "acol"], "ci_hd")                        # (W-2)-c
-    n("Greater", ["ci_hd", "neg_half"], "ci_hi")              # c<=W-2
-    n("And", ["ci_lo", "ci_hi"], "colint_b")
-    n("Cast", ["colint_b"], "colint", to=F16)                 # [1,1,1,30]
+    n("Less", ["acol", "Widx"], "ci_hi")                      # c<=W-2
+    n("And", ["ci_lo", "ci_hi"], "colint_b")                  # [1,1,1,30] bool
     n("Greater", ["arow", "half16"], "ri_lo")
-    n("Sub", ["Hm1", "arow"], "ri_hd")
-    n("Greater", ["ri_hd", "neg_half"], "ri_hi")
-    n("And", ["ri_lo", "ri_hi"], "rowint_b")
-    n("Cast", ["rowint_b"], "rowint", to=F16)                 # [1,1,30,1]
+    n("Less", ["arow", "Hidx"], "ri_hi")                      # r<=H-2
+    n("And", ["ri_lo", "ri_hi"], "rowint_b")                  # [1,1,30,1] bool
 
     # ---- row / col selectors (integer Equal, fp16 exact) -------------------
     def sel(ramp, target, tag):
@@ -160,38 +161,35 @@ def build(task):
     sel("acol", "Wm1", "csWm2")      # c==W-2
     sel("acol", "Widx", "csWm1")     # c==W-1
 
-    # off-grid sentinel vectors: 10 on rows r>Hidx / cols c>Widx.
-    # reuse the row/col occupancy (1 in-grid, 0 off-grid): roff = 10*(1-occ).
-    n("Sub", ["one16", "rowocc16"], "row_off")   # [1,1,30,1] 1 off-grid
-    n("Mul", ["row_off", "ten16"], "roff")
-    n("Sub", ["one16", "colocc16"], "col_off")   # [1,1,1,30]
-    n("Mul", ["col_off", "ten16"], "coff")
-    init("ones_r", np.ones((1, 1, N, 1), np.float16))
-    init("ones_c", np.ones((1, 1, 1, N), np.float16))
+    # ---- in-grid indicator term (replaces both off-grid sentinels) ---------
+    # og gets a uniform +1 on every in-grid cell (rank-1: rowocc16 x colocc16,
+    # both already computed = the in-grid occupancy).  Then chan = colour+1, so
+    # in-grid bg -> og=1 -> ch0; coloured cell colour k -> og=k+1 -> ch k;
+    # off-grid -> og=0 -> matches no channel (chan starts at 1) -> all-false.
 
-    # ---- col-value vectors (Brow rows 0..3) and row-value vectors (Acol cols 4..7)
-    n("Mul", [tc, "colint"], "tc_wall")     # top wall row   [1,1,1,30]
-    n("Mul", [tc, "topcol"], "tc_line")     # top line row
-    n("Mul", [bc, "botcol"], "bc_line")     # bottom line row
-    n("Mul", [bc, "colint"], "bc_wall")     # bottom wall row
-    n("Mul", [lc, "rowint"], "lc_wall")     # left wall col  [1,1,30,1]
-    n("Mul", [lc, "leftrow"], "lc_line")    # left line col
-    n("Mul", [rc, "rightrow"], "rc_line")   # right line col
-    n("Mul", [rc, "rowint"], "rc_wall")     # right wall col
+    # ---- value vectors via Where(mask_bool, colour, 0): no fp16 mask casts --
+    n("Where", ["colint_b", tc, "zero16"], "tc_wall")    # top wall row   [1,1,1,30]
+    n("Where", ["topcol_b", tc, "zero16"], "tc_line")    # top line row
+    n("Where", ["botcol_b", bc, "zero16"], "bc_line")    # bottom line row
+    n("Where", ["colint_b", bc, "zero16"], "bc_wall")    # bottom wall row
+    n("Where", ["rowint_b", lc, "zero16"], "lc_wall")    # left wall col  [1,1,30,1]
+    n("Where", ["leftrow_b", lc, "zero16"], "lc_line")   # left line col
+    n("Where", ["rightrow_b", rc, "zero16"], "rc_line")  # right line col
+    n("Where", ["rowint_b", rc, "zero16"], "rc_wall")    # right wall col
 
-    # ---- ONE packed MatMul: Acol[1,1,30,10] @ Brow[1,1,10,30] --------------
-    # Acol columns (over rows): k0..3 row-selectors, k4..7 row-value-vecs, k8 off-row, k9 ones
+    # ---- ONE packed MatMul: Acol[1,1,30,9] @ Brow[1,1,9,30] ----------------
+    # Acol cols (over rows): k0..3 row-selectors, k4..7 row-value-vecs, k8 in-grid row
     n("Concat", ["rs0", "rs1", "rsHm2", "rsHm1",
                  "lc_wall", "lc_line", "rc_line", "rc_wall",
-                 "roff", "ones_r"], "Acol", axis=3)        # [1,1,30,10]
-    # Brow rows (over cols): k0..3 col-value-vecs, k4..7 col-selectors, k8 ones, k9 off-col
+                 "rowocc16"], "Acol", axis=3)              # [1,1,30,9]
+    # Brow rows (over cols): k0..3 col-value-vecs, k4..7 col-selectors, k8 in-grid col
     n("Concat", ["tc_wall", "tc_line", "bc_line", "bc_wall",
                  "cs0", "cs1", "csWm2", "csWm1",
-                 "ones_c", "coff"], "Brow", axis=2)        # [1,1,10,30]
+                 "colocc16"], "Brow", axis=2)              # [1,1,9,30]
     n("MatMul", ["Acol", "Brow"], "og")                    # [1,1,30,30] f16
 
-    # ---- Equal(og, channel-ramp) straight into the FREE bool output --------
-    init("chan", np.arange(10, dtype=np.float16).reshape(1, 10, 1, 1))
+    # ---- Equal(og, colour+1 ramp) straight into the FREE bool output -------
+    init("chan", (np.arange(10, dtype=np.float16) + 1).reshape(1, 10, 1, 1))
     n("Equal", ["og", "chan"], "output")                   # [1,10,30,30] bool (FREE)
 
     x = helper.make_tensor_value_info("input", DATA_TYPE, GRID_SHAPE)

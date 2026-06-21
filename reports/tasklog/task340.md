@@ -15,10 +15,13 @@ collisions, so an ADDITIVE single index plane is exact.
 |---|---|---|---|---|---|---|---|
 | 0 | leftover (8-line packed MatMul, fp32 Conv counts + edge-MatMul machinery) | A | 11932 | 773 | 15.55 | — | below P |
 | 1 | single packed MatMul Acol[30,10]@Brow[10,30] + wall colours from per-ch counts | A | 9304 | 163 | 15.844 | 500/500 | beats P +0.15 |
-| 2 | reuse occupancy for off-grid sentinel | A | 9244 | 163 | 15.851 | 500/500 | best |
+| 2 | reuse occupancy for off-grid sentinel | A | 9244 | 163 | 15.851 | 500/500 | best (prior) |
+| 3 | drop 2 off-grid sentinels → ONE in-grid +1 term (rowocc⊗colocc) + chan=colour+1 | A | 8884 | 102 | 15.897 | — | inner-dim 10→9, params 163→102 |
+| 4 | interior c<=W-2 as Less(c,Widx) (drop Sub planes); value vecs via Where(mask,colour,0) | A | 8404 | 101 | 15.952 | — | kills fp16 mask casts |
+| 5 | wall colour = Sum k*(count>0) in fp16 (no argmax); H=Sum(rowocc) (drop ramp*occ Mul); Where-fold | A | **8016** | **102** | **15.998** | 3000/3000 | **NEW BEST, beats +0.307** |
 
 ## Best achieved
-15.851 @ mem 9244 params 163. Beats prior 15.69 by **+0.16 → MARGINAL (< +0.3)**.
+**15.998 @ mem 8016 params 102. Beats prior 15.69 by +0.307 → clears +0.3.** 3000/3000 fresh exact.
 
 ## Irreducible-floor analysis
 Dominant intermediates (all forced by an fp32 10-channel input):
@@ -36,11 +39,27 @@ presence, off-grid sentinel, wall-colour argmax). Reaching +0.3 needs mem+params
 count floor (2400) + og (1800) + MatMul operands (1200) + build vectors leave no room. The
 deployed kojimar net (~11050B) IS beaten on stored, just not by the +0.3 bar.
 
-## OPEN ANGLES (re-attack backlog)
-- Eliminate ONE count plane: needs per-row AND per-column wall-colour presence from a single
-  reduction — appears impossible (orthogonal 2-D reductions). If an fp16-output count op ever
-  lands under ORT_DISABLE_ALL the 2400→1200 clears +0.3 immediately.
-- Fuse Acol/Brow operand build via batched Equal/Mul (~300-400B) — measured ~byte-neutral.
+## PLANE-ELIMINATION WAVE (2026-06-21, +0.307 — supersedes the "no room for +0.3" verdict)
+The prior floor analysis double-counted: the real core is og 1800 + 2 counts 2400 + 2 concats
+1080 = 5280, NOT 7800. The ~3000B TAIL was the fat. Cuts that landed (9244→8016):
+- ⭐ OFF-GRID SENTINEL → IN-GRID +1: replace the two `+10*(off-grid)` MatMul sentinel columns
+  (k8,k9 + roff/coff/row_off/col_off/ones plumbing) with ONE in-grid term rowocc16⊗colocc16
+  and shift the Equal target ramp to colour+1. In-grid bg→og=1→ch0; colour k→og=k+1→ch k;
+  off-grid→og=0→matches no channel (ramp starts at 1)→all-false. MatMul inner-dim 10→9,
+  concats 600→540, params 163→102. (−360 mem, −61 params.)
+- ⭐ WALL COLOUR = Sum_k k*(count_k>0) in fp16 — a solid wall line holds ONLY its colour
+  (interior pixels ≥2 from walls), so NO ReduceMax/Equal argmax: one Greater→Where(chramp16,0)
+  →ReduceSum, all fp16 ([1,10,1,1] 40B→20B). Killed ~8 planes of the wall_color helper.
+- ⭐ SOLID-RECT EXTENT = COUNT not argmax: grid rows 0..H-1 all occupied (solid origin rect),
+  so H=Sum(rowocc16), Hidx=H-1 — drops the rowocc*ramp Mul planes (rowx/colx, 120B).
+- value vectors via `Where(mask_bool, colour, 0)` (not Cast(mask)+Mul) → no fp16 mask planes.
+- interior upper bound `c<=W-2 == Less(c, Widx)` → drops the Sub-vector planes.
+
+## OPEN ANGLES (remaining)
+- og 1800 (fp16 index, MatMul→Equal floor) + 2 counts 2400 (fp32 ReduceSum, orthogonal 2-D
+  reductions can't merge) + 2 concats 1080 = 5280B hard core. Remaining ~2700 tail is genuine
+  selector/value/presence vectors. A further win needs a count op that emits fp16 (ReduceSum
+  rejects narrow dtypes) or a non-MatMul index assembly.
 
 ## INSIGHT (transferable)
 - ⭐ "Shoot interior pixels to their matching wall" = SEPARABLE per-direction routing, NOT a

@@ -1,30 +1,33 @@
-"""task174 (ARC-AGI 72ca375d) — crop the horizontally-symmetric box.
+"""task174 (ARC-AGI 72ca375d) — extract the symmetric box, move to origin.
 
 Rule (from the generator, verified):
-  The 10x10 grid holds exactly 3 monochrome "boxes" (creatures) in 3 distinct
-  colours.  Box-0 (colors[0]) is built to be BOTH horizontally(column)-mirror
-  symmetric AND 180-rotationally symmetric; boxes 1,2 are built to be NEITHER.
-  The output is box-0 cropped tight to its bounding box, placed at the top-left
-  corner of a fresh grid (channel-0 fills the holes inside the HxW bbox, every
-  cell outside the bbox is all-channels-off).
+  Three monochrome "boxes" (connected creatures) are placed on a 10x10 grid, each in
+  its OWN colour channel.  Box idx 0 is forced to be BOTH vertically-mirror-symmetric
+  AND 180-rotationally symmetric about its own bbox; boxes 1,2 are forced to be NEITHER.
+  The OUTPUT is box-0's shape, cropped to its bbox and translated to the top-left origin,
+  in box-0's colour (channel-0 fills the holes inside the HxW bbox; everything outside
+  the bbox is all-channels-off).
 
-  Key invariant (verified 0/8000 fresh): box-0 is the UNIQUE colour whose
-  bbox-cropped shape equals its own horizontal mirror.  Tested in closed form
-  with a per-channel reflection MatMul: reflect each channel's columns about its
-  own axis a = c0 + c1 (Cmat[k,c',c] = (c'+c == a_k)); the channel where the
-  reflected plane equals the original (and c != background) is box-0.
+  UNIQUE discriminator (verified 0 bad / 8000 fresh): box-0 is the ONLY present colour
+  whose bbox-cropped shape equals its own horizontal (column) mirror.  (Symmetric-only
+  already discriminates because boxes 1,2 are NEITHER symmetric nor rotational.)
 
-Pipeline (ONNX, opset 11):
-  1. Slice input to the 10x10 active region A [1,10,10,10].
-  2. Per-channel col bbox (cmin,cmax) and row bbox (rmin,rmax) from 1-D occupancy
-     profiles; a = cmin+cmax.
-  3. Reflection matrix Cmat[1,10,10,10] = Equal(c'+c, a); Mf = MatMul(A, Cmat);
-     sym = ReduceSum(|A-Mf|,[2,3]) == 0.  box0color = the present (c!=0) channel
-     whose shape is symmetric.
-  4. Gather that channel's plane, shift a WORK=5 window to the top-left by
-     Gather(axis=2, arange+rmin) then Gather(axis=3, arange+cmin).
-  5. Label map L uint8: box0color on the box cells, 0 inside the HxW bbox, 10
-     outside; Pad to 30x30 (sentinel 10); Equal(L, arange[0..9]) -> BOOL output.
+Plane-free encoding (column-signature palindrome — NO full 10-channel reflection plane):
+  For colour channel k, the COLUMN SIGNATURE sig_k[c] = sum_r 2^r * M_k[r,c] is a bitmask
+  of which rows column c fills.  The shape is horizontally symmetric  <=>  sig_k[] is a
+  PALINDROME about its column-bbox centre a_k = cmin+cmax, i.e. sig_k[c]==sig_k[a_k-c] for
+  every c in [cmin,cmax] (verified exact 0/8000).  All this runs on tiny [1,10,1,10] vectors.
+
+  - sig = MatMul(rowweight[1,1,1,30], input[1,10,30,30]) -> [1,10,1,30]  (off the FREE input,
+    no full 10x10x10 plane ever materialises), sliced to the 10-col active region.
+  - reflect via GatherElements on idx=clip(a-c): refl[k,c]=sig_k[clip(a_k-c)].
+  - is_sym_k = (sig==refl on the column-span) ; special = is_sym AND present AND k!=0.
+  - k = ArgMax(special).
+  - decode box from sig DIRECTLY (no box plane): gather sig of channel k, shift cols to
+    origin, divide by 2^rmin to shift rows to origin, then box[r,c]=floor(sig'[c]/2^r) mod 2
+    on a 5x5 tile (box bbox is always <=5x5).
+  - label L (uint8): box0colour on box cells, 0 on inside-bbox holes, sentinel 10 outside;
+    Pad to 30x30, Equal(L, arange[0..9]) -> BOOL output.
 """
 
 import numpy as np
@@ -36,172 +39,186 @@ from ..harness import IR_VERSION
 F32 = TensorProto.FLOAT
 F16 = TensorProto.FLOAT16
 U8 = TensorProto.UINT8
+BOOL = TensorProto.BOOL
 I64 = TensorProto.INT64
-B = TensorProto.BOOL
 
-ACT = 10   # active region size (grid is always 10x10)
-WORK = 5   # box bbox is always <= 5x5
+N = 30      # full canvas
+W = 10      # active region side (grid is 10x10, content top-left)
+K = 5       # box bbox is always <= 5x5
+NB = 999.0  # big sentinel for min, -NB for max
 
 
 def build(task):
     inits, nodes = [], []
 
     def init(name, arr, dtype):
-        inits.append(numpy_helper.from_array(
-            np.ascontiguousarray(arr, dtype=dtype), name))
+        inits.append(numpy_helper.from_array(np.ascontiguousarray(arr, dtype=dtype), name))
         return name
 
     def n(op, ins, out, **attrs):
-        nodes.append(helper.make_node(op, ins, [out], **attrs))
+        nodes.append(helper.make_node(op, list(ins), [out], **attrs))
         return out
 
-    BIG = 1000.0
+    # ====================================================================
+    # 1. column signatures sig_k[c] = sum_r 2^r M_k[r,c]   (off the FREE input)
+    # ====================================================================
+    roww = (2.0 ** np.arange(N)).astype(np.float32)
+    roww[W:] = 0.0                                  # only rows 0..9 carry content
+    init("rowwt", roww.reshape(1, 1, 1, N), np.float32)   # [1,1,1,30]
+    n("MatMul", ["rowwt", "input"], "sig30")        # [1,10,1,30] f32
+    init("c_s", np.array([0], np.int64), np.int64)
+    init("c_e", np.array([W], np.int64), np.int64)
+    init("c_ax", np.array([3], np.int64), np.int64)
+    n("Slice", ["sig30", "c_s", "c_e", "c_ax"], "sig")   # [1,10,1,10] f32 (400B)
 
-    # ---- slice to the 10x10 active region ------------------------------------
-    init("s_start", np.array([0, 0], np.int64), np.int64)
-    init("s_end", np.array([ACT, ACT], np.int64), np.int64)
-    init("s_axes", np.array([2, 3], np.int64), np.int64)
-    n("Slice", ["input", "s_start", "s_end", "s_axes"], "A32")  # [1,10,10,10] f32
-    n("Cast", ["A32"], "A", to=F16)                         # [1,10,10,10] fp16
+    # ====================================================================
+    # 2. column bbox: cmin,cmax per channel ; a = cmin+cmax
+    # ====================================================================
+    init("ZERO", np.array(0.0, np.float32), np.float32)
+    n("Greater", ["sig", "ZERO"], "colocc")         # [1,10,1,10] bool
+    # axis machinery in fp16 (col indices 0..9 are fp16-exact); halves these planes.
+    init("cramp", np.arange(W, dtype=np.float16).reshape(1, 1, 1, W), np.float16)
+    init("PB", np.array(NB, np.float16), np.float16)
+    init("NBv", np.array(-NB, np.float16), np.float16)
+    n("Where", ["colocc", "cramp", "PB"], "cmin_src")   # [1,10,1,10] fp16
+    n("ReduceMin", ["cmin_src"], "cmin", axes=[3], keepdims=1)   # [1,10,1,1] fp16
+    n("Where", ["colocc", "cramp", "NBv"], "cmax_src")
+    n("ReduceMax", ["cmax_src"], "cmax", axes=[3], keepdims=1)   # [1,10,1,1] fp16
+    n("Add", ["cmin", "cmax"], "a")                 # [1,10,1,1] fp16 reflection axis
 
-    # ---- per-channel occupancy profiles (fp16) -------------------------------
-    n("ReduceMax", ["A"], "rowocc", axes=[3], keepdims=1)   # [1,10,10,1] fp16
-    n("ReduceMax", ["A"], "colocc", axes=[2], keepdims=1)   # [1,10,1,10] fp16
-    n("ReduceMax", ["rowocc"], "anyc", axes=[2], keepdims=1)  # [1,10,1,1] fp16
+    # (row bbox of the SPECIAL box is derived from its column signatures after
+    #  selection — see step 6 — so no per-channel row plane is built here.)
 
-    init("half", np.array(0.5, np.float16), np.float16)
-    n("Greater", ["rowocc", "half"], "rowb")                # bool [1,10,10,1]
-    n("Greater", ["colocc", "half"], "colb")                # bool [1,10,1,10]
+    # ====================================================================
+    # 4. reflect sig about a (GatherElements idx = clip(a-c, 0, 9))
+    # ====================================================================
+    n("Sub", ["a", "cramp"], "amc")                 # [1,10,1,10] fp16 = a-c
+    init("CLO", np.array(0.0, np.float16), np.float16)
+    init("CHI", np.array(float(W - 1), np.float16), np.float16)
+    n("Clip", ["amc", "CLO", "CHI"], "amc_cl")      # fp16
+    n("Cast", ["amc_cl"], "ridx", to=TensorProto.INT32)   # [1,10,1,10] int32 idx
+    n("GatherElements", ["sig", "ridx"], "refl", axis=3)   # [1,10,1,10] f32
 
-    ramp_r = np.arange(ACT, dtype=np.float16).reshape(1, 1, ACT, 1)
-    ramp_c = np.arange(ACT, dtype=np.float16).reshape(1, 1, 1, ACT)
-    init("rr", ramp_r, np.float16)                          # [1,1,10,1]
-    init("rc", ramp_c, np.float16)                          # [1,1,1,10]
-    init("PBIG", np.array(BIG, np.float16), np.float16)
-    init("NBIG", np.array(-BIG, np.float16), np.float16)
+    # symmetric column c  <=>  sig[c]==refl[c]  for every IN-SPAN column.
+    # out-of-span columns: colocc=False there, and sig=0; refl gathers a clipped
+    # in-span column whose sig may be != 0, so MASK the comparison to in-span cols.
+    n("Equal", ["sig", "refl"], "eqcol")            # [1,10,1,10] bool
+    # in-span: cmin<=c<=cmax  ==  colocc OR ... no; the palindrome must hold on the
+    # FULL [cmin,cmax] span, but interior empty cols have sig=0 on both sides so eq
+    # holds there too. So require eq on every col with cmin<=c<=cmax.
+    n("Not", [n("Less", ["cramp", "cmin"], "lt_min")], "ge_min")   # c>=cmin
+    n("Not", [n("Greater", ["cramp", "cmax"], "gt_max")], "le_max")  # c<=cmax
+    n("And", ["ge_min", "le_max"], "inspan")        # [1,10,1,10] bool
+    # symmetric iff (NOT inspan) OR eqcol, for all c  ==  no in-span mismatch
+    n("Not", ["eqcol"], "neqcol")
+    n("And", ["inspan", "neqcol"], "mismatch")      # [1,10,1,10] bool
+    n("Cast", ["mismatch"], "mismatch_f", to=F32)
+    n("ReduceSum", ["mismatch_f"], "nmis", axes=[3], keepdims=1)   # [1,10,1,1]
+    n("Equal", ["nmis", "ZERO"], "is_sym")          # [1,10,1,1] bool
 
-    # min/max occupied row & col per channel
-    n("Where", ["rowb", "rr", "PBIG"], "rmin_src")          # [1,10,10,1]
-    n("ReduceMin", ["rmin_src"], "rmin", axes=[2], keepdims=1)  # [1,10,1,1]
-    n("Where", ["rowb", "rr", "NBIG"], "rmax_src")
-    n("ReduceMax", ["rmax_src"], "rmax", axes=[2], keepdims=1)  # [1,10,1,1]
-    n("Where", ["colb", "rc", "PBIG"], "cmin_src")          # [1,10,1,10]
-    n("ReduceMin", ["cmin_src"], "cmin", axes=[3], keepdims=1)  # [1,10,1,1]
-    n("Where", ["colb", "rc", "NBIG"], "cmax_src")
-    n("ReduceMax", ["cmax_src"], "cmax", axes=[3], keepdims=1)  # [1,10,1,1]
-
-    # ---- reflection axis a = cmin + cmax (per channel) -----------------------
-    n("Add", ["cmin", "cmax"], "axis_a")                    # [1,10,1,1] f32
-
-    # ---- reflection matrix Cmat[1,10,10,10] = Equal(c'+c, a) -----------------
-    cp = np.arange(ACT, dtype=np.float16).reshape(1, 1, ACT, 1)
-    cc = np.arange(ACT, dtype=np.float16).reshape(1, 1, 1, ACT)
-    init("cp", cp, np.float16)                              # [1,1,10,1]
-    init("cc", cc, np.float16)                              # [1,1,1,10]
-    n("Add", ["cp", "cc"], "cpc")                           # [1,1,10,10] fp16
-    n("Equal", ["cpc", "axis_a"], "Cmat_b")                 # [1,10,10,10] bool
-    n("Cast", ["Cmat_b"], "Cmat", to=F16)                   # [1,10,10,10] fp16
-
-    # ---- Mf = A @ Cmat  (column reflection per channel) ----------------------
-    # MatMul batches over [1,10]; contracts last axis of A with 2nd-last of Cmat.
-    # Cmat is symmetric in (c',c) so Cmat == Cmat^T.  All values are tiny
-    # integers (sums of <=10 ones) so fp16 is exact.
-    n("MatMul", ["A", "Cmat"], "Mf")                        # [1,10,10,10] fp16
-
-    # ---- symmetry per channel: overlap(A,Mf) == count(A) ---------------------
-    # A and Mf are binary with the same pixel count (reflection preserves count),
-    # so the masks are equal iff their overlap equals the count.  Uses ONE extra
-    # full plane (A*Mf) instead of two (diff + diff^2).
-    n("Mul", ["A", "Mf"], "AMf")                            # [1,10,10,10] fp16
-    n("ReduceSum", ["AMf"], "overlap", axes=[2, 3], keepdims=1)   # [1,10,1,1]
-    n("ReduceSum", ["A"], "cntA", axes=[2, 3], keepdims=1)        # [1,10,1,1]
-    n("Equal", ["overlap", "cntA"], "is_sym")               # [1,10,1,1] bool
-
-    # present (c has pixels) and c != background channel 0
-    n("Greater", ["anyc", "half"], "present")               # [1,10,1,1] bool
-    ch0kill = np.zeros((1, 10, 1, 1), np.bool_)
-    ch0kill[0, 0, 0, 0] = True
+    # present (any column occupied)  <=>  cmax >= 0 (else cmax = -NB) ; and not channel 0
+    init("NEG1", np.array(-1.0, np.float16), np.float16)
+    n("Greater", ["cmax", "NEG1"], "present")       # [1,10,1,1] bool
+    ch0kill = np.zeros((1, 10, 1, 1), np.bool_); ch0kill[0, 0, 0, 0] = True
     init("ch0kill", ch0kill, np.bool_)
     n("Not", ["ch0kill"], "notch0")
-    n("And", ["present", "notch0"], "valid")                # [1,10,1,1] bool
-    n("And", ["is_sym", "valid"], "is_box0")                # unique True channel
+    n("And", ["present", "notch0"], "valid")
+    n("And", ["is_sym", "valid"], "is_box0")        # unique True channel
 
-    # box0color = the channel index where is_box0 is True (argmax over channel)
-    n("Cast", ["is_box0"], "is_box0_f", to=F16)             # [1,10,1,1] fp16
-    n("ArgMax", ["is_box0_f"], "bc_i", axis=1, keepdims=1)  # [1,1,1,1] int64
-    n("Cast", ["bc_i"], "bcf", to=F32)                      # box0color as float
-
-    # ---- gather min_row / min_col / spans of the box0 channel ----------------
-    init("shp10", np.array([1, 10], np.int64), np.int64)
-    init("shp11", np.array([1, 1], np.int64), np.int64)
-    n("Reshape", ["rmin", "shp10"], "rmin10")               # [1,10]
-    n("Reshape", ["cmin", "shp10"], "cmin10")
-    n("Reshape", ["bc_i", "shp11"], "bc11")                 # [1,1]
-    n("GatherElements", ["rmin10", "bc11"], "minr", axis=1)  # [1,1] f32
-    n("GatherElements", ["cmin10", "bc11"], "minc", axis=1)
-
-    # spans (H-1, W-1)
-    n("Sub", ["rmax", "rmin"], "rspan")                     # [1,10,1,1]
-    n("Sub", ["cmax", "cmin"], "cspan")
-    n("Reshape", ["rspan", "shp10"], "rspan10")
-    n("Reshape", ["cspan", "shp10"], "cspan10")
-    n("GatherElements", ["rspan10", "bc11"], "Hm1", axis=1)  # [1,1] fp16
-    n("GatherElements", ["cspan10", "bc11"], "Wm1", axis=1)
-    init("one", np.array(1.0, np.float16), np.float16)
-    n("Add", ["Hm1", "one"], "H")                           # [1,1] fp16
-    n("Add", ["Wm1", "one"], "W")
-
-    # ---- box0 plane = the box0 colour channel, shift to top-left -------------
-    init("shp1d", np.array([1], np.int64), np.int64)
-    n("Reshape", ["bc_i", "shp1d"], "bc1")                  # [1] int64
-    n("Gather", ["A", "bc1"], "bplane", axis=1)             # [1,1,10,10] f32 mask
-
-    baseW = np.arange(WORK, dtype=np.float16)
-    init("baseW", baseW, np.float16)                        # [WORK]
+    # ====================================================================
+    # 5. k = ArgMax(is_box0) over channels
+    # ====================================================================
+    n("Cast", ["is_box0"], "is_box0_f", to=F32)     # [1,10,1,1]
+    n("ArgMax", ["is_box0_f"], "k4", axis=1, keepdims=1)   # [1,1,1,1] int64
     init("shp1", np.array([1], np.int64), np.int64)
-    init("c0", np.array(0.0, np.float16), np.float16)
-    init("clo", np.array(float(ACT - 1), np.float16), np.float16)
-    n("Reshape", ["minr", "shp1"], "minr_s")                # [1]
-    n("Add", ["baseW", "minr_s"], "ridx_f")                 # [WORK]
-    n("Clip", ["ridx_f", "c0", "clo"], "ridx_cl")
-    n("Cast", ["ridx_cl"], "ridx", to=I64)                  # [WORK] int64
-    n("Reshape", ["minc", "shp1"], "minc_s")                # [1]
-    n("Add", ["baseW", "minc_s"], "cidx_f")
-    n("Clip", ["cidx_f", "c0", "clo"], "cidx_cl")
-    n("Cast", ["cidx_cl"], "cidx", to=I64)                  # [WORK] int64
+    n("Reshape", ["k4", "shp1"], "k1")              # [1] int64
 
-    n("Gather", ["bplane", "ridx"], "Vr", axis=2)           # [1,1,WORK,10] f32
-    n("Gather", ["Vr", "cidx"], "Vs", axis=3)               # [1,1,WORK,WORK] f32
+    # gather sig, cmin, cmax of channel k
+    n("Gather", ["sig", "k1"], "sigk", axis=1)      # [1,1,1,10] f32
+    n("Gather", ["cmin", "k1"], "cmink", axis=1)    # [1,1,1,1]
 
-    # ---- bbox mask (r < H) and (c < W) on the WORK x WORK canvas -------------
-    rampw_r = np.arange(WORK, dtype=np.float16).reshape(1, 1, WORK, 1)
-    rampw_c = np.arange(WORK, dtype=np.float16).reshape(1, 1, 1, WORK)
-    init("wr", rampw_r, np.float16)                         # [1,1,WORK,1]
-    init("wc", rampw_c, np.float16)                         # [1,1,1,WORK]
-    n("Less", ["wr", "H"], "rmask")                         # [1,1,WORK,1] bool
-    n("Less", ["wc", "W"], "cmask")                         # [1,1,1,WORK] bool
-    n("And", ["rmask", "cmask"], "boxmask")                 # [1,1,WORK,WORK] bool
+    # box colour = k (channel index)
+    n("Cast", ["k4"], "colf", to=F32)               # [1,1,1,1] colour value
+    n("Cast", ["colf"], "col_u8", to=U8)            # uint8 colour
 
-    # ---- box mask M = (Vs > 0.5) AND boxmask ---------------------------------
-    n("Cast", ["bcf"], "bc_u8", to=U8)                      # box0color uint8 [1,1,1,1]
-    n("Greater", ["Vs", "half"], "iseq")                    # [1,1,WORK,WORK] bool
-    n("And", ["iseq", "boxmask"], "M")                      # box0 cells
+    # ====================================================================
+    # 6. shift sig columns to origin: gather cols cmin..cmin+4
+    # ====================================================================
+    # pad sigk with K trailing zero columns so off-grid gathers read 0
+    init("sigpad", np.array([0, 0, 0, 0, 0, 0, 0, K], np.int64), np.int64)  # right pad axis3
+    n("Pad", ["sigk", "sigpad", "ZERO"], "sigk_p", mode="constant")  # [1,1,1,W+K]
+    init("kramp", np.arange(K, dtype=np.float16), np.float16)   # [5] fp16
+    n("Reshape", ["cmink", "shp1"], "cmink_s")      # [1] fp16
+    n("Add", ["kramp", "cmink_s"], "cidx_f")        # [5] fp16
+    init("KLO", np.array(0.0, np.float16), np.float16)
+    init("KHI", np.array(float(W + K - 1), np.float16), np.float16)
+    n("Clip", ["cidx_f", "KLO", "KHI"], "cidx_cl")
+    n("Cast", ["cidx_cl"], "cidx", to=I64)          # [5] int64
+    n("Gather", ["sigk_p", "cidx"], "sig_sh", axis=3)  # [1,1,1,5] f32 (col-shifted sigs)
 
-    # ---- label map L (WORK x WORK): box0color on M, 0 inside box, 10 outside -
+    # ---- decode box on rows 0..9 (col-origin) via Mod bit-extraction --------
+    # box10[r,c] = bit_r(sig_sh[c]) = (sig_sh mod 2^(r+1)) >= 2^r
+    p2hi = (2.0 ** (np.arange(W) + 1)).astype(np.float32).reshape(1, 1, W, 1)  # [1,1,10,1]
+    p2lo = (2.0 ** np.arange(W)).astype(np.float32).reshape(1, 1, W, 1)
+    init("p2hi", p2hi, np.float32)
+    init("p2lo", p2lo, np.float32)
+    n("Mod", ["sig_sh", "p2hi"], "modr", fmod=1)    # [1,1,10,5] f32 (bcast over rows)
+    n("Less", ["modr", "p2lo"], "ltlo")
+    n("Not", ["ltlo"], "box10")                     # [1,1,10,5] bool box (global rows)
+
+    # ---- row bbox from box10 row-occupancy ; rmin -> Gather rows to origin ---
+    n("Cast", ["box10"], "box10_f", to=F32)
+    n("ReduceSum", ["box10_f"], "rowcnt", axes=[3], keepdims=1)   # [1,1,10,1]
+    n("Greater", ["rowcnt", "ZERO"], "rowocc")      # [1,1,10,1] bool
+    init("rramp", np.arange(W, dtype=np.float16).reshape(1, 1, W, 1), np.float16)
+    n("Where", ["rowocc", "rramp", "PB"], "rmin_src")   # fp16
+    n("ReduceMin", ["rmin_src"], "rmink", axes=[2], keepdims=1)   # [1,1,1,1] fp16
+    # pad box10_f with K trailing zero rows so off-grid row gathers read 0
+    init("boxpad", np.array([0, 0, 0, 0, 0, 0, K, 0], np.int64), np.int64)  # bottom pad axis2
+    n("Pad", ["box10_f", "boxpad", "ZERO"], "box10_p", mode="constant")  # [1,1,W+K,5]
+    n("Reshape", ["rmink", "shp1"], "rmink_s")      # [1]
+    n("Add", ["kramp", "rmink_s"], "ridx_f")        # [5]
+    n("Clip", ["ridx_f", "KLO", "KHI"], "ridx_cl")
+    n("Cast", ["ridx_cl"], "ridx2", to=I64)         # [5]
+    n("Gather", ["box10_p", "ridx2"], "boxf", axis=2)   # [1,1,5,5] f32 origin box
+    n("Greater", ["boxf", "ZERO"], "boxmask")       # [1,1,5,5] bool box pixels
+
+    # ====================================================================
+    # 7. inside-bbox mask: r<H and c<W where H,W = box bbox extent at origin
+    #    H-1 = max occupied row of boxmask ; W-1 = max occupied col.
+    # ====================================================================
+    n("ReduceSum", ["boxf"], "bcolcnt", axes=[2], keepdims=1)   # [1,1,1,5] col occ
+    n("Greater", ["bcolcnt", "ZERO"], "bcolocc")    # [1,1,1,5] bool
+    krow = np.arange(K, dtype=np.float16).reshape(1, 1, K, 1)
+    kcol = np.arange(K, dtype=np.float16).reshape(1, 1, 1, K)
+    init("krow", krow, np.float16)
+    init("kcol", kcol, np.float16)
+    # boxrowocc (rows): from boxf
+    n("ReduceSum", ["boxf"], "browcnt", axes=[3], keepdims=1)   # [1,1,5,1]
+    n("Greater", ["browcnt", "ZERO"], "browocc")    # [1,1,5,1] bool
+    # Hm1 = max r with browocc ; Wm1 = max c with bcolocc
+    n("Where", ["browocc", "krow", "NBv"], "Hm1_src")
+    n("ReduceMax", ["Hm1_src"], "Hm1", axes=[2], keepdims=1)    # [1,1,1,1]
+    n("Where", ["bcolocc", "kcol", "NBv"], "Wm1_src")
+    n("ReduceMax", ["Wm1_src"], "Wm1", axes=[3], keepdims=1)    # [1,1,1,1]
+    n("Not", [n("Greater", ["krow", "Hm1"], "rgt")], "rin")   # r<=Hm1
+    n("Not", [n("Greater", ["kcol", "Wm1"], "cgt")], "cin")   # c<=Wm1
+    n("And", ["rin", "cin"], "inside")              # [1,1,5,5] bool
+
+    # ====================================================================
+    # 8. label map L (5x5) -> pad to 30x30 -> Equal -> output
+    # ====================================================================
     init("u0", np.array(0, np.uint8), np.uint8)
     init("u10", np.array(10, np.uint8), np.uint8)
-    n("Where", ["M", "bc_u8", "u0"], "Lin")                 # [1,1,WORK,WORK] u8
-    n("Where", ["boxmask", "Lin", "u10"], "Lw")            # outside box -> 10
-
-    # ---- pad to 30x30 (sentinel 10) and final Equal --------------------------
-    init("padpads",
-         np.array([0, 0, 0, 0, 0, 0, 30 - WORK, 30 - WORK], np.int64), np.int64)
-    n("Pad", ["Lw", "padpads", "u10"], "L", mode="constant")  # [1,1,30,30] u8
+    n("Where", ["boxmask", "col_u8", "u0"], "Lbox")  # box cells -> colour, else 0
+    n("Where", ["inside", "Lbox", "u10"], "Lin")     # outside bbox -> 10
+    init("padpads", np.array([0, 0, 0, 0, 0, 0, N - K, N - K], np.int64), np.int64)
+    n("Pad", ["Lin", "padpads", "u10"], "L", mode="constant")   # [1,1,30,30] u8
     init("chan", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
-    n("Equal", ["L", "chan"], "output")                     # [1,10,30,30] BOOL
+    n("Equal", ["L", "chan"], "output")             # [1,10,30,30] BOOL
 
-    x = helper.make_tensor_value_info("input", F32, [1, 10, 30, 30])
-    y = helper.make_tensor_value_info("output", B, [1, 10, 30, 30])
-    graph = helper.make_graph(nodes, "task174", [x], [y], inits)
-    return helper.make_model(graph, ir_version=IR_VERSION,
+    x = helper.make_tensor_value_info("input", F32, [1, 10, N, N])
+    y = helper.make_tensor_value_info("output", BOOL, [1, 10, N, N])
+    g = helper.make_graph(nodes, "task174", [x], [y], inits)
+    return helper.make_model(g, ir_version=IR_VERSION,
                              opset_imports=[helper.make_opsetid("", 11)])

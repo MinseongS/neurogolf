@@ -8,7 +8,10 @@ cyan(8) (unless already blue); likewise for pairs sharing a COLUMN. Net: per row
 is cyan iff it is NOT blue AND lies in some row-span OR some col-span. (label confirmed-infeasible was
 a FALSE-POSITIVE — the task is closed-form.)
 
-**Current:** 15.105 pts, ext:kojimar6275, mem 19800, params 30
+**Current (2026-06-21):** 15.63 pts, uint8 directional-pool net, mem 11700, params 11.
+(Prior log entries below measured an OLDER fp16 net at 15.105/19800 — the deployed net has since been
+upgraded to all-uint8 MaxPools: 11700B/15.63. The "uint8 MaxPool rejected by ORT" claim in the floor
+section below is STALE — uint8 MaxPool DOES run under ORT_DISABLE_ALL at opset≥12 and is the current net.)
 **Target tier:** A — closed-form per-row/per-col span fill via directional prefix/suffix-OR, no
 flood-fill; 10-ch expansion routed into the FREE Where output.
 
@@ -22,8 +25,19 @@ flood-fill; 10-ch expansion routed into the FREE Where output.
 | 5 | ⭐ replace 4 triangular MatMuls with 4 fp16 MaxPool prefix/suffix-OR (params→30) | A | 16776 | 30 | 15.27 | 500/500 | BEST |
 
 ## Best achieved
-15.27 @ mem 16776 params 30 — adopted? N (not self-adopted). Beats prior 15.105? Y by **+0.165
-(MARGINAL, < +0.3 threshold)**.
+Deployed uint8 net: 15.63 @ mem 11700 params 11 — already optimal. Cannot beat by +0.3 (INFEASIBLE).
+(Historical: fp16 self-build reached 15.27 @ 16776/30, since superseded by the uint8 deployed net.)
+
+## 2026-06-21 re-probe vs uint8 deployed net (11700B / 15.63)
+Measured mem breakdown of the deployed net: ONE fp32 plane 3600B (Gather of blue channel — Gather/
+Slice/Conv all inherit fp32) + Cast→uint8 900B + 4 directional uint8 MaxPool planes 3600B + 2 Min +
+1 Max + 1 Greater-bool 3600B = 11700B. To beat +0.3 needs mem+par ≤ 8676B (cut ~3035B). The only
+3000B item is the fp32 blue-extraction bridge, and it is IRREDUCIBLE: no single ONNX op maps the free
+fp32 input to a single-channel uint8 plane — Cast(input) keeps all 10 channels (9000B), Gather/Slice/
+Conv/MaxPool inherit fp32, ReduceMax-over-channels rejects uint8 out, ArgMax→int64. The downstream
+algorithm is already minimal (4 non-separable directional planes + Min/Min/Max/Greater). Absolute
+theoretical floor 3600+900+3600+2700+11 ≈ 10811B → 15.71 pts, only +0.08 over deployed. VERDICT:
+INFEASIBLE — at structural floor.
 
 ## Irreducible-floor analysis
 The rule is genuinely NON-separable (each row has its own [min,max] col span, each col its own

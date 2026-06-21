@@ -87,3 +87,21 @@ Per-plane irreducibility:
 
 To reach +0.3 needs cutting ~3.4KB (~8.5 of the 400B planes) — no such slack exists.
 VERDICT: INFEASIBLE. Keep ext:kojimar7113.
+
+## INDEPENDENT RE-CONFIRMATION (2026-06-21) — same floor, MARGINAL/INFEASIBLE upheld
+Rebuilt the directional-MaxPool design from scratch in src/custom/task145.py (the old 14.21
+log-doubling net was overwritten — it would have regressed, so the file now holds the GOOD
+design even though it still doesn't beat deployed). Net: 15.49 pts, mem 13344, params 124,
+**fresh 3000/3000 EXACT** (verified with isolated load_gen). One structural change vs the deployed
+net: replaced its two 20x20 'inside'-MaxPools with **1-D occupancy profiles** —
+ReduceSum(input, axes=[1,2])->[1,1,1,30] and axes=[1,3]->[1,1,30,1], >0, And — a clean ~2KB
+saving on inside-detection. But that saving is exactly absorbed by the unavoidable area machinery,
+landing 240B ABOVE deployed (13344 vs 13104), i.e. a tie at ~15.5. Confirms the prior verdict:
+the 4 fp16 area planes (neg_w, neg_h, area, area_for_min = 3200B) + fp32 bg slice (1600B) + uint8
+pad-back (900B) are an irreducible ~13K floor. area_for_min is MANDATORY: measured 743/2000
+instances have a 1x1 bg room (area 1) coexisting with non-bg cells (also area 1), so the global
+min cannot be taken over the raw plane. uint8 area is impossible (max room area ~324 > 255).
+⭐ Reusable: the 1-D occupancy-profile inside-mask (ReduceSum over channel + one spatial axis ->
+tiny vector -> Greater -> And) is the cheapest "in-grid rectangle from a top-left-anchored grid"
+detector and cleanly replaces inside-MaxPools, but on an already-tight net the win is absorbed.
+opset note: this design needs opset>=14 (uint8 Add for the marker sums); deployed uses opset 19.
