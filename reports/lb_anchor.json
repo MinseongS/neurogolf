@@ -1,10 +1,10 @@
 {
- "comment": "NEW BEST 7123.43. Batch-2 mid-range EXACT closed-form wins 377(15.69->15.93)+340(15.69->16.00)+174(15.77->16.12)+222(15.62->15.92) stacked on the 7122.23 state (396+364). stored +1.20 -> LB +1.20 EXACTLY (7122.23->7123.43). SECOND consecutive 1:1 confirmation: provably-EXACT closed-form wins (fresh-3000/0) transfer to LB 1:1, repeatable & compounding. Session total +1.83 (7121.60->7123.43) over 2 batches / 12 agents. KEY: mid-range (15.5-16.5pt) hit rate ~4/6 vs low-point (sub-15) ~0/6 (kojimar-floored walls). Silver ~7150 (#109/2188) needs +26.6 more. uint8 MaxPool/QLinearConv/BOOL-Pad work at opset>=13 (BUILD_PROMPT opset-11 notes stale).",
- "stored_at_submit": 7154.25,
- "lb": 7123.43,
- "time_utc": "2026-06-21 batch2 EXACT 377+340+174+222 CONFIRMED 7123.43",
+ "comment": "NEW BEST 7127.10. REBASE onto public kokinnwakashuu '7125.30 audit-trail' notebook (= Ricardo [7120 LB] base + 11 Frank-7116.79 task overrides: 364,338,366,255,191,349,080,187,174,350,050) — payload embedded as base64 in the .ipynb, sha256 6c3c21875cf822f0ba34d236a6cd6654a175484a42e95f0fda0066422c351db9, 400 onnx. OVERLAID our 6 proven-EXACT closed-form wins where ours strictly beats their base on examples (all smaller-mem): 396(+0.57)/174(+0.36)/340(+0.31)/222(+0.30)/377(+0.24)/364(+0.03). local +1.81 -> LB +1.80 (7125.30->7127.10): THIRD consecutive ~1:1 confirmation that provably-EXACT closed-form overlays transfer 1:1 and stack on ANY public base (base-independent because exact). LEVER: (1) new public blend > current base = free rebase; (2) overlay ONLY exact closed-form wins (NOT arc-gen re-golf = LB-dead). Silver ~7150 needs +22.9 more.",
+ "stored_at_submit": 7076.47,
+ "lb": 7127.10,
+ "time_utc": "2026-06-21 REBASE kokinnwakashuu-7125.30 + 6 EXACT overlays CONFIRMED 7127.10",
  "pending": false,
- "pending_submit": "batch2 EXACT mid-range CONFIRMED 7123.43 (+1.20 = exact 1:1)",
- "prev_stored_at_submit": 7153.05,
- "prev_lb": 7122.23
+ "pending_submit": "CONFIRMED 7127.10 (+1.80 over 7125.30 base; +3.67 over prior 7123.43)",
+ "prev_stored_at_submit": 7154.25,
+ "prev_lb": 7123.43
 }

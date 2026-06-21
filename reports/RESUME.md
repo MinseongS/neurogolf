@@ -1,6 +1,25 @@
 # RESUME — restart the autonomous sweep in a fresh session
 
-## ▶▶▶▶▶▶▶▶▶ RESUME HERE (handoff 2026-06-19 NIGHT v3 — ✅ NEW BEST 7121.60 via blend-rebase; local build dead, BLENDS ALIVE)
+## ▶▶▶▶▶▶▶▶▶▶ RESUME HERE (handoff 2026-06-21 — ✅ NEW BEST 7127.10 via blend-rebase + EXACT overlays)
+**NEW BEST LB 7127.10** (+3.67 over prior 7123.43). HOW: user flagged public notebook
+`kaggle.com/code/kokinnwakashuu/7125-30-lb-neurogolf-audit-trail` (LB 7125.30). The .ipynb **EMBEDS the full
+400-onnx submission.zip as base64** (decode cell 8: `B64=''.join([...])`; sha256 6c3c21875cf822f0ba34d236a6cd6654a175484a42e95f0fda0066422c351db9,
+518487 bytes). Decoded + sha-verified → that IS a 7125.30 public solution (Ricardo [7120 LB] base + 11 Frank-7116.79
+overrides: 364,338,366,255,191,349,080,187,174,350,050). REBASED onto it and OVERLAID our 6 proven-EXACT closed-form
+wins where ours strictly beats their base on examples AND is smaller-mem: 396/174/340/222/377/364. local +1.81 →
+**LB +1.80 (7125.30→7127.10)** = THIRD consecutive ~1:1 confirmation that EXACT closed-form overlays are
+base-independent and stack on ANY public base.
+⭐ REPEATABLE RECIPE (do this when any public asset > current base appears): (a) `kaggle datasets list -s neurogolf
+--sort-by updated | head` AND scan new public notebooks (`kaggle kernels list -s neurogolf --sort-by dateRun`); if a
+notebook embeds a base64 zip, decode cell source directly (`python -c` exec the B64 assignment, base64.b64decode,
+sha-check). (b) extract to /tmp/<base>, score vs manifest, (c) overlay ONLY our EXACT closed-form wins where ours
+beats base+smaller-mem (NEVER arc-gen re-golf / ext:kojimar overlays = LB-DEAD, the higher base usually already wins
+those), (d) build zip = base 400 onnx with our exact nets swapped in, `kaggle competitions submit -c neurogolf-2026`.
+Our current exact-win set (deployed, fresh-3000 proven, 1:1 transfer): 396,174,340,222,377,364. Silver ~7150 = +22.9.
+NEXT: keep monitoring public assets (kojimar/franksunp/ricardo/kokinnwakashuu publish ~daily); mine MORE mid-range
+(15.5–16.5pt) EXACT closed-form wins (hit-rate ~4/6 there vs ~0/6 sub-15 walls) to stack on the next base.
+
+## ▶▶▶▶▶▶▶▶▶ (superseded 2026-06-21) NEW BEST 7121.60 via blend-rebase; local build dead, BLENDS ALIVE
 **NEW BEST LB 7121.60** (+0.37 over 7121.23). HOW: kojimar published a newer public blend `kojimar/neurogolf-7114-66`
 (7114.66, +0.86 over the 7113.80 base) — REBASED merge_E onto it (KOJI=/tmp/koji_7114, promoted to /tmp/koji_final)
 keeping the 14 PROVEN original overlays, DROPPING today's 9 marginal re-golf overlays (measured LB-negative). The

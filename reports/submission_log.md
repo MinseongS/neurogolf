@@ -227,3 +227,14 @@ proj-exact. PRODUCTIVE RESERVOIR EXHAUSTED (blank-note + skip-list + skip-margin
 - 2026-06-19 merge_E v2: 7121.00 (−0.23 vs 7121.23) — kojimar 7113.80 base + 9 NEW marginal re-golf overlays (incl leaky 017) + 14 original. MEASURED LB-NEGATIVE.
 - 2026-06-19 clean-8: 7121.00 (017 reverted, 8 clean B-type overlays) — IDENTICAL to v2 ⇒ regression was NOT the leak; the 8 clean overlays themselves cost −0.23 (arc-gen≠private). Overlay re-golf = DEAD lever.
 - 2026-06-19 REBASE 7121.60 (+0.37, NEW BEST): new public kojimar 7114.66 blend base + the 14 PROVEN original overlays (dropped today's dead 9). Base improvement transfers to LB (crowd nets). New-blend lever ALIVE.
+
+## #NEW-BEST 2026-06-21 — CONFIRMED 7127.10 (REBASE kokinnwakashuu-7125.30 + 6 EXACT overlays)
+User flagged public notebook kaggle.com/code/kokinnwakashuu/7125-30-lb-neurogolf-audit-trail (LB 7125.30).
+The .ipynb EMBEDS the full 400-onnx submission.zip as base64 (sha256 6c3c21..., 518487 bytes, ref 53912538).
+Decoded + verified (sha match). Base = Ricardo [7120 LB] + 11 Frank-7116.79 overrides (364,338,366,255,191,
+349,080,187,174,350,050). Scored it vs our manifest: 64 tasks where ours beats base on examples, but the
+ext:kojimar7113 ones are the arc-gen≠private LB-DEAD trap (Ricardo 7120 base is higher-LB than kojimar 7113).
+Overlaid ONLY our 6 proven-EXACT closed-form wins where ours strictly beats base AND smaller-mem:
+396(14.72->15.29)/174(15.77->16.12)/340(15.69->16.00)/222(15.62->15.92)/377(15.69->15.93)/364(14.58->14.61).
+local +1.81 -> LB +1.80 (7125.30->7127.10). THIRD ~1:1 confirmation: exact closed-form overlays are
+base-independent & stack on ANY public base. +3.67 over prior 7123.43. Repeatable lever intact.
