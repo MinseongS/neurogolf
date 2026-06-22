@@ -1,10 +1,11 @@
 # LB status (stored ↔ real LB gap tracker)
 
-- **stored (local, optimistic):** 7152.42
-- **last confirmed LB:** 7121.23  (stored 7152.05 @ 2026-06-19 merge_E 7121.23 confirmed UTC)
-- **structural gap (stored−LB at anchor):** 30.82  ← base-net overcount, ~stable
-- **PROJECTED current LB:** 7121.60  (= stored − gap; +0.37 of un-submitted wins since anchor)
+- **stored (local, optimistic):** 7155.60
+- **last confirmed LB:** 7150.13  (2026-06-22 REBASE onto franksunp 7141.14 base + 25 exact custom overlays; CONFIRMED 7150.13)
+- **structural gap (stored−LB at anchor):** 5.47  ← franksunp base local≈real (gap collapsed from 30.82); stored now a tight proxy
+- **PROJECTED current LB:** 7150.13  (= stored − gap; +0.00 of un-submitted wins since anchor)
 - next submit at +5 adopted wins re-anchors this.
+- prior anchors: 7134.40 (kokinnwakashuu 7125.30 base+22 overlays, gap 30.82), 7123.43.
 
 ## Gap attribution (genverify n=40 batch — rough, false-neg prone; isolated n=200 is truth)
 Estimated overcount across 13 sub-100% tasks ≈ **35.9** pts (cf. gap 30.82).
