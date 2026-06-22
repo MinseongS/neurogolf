@@ -1,6 +1,32 @@
 # RESUME — restart the autonomous sweep in a fresh session
 
-## ▶▶▶▶▶▶▶▶▶▶▶▶ RESUME HERE (handoff 2026-06-22 — ✅ NEW BEST 7134.40; cheap-EXACT-overlay vein EXHAUSTED)
+## ▶▶▶▶▶▶▶▶▶▶▶▶ RESUME HERE (handoff 2026-06-22 PM — ✅ NEW BEST 7150.13; per-task vein exhausted, B-research next)
+**CONFIRMED LB 7150.13** (+15.73 over 7134.40). HOW: A-lever again — rebased onto `franksunp/7141-14-lb-
+neurogolf-mark-b` (LB 7141.14, found via `kaggle kernels list --competition neurogolf-2026 --sort-by dateRun`;
+its `kaggle kernels output` is a direct 400-onnx submission.zip — no base64 decode). Took it WHOLESALE (372/400
+opset>10 → local untrustworthy, the 6195 trap) + re-overlaid our 28 LIVE exact customs via fresh-gated `src.adopt`
+(25 KEEP, 2→franksunp). Δ+9 stored → +9 LB (1:1). gap COLLAPSED 30.82→5.47 (franksunp base local≈real → stored is
+now a tight proxy). Committed+pushed 9975275.
+⭐ NEW TOOL `src/reconcile.py` — cross-checks src/custom/*.py vs installed nets via manifest `method`. RUN AFTER
+EVERY REBASE: `python -m src.reconcile` (report) / `--adopt` (auto-recover). RECOVER bucket = your custom beats the
+installed net (rebase/merge silently displaces wins; recovered 7 this session, +1.35). reports/headroom.{md,json} =
+400-task archetype+headroom map.
+⛔ PER-TASK HAND-OPT VEIN EXHAUSTED on this base — probed task110(period-detect wall)/74(D4, mem-floored)/64(extent
+trick already optimal): all already at floor. Easy per-task wins are GONE.
+▶ NEXT — two levers:
+ (1) **Newer public base** (free +N): `kaggle kernels list --competition neurogolf-2026 --sort-by dateRun | head`.
+     If one beats 7150, `kaggle kernels output <ref> -p DIR`, `cp DIR/task*.onnx networks/`, re-overlay our LIVE
+     customs (`python -m src.reconcile --adopt` OR adopt the LIVE list), `pack()`, submit. Confirm LB (Kaggle keeps best).
+ (2) **B = 7150→7800 original algorithms** on the infeasible-~100 (the WHOLE gap lives here; ~650pts, most attempts
+     fail). ⭐ STARTED THIS SESSION — task187: rule is NOT flood-fill, it's GEOMETRIC "paint box interiors red"
+     (output starts all-green, only [row+1..row+tall-1)×[col+1..col+wide-1) box interiors → red). 4-ray cummax leaks
+     10.8% (lines block outside cells); flood leaks ~3% (over-marks line-pockets). EXACT needs a BOX-INTERIOR detector
+     that excludes line-pockets = "solid black rectangle with a complete color-ring border" — likely Conv/extent-
+     expressible (NOT a dead wall). This is the concrete B entry point. B METHOD LOOP: read generator → cheap
+     hypothesis → numpy-verify vs `g.generate()` on 500 fresh → if leaks, debug the rule mismatch → only build ONNX
+     once numpy is 500/500 EXACT (arc-gen-pass ≠ exact; code-audit the generator).
+
+## ▶▶▶▶▶▶▶▶▶▶▶▶ (superseded 2026-06-22 PM) NEW BEST 7134.40; cheap-EXACT-overlay vein EXHAUSTED
 **NEW BEST LB 7134.40** (+10.97 over session-start 7123.43). Added 4 more code-audited EXACT overlays
 (191+0.33/379+0.12/204+0.10/324+0.07) → 22-net deployed exact set on the kokinnwakashuu 7125.30 base. FIFTH ~1:1
 confirmation. ⭐ task191: the historically-"dead" overlay was MISATTRIBUTED — it's provably exact (94k differential
