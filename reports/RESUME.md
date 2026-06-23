@@ -1,6 +1,75 @@
 # RESUME — restart the autonomous sweep in a fresh session
 
-## ▶▶▶▶▶▶▶▶▶▶▶▶ RESUME HERE (handoff 2026-06-22 PM — ✅ NEW BEST 7150.13; per-task vein exhausted, B-research next)
+## ▶▶▶▶▶▶▶▶▶▶▶▶ RESUME HERE (2026-06-23 PM) — ✅ NEW BEST LB 7151.32 (rebase only; overlays add 0)
+**CONFIRMED LB 7151.32** (+1.19 over 7150.13, Kaggle COMPLETE). HOW: rebased onto `boristown/agi-neural-
+golf-visualization-baseline` (LB 7151.32; franksunp/7151-32 A/B-picked Boristown for all 400 — its
+`kaggle kernels output` selected_submission/ = 400 onnx, opset 17/18). Took WHOLESALE, then re-overlaid
+our 28 LIVE customs via per-task `src.adopt` (24 ADOPTED, 4 reject: 021/220/251 boristown≥ours, 352 our
+rebuild fails its own stored eval → kept boristown). Packed via direct zip (NOT pipeline --pack, which
+rebuilds) → submitted.
+⚠️ KEY RESULT: final LB = **exactly 7151.32 = boristown base unchanged** → our 24 overlays netted **ZERO**.
+The local "+7.2 stored" was an **opset>11 mirage**: adopt's `evaluate` of boristown's opset>17 nets
+UNDERSTATES their real score (numerical divergence; memory IS measured accurately so adopt thought ours
+won on mem), but on the real grader boristown ≥ our exact customs everywhere. ⇒ overlays neither helped
+nor hurt; the entire +1.19 came from the BASE. This LB-confirms the session's core finding: our golf/
+overlay customs CANNOT beat the current public base (their hidden opset>17 nets already dominate). Backups:
+/tmp/backup_networks_7150, /tmp/backup_manifest_7150.json. boristown base: /tmp/fs7151/selected_submission.
+▶ NEXT: the ONLY LB lever remaining = adopt each NEWER public base as it appears (this is what works;
+`kaggle kernels list --competition neurogolf-2026 --sort-by dateRun | head`, take the highest-LB one
+WHOLESALE, direct-zip, submit — skip the overlay step, it adds nothing). Original >base research = open.
+
+## ▶▶▶▶▶▶▶▶▶▶▶▶ (superseded) 2026-06-23 AM — 🛑 MEMORY-GOLF VEIN IS EXHAUSTED ON THIS BASE (proven programmatically)
+**LB 7150.13. No golf win.** Did a full
+PROGRAMMATIC sweep of all 400 tasks (not generator-reading): built `reports/{relprobe,scaleprobe,
+localprobe}.py` — a reusable golf-target scanner. Re-run it on any NEWER base; do NOT re-probe 7150.
+KEY MECHANIC re-confirmed (harness.py:99-100,136): scoring memory = **SUM of INTERMEDIATE tensor bytes;
+`input`+`output` EXCLUDED** → the 10-ch bool output is FREE; cost = intermediate full-canvas planes only
+(fp16 30×30 = 1800B, f32 = 3600B). Floor for a 1-full-f32-plane rule ≈ 8500B = 15.94 pts.
+EVERY lead died (details + why in [[neurogolf-golf-target-scan]]):
+  • exact upscales (001 fractal / 152,083 mirror): ext but already lean; our 001/152 customs DEAD (kojimar ≤ ours).
+  • crop tasks: NONE are a simple fixed crop (all need runtime object selection).
+  • LOCAL-3×3-EXACT (192/004/222): 192's custom is a perfect single-Conv net scoring EXACTLY 15.94 = TIED
+    w/ kojimar (adopt REJECTs ==). AT THE FLOOR, not a bug.
+  • "5×5-local-exact" (243/077/208) = FALSE POSITIVE: random per-instance colours ⇒ patches never collide ⇒
+    a FLOOD task (243 = 4-conn flood, 38 rounds) reads as "local". Our customs < kojimar. ⇒ localprobe
+    0-conflicts ≠ golfable; STILL read the generator for propagation.
+  • `python -m src.reconcile`: RECOVER=0 (no displaced wins). Self-golf of our LIVE customs (205=46074 etc.):
+    205 already shrunk 69514→46074, fully fp16+separable; at floor.
+▶ NEXT (only real levers, unchanged): (1) NEWER public base via `kaggle kernels list --competition
+neurogolf-2026 --sort-by dateRun | head` — if >7150, take wholesale, then re-run the scanner + `src.reconcile
+--adopt` our LIVE customs onto it; (2) B-research originals (the ~650-pt infeasible gap). The 7150-base
+per-task golf vein is CLOSED.
+
+## ▶▶▶▶▶▶▶▶▶▶▶▶ (2026-06-22 PM-3) — 🔄 DIRECTION PIVOT: the lever is MEMORY GOLFING, not hard-task solving
+**LB 7150.13 (unchanged, safe).** The whole prior approach (crack "infeasible/hard" tasks with exact ONNX nets) is
+the WRONG LEVER — proven this session. THE SCORING (src/harness.py:291): `points = max(1, 25 − ln(mem+params))` PER
+TASK, summed over 400. So points are dominated by NET SIZE, exponentially:
+  • 7150 = avg **17.88 pts/task = avg ~1243 bytes/task**.   • 7800 = avg 19.50 = avg **~245 bytes/task**.
+  ⇒ 7150→7800 = shrink the AVERAGE net ~5× (1243→245 B). It is NOT about solving more hard tasks.
+⭐⭐ **THE LEVER = MEMORY-GOLF the bloated working nets into tiny exact ones.** Memory distribution of the 400
+deployed nets (reports/manifest.json): 112 tasks <500B (≈18.8pt+, good), 119 @500B–2k, **125 @2k–10k, 38 @10k–50k,
+6 @>50k**. Golfing all 169 tasks with mem≥2k down to ~500B = up to **+426 pts** (→~7580) as an upper bound. A tiny
+exact net (500B→18.8pt) BEATS a bloated public net (10k→15.8pt) by ~3 pts/task, and `src.adopt` auto-gates it
+(passes stored + generalizes on 120 fresh + beats current real → adopts). THIS is how the crowd climbs.
+▶ METHOD (next session): for each high-mem task (start with the 6 @>50k then 38 @10k–50k = biggest per-task gain):
+  1. `python -c "import json; m=json.load(open('reports/manifest.json'))['tasks']; print(sorted(((x['memory'],t,x['method']) for t,x in m.items()),reverse=True)[:50])"` → the bloat list.
+  2. Read its generator (reports/arc_mapping.json → /tmp/arc-gen/tasks/task_<arcid>.py). Is the rule TINY-expressible
+     (per-pixel color map / single fixed Conv / crop / reflect / tile / simple recolor)? If YES → it's a golf target.
+     If it needs CCL/correlation/flood-unroll → SKIP (those nets are big = low points, see task366 lesson below).
+  3. Hand-build a MINIMAL ONNX net (src/custom/taskNNN.py, `build(task)`; copy idioms from a SMALL deployed custom,
+     NOT task048). Verify numpy-exact on fresh, then `python -m src.adopt NNN` → must print ADOPTED. Commit.
+⚠️ CAVEAT: 372/400 deployed nets are franksunp's opset>10 (can't eval locally, the 6195 trap) → REBUILD from scratch,
+do not try to edit them. The adopt gate is the safety net (only keeps a generalizing net that beats current real).
+⛔ DEAD ENDS — DO NOT REPEAT (all measured/proven this session, see [[neurogolf-object-primitive-verdict]]):
+  • Hard-task EXACT builds are LB-NEGATIVE: built task366 to a 100%-fresh-exact ONNX net (1764 nodes) → but 5.0MB
+    → only **9.56 pts** < old public net's 14.38 → REVERTED. Unrolled CCL/correlation/stamp memory > its point value.
+  • 8 gap-closer "walls" deep-audited (18,118,44,319,157,76 + 187,2,255,219): all genuine walls (ambiguity OR
+    inexpressibility), NOT fast-bail mistakes. Don't re-audit.
+  • B-research / "solve the infeasible-100" / object-segmentation primitive: the primitive WORKS but is too big to pay.
+Memory: [[neurogolf-object-primitive-verdict]] (the decisive "exactness loses to memory" result + 8-wall audit),
+[[neurogolf-b-landscape-scan]], [[neurogolf-overlay-regolf-lb-negative]] (rebase/submit recipe is in the block below).
+
+## ▶▶▶▶▶▶▶▶▶▶▶▶ (background, still valid) the 7150.13 base + rebase/submit recipe
 **CONFIRMED LB 7150.13** (+15.73 over 7134.40). HOW: A-lever again — rebased onto `franksunp/7141-14-lb-
 neurogolf-mark-b` (LB 7141.14, found via `kaggle kernels list --competition neurogolf-2026 --sort-by dateRun`;
 its `kaggle kernels output` is a direct 400-onnx submission.zip — no base64 decode). Took it WHOLESALE (372/400
