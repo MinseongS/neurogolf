@@ -17,6 +17,12 @@ Goal: a generalizing net at the ~3600B label-map floor (or lower) that scores
    counting / ambiguous / global-search), BAIL: write nothing, return a one-line
    reason. Do not force an overfit.
 
+## Submission policy
+- Kaggle submissions are effectively not scarce for this project: the daily limit is **100 submissions/day**.
+- It is acceptable to use Kaggle submissions as A/B probes for uncertain overlays, provided the current best
+  submission can be reconstructed and the probe is clearly labeled.
+- Do not reject a useful experiment merely to conserve submissions.
+
 ## Workflow
 1. `PYTHONPATH=. .venv/bin/python -m src.show N --gen` → the generator source IS
    the exact rule. Read it carefully. Also look at a couple of train examples:

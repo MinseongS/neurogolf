@@ -1,5 +1,17 @@
 # RESUME — restart the autonomous sweep in a fresh session
 
+## ▶▶▶▶▶▶▶▶▶▶▶▶ CURRENT OPERATING RULE (2026-06-26) — submissions are effectively not scarce
+The competition allows **100 submissions per day**. Treat this as effectively unlimited for our workflow.
+Do not avoid useful Kaggle A/B tests just to "save submissions." It is acceptable to submit probe zips to
+measure whether a fresh-gated custom overlay actually improves public LB, as long as the current best zip/commit
+remains recoverable. Kaggle keeps the best score, so downside from a probe submission is operational noise, not
+leaderboard loss.
+
+Current confirmed best: **7170.19**. The meaningful non-public gain was recovering **15 fresh-gated repo custom
+nets** over the public 7166.68 base: tasks `009,055,080,128,174,191,202,204,222,250,338,340,379,383,398`.
+This matters: when a higher public base appears, rebase onto it, then re-overlay our fresh-gated custom set and
+submit. Public base + our verified overlays is the repeatable edge.
+
 ## ▶▶▶▶▶▶▶▶▶▶▶▶ RESUME HERE (2026-06-23 PM) — ✅ NEW BEST LB 7151.32 (rebase only; overlays add 0)
 **CONFIRMED LB 7151.32** (+1.19 over 7150.13, Kaggle COMPLETE). HOW: rebased onto `boristown/agi-neural-
 golf-visualization-baseline` (LB 7151.32; franksunp/7151-32 A/B-picked Boristown for all 400 — its
