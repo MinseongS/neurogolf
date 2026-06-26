@@ -7,10 +7,17 @@ measure whether a fresh-gated custom overlay actually improves public LB, as lon
 remains recoverable. Kaggle keeps the best score, so downside from a probe submission is operational noise, not
 leaderboard loss.
 
-Current confirmed best: **7170.19**. The meaningful non-public gain was recovering **15 fresh-gated repo custom
-nets** over the public 7166.68 base: tasks `009,055,080,128,174,191,202,204,222,250,338,340,379,383,398`.
-This matters: when a higher public base appears, rebase onto it, then re-overlay our fresh-gated custom set and
-submit. Public base + our verified overlays is the repeatable edge.
+Current confirmed best: **7170.36**. The newest meaningful non-public gain is **task118 tail optimization**:
+same behavior as the previous task118 model on official examples + 1000 fresh generated cases, but the output
+tail now writes `Where(mask, cyan_onehot, input) -> output` directly instead of materializing ScatterElements
+channel updates. Local task118 points **14.344671920564709 → 14.513263841771765**; Kaggle submission `54074109`
+completed at **7170.36** (+0.17 vs 7170.19).
+
+The earlier meaningful non-public gain was recovering **15 fresh-gated repo custom nets** over the public
+7166.68 base: tasks `009,055,080,128,174,191,202,204,222,250,338,340,379,383,398`. This matters: when a higher
+public base appears, rebase onto it, then re-overlay our verified custom set and keep task118 tail optimization
+if the new base has the same output-materialization weakness. Public base + our verified overlays + our own
+tail/memory optimizations is the repeatable edge.
 
 ## ▶▶▶▶▶▶▶▶▶▶▶▶ RESUME HERE (2026-06-23 PM) — ✅ NEW BEST LB 7151.32 (rebase only; overlays add 0)
 **CONFIRMED LB 7151.32** (+1.19 over 7150.13, Kaggle COMPLETE). HOW: rebased onto `boristown/agi-neural-

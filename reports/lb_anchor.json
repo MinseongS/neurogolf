@@ -1,10 +1,10 @@
 {
- "comment": "NEW BEST 7170.19. Recovered 15 repo custom nets over the public 7166.68 base after fresh-gating each changed task (300-500/500 checks). This is not a public wholesale copy; it restores generalizing custom work displaced by the public base. submission/submission.zip SHA256 02382f6879cf725148c815daa426d78b5f6670cfed2e417bac0642f963b726fa. Kaggle submission 54070075 COMPLETE with publicScore 7170.19. Local static total is 7170.0910.",
- "stored_at_submit": 7170.0910,
- "lb": 7170.19,
- "time_utc": "2026-06-26 07:11 submission 54070075 COMPLETE",
+ "comment": "NEW BEST 7170.36. Non-public original improvement: optimized task118 tail output materialization. Replaced ScatterElements channel update tail with Pad(mask)->Where(mask, cyan_onehot, input)->output, preserving exact outputs vs previous task118 model on official examples + 1000 fresh generated cases. task118 local points 14.344671920564709 -> 14.513263841771765, memory 37649 -> 31049. submission/submission.zip SHA256 69716db84878ad48bf8c75bebafe8a20076b0adb2fbbbdc71a0800fd08c55fc6. Kaggle submission 54074109 COMPLETE with publicScore 7170.36. Prior meaningful edge still includes the 15 recovered fresh-gated repo custom nets over public 7166.68 base: 009,055,080,128,174,191,202,204,222,250,338,340,379,383,398.",
+ "stored_at_submit": 7170.259597713052,
+ "lb": 7170.36,
+ "time_utc": "2026-06-26 09:45 submission 54074109 COMPLETE",
  "pending": false,
- "pending_submit": "CONFIRMED 7170.19 (+3.51 over prior confirmed 7166.68)",
- "prev_stored_at_submit": 7166.5792,
- "prev_lb": 7166.68
+ "pending_submit": "CONFIRMED 7170.36 (+0.17 over prior confirmed 7170.19)",
+ "prev_stored_at_submit": 7170.0910,
+ "prev_lb": 7170.19
 }
