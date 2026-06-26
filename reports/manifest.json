@@ -103,10 +103,10 @@
    "method": "ext:franksunp7166_65"
   },
   "18": {
-   "points": 13.89778336746099,
-   "memory": 63280,
+   "points": 13.898130241451181,
+   "memory": 63257,
    "params": 3038,
-   "method": "ext:franksunp7166_65"
+   "method": "ext:franksunp7166_68"
   },
   "19": {
    "points": 16.9676398520755,
@@ -259,10 +259,10 @@
    "method": "ext:franksunp7166_65"
   },
   "44": {
-   "points": 15.63282683399703,
-   "memory": 11630,
+   "points": 15.633682046569465,
+   "memory": 11620,
    "params": 68,
-   "method": "ext:franksunp7166_65"
+   "method": "ext:franksunp7166_68"
   },
   "45": {
    "points": 17.577626299013176,
@@ -319,10 +319,10 @@
    "method": "ext:franksunp7166_65"
   },
   "54": {
-   "points": 14.791494021765224,
-   "memory": 26895,
+   "points": 14.79153087793403,
+   "memory": 26894,
    "params": 238,
-   "method": "ext:franksunp7166_65"
+   "method": "ext:franksunp7166_68"
   },
   "55": {
    "points": 15.46497082994294,
@@ -391,10 +391,10 @@
    "method": "ext:franksunp7166_65"
   },
   "66": {
-   "points": 15.106209310442736,
-   "memory": 19155,
+   "points": 15.108332024269215,
+   "memory": 19113,
    "params": 652,
-   "method": "ext:franksunp7166_65"
+   "method": "ext:franksunp7166_68"
   },
   "67": {
    "points": 21.14985239828994,
@@ -451,10 +451,10 @@
    "method": "ext:franksunp7166_65"
   },
   "76": {
-   "points": 14.84661012684897,
-   "memory": 25389,
+   "points": 14.847155489333758,
+   "memory": 25375,
    "params": 289,
-   "method": "ext:franksunp7166_65"
+   "method": "ext:franksunp7166_68"
   },
   "77": {
    "points": 15.392629998736755,
@@ -571,10 +571,10 @@
    "method": "ext:franksunp7166_65"
   },
   "96": {
-   "points": 15.900256049365844,
-   "memory": 8148,
+   "points": 15.90249243629816,
+   "memory": 8128,
    "params": 805,
-   "method": "ext:franksunp7166_65"
+   "method": "ext:franksunp7166_68"
   },
   "97": {
    "points": 18.186555400489105,
@@ -601,10 +601,10 @@
    "method": "ext:franksunp7166_65"
   },
   "101": {
-   "points": 15.206048334532179,
-   "memory": 17016,
+   "points": 15.206104124093967,
+   "memory": 17015,
    "params": 909,
-   "method": "ext:franksunp7166_65"
+   "method": "ext:franksunp7166_68"
   },
   "102": {
    "points": 17.165211892611808,
@@ -937,10 +937,10 @@
    "method": "ext:franksunp7166_65"
   },
   "157": {
-   "points": 15.550091698295466,
-   "memory": 12119,
+   "points": 15.550170398173522,
+   "memory": 12118,
    "params": 588,
-   "method": "ext:franksunp7166_65"
+   "method": "ext:franksunp7166_68"
   },
   "158": {
    "points": 14.525645901612759,
@@ -1396,10 +1396,10 @@
    "method": "ext:franksunp7166_65"
   },
   "233": {
-   "points": 13.835186248308016,
-   "memory": 69958,
+   "points": 13.835398729451114,
+   "memory": 69943,
    "params": 644,
-   "method": "ext:franksunp7166_65"
+   "method": "ext:franksunp7166_68"
   },
   "234": {
    "points": 16.16741229756545,
@@ -1528,10 +1528,10 @@
    "method": "ext:franksunp7166_65"
   },
   "255": {
-   "points": 14.868540571293021,
-   "memory": 24806,
+   "points": 14.870931868116244,
+   "memory": 24746,
    "params": 315,
-   "method": "ext:franksunp7166_65"
+   "method": "ext:franksunp7166_68"
   },
   "256": {
    "points": 17.011117746690772,
@@ -1678,10 +1678,10 @@
    "method": "ext:franksunp7166_65"
   },
   "280": {
-   "points": 16.291195204882715,
-   "memory": 5304,
+   "points": 16.291525510418335,
+   "memory": 5302,
    "params": 752,
-   "method": "ext:franksunp7166_65"
+   "method": "ext:franksunp7166_68"
   },
   "281": {
    "points": 17.22262639734214,
@@ -1913,10 +1913,10 @@
    "method": "ext:franksunp7166_65"
   },
   "319": {
-   "points": 14.975224450256672,
-   "memory": 22310,
+   "points": 14.990262327621213,
+   "memory": 21973,
    "params": 269,
-   "method": "ext:franksunp7166_65"
+   "method": "ext:franksunp7166_68"
   },
   "320": {
    "points": 18.35360948515227,

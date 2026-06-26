@@ -1,11 +1,12 @@
 # NEXT SESSION — NeuroGolf sweep handoff (2026-06-18 ~15:30)
 
-## CURRENT (2026-06-26 09:xx KST) — ✅ NEW BEST LB 7166.65
-- Applied public `franksunp/7166-65-lb-neurogolf-rewire-audit-mark-i` wholesale.
-- Submitted exact public artifact SHA256 `67c695f349526a133fa5199ce6bdabd400aa572e56b98f0b386d08fcbe5aad88`; Kaggle submission `54061465` COMPLETE with **publicScore 7166.65**.
-- Previous confirmed visible score was 7159.47, so this locked **+7.18 LB**.
-- Local static manifest total: **7166.5550**. Local stored-output mismatch remains on task191/220/230/294/352; this is expected public/opset/local-data divergence. Do not “fix” those with local customs unless a high-count/private-safe audit proves a real LB win.
-- Next real levers: monitor for public base >7166.65; otherwise enter research mode for genuinely new algorithms. Per-task local golf is now very thin and should target only audited, private-safe structural wins.
+## CURRENT (2026-06-26 11:5x KST) — ✅ NEW BEST LB 7166.68
+- Applied public `franksunp/7166-68-lb-neurogolf-rewire-audit-mark-i` wholesale.
+- Submitted exact public artifact SHA256 `71674769eeb6f7e034cfa76dcfa1774c37b4a4656104bf87bb54299d77fc751a`; Kaggle submission `54064157` COMPLETE with **publicScore 7166.68**.
+- Previous confirmed visible score was 7166.65, so this locked **+0.03 LB** over the prior public base and **+7.21** over 7159.47.
+- Local static manifest total: **7166.5792**. Local/public divergence can still exist on some tasks; keep public raw unless a high-count/private-safe audit proves a real LB win.
+- Started duplicate-output rewire research: top candidates on 018/233/319/209 did not produce an immediate full-score win; 286 bitwise graph was too slow and should be targeted with a narrower probe.
+- Next real levers: monitor for public base >7166.68; otherwise continue research mode for genuinely new algorithms / exact graph rewires.
 
 ## State at handoff
 - **Confirmed LB 6578.01** (#22, 20th proj-exact). **#23 PENDING** (proj 6585.60) — confirm first.
