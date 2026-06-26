@@ -1,10 +1,10 @@
 {
- "comment": "NEW BEST 7166.68. Applied public franksunp/7166-68-lb-neurogolf-rewire-audit-mark-i wholesale. submission/submission.zip SHA256 matches the downloaded public artifact exactly (71674769eeb6f7e034cfa76dcfa1774c37b4a4656104bf87bb54299d77fc751a). Kaggle submission 54064157 COMPLETE with publicScore 7166.68. Local static total is 7166.5792. Keep public raw for locally divergent public/opset tasks unless a high-count/private-safe audit proves a real LB win.",
- "stored_at_submit": 7166.5792,
- "lb": 7166.68,
- "time_utc": "2026-06-26 02:51 submission 54064157 COMPLETE",
+ "comment": "NEW BEST 7170.19. Recovered 15 repo custom nets over the public 7166.68 base after fresh-gating each changed task (300-500/500 checks). This is not a public wholesale copy; it restores generalizing custom work displaced by the public base. submission/submission.zip SHA256 02382f6879cf725148c815daa426d78b5f6670cfed2e417bac0642f963b726fa. Kaggle submission 54070075 COMPLETE with publicScore 7170.19. Local static total is 7170.0910.",
+ "stored_at_submit": 7170.0910,
+ "lb": 7170.19,
+ "time_utc": "2026-06-26 07:11 submission 54070075 COMPLETE",
  "pending": false,
- "pending_submit": "CONFIRMED 7166.68 (+0.03 over prior confirmed 7166.65; +7.21 over 7159.47)",
- "prev_stored_at_submit": 7166.5550,
- "prev_lb": 7166.65
+ "pending_submit": "CONFIRMED 7170.19 (+3.51 over prior confirmed 7166.68)",
+ "prev_stored_at_submit": 7166.5792,
+ "prev_lb": 7166.68
 }

@@ -6,6 +6,7 @@ Stored at session start: 6445.88 (≈61pt stored-vs-LB gap pre-existing from ove
 | # | time(UTC) | stored | wins since last | LB (publicScore) | Δ LB | notes |
 |---|---|---|---|---|---|---|
 | baseline | 06-15 16:07 | ~6384.6 | — | 6384.61 | — | pre-sweep |
+| custom-recover-7170.19 | 06-26 07:11 | 7170.09 static | recovered 15 fresh-gated repo custom nets over public base | **7170.19** | **+3.51 vs 7166.68** | submission 54070075 COMPLETE; zip SHA `02382f68...`; changed 009/055/080/128/174/191/202/204/222/250/338/340/379/383/398; all changed nets fresh-verified 300–500/500 |
 | public-7166.68 | 06-26 02:51 | 7166.58 static | franksunp/7166.68 public rewire Mark I wholesale | **7166.68** | **+0.03 vs 7166.65** | submission 54064157 COMPLETE; zip SHA `71674769...`; changed 018/044/054/066/076/096/101/157/233/255/280/319 vs repo |
 | public-7166 | 06-26 00:46 | 7166.56 static | franksunp/7166.65 public rewire Mark I wholesale | **7166.65** | **+7.18 vs 7159.47** | submission 54061465 COMPLETE; zip SHA matches public artifact `67c695f...`; local mismatch 5 tasks, keep public raw |
 | 1 | 06-15 17:32 | 6454.46 | 020,034,020R,034R,091,224,370 | **6393.20** | **+8.59** | session stored Δ +8.58 → LB +8.59 = **1:1 translation confirmed** |
