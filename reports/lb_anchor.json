@@ -1,10 +1,10 @@
 {
- "comment": "NEW BEST 7134.40. kokinnwakashuu 7125.30 base + 22 EXACT-AUDITED closed-form overlays (18 prior + 4 new: 191/379/204/324). The 4 new were code-audited provably-exact (191 ~94k differential cases, 379 756k, 204 10k adversarial, 324 6k). local +9.10 over base -> LB +9.10 (7125.30->7134.40): FIFTH ~1:1 confirmation. KEY FINDING: the historically-'dead' task191 overlay was MISATTRIBUTED -- it is provably exact (touches-all-4-edges invariant makes the suspected off-grid leak structurally impossible); the old -0.23 was a bundled batch of 8, never isolated to 191. BUILD-FROM-SCRATCH batch this session: 6 bloated low-score targets -> 0 new wins, 4 NO_GO (158/243/367/198 = walls or memory-floored). LESSON: bloated low-score public base nets are bloated because the task is HARD (info-theoretic wall or near memory-floor), NOT because they are easy golf targets; the public base is near-optimal where tasks are solvable. The cheap EXACT wins were all EXISTING custom solvers not yet overlaid (16 total: the 12 + 191/379/204/324). Remaining gains require genuinely NEW algorithms (7800-tier original work) or a newer public base. Silver ~7150 needs +15.6 more.",
- "stored_at_submit": 7083.76,
- "lb": 7134.40,
- "time_utc": "2026-06-22 kokinnwakashuu-7125.30 + 22 EXACT-audited overlays CONFIRMED 7134.40",
+ "comment": "NEW BEST 7166.65. Applied public franksunp/7166-65-lb-neurogolf-rewire-audit-mark-i wholesale. submission/submission.zip SHA256 matches the downloaded public artifact exactly (67c695f349526a133fa5199ce6bdabd400aa572e56b98f0b386d08fcbe5aad88). Kaggle submission 54061465 COMPLETE with publicScore 7166.65. Local static total is 7166.5550; local stored-output mismatch exists for task191/220/230/294/352 due public/opset/local-data divergence, so do not replace those with local customs unless a high-count/private-safe audit proves a real LB win.",
+ "stored_at_submit": 7166.5550,
+ "lb": 7166.65,
+ "time_utc": "2026-06-26 00:46 submission 54061465 COMPLETE",
  "pending": false,
- "pending_submit": "CONFIRMED 7134.40 (+9.10 over 7125.30 base; +0.63 over prior 7133.77; +10.97 over session-start 7123.43)",
- "prev_stored_at_submit": 7083.14,
- "prev_lb": 7133.77
+ "pending_submit": "CONFIRMED 7166.65 (+7.18 over prior confirmed 7159.47)",
+ "prev_stored_at_submit": 7159.47,
+ "prev_lb": 7159.47
 }

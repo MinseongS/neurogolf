@@ -1,5 +1,12 @@
 # NEXT SESSION — NeuroGolf sweep handoff (2026-06-18 ~15:30)
 
+## CURRENT (2026-06-26 09:xx KST) — ✅ NEW BEST LB 7166.65
+- Applied public `franksunp/7166-65-lb-neurogolf-rewire-audit-mark-i` wholesale.
+- Submitted exact public artifact SHA256 `67c695f349526a133fa5199ce6bdabd400aa572e56b98f0b386d08fcbe5aad88`; Kaggle submission `54061465` COMPLETE with **publicScore 7166.65**.
+- Previous confirmed visible score was 7159.47, so this locked **+7.18 LB**.
+- Local static manifest total: **7166.5550**. Local stored-output mismatch remains on task191/220/230/294/352; this is expected public/opset/local-data divergence. Do not “fix” those with local customs unless a high-count/private-safe audit proves a real LB win.
+- Next real levers: monitor for public base >7166.65; otherwise enter research mode for genuinely new algorithms. Per-task local golf is now very thin and should target only audited, private-safe structural wins.
+
 ## State at handoff
 - **Confirmed LB 6578.01** (#22, 20th proj-exact). **#23 PENDING** (proj 6585.60) — confirm first.
 - Stored 6615.15, **gap 28.96 == walls 219+255** (the ONLY two 0-score tasks; everything else translates 1:1).
