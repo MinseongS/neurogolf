@@ -1,14 +1,15 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-26 16:10_
+_Updated: 2026-06-26 17:40_
 
 **Total: 7170.09 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
-| ext:franksunp7166_65 | 373 | 6747.72 |
+| ext:franksunp7166_65 | 372 | 6728.85 |
 | ext:franksunp7166_68 | 12 | 180.93 |
 | custom:task128 | 1 | 19.30 |
+| custom:task352 | 1 | 18.87 |
 | custom:task250 | 1 | 16.77 |
 | custom:task398 | 1 | 16.75 |
 | custom:task383 | 1 | 16.29 |
@@ -379,7 +380,7 @@ _Updated: 2026-06-26 16:10_
 | 349 | ext:franksunp7166_65 | 37800 | 1196 | 14.43 |
 | 350 | ext:franksunp7166_65 | 9012 | 26 | 15.89 |
 | 351 | ext:franksunp7166_65 | 1632 | 19 | 17.59 |
-| 352 | ext:franksunp7166_65 | 0 | 460 | 18.87 |
+| 352 | custom:task352 | 0 | 460 | 18.87 |
 | 353 | ext:franksunp7166_65 | 272 | 62 | 19.19 |
 | 354 | ext:franksunp7166_65 | 2998 | 79 | 16.97 |
 | 355 | ext:franksunp7166_65 | 2748 | 27 | 17.07 |

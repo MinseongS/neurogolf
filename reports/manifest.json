@@ -2113,8 +2113,7 @@
    "points": 18.86877351051686,
    "memory": 0,
    "params": 460,
-   "method": "ext:franksunp7166_65",
-   "local_stored_ok": false
+   "method": "custom:task352"
   },
   "353": {
    "points": 19.1888590070233,
