@@ -7,7 +7,13 @@ measure whether a fresh-gated custom overlay actually improves public LB, as lon
 remains recoverable. Kaggle keeps the best score, so downside from a probe submission is operational noise, not
 leaderboard loss.
 
-Current confirmed best: **7170.36**. The newest meaningful non-public gain is **task118 tail optimization**:
+Current confirmed best: **7170.45**. The newest meaningful non-public gain is **task187 label-map flood-fill**:
+it replaces a full 10-channel uint8 output construction with a single uint8 label map + final BOOL Equal.
+Local task187 points **14.246169228890707 → 14.339780325278817**; Kaggle submission `54102185` completed at
+**7170.45** (+0.09 vs 7170.36). This is a small gain, but it confirms another non-public model surgery translated
+to LB.
+
+Previous meaningful non-public gain: **task118 tail optimization**:
 same behavior as the previous task118 model on official examples + 1000 fresh generated cases, but the output
 tail now writes `Where(mask, cyan_onehot, input) -> output` directly instead of materializing ScatterElements
 channel updates. Local task118 points **14.344671920564709 → 14.513263841771765**; Kaggle submission `54074109`

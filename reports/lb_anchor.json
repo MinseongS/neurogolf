@@ -1,10 +1,10 @@
 {
- "comment": "NEW BEST 7170.36. Non-public original improvement: optimized task118 tail output materialization. Replaced ScatterElements channel update tail with Pad(mask)->Where(mask, cyan_onehot, input)->output, preserving exact outputs vs previous task118 model on official examples + 1000 fresh generated cases. task118 local points 14.344671920564709 -> 14.513263841771765, memory 37649 -> 31049. submission/submission.zip SHA256 69716db84878ad48bf8c75bebafe8a20076b0adb2fbbbdc71a0800fd08c55fc6. Kaggle submission 54074109 COMPLETE with publicScore 7170.36. Prior meaningful edge still includes the 15 recovered fresh-gated repo custom nets over public 7166.68 base: 009,055,080,128,174,191,202,204,222,250,338,340,379,383,398.",
- "stored_at_submit": 7170.259597713052,
- "lb": 7170.36,
- "time_utc": "2026-06-26 09:45 submission 54074109 COMPLETE",
+ "comment": "NEW BEST 7170.45. Non-public original improvement: custom task187 label-map flood fill. Replaced public full 10-channel uint8 output construction with single uint8 label map + final BOOL Equal; preserves official examples and improved local task187 points 14.246169228890707 -> 14.339780325278817, memory 45900 -> 41700. Probe submission 54102185 COMPLETE publicScore 7170.45. Prior non-public improvements include task118 tail optimization and the 15 recovered fresh-gated repo custom nets over public 7166.68 base: 009,055,080,128,174,191,202,204,222,250,338,340,379,383,398.",
+ "stored_at_submit": 7170.353208809439,
+ "lb": 7170.45,
+ "time_utc": "2026-06-27 08:38 submission 54102185 COMPLETE",
  "pending": false,
- "pending_submit": "CONFIRMED 7170.36 (+0.17 over prior confirmed 7170.19)",
- "prev_stored_at_submit": 7170.0910,
- "prev_lb": 7170.19
+ "pending_submit": "CONFIRMED 7170.45 (+0.09 over prior confirmed 7170.36)",
+ "prev_stored_at_submit": 7170.259597713052,
+ "prev_lb": 7170.36
 }
