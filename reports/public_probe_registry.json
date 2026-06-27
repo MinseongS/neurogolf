@@ -1,0 +1,15 @@
+{
+  "baseline": {
+    "anchor_ref": null,
+    "best_lb": 7170.45,
+    "captured_at": "2026-06-27T16:11:50Z",
+    "networks_tree_sha256": "a8c5113cc8eab6f394d1f2553e2459a1c62cbcaead8333769e7d2ba746364075",
+    "stored_at_submit": 7170.353208809439,
+    "task_count": 400
+  },
+  "candidates": {},
+  "competition": "neurogolf-2026",
+  "created_at": "2026-06-27T16:11:50Z",
+  "packs": {},
+  "submissions": {}
+}

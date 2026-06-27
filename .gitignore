@@ -20,5 +20,7 @@ scratch/
 
 # Submission archives are reproducible artifacts
 submission/*.zip
+reports/probes/zips/*.zip
+reports/probes/candidates/*.onnx
 .gstack/
 .worktrees/
