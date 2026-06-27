@@ -1,10 +1,10 @@
 {
- "comment": "NEW BEST 7170.45. Non-public original improvement: custom task187 label-map flood fill. Replaced public full 10-channel uint8 output construction with single uint8 label map + final BOOL Equal; preserves official examples and improved local task187 points 14.246169228890707 -> 14.339780325278817, memory 45900 -> 41700. Probe submission 54102185 COMPLETE publicScore 7170.45. Prior non-public improvements include task118 tail optimization and the 15 recovered fresh-gated repo custom nets over public 7166.68 base: 009,055,080,128,174,191,202,204,222,250,338,340,379,383,398.",
- "stored_at_submit": 7170.353208809439,
- "lb": 7170.45,
- "time_utc": "2026-06-27 08:38 submission 54102185 COMPLETE",
+ "comment": "NEW BEST 7170.49. task118 onnxsim semantic-equivalent param reduction. Base and simplified task118 outputs matched on 1000 fresh instances; params 4788 -> 3387, local task118 points 14.513263841771765 -> 14.553142192222154. Submission 54114451 COMPLETE publicScore 7170.49. Prior non-public original improvements include task187 label-map flood fill (submission 54102185, 7170.45), task118 tail optimization, and the 15 recovered fresh-gated repo custom nets over public 7166.68 base: 009,055,080,128,174,191,202,204,222,250,338,340,379,383,398.",
+ "stored_at_submit": 7170.393087159889,
+ "lb": 7170.49,
+ "time_utc": "2026-06-27 16:16 submission 54114451 COMPLETE",
  "pending": false,
- "pending_submit": "CONFIRMED 7170.45 (+0.09 over prior confirmed 7170.36)",
- "prev_stored_at_submit": 7170.259597713052,
- "prev_lb": 7170.36
+ "pending_submit": "CONFIRMED 7170.49 (+0.04 over prior confirmed 7170.45)",
+ "prev_stored_at_submit": 7170.353208809439,
+ "prev_lb": 7170.45
 }
