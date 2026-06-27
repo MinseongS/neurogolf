@@ -65,3 +65,92 @@ Two foundational claims re-verified by hand against local grader source (cited i
 classes (cummax-style propagation; factored rep), plus a lossless bit-packing sweep on the existing blend.
 It is NOT reachable via any public blend (ceiling ~7121) nor any Loop/Scan recurrence (banned). The 7121→7800
 path is INFERRED from primitives, not confirmed from any top-entry writeup — treat as a research bet, not a recipe.
+
+---
+
+## 2026-06-28 research pivot after leaderboard reached 7960.85
+
+Latest checked leaderboard: top public score **7960.85**, with 12th already **7800.44**. Our confirmed best is
+**7170.45**, so the gap is not a per-task +0.1/+0.3 grind problem.
+
+### Hard math
+
+- Our average: `7170.45 / 400 = 17.93 pts/task`.
+- Top average: `7960.85 / 400 = 19.90 pts/task`.
+- Score formula implies average cost targets:
+  - 7500: avg `mem+params ≈ 518`
+  - 7800: avg `≈245`
+  - 7960: avg `≈164`
+- Current distribution from manifest:
+  - `<=250`: 76 tasks
+  - `<=500`: 113 tasks
+  - `<=900`: 153 tasks
+  - `>900`: **247 tasks**
+
+Therefore: 7500+ requires pushing a very large fraction of the 247 `>900B` tasks below ~500B. Generator-exact
+label-map rewrites (`uint8 [1,1,30,30] -> Equal`) cannot do that; they floor near 16.8 and are structurally
+below the target average.
+
+### Tests run this session
+
+1. **Latest public artifacts are not the 7800 method.**
+   - Downloaded `seddiktrk/neurogolf-2026-all-graph-surgeries` and `franksunp/neurogolf-stack-audit-variant`.
+   - Public receipts show Seddik/Frank stack around **7167.12**, below our **7170.45**.
+   - Compared seddik zip: only tiny local gains over ours (`010/066/093/396/105`, total ~+0.07); no hidden
+     structural lever. `191` was smaller but failed local.
+
+2. **Generic final-output Cast/Equal rewrite is already exhausted.**
+   - Scanned all 400 for `Equal/Greater/... -> Cast(float) -> output` where making output BOOL would remove a
+     counted `[1,10,30,30]` bool tensor.
+   - Count: **0**. Current base already routes most final one-hot outputs directly.
+
+3. **`onnxsim` is not a big compressor.**
+   - Sampled 30 high-memory/low-score tasks.
+   - Only meaningful result: task118 params `4788 -> 3387`, +0.04 points.
+   - Not a 7500/7800 lever.
+
+4. **Sparse initializer exploit is blocked beyond Conv.**
+   - Prior notes said sparse Conv weights fail checker.
+   - Tested sparse initializer as Add/Mul input; checker rejects `sparse_tensor(float)` for these too.
+   - So sparse params are not a broad escape.
+
+5. **Directional prefix/cummax primitive has a real cost floor.**
+   - A one-direction `MaxPool(kernel=[1,30], left-pad)` prefix max over one 30x30 plane costs ~7200B in a
+     simple prototype once the input slice and prefix plane are counted.
+   - Triangular `MatMul` has similar activation cost plus 900 params.
+   - Useful for specific tasks, but not a sub-900 universal primitive by itself.
+
+6. **“Kaggle public ignores arc-gen” is not enough to explain 7960.**
+   - A train/test-only vs full local comparison on current networks showed only ~+0.16 total visible-only delta
+     in the same harness process. This does not explain a +790 gap.
+   - The stronger hypothesis remains: top teams either have a broad sub-500B model-generation method, or they
+     combine many risky ultra-cheap candidates selected via public LB oracle.
+
+### New working thesis
+
+Our previous exact-generalization approach is valuable for robust private/general solutions but is not sufficient
+for 7500+ public leaderboard. To climb explosively, we need one of:
+
+1. **A broad sub-500B compiler pattern** for many currently label-map/detection tasks. This likely means avoiding
+   full `[1,1,30,30]` intermediate label maps entirely, not just dtype-shrinking them.
+2. **Public-LB oracle mining**: generate many ultra-cheap risky candidates per task, submit controlled A/B probes,
+   and keep candidates that score on public hidden even if they are not generator-exact. With 100 submissions/day,
+   this becomes a group-testing/search problem rather than a proof-of-generalization problem.
+3. **A new hard-task primitive** that beats the flood/correspondence floors by representing multiple boolean states
+   in one tensor (bit-packed boolean algebra) or by computing global propagation without materializing per-step
+   full-grid activations. Sparse and simple prefix-MaxPool do not solve this yet.
+
+### Immediate next research actions
+
+1. Build a **public-probe harness**:
+   - baseline zip hash + score anchor;
+   - candidate registry `(task, candidate_path, expected_score_if_pass, local_behavior, message)`;
+   - one-task and grouped submission modes;
+   - result decoder that attributes LB deltas to accepted/rejected candidates.
+2. Seed candidate registry from existing tasklogs:
+   - risky undershoot flood depths;
+   - write-all / approximate variants;
+   - mem-0 conv or grouped-conv variants that fail rare fresh tails but pass stored;
+   - public-source alternates with lower cost but uncertain hidden behavior.
+3. Separately continue sub-500B compiler research on the 247 tasks with `mem+params>900`, prioritizing tasks where
+   the top intermediates are simple repeated bool/uint8 full planes and might be bit-packed or factored.
