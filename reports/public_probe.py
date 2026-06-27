@@ -259,6 +259,57 @@ def cmd_poll(args: argparse.Namespace) -> None:
     save_registry(reg)
 
 
+def cmd_record(args: argparse.Namespace) -> None:
+    reg = load_registry()
+    matched = []
+    for sid, sub in reg.get("submissions", {}).items():
+        if args.message and sub.get("message") != args.message:
+            continue
+        if args.pack_sha256 and sub.get("pack_sha256") != args.pack_sha256:
+            continue
+        matched.append((sid, sub))
+    if not matched:
+        raise SystemExit("no matching submission in registry")
+    baseline = reg.get("baseline", {}).get("best_lb")
+    for sid, sub in matched:
+        sub["publicScore"] = args.score
+        sub["score_delta_vs_baseline"] = None if baseline is None else args.score - float(baseline)
+        sub["status"] = "complete"
+        sub["recorded_at"] = now()
+        for cid in sub.get("candidate_ids", []):
+            cand = reg["candidates"].get(cid)
+            if not cand:
+                continue
+            cand.setdefault("public_results", []).append({
+                "submission": sid,
+                "score": args.score,
+                "delta_vs_baseline": sub["score_delta_vs_baseline"],
+                "recorded_at": sub["recorded_at"],
+            })
+            if baseline is not None and args.score > float(baseline):
+                cand["status"] = "accepted"
+            elif baseline is not None and args.score < float(baseline):
+                cand["status"] = "rejected"
+        print(json.dumps({"submission": sid, **sub}, indent=2))
+    save_registry(reg)
+
+
+def cmd_adopt(args: argparse.Namespace) -> None:
+    reg = load_registry()
+    if args.id not in reg.get("candidates", {}):
+        raise SystemExit(f"unknown candidate id: {args.id}")
+    cand = reg["candidates"][args.id]
+    src = ROOT / cand["path"]
+    dst = ROOT / "networks" / cand["task_name"]
+    if not src.exists():
+        raise SystemExit(f"candidate file missing: {src}")
+    shutil.copyfile(src, dst)
+    cand["status"] = "adopted"
+    cand["adopted_at"] = now()
+    save_registry(reg)
+    print(f"adopted {args.id}: {src} -> {dst}")
+
+
 def cmd_list(args: argparse.Namespace) -> None:
     reg = load_registry()
     print("baseline:", json.dumps(reg.get("baseline", {}), sort_keys=True))
@@ -303,6 +354,16 @@ def main(argv: list[str] | None = None) -> None:
     q = sub.add_parser("poll")
     q.add_argument("--limit", type=int, default=8)
     q.set_defaults(func=cmd_poll)
+
+    q = sub.add_parser("record")
+    q.add_argument("--message")
+    q.add_argument("--pack-sha256")
+    q.add_argument("--score", type=float, required=True)
+    q.set_defaults(func=cmd_record)
+
+    q = sub.add_parser("adopt")
+    q.add_argument("--id", required=True)
+    q.set_defaults(func=cmd_adopt)
 
     q = sub.add_parser("list")
     q.add_argument("--submissions", action="store_true")

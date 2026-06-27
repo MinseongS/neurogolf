@@ -1,8 +1,8 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-28 01:16_
+_Updated: 2026-06-28 03:51_
 
-**Total: 7170.39 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 7170.49 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
@@ -10,20 +10,20 @@ _Updated: 2026-06-28 01:16_
 | ext:franksunp7166_68 | 12 | 180.93 |
 | custom:task128 | 1 | 19.30 |
 | custom:task352 | 1 | 18.87 |
-| custom:task250 | 1 | 16.77 |
-| custom:task398 | 1 | 16.75 |
+| custom:task250+onnxsim | 1 | 16.78 |
+| custom:task398+onnxsim | 1 | 16.75 |
 | custom:task383 | 1 | 16.29 |
-| custom:task009 | 1 | 16.13 |
-| custom:task174 | 1 | 16.12 |
-| custom:task340 | 1 | 16.00 |
+| custom:task009+onnxsim | 1 | 16.13 |
+| custom:task174+onnxsim | 1 | 16.12 |
+| custom:task340+onnxsim | 1 | 16.03 |
 | custom:task055 | 1 | 15.92 |
 | custom:task222 | 1 | 15.92 |
-| custom:task379 | 1 | 15.78 |
-| custom:task204 | 1 | 15.72 |
-| custom:task080 | 1 | 15.61 |
-| custom:task338 | 1 | 15.37 |
-| custom:task202 | 1 | 15.15 |
-| custom:task191 | 1 | 14.62 |
+| custom:task379+onnxsim | 1 | 15.82 |
+| custom:task204+onnxsim | 1 | 15.72 |
+| custom:task080+onnxsim | 1 | 15.63 |
+| custom:task338+onnxsim | 1 | 15.37 |
+| custom:task202+onnxsim | 1 | 15.15 |
+| custom:task191+onnxsim | 1 | 14.62 |
 | custom:task118_tail_where+onnxsim | 1 | 14.55 |
 | custom:task187_label_flood | 1 | 14.34 |
 
@@ -39,7 +39,7 @@ _Updated: 2026-06-28 01:16_
 | 006 | ext:franksunp7166_65 | 126 | 27 | 19.97 |
 | 007 | ext:franksunp7166_65 | 0 | 127 | 20.16 |
 | 008 | ext:franksunp7166_65 | 5561 | 66 | 16.36 |
-| 009 | custom:task009 | 7049 | 86 | 16.13 |
+| 009 | custom:task009+onnxsim | 7029 | 95 | 16.13 |
 | 010 | ext:franksunp7166_65 | 750 | 340 | 18.01 |
 | 011 | ext:franksunp7166_65 | 1991 | 126 | 17.34 |
 | 012 | ext:franksunp7166_65 | 2076 | 188 | 17.28 |
@@ -110,7 +110,7 @@ _Updated: 2026-06-28 01:16_
 | 077 | ext:franksunp7166_65 | 14760 | 114 | 15.39 |
 | 078 | ext:franksunp7166_65 | 1260 | 33 | 17.84 |
 | 079 | ext:franksunp7166_65 | 3065 | 79 | 16.95 |
-| 080 | custom:task080 | 11468 | 467 | 15.61 |
+| 080 | custom:task080+onnxsim | 11334 | 454 | 15.63 |
 | 081 | ext:franksunp7166_65 | 392 | 72 | 18.86 |
 | 082 | ext:franksunp7166_65 | 0 | 190 | 19.75 |
 | 083 | ext:franksunp7166_65 | 376 | 71 | 18.90 |
@@ -204,7 +204,7 @@ _Updated: 2026-06-28 01:16_
 | 171 | ext:franksunp7166_65 | 0 | 910 | 18.19 |
 | 172 | ext:franksunp7166_65 | 0 | 30 | 21.60 |
 | 173 | ext:franksunp7166_65 | 23159 | 112 | 14.95 |
-| 174 | custom:task174 | 7023 | 143 | 16.12 |
+| 174 | custom:task174+onnxsim | 7013 | 142 | 16.12 |
 | 175 | ext:franksunp7166_65 | 340 | 937 | 17.85 |
 | 176 | ext:franksunp7166_65 | 0 | 240 | 19.52 |
 | 177 | ext:franksunp7166_65 | 3692 | 130 | 16.75 |
@@ -221,7 +221,7 @@ _Updated: 2026-06-28 01:16_
 | 188 | ext:franksunp7166_65 | 1146 | 60 | 17.90 |
 | 189 | ext:franksunp7166_65 | 866 | 49 | 18.18 |
 | 190 | ext:franksunp7166_65 | 2480 | 247 | 17.09 |
-| 191 | custom:task191 | 31276 | 844 | 14.62 |
+| 191 | custom:task191+onnxsim | 31276 | 841 | 14.62 |
 | 192 | ext:franksunp7166_65 | 8515 | 106 | 15.94 |
 | 193 | ext:franksunp7166_65 | 0 | 910 | 18.19 |
 | 194 | ext:franksunp7166_65 | 900 | 49 | 18.14 |
@@ -232,9 +232,9 @@ _Updated: 2026-06-28 01:16_
 | 199 | ext:franksunp7166_65 | 1749 | 88 | 17.48 |
 | 200 | ext:franksunp7166_65 | 570 | 186 | 18.37 |
 | 201 | ext:franksunp7166_65 | 4476 | 298 | 16.53 |
-| 202 | custom:task202 | 18963 | 25 | 15.15 |
+| 202 | custom:task202+onnxsim | 18963 | 24 | 15.15 |
 | 203 | ext:franksunp7166_65 | 408 | 1 | 18.99 |
-| 204 | custom:task204 | 10244 | 454 | 15.72 |
+| 204 | custom:task204+onnxsim | 10244 | 453 | 15.72 |
 | 205 | ext:franksunp7166_65 | 19212 | 651 | 15.10 |
 | 206 | ext:franksunp7166_65 | 4122 | 77 | 16.66 |
 | 207 | ext:franksunp7166_65 | 192 | 44 | 19.54 |
@@ -280,7 +280,7 @@ _Updated: 2026-06-28 01:16_
 | 247 | ext:franksunp7166_65 | 408 | 62 | 18.85 |
 | 248 | ext:franksunp7166_65 | 122 | 29 | 19.98 |
 | 249 | ext:franksunp7166_65 | 248 | 39 | 19.34 |
-| 250 | custom:task250 | 3664 | 85 | 16.77 |
+| 250 | custom:task250+onnxsim | 3664 | 62 | 16.78 |
 | 251 | ext:franksunp7166_65 | 5472 | 168 | 16.36 |
 | 252 | ext:franksunp7166_65 | 0 | 260 | 19.44 |
 | 253 | ext:franksunp7166_65 | 540 | 52 | 18.62 |
@@ -368,9 +368,9 @@ _Updated: 2026-06-28 01:16_
 | 335 | ext:franksunp7166_65 | 3546 | 670 | 16.65 |
 | 336 | ext:franksunp7166_65 | 1092 | 1196 | 17.26 |
 | 337 | ext:franksunp7166_65 | 0 | 10 | 22.70 |
-| 338 | custom:task338 | 14515 | 667 | 15.37 |
+| 338 | custom:task338+onnxsim | 14515 | 666 | 15.37 |
 | 339 | ext:franksunp7166_65 | 40 | 100 | 20.06 |
-| 340 | custom:task340 | 8016 | 102 | 16.00 |
+| 340 | custom:task340+onnxsim | 7596 | 277 | 16.03 |
 | 341 | ext:franksunp7166_65 | 1394 | 35 | 17.74 |
 | 342 | ext:franksunp7166_65 | 1510 | 75 | 17.63 |
 | 343 | ext:franksunp7166_65 | 1927 | 110 | 17.38 |
@@ -409,7 +409,7 @@ _Updated: 2026-06-28 01:16_
 | 376 | ext:franksunp7166_65 | 144 | 42 | 19.77 |
 | 377 | ext:franksunp7166_65 | 8351 | 154 | 15.95 |
 | 378 | ext:franksunp7166_65 | 4372 | 117 | 16.59 |
-| 379 | custom:task379 | 9469 | 653 | 15.78 |
+| 379 | custom:task379+onnxsim | 9069 | 653 | 15.82 |
 | 380 | ext:franksunp7166_65 | 0 | 99 | 20.40 |
 | 381 | ext:franksunp7166_65 | 2128 | 70 | 17.30 |
 | 382 | ext:franksunp7166_65 | 5648 | 135 | 16.34 |
@@ -428,6 +428,6 @@ _Updated: 2026-06-28 01:16_
 | 395 | ext:franksunp7166_65 | 144 | 21 | 19.89 |
 | 396 | ext:franksunp7166_65 | 13007 | 137 | 15.52 |
 | 397 | ext:franksunp7166_65 | 2648 | 200 | 17.05 |
-| 398 | custom:task398 | 2624 | 1201 | 16.75 |
+| 398 | custom:task398+onnxsim | 2624 | 1193 | 16.75 |
 | 399 | ext:franksunp7166_65 | 71 | 20 | 20.49 |
 | 400 | ext:franksunp7166_65 | 1800 | 66 | 17.47 |

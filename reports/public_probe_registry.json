@@ -1,10 +1,10 @@
 {
   "baseline": {
     "anchor_ref": null,
-    "best_lb": 7170.45,
-    "captured_at": "2026-06-27T16:11:50Z",
-    "networks_tree_sha256": "a8c5113cc8eab6f394d1f2553e2459a1c62cbcaead8333769e7d2ba746364075",
-    "stored_at_submit": 7170.353208809439,
+    "best_lb": 7170.49,
+    "captured_at": "2026-06-27T18:49:08Z",
+    "networks_tree_sha256": "cbb4651d50f0ac77c33b9fb161eb09e0005675899a774e97f92918acf44db0a6",
+    "stored_at_submit": 7170.393087159889,
     "task_count": 400
   },
   "candidates": {},
