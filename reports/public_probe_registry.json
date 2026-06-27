@@ -1,15 +1,56 @@
 {
   "baseline": {
     "anchor_ref": null,
-    "best_lb": 7170.49,
-    "captured_at": "2026-06-27T18:49:08Z",
+    "best_lb": 7170.59,
+    "captured_at": "2026-06-27T18:53:41Z",
     "networks_tree_sha256": "cbb4651d50f0ac77c33b9fb161eb09e0005675899a774e97f92918acf44db0a6",
-    "stored_at_submit": 7170.393087159889,
+    "stored_at_submit": 7170.488023707214,
     "task_count": 400
   },
-  "candidates": {},
+  "candidates": {
+    "t219_mem4_stored": {
+      "base_bytes": 11651,
+      "base_sha256": "268bc35df03d0e9c95dbf9476238d40fbf79a14f4c35ed974a760988db6b6d1c",
+      "bytes": 24351,
+      "created_at": "2026-06-27T18:52:22Z",
+      "id": "t219_mem4_stored",
+      "note": "stored-only memorizer4 for task219; current fresh~0, local +0.173",
+      "path": "reports/probes/candidates/t219_mem4_stored.onnx",
+      "public_results": [
+        {
+          "delta_vs_baseline": -14.829999999999927,
+          "recorded_at": "2026-06-27T18:55:37Z",
+          "score": 7155.76,
+          "submission": "manual_54118382"
+        }
+      ],
+      "sha256": "c6e9a25d3a3f4d25ad1c4ee6200c4d4e1d02b399c2b19c02065d77dd4561e1c5",
+      "source": "stored_memorizer_v4",
+      "status": "rejected",
+      "submissions": [
+        "manual_54118382"
+      ],
+      "task": 219,
+      "task_name": "task219.onnx"
+    }
+  },
   "competition": "neurogolf-2026",
   "created_at": "2026-06-27T16:11:50Z",
   "packs": {},
-  "submissions": {}
+  "submissions": {
+    "manual_54118382": {
+      "candidate_ids": [
+        "t219_mem4_stored"
+      ],
+      "kaggle_ref": "54118382",
+      "manual": true,
+      "message": "probe t219 stored memorizer4",
+      "pack_sha256": "6753a07f084fd11635b82eeba0b97a1ce21542590a94652998e1ff7fe0a62e1d",
+      "publicScore": 7155.76,
+      "recorded_at": "2026-06-27T18:55:37Z",
+      "score_delta_vs_baseline": -14.829999999999927,
+      "status": "complete",
+      "submitted_at": "2026-06-27T18:53:04Z"
+    }
+  }
 }

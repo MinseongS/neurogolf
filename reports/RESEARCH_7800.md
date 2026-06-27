@@ -154,3 +154,14 @@ for 7500+ public leaderboard. To climb explosively, we need one of:
    - public-source alternates with lower cost but uncertain hidden behavior.
 3. Separately continue sub-500B compiler research on the 247 tasks with `mem+params>900`, prioritizing tasks where
    the top intermediates are simple repeated bool/uint8 full planes and might be bit-packed or factored.
+
+### 2026-06-28 probe result: stored-only memorizers are unsafe
+
+- Built `memorizer_v4` stored-only candidates for several low-score tasks. Local stored gains existed
+  (`task219 +0.173`, `task233 +0.347`, `task319 +0.593`, etc.).
+- Single-task public probe `task219` (`t219_mem4_stored`, submission `54118382`) scored **7155.76** against the
+  7170.59 baseline: **−14.83**.
+- Conclusion: do **not** assume tasks with poor isolated fresh rate have zero public contribution. Kaggle public
+  hidden can still reward the existing non-generalizing-looking net, and a stored-only memorizer can wipe out the
+  task's public score. Future risky probes must be task-specific algorithmic approximations with evidence of hidden
+  survival, not plain stored memorization.

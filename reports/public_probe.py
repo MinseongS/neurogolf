@@ -201,7 +201,11 @@ def cmd_submit(args: argparse.Namespace) -> None:
     out, meta = build_zip(cands, args.label)
     message = args.message or f"public-probe {'+'.join(meta['candidate_ids'])}"
     print(f"submitting {out} ({meta['sha256'][:12]}) message={message!r}")
-    text = kaggle_cmd("competitions", "submit", "-c", COMPETITION, "-f", str(out), "-m", message)
+    # Kaggle accepts the same bytes reliably when the uploaded basename is
+    # submission.zip; arbitrary probe_*.zip names can receive a 400 Bad Request.
+    submit_path = PROBE_DIR / "submission.zip"
+    shutil.copyfile(out, submit_path)
+    text = kaggle_cmd("competitions", "submit", "-c", COMPETITION, "-f", str(submit_path), "-m", message)
     print(text)
     meta["message"] = message
     reg["packs"][meta["sha256"]] = meta
