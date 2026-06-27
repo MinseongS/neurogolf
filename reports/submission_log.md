@@ -267,3 +267,16 @@ invariant kills the suspected leak); the old -0.23 was a bundled batch, never is
 LESSON: bloated low-score base nets are bloated because the task is HARD (wall/memory-floored), not easy -- 0/6 new
 builds. Cheap EXACT overlay vein now EXHAUSTED (22 nets deployed). Further gains need NEW algorithms or a newer
 public base. Total deployed exact set (22): 396,174,340,222,377,364,250,055,080,355,352,202,128,398,267,338,215,349,191,379,204,324.
+
+## 2026-06-27 negative probe — 220/230/294 local-exact replacements LOWER hidden/public
+Tried aggressive local-exact replacements for three apparent 0-score slots from a misleading single-process
+bulk eval: task220 fixed 3x3 halo Conv (mem 0, 18.1976, fresh 1000/1000), task230 2x2 gray-block satellite
+stamper (v1 15.1857, v2 15.8629, v3 16.2756, fresh up to 5000/5000), task294 rectangle-interior recolor Conv
+(mem 0, 18.1866, fresh 5000/5000). Submissions:
+- `54108392` task220+230v1+294 → **7167.44**
+- `54108431` task220+230v2+294 → **7168.12**
+- `54108457` task220+230v3+294 → **7168.53**
+All are BELOW best **7170.45**. Reverted `networks/task220.onnx`, `task230.onnx`, `task294.onnx` to HEAD.
+Lesson: do not trust a one-process 400-task eval for mem-0/simple Conv models; verify suspicious slots with
+`python -m src.harness networks/taskNNN.onnx NNN` in a fresh process. These three current public/base nets already
+score strongly on hidden despite local exact replacements looking clean; do NOT reattempt as a gap-closer.

@@ -13,6 +13,13 @@ Local task187 points **14.246169228890707 → 14.339780325278817**; Kaggle submi
 **7170.45** (+0.09 vs 7170.36). This is a small gain, but it confirms another non-public model surgery translated
 to LB.
 
+Latest negative A/B probes: **do not replace tasks 220/230/294 with local-exact simple Conv solvers.** A
+single-process bulk eval made these slots look like local 0-point failures, but fresh-process `src.harness`
+shows the current HEAD models already pass stored. New generator-exact solvers for 220/230/294 were fresh-clean
+locally, but Kaggle public scores were **7167.44 / 7168.12 / 7168.53**, all below **7170.45**. The networks were
+reverted to HEAD. Future suspicious "0-point" findings must be rechecked per task in a fresh process before
+any adoption/probe.
+
 Previous meaningful non-public gain: **task118 tail optimization**:
 same behavior as the previous task118 model on official examples + 1000 fresh generated cases, but the output
 tail now writes `Where(mask, cyan_onehot, input) -> output` directly instead of materializing ScatterElements
