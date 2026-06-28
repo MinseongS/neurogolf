@@ -5,10 +5,10 @@ Generated from `reports/manifest.json`, `networks/`, and `src/custom/`.
 ## Summary
 
 - LIVE_CUSTOM: 18
-- EXT_LIVE_CUSTOM_SHELVED: 361
-- EXT_LIVE_NO_CUSTOM_SOURCE: 21
+- EXT_LIVE_CUSTOM_SHELVED: 362
+- EXT_LIVE_NO_CUSTOM_SOURCE: 20
 - networks present: 400/400
-- custom source files present: 378/400
+- custom source files present: 379/400
 - manifest total: 7172.001177
 
 ## Meaning
@@ -99,7 +99,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 074 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 15.8649 | 7462 | 1813 | yes | yes |
 | 075 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.6955 | 1326 | 161 | yes | yes |
 | 076 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_68 | 14.8472 | 25375 | 289 | yes | no |
-| 077 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 15.3926 | 14760 | 114 | yes | no |
+| 077 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 15.3926 | 14760 | 114 | yes | yes |
 | 078 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.8353 | 1260 | 33 | yes | yes |
 | 079 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.9467 | 3065 | 79 | yes | yes |
 | 080 | LIVE_CUSTOM | custom:task080+qconv+onnxsim | 15.6685 | 10834 | 454 | yes | yes |
