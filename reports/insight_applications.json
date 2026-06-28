@@ -1197,11 +1197,11 @@
         "task": 396
       },
       {
-        "memory": 13812,
-        "method": "teacher:urad7174_remaining_public_probe",
-        "params": 151,
-        "points": 15.455833747057806,
-        "score": 12626.25,
+        "memory": 13789,
+        "method": "ext:lucifer_positive",
+        "params": 172,
+        "points": 15.455976993011353,
+        "score": 12624.207,
         "source_class": "unknown",
         "tags": [
           "conv_heavy",
@@ -2231,10 +2231,10 @@
       },
       {
         "memory": 23296,
-        "method": "teacher:urad7174_remaining_public_probe",
-        "params": 306,
-        "points": 14.930913266814306,
-        "score": 21922.726,
+        "method": "ext:lucifer_positive",
+        "params": 292,
+        "points": 14.931506612879605,
+        "score": 21908.548,
         "source_class": "exact_preserve",
         "tags": [
           "assignment_wall",
@@ -2499,10 +2499,10 @@
       },
       {
         "memory": 4339,
-        "method": "teacher:urad7174_remaining_public_probe",
-        "params": 298,
-        "points": 16.558177115608537,
-        "score": 4637.0,
+        "method": "ext:lucifer_positive",
+        "params": 297,
+        "points": 16.558392795540357,
+        "score": 4636.0,
         "source_class": "semantic_or_handbuilt",
         "tags": [
           "connectivity_wall",
@@ -2789,10 +2789,10 @@
       },
       {
         "memory": 23296,
-        "method": "teacher:urad7174_remaining_public_probe",
-        "params": 306,
-        "points": 14.930913266814306,
-        "score": 21922.726,
+        "method": "ext:lucifer_positive",
+        "params": 292,
+        "points": 14.931506612879605,
+        "score": 21908.548,
         "source_class": "exact_preserve",
         "tags": [
           "assignment_wall",
@@ -2975,11 +2975,11 @@
         "task": 396
       },
       {
-        "memory": 13812,
-        "method": "teacher:urad7174_remaining_public_probe",
-        "params": 151,
-        "points": 15.455833747057806,
-        "score": 12626.25,
+        "memory": 13789,
+        "method": "ext:lucifer_positive",
+        "params": 172,
+        "points": 15.455976993011353,
+        "score": 12624.207,
         "source_class": "unknown",
         "tags": [
           "conv_heavy",
@@ -3400,10 +3400,10 @@
       },
       {
         "memory": 23296,
-        "method": "teacher:urad7174_remaining_public_probe",
-        "params": 306,
-        "points": 14.930913266814306,
-        "score": 21922.726,
+        "method": "ext:lucifer_positive",
+        "params": 292,
+        "points": 14.931506612879605,
+        "score": 21908.548,
         "source_class": "exact_preserve",
         "tags": [
           "assignment_wall",
@@ -3682,11 +3682,11 @@
         "task": 396
       },
       {
-        "memory": 13812,
-        "method": "teacher:urad7174_remaining_public_probe",
-        "params": 151,
-        "points": 15.455833747057806,
-        "score": 12626.25,
+        "memory": 13789,
+        "method": "ext:lucifer_positive",
+        "params": 172,
+        "points": 15.455976993011353,
+        "score": 12624.207,
         "source_class": "unknown",
         "tags": [
           "conv_heavy",
@@ -3917,10 +3917,10 @@
       },
       {
         "memory": 4339,
-        "method": "teacher:urad7174_remaining_public_probe",
-        "params": 298,
-        "points": 16.558177115608537,
-        "score": 4637.0,
+        "method": "ext:lucifer_positive",
+        "params": 297,
+        "points": 16.558392795540357,
+        "score": 4636.0,
         "source_class": "semantic_or_handbuilt",
         "tags": [
           "connectivity_wall",

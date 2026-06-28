@@ -1828,7 +1828,6 @@
       133,
       134,
       136,
-      138,
       143,
       148,
       156,
@@ -7345,7 +7344,7 @@
           "1": 2,
           "2": 12,
           "6": 72,
-          "7": 12,
+          "7": 11,
           "9": 10
         },
         "largest": [
@@ -7426,10 +7425,10 @@
             ]
           }
         ],
-        "total_elems": 108
+        "total_elems": 107
       },
       "memory": 7878,
-      "method": "teacher:urad7174_remaining_public_probe",
+      "method": "ext:lucifer_positive",
       "node_count": 38,
       "op_sequence": [
         "ReduceSum",
@@ -7495,8 +7494,8 @@
           "version": 17
         }
       ],
-      "params": 108,
-      "points": 16.014554712376835,
+      "params": 107,
+      "points": 16.014679939350888,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -15309,7 +15308,7 @@
           "10": 234,
           "2": 1,
           "6": 1,
-          "7": 69,
+          "7": 55,
           "9": 1
         },
         "largest": [
@@ -15378,10 +15377,10 @@
             ]
           }
         ],
-        "total_elems": 306
+        "total_elems": 292
       },
       "memory": 23296,
-      "method": "teacher:urad7174_remaining_public_probe",
+      "method": "ext:lucifer_positive",
       "node_count": 141,
       "op_sequence": [
         "Slice",
@@ -15497,8 +15496,8 @@
           "version": 13
         }
       ],
-      "params": 306,
-      "points": 14.930913266814306,
+      "params": 292,
+      "points": 14.931506612879605,
       "source_class": "exact_preserve",
       "source_has_build": true,
       "tags": [
@@ -23397,8 +23396,9 @@
         "dtype_elem_counts": {
           "1": 90,
           "2": 12,
-          "6": 28,
-          "7": 21
+          "6": 26,
+          "7": 21,
+          "9": 23
         },
         "largest": [
           {
@@ -23427,6 +23427,14 @@
             "dtype": 6,
             "elems": 23,
             "name": "rng",
+            "shape": [
+              23
+            ]
+          },
+          {
+            "dtype": 9,
+            "elems": 23,
+            "name": "gt0",
             "shape": [
               23
             ]
@@ -23468,21 +23476,13 @@
             "shape": [
               8
             ]
-          },
-          {
-            "dtype": 7,
-            "elems": 3,
-            "name": "un013",
-            "shape": [
-              3
-            ]
           }
         ],
-        "total_elems": 151
+        "total_elems": 172
       },
-      "memory": 13812,
-      "method": "teacher:urad7174_remaining_public_probe",
-      "node_count": 56,
+      "memory": 13789,
+      "method": "ext:lucifer_positive",
+      "node_count": 55,
       "op_sequence": [
         "Conv",
         "Cast",
@@ -23511,7 +23511,6 @@
         "Gather",
         "Sub",
         "Sub",
-        "Greater",
         "Less",
         "Less",
         "And",
@@ -23549,7 +23548,6 @@
         "Conv": 3,
         "Equal": 4,
         "Gather": 7,
-        "Greater": 1,
         "Less": 2,
         "LessOrEqual": 2,
         "MaxPool": 2,
@@ -23568,8 +23566,8 @@
           "version": 17
         }
       ],
-      "params": 151,
-      "points": 15.455833747057806,
+      "params": 172,
+      "points": 15.455976993011353,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -26200,7 +26198,7 @@
         "dtype_elem_counts": {
           "1": 4,
           "2": 13,
-          "7": 24
+          "7": 16
         },
         "largest": [
           {
@@ -26264,17 +26262,17 @@
           },
           {
             "dtype": 7,
-            "elems": 2,
-            "name": "col0_a",
+            "elems": 1,
+            "name": "s1s",
             "shape": [
-              2
+              1
             ]
           }
         ],
-        "total_elems": 41
+        "total_elems": 33
       },
       "memory": 4055,
-      "method": "teacher:urad7174_top15_public_probe",
+      "method": "ext:lucifer_positive",
       "node_count": 30,
       "op_sequence": [
         "Slice",
@@ -26328,8 +26326,8 @@
           "version": 17
         }
       ],
-      "params": 41,
-      "points": 16.682233833280655,
+      "params": 33,
+      "points": 16.684188868116458,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
@@ -51175,7 +51173,7 @@
         "dtype_elem_counts": {
           "10": 1,
           "2": 233,
-          "7": 64
+          "7": 63
         },
         "largest": [
           {
@@ -51255,10 +51253,10 @@
             ]
           }
         ],
-        "total_elems": 298
+        "total_elems": 297
       },
       "memory": 4339,
-      "method": "teacher:urad7174_remaining_public_probe",
+      "method": "ext:lucifer_positive",
       "node_count": 47,
       "op_sequence": [
         "Slice",
@@ -51333,8 +51331,8 @@
           "version": 17
         }
       ],
-      "params": 298,
-      "points": 16.558177115608537,
+      "params": 297,
+      "points": 16.558392795540357,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [

@@ -1,10 +1,10 @@
 {
   "baseline": {
     "anchor_ref": null,
-    "best_lb": 7178.42,
-    "captured_at": "2026-06-28T10:52:03Z",
-    "networks_tree_sha256": "06b20724f962a23a9e01cef0d3b3921b4af870dfb06a1ebce9396083b0d594fb",
-    "stored_at_submit": 7178.323464479424,
+    "best_lb": 7178.43,
+    "captured_at": "2026-06-28T11:04:58Z",
+    "networks_tree_sha256": "3dd1601eabc26e9a34f0f311ca11dfe39716d6b8e026d3d68e9b54cd66cc90c5",
+    "stored_at_submit": 7178.329899498155,
     "task_count": 400
   },
   "candidates": {
@@ -331,6 +331,24 @@
       ],
       "task": 392,
       "task_name": "task392.onnx"
+    },
+    "lucifer_t161": {
+      "adopted_at": "2026-06-28T11:00:40Z",
+      "base_bytes": 1640,
+      "base_sha256": "57fa837bed54eedba4fdd8b10c62515ec47fe7422a77dcba684de9f1042cc5ea",
+      "bytes": 2313,
+      "created_at": "2026-06-28T10:57:46Z",
+      "id": "lucifer_t161",
+      "note": "lucifer positive vs current local +0.001955",
+      "path": "reports/probes/candidates/lucifer_t161.onnx",
+      "sha256": "38978389dc2bca4a0cc3dc1c6d9228811cc6d403816d5fb7d42066806accf126",
+      "source": "lucifer19/neurogolf-agi-circuit-forge",
+      "status": "adopted",
+      "submissions": [
+        "62ea222499e29d7bd409eb50c1cd56e447a12969a2fec94655dbeac1d2c2b2a8"
+      ],
+      "task": 161,
+      "task_name": "task161.onnx"
     },
     "t017_source_ahead_15631": {
       "adopted_at": "2026-06-28T09:12:08Z",
@@ -1081,6 +1099,19 @@
   "competition": "neurogolf-2026",
   "created_at": "2026-06-27T16:11:50Z",
   "packs": {
+    "62ea222499e29d7bd409eb50c1cd56e447a12969a2fec94655dbeac1d2c2b2a8": {
+      "bytes": 528136,
+      "candidate_ids": [
+        "lucifer_t161"
+      ],
+      "created_at": "2026-06-28T10:57:46Z",
+      "message": "probe lucifer task161 positive overlay local +0.002",
+      "sha256": "62ea222499e29d7bd409eb50c1cd56e447a12969a2fec94655dbeac1d2c2b2a8",
+      "tasks": [
+        161
+      ],
+      "zip": "reports/probes/zips/probe_lucifer_t161_positive_overlay.zip"
+    },
     "65b57cb8bff5220eb9b08184792d8e50b1225a619104f0ccd7ba986f61481463": {
       "bytes": 533222,
       "candidate_ids": [
@@ -1243,6 +1274,27 @@
     }
   },
   "submissions": {
+    "62ea222499e29d7bd409eb50c1cd56e447a12969a2fec94655dbeac1d2c2b2a8": {
+      "candidate_ids": [
+        "lucifer_t161"
+      ],
+      "kaggle_row": {
+        "date": "2026-06-28 10:57:49.137000",
+        "description": "probe lucifer task161 positive overlay local +0.002",
+        "fileName": "submission.zip",
+        "privateScore": "",
+        "publicScore": "7178.43",
+        "ref": "54137843",
+        "status": "SubmissionStatus.COMPLETE"
+      },
+      "message": "probe lucifer task161 positive overlay local +0.002",
+      "pack_sha256": "62ea222499e29d7bd409eb50c1cd56e447a12969a2fec94655dbeac1d2c2b2a8",
+      "polled_at": "2026-06-28T11:00:20Z",
+      "publicScore": 7178.43,
+      "raw_submit_output": "\n  0%|          | 0.00/516k [00:00<?, ?B/s]\n  3%|\u258e         | 16.0k/516k [00:00<00:05, 86.2kB/s]\n 31%|\u2588\u2588\u2588       | 160k/516k [00:00<00:00, 537kB/s]  \n 65%|\u2588\u2588\u2588\u2588\u2588\u2588\u258c   | 336k/516k [00:00<00:00, 775kB/s]\n 99%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589| 512k/516k [00:01<00:00, 473kB/s]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 516k/516k [00:02<00:00, 259kB/s]\nSuccessfully submitted to The 2026 NeuroGolf Championship",
+      "status": "SubmissionStatus.COMPLETE",
+      "submitted_at": "2026-06-28T10:57:50Z"
+    },
     "65b57cb8bff5220eb9b08184792d8e50b1225a619104f0ccd7ba986f61481463": {
       "candidate_ids": [
         "urad7174_more_t004_d0p090",
@@ -1281,7 +1333,7 @@
       },
       "message": "probe URAD7174 remaining positive overlay local +1.38",
       "pack_sha256": "65b57cb8bff5220eb9b08184792d8e50b1225a619104f0ccd7ba986f61481463",
-      "polled_at": "2026-06-28T10:49:11Z",
+      "polled_at": "2026-06-28T11:00:20Z",
       "publicScore": 7178.35,
       "raw_submit_output": "\n  0%|          | 0.00/521k [00:00<?, ?B/s]\n  3%|\u258e         | 16.0k/521k [00:00<00:06, 81.7kB/s]\n 31%|\u2588\u2588\u2588       | 160k/521k [00:00<00:00, 514kB/s]  \n 65%|\u2588\u2588\u2588\u2588\u2588\u2588\u258d   | 336k/521k [00:00<00:00, 751kB/s]\n 98%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a| 512k/521k [00:00<00:00, 862kB/s]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 521k/521k [00:01<00:00, 277kB/s]\nSuccessfully submitted to The 2026 NeuroGolf Championship",
       "status": "SubmissionStatus.COMPLETE",
@@ -1302,7 +1354,7 @@
       },
       "message": "probe t017 source-owned +0.083 risky fresh",
       "pack_sha256": "bfb5256ad145b0812a08606f076944e03ae0203f9f7a51f4a332c7cce8d17572",
-      "polled_at": "2026-06-28T10:49:11Z",
+      "polled_at": "2026-06-28T11:00:20Z",
       "publicScore": 7172.43,
       "raw_submit_output": "\n  0%|          | 0.00/512k [00:00<?, ?B/s]\n  3%|\u258e         | 16.0k/512k [00:00<00:06, 84.0kB/s]\n 31%|\u2588\u2588\u2588\u258f      | 160k/512k [00:00<00:00, 527kB/s]  \n 66%|\u2588\u2588\u2588\u2588\u2588\u2588\u258c   | 336k/512k [00:00<00:00, 789kB/s]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 512k/512k [00:01<00:00, 475kB/s]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 512k/512k [00:01<00:00, 271kB/s]\nSuccessfully submitted to The 2026 NeuroGolf Championship",
       "status": "SubmissionStatus.COMPLETE",
@@ -1337,7 +1389,7 @@
       },
       "message": "probe URAD7174 top15 positive overlay local +4.55",
       "pack_sha256": "f6e8e801e25fc2006365319da474aa4fb0913bce60a51c7a2d02e1dd2ee8beea",
-      "polled_at": "2026-06-28T10:49:11Z",
+      "polled_at": "2026-06-28T11:00:20Z",
       "publicScore": 7176.98,
       "raw_submit_output": "\n  0%|          | 0.00/517k [00:00<?, ?B/s]\n  3%|\u258e         | 16.0k/517k [00:00<00:06, 81.9kB/s]\n 31%|\u2588\u2588\u2588       | 160k/517k [00:00<00:00, 516kB/s]  \n 65%|\u2588\u2588\u2588\u2588\u2588\u2588\u258c   | 336k/517k [00:00<00:00, 765kB/s]\n 96%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c| 496k/517k [00:01<00:00, 462kB/s]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 517k/517k [00:02<00:00, 248kB/s]\nSuccessfully submitted to The 2026 NeuroGolf Championship",
       "status": "SubmissionStatus.COMPLETE",
@@ -1375,7 +1427,7 @@
       },
       "message": "probe biohack mix unique positive overlay local +0.068",
       "pack_sha256": "f96f1bb249bbd8518ebae8c0d503456a92481c79f4a0773c3175031725539533",
-      "polled_at": "2026-06-28T10:49:11Z",
+      "polled_at": "2026-06-28T11:00:20Z",
       "publicScore": 7178.42,
       "raw_submit_output": "\n  0%|          | 0.00/518k [00:00<?, ?B/s]\n  3%|\u258e         | 16.0k/518k [00:00<00:06, 84.2kB/s]\n 31%|\u2588\u2588\u2588       | 160k/518k [00:00<00:00, 533kB/s]  \n 65%|\u2588\u2588\u2588\u2588\u2588\u2588\u258d   | 336k/518k [00:00<00:00, 768kB/s]\n 99%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589| 512k/518k [00:00<00:00, 885kB/s]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 518k/518k [00:01<00:00, 274kB/s]\nSuccessfully submitted to The 2026 NeuroGolf Championship",
       "status": "SubmissionStatus.COMPLETE",
@@ -1398,7 +1450,7 @@
       "manual": true,
       "message": "probe t219 stored memorizer4",
       "pack_sha256": "6753a07f084fd11635b82eeba0b97a1ce21542590a94652998e1ff7fe0a62e1d",
-      "polled_at": "2026-06-28T10:49:11Z",
+      "polled_at": "2026-06-28T11:00:20Z",
       "publicScore": 7155.76,
       "recorded_at": "2026-06-27T18:55:37Z",
       "score_delta_vs_baseline": -14.829999999999927,

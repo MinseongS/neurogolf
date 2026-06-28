@@ -1,6 +1,6 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-28 19:51_
+_Updated: 2026-06-28 20:04_
 
 **Total: 7178.33 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
@@ -8,8 +8,9 @@ _Updated: 2026-06-28 19:51_
 |---|---:|---:|
 | ext:franksunp7166_65 | 316 | 5822.07 |
 | ext:biohack_mix_positive | 27 | 440.84 |
-| teacher:urad7174_remaining_public_probe | 24 | 387.86 |
-| teacher:urad7174_top15_public_probe | 14 | 217.99 |
+| teacher:urad7174_remaining_public_probe | 20 | 324.90 |
+| teacher:urad7174_top15_public_probe | 13 | 201.31 |
+| ext:lucifer_positive | 5 | 79.64 |
 | custom:task128 | 1 | 19.30 |
 | custom:task352 | 1 | 18.87 |
 | custom:task267 | 1 | 18.36 |
@@ -47,7 +48,7 @@ _Updated: 2026-06-28 19:51_
 | 011 | ext:biohack_mix_positive | 1991 | 123 | 17.34 |
 | 012 | ext:franksunp7166_65 | 2076 | 188 | 17.28 |
 | 013 | ext:franksunp7166_65 | 1869 | 61 | 17.43 |
-| 014 | teacher:urad7174_remaining_public_probe | 7878 | 108 | 16.01 |
+| 014 | ext:lucifer_positive | 7878 | 107 | 16.01 |
 | 015 | ext:franksunp7166_65 | 0 | 900 | 18.20 |
 | 016 | ext:franksunp7166_65 | 0 | 10 | 22.70 |
 | 017 | custom:task017+source-ahead-public-probe | 9330 | 2388 | 15.63 |
@@ -109,7 +110,7 @@ _Updated: 2026-06-28 19:51_
 | 073 | ext:franksunp7166_65 | 0 | 40 | 21.31 |
 | 074 | teacher:urad7174_remaining_public_probe | 9000 | 50 | 15.89 |
 | 075 | ext:franksunp7166_65 | 1326 | 161 | 17.70 |
-| 076 | teacher:urad7174_remaining_public_probe | 23296 | 306 | 14.93 |
+| 076 | ext:lucifer_positive | 23296 | 292 | 14.93 |
 | 077 | ext:franksunp7166_65 | 14760 | 114 | 15.39 |
 | 078 | ext:franksunp7166_65 | 1260 | 33 | 17.84 |
 | 079 | ext:biohack_mix_positive | 3065 | 78 | 16.95 |
@@ -171,7 +172,7 @@ _Updated: 2026-06-28 19:51_
 | 135 | ext:franksunp7166_65 | 0 | 200 | 19.70 |
 | 136 | ext:franksunp7166_65 | 1179 | 34 | 17.90 |
 | 137 | ext:franksunp7166_65 | 3433 | 93 | 16.83 |
-| 138 | teacher:urad7174_remaining_public_probe | 13812 | 151 | 15.46 |
+| 138 | ext:lucifer_positive | 13789 | 172 | 15.46 |
 | 139 | ext:franksunp7166_65 | 765 | 139 | 18.19 |
 | 140 | ext:franksunp7166_65 | 0 | 5 | 23.39 |
 | 141 | ext:franksunp7166_65 | 1404 | 101 | 17.68 |
@@ -194,7 +195,7 @@ _Updated: 2026-06-28 19:51_
 | 158 | ext:biohack_mix_positive | 32987 | 2340 | 14.53 |
 | 159 | ext:franksunp7166_65 | 1419 | 149 | 17.64 |
 | 160 | ext:franksunp7166_65 | 1164 | 170 | 17.80 |
-| 161 | teacher:urad7174_top15_public_probe | 4055 | 41 | 16.68 |
+| 161 | ext:lucifer_positive | 4055 | 33 | 16.68 |
 | 162 | ext:franksunp7166_65 | 4024 | 44 | 16.69 |
 | 163 | ext:franksunp7166_65 | 2235 | 110 | 17.24 |
 | 164 | ext:franksunp7166_65 | 0 | 30 | 21.60 |
@@ -396,7 +397,7 @@ _Updated: 2026-06-28 19:51_
 | 360 | ext:franksunp7166_65 | 0 | 340 | 19.17 |
 | 361 | ext:franksunp7166_65 | 4472 | 367 | 16.52 |
 | 362 | ext:franksunp7166_65 | 408 | 113 | 18.74 |
-| 363 | teacher:urad7174_remaining_public_probe | 4339 | 298 | 16.56 |
+| 363 | ext:lucifer_positive | 4339 | 297 | 16.56 |
 | 364 | teacher:urad7174_remaining_public_probe | 24220 | 111 | 14.90 |
 | 365 | ext:franksunp7166_65 | 3908 | 120 | 16.70 |
 | 366 | teacher:urad7174_remaining_public_probe | 35927 | 490 | 14.50 |

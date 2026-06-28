@@ -79,10 +79,10 @@
    "method": "ext:franksunp7166_65"
   },
   "14": {
-   "points": 16.014554712376835,
+   "points": 16.014679939350888,
    "memory": 7878,
-   "params": 108,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "params": 107,
+   "method": "ext:lucifer_positive"
   },
   "15": {
    "points": 18.197605236675688,
@@ -451,10 +451,10 @@
    "method": "ext:franksunp7166_65"
   },
   "76": {
-   "points": 14.930913266814306,
+   "points": 14.931506612879605,
    "memory": 23296,
-   "params": 306,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "params": 292,
+   "method": "ext:lucifer_positive"
   },
   "77": {
    "points": 15.392629998736755,
@@ -823,10 +823,10 @@
    "method": "ext:franksunp7166_65"
   },
   "138": {
-   "points": 15.455833747057806,
-   "memory": 13812,
-   "params": 151,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "points": 15.455976993011353,
+   "memory": 13789,
+   "params": 172,
+   "method": "ext:lucifer_positive"
   },
   "139": {
    "points": 18.193170639607825,
@@ -961,10 +961,10 @@
    "method": "ext:franksunp7166_65"
   },
   "161": {
-   "points": 16.682233833280655,
+   "points": 16.684188868116458,
    "memory": 4055,
-   "params": 41,
-   "method": "teacher:urad7174_top15_public_probe"
+   "params": 33,
+   "method": "ext:lucifer_positive"
   },
   "162": {
    "points": 16.68909324283155,
@@ -2176,10 +2176,10 @@
    "method": "ext:franksunp7166_65"
   },
   "363": {
-   "points": 16.558177115608537,
+   "points": 16.558392795540357,
    "memory": 4339,
-   "params": 298,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "params": 297,
+   "method": "ext:lucifer_positive"
   },
   "364": {
    "points": 14.90049346354632,

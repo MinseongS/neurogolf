@@ -1,20 +1,20 @@
 # Public teacher extraction — task161
 
-- public path: `public_candidates/urad_7174_10/extracted/task161.onnx`
+- public path: `public_candidates/lucifer_agi_circuit_20260628/extracted/task161.onnx`
 - live path: `/Users/minseong/project/neurogolf/networks/task161.onnx`
 
 ## Stored evaluation
 
-- public: ok=True pts=16.682234 mem=4055 params=41
-- live: ok=True pts=16.682234 mem=4055 params=41
+- public: ok=True pts=16.684189 mem=4055 params=33
+- live: ok=True pts=16.684189 mem=4055 params=33
 - delta public-live: pts=+0.000000 mem=0 params=0
 
 ## Structural comparison
 
 - public nodes: 30
 - live nodes: 30
-- public initializer elems: 41
-- live initializer elems: 41
+- public initializer elems: 33
+- live initializer elems: 33
 
 ### Op delta public-live
 

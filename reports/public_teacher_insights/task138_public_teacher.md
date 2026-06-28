@@ -1,36 +1,24 @@
 # Public teacher extraction — task138
 
-- public path: `public_candidates/urad_7174_10/extracted/task138.onnx`
+- public path: `public_candidates/lucifer_agi_circuit_20260628/extracted/task138.onnx`
 - live path: `/Users/minseong/project/neurogolf/networks/task138.onnx`
 
 ## Stored evaluation
 
-- public: ok=True pts=15.455834 mem=13812 params=151
-- live: ok=True pts=15.429750 mem=14106 params=226
-- delta public-live: pts=+0.026084 mem=-294 params=-75
+- public: ok=True pts=15.455977 mem=13789 params=172
+- live: ok=True pts=15.455977 mem=13789 params=172
+- delta public-live: pts=+0.000000 mem=0 params=0
 
 ## Structural comparison
 
-- public nodes: 56
-- live nodes: 58
-- public initializer elems: 151
-- live initializer elems: 226
+- public nodes: 55
+- live nodes: 55
+- public initializer elems: 172
+- live initializer elems: 172
 
 ### Op delta public-live
 
-- `Cast`: -3
-- `Gather`: +4
-- `Greater`: +1
-- `Max`: -1
-- `MaxPool`: -2
-- `Not`: -1
-- `Or`: -1
-- `ReduceMax`: -1
-- `Reshape`: -3
-- `Slice`: -2
-- `Squeeze`: +4
-- `Transpose`: +2
-- `Unsqueeze`: +1
+- no op-count delta
 
 ## Mechanism extraction checklist
 

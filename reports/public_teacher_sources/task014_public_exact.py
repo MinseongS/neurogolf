@@ -1,6 +1,6 @@
 """Task 014 public-teacher exact source draft.
 
-Generated from `public_candidates/urad_7174_10/extracted/task014.onnx` by `reports/scripts/public_teacher_extract.py`.
+Generated from `public_candidates/lucifer_agi_circuit_20260628/extracted/task014.onnx` by `reports/scripts/public_teacher_extract.py`.
 This draft is intentionally non-installed.  Review the mechanism, convert to a
 semantic builder when possible, or install explicitly only after fresh/source
 gates pass.
@@ -15,19 +15,22 @@ import onnx
 
 
 _PAYLOAD = (
-    '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'
+    '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'
+    'ijY2MQwAAA=='
 )
 
 

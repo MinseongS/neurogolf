@@ -104,7 +104,7 @@ Collapse local neighborhood rules to one sparse Conv/QLinearConv when output is 
 | 2 | 349 | 25041.9 | 14.827 | 26100 | 90 | unknown | conv_heavy,documented_wall,high_memory,local_stencil,low_score,lut_selection,maxpool_scan,open_angle |
 | 3 | 023 | 13278.9 | 15.517 | 12843 | 291 | semantic_or_handbuilt | conv_heavy,high_memory,qlinear |
 | 4 | 396 | 12827.6 | 15.551 | 12557 | 136 | unknown | conv_heavy,high_memory,local_stencil |
-| 5 | 138 | 12626.2 | 15.456 | 13812 | 151 | unknown | conv_heavy,documented_wall,high_memory,local_stencil,open_angle |
+| 5 | 138 | 12624.2 | 15.456 | 13789 | 172 | unknown | conv_heavy,documented_wall,high_memory,local_stencil,open_angle |
 | 6 | 370 | 10468.7 | 15.751 | 9127 | 1267 | semantic_or_handbuilt | conv_heavy,qlinear,scan,scatter |
 | 7 | 080 | 9887.4 | 15.669 | 10834 | 454 | unknown | conv_heavy,documented_wall,high_memory,lut_selection,open_angle,qlinear |
 | 8 | 074 | 9083.2 | 15.889 | 9000 | 50 | semantic_or_handbuilt | local_stencil,open_angle,template_match |
@@ -144,7 +144,7 @@ Prioritize exact-preserve source builders for semantic replacement
 | 6 | 285 | 25475.5 | 14.848 | 25080 | 550 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scatter |
 | 7 | 173 | 22962.9 | 14.950 | 23036 | 112 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scatter |
 | 8 | 002 | 22778.3 | 14.896 | 24320 | 127 | exact_preserve | bitwise_program,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score |
-| 9 | 076 | 21922.7 | 14.931 | 23296 | 306 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,heuristic,high_memory,low_score,open_angle |
+| 9 | 076 | 21908.5 | 14.932 | 23296 | 292 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,heuristic,high_memory,low_score,open_angle |
 | 10 | 255 | 21703.0 | 14.940 | 23123 | 262 | exact_preserve | connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,low_score,matmul |
 | 11 | 319 | 20404.0 | 14.997 | 21834 | 269 | exact_preserve | assignment_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score,scan |
 | 12 | 066 | 18161.3 | 15.179 | 17763 | 652 | exact_preserve | exact_preserve,heuristic,high_memory,scan |
@@ -168,7 +168,7 @@ Use one stacked Conv for all dihedral orientations of a small runtime-extracted 
 | 1 | 191 | 32530.1 | 14.623 | 31276 | 841 | unknown | assignment_wall,conv_heavy,custom_win,high_memory,low_score,matmul,open_angle,template_match |
 | 2 | 364 | 24660.9 | 14.900 | 24220 | 111 | unknown | connectivity_wall,high_memory,local_stencil,low_score,maxpool_scan,open_angle,template_match |
 | 3 | 074 | 9083.2 | 15.889 | 9000 | 50 | semantic_or_handbuilt | local_stencil,open_angle,template_match |
-| 4 | 363 | 4637.0 | 16.558 | 4339 | 298 | semantic_or_handbuilt | connectivity_wall,conv_heavy,local_stencil,open_angle,template_match |
+| 4 | 363 | 4636.0 | 16.558 | 4339 | 297 | semantic_or_handbuilt | connectivity_wall,conv_heavy,local_stencil,open_angle,template_match |
 | 5 | 287 | 1994.0 | 17.402 | 1699 | 295 | semantic_or_handbuilt | open_angle,template_match |
 | 6 | 400 | 1866.0 | 17.468 | 1800 | 66 | semantic_or_handbuilt | assignment_wall,connectivity_wall,open_angle,template_match |
 | 7 | 158 | -5731.3 | 14.528 | 32987 | 2340 | unknown | assignment_wall,conv_heavy,documented_wall,gather_heavy,high_memory,low_score,marginal_wall,open_angle |
@@ -194,7 +194,7 @@ Run iterative connectivity/flood-fill on the generator's true max canvas, not th
 | 9 | 349 | 25041.9 | 14.827 | 26100 | 90 | unknown | conv_heavy,documented_wall,high_memory,local_stencil,low_score,lut_selection,maxpool_scan,open_angle |
 | 10 | 364 | 24660.9 | 14.900 | 24220 | 111 | unknown | connectivity_wall,high_memory,local_stencil,low_score,maxpool_scan,open_angle,template_match |
 | 11 | 173 | 22962.9 | 14.950 | 23036 | 112 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scatter |
-| 12 | 076 | 21922.7 | 14.931 | 23296 | 306 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,heuristic,high_memory,low_score,open_angle |
+| 12 | 076 | 21908.5 | 14.932 | 23296 | 292 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,heuristic,high_memory,low_score,open_angle |
 | 13 | 255 | 21703.0 | 14.940 | 23123 | 262 | exact_preserve | connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,low_score,matmul |
 | 14 | 319 | 20404.0 | 14.997 | 21834 | 269 | exact_preserve | assignment_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score,scan |
 | 15 | 066 | 18161.3 | 15.179 | 17763 | 652 | exact_preserve | exact_preserve,heuristic,high_memory,scan |
@@ -205,7 +205,7 @@ Run iterative connectivity/flood-fill on the generator's true max canvas, not th
 | 20 | 023 | 13278.9 | 15.517 | 12843 | 291 | semantic_or_handbuilt | conv_heavy,high_memory,qlinear |
 | 21 | 338 | 13232.7 | 15.414 | 13890 | 667 | unknown | connectivity_wall,documented_wall,high_memory,local_stencil,open_angle,qlinear |
 | 22 | 396 | 12827.6 | 15.551 | 12557 | 136 | unknown | conv_heavy,high_memory,local_stencil |
-| 23 | 138 | 12626.2 | 15.456 | 13812 | 151 | unknown | conv_heavy,documented_wall,high_memory,local_stencil,open_angle |
+| 23 | 138 | 12624.2 | 15.456 | 13789 | 172 | unknown | conv_heavy,documented_wall,high_memory,local_stencil,open_angle |
 | 24 | 110 | 12448.5 | 15.468 | 13155 | 634 | semantic_or_handbuilt | connectivity_wall,conv_heavy,documented_wall,high_memory,maxpool_scan,open_angle |
 | 25 | 198 | 12226.7 | 15.484 | 13434 | 138 | semantic_or_handbuilt | connectivity_wall,documented_wall,gather_heavy,high_memory,open_angle,scan |
 
@@ -227,7 +227,7 @@ Replace repeated MaxPool/Max/Min scan stacks with bitwise shift/mask routing whe
 | 6 | 349 | 25041.9 | 14.827 | 26100 | 90 | unknown | conv_heavy,documented_wall,high_memory,local_stencil,low_score,lut_selection,maxpool_scan,open_angle |
 | 7 | 364 | 24660.9 | 14.900 | 24220 | 111 | unknown | connectivity_wall,high_memory,local_stencil,low_score,maxpool_scan,open_angle,template_match |
 | 8 | 173 | 22962.9 | 14.950 | 23036 | 112 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scatter |
-| 9 | 076 | 21922.7 | 14.931 | 23296 | 306 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,heuristic,high_memory,low_score,open_angle |
+| 9 | 076 | 21908.5 | 14.932 | 23296 | 292 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,heuristic,high_memory,low_score,open_angle |
 | 10 | 066 | 18161.3 | 15.179 | 17763 | 652 | exact_preserve | exact_preserve,heuristic,high_memory,scan |
 | 11 | 219 | 16976.3 | 15.162 | 18633 | 92 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,lut_selection |
 | 12 | 158 | -5731.3 | 14.528 | 32987 | 2340 | unknown | assignment_wall,conv_heavy,documented_wall,gather_heavy,high_memory,low_score,marginal_wall,open_angle |
@@ -252,7 +252,7 @@ Convert repeated binary/count Conv/ConvTranspose towers to QLinearConv/uint8 rou
 | 5 | 205 | 15564.1 | 15.360 | 14734 | 638 | semantic_or_handbuilt | connectivity_wall,conv_heavy,high_memory,lut_selection,open_angle |
 | 6 | 338 | 13232.7 | 15.414 | 13890 | 667 | unknown | connectivity_wall,documented_wall,high_memory,local_stencil,open_angle,qlinear |
 | 7 | 396 | 12827.6 | 15.551 | 12557 | 136 | unknown | conv_heavy,high_memory,local_stencil |
-| 8 | 138 | 12626.2 | 15.456 | 13812 | 151 | unknown | conv_heavy,documented_wall,high_memory,local_stencil,open_angle |
+| 8 | 138 | 12624.2 | 15.456 | 13789 | 172 | unknown | conv_heavy,documented_wall,high_memory,local_stencil,open_angle |
 | 9 | 110 | 12448.5 | 15.468 | 13155 | 634 | semantic_or_handbuilt | connectivity_wall,conv_heavy,documented_wall,high_memory,maxpool_scan,open_angle |
 | 10 | 202 | 11376.2 | 15.669 | 11253 | 24 | semantic_or_handbuilt | connectivity_wall,high_memory,local_stencil,onehot_final_equal,open_angle,qlinear |
 | 11 | 080 | 9887.4 | 15.669 | 10834 | 454 | unknown | conv_heavy,documented_wall,high_memory,lut_selection,open_angle,qlinear |
@@ -267,6 +267,6 @@ Convert repeated binary/count Conv/ConvTranspose towers to QLinearConv/uint8 rou
 | 20 | 004 | 5394.0 | 16.407 | 5300 | 94 | unknown | connectivity_wall,local_stencil,open_angle |
 | 21 | 085 | 5381.0 | 16.409 | 4500 | 881 | unknown | local_stencil,open_angle |
 | 22 | 165 | 4650.0 | 16.276 | 5836 | 314 | unknown | connectivity_wall,documented_wall,local_stencil,onehot_final_equal,open_angle,qlinear |
-| 23 | 363 | 4637.0 | 16.558 | 4339 | 298 | semantic_or_handbuilt | connectivity_wall,conv_heavy,local_stencil,open_angle,template_match |
+| 23 | 363 | 4636.0 | 16.558 | 4339 | 297 | semantic_or_handbuilt | connectivity_wall,conv_heavy,local_stencil,open_angle,template_match |
 | 24 | 132 | 4089.0 | 16.684 | 3990 | 99 | unknown | bitwise_program,gather_heavy,local_stencil,open_angle |
 | 25 | 177 | 3822.0 | 16.751 | 3692 | 130 | unknown | connectivity_wall,conv_heavy,local_stencil,open_angle |
