@@ -143,6 +143,7 @@
       356,
       357,
       358,
+      359,
       361,
       362,
       363,
@@ -167,7 +168,6 @@
     "And": [
       2,
       3,
-      4,
       6,
       9,
       13,
@@ -278,7 +278,6 @@
       345,
       348,
       358,
-      363,
       365,
       366,
       368,
@@ -385,7 +384,6 @@
       273,
       281,
       284,
-      286,
       288,
       293,
       295,
@@ -821,7 +819,6 @@
       66,
       69,
       71,
-      74,
       75,
       76,
       78,
@@ -947,7 +944,6 @@
       361,
       362,
       363,
-      364,
       365,
       366,
       367,
@@ -977,7 +973,6 @@
       9,
       15,
       18,
-      19,
       20,
       26,
       32,
@@ -1023,7 +1018,6 @@
       152,
       158,
       163,
-      165,
       170,
       171,
       173,
@@ -1058,7 +1052,6 @@
       233,
       237,
       246,
-      255,
       257,
       258,
       259,
@@ -1118,7 +1111,6 @@
       255,
       327,
       339,
-      363,
       384
     ],
     "CumSum": [
@@ -1228,6 +1220,7 @@
       51,
       59,
       65,
+      66,
       68,
       75,
       88,
@@ -1540,7 +1533,6 @@
     "Flatten": [
       1,
       12,
-      74,
       79,
       118,
       132,
@@ -1798,11 +1790,13 @@
     ],
     "Greater": [
       2,
+      4,
       5,
       9,
       10,
       13,
       18,
+      19,
       25,
       27,
       35,
@@ -1835,6 +1829,7 @@
       133,
       134,
       136,
+      138,
       143,
       148,
       156,
@@ -1849,7 +1844,6 @@
       178,
       182,
       187,
-      188,
       191,
       192,
       198,
@@ -1900,11 +1894,11 @@
       355,
       357,
       359,
+      363,
       366,
       370,
       378,
       379,
-      396,
       397,
       399
     ],
@@ -1927,7 +1921,6 @@
       255,
       281,
       348,
-      359,
       361,
       365,
       378,
@@ -2078,7 +2071,6 @@
       39,
       44,
       50,
-      66,
       104,
       105,
       107,
@@ -2107,6 +2099,7 @@
       64,
       66,
       69,
+      74,
       94,
       96,
       99,
@@ -2116,7 +2109,6 @@
       132,
       133,
       137,
-      138,
       154,
       158,
       161,
@@ -2208,6 +2200,7 @@
       137
     ],
     "Min": [
+      4,
       5,
       14,
       23,
@@ -2395,6 +2388,7 @@
       333,
       355,
       356,
+      359,
       361,
       363,
       364,
@@ -2418,7 +2412,6 @@
     ],
     "Not": [
       2,
-      4,
       13,
       18,
       27,
@@ -2435,7 +2428,6 @@
       105,
       107,
       119,
-      138,
       153,
       157,
       158,
@@ -2447,7 +2439,6 @@
       206,
       209,
       213,
-      218,
       226,
       233,
       254,
@@ -2460,6 +2451,7 @@
       338,
       341,
       346,
+      359,
       366,
       368,
       370,
@@ -2776,6 +2768,7 @@
     ],
     "QLinearConv": [
       5,
+      19,
       23,
       34,
       77,
@@ -2789,6 +2782,7 @@
       158,
       160,
       162,
+      165,
       168,
       169,
       182,
@@ -2802,10 +2796,12 @@
       222,
       233,
       243,
+      255,
       271,
       278,
       279,
       282,
+      286,
       302,
       323,
       324,
@@ -2868,7 +2864,6 @@
       66,
       69,
       70,
-      74,
       76,
       80,
       83,
@@ -3156,7 +3151,6 @@
       118,
       119,
       124,
-      138,
       153,
       157,
       158,
@@ -3377,7 +3371,6 @@
       127,
       132,
       134,
-      138,
       139,
       142,
       143,
@@ -3609,6 +3602,7 @@
       121,
       123,
       134,
+      138,
       146,
       157,
       170,
@@ -3766,6 +3760,7 @@
     "Sum": [
       18,
       29,
+      44,
       175,
       198,
       207,
@@ -3828,9 +3823,11 @@
       54,
       61,
       66,
+      74,
       93,
       115,
       117,
+      138,
       157,
       179,
       197,
@@ -3875,6 +3872,7 @@
       117,
       131,
       134,
+      138,
       157,
       159,
       163,
@@ -4105,7 +4103,6 @@
       355,
       357,
       358,
-      359,
       361,
       364,
       365,
@@ -4365,6 +4362,7 @@
       343,
       349,
       354,
+      363,
       367,
       369,
       370,
@@ -4709,6 +4707,7 @@
       184,
       185,
       187,
+      188,
       189,
       190,
       192,
@@ -4772,6 +4771,7 @@
       372,
       377,
       383,
+      396,
       397
     ],
     "low_score": [
@@ -4855,7 +4855,6 @@
       39,
       44,
       50,
-      66,
       104,
       105,
       107,
@@ -5268,6 +5267,7 @@
     ],
     "qlinear": [
       5,
+      19,
       23,
       34,
       55,
@@ -5284,6 +5284,7 @@
       158,
       160,
       162,
+      165,
       168,
       169,
       182,
@@ -5299,10 +5300,12 @@
       233,
       243,
       250,
+      255,
       271,
       278,
       279,
       282,
+      286,
       302,
       323,
       324,
@@ -5859,14 +5862,14 @@
       "initializer_summary": {
         "dtype_elem_counts": {
           "1": 41,
-          "2": 12,
-          "7": 39
+          "2": 13,
+          "7": 40
         },
         "largest": [
           {
             "dtype": 1,
             "elems": 40,
-            "name": "color_weights",
+            "name": "Wc",
             "shape": [
               1,
               10,
@@ -5877,7 +5880,7 @@
           {
             "dtype": 7,
             "elems": 16,
-            "name": "below_any_indices",
+            "name": "bidx",
             "shape": [
               16
             ]
@@ -5885,7 +5888,7 @@
           {
             "dtype": 7,
             "elems": 16,
-            "name": "shifted_vals_indices",
+            "name": "sidx",
             "shape": [
               16
             ]
@@ -5903,52 +5906,50 @@
           },
           {
             "dtype": 7,
-            "elems": 4,
-            "name": "scalar_full_pads",
+            "elems": 8,
+            "name": "pads",
             "shape": [
-              4
+              8
             ]
           },
           {
-            "dtype": 7,
-            "elems": 2,
-            "name": "scalar_full_pad_axes",
+            "dtype": 1,
+            "elems": 1,
+            "name": "bc",
             "shape": [
-              2
+              1
             ]
           },
           {
             "dtype": 2,
             "elems": 1,
-            "name": "zero_u8",
+            "name": "u255",
             "shape": []
           },
           {
             "dtype": 2,
             "elems": 1,
-            "name": "sentinel_u8",
+            "name": "u0",
             "shape": []
           }
         ],
-        "total_elems": 92
+        "total_elems": 94
       },
-      "memory": 5812,
-      "method": "ext:franksunp7166_65",
-      "node_count": 21,
+      "memory": 5300,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 19,
       "op_sequence": [
         "Conv",
         "Cast",
         "Less",
         "Where",
-        "Cast",
+        "Min",
         "Gather",
         "Gather",
         "ReduceMax",
         "Cast",
         "Gather",
-        "And",
-        "Not",
-        "And",
+        "Greater",
         "Xor",
         "Where",
         "Where",
@@ -5959,14 +5960,14 @@
         "Equal"
       ],
       "ops": {
-        "And": 2,
-        "Cast": 3,
+        "Cast": 2,
         "Conv": 1,
         "Equal": 1,
         "Gather": 4,
+        "Greater": 1,
         "Less": 1,
         "Max": 1,
-        "Not": 1,
+        "Min": 1,
         "Pad": 1,
         "ReduceMax": 1,
         "Where": 4,
@@ -5975,11 +5976,11 @@
       "opset": [
         {
           "domain": "",
-          "version": 18
+          "version": 17
         }
       ],
-      "params": 92,
-      "points": 16.31661463371969,
+      "params": 94,
+      "points": 16.406957496300326,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -6077,9 +6078,9 @@
         ],
         "total_elems": 490
       },
-      "memory": 6610,
-      "method": "ext:franksunp7166_65",
-      "node_count": 211,
+      "memory": 6392,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 181,
       "op_sequence": [
         "Conv",
         "Cast",
@@ -6108,17 +6109,10 @@
         "Slice",
         "Mul",
         "Slice",
-        "Slice",
         "Mul",
         "Slice",
         "Slice",
         "Mul",
-        "Slice",
-        "Slice",
-        "Slice",
-        "Max",
-        "Mul",
-        "Slice",
         "Slice",
         "Slice",
         "Max",
@@ -6137,6 +6131,10 @@
         "Slice",
         "Slice",
         "Max",
+        "Mul",
+        "Slice",
+        "Slice",
+        "Max",
         "Slice",
         "Slice",
         "Slice",
@@ -6148,7 +6146,6 @@
         "Slice",
         "Slice",
         "Max",
-        "Slice",
         "Slice",
         "Slice",
         "Slice",
@@ -6160,6 +6157,10 @@
         "Slice",
         "Slice",
         "Slice",
+        "Slice",
+        "Slice",
+        "Slice",
+        "Concat",
         "Slice"
       ],
       "ops": {
@@ -6168,14 +6169,14 @@
         "Conv": 1,
         "Equal": 1,
         "Greater": 1,
-        "Max": 53,
+        "Max": 44,
         "MaxPool": 2,
         "Min": 1,
         "Mul": 9,
         "Pad": 1,
         "QLinearConv": 2,
         "Reshape": 2,
-        "Slice": 122,
+        "Slice": 101,
         "Split": 1
       },
       "opset": [
@@ -6185,7 +6186,7 @@
         }
       ],
       "params": 490,
-      "points": 16.132149936970592,
+      "points": 16.163335413642574,
       "source_class": "exact_preserve",
       "source_has_build": true,
       "tags": [
@@ -6734,7 +6735,7 @@
           {
             "dtype": 2,
             "elems": 300,
-            "name": "row_lut",
+            "name": "k",
             "shape": [
               1,
               10,
@@ -6745,7 +6746,7 @@
           {
             "dtype": 2,
             "elems": 10,
-            "name": "height_to_black",
+            "name": "f",
             "shape": [
               10
             ]
@@ -6753,7 +6754,7 @@
           {
             "dtype": 7,
             "elems": 8,
-            "name": "pad_to_full_thresholds",
+            "name": "j",
             "shape": [
               8
             ]
@@ -6761,7 +6762,7 @@
           {
             "dtype": 6,
             "elems": 4,
-            "name": "rank_targets",
+            "name": "e",
             "shape": [
               1,
               4,
@@ -6772,7 +6773,7 @@
           {
             "dtype": 2,
             "elems": 4,
-            "name": "zero_color_col",
+            "name": "i",
             "shape": [
               1,
               4,
@@ -6783,7 +6784,7 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "slice_starts",
+            "name": "a",
             "shape": [
               3
             ]
@@ -6791,7 +6792,7 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "slice_ends",
+            "name": "b",
             "shape": [
               3
             ]
@@ -6799,7 +6800,7 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "slice_axes",
+            "name": "c",
             "shape": [
               3
             ]
@@ -6807,20 +6808,18 @@
         ],
         "total_elems": 340
       },
-      "memory": 750,
-      "method": "ext:franksunp7166_65",
-      "node_count": 21,
+      "memory": 730,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 19,
       "op_sequence": [
         "Slice",
         "ReduceSum",
         "Cast",
         "Cast",
         "Unsqueeze",
-        "Unsqueeze",
         "Greater",
         "Cast",
         "ReduceSum",
-        "Unsqueeze",
         "Equal",
         "Where",
         "Gather",
@@ -6844,7 +6843,7 @@
         "ReduceSum": 2,
         "Slice": 1,
         "Split": 2,
-        "Unsqueeze": 4,
+        "Unsqueeze": 2,
         "Where": 1
       },
       "opset": [
@@ -6854,7 +6853,7 @@
         }
       ],
       "params": 340,
-      "points": 18.00606702477681,
+      "points": 18.024586072544047,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
@@ -7346,15 +7345,15 @@
         "dtype_elem_counts": {
           "1": 2,
           "2": 12,
-          "6": 56,
-          "7": 9,
+          "6": 72,
+          "7": 12,
           "9": 10
         },
         "largest": [
           {
             "dtype": 6,
             "elems": 18,
-            "name": "idx18_i32",
+            "name": "idxc",
             "shape": [
               18
             ]
@@ -7362,29 +7361,37 @@
           {
             "dtype": 6,
             "elems": 18,
-            "name": "row_out18_i32",
+            "name": "idxC",
             "shape": [
               1,
               1,
-              18,
+              1,
+              18
+            ]
+          },
+          {
+            "dtype": 6,
+            "elems": 17,
+            "name": "idxr",
+            "shape": [
+              17
+            ]
+          },
+          {
+            "dtype": 6,
+            "elems": 17,
+            "name": "idxR",
+            "shape": [
+              1,
+              1,
+              17,
               1
-            ]
-          },
-          {
-            "dtype": 6,
-            "elems": 18,
-            "name": "col_out18_i32",
-            "shape": [
-              1,
-              1,
-              1,
-              18
             ]
           },
           {
             "dtype": 9,
             "elems": 10,
-            "name": "channel0_b",
+            "name": "ch0_b",
             "shape": [
               1,
               10,
@@ -7395,7 +7402,7 @@
           {
             "dtype": 2,
             "elems": 10,
-            "name": "channel_idx_u8",
+            "name": "chidx",
             "shape": [
               1,
               10,
@@ -7406,39 +7413,25 @@
           {
             "dtype": 7,
             "elems": 8,
-            "name": "pad_to_30_i64",
+            "name": "pads",
             "shape": [
               8
             ]
           },
           {
-            "dtype": 1,
-            "elems": 1,
-            "name": "one_f",
+            "dtype": 7,
+            "elems": 2,
+            "name": "ax23",
             "shape": [
-              1,
-              1,
-              1,
-              1
-            ]
-          },
-          {
-            "dtype": 1,
-            "elems": 1,
-            "name": "penalty_f",
-            "shape": [
-              1,
-              1,
-              1,
-              1
+              2
             ]
           }
         ],
-        "total_elems": 89
+        "total_elems": 108
       },
-      "memory": 7989,
-      "method": "ext:franksunp7166_65",
-      "node_count": 39,
+      "memory": 7878,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 38,
       "op_sequence": [
         "ReduceSum",
         "Less",
@@ -7446,7 +7439,6 @@
         "Where",
         "ArgMin",
         "Cast",
-        "Cast",
         "Reshape",
         "Gather",
         "Cast",
@@ -7464,17 +7456,17 @@
         "Add",
         "Sub",
         "Add",
+        "Reshape",
+        "Reshape",
+        "Add",
+        "Add",
+        "Min",
+        "Min",
+        "Gather",
+        "Gather",
         "Less",
         "Less",
         "And",
-        "Reshape",
-        "Reshape",
-        "Add",
-        "Add",
-        "Min",
-        "Min",
-        "Gather",
-        "Gather",
         "Where",
         "Where",
         "Pad",
@@ -7485,7 +7477,7 @@
         "And": 1,
         "ArgMax": 4,
         "ArgMin": 1,
-        "Cast": 7,
+        "Cast": 6,
         "Equal": 1,
         "Gather": 3,
         "Less": 3,
@@ -7501,11 +7493,11 @@
       "opset": [
         {
           "domain": "",
-          "version": 12
+          "version": 17
         }
       ],
-      "params": 89,
-      "points": 16.003100403876644,
+      "params": 108,
+      "points": 16.014554712376835,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -7982,9 +7974,8 @@
     {
       "initializer_summary": {
         "dtype_elem_counts": {
-          "1": 1,
-          "10": 4,
-          "2": 24,
+          "1": 2,
+          "2": 34,
           "6": 36,
           "7": 17
         },
@@ -8042,22 +8033,22 @@
             ]
           },
           {
+            "dtype": 2,
+            "elems": 9,
+            "name": "diag_weight_38_q019_u8",
+            "shape": [
+              1,
+              1,
+              3,
+              3
+            ]
+          },
+          {
             "dtype": 7,
             "elems": 8,
             "name": "value_pad_pads_47",
             "shape": [
               8
-            ]
-          },
-          {
-            "dtype": 10,
-            "elems": 4,
-            "name": "diag_weight_38",
-            "shape": [
-              1,
-              1,
-              2,
-              2
             ]
           },
           {
@@ -8069,10 +8060,10 @@
             ]
           }
         ],
-        "total_elems": 82
+        "total_elems": 89
       },
-      "memory": 2997,
-      "method": "ext:franksunp7166_65",
+      "memory": 2709,
+      "method": "teacher:urad7174_remaining_public_probe",
       "node_count": 32,
       "op_sequence": [
         "Slice",
@@ -8093,15 +8084,15 @@
         "And",
         "Equal",
         "ReduceSum",
-        "Cast",
+        "Greater",
         "Where",
         "ReduceMax",
         "Gather",
         "Gather",
         "And",
         "Cast",
-        "Conv",
-        "Cast",
+        "QLinearConv",
+        "Greater",
         "Where",
         "Where",
         "Where",
@@ -8111,13 +8102,14 @@
       "ops": {
         "Add": 2,
         "And": 2,
-        "Cast": 5,
-        "Conv": 1,
+        "Cast": 3,
         "Equal": 2,
         "Gather": 2,
+        "Greater": 2,
         "Less": 2,
         "Mod": 2,
         "Pad": 1,
+        "QLinearConv": 1,
         "ReduceMax": 2,
         "ReduceSum": 3,
         "Sign": 1,
@@ -8131,12 +8123,13 @@
           "version": 12
         }
       ],
-      "params": 82,
-      "points": 16.9676398520755,
+      "params": 89,
+      "points": 17.063339844774575,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
-        "local_stencil"
+        "local_stencil",
+        "qlinear"
       ],
       "task": 19,
       "tasklog_exists": false
@@ -11178,9 +11171,9 @@
         ],
         "total_elems": 68
       },
-      "memory": 11620,
-      "method": "ext:franksunp7166_68",
-      "node_count": 133,
+      "memory": 11420,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 132,
       "op_sequence": [
         "Slice",
         "Cast",
@@ -11264,7 +11257,7 @@
         "Clip"
       ],
       "ops": {
-        "Add": 10,
+        "Add": 8,
         "And": 7,
         "ArgMax": 8,
         "Cast": 16,
@@ -11283,6 +11276,7 @@
         "Slice": 1,
         "Squeeze": 2,
         "Sub": 21,
+        "Sum": 1,
         "Unsqueeze": 3
       },
       "opset": [
@@ -11292,7 +11286,7 @@
         }
       ],
       "params": 68,
-      "points": 15.633682046569465,
+      "points": 15.650941708711995,
       "source_class": "exact_preserve",
       "source_has_build": true,
       "tags": [
@@ -14129,9 +14123,9 @@
         ],
         "total_elems": 652
       },
-      "memory": 19113,
-      "method": "ext:franksunp7166_68",
-      "node_count": 301,
+      "memory": 17763,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 234,
       "op_sequence": [
         "Slice",
         "Cast",
@@ -14183,27 +14177,18 @@
         "Where",
         "ReduceMin",
         "Where",
-        "ReduceMin",
+        "ReduceMax",
         "Where",
         "ReduceMax",
         "Where",
         "ReduceMin",
         "Where",
         "ReduceMax",
-        "Where",
-        "ReduceMin",
-        "Equal",
-        "Equal",
         "Greater",
-        "Less",
-        "And",
-        "Or",
-        "And",
         "Min",
         "Max",
         "Add",
         "Sub",
-        "Where",
         "Where",
         "Cast",
         "Unsqueeze",
@@ -14212,35 +14197,44 @@
         "Squeeze",
         "Cast",
         "Unsqueeze",
-        "Add"
+        "Add",
+        "GatherElements",
+        "Squeeze",
+        "Cast",
+        "Cast",
+        "Cast",
+        "Cast",
+        "CumSum",
+        "Slice",
+        "Pad"
       ],
       "ops": {
-        "Add": 9,
-        "And": 74,
+        "Add": 8,
+        "And": 51,
         "ArgMax": 4,
-        "Cast": 24,
+        "Cast": 14,
         "Concat": 2,
         "CumSum": 2,
-        "Equal": 26,
-        "GatherElements": 8,
-        "Greater": 21,
-        "Less": 11,
+        "Einsum": 1,
+        "Equal": 17,
+        "GatherElements": 5,
+        "Greater": 18,
+        "Less": 10,
         "LessOrEqual": 1,
-        "MatMul": 1,
         "Max": 2,
         "Min": 2,
         "Mul": 2,
-        "Not": 2,
-        "Or": 27,
+        "Not": 1,
+        "Or": 24,
         "Pad": 4,
-        "ReduceMax": 14,
-        "ReduceMin": 5,
+        "ReduceMax": 13,
+        "ReduceMin": 3,
         "Slice": 10,
-        "Squeeze": 10,
-        "Sub": 14,
-        "Transpose": 3,
-        "Unsqueeze": 5,
-        "Where": 18
+        "Squeeze": 9,
+        "Sub": 9,
+        "Transpose": 2,
+        "Unsqueeze": 4,
+        "Where": 16
       },
       "opset": [
         {
@@ -14249,14 +14243,13 @@
         }
       ],
       "params": 652,
-      "points": 15.108332024269215,
+      "points": 15.179079171120835,
       "source_class": "exact_preserve",
       "source_has_build": true,
       "tags": [
         "exact_preserve",
         "heuristic",
         "high_memory",
-        "matmul",
         "scan"
       ],
       "task": 66,
@@ -15111,61 +15104,21 @@
         "dtype_elem_counts": {
           "1": 10,
           "2": 10,
-          "7": 1793
+          "7": 30
         },
         "largest": [
           {
             "dtype": 7,
-            "elems": 900,
-            "name": "cell_reps",
+            "elems": 30,
+            "name": "midx",
             "shape": [
-              1,
-              30,
               30
-            ]
-          },
-          {
-            "dtype": 7,
-            "elems": 704,
-            "name": "orbit_idx_8",
-            "shape": [
-              88,
-              8
-            ]
-          },
-          {
-            "dtype": 7,
-            "elems": 168,
-            "name": "orbit_idx_4",
-            "shape": [
-              42,
-              4
-            ]
-          },
-          {
-            "dtype": 7,
-            "elems": 18,
-            "name": "orbit_idx_6",
-            "shape": [
-              3,
-              6
-            ]
-          },
-          {
-            "dtype": 2,
-            "elems": 10,
-            "name": "channel_ids",
-            "shape": [
-              1,
-              10,
-              1,
-              1
             ]
           },
           {
             "dtype": 1,
             "elems": 10,
-            "name": "color_weights",
+            "name": "W",
             "shape": [
               1,
               10,
@@ -15174,51 +15127,48 @@
             ]
           },
           {
-            "dtype": 7,
-            "elems": 3,
-            "name": "orbit_idx_1",
+            "dtype": 2,
+            "elems": 10,
+            "name": "chan",
             "shape": [
-              3
+              1,
+              10,
+              1,
+              1
             ]
           }
         ],
-        "total_elems": 1813
+        "total_elems": 50
       },
-      "memory": 7462,
-      "method": "ext:franksunp7166_65",
-      "node_count": 13,
+      "memory": 9000,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 8,
       "op_sequence": [
         "Conv",
         "Cast",
-        "Flatten",
+        "Transpose",
         "Gather",
+        "Max",
         "Gather",
-        "ReduceMax",
-        "Gather",
-        "ReduceMax",
-        "Gather",
-        "ReduceMax",
-        "Concat",
-        "Gather",
+        "Max",
         "Equal"
       ],
       "ops": {
         "Cast": 1,
-        "Concat": 1,
         "Conv": 1,
         "Equal": 1,
-        "Flatten": 1,
-        "Gather": 5,
-        "ReduceMax": 3
+        "Gather": 2,
+        "Max": 2,
+        "Transpose": 1
       },
       "opset": [
         {
           "domain": "",
-          "version": 13
+          "version": 17
         }
       ],
-      "params": 1813,
-      "points": 15.864922112524365,
+      "params": 50,
+      "points": 15.889479963306028,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
@@ -15361,7 +15311,8 @@
           "10": 234,
           "2": 1,
           "6": 1,
-          "7": 53
+          "7": 69,
+          "9": 1
         },
         "largest": [
           {
@@ -15429,11 +15380,11 @@
             ]
           }
         ],
-        "total_elems": 289
+        "total_elems": 306
       },
-      "memory": 25375,
-      "method": "ext:franksunp7166_68",
-      "node_count": 144,
+      "memory": 23296,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 141,
       "op_sequence": [
         "Slice",
         "Cast",
@@ -15445,7 +15396,6 @@
         "Cast",
         "Slice",
         "Cast",
-        "Or",
         "Or",
         "Or",
         "Cast",
@@ -15471,7 +15421,6 @@
         "Mod",
         "Cast",
         "Cast",
-        "Or",
         "And",
         "Reshape",
         "Cast",
@@ -15514,13 +15463,15 @@
         "Sub",
         "Unsqueeze",
         "Unsqueeze",
-        "Unsqueeze"
+        "Unsqueeze",
+        "Unsqueeze",
+        "Concat"
       ],
       "ops": {
         "Add": 6,
         "And": 7,
         "ArgMax": 1,
-        "Cast": 26,
+        "Cast": 25,
         "Clip": 4,
         "Concat": 5,
         "Div": 3,
@@ -15530,7 +15481,7 @@
         "Mod": 3,
         "Mul": 2,
         "Not": 4,
-        "Or": 9,
+        "Or": 7,
         "Pad": 1,
         "ReduceMax": 1,
         "Reshape": 7,
@@ -15545,11 +15496,11 @@
       "opset": [
         {
           "domain": "",
-          "version": 12
+          "version": 13
         }
       ],
-      "params": 289,
-      "points": 14.847155489333758,
+      "params": 306,
+      "points": 14.930913266814306,
       "source_class": "exact_preserve",
       "source_has_build": true,
       "tags": [
@@ -23456,16 +23407,15 @@
       "initializer_summary": {
         "dtype_elem_counts": {
           "1": 90,
-          "10": 48,
           "2": 12,
-          "7": 29,
-          "9": 47
+          "6": 28,
+          "7": 21
         },
         "largest": [
           {
             "dtype": 1,
             "elems": 40,
-            "name": "rowcount_w",
+            "name": "rk",
             "shape": [
               1,
               10,
@@ -23476,7 +23426,7 @@
           {
             "dtype": 1,
             "elems": 40,
-            "name": "colcount_w",
+            "name": "ck",
             "shape": [
               1,
               10,
@@ -23485,53 +23435,17 @@
             ]
           },
           {
-            "dtype": 10,
-            "elems": 24,
-            "name": "arangeK_y",
-            "shape": [
-              1,
-              1,
-              24,
-              1
-            ]
-          },
-          {
-            "dtype": 9,
-            "elems": 24,
-            "name": "by_gt",
-            "shape": [
-              1,
-              1,
-              24,
-              1
-            ]
-          },
-          {
-            "dtype": 10,
+            "dtype": 6,
             "elems": 23,
-            "name": "arangeK_x",
+            "name": "rng",
             "shape": [
-              1,
-              1,
-              1,
-              23
-            ]
-          },
-          {
-            "dtype": 9,
-            "elems": 23,
-            "name": "bx_gt",
-            "shape": [
-              1,
-              1,
-              1,
               23
             ]
           },
           {
             "dtype": 1,
             "elems": 10,
-            "name": "decode_kernel",
+            "name": "decK",
             "shape": [
               1,
               10,
@@ -23542,77 +23456,99 @@
           {
             "dtype": 2,
             "elems": 10,
-            "name": "levels_u8",
+            "name": "crange",
             "shape": [
               1,
               10,
               1,
               1
             ]
+          },
+          {
+            "dtype": 7,
+            "elems": 8,
+            "name": "pad1",
+            "shape": [
+              8
+            ]
+          },
+          {
+            "dtype": 7,
+            "elems": 8,
+            "name": "padSZ",
+            "shape": [
+              8
+            ]
+          },
+          {
+            "dtype": 7,
+            "elems": 3,
+            "name": "un013",
+            "shape": [
+              3
+            ]
           }
         ],
-        "total_elems": 226
+        "total_elems": 151
       },
-      "memory": 14106,
-      "method": "ext:franksunp7166_65",
-      "node_count": 58,
+      "memory": 13812,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 56,
       "op_sequence": [
         "Conv",
         "Cast",
-        "Conv",
-        "Conv",
-        "ArgMax",
-        "Cast",
-        "ArgMax",
-        "Cast",
-        "ArgMax",
-        "Cast",
-        "ArgMax",
-        "Cast",
-        "Sub",
-        "Sub",
-        "Add",
-        "LessOrEqual",
-        "Where",
-        "Reshape",
-        "Cast",
-        "Add",
-        "LessOrEqual",
-        "Where",
-        "Reshape",
-        "Cast",
         "Pad",
-        "Gather",
-        "Gather",
-        "Less",
-        "And",
-        "Less",
-        "And",
-        "And",
-        "Where",
-        "ReduceMax",
-        "Slice",
-        "Slice",
+        "Conv",
+        "Conv",
+        "ArgMax",
+        "ArgMax",
+        "ArgMax",
+        "ArgMax",
         "Cast",
-        "Reshape",
+        "Squeeze",
+        "Cast",
+        "Squeeze",
+        "Cast",
+        "Squeeze",
+        "Cast",
+        "Squeeze",
+        "Add",
+        "LessOrEqual",
+        "Where",
+        "Add",
+        "LessOrEqual",
+        "Where",
         "Gather",
+        "Gather",
+        "Sub",
+        "Sub",
+        "Greater",
+        "Less",
+        "Less",
+        "And",
+        "And",
+        "Unsqueeze",
+        "And",
         "Where",
         "ReduceMax",
+        "Gather",
+        "Gather",
+        "Gather",
+        "Gather",
+        "Gather",
         "Equal",
         "Equal",
         "Equal",
         "Or",
         "Or",
-        "Not",
-        "MaxPool",
-        "MaxPool",
+        "Transpose",
+        "Where",
         "MaxPool",
         "MaxPool",
         "Where",
+        "Transpose",
         "Where",
-        "Or",
         "Where",
-        "Max",
         "Pad",
         "Equal"
       ],
@@ -23620,21 +23556,21 @@
         "Add": 2,
         "And": 3,
         "ArgMax": 4,
-        "Cast": 8,
+        "Cast": 5,
         "Conv": 3,
         "Equal": 4,
-        "Gather": 3,
+        "Gather": 7,
+        "Greater": 1,
         "Less": 2,
         "LessOrEqual": 2,
-        "Max": 1,
-        "MaxPool": 4,
-        "Not": 1,
-        "Or": 3,
+        "MaxPool": 2,
+        "Or": 2,
         "Pad": 2,
-        "ReduceMax": 2,
-        "Reshape": 3,
-        "Slice": 2,
+        "ReduceMax": 1,
+        "Squeeze": 4,
         "Sub": 2,
+        "Transpose": 2,
+        "Unsqueeze": 1,
         "Where": 7
       },
       "opset": [
@@ -23643,8 +23579,8 @@
           "version": 17
         }
       ],
-      "params": 226,
-      "points": 15.429749921575155,
+      "params": 151,
+      "points": 15.455833747057806,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -26730,8 +26666,9 @@
     {
       "initializer_summary": {
         "dtype_elem_counts": {
-          "1": 1,
-          "10": 260,
+          "1": 2,
+          "10": 231,
+          "2": 30,
           "7": 51
         },
         "largest": [
@@ -26747,9 +26684,9 @@
             ]
           },
           {
-            "dtype": 10,
+            "dtype": 2,
             "elems": 28,
-            "name": "kite_template",
+            "name": "kite_template_q165_u8",
             "shape": [
               1,
               1,
@@ -26818,17 +26755,17 @@
             ]
           }
         ],
-        "total_elems": 312
+        "total_elems": 314
       },
-      "memory": 6144,
-      "method": "ext:franksunp7166_65",
+      "memory": 5836,
+      "method": "teacher:urad7174_remaining_public_probe",
       "node_count": 26,
       "op_sequence": [
         "Slice",
         "Equal",
         "Slice",
         "Cast",
-        "Conv",
+        "QLinearConv",
         "Greater",
         "Cast",
         "ConvTranspose",
@@ -26857,7 +26794,6 @@
         "ArgMax": 2,
         "Cast": 5,
         "Concat": 2,
-        "Conv": 1,
         "ConvTranspose": 1,
         "Equal": 1,
         "Flatten": 1,
@@ -26865,6 +26801,7 @@
         "GatherND": 1,
         "Greater": 1,
         "Pad": 1,
+        "QLinearConv": 1,
         "ReduceMax": 2,
         "Slice": 2,
         "Where": 1
@@ -26875,8 +26812,8 @@
           "version": 17
         }
       ],
-      "params": 312,
-      "points": 16.227234790050215,
+      "params": 314,
+      "points": 16.275792639199437,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -26884,7 +26821,8 @@
         "documented_wall",
         "local_stencil",
         "onehot_final_equal",
-        "open_angle"
+        "open_angle",
+        "qlinear"
       ],
       "task": 165,
       "tasklog_exists": true
@@ -29604,7 +29542,7 @@
       "initializer_summary": {
         "dtype_elem_counts": {
           "1": 1,
-          "2": 11,
+          "2": 10,
           "7": 48
         },
         "largest": [
@@ -29676,11 +29614,11 @@
             ]
           }
         ],
-        "total_elems": 60
+        "total_elems": 59
       },
-      "memory": 1146,
-      "method": "ext:franksunp7166_65",
-      "node_count": 71,
+      "memory": 1128,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 53,
       "op_sequence": [
         "Slice",
         "Cast",
@@ -29716,26 +29654,8 @@
         "Equal",
         "Equal",
         "Equal",
-        "Equal",
         "And",
         "And",
-        "And",
-        "Equal",
-        "Equal",
-        "Equal",
-        "Equal",
-        "And",
-        "And",
-        "And",
-        "And",
-        "Equal",
-        "Equal",
-        "Not",
-        "And",
-        "Greater",
-        "Or",
-        "And",
-        "Not",
         "And",
         "Or",
         "Not",
@@ -29755,13 +29675,12 @@
         "Pad"
       ],
       "ops": {
-        "And": 18,
+        "And": 11,
         "Cast": 9,
         "Concat": 2,
-        "Equal": 10,
-        "Greater": 1,
-        "Not": 6,
-        "Or": 8,
+        "Equal": 3,
+        "Not": 4,
+        "Or": 7,
         "Pad": 1,
         "QLinearConv": 1,
         "ReduceMax": 4,
@@ -29775,12 +29694,13 @@
           "version": 13
         }
       ],
-      "params": 60,
-      "points": 17.90493562271287,
+      "params": 59,
+      "points": 17.92081560539033,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
         "documented_wall",
+        "local_stencil",
         "open_angle",
         "qlinear"
       ],
@@ -30714,13 +30634,13 @@
           "1": 11,
           "2": 1,
           "3": 10,
-          "7": 14
+          "7": 16
         },
         "largest": [
           {
             "dtype": 1,
             "elems": 10,
-            "name": "green_pixel",
+            "name": "c3",
             "shape": [
               1,
               10,
@@ -30731,7 +30651,7 @@
           {
             "dtype": 3,
             "elems": 9,
-            "name": "seed_kernel",
+            "name": "seedw",
             "shape": [
               1,
               1,
@@ -30741,8 +30661,16 @@
           },
           {
             "dtype": 7,
+            "elems": 8,
+            "name": "padg",
+            "shape": [
+              8
+            ]
+          },
+          {
+            "dtype": 7,
             "elems": 4,
-            "name": "blue_starts",
+            "name": "bstart",
             "shape": [
               4
             ]
@@ -30750,45 +30678,35 @@
           {
             "dtype": 7,
             "elems": 4,
-            "name": "blue_ends",
+            "name": "bend",
             "shape": [
               4
-            ]
-          },
-          {
-            "dtype": 7,
-            "elems": 4,
-            "name": "pad_green_spatial",
-            "shape": [
-              4
-            ]
-          },
-          {
-            "dtype": 7,
-            "elems": 2,
-            "name": "pad_spatial_axes",
-            "shape": [
-              2
             ]
           },
           {
             "dtype": 1,
             "elems": 1,
-            "name": "q_scale",
+            "name": "qs",
             "shape": []
           },
           {
             "dtype": 2,
             "elems": 1,
-            "name": "zero_u8",
+            "name": "zu8",
+            "shape": []
+          },
+          {
+            "dtype": 3,
+            "elems": 1,
+            "name": "wz",
             "shape": []
           }
         ],
-        "total_elems": 36
+        "total_elems": 38
       },
-      "memory": 4725,
-      "method": "ext:franksunp7166_65",
-      "node_count": 16,
+      "memory": 4500,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 15,
       "op_sequence": [
         "Slice",
         "Cast",
@@ -30802,7 +30720,6 @@
         "MaxPool",
         "Min",
         "MaxPool",
-        "Min",
         "Less",
         "Pad",
         "Where"
@@ -30811,7 +30728,7 @@
         "Cast": 1,
         "Less": 1,
         "MaxPool": 5,
-        "Min": 5,
+        "Min": 4,
         "Pad": 1,
         "QLinearConv": 1,
         "Slice": 1,
@@ -30820,11 +30737,11 @@
       "opset": [
         {
           "domain": "",
-          "version": 18
+          "version": 17
         }
       ],
-      "params": 36,
-      "points": 16.53178699080548,
+      "params": 38,
+      "points": 16.579758334660212,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -31459,7 +31376,7 @@
     {
       "initializer_summary": {
         "dtype_elem_counts": {
-          "1": 180,
+          "1": 20,
           "2": 14,
           "6": 20,
           "7": 68,
@@ -31468,12 +31385,12 @@
         "largest": [
           {
             "dtype": 1,
-            "elems": 180,
+            "elems": 20,
             "name": "conv_weights",
             "shape": [
               1,
               10,
-              18,
+              2,
               1
             ]
           },
@@ -31540,10 +31457,10 @@
             ]
           }
         ],
-        "total_elems": 298
+        "total_elems": 138
       },
       "memory": 4476,
-      "method": "ext:franksunp7166_65",
+      "method": "teacher:urad7174_remaining_public_probe",
       "node_count": 59,
       "op_sequence": [
         "Conv",
@@ -31632,8 +31549,8 @@
           "version": 13
         }
       ],
-      "params": 298,
-      "points": 16.529060193101223,
+      "params": 138,
+      "points": 16.5631495612663,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -33217,7 +33134,8 @@
     {
       "initializer_summary": {
         "dtype_elem_counts": {
-          "1": 21,
+          "1": 20,
+          "10": 1,
           "2": 10,
           "7": 17,
           "9": 1
@@ -33267,14 +33185,6 @@
             ]
           },
           {
-            "dtype": 1,
-            "elems": 1,
-            "name": "two_half_f",
-            "shape": [
-              1
-            ]
-          },
-          {
             "dtype": 9,
             "elems": 1,
             "name": "false_1x1",
@@ -33291,13 +33201,21 @@
               1,
               1
             ]
+          },
+          {
+            "dtype": 7,
+            "elems": 1,
+            "name": "axis1",
+            "shape": [
+              1
+            ]
           }
         ],
         "total_elems": 49
       },
-      "memory": 1869,
-      "method": "ext:franksunp7166_65",
-      "node_count": 76,
+      "memory": 1838,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 69,
       "op_sequence": [
         "Einsum",
         "Einsum",
@@ -33313,19 +33231,16 @@
         "Slice",
         "Cast",
         "ReduceSum",
-        "Cast",
         "Greater",
         "Slice",
         "Slice",
         "Cast",
         "ReduceSum",
-        "Cast",
         "Greater",
         "Slice",
         "Slice",
         "Cast",
         "ReduceSum",
-        "Cast",
         "Greater",
         "Or",
         "Or",
@@ -33345,21 +33260,17 @@
         "Slice",
         "Cast",
         "ReduceSum",
-        "Cast",
         "Greater",
         "Slice",
         "Slice",
         "Cast",
         "ReduceSum",
-        "Cast",
         "Greater",
         "Slice",
         "Slice",
         "Cast",
         "ReduceSum",
-        "Cast",
         "Greater",
-        "And",
         "Or",
         "Or",
         "And",
@@ -33377,8 +33288,8 @@
         "Pad"
       ],
       "ops": {
-        "And": 7,
-        "Cast": 16,
+        "And": 6,
+        "Cast": 10,
         "Div": 2,
         "Einsum": 4,
         "Equal": 2,
@@ -33398,7 +33309,7 @@
         }
       ],
       "params": 49,
-      "points": 17.440961744556617,
+      "points": 17.457256454631448,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
@@ -33985,10 +33896,11 @@
     {
       "initializer_summary": {
         "dtype_elem_counts": {
-          "1": 69,
+          "1": 68,
           "10": 8,
           "2": 10,
-          "7": 17
+          "7": 17,
+          "9": 1
         },
         "largest": [
           {
@@ -34054,7 +33966,7 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "row_start_axes",
+            "name": "row_start_6_axes13",
             "shape": [
               3
             ]
@@ -34062,7 +33974,7 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "col_start_axes",
+            "name": "col_start_12_axes13",
             "shape": [
               3
             ]
@@ -34070,22 +33982,20 @@
         ],
         "total_elems": 104
       },
-      "memory": 572,
-      "method": "ext:franksunp7166_65",
-      "node_count": 24,
+      "memory": 558,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 22,
       "op_sequence": [
         "Conv",
         "Cast",
         "Conv",
         "Conv",
-        "Equal",
-        "Not",
+        "Cast",
         "Squeeze",
         "Where",
         "TopK",
         "Cast",
-        "Equal",
-        "Not",
+        "Cast",
         "Squeeze",
         "Where",
         "TopK",
@@ -34101,11 +34011,10 @@
       ],
       "ops": {
         "And": 1,
-        "Cast": 3,
+        "Cast": 5,
         "Conv": 3,
-        "Equal": 3,
+        "Equal": 1,
         "Gather": 2,
-        "Not": 2,
         "Pad": 1,
         "Squeeze": 2,
         "TopK": 2,
@@ -34119,7 +34028,7 @@
         }
       ],
       "params": 104,
-      "points": 18.483806923957037,
+      "points": 18.50473444406299,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -38065,7 +37974,7 @@
           {
             "dtype": 2,
             "elems": 144,
-            "name": "bmask",
+            "name": "frame",
             "shape": [
               1,
               1,
@@ -38084,7 +37993,7 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "ax3",
+            "name": "s0",
             "shape": [
               3
             ]
@@ -38092,7 +38001,7 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "rst",
+            "name": "e0",
             "shape": [
               3
             ]
@@ -38100,7 +38009,7 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "ren",
+            "name": "s2",
             "shape": [
               3
             ]
@@ -38108,7 +38017,7 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "bst",
+            "name": "e2",
             "shape": [
               3
             ]
@@ -38116,7 +38025,7 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "ben",
+            "name": "ax",
             "shape": [
               3
             ]
@@ -38132,9 +38041,9 @@
         ],
         "total_elems": 168
       },
-      "memory": 5472,
-      "method": "ext:franksunp7166_65",
-      "node_count": 31,
+      "memory": 4752,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 26,
       "op_sequence": [
         "Slice",
         "Slice",
@@ -38157,25 +38066,20 @@
         "MaxPool",
         "Mul",
         "MaxPool",
-        "Mul",
         "Sub",
         "Mul",
-        "Sub",
         "Mul",
-        "Cast",
-        "Cast",
-        "Cast",
         "Concat",
         "Pad"
       ],
       "ops": {
-        "Cast": 5,
+        "Cast": 2,
         "Concat": 1,
         "MaxPool": 8,
-        "Mul": 11,
+        "Mul": 10,
         "Pad": 1,
         "Slice": 2,
-        "Sub": 3
+        "Sub": 2
       },
       "opset": [
         {
@@ -38184,7 +38088,7 @@
         }
       ],
       "params": 168,
-      "points": 16.362360655507896,
+      "points": 16.498936190513646,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -38487,9 +38391,10 @@
       "initializer_summary": {
         "dtype_elem_counts": {
           "1": 75,
-          "10": 12,
+          "10": 7,
+          "2": 12,
           "7": 18,
-          "9": 210
+          "9": 150
         },
         "largest": [
           {
@@ -38561,7 +38466,7 @@
           {
             "dtype": 9,
             "elems": 30,
-            "name": "pos1",
+            "name": "pos29",
             "shape": [
               1,
               1,
@@ -38570,22 +38475,22 @@
             ]
           },
           {
-            "dtype": 9,
-            "elems": 30,
-            "name": "pos28",
+            "dtype": 1,
+            "elems": 10,
+            "name": "channel3",
             "shape": [
               1,
+              10,
               1,
-              1,
-              30
+              1
             ]
           }
         ],
-        "total_elems": 315
+        "total_elems": 262
       },
-      "memory": 24746,
-      "method": "ext:franksunp7166_68",
-      "node_count": 173,
+      "memory": 23123,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 148,
       "op_sequence": [
         "Slice",
         "ReduceSum",
@@ -38598,21 +38503,21 @@
         "Sub",
         "Equal",
         "Cast",
-        "Conv",
+        "QLinearConv",
         "Equal",
         "Cast",
         "ConvTranspose",
         "Greater",
-        "Conv",
+        "QLinearConv",
         "Equal",
         "And",
         "Cast",
-        "Conv",
+        "QLinearConv",
         "Equal",
         "Cast",
         "ConvTranspose",
         "Greater",
-        "Conv",
+        "QLinearConv",
         "Equal",
         "And",
         "And",
@@ -38638,21 +38543,21 @@
         "Equal",
         "Reshape",
         "Cast",
-        "Conv",
+        "QLinearConv",
         "Equal",
         "Cast",
         "ConvTranspose",
         "Greater",
-        "Conv",
+        "QLinearConv",
         "Equal",
         "And",
         "Cast",
-        "Conv",
+        "QLinearConv",
         "Equal",
         "Cast",
         "ConvTranspose",
         "Greater",
-        "Conv",
+        "QLinearConv",
         "Equal",
         "And",
         "Reshape",
@@ -38663,28 +38568,28 @@
         "Cast",
         "Mul",
         "ReduceMax",
-        "ReduceMax",
-        "Greater",
         "Less",
-        "Cast"
+        "Cast",
+        "Sub",
+        "GreaterOrEqual"
       ],
       "ops": {
-        "And": 32,
+        "And": 21,
         "Cast": 18,
-        "Conv": 12,
         "ConvTranspose": 4,
         "Equal": 20,
-        "Greater": 5,
+        "Greater": 4,
         "GreaterOrEqual": 4,
         "Less": 2,
         "MatMul": 4,
         "Mul": 2,
-        "Not": 6,
-        "Or": 17,
-        "ReduceMax": 3,
+        "Not": 2,
+        "Or": 13,
+        "QLinearConv": 12,
+        "ReduceMax": 2,
         "ReduceSum": 5,
         "Reshape": 13,
-        "Slice": 18,
+        "Slice": 14,
         "Sub": 7,
         "Where": 1
       },
@@ -38694,8 +38599,8 @@
           "version": 12
         }
       ],
-      "params": 315,
-      "points": 14.870931868116244,
+      "params": 262,
+      "points": 14.940149929840013,
       "source_class": "exact_preserve",
       "source_has_build": true,
       "tags": [
@@ -38707,7 +38612,8 @@
         "high_memory",
         "low_score",
         "matmul",
-        "open_angle"
+        "open_angle",
+        "qlinear"
       ],
       "task": 255,
       "tasklog_exists": true
@@ -42661,8 +42567,9 @@
     {
       "initializer_summary": {
         "dtype_elem_counts": {
+          "1": 1,
           "12": 29,
-          "2": 12,
+          "2": 13,
           "6": 26,
           "7": 47,
           "9": 625
@@ -42745,18 +42652,17 @@
             ]
           }
         ],
-        "total_elems": 739
+        "total_elems": 741
       },
-      "memory": 51276,
-      "method": "ext:franksunp7166_65",
-      "node_count": 3038,
+      "memory": 46272,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 3036,
       "op_sequence": [
         "Cast",
         "Slice",
         "ReduceMax",
         "Cast",
-        "ArgMax",
-        "Cast",
+        "QLinearConv",
         "Gather",
         "Gather",
         "Equal",
@@ -42830,19 +42736,20 @@
         "BitShift",
         "BitwiseAnd",
         "BitwiseOr",
-        "BitShift"
+        "BitShift",
+        "BitwiseAnd"
       ],
       "ops": {
         "And": 2,
-        "ArgMax": 1,
         "BitShift": 926,
-        "BitwiseAnd": 1068,
+        "BitwiseAnd": 1067,
         "BitwiseOr": 965,
-        "Cast": 5,
+        "Cast": 4,
         "Concat": 1,
         "Equal": 4,
         "Gather": 50,
         "Pad": 1,
+        "QLinearConv": 1,
         "ReduceMax": 3,
         "ReduceSum": 2,
         "Reshape": 1,
@@ -42855,8 +42762,8 @@
           "version": 18
         }
       ],
-      "params": 739,
-      "points": 14.140712582495004,
+      "params": 741,
+      "points": 14.241820561808675,
       "source_class": "exact_preserve",
       "source_has_build": true,
       "tags": [
@@ -42867,7 +42774,8 @@
         "gather_heavy",
         "heuristic",
         "high_memory",
-        "low_score"
+        "low_score",
+        "qlinear"
       ],
       "task": 286,
       "tasklog_exists": true
@@ -50774,14 +50682,14 @@
       "initializer_summary": {
         "dtype_elem_counts": {
           "1": 1,
-          "2": 13,
+          "3": 12,
           "7": 2
         },
         "largest": [
           {
-            "dtype": 2,
+            "dtype": 3,
             "elems": 10,
-            "name": "color_ids",
+            "name": "chidx",
             "shape": [
               1,
               10,
@@ -50790,51 +50698,45 @@
             ]
           },
           {
-            "dtype": 2,
+            "dtype": 7,
             "elems": 1,
-            "name": "bad_color",
+            "name": "axW",
+            "shape": [
+              1
+            ]
+          },
+          {
+            "dtype": 7,
+            "elems": 1,
+            "name": "axH",
+            "shape": [
+              1
+            ]
+          },
+          {
+            "dtype": 3,
+            "elems": 1,
+            "name": "one8",
             "shape": []
           },
           {
             "dtype": 1,
             "elems": 1,
-            "name": "zerof",
+            "name": "zero_f",
             "shape": []
           },
           {
-            "dtype": 2,
+            "dtype": 3,
             "elems": 1,
-            "name": "big",
+            "name": "fifty8",
             "shape": []
-          },
-          {
-            "dtype": 2,
-            "elems": 1,
-            "name": "one_u8",
-            "shape": []
-          },
-          {
-            "dtype": 7,
-            "elems": 1,
-            "name": "axes3",
-            "shape": [
-              1
-            ]
-          },
-          {
-            "dtype": 7,
-            "elems": 1,
-            "name": "axes2",
-            "shape": [
-              1
-            ]
           }
         ],
-        "total_elems": 16
+        "total_elems": 15
       },
-      "memory": 5171,
-      "method": "ext:franksunp7166_65",
-      "node_count": 22,
+      "memory": 4452,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 28,
       "op_sequence": [
         "ReduceSum",
         "ReduceSum",
@@ -50844,31 +50746,38 @@
         "Cast",
         "ReduceMax",
         "ReduceMax",
-        "Greater",
-        "Greater",
         "ReduceSum",
         "ReduceSum",
-        "GreaterOrEqual",
+        "Greater",
+        "Not",
         "Cast",
         "Sub",
-        "Where",
-        "Where",
+        "Mul",
+        "Mul",
         "Greater",
-        "Where",
-        "Where",
-        "Where",
+        "Greater",
+        "Cast",
+        "Cast",
+        "Add",
+        "Mul",
+        "Sub",
+        "Add",
+        "Mul",
+        "Sub",
+        "Add",
         "Equal"
       ],
       "ops": {
+        "Add": 3,
         "ArgMax": 2,
-        "Cast": 3,
+        "Cast": 5,
         "Equal": 1,
         "Greater": 3,
-        "GreaterOrEqual": 1,
+        "Mul": 4,
+        "Not": 1,
         "ReduceMax": 2,
         "ReduceSum": 4,
-        "Sub": 1,
-        "Where": 5
+        "Sub": 3
       },
       "opset": [
         {
@@ -50876,8 +50785,8 @@
           "version": 17
         }
       ],
-      "params": 16,
-      "points": 16.4460892256486,
+      "params": 15,
+      "points": 16.595527678647883,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -51274,15 +51183,15 @@
     {
       "initializer_summary": {
         "dtype_elem_counts": {
-          "10": 11,
-          "2": 206,
-          "7": 66
+          "10": 1,
+          "2": 233,
+          "7": 64
         },
         "largest": [
           {
             "dtype": 2,
             "elems": 100,
-            "name": "train0_remove_mask",
+            "name": "rm0",
             "shape": [
               1,
               1,
@@ -51293,7 +51202,7 @@
           {
             "dtype": 2,
             "elems": 100,
-            "name": "train1_black_template",
+            "name": "rm1",
             "shape": [
               1,
               1,
@@ -51302,20 +51211,31 @@
             ]
           },
           {
-            "dtype": 10,
-            "elems": 9,
-            "name": "diamond_mask",
+            "dtype": 2,
+            "elems": 16,
+            "name": "kt0",
             "shape": [
               1,
               1,
-              3,
-              3
+              4,
+              4
+            ]
+          },
+          {
+            "dtype": 2,
+            "elems": 16,
+            "name": "kt1",
+            "shape": [
+              1,
+              1,
+              4,
+              4
             ]
           },
           {
             "dtype": 7,
             "elems": 8,
-            "name": "red_pads",
+            "name": "bpad",
             "shape": [
               8
             ]
@@ -51323,15 +51243,7 @@
           {
             "dtype": 7,
             "elems": 8,
-            "name": "corr1_pads",
-            "shape": [
-              8
-            ]
-          },
-          {
-            "dtype": 7,
-            "elems": 8,
-            "name": "output_pads",
+            "name": "outpad",
             "shape": [
               8
             ]
@@ -51339,7 +51251,7 @@
           {
             "dtype": 7,
             "elems": 4,
-            "name": "axes4",
+            "name": "ax",
             "shape": [
               4
             ]
@@ -51347,25 +51259,25 @@
           {
             "dtype": 7,
             "elems": 4,
-            "name": "black_starts",
+            "name": "s_black",
             "shape": [
               4
             ]
           }
         ],
-        "total_elems": 283
+        "total_elems": 298
       },
-      "memory": 4843,
-      "method": "ext:franksunp7166_65",
-      "node_count": 49,
+      "memory": 4339,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 47,
       "op_sequence": [
         "Slice",
         "Slice",
+        "Slice",
         "Cast",
         "Cast",
         "Cast",
         "Cast",
-        "ReduceSum",
         "ReduceMax",
         "ReduceMax",
         "ArgMax",
@@ -51376,70 +51288,68 @@
         "Add",
         "Pad",
         "Slice",
+        "Cast",
+        "ReduceSum",
         "Conv",
         "Equal",
         "Cast",
-        "ConvTranspose",
-        "Cast",
         "Slice",
-        "Mul",
-        "ReduceSum",
-        "Equal",
-        "Equal",
-        "And",
+        "Conv",
+        "Greater",
         "Cast",
-        "Mul",
-        "Sub",
         "Equal",
         "Cast",
         "ReduceMin",
-        "Slice",
+        "Equal",
+        "Cast",
         "ReduceMin",
+        "Equal",
+        "Cast",
+        "Equal",
         "Cast",
         "Mul",
         "Mul",
         "Mul",
-        "Pad",
+        "Mul",
+        "Add",
         "Sub",
         "Max",
         "Sub",
         "Sub",
-        "Sub",
-        "Max",
         "Concat",
         "Pad"
       ],
       "ops": {
-        "Add": 1,
-        "And": 1,
+        "Add": 2,
         "ArgMax": 2,
-        "Cast": 9,
+        "Cast": 11,
         "Concat": 2,
-        "Conv": 1,
-        "ConvTranspose": 1,
-        "Equal": 4,
-        "Max": 2,
-        "Mul": 5,
-        "Pad": 3,
+        "Conv": 2,
+        "Equal": 5,
+        "Greater": 1,
+        "Max": 1,
+        "Mul": 4,
+        "Pad": 2,
         "ReduceMax": 2,
         "ReduceMin": 2,
-        "ReduceSum": 2,
+        "ReduceSum": 1,
         "Reshape": 2,
         "Slice": 5,
-        "Sub": 5
+        "Sub": 3
       },
       "opset": [
         {
           "domain": "",
-          "version": 14
+          "version": 17
         }
       ],
-      "params": 283,
-      "points": 16.457919093075983,
+      "params": 298,
+      "points": 16.558177115608537,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
         "connectivity_wall",
+        "conv_heavy",
         "local_stencil",
         "open_angle",
         "template_match"
@@ -51452,7 +51362,7 @@
         "dtype_elem_counts": {
           "1": 9,
           "2": 79,
-          "7": 26
+          "7": 23
         },
         "largest": [
           {
@@ -51520,26 +51430,24 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "stB",
+            "name": "ax123",
             "shape": [
               3
             ]
           }
         ],
-        "total_elems": 114
+        "total_elems": 111
       },
-      "memory": 26860,
-      "method": "ext:franksunp7166_65",
-      "node_count": 34,
+      "memory": 24220,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 43,
       "op_sequence": [
         "Slice",
-        "Slice",
+        "Cast",
         "Conv",
         "Cast",
         "Gather",
         "Gather",
-        "Concat",
-        "Cast",
         "MaxPool",
         "Mul",
         "MaxPool",
@@ -51553,15 +51461,26 @@
         "MaxPool",
         "Mul",
         "MaxPool",
+        "MaxPool",
         "Mul",
-        "Slice",
-        "Slice",
+        "MaxPool",
+        "Mul",
+        "MaxPool",
+        "Mul",
+        "MaxPool",
+        "Mul",
+        "MaxPool",
+        "Mul",
+        "MaxPool",
+        "Mul",
+        "MaxPool",
         "Mul",
         "Equal",
         "Equal",
         "Where",
         "Where",
         "Mul",
+        "Slice",
         "Cast",
         "Add",
         "Pad",
@@ -51570,14 +51489,13 @@
       "ops": {
         "Add": 1,
         "Cast": 3,
-        "Concat": 1,
         "Conv": 1,
         "Equal": 3,
         "Gather": 2,
-        "MaxPool": 7,
-        "Mul": 9,
+        "MaxPool": 14,
+        "Mul": 14,
         "Pad": 1,
-        "Slice": 4,
+        "Slice": 2,
         "Where": 2
       },
       "opset": [
@@ -51586,8 +51504,8 @@
           "version": 17
         }
       ],
-      "params": 114,
-      "points": 14.797371281923198,
+      "params": 111,
+      "points": 14.90049346354632,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -51824,7 +51742,7 @@
           "1": 43,
           "10": 2,
           "2": 22,
-          "6": 108,
+          "6": 107,
           "7": 61,
           "9": 255
         },
@@ -51910,11 +51828,11 @@
             ]
           }
         ],
-        "total_elems": 491
+        "total_elems": 490
       },
-      "memory": 36955,
-      "method": "ext:franksunp7166_65",
-      "node_count": 669,
+      "memory": 35927,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 640,
       "op_sequence": [
         "Conv",
         "Cast",
@@ -51947,7 +51865,6 @@
         "Add",
         "Where",
         "Where",
-        "Clip",
         "Clip",
         "Gather",
         "Gather",
@@ -51995,14 +51912,15 @@
         "Reshape",
         "Cast",
         "TopK",
-        "ReduceMin"
+        "ReduceMin",
+        "Greater"
       ],
       "ops": {
         "Add": 15,
-        "And": 74,
+        "And": 60,
         "ArgMax": 12,
         "Cast": 54,
-        "Clip": 10,
+        "Clip": 9,
         "Concat": 10,
         "Conv": 1,
         "Div": 7,
@@ -52010,10 +51928,10 @@
         "Expand": 2,
         "Gather": 44,
         "GatherElements": 42,
-        "Greater": 46,
-        "Less": 32,
+        "Greater": 44,
+        "Less": 24,
         "Mul": 16,
-        "Not": 48,
+        "Not": 44,
         "Or": 13,
         "Pad": 1,
         "ReduceMax": 12,
@@ -52033,8 +51951,8 @@
           "version": 13
         }
       ],
-      "params": 491,
-      "points": 14.469344825837902,
+      "params": 490,
+      "points": 14.497209022434086,
       "source_class": "exact_preserve",
       "source_has_build": true,
       "tags": [
@@ -55904,14 +55822,14 @@
       "initializer_summary": {
         "dtype_elem_counts": {
           "1": 10,
-          "10": 99,
+          "10": 98,
           "7": 28
         },
         "largest": [
           {
             "dtype": 10,
             "elems": 16,
-            "name": "lker",
+            "name": "h",
             "shape": [
               1,
               1,
@@ -55922,7 +55840,7 @@
           {
             "dtype": 1,
             "elems": 10,
-            "name": "wenc",
+            "name": "a",
             "shape": [
               1,
               10,
@@ -55933,7 +55851,7 @@
           {
             "dtype": 10,
             "elems": 10,
-            "name": "iota10",
+            "name": "p",
             "shape": [
               1,
               10
@@ -55942,7 +55860,7 @@
           {
             "dtype": 10,
             "elems": 10,
-            "name": "bgm",
+            "name": "q",
             "shape": [
               1,
               10
@@ -55951,7 +55869,7 @@
           {
             "dtype": 10,
             "elems": 10,
-            "name": "dec",
+            "name": "y",
             "shape": [
               1,
               10,
@@ -55962,7 +55880,7 @@
           {
             "dtype": 10,
             "elems": 8,
-            "name": "whk",
+            "name": "k",
             "shape": [
               1,
               1,
@@ -55973,7 +55891,7 @@
           {
             "dtype": 10,
             "elems": 8,
-            "name": "wvk",
+            "name": "l",
             "shape": [
               1,
               1,
@@ -55984,7 +55902,7 @@
           {
             "dtype": 10,
             "elems": 8,
-            "name": "thr",
+            "name": "m",
             "shape": [
               1,
               8,
@@ -55993,11 +55911,11 @@
             ]
           }
         ],
-        "total_elems": 137
+        "total_elems": 136
       },
-      "memory": 13007,
-      "method": "ext:franksunp7166_65",
-      "node_count": 61,
+      "memory": 12557,
+      "method": "teacher:urad7174_remaining_public_probe",
+      "node_count": 59,
       "op_sequence": [
         "Conv",
         "Slice",
@@ -56008,8 +55926,6 @@
         "Equal",
         "Slice",
         "Equal",
-        "Greater",
-        "And",
         "And",
         "Where",
         "ReduceMax",
@@ -56063,13 +55979,12 @@
       ],
       "ops": {
         "Add": 4,
-        "And": 2,
+        "And": 1,
         "ArgMax": 3,
         "Cast": 8,
         "Concat": 2,
         "Conv": 4,
         "Equal": 6,
-        "Greater": 1,
         "GreaterOrEqual": 2,
         "GridSample": 1,
         "Less": 2,
@@ -56089,13 +56004,14 @@
           "version": 17
         }
       ],
-      "params": 137,
-      "points": 15.516279340282896,
+      "params": 136,
+      "points": 15.551194060611822,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
         "conv_heavy",
-        "high_memory"
+        "high_memory",
+        "local_stencil"
       ],
       "task": 396,
       "tasklog_exists": true

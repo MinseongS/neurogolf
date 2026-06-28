@@ -19,16 +19,16 @@
    "method": "ext:franksunp7166_65"
   },
   "4": {
-   "points": 16.31661463371969,
-   "memory": 5812,
-   "params": 92,
-   "method": "ext:franksunp7166_65"
+   "points": 16.406957496300326,
+   "memory": 5300,
+   "params": 94,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "5": {
-   "points": 16.132149936970592,
-   "memory": 6610,
+   "points": 16.163335413642574,
+   "memory": 6392,
    "params": 490,
-   "method": "ext:franksunp7166_65"
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "6": {
    "points": 19.969562078607566,
@@ -55,10 +55,10 @@
    "method": "custom:task009+onnxsim"
   },
   "10": {
-   "points": 18.00606702477681,
-   "memory": 750,
+   "points": 18.024586072544047,
+   "memory": 730,
    "params": 340,
-   "method": "ext:franksunp7166_65"
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "11": {
    "points": 17.342244728865133,
@@ -79,10 +79,10 @@
    "method": "ext:franksunp7166_65"
   },
   "14": {
-   "points": 16.003100403876644,
-   "memory": 7989,
-   "params": 89,
-   "method": "ext:franksunp7166_65"
+   "points": 16.014554712376835,
+   "memory": 7878,
+   "params": 108,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "15": {
    "points": 18.197605236675688,
@@ -109,10 +109,10 @@
    "method": "teacher:urad7174_top15_public_probe"
   },
   "19": {
-   "points": 16.9676398520755,
-   "memory": 2997,
-   "params": 82,
-   "method": "ext:franksunp7166_65"
+   "points": 17.063339844774575,
+   "memory": 2709,
+   "params": 89,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "20": {
    "points": 17.6695947881556,
@@ -259,10 +259,10 @@
    "method": "ext:franksunp7166_65"
   },
   "44": {
-   "points": 15.633682046569465,
-   "memory": 11620,
+   "points": 15.650941708711995,
+   "memory": 11420,
    "params": 68,
-   "method": "ext:franksunp7166_68"
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "45": {
    "points": 17.577626299013176,
@@ -391,10 +391,10 @@
    "method": "ext:franksunp7166_65"
   },
   "66": {
-   "points": 15.108332024269215,
-   "memory": 19113,
+   "points": 15.179079171120835,
+   "memory": 17763,
    "params": 652,
-   "method": "ext:franksunp7166_68"
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "67": {
    "points": 21.14985239828994,
@@ -439,10 +439,10 @@
    "method": "ext:franksunp7166_65"
   },
   "74": {
-   "points": 15.864922112524365,
-   "memory": 7462,
-   "params": 1813,
-   "method": "ext:franksunp7166_65"
+   "points": 15.889479963306028,
+   "memory": 9000,
+   "params": 50,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "75": {
    "points": 17.695484053539843,
@@ -451,10 +451,10 @@
    "method": "ext:franksunp7166_65"
   },
   "76": {
-   "points": 14.847155489333758,
-   "memory": 25375,
-   "params": 289,
-   "method": "ext:franksunp7166_68"
+   "points": 14.930913266814306,
+   "memory": 23296,
+   "params": 306,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "77": {
    "points": 15.392629998736755,
@@ -823,10 +823,10 @@
    "method": "ext:franksunp7166_65"
   },
   "138": {
-   "points": 15.429749921575155,
-   "memory": 14106,
-   "params": 226,
-   "method": "ext:franksunp7166_65"
+   "points": 15.455833747057806,
+   "memory": 13812,
+   "params": 151,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "139": {
    "points": 18.193170639607825,
@@ -985,10 +985,10 @@
    "method": "ext:franksunp7166_65"
   },
   "165": {
-   "points": 16.227234790050215,
-   "memory": 6144,
-   "params": 312,
-   "method": "ext:franksunp7166_65"
+   "points": 16.275792639199437,
+   "memory": 5836,
+   "params": 314,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "166": {
    "points": 21.821946169652055,
@@ -1123,10 +1123,10 @@
    "method": "custom:task187"
   },
   "188": {
-   "points": 17.90493562271287,
-   "memory": 1146,
-   "params": 60,
-   "method": "ext:franksunp7166_65"
+   "points": 17.92081560539033,
+   "memory": 1128,
+   "params": 59,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "189": {
    "points": 18.18107593472448,
@@ -1171,10 +1171,10 @@
    "method": "ext:franksunp7166_65"
   },
   "196": {
-   "points": 16.53178699080548,
-   "memory": 4725,
-   "params": 36,
-   "method": "ext:franksunp7166_65"
+   "points": 16.579758334660212,
+   "memory": 4500,
+   "params": 38,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "197": {
    "points": 17.13596434092755,
@@ -1201,10 +1201,10 @@
    "method": "ext:franksunp7166_65"
   },
   "201": {
-   "points": 16.529060193101223,
+   "points": 16.5631495612663,
    "memory": 4476,
-   "params": 298,
-   "method": "ext:franksunp7166_65"
+   "params": 138,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "202": {
    "points": 15.669479467767712,
@@ -1273,10 +1273,10 @@
    "method": "ext:franksunp7166_65"
   },
   "213": {
-   "points": 17.440961744556617,
-   "memory": 1869,
+   "points": 17.457256454631448,
+   "memory": 1838,
    "params": 49,
-   "method": "ext:franksunp7166_65"
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "214": {
    "points": 18.357513198632745,
@@ -1303,10 +1303,10 @@
    "method": "ext:franksunp7166_65"
   },
   "218": {
-   "points": 18.483806923957037,
-   "memory": 572,
+   "points": 18.50473444406299,
+   "memory": 558,
    "params": 104,
-   "method": "ext:franksunp7166_65"
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "219": {
    "points": 15.16238519161458,
@@ -1503,10 +1503,10 @@
    "method": "custom:task250+qlinear+onnxsim"
   },
   "251": {
-   "points": 16.362360655507896,
-   "memory": 5472,
+   "points": 16.498936190513646,
+   "memory": 4752,
    "params": 168,
-   "method": "ext:franksunp7166_65"
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "252": {
    "points": 19.439318368984473,
@@ -1527,10 +1527,10 @@
    "method": "ext:franksunp7166_65"
   },
   "255": {
-   "points": 14.870931868116244,
-   "memory": 24746,
-   "params": 315,
-   "method": "ext:franksunp7166_68"
+   "points": 14.940149929840013,
+   "memory": 23123,
+   "params": 262,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "256": {
    "points": 17.011117746690772,
@@ -1713,10 +1713,10 @@
    "method": "ext:franksunp7166_65"
   },
   "286": {
-   "points": 14.140712582495004,
-   "memory": 51276,
-   "params": 739,
-   "method": "ext:franksunp7166_65"
+   "points": 14.241820561808675,
+   "memory": 46272,
+   "params": 741,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "287": {
    "points": 17.402102049478216,
@@ -2152,10 +2152,10 @@
    "method": "ext:franksunp7166_65"
   },
   "359": {
-   "points": 16.4460892256486,
-   "memory": 5171,
-   "params": 16,
-   "method": "ext:franksunp7166_65"
+   "points": 16.595527678647883,
+   "memory": 4452,
+   "params": 15,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "360": {
    "points": 19.17105438238979,
@@ -2176,16 +2176,16 @@
    "method": "ext:franksunp7166_65"
   },
   "363": {
-   "points": 16.457919093075983,
-   "memory": 4843,
-   "params": 283,
-   "method": "ext:franksunp7166_65"
+   "points": 16.558177115608537,
+   "memory": 4339,
+   "params": 298,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "364": {
-   "points": 14.797371281923198,
-   "memory": 26860,
-   "params": 114,
-   "method": "ext:franksunp7166_65"
+   "points": 14.90049346354632,
+   "memory": 24220,
+   "params": 111,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "365": {
    "points": 16.698974746161547,
@@ -2194,10 +2194,10 @@
    "method": "ext:franksunp7166_65"
   },
   "366": {
-   "points": 14.469344825837902,
-   "memory": 36955,
-   "params": 491,
-   "method": "ext:franksunp7166_65"
+   "points": 14.497209022434086,
+   "memory": 35927,
+   "params": 490,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "367": {
    "points": 14.800006916464858,
@@ -2374,10 +2374,10 @@
    "method": "ext:franksunp7166_65"
   },
   "396": {
-   "points": 15.516279340282896,
-   "memory": 13007,
-   "params": 137,
-   "method": "ext:franksunp7166_65"
+   "points": 15.551194060611822,
+   "memory": 12557,
+   "params": 136,
+   "method": "teacher:urad7174_remaining_public_probe"
   },
   "397": {
    "points": 17.045627727468133,

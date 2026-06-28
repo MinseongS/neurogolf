@@ -1,5 +1,5 @@
 
-task005_export_final:Û¨
+task005_export_final:›„
 x
 input
 color_index_weightcolors21_f32conv_scalar_color_index_crop"Conv*
@@ -119,11 +119,6 @@ Z
 Q
 hit_slice_s_0
 template_presentmarker_match_gated_sgate_marker_match_s"Mul
-r
-marker_match_gated_s
-row_present0_starts
-s_ray3crop_ends
-anchor_axesaxis_s_3cropslice_axis_s_3crop"Slice
 Z
 colors21
 hit_w_0_starts
@@ -145,11 +140,6 @@ Z
 Q
 hit_slice_e_0
 template_presentmarker_match_gated_egate_marker_match_e"Mul
-r
-marker_match_gated_e
-row_present0_starts
-e_ray3crop_ends
-anchor_axesaxis_e_3cropslice_axis_e_3crop"Slice
 f
 colors21
 col_present1_starts
@@ -239,14 +229,9 @@ y
 row_present0_starts
 anchor_starts
 anchor_axesray_k2_nw_0_0_sliceslice_ray_k2_nw_0_0"Slice
-p
-ray_nw_3crop
-row_present0_starts
-anchor_starts
-anchor_axesray_k3_nw_0_0_sliceslice_ray_k3_nw_0_0"Slice
-Q
+J
 ray_k2_nw_0_0_slice
-ray_k3_nw_0_0_sliceray_block_0_0max_ray_block_0_0"Max
+ray_nw_3cropray_block_0_0max_ray_block_0_0"Max
 
 marker_match_gated_nw
 ray_k2_nw_0_1_starts
@@ -311,14 +296,9 @@ y
 w_ray3crop_starts
 s_ray3crop_ends
 anchor_axesray_k2_ne_0_10_sliceslice_ray_k2_ne_0_10"Slice
-r
-ray_ne_3crop
-row_present0_starts
-anchor_starts
-anchor_axesray_k3_ne_0_10_sliceslice_ray_k3_ne_0_10"Slice
-U
+M
 ray_k2_ne_0_10_slice
-ray_k3_ne_0_10_sliceray_block_0_10max_ray_block_0_10"Max
+ray_ne_3cropray_block_0_10max_ray_block_0_10"Max
 î
 ray_block_0_0
 ray_k2_nw_0_1_slice
@@ -400,38 +380,14 @@ y
 ray_k2_nw_1_0_ends
 hit_s_0_starts
 anchor_axesray_k2_nw_2_1_sliceslice_ray_k2_nw_2_1"Slice
-J
-ray_k2_nw_0_0_slice
-ray_nw_3cropray_block_2_2max_ray_block_2_2"Max
-v
-marker_match_gated_n
-n_ray3crop_starts
-e_ray3crop_ends
-anchor_axesray_k2_n_2_4_sliceslice_ray_k2_n_2_4"Slice
 d
 ray_k2_nw_0_2_slice
 ray_k2_n_0_4_slice
-ray_k2_n_2_4_sliceray_block_2_4max_ray_block_2_4"Max
-v
-marker_match_gated_n
-ray_k2_nw_1_0_ends
-hit_s_0_starts
-anchor_axesray_k2_n_2_5_sliceslice_ray_k2_n_2_5"Slice
-O
-ray_k2_n_0_5_slice
-ray_k2_n_2_5_sliceray_block_2_5max_ray_block_2_5"Max
-y
-marker_match_gated_n
-nw_ray3crop_starts
-row_present0_ends
-anchor_axesray_k2_n_2_6_sliceslice_ray_k2_n_2_6"Slice
+ray_k3_n_0_4_sliceray_block_2_4max_ray_block_2_4"Max
 d
 ray_k2_n_0_6_slice
 ray_k2_ne_0_8_slice
-ray_k2_n_2_6_sliceray_block_2_6max_ray_block_2_6"Max
-K
-ray_k2_ne_0_10_slice
-ray_ne_3cropray_block_2_8max_ray_block_2_8"Max
+ray_k3_n_0_6_sliceray_block_2_6max_ray_block_2_6"Max
 y
 marker_match_gated_ne
 ray_k2_nw_1_0_ends
@@ -442,16 +398,16 @@ y
 nw_ray3crop_starts
 row_present0_ends
 anchor_axesray_k2_ne_2_10_sliceslice_ray_k2_ne_2_10"Slice
-ü
+ý
 ray_k2_nw_2_0_slice
 ray_k2_nw_2_1_slice
-ray_block_2_2
+ray_block_0_0
 ray_k2_nw_0_1_slice
 ray_block_2_4
-ray_block_2_5
+ray_block_0_5
 ray_block_2_6
 ray_k2_ne_0_9_slice
-ray_block_2_8
+ray_block_0_10
 ray_k2_ne_2_9_slice
 ray_k2_ne_2_10_slice	ray_row_2concat_ray_row_2"Concat*
 axis 
@@ -492,15 +448,10 @@ O
 ray_k2_nw_0_1_starts
 center_hit1_starts
 anchor_axesray_k2_w_4_1_sliceslice_ray_k2_w_4_1"Slice
-v
-marker_match_gated_w
-w_ray3crop_starts
-s_ray3crop_ends
-anchor_axesray_k2_w_4_2_sliceslice_ray_k2_w_4_2"Slice
 d
 ray_k2_nw_2_0_slice
 ray_k2_w_4_0_slice
-ray_k2_w_4_2_sliceray_block_4_2max_ray_block_4_2"Max
+ray_k3_w_4_0_sliceray_block_4_2max_ray_block_4_2"Max
 P
 ray_k2_nw_2_1_slice
 ray_k2_w_4_1_sliceray_block_4_3max_ray_block_4_3"Max
@@ -513,8 +464,8 @@ center_map
 s
 ray_center_4_4_slice
 ray_nw_3crop
-ray_k2_n_2_4_slice
-ray_k2_w_4_2_sliceray_block_4_4max_ray_block_4_4"Max
+ray_k3_n_0_4_slice
+ray_k3_w_4_0_sliceray_block_4_4max_ray_block_4_4"Max
 v
 
 center_map
@@ -523,7 +474,7 @@ center_map
 anchor_axesray_center_4_5_sliceslice_ray_center_4_5"Slice
 Q
 ray_center_4_5_slice
-ray_k2_n_2_5_sliceray_block_4_5max_ray_block_4_5"Max
+ray_k3_n_0_5_sliceray_block_4_5max_ray_block_4_5"Max
 p
 
 center_map
@@ -537,7 +488,7 @@ v
 anchor_axesray_k1_e_4_6_sliceslice_ray_k1_e_4_6"Slice
 s
 ray_center_4_6_slice
-ray_k2_n_2_6_slice
+ray_k3_n_0_6_slice
 ray_ne_3crop
 ray_k1_e_4_6_sliceray_block_4_6max_ray_block_4_6"Max
 |
@@ -557,14 +508,9 @@ e
 ray_k2_ne_2_10_slice
 ray_k1_e_4_8_slice
 ray_k1_e_4_6_sliceray_block_4_8max_ray_block_4_8"Max
-p
-axis_e_3crop
-row_present0_starts
-anchor_starts
-anchor_axesray_k3_e_4_10_sliceslice_ray_k3_e_4_10"Slice
-R
+Q
 ray_k1_e_4_8_slice
-ray_k3_e_4_10_sliceray_block_4_10max_ray_block_4_10"Max
+ray_k1_e_4_6_sliceray_block_4_10max_ray_block_4_10"Max
 â
 ray_block_4_0
 ray_k2_w_4_1_slice
@@ -597,14 +543,6 @@ u
 nw_ray3crop_starts
 anchor_axesray_k2_w_5_1_sliceslice_ray_k2_w_5_1"Slice
 v
-marker_match_gated_w
-center_hit1_starts
-hit_e_0_starts
-anchor_axesray_k2_w_5_2_sliceslice_ray_k2_w_5_2"Slice
-O
-ray_k2_w_5_0_slice
-ray_k2_w_5_2_sliceray_block_5_2max_ray_block_5_2"Max
-v
 
 center_map
 ray_k2_nw_1_0_starts
@@ -612,7 +550,7 @@ center_map
 anchor_axesray_center_5_4_sliceslice_ray_center_5_4"Slice
 Q
 ray_center_5_4_slice
-ray_k2_w_5_2_sliceray_block_5_4max_ray_block_5_4"Max
+ray_k3_w_5_0_sliceray_block_5_4max_ray_block_5_4"Max
 o
 
 center_map
@@ -646,18 +584,10 @@ v
 O
 ray_k1_e_5_8_slice
 ray_k1_e_5_6_sliceray_block_5_8max_ray_block_5_8"Max
-v
-axis_e_3crop
-ray_k2_nw_1_0_starts
-ray_k2_nw_1_0_ends
-anchor_axesray_k3_e_5_10_sliceslice_ray_k3_e_5_10"Slice
-R
-ray_k1_e_5_8_slice
-ray_k3_e_5_10_sliceray_block_5_10max_ray_block_5_10"Max
-ó
+ò
 ray_block_5_0
 ray_k2_w_5_1_slice
-ray_block_5_2
+ray_block_5_0
 ray_k2_w_5_1_slice
 ray_block_5_4
 ray_center_5_5_slice
@@ -665,7 +595,7 @@ R
 ray_k1_e_5_7_slice
 ray_block_5_8
 ray_k1_e_5_7_slice
-ray_block_5_10	ray_row_5concat_ray_row_5"Concat*
+ray_block_5_8	ray_row_5concat_ray_row_5"Concat*
 axis 
 v
 marker_match_gated_w
@@ -690,15 +620,10 @@ y
 row_present0_starts
 anchor_starts
 anchor_axesray_k1_sw_6_2_sliceslice_ray_k1_sw_6_2"Slice
-y
-marker_match_gated_w
-nw_ray3crop_starts
-row_present0_ends
-anchor_axesray_k2_w_6_2_sliceslice_ray_k2_w_6_2"Slice
 d
 ray_k2_w_6_0_slice
 ray_k1_sw_6_2_slice
-ray_k2_w_6_2_sliceray_block_6_2max_ray_block_6_2"Max
+ray_k3_w_6_0_sliceray_block_6_2max_ray_block_6_2"Max
 
 marker_match_gated_sw
 ray_k2_nw_0_1_starts
@@ -720,7 +645,7 @@ v
 anchor_axesray_k1_s_6_4_sliceslice_ray_k1_s_6_4"Slice
 s
 ray_center_6_4_slice
-ray_k2_w_6_2_slice
+ray_k3_w_6_0_slice
 ray_sw_3crop
 ray_k1_s_6_4_sliceray_block_6_4max_ray_block_6_4"Max
 p
@@ -785,14 +710,9 @@ d
 ray_k1_e_6_8_slice
 ray_k1_se_6_8_slice
 ray_k1_e_6_6_sliceray_block_6_8max_ray_block_6_8"Max
-p
-axis_e_3crop
-n_ray3crop_starts
-e_ray3crop_ends
-anchor_axesray_k3_e_6_10_sliceslice_ray_k3_e_6_10"Slice
-R
+Q
 ray_k1_e_6_8_slice
-ray_k3_e_6_10_sliceray_block_6_10max_ray_block_6_10"Max
+ray_k1_e_6_6_sliceray_block_6_10max_ray_block_6_10"Max
 â
 ray_block_6_0
 ray_k2_w_6_1_slice
@@ -811,11 +731,6 @@ R
 ray_k2_nw_1_0_starts
 ray_k2_nw_1_0_ends
 anchor_axesray_k1_sw_7_2_sliceslice_ray_k1_sw_7_2"Slice
-x
-marker_match_gated_sw
-anchor_starts
-nw_ray3crop_starts
-anchor_axesray_k1_sw_7_3_sliceslice_ray_k1_sw_7_3"Slice
 y
 marker_match_gated_sw
 center_hit1_starts
@@ -829,11 +744,6 @@ y
 P
 ray_k1_sw_7_4_slice
 ray_k1_s_7_4_sliceray_block_7_4max_ray_block_7_4"Max
-u
-marker_match_gated_s
-anchor_starts
-nw_ray3crop_starts
-anchor_axesray_k1_s_7_5_sliceslice_ray_k1_s_7_5"Slice
 v
 marker_match_gated_s
 center_hit1_starts
@@ -857,13 +767,13 @@ y
 center_hit1_starts
 hit_e_0_starts
 anchor_axesray_k1_se_7_8_sliceslice_ray_k1_se_7_8"Slice
-ð
+ï
 ray_zero_1_3
 ray_zero_1_1
 ray_k1_sw_7_2_slice
-ray_k1_sw_7_3_slice
+ray_k2_w_5_1_slice
 ray_block_7_4
-ray_k1_s_7_5_slice
+ray_k2_w_5_1_slice
 ray_block_7_6
 ray_k1_se_7_7_slice
 ray_k1_se_7_8_slice
@@ -897,14 +807,6 @@ d
 ray_k1_sw_8_4_slice
 ray_k1_s_8_4_slice
 ray_k1_s_6_4_sliceray_block_8_4max_ray_block_8_4"Max
-v
-marker_match_gated_s
-ray_k2_nw_1_0_ends
-hit_s_0_starts
-anchor_axesray_k1_s_8_5_sliceslice_ray_k1_s_8_5"Slice
-O
-ray_k1_s_8_5_slice
-ray_k1_s_6_5_sliceray_block_8_5max_ray_block_8_5"Max
 y
 marker_match_gated_s
 nw_ray3crop_starts
@@ -932,84 +834,50 @@ y
 J
 ray_k1_se_8_8_slice
 ray_se_3cropray_block_8_8max_ray_block_8_8"Max
-û
+€
 ray_k1_sw_6_2_slice
 ray_k1_sw_6_3_slice
 ray_block_8_2
 ray_k1_sw_8_3_slice
 ray_block_8_4
-ray_block_8_5
+ray_k1_s_6_5_slice
 ray_block_8_6
 ray_k1_se_8_7_slice
 ray_block_8_8
 ray_k1_se_6_7_slice
 ray_k1_se_6_8_slice	ray_row_8concat_ray_row_8"Concat*
 axis 
-ˆ
+‡
 ray_k1_sw_7_2_slice
-ray_k1_sw_7_3_slice
+ray_k2_w_5_1_slice
 ray_k1_sw_7_4_slice
 ray_zero_1_1
 ray_k1_s_7_4_slice
-ray_k1_s_7_5_slice
+ray_k2_w_5_1_slice
 ray_k1_s_7_6_slice
 ray_zero_1_1
 ray_k1_se_7_6_slice
 ray_k1_se_7_7_slice
 ray_k1_se_7_8_slice	ray_row_9concat_ray_row_9"Concat*
 axis 
-r
-ray_sw_3crop
-row_present0_starts
-anchor_starts
-anchor_axesray_k3_sw_10_0_sliceslice_ray_k3_sw_10_0"Slice
-T
-ray_k1_sw_8_2_slice
-ray_k3_sw_10_0_sliceray_block_10_0max_ray_block_10_0"Max
-p
-axis_s_3crop
-row_present0_starts
-anchor_starts
-anchor_axesray_k3_s_10_4_sliceslice_ray_k3_s_10_4"Slice
-R
+Q
 ray_k1_s_8_4_slice
-ray_k3_s_10_4_sliceray_block_10_4max_ray_block_10_4"Max
-v
-axis_s_3crop
-ray_k2_nw_0_1_starts
-center_hit1_starts
-anchor_axesray_k3_s_10_5_sliceslice_ray_k3_s_10_5"Slice
-R
-ray_k1_s_8_5_slice
-ray_k3_s_10_5_sliceray_block_10_5max_ray_block_10_5"Max
-p
-axis_s_3crop
-w_ray3crop_starts
-s_ray3crop_ends
-anchor_axesray_k3_s_10_6_sliceslice_ray_k3_s_10_6"Slice
-R
+ray_k1_s_6_4_sliceray_block_10_4max_ray_block_10_4"Max
+Q
 ray_k1_s_8_6_slice
-ray_k3_s_10_6_sliceray_block_10_6max_ray_block_10_6"Max
-t
-ray_se_3crop
-row_present0_starts
-anchor_starts
-anchor_axesray_k3_se_10_10_sliceslice_ray_k3_se_10_10"Slice
-W
-ray_k1_se_8_8_slice
-ray_k3_se_10_10_sliceray_block_10_10max_ray_block_10_10"Max
-õ
-ray_block_10_0
+ray_k1_s_6_6_sliceray_block_10_6max_ray_block_10_6"Max
+ö
+ray_block_8_2
 ray_k1_sw_8_3_slice
 ray_k1_sw_8_4_slice
 ray_zero_3_1
 ray_block_10_4
-ray_block_10_5
+ray_k1_s_6_5_slice
 ray_block_10_6
 ray_zero_3_1
 ray_k1_se_8_6_slice
 ray_k1_se_8_7_slice
-ray_block_10_10
+ray_block_8_8
 ray_row_10concat_ray_row_10"Concat*
 axis 
 ¬
@@ -1027,9 +895,9 @@ ray_row_10concat_ray_row_10"Concat*
 ray_row_10	ray_totalconcat_ray_total"Concat*
 axis 
 Œ
-template_cell_flag_8
+template_cell_flag_0
 template_cell_flag_7
-template_cell_flag_6
+template_cell_flag_2
 template_cell_flag_5
 template_cell_flag_4
 template_cell_flag_3
@@ -1210,19 +1078,7 @@ T
 
 
 j.
-template_cell_flag_6
-
-
-
-
-j.
 template_cell_flag_7
-
-
-
-
-j.
-template_cell_flag_8
 
 
 
@@ -1282,12 +1138,6 @@ center_map
 
 
 
-j&
-axis_s_3crop
-
-
-
-
 j'
 hit_slice_w_0
 
@@ -1318,13 +1168,7 @@ center_map
 
 
 
-j&
-axis_e_3crop
-
-
-
-
-j(
+j(
 hit_slice_nw_0
 
 
@@ -1450,12 +1294,6 @@ center_map
 
 
 
-j-
-ray_k3_nw_0_0_slice
-
-
-
-
 j'
 ray_block_0_0
 
@@ -1546,12 +1384,6 @@ center_map
 
 
 
-j.
-ray_k3_ne_0_10_slice
-
-
-
-
 j(
 ray_block_0_10
 
@@ -1637,49 +1469,13 @@ center_map
 
 
 j'
-ray_block_2_2
-
-
-
-
-j,
-ray_k2_n_2_4_slice
-
-
-
-
-j'
 ray_block_2_4
-
-
-
-
-j,
-ray_k2_n_2_5_slice
-
-
-
-
-j'
-ray_block_2_5
-
-
-
-
-j,
-ray_k2_n_2_6_slice
 
 
 
 
 j'
 ray_block_2_6
-
-
-
-
-j'
-ray_block_2_8
 
 
 
@@ -1744,13 +1540,7 @@ center_map
 
 
 
-j,
-ray_k2_w_4_2_slice
-
-
-
-
-j'
+j'
 ray_block_4_2
 
 
@@ -1828,12 +1618,6 @@ center_map
 
 
 
-j-
-ray_k3_e_4_10_slice
-
-
-
-
 j(
 ray_block_4_10
 
@@ -1870,19 +1654,7 @@ center_map
 
 
 
-j,
-ray_k2_w_5_2_slice
-
-
-
-
-j'
-ray_block_5_2
-
-
-
-
-j.
+j.
 ray_center_5_4_slice
 
 
@@ -1936,18 +1708,6 @@ center_map
 
 
 
-j-
-ray_k3_e_5_10_slice
-
-
-
-
-j(
-ray_block_5_10
-
-
-
-
 j#
 	ray_row_5
 
@@ -1980,12 +1740,6 @@ center_map
 
 j-
 ray_k1_sw_6_2_slice
-
-
-
-
-j,
-ray_k2_w_6_2_slice
 
 
 
@@ -2104,12 +1858,6 @@ center_map
 
 
 
-j-
-ray_k3_e_6_10_slice
-
-
-
-
 j(
 ray_block_6_10
 
@@ -2129,12 +1877,6 @@ center_map
 
 
 j-
-ray_k1_sw_7_3_slice
-
-
-
-
-j-
 ray_k1_sw_7_4_slice
 
 
@@ -2153,12 +1895,6 @@ center_map
 
 
 j,
-ray_k1_s_7_5_slice
-
-
-
-
-j,
 ray_k1_s_7_6_slice
 
 
@@ -2231,18 +1967,6 @@ center_map
 
 
 j,
-ray_k1_s_8_5_slice
-
-
-
-
-j'
-ray_block_8_5
-
-
-
-
-j,
 ray_k1_s_8_6_slice
 
 
@@ -2290,62 +2014,14 @@ center_map
 
 
 
-j.
-ray_k3_sw_10_0_slice
-
-
-
-
-j(
-ray_block_10_0
-
-
-
-
-j-
-ray_k3_s_10_4_slice
-
-
-
-
-j(
+j(
 ray_block_10_4
-
-
-
-
-j-
-ray_k3_s_10_5_slice
-
-
-
-
-j(
-ray_block_10_5
-
-
-
-
-j-
-ray_k3_s_10_6_slice
 
 
 
 
 j(
 ray_block_10_6
-
-
-
-
-j/
-ray_k3_se_10_10_slice
-
-
-
-
-j)
-ray_block_10_10
 
 
 
