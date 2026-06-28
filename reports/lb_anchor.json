@@ -1,10 +1,10 @@
 {
- "comment": "NEW BEST 7171.00. Original task055 QLinearMatMul uint8 LUT rewrite: fp16 one-hot@LUT@one-hot label path changed to uint8 quantized matmul (scale=1/zp=0), shrinking task055 mem 8760->5790 and local points 15.9168->16.3279. Fresh 1000/1000. Submission 54127206 COMPLETE publicScore 7171.00. Prior best was equivalent compression sweep submission 54118286, 7170.59.",
- "stored_at_submit": 7170.899122008326,
- "lb": 7171.0,
- "time_utc": "2026-06-28 03:49 submission 54127206 COMPLETE",
+ "comment": "NEW BEST 7171.25. Original task340 QLinearMatMul packed uint8 outer-product rewrite, following task055. The packed fp16 MatMul integer label assembly was changed to uint8 QLinearMatMul (scale=1/zp=0), shrinking task340 local from 16.0288 to 16.2776 after onnxsim; fresh 1000/1000 source and 500/500 sim. Submission 54127287 COMPLETE publicScore 7171.25. Prior best was task055 QLinear submission 54127206, 7171.00.",
+ "stored_at_submit": 7171.1478993300825,
+ "lb": 7171.25,
+ "time_utc": "2026-06-28 03:54 submission 54127287 COMPLETE",
  "pending": false,
- "pending_submit": "CONFIRMED 7171.00 (+0.41 over prior confirmed 7170.59)",
- "prev_stored_at_submit": 7170.488023707214,
- "prev_lb": 7170.59
+ "pending_submit": "CONFIRMED 7171.25 (+0.25 over prior confirmed 7171.00)",
+ "prev_stored_at_submit": 7170.899122008326,
+ "prev_lb": 7171.0
 }

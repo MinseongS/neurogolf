@@ -294,3 +294,14 @@ Submission `54127206` (`task055 qlinear uint8 matmul custom +0.411 local`) compl
 **publicScore 7171.00**, improving previous best **7170.59** by **+0.41**. This is a meaningful
 original mechanism: for one-hot integer label LUTs feeding final `Equal(label, channel_ids)`,
 try uint8 `QLinearMatMul` before assuming fp16 MatMul planes are the floor.
+
+## #NEW-BEST 2026-06-28 — CONFIRMED 7171.25 (QLinearMatMul repeats on packed outer-product)
+Applied the same uint8 quantized-matmul mechanism to live `custom:task340+onnxsim`. This task's
+single packed outer-product MatMul assembles a small non-negative integer label plane, so fp16 was
+not necessary. Rewrote A/B operands and `og` to uint8 `QLinearMatMul` (scale=1, zero-point=0),
+then onnxsim reduced the final net to mem 5860 / params 279 / **16.2776 pts** versus previous
+task340 16.0288. Verification: source 1000/1000 fresh, adopted sim 500/500 fresh.
+
+Submission `54127287` (`task340 qlinear packed matmul custom +0.249 local`) completed with
+**publicScore 7171.25**, improving previous best **7171.00** by **+0.25**. The repeated win upgrades
+QLinearMatMul from one-off trick to a real search pattern for integer label assembly graphs.

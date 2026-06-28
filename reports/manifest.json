@@ -2038,10 +2038,10 @@
    "method": "ext:franksunp7166_65"
   },
   "340": {
-   "points": 16.028805536815533,
-   "memory": 7596,
-   "params": 277,
-   "method": "custom:task340+onnxsim"
+   "points": 16.277582858572504,
+   "memory": 5860,
+   "params": 279,
+   "method": "custom:task340+qlinear+onnxsim"
   },
   "341": {
    "points": 17.735269822070133,

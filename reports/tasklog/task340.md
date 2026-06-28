@@ -19,9 +19,11 @@ collisions, so an ADDITIVE single index plane is exact.
 | 3 | drop 2 off-grid sentinels → ONE in-grid +1 term (rowocc⊗colocc) + chan=colour+1 | A | 8884 | 102 | 15.897 | — | inner-dim 10→9, params 163→102 |
 | 4 | interior c<=W-2 as Less(c,Widx) (drop Sub planes); value vecs via Where(mask,colour,0) | A | 8404 | 101 | 15.952 | — | kills fp16 mask casts |
 | 5 | wall colour = Sum k*(count>0) in fp16 (no argmax); H=Sum(rowocc) (drop ramp*occ Mul); Where-fold | A | **8016** | **102** | **15.998** | 3000/3000 | **NEW BEST, beats +0.307** |
+| 6 | QLinearMatMul packed uint8 outer-product + onnxsim | A | **5860** | **279** | **16.278** | 1000/1000 base, 500/500 sim | **ADOPTED** |
 
 ## Best achieved
-**15.998 @ mem 8016 params 102. Beats prior 15.69 by +0.307 → clears +0.3.** 3000/3000 fresh exact.
+**16.278 @ mem 5860 params 279.** Beats prior live 16.029 (`custom:task340+onnxsim`) by **+0.249**.
+The uint8 QLinearMatMul source passed 1000/1000 fresh; the adopted onnxsim file passed 500/500 fresh.
 
 ## Irreducible-floor analysis
 Dominant intermediates (all forced by an fp32 10-channel input):
@@ -60,6 +62,10 @@ The prior floor analysis double-counted: the real core is og 1800 + 2 counts 240
   reductions can't merge) + 2 concats 1080 = 5280B hard core. Remaining ~2700 tail is genuine
   selector/value/presence vectors. A further win needs a count op that emits fp16 (ReduceSum
   rejects narrow dtypes) or a non-MatMul index assembly.
+- 2026-06-28 update: the fp16 `og`/concat floor was false. The packed outer-product terms are
+  small non-negative integers, so `QLinearMatMul` with uint8 operands and scale=1/zp=0 preserves
+  the additive index exactly while cutting `og` 1800→900 and A/B operands 540+540→270+270.
+  Same mechanism as task055; use it whenever packed MatMul is pure integer label assembly.
 
 ## INSIGHT (transferable)
 - ⭐ "Shoot interior pixels to their matching wall" = SEPARABLE per-direction routing, NOT a

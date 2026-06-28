@@ -38,6 +38,7 @@ from src.harness import IR_VERSION, DATA_TYPE, GRID_SHAPE
 
 F32 = TensorProto.FLOAT
 F16 = TensorProto.FLOAT16
+U8 = TensorProto.UINT8
 BOOL = TensorProto.BOOL
 I64 = TensorProto.INT64
 N = 30
@@ -61,7 +62,10 @@ def build(task):
     init("one16", np.array(1.0, np.float16))
     init("half16", np.array(0.5, np.float16))
     init("zero16", np.array(0.0, np.float16))
+    init("zero8", np.array(0, np.uint8))
     init("c1p5", np.array(1.5, np.float32))   # threshold for count>=2 (fp32 counts)
+    init("qscale", np.array(1.0, np.float32))
+    init("qzero", np.array(0, np.uint8))
 
     # ---- grid extent scalars Hidx (=H-1), Widx (=W-1) ----------------------
     # The grid is a SOLID H x W rectangle anchored at origin, so rows 0..H-1 and
@@ -118,6 +122,10 @@ def build(task):
     bc = wall_color("botw_a", "botw")
     lc = wall_color("leftw", "leftw")
     rc = wall_color("rightw_a", "rightw")
+    n("Cast", [tc], "tc8", to=U8)
+    n("Cast", [bc], "bc8", to=U8)
+    n("Cast", [lc], "lc8", to=U8)
+    n("Cast", [rc], "rc8", to=U8)
 
     # channel indices for gathering the count line (index shape [1])
     def chan_scalar(colf, tag):
@@ -151,7 +159,7 @@ def build(task):
     # ---- row / col selectors (integer Equal, fp16 exact) -------------------
     def sel(ramp, target, tag):
         n("Equal", [ramp, target], tag + "_b")
-        return n("Cast", [tag + "_b"], tag, to=F16)
+        return n("Cast", [tag + "_b"], tag, to=U8)
     sel("arow", "zero16", "rs0")     # r==0
     sel("arow", "one16", "rs1")      # r==1
     sel("arow", "Hm1", "rsHm2")      # r==H-2
@@ -167,29 +175,34 @@ def build(task):
     # in-grid bg -> og=1 -> ch0; coloured cell colour k -> og=k+1 -> ch k;
     # off-grid -> og=0 -> matches no channel (chan starts at 1) -> all-false.
 
-    # ---- value vectors via Where(mask_bool, colour, 0): no fp16 mask casts --
-    n("Where", ["colint_b", tc, "zero16"], "tc_wall")    # top wall row   [1,1,1,30]
-    n("Where", ["topcol_b", tc, "zero16"], "tc_line")    # top line row
-    n("Where", ["botcol_b", bc, "zero16"], "bc_line")    # bottom line row
-    n("Where", ["colint_b", bc, "zero16"], "bc_wall")    # bottom wall row
-    n("Where", ["rowint_b", lc, "zero16"], "lc_wall")    # left wall col  [1,1,30,1]
-    n("Where", ["leftrow_b", lc, "zero16"], "lc_line")   # left line col
-    n("Where", ["rightrow_b", rc, "zero16"], "rc_line")  # right line col
-    n("Where", ["rowint_b", rc, "zero16"], "rc_wall")    # right wall col
+    # uint8 occupancy factors for the quantized packed MatMul.
+    n("Cast", ["rowocc"], "rowocc8", to=U8)
+    n("Cast", ["colocc"], "colocc8", to=U8)
+
+    # ---- value vectors via Where(mask_bool, colour, 0): no mask casts -------
+    n("Where", ["colint_b", "tc8", "zero8"], "tc_wall")    # top wall row   [1,1,1,30]
+    n("Where", ["topcol_b", "tc8", "zero8"], "tc_line")    # top line row
+    n("Where", ["botcol_b", "bc8", "zero8"], "bc_line")    # bottom line row
+    n("Where", ["colint_b", "bc8", "zero8"], "bc_wall")    # bottom wall row
+    n("Where", ["rowint_b", "lc8", "zero8"], "lc_wall")    # left wall col  [1,1,30,1]
+    n("Where", ["leftrow_b", "lc8", "zero8"], "lc_line")   # left line col
+    n("Where", ["rightrow_b", "rc8", "zero8"], "rc_line")  # right line col
+    n("Where", ["rowint_b", "rc8", "zero8"], "rc_wall")    # right wall col
 
     # ---- ONE packed MatMul: Acol[1,1,30,9] @ Brow[1,1,9,30] ----------------
     # Acol cols (over rows): k0..3 row-selectors, k4..7 row-value-vecs, k8 in-grid row
     n("Concat", ["rs0", "rs1", "rsHm2", "rsHm1",
                  "lc_wall", "lc_line", "rc_line", "rc_wall",
-                 "rowocc16"], "Acol", axis=3)              # [1,1,30,9]
+                 "rowocc8"], "Acol", axis=3)               # [1,1,30,9] u8
     # Brow rows (over cols): k0..3 col-value-vecs, k4..7 col-selectors, k8 in-grid col
     n("Concat", ["tc_wall", "tc_line", "bc_line", "bc_wall",
                  "cs0", "cs1", "csWm2", "csWm1",
-                 "colocc16"], "Brow", axis=2)              # [1,1,9,30]
-    n("MatMul", ["Acol", "Brow"], "og")                    # [1,1,30,30] f16
+                 "colocc8"], "Brow", axis=2)               # [1,1,9,30] u8
+    qargs = ["qscale", "qzero"]
+    n("QLinearMatMul", ["Acol", *qargs, "Brow", *qargs, *qargs], "og")  # [1,1,30,30] u8
 
     # ---- Equal(og, colour+1 ramp) straight into the FREE bool output -------
-    init("chan", (np.arange(10, dtype=np.float16) + 1).reshape(1, 10, 1, 1))
+    init("chan", (np.arange(10, dtype=np.uint8) + 1).reshape(1, 10, 1, 1))
     n("Equal", ["og", "chan"], "output")                   # [1,10,30,30] bool (FREE)
 
     x = helper.make_tensor_value_info("input", DATA_TYPE, GRID_SHAPE)
