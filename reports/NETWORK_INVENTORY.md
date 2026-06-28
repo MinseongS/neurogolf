@@ -5,10 +5,10 @@ Generated from `reports/manifest.json`, `networks/`, and `src/custom/`.
 ## Summary
 
 - LIVE_CUSTOM: 18
-- EXT_LIVE_CUSTOM_SHELVED: 363
-- EXT_LIVE_NO_CUSTOM_SOURCE: 19
+- EXT_LIVE_CUSTOM_SHELVED: 382
+- EXT_LIVE_NO_CUSTOM_SOURCE: 0
 - networks present: 400/400
-- custom source files present: 380/400
+- custom source files present: 400/400
 - manifest total: 7172.001177
 
 ## Meaning
@@ -24,10 +24,10 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | task | class | method | points | memory | params | network | custom_py |
 |---:|---|---|---:|---:|---:|---|---|
 | 001 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.9780 | 1095 | 26 | yes | yes |
-| 002 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 14.4005 | 40084 | 32 | yes | no |
+| 002 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 14.4005 | 40084 | 32 | yes | yes |
 | 003 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 19.2896 | 281 | 21 | yes | yes |
 | 004 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.3166 | 5812 | 92 | yes | yes |
-| 005 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 16.1321 | 6610 | 490 | yes | no |
+| 005 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.1321 | 6610 | 490 | yes | yes |
 | 006 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 19.9696 | 126 | 27 | yes | yes |
 | 007 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 20.1558 | 0 | 127 | yes | yes |
 | 008 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.3647 | 5561 | 66 | yes | yes |
@@ -40,7 +40,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 015 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.1976 | 0 | 900 | yes | yes |
 | 016 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 22.6974 | 0 | 10 | yes | yes |
 | 017 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 15.5479 | 10931 | 1804 | yes | yes |
-| 018 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_68 | 13.8981 | 63257 | 3038 | yes | no |
+| 018 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_68 | 13.8981 | 63257 | 3038 | yes | yes |
 | 019 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.9676 | 2997 | 82 | yes | yes |
 | 020 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.6696 | 1356 | 170 | yes | yes |
 | 021 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.9352 | 1072 | 98 | yes | yes |
@@ -66,7 +66,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 041 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.5106 | 1730 | 59 | yes | yes |
 | 042 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.9576 | 2792 | 318 | yes | yes |
 | 043 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.3229 | 588 | 206 | yes | yes |
-| 044 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_68 | 15.6337 | 11620 | 68 | yes | no |
+| 044 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_68 | 15.6337 | 11620 | 68 | yes | yes |
 | 045 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.5776 | 1050 | 623 | yes | yes |
 | 046 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.2515 | 2221 | 97 | yes | yes |
 | 047 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.2407 | 826 | 36 | yes | yes |
@@ -76,7 +76,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 051 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.5028 | 1702 | 101 | yes | yes |
 | 052 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 19.5750 | 213 | 14 | yes | yes |
 | 053 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 21.5988 | 0 | 30 | yes | yes |
-| 054 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_68 | 14.7915 | 26894 | 238 | yes | no |
+| 054 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_68 | 14.7915 | 26894 | 238 | yes | yes |
 | 055 | LIVE_CUSTOM | custom:task055 | 16.3279 | 5790 | 48 | yes | yes |
 | 056 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 21.4736 | 34 | 0 | yes | yes |
 | 057 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.4957 | 638 | 30 | yes | yes |
@@ -88,7 +88,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 063 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.3936 | 1728 | 283 | yes | yes |
 | 064 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 15.4943 | 13368 | 68 | yes | yes |
 | 065 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.5370 | 582 | 59 | yes | yes |
-| 066 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_68 | 15.1083 | 19113 | 652 | yes | no |
+| 066 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_68 | 15.1083 | 19113 | 652 | yes | yes |
 | 067 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 21.1499 | 39 | 8 | yes | yes |
 | 068 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.5655 | 500 | 123 | yes | yes |
 | 069 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.7282 | 3848 | 64 | yes | yes |
@@ -98,7 +98,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 073 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 21.3111 | 0 | 40 | yes | yes |
 | 074 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 15.8649 | 7462 | 1813 | yes | yes |
 | 075 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.6955 | 1326 | 161 | yes | yes |
-| 076 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_68 | 14.8472 | 25375 | 289 | yes | no |
+| 076 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_68 | 14.8472 | 25375 | 289 | yes | yes |
 | 077 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 15.3926 | 14760 | 114 | yes | yes |
 | 078 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.8353 | 1260 | 33 | yes | yes |
 | 079 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.9467 | 3065 | 79 | yes | yes |
@@ -123,7 +123,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 098 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.1976 | 0 | 900 | yes | yes |
 | 099 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.4446 | 1633 | 278 | yes | yes |
 | 100 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.7029 | 454 | 89 | yes | yes |
-| 101 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_68 | 15.2061 | 17015 | 909 | yes | no |
+| 101 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_68 | 15.2061 | 17015 | 909 | yes | yes |
 | 102 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.1652 | 2414 | 113 | yes | yes |
 | 103 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 20.9057 | 36 | 24 | yes | yes |
 | 104 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 19.4627 | 197 | 57 | yes | yes |
@@ -140,7 +140,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 115 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.0501 | 980 | 63 | yes | yes |
 | 116 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 21.5988 | 0 | 30 | yes | yes |
 | 117 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.6655 | 3922 | 243 | yes | yes |
-| 118 | LIVE_CUSTOM | custom:task118_tail_where+onnxsim | 14.5531 | 31049 | 3387 | yes | no |
+| 118 | LIVE_CUSTOM | custom:task118_tail_where+onnxsim | 14.5531 | 31049 | 3387 | yes | yes |
 | 119 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.7811 | 1244 | 121 | yes | yes |
 | 120 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.1866 | 0 | 910 | yes | yes |
 | 121 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 19.1681 | 275 | 66 | yes | yes |
@@ -155,7 +155,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 130 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 21.5988 | 0 | 30 | yes | yes |
 | 131 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.7092 | 3312 | 675 | yes | yes |
 | 132 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.6839 | 3990 | 99 | yes | yes |
-| 133 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 14.5783 | 32294 | 1288 | yes | no |
+| 133 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 14.5783 | 32294 | 1288 | yes | yes |
 | 134 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.2663 | 2250 | 34 | yes | yes |
 | 135 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 19.7017 | 0 | 200 | yes | yes |
 | 136 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.8991 | 1179 | 34 | yes | yes |
@@ -179,7 +179,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 154 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.0770 | 2661 | 99 | yes | yes |
 | 155 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 19.9374 | 128 | 30 | yes | yes |
 | 156 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.5361 | 1697 | 47 | yes | yes |
-| 157 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_68 | 15.5502 | 12118 | 588 | yes | no |
+| 157 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_68 | 15.5502 | 12118 | 588 | yes | yes |
 | 158 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 14.5256 | 33053 | 2343 | yes | yes |
 | 159 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.6424 | 1419 | 149 | yes | yes |
 | 160 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.8041 | 1164 | 170 | yes | yes |
@@ -195,7 +195,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 170 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.1581 | 2216 | 329 | yes | yes |
 | 171 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.1866 | 0 | 910 | yes | yes |
 | 172 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 21.5988 | 0 | 30 | yes | yes |
-| 173 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 14.9450 | 23159 | 112 | yes | no |
+| 173 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 14.9450 | 23159 | 112 | yes | yes |
 | 174 | LIVE_CUSTOM | custom:task174+onnxsim | 16.1244 | 7013 | 142 | yes | yes |
 | 175 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.8477 | 340 | 937 | yes | yes |
 | 176 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 19.5194 | 0 | 240 | yes | yes |
@@ -231,17 +231,17 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 206 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.6574 | 4122 | 77 | yes | yes |
 | 207 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 19.5362 | 192 | 44 | yes | yes |
 | 208 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.2867 | 5974 | 109 | yes | yes |
-| 209 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 14.1575 | 50951 | 198 | yes | no |
+| 209 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 14.1575 | 50951 | 198 | yes | yes |
 | 210 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 21.5988 | 0 | 30 | yes | yes |
 | 211 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 19.0186 | 240 | 156 | yes | yes |
 | 212 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.2336 | 2178 | 182 | yes | yes |
 | 213 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.4410 | 1869 | 49 | yes | yes |
 | 214 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.3575 | 726 | 41 | yes | yes |
 | 215 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.3773 | 678 | 74 | yes | yes |
-| 216 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 15.8801 | 9048 | 87 | yes | no |
+| 216 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 15.8801 | 9048 | 87 | yes | yes |
 | 217 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.7070 | 1429 | 41 | yes | yes |
 | 218 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.4838 | 572 | 104 | yes | yes |
-| 219 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 14.8258 | 26133 | 84 | yes | no |
+| 219 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 14.8258 | 26133 | 84 | yes | yes |
 | 220 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.1976 | 0 | 900 | yes | yes |
 | 221 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.3092 | 451 | 354 | yes | yes |
 | 222 | LIVE_CUSTOM | custom:task222 | 15.9159 | 8736 | 78 | yes | yes |
@@ -277,7 +277,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 252 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 19.4393 | 0 | 260 | yes | yes |
 | 253 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.6165 | 540 | 52 | yes | yes |
 | 254 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.9988 | 1079 | 19 | yes | yes |
-| 255 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_68 | 14.8709 | 24746 | 315 | yes | no |
+| 255 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_68 | 14.8709 | 24746 | 315 | yes | yes |
 | 256 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.0111 | 2898 | 50 | yes | yes |
 | 257 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.9863 | 0 | 409 | yes | yes |
 | 258 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 19.9248 | 0 | 160 | yes | yes |
@@ -307,8 +307,8 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 282 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.8997 | 407 | 39 | yes | yes |
 | 283 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.1866 | 0 | 910 | yes | yes |
 | 284 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.7745 | 3082 | 653 | yes | yes |
-| 285 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 14.8484 | 25080 | 552 | yes | no |
-| 286 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 14.1407 | 51276 | 739 | yes | no |
+| 285 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 14.8484 | 25080 | 552 | yes | yes |
+| 286 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 14.1407 | 51276 | 739 | yes | yes |
 | 287 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.4021 | 1699 | 295 | yes | yes |
 | 288 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.1352 | 769 | 189 | yes | yes |
 | 289 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.3907 | 618 | 124 | yes | yes |
@@ -341,7 +341,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 316 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.9456 | 388 | 38 | yes | yes |
 | 317 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 20.0164 | 128 | 18 | yes | yes |
 | 318 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 20.3948 | 0 | 100 | yes | yes |
-| 319 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_68 | 14.9903 | 21973 | 269 | yes | no |
+| 319 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_68 | 14.9903 | 21973 | 269 | yes | yes |
 | 320 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.3536 | 448 | 322 | yes | yes |
 | 321 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 19.2962 | 0 | 300 | yes | yes |
 | 322 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 19.7017 | 144 | 56 | yes | yes |
@@ -388,7 +388,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 363 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.4579 | 4843 | 283 | yes | yes |
 | 364 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 14.7974 | 26860 | 114 | yes | yes |
 | 365 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.6990 | 3908 | 120 | yes | yes |
-| 366 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 14.4693 | 36955 | 491 | yes | no |
+| 366 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 14.4693 | 36955 | 491 | yes | yes |
 | 367 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 14.8000 | 21268 | 5635 | yes | yes |
 | 368 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.2637 | 6022 | 203 | yes | yes |
 | 369 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.6229 | 1300 | 299 | yes | yes |

@@ -23,7 +23,10 @@ def arr_b64(payload: str) -> np.ndarray:
 
 
 def tensor(name: str, arr: np.ndarray):
-    return numpy_helper.from_array(np.ascontiguousarray(arr), name)
+    arr = np.asarray(arr)
+    if arr.ndim > 0:
+        arr = np.ascontiguousarray(arr)
+    return numpy_helper.from_array(arr, name)
 
 
 def model(name: str, nodes, inits, output_dtype=TensorProto.FLOAT, opset=11, value_infos=None):
