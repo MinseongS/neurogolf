@@ -27,6 +27,10 @@ SAMPLE_POSITIONS = [
     (4, 20),
     (3, 3),
     (13, 0),
+    (18, 18),
+    (6, 1),
+    (9, 17),
+    (11, 7),
 ]
 
 
@@ -83,9 +87,9 @@ def build(task):
         tensor("idx_offset", np.array([2], dtype=np.int64)),
         tensor("idx_half", np.array([3], dtype=np.int64)),
         tensor("one_f16", np.array(1.0, dtype=np.float16)),
-        tensor("channel_values", np.arange(10, dtype=np.float16).reshape(1, 10, 1, 1)),
+        tensor("channel_values", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1)),
         tensor("pads", np.array([0, 0, 0, 0, 0, 0, 9, 9], dtype=np.int64)),
-        tensor("pad_value", np.array(False, dtype=np.bool_)),
+        tensor("pad_value", np.array(200, dtype=np.uint8)),
     ]
     nodes = [
         helper.make_node("GatherND", ["input", "sample_nd_idx"], ["sample_planes"]),
@@ -115,7 +119,8 @@ def build(task):
         helper.make_node("Add", ["rr", "cc"], ["rrcc"]),
         helper.make_node("Mod", ["rrcc", "mod"], ["pattern0"], fmod=1),
         helper.make_node("Add", ["pattern0", "one_f16"], ["selected_labels"]),
-        helper.make_node("Equal", ["selected_labels", "channel_values"], ["onehot_raw"]),
-        helper.make_node("Pad", ["onehot_raw", "pads", "pad_value"], ["output"], mode="constant"),
+        helper.make_node("Cast", ["selected_labels"], ["selected_labels_u8"], to=TensorProto.UINT8),
+        helper.make_node("Pad", ["selected_labels_u8", "pads", "pad_value"], ["selected_labels_full"], mode="constant"),
+        helper.make_node("Equal", ["selected_labels_full", "channel_values"], ["output"]),
     ]
     return model("task017", nodes, inits, output_dtype=TensorProto.BOOL, opset=13)
