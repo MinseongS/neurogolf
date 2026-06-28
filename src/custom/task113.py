@@ -1,0 +1,22 @@
+"""Task 113 — fixed row Gather."""
+
+import numpy as np
+from onnx import TensorProto, helper, numpy_helper
+
+from ..harness import IR_VERSION
+
+
+IDX = [0, 1, 2, 3, 4, 4, 3, 2, 1, 0] + [10] * 20
+
+
+def build(task):
+    idx = numpy_helper.from_array(np.array(IDX, np.int64), "idx")
+    node = helper.make_node("Gather", ["input", "idx"], ["output"], axis=2)
+    graph = helper.make_graph(
+        [node],
+        "task113",
+        [helper.make_tensor_value_info("input", TensorProto.FLOAT, [1, 10, 30, 30])],
+        [helper.make_tensor_value_info("output", TensorProto.FLOAT, [1, 10, 30, 30])],
+        [idx],
+    )
+    return helper.make_model(graph, ir_version=IR_VERSION, opset_imports=[helper.make_opsetid("", 11)])
