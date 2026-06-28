@@ -142,5 +142,47 @@
       "verification": "confirm generator max height/width, stored eval, fresh adopt gate"
     },
     "transformer": null
+  },
+  {
+    "id": "public_teacher_bitwise_scan_replacement",
+    "title": "Replace repeated MaxPool/Max/Min scan stacks with bitwise shift/mask routing when the state is binary",
+    "status": "active",
+    "source_tasks": [2, 209],
+    "rationale": "URAD 7174.10 teacher overlays for task002 and task209 replaced large repeated MaxPool/Max/Min scan stacks with BitShift/BitwiseAnd/BitwiseOr/Gather or small QLinearConv routing, cutting 15k-19k memory and producing +0.46..+0.50 stored gains.  Treat as a teacher-derived mechanism: extract the exact binary state encoding before applying broadly.",
+    "applies_when": {
+      "any_ops": ["MaxPool", "Max", "Min"],
+      "any_tags": ["maxpool_scan", "connectivity_wall", "high_memory"],
+      "min_memory": 15000
+    },
+    "reject_when": {
+      "any_tags": ["mem0_single_op"]
+    },
+    "expected": {
+      "gain_type": "memory",
+      "risk": "medium-high",
+      "verification": "stored eval, fresh eval when generator available, public-probe if strict fresh is known weak"
+    },
+    "transformer": null
+  },
+  {
+    "id": "public_teacher_qlinear_conv_rewrite",
+    "title": "Convert repeated binary/count Conv/ConvTranspose towers to QLinearConv/uint8 routes",
+    "status": "active",
+    "source_tasks": [23, 349, 182, 233, 255],
+    "rationale": "URAD 7174.10 teacher overlays showed broad gains from replacing fp32/fp16 Conv-heavy shape logic with QLinearConv/uint8 equivalents.  task023 gained +0.533 stored with 56 QLinearConv nodes; task349 gained +0.398 with lower memory and params.  This extends the local task055/task080 QLinear insight to ConvTranspose/shape-detection towers.",
+    "applies_when": {
+      "any_ops": ["Conv", "ConvTranspose"],
+      "any_tags": ["conv_heavy", "local_stencil", "qlinear"],
+      "min_memory": 2000
+    },
+    "reject_when": {
+      "any_tags": ["mem0_single_op", "assignment_wall"]
+    },
+    "expected": {
+      "gain_type": "memory+params",
+      "risk": "medium",
+      "verification": "stored eval plus fresh; inspect for output-range saturation before adoption"
+    },
+    "transformer": null
   }
 ]

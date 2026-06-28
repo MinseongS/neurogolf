@@ -1,13 +1,14 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-28 18:13_
+_Updated: 2026-06-28 18:24_
 
-**Total: 7172.33 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 7176.88 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
-| ext:franksunp7166_65 | 368 | 6666.36 |
-| ext:franksunp7166_68 | 12 | 180.93 |
+| ext:franksunp7166_65 | 357 | 6497.69 |
+| teacher:urad7174_top15_public_probe | 15 | 231.98 |
+| ext:franksunp7166_68 | 9 | 137.64 |
 | custom:task128 | 1 | 19.30 |
 | custom:task352 | 1 | 18.87 |
 | custom:task267 | 1 | 18.36 |
@@ -23,7 +24,6 @@ _Updated: 2026-06-28 18:13_
 | custom:task204+onnxsim | 1 | 15.72 |
 | custom:task080+qconv+onnxsim | 1 | 15.67 |
 | custom:task017+source-ahead-public-probe | 1 | 15.63 |
-| custom:task202+qlinear+onnxsim | 1 | 15.48 |
 | custom:task338+qlinear+onnxsim | 1 | 15.41 |
 | custom:task191+onnxsim | 1 | 14.62 |
 | custom:task187 | 1 | 14.58 |
@@ -34,7 +34,7 @@ _Updated: 2026-06-28 18:13_
 | task | method | memory | params | points |
 |---|---|---:|---:|---:|
 | 001 | ext:franksunp7166_65 | 1095 | 26 | 17.98 |
-| 002 | ext:franksunp7166_65 | 40084 | 32 | 14.40 |
+| 002 | teacher:urad7174_top15_public_probe | 24320 | 127 | 14.90 |
 | 003 | ext:franksunp7166_65 | 281 | 21 | 19.29 |
 | 004 | ext:franksunp7166_65 | 5812 | 92 | 16.32 |
 | 005 | ext:franksunp7166_65 | 6610 | 490 | 16.13 |
@@ -50,12 +50,12 @@ _Updated: 2026-06-28 18:13_
 | 015 | ext:franksunp7166_65 | 0 | 900 | 18.20 |
 | 016 | ext:franksunp7166_65 | 0 | 10 | 22.70 |
 | 017 | custom:task017+source-ahead-public-probe | 9330 | 2388 | 15.63 |
-| 018 | ext:franksunp7166_68 | 63257 | 3038 | 13.90 |
+| 018 | teacher:urad7174_top15_public_probe | 48196 | 2987 | 14.16 |
 | 019 | ext:franksunp7166_65 | 2997 | 82 | 16.97 |
 | 020 | ext:franksunp7166_65 | 1356 | 170 | 17.67 |
 | 021 | ext:franksunp7166_65 | 1072 | 98 | 17.94 |
 | 022 | ext:franksunp7166_65 | 2004 | 298 | 17.26 |
-| 023 | ext:franksunp7166_65 | 22275 | 111 | 14.98 |
+| 023 | teacher:urad7174_top15_public_probe | 12843 | 291 | 15.52 |
 | 024 | ext:franksunp7166_65 | 0 | 110 | 20.30 |
 | 025 | ext:franksunp7166_65 | 14072 | 195 | 15.43 |
 | 026 | ext:franksunp7166_65 | 0 | 200 | 19.70 |
@@ -189,11 +189,11 @@ _Updated: 2026-06-28 18:13_
 | 154 | ext:franksunp7166_65 | 2661 | 99 | 17.08 |
 | 155 | ext:franksunp7166_65 | 128 | 30 | 19.94 |
 | 156 | ext:franksunp7166_65 | 1697 | 47 | 17.54 |
-| 157 | ext:franksunp7166_68 | 12118 | 588 | 15.55 |
+| 157 | teacher:urad7174_top15_public_probe | 7983 | 351 | 15.97 |
 | 158 | ext:franksunp7166_65 | 33053 | 2343 | 14.53 |
 | 159 | ext:franksunp7166_65 | 1419 | 149 | 17.64 |
 | 160 | ext:franksunp7166_65 | 1164 | 170 | 17.80 |
-| 161 | ext:franksunp7166_65 | 5189 | 28 | 16.44 |
+| 161 | teacher:urad7174_top15_public_probe | 4055 | 41 | 16.68 |
 | 162 | ext:franksunp7166_65 | 4024 | 44 | 16.69 |
 | 163 | ext:franksunp7166_65 | 2235 | 110 | 17.24 |
 | 164 | ext:franksunp7166_65 | 0 | 30 | 21.60 |
@@ -214,7 +214,7 @@ _Updated: 2026-06-28 18:13_
 | 179 | ext:franksunp7166_65 | 0 | 0 | 25.00 |
 | 180 | ext:franksunp7166_65 | 0 | 210 | 19.65 |
 | 181 | ext:franksunp7166_65 | 201 | 168 | 19.09 |
-| 182 | ext:franksunp7166_65 | 7935 | 95 | 16.01 |
+| 182 | teacher:urad7174_top15_public_probe | 6695 | 98 | 16.18 |
 | 183 | ext:franksunp7166_65 | 1008 | 222 | 17.89 |
 | 184 | ext:franksunp7166_65 | 2460 | 60 | 17.17 |
 | 185 | ext:franksunp7166_65 | 1651 | 310 | 17.42 |
@@ -230,18 +230,18 @@ _Updated: 2026-06-28 18:13_
 | 195 | ext:franksunp7166_65 | 882 | 39 | 18.17 |
 | 196 | ext:franksunp7166_65 | 4725 | 36 | 16.53 |
 | 197 | ext:franksunp7166_65 | 2586 | 16 | 17.14 |
-| 198 | ext:franksunp7166_65 | 16961 | 136 | 15.25 |
+| 198 | teacher:urad7174_top15_public_probe | 13434 | 138 | 15.48 |
 | 199 | ext:franksunp7166_65 | 1749 | 88 | 17.48 |
 | 200 | ext:franksunp7166_65 | 570 | 186 | 18.37 |
 | 201 | ext:franksunp7166_65 | 4476 | 298 | 16.53 |
-| 202 | custom:task202+qlinear+onnxsim | 13563 | 25 | 15.48 |
+| 202 | teacher:urad7174_top15_public_probe | 11253 | 24 | 15.67 |
 | 203 | ext:franksunp7166_65 | 408 | 1 | 18.99 |
 | 204 | custom:task204+onnxsim | 10244 | 453 | 15.72 |
-| 205 | ext:franksunp7166_65 | 19212 | 651 | 15.10 |
+| 205 | teacher:urad7174_top15_public_probe | 14734 | 638 | 15.36 |
 | 206 | ext:franksunp7166_65 | 4122 | 77 | 16.66 |
 | 207 | ext:franksunp7166_65 | 192 | 44 | 19.54 |
 | 208 | ext:franksunp7166_65 | 5974 | 109 | 16.29 |
-| 209 | ext:franksunp7166_65 | 50951 | 198 | 14.16 |
+| 209 | teacher:urad7174_top15_public_probe | 32027 | 185 | 14.62 |
 | 210 | ext:franksunp7166_65 | 0 | 30 | 21.60 |
 | 211 | ext:franksunp7166_65 | 240 | 156 | 19.02 |
 | 212 | ext:franksunp7166_65 | 2178 | 182 | 17.23 |
@@ -251,7 +251,7 @@ _Updated: 2026-06-28 18:13_
 | 216 | ext:franksunp7166_65 | 9048 | 87 | 15.88 |
 | 217 | ext:franksunp7166_65 | 1429 | 41 | 17.71 |
 | 218 | ext:franksunp7166_65 | 572 | 104 | 18.48 |
-| 219 | ext:franksunp7166_65 | 26133 | 84 | 14.83 |
+| 219 | teacher:urad7174_top15_public_probe | 18633 | 92 | 15.16 |
 | 220 | ext:franksunp7166_65 | 0 | 900 | 18.20 |
 | 221 | ext:franksunp7166_65 | 451 | 354 | 18.31 |
 | 222 | custom:task222 | 8736 | 78 | 15.92 |
@@ -265,7 +265,7 @@ _Updated: 2026-06-28 18:13_
 | 230 | ext:franksunp7166_65 | 0 | 900 | 18.20 |
 | 231 | ext:franksunp7166_65 | 180 | 39 | 19.61 |
 | 232 | ext:franksunp7166_65 | 0 | 1410 | 17.75 |
-| 233 | ext:franksunp7166_68 | 69943 | 644 | 13.84 |
+| 233 | teacher:urad7174_top15_public_probe | 59587 | 654 | 13.99 |
 | 234 | ext:franksunp7166_65 | 6809 | 45 | 16.17 |
 | 235 | ext:franksunp7166_65 | 111 | 59 | 19.86 |
 | 236 | ext:franksunp7166_65 | 208 | 29 | 19.53 |
@@ -309,7 +309,7 @@ _Updated: 2026-06-28 18:13_
 | 274 | ext:franksunp7166_65 | 146 | 80 | 19.58 |
 | 275 | ext:franksunp7166_65 | 1374 | 637 | 17.39 |
 | 276 | ext:franksunp7166_65 | 0 | 10 | 22.70 |
-| 277 | ext:franksunp7166_65 | 5342 | 18 | 16.41 |
+| 277 | teacher:urad7174_top15_public_probe | 4101 | 228 | 16.63 |
 | 278 | ext:franksunp7166_65 | 6084 | 47 | 16.28 |
 | 279 | ext:franksunp7166_65 | 5508 | 47 | 16.38 |
 | 280 | ext:franksunp7166_68 | 5302 | 752 | 16.29 |
@@ -367,7 +367,7 @@ _Updated: 2026-06-28 18:13_
 | 332 | ext:franksunp7166_65 | 429 | 134 | 18.67 |
 | 333 | ext:franksunp7166_65 | 2792 | 435 | 16.92 |
 | 334 | ext:franksunp7166_65 | 189 | 8 | 19.72 |
-| 335 | ext:franksunp7166_65 | 3546 | 670 | 16.65 |
+| 335 | teacher:urad7174_top15_public_probe | 2840 | 661 | 16.84 |
 | 336 | ext:franksunp7166_65 | 1092 | 1196 | 17.26 |
 | 337 | ext:franksunp7166_65 | 0 | 10 | 22.70 |
 | 338 | custom:task338+qlinear+onnxsim | 13890 | 667 | 15.41 |
@@ -381,7 +381,7 @@ _Updated: 2026-06-28 18:13_
 | 346 | ext:franksunp7166_65 | 1224 | 30 | 17.87 |
 | 347 | ext:franksunp7166_65 | 117 | 26 | 20.04 |
 | 348 | ext:franksunp7166_65 | 2108 | 169 | 17.27 |
-| 349 | ext:franksunp7166_65 | 37800 | 1196 | 14.43 |
+| 349 | teacher:urad7174_top15_public_probe | 26100 | 90 | 14.83 |
 | 350 | ext:franksunp7166_65 | 9012 | 26 | 15.89 |
 | 351 | ext:franksunp7166_65 | 1632 | 19 | 17.59 |
 | 352 | custom:task352 | 0 | 460 | 18.87 |

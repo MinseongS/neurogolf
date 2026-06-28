@@ -7,10 +7,10 @@
    "method": "ext:franksunp7166_65"
   },
   "2": {
-   "points": 14.400469463791902,
-   "memory": 40084,
-   "params": 32,
-   "method": "ext:franksunp7166_65"
+   "points": 14.895737212011671,
+   "memory": 24320,
+   "params": 127,
+   "method": "teacher:urad7174_top15_public_probe"
   },
   "3": {
    "points": 19.28957298262513,
@@ -103,10 +103,10 @@
    "method": "custom:task017+source-ahead-public-probe"
   },
   "18": {
-   "points": 13.898130241451181,
-   "memory": 63257,
-   "params": 3038,
-   "method": "ext:franksunp7166_68"
+   "points": 14.156837275356981,
+   "memory": 48196,
+   "params": 2987,
+   "method": "teacher:urad7174_top15_public_probe"
   },
   "19": {
    "points": 16.9676398520755,
@@ -133,10 +133,10 @@
    "method": "ext:franksunp7166_65"
   },
   "23": {
-   "points": 14.983808957550787,
-   "memory": 22275,
-   "params": 111,
-   "method": "ext:franksunp7166_65"
+   "points": 15.517040433249083,
+   "memory": 12843,
+   "params": 291,
+   "method": "teacher:urad7174_top15_public_probe"
   },
   "24": {
    "points": 20.299519634207584,
@@ -937,10 +937,10 @@
    "method": "ext:franksunp7166_65"
   },
   "157": {
-   "points": 15.550170398173522,
-   "memory": 12118,
-   "params": 588,
-   "method": "ext:franksunp7166_68"
+   "points": 15.9719011880176,
+   "memory": 7983,
+   "params": 351,
+   "method": "teacher:urad7174_top15_public_probe"
   },
   "158": {
    "points": 14.525645901612759,
@@ -961,10 +961,10 @@
    "method": "ext:franksunp7166_65"
   },
   "161": {
-   "points": 16.440322196977608,
-   "memory": 5189,
-   "params": 28,
-   "method": "ext:franksunp7166_65"
+   "points": 16.682233833280655,
+   "memory": 4055,
+   "params": 41,
+   "method": "teacher:urad7174_top15_public_probe"
   },
   "162": {
    "points": 16.68909324283155,
@@ -1087,10 +1087,10 @@
    "method": "ext:franksunp7166_65"
   },
   "182": {
-   "points": 16.00906019305919,
-   "memory": 7935,
-   "params": 95,
-   "method": "ext:franksunp7166_65"
+   "points": 16.176352050808696,
+   "memory": 6695,
+   "params": 98,
+   "method": "teacher:urad7174_top15_public_probe"
   },
   "183": {
    "points": 17.885230551633537,
@@ -1183,10 +1183,10 @@
    "method": "ext:franksunp7166_65"
   },
   "198": {
-   "points": 15.25334171149689,
-   "memory": 16961,
-   "params": 136,
-   "method": "ext:franksunp7166_65"
+   "points": 15.48423587409588,
+   "memory": 13434,
+   "params": 138,
+   "method": "teacher:urad7174_top15_public_probe"
   },
   "199": {
    "points": 17.484110914784875,
@@ -1207,10 +1207,10 @@
    "method": "ext:franksunp7166_65"
   },
   "202": {
-   "points": 15.483057670719525,
-   "memory": 13563,
-   "params": 25,
-   "method": "custom:task202+qlinear+onnxsim"
+   "points": 15.669479467767712,
+   "memory": 11253,
+   "params": 24,
+   "method": "teacher:urad7174_top15_public_probe"
   },
   "203": {
    "points": 18.986284843957197,
@@ -1225,10 +1225,10 @@
    "method": "custom:task204+onnxsim"
   },
   "205": {
-   "points": 15.103386016407045,
-   "memory": 19212,
-   "params": 651,
-   "method": "ext:franksunp7166_65"
+   "points": 15.359697048315265,
+   "memory": 14734,
+   "params": 638,
+   "method": "teacher:urad7174_top15_public_probe"
   },
   "206": {
    "points": 16.657398319315806,
@@ -1249,10 +1249,10 @@
    "method": "ext:franksunp7166_65"
   },
   "209": {
-   "points": 14.157501779153469,
-   "memory": 50951,
-   "params": 198,
-   "method": "ext:franksunp7166_65"
+   "points": 14.619905667084565,
+   "memory": 32027,
+   "params": 185,
+   "method": "teacher:urad7174_top15_public_probe"
   },
   "210": {
    "points": 21.598802618337846,
@@ -1309,10 +1309,10 @@
    "method": "ext:franksunp7166_65"
   },
   "219": {
-   "points": 14.825836665704346,
-   "memory": 26133,
-   "params": 84,
-   "method": "ext:franksunp7166_65"
+   "points": 15.16238519161458,
+   "memory": 18633,
+   "params": 92,
+   "method": "teacher:urad7174_top15_public_probe"
   },
   "220": {
    "points": 18.197605236675688,
@@ -1395,10 +1395,10 @@
    "method": "ext:franksunp7166_65"
   },
   "233": {
-   "points": 13.835398729451114,
-   "memory": 69943,
-   "params": 644,
-   "method": "ext:franksunp7166_68"
+   "points": 13.993891537398403,
+   "memory": 59587,
+   "params": 654,
+   "method": "teacher:urad7174_top15_public_probe"
   },
   "234": {
    "points": 16.16741229756545,
@@ -1659,10 +1659,10 @@
    "method": "ext:franksunp7166_65"
   },
   "277": {
-   "points": 16.413280745935154,
-   "memory": 5342,
-   "params": 18,
-   "method": "ext:franksunp7166_65"
+   "points": 16.62690815255802,
+   "memory": 4101,
+   "params": 228,
+   "method": "teacher:urad7174_top15_public_probe"
   },
   "278": {
    "points": 16.278886852237314,
@@ -2008,10 +2008,10 @@
    "method": "ext:franksunp7166_65"
   },
   "335": {
-   "points": 16.6533579097788,
-   "memory": 3546,
-   "params": 670,
-   "method": "ext:franksunp7166_65"
+   "points": 16.839196079045337,
+   "memory": 2840,
+   "params": 661,
+   "method": "teacher:urad7174_top15_public_probe"
   },
   "336": {
    "points": 17.26456664750031,
@@ -2092,10 +2092,10 @@
    "method": "ext:franksunp7166_65"
   },
   "349": {
-   "points": 14.428785644250837,
-   "memory": 37800,
-   "params": 1196,
-   "method": "ext:franksunp7166_65"
+   "points": 14.826867062498243,
+   "memory": 26100,
+   "params": 90,
+   "method": "teacher:urad7174_top15_public_probe"
   },
   "350": {
    "points": 15.890806810028774,

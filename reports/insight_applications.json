@@ -61,23 +61,8 @@
     "title": "Replace fp16/fp32 one-hot LUT/MatMul selection with uint8 QLinearMatMul/QLinearConv where exact"
   },
   {
-    "candidate_count": 25,
+    "candidate_count": 26,
     "candidates": [
-      {
-        "memory": 10931,
-        "method": "ext:franksunp7166_65",
-        "params": 1804,
-        "points": 15.547890612586443,
-        "score": 12870.633,
-        "source_class": "semantic_or_handbuilt",
-        "tags": [
-          "custom_win",
-          "high_memory",
-          "onehot_final_equal",
-          "open_angle"
-        ],
-        "task": 17
-      },
       {
         "memory": 13368,
         "method": "ext:franksunp7166_65",
@@ -93,6 +78,37 @@
           "open_angle"
         ],
         "task": 64
+      },
+      {
+        "memory": 9330,
+        "method": "custom:task017+source-ahead-public-probe",
+        "params": 2388,
+        "points": 15.631118599895267,
+        "score": 11828.664,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "custom_win",
+          "onehot_final_equal",
+          "open_angle"
+        ],
+        "task": 17
+      },
+      {
+        "memory": 11253,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 24,
+        "points": 15.669479467767712,
+        "score": 11376.156,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "connectivity_wall",
+          "high_memory",
+          "local_stencil",
+          "onehot_final_equal",
+          "open_angle",
+          "qlinear"
+        ],
+        "task": 202
       },
       {
         "memory": 8736,
@@ -219,21 +235,6 @@
         "task": 378
       },
       {
-        "memory": 3546,
-        "method": "ext:franksunp7166_65",
-        "params": 670,
-        "points": 16.6533579097788,
-        "score": 4216.0,
-        "source_class": "semantic_or_handbuilt",
-        "tags": [
-          "conv_heavy",
-          "local_stencil",
-          "onehot_final_equal",
-          "open_angle"
-        ],
-        "task": 335
-      },
-      {
         "memory": 2924,
         "method": "ext:franksunp7166_65",
         "params": 1154,
@@ -264,6 +265,21 @@
           "scatter"
         ],
         "task": 387
+      },
+      {
+        "memory": 2840,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 661,
+        "points": 16.839196079045337,
+        "score": 3501.0,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "conv_heavy",
+          "local_stencil",
+          "onehot_final_equal",
+          "open_angle"
+        ],
+        "task": 335
       },
       {
         "memory": 2856,
@@ -413,11 +429,11 @@
         "task": 48
       },
       {
-        "memory": 50951,
-        "method": "ext:franksunp7166_65",
-        "params": 198,
-        "points": 14.157501779153469,
-        "score": -50298.251,
+        "memory": 32027,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 185,
+        "points": 14.619905667084565,
+        "score": -69373.972,
         "source_class": "exact_preserve",
         "tags": [
           "ambiguity_wall",
@@ -431,6 +447,7 @@
           "low_score",
           "lut_selection",
           "onehot_final_equal",
+          "qlinear",
           "scan"
         ],
         "task": 209
@@ -466,14 +483,14 @@
     "title": "Delay 10-channel expansion to final Equal/Where output"
   },
   {
-    "candidate_count": 37,
+    "candidate_count": 36,
     "candidates": [
       {
-        "memory": 69943,
-        "method": "ext:franksunp7166_68",
-        "params": 644,
-        "points": 13.835398729451114,
-        "score": 70736.38,
+        "memory": 59587,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 654,
+        "points": 13.993891537398403,
+        "score": 60342.833,
         "source_class": "exact_preserve",
         "tags": [
           "conv_heavy",
@@ -482,46 +499,11 @@
           "high_memory",
           "low_score",
           "matmul",
+          "qlinear",
           "scan",
           "scatter"
         ],
         "task": 233
-      },
-      {
-        "memory": 40084,
-        "method": "ext:franksunp7166_65",
-        "params": 32,
-        "points": 14.400469463791902,
-        "score": 38595.859,
-        "source_class": "exact_preserve",
-        "tags": [
-          "connectivity_wall",
-          "documented_wall",
-          "exact_preserve",
-          "heuristic",
-          "high_memory",
-          "low_score",
-          "maxpool_scan"
-        ],
-        "task": 2
-      },
-      {
-        "memory": 37800,
-        "method": "ext:franksunp7166_65",
-        "params": 1196,
-        "points": 14.428785644250837,
-        "score": 37967.364,
-        "source_class": "unknown",
-        "tags": [
-          "documented_wall",
-          "high_memory",
-          "local_stencil",
-          "low_score",
-          "lut_selection",
-          "open_angle",
-          "scan"
-        ],
-        "task": 349
       },
       {
         "memory": 36955,
@@ -638,26 +620,24 @@
         "task": 285
       },
       {
-        "memory": 26133,
-        "method": "ext:franksunp7166_65",
-        "params": 84,
-        "points": 14.825836665704346,
-        "score": 24569.249,
-        "source_class": "exact_preserve",
+        "memory": 26100,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 90,
+        "points": 14.826867062498243,
+        "score": 25041.94,
+        "source_class": "unknown",
         "tags": [
-          "assignment_wall",
-          "connectivity_wall",
+          "conv_heavy",
           "documented_wall",
-          "exact_preserve",
-          "gather_heavy",
-          "heuristic",
           "high_memory",
+          "local_stencil",
           "low_score",
           "lut_selection",
+          "maxpool_scan",
           "open_angle",
-          "scan"
+          "qlinear"
         ],
-        "task": 219
+        "task": 349
       },
       {
         "memory": 23159,
@@ -728,21 +708,25 @@
         "task": 101
       },
       {
-        "memory": 16961,
-        "method": "ext:franksunp7166_65",
-        "params": 136,
-        "points": 15.25334171149689,
-        "score": 15820.997,
-        "source_class": "semantic_or_handbuilt",
+        "memory": 18633,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 92,
+        "points": 15.16238519161458,
+        "score": 16976.284,
+        "source_class": "exact_preserve",
         "tags": [
+          "assignment_wall",
           "connectivity_wall",
           "documented_wall",
+          "exact_preserve",
           "gather_heavy",
+          "heuristic",
           "high_memory",
+          "lut_selection",
           "open_angle",
           "scan"
         ],
-        "task": 198
+        "task": 219
       },
       {
         "memory": 14072,
@@ -776,6 +760,23 @@
         "task": 110
       },
       {
+        "memory": 13434,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 138,
+        "points": 15.48423587409588,
+        "score": 12226.729,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "connectivity_wall",
+          "documented_wall",
+          "gather_heavy",
+          "high_memory",
+          "open_angle",
+          "scan"
+        ],
+        "task": 198
+      },
+      {
         "memory": 13104,
         "method": "ext:franksunp7166_65",
         "params": 111,
@@ -792,27 +793,6 @@
           "open_angle"
         ],
         "task": 145
-      },
-      {
-        "memory": 12118,
-        "method": "ext:franksunp7166_68",
-        "params": 588,
-        "points": 15.550170398173522,
-        "score": 10840.949,
-        "source_class": "exact_preserve",
-        "tags": [
-          "assignment_wall",
-          "connectivity_wall",
-          "documented_wall",
-          "exact_preserve",
-          "gather_heavy",
-          "heuristic",
-          "high_memory",
-          "lut_selection",
-          "open_angle",
-          "scatter"
-        ],
-        "task": 157
       },
       {
         "memory": 9144,
@@ -884,6 +864,26 @@
         "task": 324
       },
       {
+        "memory": 7983,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 351,
+        "points": 15.9719011880176,
+        "score": 6342.43,
+        "source_class": "exact_preserve",
+        "tags": [
+          "assignment_wall",
+          "connectivity_wall",
+          "documented_wall",
+          "exact_preserve",
+          "gather_heavy",
+          "heuristic",
+          "lut_selection",
+          "open_angle",
+          "scatter"
+        ],
+        "task": 157
+      },
+      {
         "memory": 5790,
         "method": "custom:task055",
         "params": 48,
@@ -915,18 +915,6 @@
         "task": 382
       },
       {
-        "memory": 5342,
-        "method": "ext:franksunp7166_65",
-        "params": 18,
-        "points": 16.413280745935154,
-        "score": 5360.0,
-        "source_class": "semantic_or_handbuilt",
-        "tags": [
-          "maxpool_scan"
-        ],
-        "task": 277
-      },
-      {
         "memory": 6809,
         "method": "ext:franksunp7166_65",
         "params": 45,
@@ -939,6 +927,18 @@
           "open_angle"
         ],
         "task": 234
+      },
+      {
+        "memory": 4101,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 228,
+        "points": 16.62690815255802,
+        "score": 4329.0,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "maxpool_scan"
+        ],
+        "task": 277
       },
       {
         "memory": 5472,
@@ -1049,11 +1049,11 @@
         "task": 46
       },
       {
-        "memory": 63257,
-        "method": "ext:franksunp7166_68",
-        "params": 3038,
-        "points": 13.898130241451181,
-        "score": -35074.439,
+        "memory": 48196,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 2987,
+        "points": 14.156837275356981,
+        "score": -50264.051,
         "source_class": "exact_preserve",
         "tags": [
           "ambiguity_wall",
@@ -1069,11 +1069,11 @@
         "task": 18
       },
       {
-        "memory": 50951,
-        "method": "ext:franksunp7166_65",
-        "params": 198,
-        "points": 14.157501779153469,
-        "score": -50298.251,
+        "memory": 32027,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 185,
+        "points": 14.619905667084565,
+        "score": -69373.972,
         "source_class": "exact_preserve",
         "tags": [
           "ambiguity_wall",
@@ -1087,6 +1087,7 @@
           "low_score",
           "lut_selection",
           "onehot_final_equal",
+          "qlinear",
           "scan"
         ],
         "task": 209
@@ -1128,11 +1129,11 @@
     "candidate_count": 63,
     "candidates": [
       {
-        "memory": 69943,
-        "method": "ext:franksunp7166_68",
-        "params": 644,
-        "points": 13.835398729451114,
-        "score": 70736.38,
+        "memory": 59587,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 654,
+        "points": 13.993891537398403,
+        "score": 60342.833,
         "source_class": "exact_preserve",
         "tags": [
           "conv_heavy",
@@ -1141,43 +1142,31 @@
           "high_memory",
           "low_score",
           "matmul",
+          "qlinear",
           "scan",
           "scatter"
         ],
         "task": 233
       },
       {
-        "memory": 37800,
-        "method": "ext:franksunp7166_65",
-        "params": 1196,
-        "points": 14.428785644250837,
-        "score": 37967.364,
+        "memory": 26100,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 90,
+        "points": 14.826867062498243,
+        "score": 25041.94,
         "source_class": "unknown",
         "tags": [
+          "conv_heavy",
           "documented_wall",
           "high_memory",
           "local_stencil",
           "low_score",
           "lut_selection",
+          "maxpool_scan",
           "open_angle",
-          "scan"
+          "qlinear"
         ],
         "task": 349
-      },
-      {
-        "memory": 22275,
-        "method": "ext:franksunp7166_65",
-        "params": 111,
-        "points": 14.983808957550787,
-        "score": 22690.857,
-        "source_class": "semantic_or_handbuilt",
-        "tags": [
-          "conv_heavy",
-          "high_memory",
-          "local_stencil",
-          "low_score"
-        ],
-        "task": 23
       },
       {
         "memory": 13007,
@@ -1191,6 +1180,20 @@
           "high_memory"
         ],
         "task": 396
+      },
+      {
+        "memory": 12843,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 291,
+        "points": 15.517040433249083,
+        "score": 13278.888,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "conv_heavy",
+          "high_memory",
+          "qlinear"
+        ],
+        "task": 23
       },
       {
         "memory": 14106,
@@ -1360,21 +1363,6 @@
         "task": 278
       },
       {
-        "memory": 3546,
-        "method": "ext:franksunp7166_65",
-        "params": 670,
-        "points": 16.6533579097788,
-        "score": 4216.0,
-        "source_class": "semantic_or_handbuilt",
-        "tags": [
-          "conv_heavy",
-          "local_stencil",
-          "onehot_final_equal",
-          "open_angle"
-        ],
-        "task": 335
-      },
-      {
         "memory": 3922,
         "method": "ext:franksunp7166_65",
         "params": 243,
@@ -1432,6 +1420,21 @@
           "scatter"
         ],
         "task": 284
+      },
+      {
+        "memory": 2840,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 661,
+        "points": 16.839196079045337,
+        "score": 3501.0,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "conv_heavy",
+          "local_stencil",
+          "onehot_final_equal",
+          "open_angle"
+        ],
+        "task": 335
       },
       {
         "memory": 3065,
@@ -2050,14 +2053,14 @@
     "title": "Collapse local neighborhood rules to one sparse Conv/QLinearConv when output is thresholded"
   },
   {
-    "candidate_count": 19,
+    "candidate_count": 18,
     "candidates": [
       {
-        "memory": 69943,
-        "method": "ext:franksunp7166_68",
-        "params": 644,
-        "points": 13.835398729451114,
-        "score": 70736.38,
+        "memory": 59587,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 654,
+        "points": 13.993891537398403,
+        "score": 60342.833,
         "source_class": "exact_preserve",
         "tags": [
           "conv_heavy",
@@ -2066,6 +2069,7 @@
           "high_memory",
           "low_score",
           "matmul",
+          "qlinear",
           "scan",
           "scatter"
         ],
@@ -2089,24 +2093,6 @@
           "low_score"
         ],
         "task": 286
-      },
-      {
-        "memory": 40084,
-        "method": "ext:franksunp7166_65",
-        "params": 32,
-        "points": 14.400469463791902,
-        "score": 38595.859,
-        "source_class": "exact_preserve",
-        "tags": [
-          "connectivity_wall",
-          "documented_wall",
-          "exact_preserve",
-          "heuristic",
-          "high_memory",
-          "low_score",
-          "maxpool_scan"
-        ],
-        "task": 2
       },
       {
         "memory": 36955,
@@ -2189,28 +2175,6 @@
         "task": 285
       },
       {
-        "memory": 26133,
-        "method": "ext:franksunp7166_65",
-        "params": 84,
-        "points": 14.825836665704346,
-        "score": 24569.249,
-        "source_class": "exact_preserve",
-        "tags": [
-          "assignment_wall",
-          "connectivity_wall",
-          "documented_wall",
-          "exact_preserve",
-          "gather_heavy",
-          "heuristic",
-          "high_memory",
-          "low_score",
-          "lut_selection",
-          "open_angle",
-          "scan"
-        ],
-        "task": 219
-      },
-      {
         "memory": 25375,
         "method": "ext:franksunp7166_68",
         "params": 289,
@@ -2268,6 +2232,26 @@
         "task": 173
       },
       {
+        "memory": 24320,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 127,
+        "points": 14.895737212011671,
+        "score": 22778.279,
+        "source_class": "exact_preserve",
+        "tags": [
+          "bitwise_program",
+          "connectivity_wall",
+          "documented_wall",
+          "exact_preserve",
+          "gather_heavy",
+          "heuristic",
+          "high_memory",
+          "low_score",
+          "matmul"
+        ],
+        "task": 2
+      },
+      {
         "memory": 21973,
         "method": "ext:franksunp7166_68",
         "params": 269,
@@ -2319,11 +2303,11 @@
         "task": 101
       },
       {
-        "memory": 12118,
-        "method": "ext:franksunp7166_68",
-        "params": 588,
-        "points": 15.550170398173522,
-        "score": 10840.949,
+        "memory": 18633,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 92,
+        "points": 15.16238519161458,
+        "score": 16976.284,
         "source_class": "exact_preserve",
         "tags": [
           "assignment_wall",
@@ -2335,9 +2319,9 @@
           "high_memory",
           "lut_selection",
           "open_angle",
-          "scatter"
+          "scan"
         ],
-        "task": 157
+        "task": 219
       },
       {
         "memory": 11620,
@@ -2359,11 +2343,11 @@
         "task": 44
       },
       {
-        "memory": 63257,
-        "method": "ext:franksunp7166_68",
-        "params": 3038,
-        "points": 13.898130241451181,
-        "score": -35074.439,
+        "memory": 48196,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 2987,
+        "points": 14.156837275356981,
+        "score": -50264.051,
         "source_class": "exact_preserve",
         "tags": [
           "ambiguity_wall",
@@ -2377,29 +2361,6 @@
           "scatter"
         ],
         "task": 18
-      },
-      {
-        "memory": 50951,
-        "method": "ext:franksunp7166_65",
-        "params": 198,
-        "points": 14.157501779153469,
-        "score": -50298.251,
-        "source_class": "exact_preserve",
-        "tags": [
-          "ambiguity_wall",
-          "assignment_wall",
-          "connectivity_wall",
-          "conv_heavy",
-          "documented_wall",
-          "exact_preserve",
-          "heuristic",
-          "high_memory",
-          "low_score",
-          "lut_selection",
-          "onehot_final_equal",
-          "scan"
-        ],
-        "task": 209
       },
       {
         "memory": 31049,
@@ -2424,6 +2385,30 @@
           "scatter"
         ],
         "task": 118
+      },
+      {
+        "memory": 32027,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 185,
+        "points": 14.619905667084565,
+        "score": -69373.972,
+        "source_class": "exact_preserve",
+        "tags": [
+          "ambiguity_wall",
+          "assignment_wall",
+          "connectivity_wall",
+          "conv_heavy",
+          "documented_wall",
+          "exact_preserve",
+          "heuristic",
+          "high_memory",
+          "low_score",
+          "lut_selection",
+          "onehot_final_equal",
+          "qlinear",
+          "scan"
+        ],
+        "task": 209
       }
     ],
     "expected": {
@@ -2574,11 +2559,11 @@
     "candidate_count": 36,
     "candidates": [
       {
-        "memory": 69943,
-        "method": "ext:franksunp7166_68",
-        "params": 644,
-        "points": 13.835398729451114,
-        "score": 70736.38,
+        "memory": 59587,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 654,
+        "points": 13.993891537398403,
+        "score": 60342.833,
         "source_class": "exact_preserve",
         "tags": [
           "conv_heavy",
@@ -2587,6 +2572,7 @@
           "high_memory",
           "low_score",
           "matmul",
+          "qlinear",
           "scan",
           "scatter"
         ],
@@ -2610,24 +2596,6 @@
           "low_score"
         ],
         "task": 286
-      },
-      {
-        "memory": 40084,
-        "method": "ext:franksunp7166_65",
-        "params": 32,
-        "points": 14.400469463791902,
-        "score": 38595.859,
-        "source_class": "exact_preserve",
-        "tags": [
-          "connectivity_wall",
-          "documented_wall",
-          "exact_preserve",
-          "heuristic",
-          "high_memory",
-          "low_score",
-          "maxpool_scan"
-        ],
-        "task": 2
       },
       {
         "memory": 36955,
@@ -2763,26 +2731,24 @@
         "task": 285
       },
       {
-        "memory": 26133,
-        "method": "ext:franksunp7166_65",
-        "params": 84,
-        "points": 14.825836665704346,
-        "score": 24569.249,
-        "source_class": "exact_preserve",
+        "memory": 26100,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 90,
+        "points": 14.826867062498243,
+        "score": 25041.94,
+        "source_class": "unknown",
         "tags": [
-          "assignment_wall",
-          "connectivity_wall",
+          "conv_heavy",
           "documented_wall",
-          "exact_preserve",
-          "gather_heavy",
-          "heuristic",
           "high_memory",
+          "local_stencil",
           "low_score",
           "lut_selection",
+          "maxpool_scan",
           "open_angle",
-          "scan"
+          "qlinear"
         ],
-        "task": 219
+        "task": 349
       },
       {
         "memory": 25375,
@@ -2861,22 +2827,6 @@
         "task": 319
       },
       {
-        "memory": 19212,
-        "method": "ext:franksunp7166_65",
-        "params": 651,
-        "points": 15.103386016407045,
-        "score": 20131.984,
-        "source_class": "semantic_or_handbuilt",
-        "tags": [
-          "connectivity_wall",
-          "conv_heavy",
-          "high_memory",
-          "lut_selection",
-          "open_angle"
-        ],
-        "task": 205
-      },
-      {
         "memory": 19113,
         "method": "ext:franksunp7166_68",
         "params": 652,
@@ -2909,21 +2859,41 @@
         "task": 101
       },
       {
-        "memory": 16961,
-        "method": "ext:franksunp7166_65",
-        "params": 136,
-        "points": 15.25334171149689,
-        "score": 15820.997,
-        "source_class": "semantic_or_handbuilt",
+        "memory": 18633,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 92,
+        "points": 15.16238519161458,
+        "score": 16976.284,
+        "source_class": "exact_preserve",
         "tags": [
+          "assignment_wall",
           "connectivity_wall",
           "documented_wall",
+          "exact_preserve",
           "gather_heavy",
+          "heuristic",
           "high_memory",
+          "lut_selection",
           "open_angle",
           "scan"
         ],
-        "task": 198
+        "task": 219
+      },
+      {
+        "memory": 14734,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 638,
+        "points": 15.359697048315265,
+        "score": 15564.091,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "connectivity_wall",
+          "conv_heavy",
+          "high_memory",
+          "lut_selection",
+          "open_angle"
+        ],
+        "task": 205
       },
       {
         "memory": 14072,
@@ -2940,21 +2910,6 @@
         "task": 25
       },
       {
-        "memory": 13563,
-        "method": "custom:task202+qlinear+onnxsim",
-        "params": 25,
-        "points": 15.483057670719525,
-        "score": 13743.083,
-        "source_class": "semantic_or_handbuilt",
-        "tags": [
-          "connectivity_wall",
-          "high_memory",
-          "open_angle",
-          "qlinear"
-        ],
-        "task": 202
-      },
-      {
         "memory": 13007,
         "method": "ext:franksunp7166_65",
         "params": 137,
@@ -2966,6 +2921,20 @@
           "high_memory"
         ],
         "task": 396
+      },
+      {
+        "memory": 12843,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 291,
+        "points": 15.517040433249083,
+        "score": 13278.888,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "conv_heavy",
+          "high_memory",
+          "qlinear"
+        ],
+        "task": 23
       },
       {
         "memory": 13890,
@@ -3018,6 +2987,23 @@
         "task": 110
       },
       {
+        "memory": 13434,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 138,
+        "points": 15.48423587409588,
+        "score": 12226.729,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "connectivity_wall",
+          "documented_wall",
+          "gather_heavy",
+          "high_memory",
+          "open_angle",
+          "scan"
+        ],
+        "task": 198
+      },
+      {
         "memory": 13368,
         "method": "ext:franksunp7166_65",
         "params": 68,
@@ -3052,25 +3038,21 @@
         "task": 145
       },
       {
-        "memory": 12118,
-        "method": "ext:franksunp7166_68",
-        "params": 588,
-        "points": 15.550170398173522,
-        "score": 10840.949,
-        "source_class": "exact_preserve",
+        "memory": 11253,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 24,
+        "points": 15.669479467767712,
+        "score": 11376.156,
+        "source_class": "semantic_or_handbuilt",
         "tags": [
-          "assignment_wall",
           "connectivity_wall",
-          "documented_wall",
-          "exact_preserve",
-          "gather_heavy",
-          "heuristic",
           "high_memory",
-          "lut_selection",
+          "local_stencil",
+          "onehot_final_equal",
           "open_angle",
-          "scatter"
+          "qlinear"
         ],
-        "task": 157
+        "task": 202
       },
       {
         "memory": 10834,
@@ -3143,11 +3125,11 @@
         "task": 29
       },
       {
-        "memory": 63257,
-        "method": "ext:franksunp7166_68",
-        "params": 3038,
-        "points": 13.898130241451181,
-        "score": -35074.439,
+        "memory": 48196,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 2987,
+        "points": 14.156837275356981,
+        "score": -50264.051,
         "source_class": "exact_preserve",
         "tags": [
           "ambiguity_wall",
@@ -3161,29 +3143,6 @@
           "scatter"
         ],
         "task": 18
-      },
-      {
-        "memory": 50951,
-        "method": "ext:franksunp7166_65",
-        "params": 198,
-        "points": 14.157501779153469,
-        "score": -50298.251,
-        "source_class": "exact_preserve",
-        "tags": [
-          "ambiguity_wall",
-          "assignment_wall",
-          "connectivity_wall",
-          "conv_heavy",
-          "documented_wall",
-          "exact_preserve",
-          "heuristic",
-          "high_memory",
-          "low_score",
-          "lut_selection",
-          "onehot_final_equal",
-          "scan"
-        ],
-        "task": 209
       },
       {
         "memory": 31049,
@@ -3208,6 +3167,30 @@
           "scatter"
         ],
         "task": 118
+      },
+      {
+        "memory": 32027,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 185,
+        "points": 14.619905667084565,
+        "score": -69373.972,
+        "source_class": "exact_preserve",
+        "tags": [
+          "ambiguity_wall",
+          "assignment_wall",
+          "connectivity_wall",
+          "conv_heavy",
+          "documented_wall",
+          "exact_preserve",
+          "heuristic",
+          "high_memory",
+          "low_score",
+          "lut_selection",
+          "onehot_final_equal",
+          "qlinear",
+          "scan"
+        ],
+        "task": 209
       },
       {
         "memory": 14760,
@@ -3240,5 +3223,946 @@
       187
     ],
     "title": "Run iterative connectivity/flood-fill on the generator's true max canvas, not the 30x30 harness canvas"
+  },
+  {
+    "candidate_count": 15,
+    "candidates": [
+      {
+        "memory": 59587,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 654,
+        "points": 13.993891537398403,
+        "score": 60342.833,
+        "source_class": "exact_preserve",
+        "tags": [
+          "conv_heavy",
+          "exact_preserve",
+          "gather_heavy",
+          "high_memory",
+          "low_score",
+          "matmul",
+          "qlinear",
+          "scan",
+          "scatter"
+        ],
+        "task": 233
+      },
+      {
+        "memory": 32850,
+        "method": "custom:task187",
+        "params": 665,
+        "points": 14.580251621207942,
+        "score": 33940.925,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "connectivity_wall",
+          "high_memory",
+          "local_stencil",
+          "low_score",
+          "maxpool_scan"
+        ],
+        "task": 187
+      },
+      {
+        "memory": 31276,
+        "method": "custom:task191+onnxsim",
+        "params": 841,
+        "points": 14.622859236052264,
+        "score": 32530.142,
+        "source_class": "unknown",
+        "tags": [
+          "assignment_wall",
+          "conv_heavy",
+          "custom_win",
+          "high_memory",
+          "low_score",
+          "matmul",
+          "open_angle",
+          "template_match"
+        ],
+        "task": 191
+      },
+      {
+        "memory": 32294,
+        "method": "ext:franksunp7166_65",
+        "params": 1288,
+        "points": 14.578254511880585,
+        "score": 32008.524,
+        "source_class": "exact_preserve",
+        "tags": [
+          "assignment_wall",
+          "connectivity_wall",
+          "conv_heavy",
+          "documented_wall",
+          "exact_preserve",
+          "gather_heavy",
+          "heuristic",
+          "high_memory",
+          "low_score",
+          "open_angle",
+          "qlinear",
+          "scatter"
+        ],
+        "task": 133
+      },
+      {
+        "memory": 26860,
+        "method": "ext:franksunp7166_65",
+        "params": 114,
+        "points": 14.797371281923198,
+        "score": 27334.789,
+        "source_class": "unknown",
+        "tags": [
+          "connectivity_wall",
+          "high_memory",
+          "local_stencil",
+          "low_score",
+          "maxpool_scan",
+          "open_angle",
+          "template_match"
+        ],
+        "task": 364
+      },
+      {
+        "memory": 25080,
+        "method": "ext:franksunp7166_65",
+        "params": 552,
+        "points": 14.848403150131913,
+        "score": 25477.479,
+        "source_class": "exact_preserve",
+        "tags": [
+          "exact_preserve",
+          "gather_heavy",
+          "heuristic",
+          "high_memory",
+          "low_score",
+          "scatter"
+        ],
+        "task": 285
+      },
+      {
+        "memory": 26100,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 90,
+        "points": 14.826867062498243,
+        "score": 25041.94,
+        "source_class": "unknown",
+        "tags": [
+          "conv_heavy",
+          "documented_wall",
+          "high_memory",
+          "local_stencil",
+          "low_score",
+          "lut_selection",
+          "maxpool_scan",
+          "open_angle",
+          "qlinear"
+        ],
+        "task": 349
+      },
+      {
+        "memory": 25375,
+        "method": "ext:franksunp7166_68",
+        "params": 289,
+        "points": 14.847155489333758,
+        "score": 24009.853,
+        "source_class": "exact_preserve",
+        "tags": [
+          "assignment_wall",
+          "connectivity_wall",
+          "documented_wall",
+          "exact_preserve",
+          "heuristic",
+          "high_memory",
+          "low_score",
+          "open_angle",
+          "scatter"
+        ],
+        "task": 76
+      },
+      {
+        "memory": 23159,
+        "method": "ext:franksunp7166_65",
+        "params": 112,
+        "points": 14.94503677084102,
+        "score": 23087.489,
+        "source_class": "exact_preserve",
+        "tags": [
+          "exact_preserve",
+          "gather_heavy",
+          "heuristic",
+          "high_memory",
+          "low_score",
+          "scatter"
+        ],
+        "task": 173
+      },
+      {
+        "memory": 19113,
+        "method": "ext:franksunp7166_68",
+        "params": 652,
+        "points": 15.108332024269215,
+        "score": 19532.5,
+        "source_class": "exact_preserve",
+        "tags": [
+          "exact_preserve",
+          "heuristic",
+          "high_memory",
+          "matmul",
+          "scan"
+        ],
+        "task": 66
+      },
+      {
+        "memory": 18633,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 92,
+        "points": 15.16238519161458,
+        "score": 16976.284,
+        "source_class": "exact_preserve",
+        "tags": [
+          "assignment_wall",
+          "connectivity_wall",
+          "documented_wall",
+          "exact_preserve",
+          "gather_heavy",
+          "heuristic",
+          "high_memory",
+          "lut_selection",
+          "open_angle",
+          "scan"
+        ],
+        "task": 219
+      },
+      {
+        "memory": 33053,
+        "method": "ext:franksunp7166_65",
+        "params": 2343,
+        "points": 14.525645901612759,
+        "score": -5661.694,
+        "source_class": "unknown",
+        "tags": [
+          "assignment_wall",
+          "conv_heavy",
+          "documented_wall",
+          "gather_heavy",
+          "high_memory",
+          "low_score",
+          "marginal_wall",
+          "open_angle",
+          "qlinear",
+          "template_match"
+        ],
+        "task": 158
+      },
+      {
+        "memory": 48196,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 2987,
+        "points": 14.156837275356981,
+        "score": -50264.051,
+        "source_class": "exact_preserve",
+        "tags": [
+          "ambiguity_wall",
+          "documented_wall",
+          "exact_preserve",
+          "gather_heavy",
+          "heuristic",
+          "high_memory",
+          "low_score",
+          "maxpool_scan",
+          "scatter"
+        ],
+        "task": 18
+      },
+      {
+        "memory": 31049,
+        "method": "custom:task118_tail_where+onnxsim",
+        "params": 3387,
+        "points": 14.553142192222154,
+        "score": -67129.943,
+        "source_class": "exact_preserve",
+        "tags": [
+          "connectivity_wall",
+          "conv_heavy",
+          "documented_wall",
+          "exact_preserve",
+          "heuristic",
+          "high_memory",
+          "infeasible_exact_wall",
+          "information_loss_wall",
+          "local_stencil",
+          "low_score",
+          "matmul",
+          "qlinear",
+          "scatter"
+        ],
+        "task": 118
+      },
+      {
+        "memory": 32027,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 185,
+        "points": 14.619905667084565,
+        "score": -69373.972,
+        "source_class": "exact_preserve",
+        "tags": [
+          "ambiguity_wall",
+          "assignment_wall",
+          "connectivity_wall",
+          "conv_heavy",
+          "documented_wall",
+          "exact_preserve",
+          "heuristic",
+          "high_memory",
+          "low_score",
+          "lut_selection",
+          "onehot_final_equal",
+          "qlinear",
+          "scan"
+        ],
+        "task": 209
+      }
+    ],
+    "expected": {
+      "gain_type": "memory",
+      "risk": "medium-high",
+      "verification": "stored eval, fresh eval when generator available, public-probe if strict fresh is known weak"
+    },
+    "insight_id": "public_teacher_bitwise_scan_replacement",
+    "source_tasks": [
+      2,
+      209
+    ],
+    "title": "Replace repeated MaxPool/Max/Min scan stacks with bitwise shift/mask routing when the state is binary"
+  },
+  {
+    "candidate_count": 39,
+    "candidates": [
+      {
+        "memory": 59587,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 654,
+        "points": 13.993891537398403,
+        "score": 60342.833,
+        "source_class": "exact_preserve",
+        "tags": [
+          "conv_heavy",
+          "exact_preserve",
+          "gather_heavy",
+          "high_memory",
+          "low_score",
+          "matmul",
+          "qlinear",
+          "scan",
+          "scatter"
+        ],
+        "task": 233
+      },
+      {
+        "memory": 32850,
+        "method": "custom:task187",
+        "params": 665,
+        "points": 14.580251621207942,
+        "score": 33940.925,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "connectivity_wall",
+          "high_memory",
+          "local_stencil",
+          "low_score",
+          "maxpool_scan"
+        ],
+        "task": 187
+      },
+      {
+        "memory": 26860,
+        "method": "ext:franksunp7166_65",
+        "params": 114,
+        "points": 14.797371281923198,
+        "score": 27334.789,
+        "source_class": "unknown",
+        "tags": [
+          "connectivity_wall",
+          "high_memory",
+          "local_stencil",
+          "low_score",
+          "maxpool_scan",
+          "open_angle",
+          "template_match"
+        ],
+        "task": 364
+      },
+      {
+        "memory": 24746,
+        "method": "ext:franksunp7166_68",
+        "params": 315,
+        "points": 14.870931868116244,
+        "score": 23399.72,
+        "source_class": "exact_preserve",
+        "tags": [
+          "connectivity_wall",
+          "conv_heavy",
+          "documented_wall",
+          "exact_preserve",
+          "heuristic",
+          "high_memory",
+          "low_score",
+          "matmul",
+          "open_angle"
+        ],
+        "task": 255
+      },
+      {
+        "memory": 14734,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 638,
+        "points": 15.359697048315265,
+        "score": 15564.091,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "connectivity_wall",
+          "conv_heavy",
+          "high_memory",
+          "lut_selection",
+          "open_angle"
+        ],
+        "task": 205
+      },
+      {
+        "memory": 13007,
+        "method": "ext:franksunp7166_65",
+        "params": 137,
+        "points": 15.516279340282896,
+        "score": 13289.116,
+        "source_class": "unknown",
+        "tags": [
+          "conv_heavy",
+          "high_memory"
+        ],
+        "task": 396
+      },
+      {
+        "memory": 13890,
+        "method": "custom:task338+qlinear+onnxsim",
+        "params": 667,
+        "points": 15.414172743435339,
+        "score": 13232.748,
+        "source_class": "unknown",
+        "tags": [
+          "connectivity_wall",
+          "documented_wall",
+          "high_memory",
+          "local_stencil",
+          "open_angle",
+          "qlinear"
+        ],
+        "task": 338
+      },
+      {
+        "memory": 14106,
+        "method": "ext:franksunp7166_65",
+        "params": 226,
+        "points": 15.429749921575155,
+        "score": 13003.075,
+        "source_class": "unknown",
+        "tags": [
+          "conv_heavy",
+          "documented_wall",
+          "high_memory",
+          "local_stencil",
+          "open_angle"
+        ],
+        "task": 138
+      },
+      {
+        "memory": 13155,
+        "method": "ext:franksunp7166_65",
+        "params": 634,
+        "points": 15.468373548158258,
+        "score": 12448.488,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "connectivity_wall",
+          "conv_heavy",
+          "documented_wall",
+          "high_memory",
+          "maxpool_scan",
+          "open_angle"
+        ],
+        "task": 110
+      },
+      {
+        "memory": 11253,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 24,
+        "points": 15.669479467767712,
+        "score": 11376.156,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "connectivity_wall",
+          "high_memory",
+          "local_stencil",
+          "onehot_final_equal",
+          "open_angle",
+          "qlinear"
+        ],
+        "task": 202
+      },
+      {
+        "memory": 10834,
+        "method": "custom:task080+qconv+onnxsim",
+        "params": 454,
+        "points": 15.66850450646735,
+        "score": 9887.449,
+        "source_class": "unknown",
+        "tags": [
+          "conv_heavy",
+          "documented_wall",
+          "high_memory",
+          "lut_selection",
+          "open_angle",
+          "qlinear"
+        ],
+        "task": 80
+      },
+      {
+        "memory": 9069,
+        "method": "custom:task379+onnxsim",
+        "params": 653,
+        "points": 15.8178533623946,
+        "score": 9776.644,
+        "source_class": "unknown",
+        "tags": [
+          "connectivity_wall",
+          "conv_heavy",
+          "custom_win",
+          "open_angle"
+        ],
+        "task": 379
+      },
+      {
+        "memory": 7462,
+        "method": "ext:franksunp7166_65",
+        "params": 1813,
+        "points": 15.864922112524365,
+        "score": 9315.523,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "local_stencil",
+          "open_angle",
+          "template_match"
+        ],
+        "task": 74
+      },
+      {
+        "memory": 8736,
+        "method": "custom:task222",
+        "params": 78,
+        "points": 15.915903354598068,
+        "score": 8839.229,
+        "source_class": "unknown",
+        "tags": [
+          "conv_heavy",
+          "custom_win",
+          "local_stencil",
+          "maxpool_scan",
+          "onehot_final_equal",
+          "open_angle",
+          "qlinear"
+        ],
+        "task": 222
+      },
+      {
+        "memory": 8351,
+        "method": "ext:franksunp7166_65",
+        "params": 154,
+        "points": 15.951590495170038,
+        "score": 8519.523,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "connectivity_wall",
+          "local_stencil",
+          "open_angle"
+        ],
+        "task": 377
+      },
+      {
+        "memory": 7330,
+        "method": "ext:franksunp7166_65",
+        "params": 1586,
+        "points": 15.904397305494241,
+        "score": 7444.681,
+        "source_class": "unknown",
+        "tags": [
+          "conv_heavy",
+          "documented_wall",
+          "local_stencil",
+          "qlinear",
+          "scan"
+        ],
+        "task": 324
+      },
+      {
+        "memory": 8515,
+        "method": "ext:franksunp7166_65",
+        "params": 106,
+        "points": 15.938043633790075,
+        "score": 7139.587,
+        "source_class": "unknown",
+        "tags": [
+          "documented_wall",
+          "local_stencil",
+          "open_angle"
+        ],
+        "task": 192
+      },
+      {
+        "memory": 6610,
+        "method": "ext:franksunp7166_65",
+        "params": 490,
+        "points": 16.132149936970592,
+        "score": 6600.0,
+        "source_class": "exact_preserve",
+        "tags": [
+          "conv_heavy",
+          "exact_preserve",
+          "heuristic",
+          "qlinear"
+        ],
+        "task": 5
+      },
+      {
+        "memory": 5812,
+        "method": "ext:franksunp7166_65",
+        "params": 92,
+        "points": 16.31661463371969,
+        "score": 5904.0,
+        "source_class": "unknown",
+        "tags": [
+          "connectivity_wall",
+          "local_stencil",
+          "open_angle"
+        ],
+        "task": 4
+      },
+      {
+        "memory": 7029,
+        "method": "custom:task009+onnxsim",
+        "params": 95,
+        "points": 16.12877535559045,
+        "score": 5624.0,
+        "source_class": "unknown",
+        "tags": [
+          "connectivity_wall",
+          "documented_wall",
+          "local_stencil",
+          "lut_selection",
+          "onehot_final_equal",
+          "open_angle"
+        ],
+        "task": 9
+      },
+      {
+        "memory": 4500,
+        "method": "ext:franksunp7166_65",
+        "params": 881,
+        "points": 16.409370490510582,
+        "score": 5381.0,
+        "source_class": "unknown",
+        "tags": [
+          "local_stencil",
+          "open_angle"
+        ],
+        "task": 85
+      },
+      {
+        "memory": 4843,
+        "method": "ext:franksunp7166_65",
+        "params": 283,
+        "points": 16.457919093075983,
+        "score": 5126.0,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "connectivity_wall",
+          "local_stencil",
+          "open_angle",
+          "template_match"
+        ],
+        "task": 363
+      },
+      {
+        "memory": 6144,
+        "method": "ext:franksunp7166_65",
+        "params": 312,
+        "points": 16.227234790050215,
+        "score": 4956.0,
+        "source_class": "unknown",
+        "tags": [
+          "connectivity_wall",
+          "documented_wall",
+          "local_stencil",
+          "onehot_final_equal",
+          "open_angle"
+        ],
+        "task": 165
+      },
+      {
+        "memory": 3990,
+        "method": "ext:franksunp7166_65",
+        "params": 99,
+        "points": 16.683944279635355,
+        "score": 4089.0,
+        "source_class": "unknown",
+        "tags": [
+          "bitwise_program",
+          "gather_heavy",
+          "local_stencil",
+          "open_angle"
+        ],
+        "task": 132
+      },
+      {
+        "memory": 3692,
+        "method": "ext:franksunp7166_65",
+        "params": 130,
+        "points": 16.751470875199782,
+        "score": 3822.0,
+        "source_class": "unknown",
+        "tags": [
+          "connectivity_wall",
+          "conv_heavy",
+          "local_stencil",
+          "open_angle"
+        ],
+        "task": 177
+      },
+      {
+        "memory": 3082,
+        "method": "ext:franksunp7166_65",
+        "params": 653,
+        "points": 16.774496902433082,
+        "score": 3735.0,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "conv_heavy",
+          "custom_win",
+          "open_angle",
+          "scatter"
+        ],
+        "task": 284
+      },
+      {
+        "memory": 2840,
+        "method": "teacher:urad7174_top15_public_probe",
+        "params": 661,
+        "points": 16.839196079045337,
+        "score": 3501.0,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "conv_heavy",
+          "local_stencil",
+          "onehot_final_equal",
+          "open_angle"
+        ],
+        "task": 335
+      },
+      {
+        "memory": 3065,
+        "method": "ext:franksunp7166_65",
+        "params": 79,
+        "points": 16.9467488464509,
+        "score": 3144.0,
+        "source_class": "unknown",
+        "tags": [
+          "custom_win",
+          "local_stencil",
+          "open_angle"
+        ],
+        "task": 79
+      },
+      {
+        "memory": 2792,
+        "method": "ext:franksunp7166_65",
+        "params": 318,
+        "points": 16.95762199482672,
+        "score": 3110.0,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "conv_heavy",
+          "local_stencil"
+        ],
+        "task": 42
+      },
+      {
+        "memory": 2997,
+        "method": "ext:franksunp7166_65",
+        "params": 82,
+        "points": 16.9676398520755,
+        "score": 3079.0,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "local_stencil"
+        ],
+        "task": 19
+      },
+      {
+        "memory": 2998,
+        "method": "ext:franksunp7166_65",
+        "params": 79,
+        "points": 16.968289624677958,
+        "score": 3077.0,
+        "source_class": "unknown",
+        "tags": [
+          "conv_heavy",
+          "local_stencil",
+          "open_angle"
+        ],
+        "task": 354
+      },
+      {
+        "memory": 2853,
+        "method": "ext:franksunp7166_65",
+        "params": 175,
+        "points": 16.98434238544266,
+        "score": 3028.0,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "local_stencil",
+          "open_angle"
+        ],
+        "task": 91
+      },
+      {
+        "memory": 2648,
+        "method": "ext:franksunp7166_65",
+        "params": 200,
+        "points": 17.045627727468133,
+        "score": 2848.0,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "local_stencil",
+          "onehot_final_equal",
+          "scatter"
+        ],
+        "task": 397
+      },
+      {
+        "memory": 2460,
+        "method": "ext:franksunp7166_65",
+        "params": 371,
+        "points": 17.0516147148881,
+        "score": 2831.0,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "conv_heavy",
+          "local_stencil",
+          "open_angle"
+        ],
+        "task": 224
+      },
+      {
+        "memory": 2334,
+        "method": "ext:franksunp7166_65",
+        "params": 419,
+        "points": 17.079553494857393,
+        "score": 2753.0,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "conv_heavy",
+          "local_stencil",
+          "open_angle"
+        ],
+        "task": 246
+      },
+      {
+        "memory": 2662,
+        "method": "ext:franksunp7166_65",
+        "params": 51,
+        "points": 17.094189687341068,
+        "score": 1213.0,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "connectivity_wall",
+          "conv_heavy",
+          "documented_wall",
+          "local_stencil",
+          "lut_selection",
+          "open_angle"
+        ],
+        "task": 94
+      },
+      {
+        "memory": 2460,
+        "method": "ext:franksunp7166_65",
+        "params": 60,
+        "points": 17.167985819494533,
+        "score": 1020.0,
+        "source_class": "unknown",
+        "tags": [
+          "connectivity_wall",
+          "conv_heavy",
+          "documented_wall",
+          "local_stencil",
+          "open_angle",
+          "scan"
+        ],
+        "task": 184
+      },
+      {
+        "memory": 2221,
+        "method": "ext:franksunp7166_65",
+        "params": 97,
+        "points": 17.251539976100304,
+        "score": 818.0,
+        "source_class": "heuristic",
+        "tags": [
+          "connectivity_wall",
+          "documented_wall",
+          "heuristic",
+          "local_stencil",
+          "scan"
+        ],
+        "task": 46
+      },
+      {
+        "memory": 31049,
+        "method": "custom:task118_tail_where+onnxsim",
+        "params": 3387,
+        "points": 14.553142192222154,
+        "score": -67129.943,
+        "source_class": "exact_preserve",
+        "tags": [
+          "connectivity_wall",
+          "conv_heavy",
+          "documented_wall",
+          "exact_preserve",
+          "heuristic",
+          "high_memory",
+          "infeasible_exact_wall",
+          "information_loss_wall",
+          "local_stencil",
+          "low_score",
+          "matmul",
+          "qlinear",
+          "scatter"
+        ],
+        "task": 118
+      }
+    ],
+    "expected": {
+      "gain_type": "memory+params",
+      "risk": "medium",
+      "verification": "stored eval plus fresh; inspect for output-range saturation before adoption"
+    },
+    "insight_id": "public_teacher_qlinear_conv_rewrite",
+    "source_tasks": [
+      23,
+      349,
+      182,
+      233,
+      255
+    ],
+    "title": "Convert repeated binary/count Conv/ConvTranspose towers to QLinearConv/uint8 routes"
   }
 ]
