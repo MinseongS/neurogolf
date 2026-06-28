@@ -27,7 +27,7 @@
 - `And`: 127 tasks
 - `ArgMax`: 123 tasks
 - `Conv`: 122 tasks
-- `Greater`: 112 tasks
+- `Greater`: 110 tasks
 - `ReduceSum`: 108 tasks
 - `Mul`: 101 tasks
 - `Less`: 95 tasks
@@ -38,7 +38,7 @@
 - `Or`: 64 tasks
 - `Mod`: 63 tasks
 - `Max`: 50 tasks
-- `Not`: 49 tasks
+- `MaxPool`: 48 tasks
 
 ## Key tags
 

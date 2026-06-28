@@ -19,11 +19,11 @@
         "task": 107
       },
       {
-        "memory": 2856,
-        "method": "ext:franksunp7166_65",
+        "memory": 2854,
+        "method": "ext:biohack_mix_positive",
         "params": 106,
-        "points": 17.006380005172254,
-        "score": 2962.0,
+        "points": 17.007055452681893,
+        "score": 2960.0,
         "source_class": "unknown",
         "tags": [
           "custom_win",
@@ -130,10 +130,10 @@
       },
       {
         "memory": 4971,
-        "method": "ext:franksunp7166_65",
-        "params": 1941,
-        "points": 16.158985689516108,
-        "score": 6912.0,
+        "method": "ext:biohack_mix_positive",
+        "params": 1940,
+        "points": 16.159130375908603,
+        "score": 6911.0,
         "source_class": "unknown",
         "tags": [
           "onehot_final_equal"
@@ -283,11 +283,11 @@
         "task": 335
       },
       {
-        "memory": 2856,
-        "method": "ext:franksunp7166_65",
+        "memory": 2854,
+        "method": "ext:biohack_mix_positive",
         "params": 106,
-        "points": 17.006380005172254,
-        "score": 2962.0,
+        "points": 17.007055452681893,
+        "score": 2960.0,
         "source_class": "unknown",
         "tags": [
           "custom_win",
@@ -487,11 +487,11 @@
     "candidate_count": 36,
     "candidates": [
       {
-        "memory": 59587,
-        "method": "teacher:urad7174_top15_public_probe",
-        "params": 654,
-        "points": 13.993891537398403,
-        "score": 60342.833,
+        "memory": 59147,
+        "method": "ext:biohack_mix_positive",
+        "params": 565,
+        "points": 14.002711715792984,
+        "score": 59811.186,
         "source_class": "exact_preserve",
         "tags": [
           "conv_heavy",
@@ -568,11 +568,11 @@
         "task": 133
       },
       {
-        "memory": 26894,
-        "method": "ext:franksunp7166_68",
+        "memory": 26877,
+        "method": "ext:biohack_mix_positive",
         "params": 238,
-        "points": 14.79153087793403,
-        "score": 26994.541,
+        "points": 14.79215764072484,
+        "score": 26977.353,
         "source_class": "exact_preserve",
         "tags": [
           "exact_preserve",
@@ -587,10 +587,10 @@
       },
       {
         "memory": 25080,
-        "method": "ext:franksunp7166_65",
-        "params": 552,
-        "points": 14.848403150131913,
-        "score": 25477.479,
+        "method": "ext:biohack_mix_positive",
+        "params": 550,
+        "points": 14.848481180641883,
+        "score": 25475.456,
         "source_class": "exact_preserve",
         "tags": [
           "exact_preserve",
@@ -641,11 +641,11 @@
         "task": 364
       },
       {
-        "memory": 23159,
-        "method": "ext:franksunp7166_65",
+        "memory": 23036,
+        "method": "ext:biohack_mix_positive",
         "params": 112,
-        "points": 14.94503677084102,
-        "score": 23087.489,
+        "points": 14.95033633730627,
+        "score": 22962.899,
         "source_class": "exact_preserve",
         "tags": [
           "exact_preserve",
@@ -658,11 +658,11 @@
         "task": 173
       },
       {
-        "memory": 21973,
-        "method": "ext:franksunp7166_68",
+        "memory": 21834,
+        "method": "ext:biohack_mix_positive",
         "params": 269,
-        "points": 14.990262327621213,
-        "score": 20544.921,
+        "points": 14.996531375100558,
+        "score": 20404.041,
         "source_class": "exact_preserve",
         "tags": [
           "assignment_wall",
@@ -692,11 +692,11 @@
         "task": 66
       },
       {
-        "memory": 17015,
-        "method": "ext:franksunp7166_68",
-        "params": 909,
-        "points": 15.206104124093967,
-        "score": 17662.169,
+        "memory": 16940,
+        "method": "ext:biohack_mix_positive",
+        "params": 905,
+        "points": 15.210521364075738,
+        "score": 17581.844,
         "source_class": "exact_preserve",
         "tags": [
           "exact_preserve",
@@ -729,11 +729,11 @@
         "task": 219
       },
       {
-        "memory": 14072,
-        "method": "ext:franksunp7166_65",
+        "memory": 14062,
+        "method": "ext:biohack_mix_positive",
         "params": 195,
-        "points": 15.434295542885186,
-        "score": 14436.711,
+        "points": 15.43499670684604,
+        "score": 14426.501,
         "source_class": "semantic_or_handbuilt",
         "tags": [
           "high_memory",
@@ -795,11 +795,11 @@
         "task": 145
       },
       {
-        "memory": 9144,
-        "method": "ext:franksunp7166_65",
+        "memory": 9127,
+        "method": "ext:biohack_mix_positive",
         "params": 1267,
-        "points": 15.749381781525248,
-        "score": 10486.185,
+        "points": 15.751016004431612,
+        "score": 10468.695,
         "source_class": "semantic_or_handbuilt",
         "tags": [
           "conv_heavy",
@@ -848,11 +848,11 @@
         "task": 222
       },
       {
-        "memory": 7330,
-        "method": "ext:franksunp7166_65",
+        "memory": 7308,
+        "method": "ext:biohack_mix_positive",
         "params": 1586,
-        "points": 15.904397305494241,
-        "score": 7444.681,
+        "points": 15.906867828929359,
+        "score": 7421.94,
         "source_class": "unknown",
         "tags": [
           "conv_heavy",
@@ -957,11 +957,11 @@
         "task": 251
       },
       {
-        "memory": 3010,
-        "method": "ext:franksunp7166_65",
+        "memory": 3009,
+        "method": "ext:biohack_mix_positive",
         "params": 82,
-        "points": 16.963426590292688,
-        "score": 3092.0,
+        "points": 16.963750057867884,
+        "score": 3091.0,
         "source_class": "semantic_or_handbuilt",
         "tags": [
           "scan"
@@ -1129,11 +1129,11 @@
     "candidate_count": 64,
     "candidates": [
       {
-        "memory": 59587,
-        "method": "teacher:urad7174_top15_public_probe",
-        "params": 654,
-        "points": 13.993891537398403,
-        "score": 60342.833,
+        "memory": 59147,
+        "method": "ext:biohack_mix_positive",
+        "params": 565,
+        "points": 14.002711715792984,
+        "score": 59811.186,
         "source_class": "exact_preserve",
         "tags": [
           "conv_heavy",
@@ -1213,11 +1213,11 @@
         "task": 138
       },
       {
-        "memory": 9144,
-        "method": "ext:franksunp7166_65",
+        "memory": 9127,
+        "method": "ext:biohack_mix_positive",
         "params": 1267,
-        "points": 15.749381781525248,
-        "score": 10486.185,
+        "points": 15.751016004431612,
+        "score": 10468.695,
         "source_class": "semantic_or_handbuilt",
         "tags": [
           "conv_heavy",
@@ -1277,11 +1277,11 @@
         "task": 222
       },
       {
-        "memory": 7330,
-        "method": "ext:franksunp7166_65",
+        "memory": 7308,
+        "method": "ext:biohack_mix_positive",
         "params": 1586,
-        "points": 15.904397305494241,
-        "score": 7444.681,
+        "points": 15.906867828929359,
+        "score": 7421.94,
         "source_class": "unknown",
         "tags": [
           "conv_heavy",
@@ -1439,10 +1439,10 @@
       },
       {
         "memory": 3065,
-        "method": "ext:franksunp7166_65",
-        "params": 79,
-        "points": 16.9467488464509,
-        "score": 3144.0,
+        "method": "ext:biohack_mix_positive",
+        "params": 78,
+        "points": 16.94706696320243,
+        "score": 3143.0,
         "source_class": "unknown",
         "tags": [
           "custom_win",
@@ -1849,10 +1849,10 @@
       },
       {
         "memory": 702,
-        "method": "ext:franksunp7166_65",
-        "params": 62,
-        "points": 18.361432210833478,
-        "score": 764.0,
+        "method": "ext:biohack_mix_positive",
+        "params": 61,
+        "points": 18.362741968715543,
+        "score": 763.0,
         "source_class": "semantic_or_handbuilt",
         "tags": [
           "conv_heavy",
@@ -2073,11 +2073,11 @@
     "candidate_count": 18,
     "candidates": [
       {
-        "memory": 59587,
-        "method": "teacher:urad7174_top15_public_probe",
-        "params": 654,
-        "points": 13.993891537398403,
-        "score": 60342.833,
+        "memory": 59147,
+        "method": "ext:biohack_mix_positive",
+        "params": 565,
+        "points": 14.002711715792984,
+        "score": 59811.186,
         "source_class": "exact_preserve",
         "tags": [
           "conv_heavy",
@@ -2158,11 +2158,11 @@
         "task": 133
       },
       {
-        "memory": 26894,
-        "method": "ext:franksunp7166_68",
+        "memory": 26877,
+        "method": "ext:biohack_mix_positive",
         "params": 238,
-        "points": 14.79153087793403,
-        "score": 26994.541,
+        "points": 14.79215764072484,
+        "score": 26977.353,
         "source_class": "exact_preserve",
         "tags": [
           "exact_preserve",
@@ -2177,10 +2177,10 @@
       },
       {
         "memory": 25080,
-        "method": "ext:franksunp7166_65",
-        "params": 552,
-        "points": 14.848403150131913,
-        "score": 25477.479,
+        "method": "ext:biohack_mix_positive",
+        "params": 550,
+        "points": 14.848481180641883,
+        "score": 25475.456,
         "source_class": "exact_preserve",
         "tags": [
           "exact_preserve",
@@ -2193,11 +2193,11 @@
         "task": 285
       },
       {
-        "memory": 23159,
-        "method": "ext:franksunp7166_65",
+        "memory": 23036,
+        "method": "ext:biohack_mix_positive",
         "params": 112,
-        "points": 14.94503677084102,
-        "score": 23087.489,
+        "points": 14.95033633730627,
+        "score": 22962.899,
         "source_class": "exact_preserve",
         "tags": [
           "exact_preserve",
@@ -2271,11 +2271,11 @@
         "task": 255
       },
       {
-        "memory": 21973,
-        "method": "ext:franksunp7166_68",
+        "memory": 21834,
+        "method": "ext:biohack_mix_positive",
         "params": 269,
-        "points": 14.990262327621213,
-        "score": 20544.921,
+        "points": 14.996531375100558,
+        "score": 20404.041,
         "source_class": "exact_preserve",
         "tags": [
           "assignment_wall",
@@ -2305,11 +2305,11 @@
         "task": 66
       },
       {
-        "memory": 17015,
-        "method": "ext:franksunp7166_68",
-        "params": 909,
-        "points": 15.206104124093967,
-        "score": 17662.169,
+        "memory": 16940,
+        "method": "ext:biohack_mix_positive",
+        "params": 905,
+        "points": 15.210521364075738,
+        "score": 17581.844,
         "source_class": "exact_preserve",
         "tags": [
           "exact_preserve",
@@ -2542,11 +2542,11 @@
         "task": 400
       },
       {
-        "memory": 33053,
-        "method": "ext:franksunp7166_65",
-        "params": 2343,
-        "points": 14.525645901612759,
-        "score": -5661.694,
+        "memory": 32987,
+        "method": "ext:biohack_mix_positive",
+        "params": 2340,
+        "points": 14.52759717692328,
+        "score": -5731.279,
         "source_class": "unknown",
         "tags": [
           "assignment_wall",
@@ -2578,11 +2578,11 @@
     "candidate_count": 36,
     "candidates": [
       {
-        "memory": 59587,
-        "method": "teacher:urad7174_top15_public_probe",
-        "params": 654,
-        "points": 13.993891537398403,
-        "score": 60342.833,
+        "memory": 59147,
+        "method": "ext:biohack_mix_positive",
+        "params": 565,
+        "points": 14.002711715792984,
+        "score": 59811.186,
         "source_class": "exact_preserve",
         "tags": [
           "conv_heavy",
@@ -2698,11 +2698,11 @@
         "task": 133
       },
       {
-        "memory": 26894,
-        "method": "ext:franksunp7166_68",
+        "memory": 26877,
+        "method": "ext:biohack_mix_positive",
         "params": 238,
-        "points": 14.79153087793403,
-        "score": 26994.541,
+        "points": 14.79215764072484,
+        "score": 26977.353,
         "source_class": "exact_preserve",
         "tags": [
           "exact_preserve",
@@ -2717,10 +2717,10 @@
       },
       {
         "memory": 25080,
-        "method": "ext:franksunp7166_65",
-        "params": 552,
-        "points": 14.848403150131913,
-        "score": 25477.479,
+        "method": "ext:biohack_mix_positive",
+        "params": 550,
+        "points": 14.848481180641883,
+        "score": 25475.456,
         "source_class": "exact_preserve",
         "tags": [
           "exact_preserve",
@@ -2771,11 +2771,11 @@
         "task": 364
       },
       {
-        "memory": 23159,
-        "method": "ext:franksunp7166_65",
+        "memory": 23036,
+        "method": "ext:biohack_mix_positive",
         "params": 112,
-        "points": 14.94503677084102,
-        "score": 23087.489,
+        "points": 14.95033633730627,
+        "score": 22962.899,
         "source_class": "exact_preserve",
         "tags": [
           "exact_preserve",
@@ -2829,11 +2829,11 @@
         "task": 255
       },
       {
-        "memory": 21973,
-        "method": "ext:franksunp7166_68",
+        "memory": 21834,
+        "method": "ext:biohack_mix_positive",
         "params": 269,
-        "points": 14.990262327621213,
-        "score": 20544.921,
+        "points": 14.996531375100558,
+        "score": 20404.041,
         "source_class": "exact_preserve",
         "tags": [
           "assignment_wall",
@@ -2863,11 +2863,11 @@
         "task": 66
       },
       {
-        "memory": 17015,
-        "method": "ext:franksunp7166_68",
-        "params": 909,
-        "points": 15.206104124093967,
-        "score": 17662.169,
+        "memory": 16940,
+        "method": "ext:biohack_mix_positive",
+        "params": 905,
+        "points": 15.210521364075738,
+        "score": 17581.844,
         "source_class": "exact_preserve",
         "tags": [
           "exact_preserve",
@@ -2916,11 +2916,11 @@
         "task": 205
       },
       {
-        "memory": 14072,
-        "method": "ext:franksunp7166_65",
+        "memory": 14062,
+        "method": "ext:biohack_mix_positive",
         "params": 195,
-        "points": 15.434295542885186,
-        "score": 14436.711,
+        "points": 15.43499670684604,
+        "score": 14426.501,
         "source_class": "semantic_or_handbuilt",
         "tags": [
           "high_memory",
@@ -3249,11 +3249,11 @@
     "candidate_count": 15,
     "candidates": [
       {
-        "memory": 59587,
-        "method": "teacher:urad7174_top15_public_probe",
-        "params": 654,
-        "points": 13.993891537398403,
-        "score": 60342.833,
+        "memory": 59147,
+        "method": "ext:biohack_mix_positive",
+        "params": 565,
+        "points": 14.002711715792984,
+        "score": 59811.186,
         "source_class": "exact_preserve",
         "tags": [
           "conv_heavy",
@@ -3328,10 +3328,10 @@
       },
       {
         "memory": 25080,
-        "method": "ext:franksunp7166_65",
-        "params": 552,
-        "points": 14.848403150131913,
-        "score": 25477.479,
+        "method": "ext:biohack_mix_positive",
+        "params": 550,
+        "points": 14.848481180641883,
+        "score": 25475.456,
         "source_class": "exact_preserve",
         "tags": [
           "exact_preserve",
@@ -3382,11 +3382,11 @@
         "task": 364
       },
       {
-        "memory": 23159,
-        "method": "ext:franksunp7166_65",
+        "memory": 23036,
+        "method": "ext:biohack_mix_positive",
         "params": 112,
-        "points": 14.94503677084102,
-        "score": 23087.489,
+        "points": 14.95033633730627,
+        "score": 22962.899,
         "source_class": "exact_preserve",
         "tags": [
           "exact_preserve",
@@ -3455,11 +3455,11 @@
         "task": 219
       },
       {
-        "memory": 33053,
-        "method": "ext:franksunp7166_65",
-        "params": 2343,
-        "points": 14.525645901612759,
-        "score": -5661.694,
+        "memory": 32987,
+        "method": "ext:biohack_mix_positive",
+        "params": 2340,
+        "points": 14.52759717692328,
+        "score": -5731.279,
         "source_class": "unknown",
         "tags": [
           "assignment_wall",
@@ -3560,11 +3560,11 @@
     "candidate_count": 38,
     "candidates": [
       {
-        "memory": 59587,
-        "method": "teacher:urad7174_top15_public_probe",
-        "params": 654,
-        "points": 13.993891537398403,
-        "score": 60342.833,
+        "memory": 59147,
+        "method": "ext:biohack_mix_positive",
+        "params": 565,
+        "points": 14.002711715792984,
+        "score": 59811.186,
         "source_class": "exact_preserve",
         "tags": [
           "conv_heavy",
@@ -3810,11 +3810,11 @@
         "task": 377
       },
       {
-        "memory": 7330,
-        "method": "ext:franksunp7166_65",
+        "memory": 7308,
+        "method": "ext:biohack_mix_positive",
         "params": 1586,
-        "points": 15.904397305494241,
-        "score": 7444.681,
+        "points": 15.906867828929359,
+        "score": 7421.94,
         "source_class": "unknown",
         "tags": [
           "conv_heavy",
@@ -3993,10 +3993,10 @@
       },
       {
         "memory": 3065,
-        "method": "ext:franksunp7166_65",
-        "params": 79,
-        "points": 16.9467488464509,
-        "score": 3144.0,
+        "method": "ext:biohack_mix_positive",
+        "params": 78,
+        "points": 16.94706696320243,
+        "score": 3143.0,
         "source_class": "unknown",
         "tags": [
           "custom_win",

@@ -1,20 +1,20 @@
 # Public teacher extraction — task233
 
-- public path: `public_candidates/urad_7174_10/extracted/task233.onnx`
+- public path: `public_candidates/biohack_mix_20260628/_src_A/task233.onnx`
 - live path: `/Users/minseong/project/neurogolf/networks/task233.onnx`
 
 ## Stored evaluation
 
-- public: ok=True pts=13.993892 mem=59587 params=654
-- live: ok=True pts=13.993892 mem=59587 params=654
+- public: ok=True pts=14.002712 mem=59147 params=565
+- live: ok=True pts=14.002712 mem=59147 params=565
 - delta public-live: pts=+0.000000 mem=0 params=0
 
 ## Structural comparison
 
 - public nodes: 400
 - live nodes: 400
-- public initializer elems: 654
-- live initializer elems: 654
+- public initializer elems: 565
+- live initializer elems: 565
 
 ### Op delta public-live
 

@@ -1,10 +1,10 @@
 {
- "comment": "NEW BEST 7172.10. Continued original dtype floor-break series: task080 bitmap fp16 count Convs -> uint8 QLinearConv (fresh 300/300), after task055/340/202/398/338/250 QLinear/uint8 wins. Latest submission 54127830 COMPLETE publicScore 7172.10. Prior best was task250 QLinear submission 54127715, 7172.06; before QLinear/uint8 series best was 7170.59.",
- "stored_at_submit": 7172.001176515293,
- "lb": 7172.10,
- "time_utc": "2026-06-28 04:21 submission 54127830 COMPLETE",
+ "comment": "NEW BEST 7178.42. After URAD positive teacher absorption, biohack44/neurogolf-2026-mix unique positive overlay was submitted as 54137586 and validated +0.07 over 7178.35. This remains positive-only teacher absorption with generated source drafts/insight notes; semantic ownership remains follow-up debt.",
+ "stored_at_submit": 7178.323464479424,
+ "lb": 7178.42,
+ "time_utc": "2026-06-28 10:46 submission 54137586 COMPLETE",
  "pending": false,
- "pending_submit": "CONFIRMED 7172.10 (+0.04 over prior confirmed 7172.06)",
- "prev_stored_at_submit": 7171.957834664969,
- "prev_lb": 7172.06
+ "pending_submit": "CONFIRMED 7178.42 (+0.07 over prior confirmed 7178.35)",
+ "prev_stored_at_submit": 7178.255265803125,
+ "prev_lb": 7178.35
 }

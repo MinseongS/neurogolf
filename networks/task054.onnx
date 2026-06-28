@@ -1,5 +1,5 @@
 
-task054:±ß
+task054:´Ý
 H
 input
 label_conv_w	label_f32	label_f32"Conv*
@@ -441,12 +441,9 @@ e
 D
 motif_col_center
 minus_two_i64htail_col_idxhtail_col_add"Add
-B
-htail_col_idx
-shape_1htail_col_1dhtail_col_reshape"Reshape
-^
+_
 west_present_row
-htail_col_1dhtail_presenthtail_present_gather_col"Gather*
+htail_col_idxhtail_presenthtail_present_gather_col"Gather*
 axis 
 G
 vtail_present
@@ -489,10 +486,6 @@ B
 N
 seed_0_present_b
 shape_1seed_0_present_1seed_0_present_reshape"Reshape
-c
-seed_0_present_1
-seed_0_col_i64
-motif_col_center_1seed_0_safe_col_i64seed_0_safe_col"Where
 J
 seed_0_present_b
 htail_presenth_seed_0_active_bh_seed_0_active"And
@@ -666,9 +659,6 @@ W
 N
 h_seed_1_same_active_bh_seed_1_update_u8h_seed_1_update"Cast*	
 to 
-J
-seed_1_present_b
-vtail_presentv_seed_1_active_bv_seed_1_active"And
 b
 host_mask_b
 seed_1_col_i64v_seed_1_host_col_vec_bv_seed_1_host_col_vec"Gather*
@@ -696,9 +686,9 @@ X
 N
 v_seed_1_same_raw_b
 v_seed_1_col_vec_bv_seed_1_same_bv_seed_1_same"And
-W
+S
 v_seed_1_same_b
-v_seed_1_active_bv_seed_1_same_active_bv_seed_1_same_active"And
+vtail_presentv_seed_1_same_active_bv_seed_1_same_active"And
 ]
 v_seed_1_same_active_b
 shape_1_1_1_30v_seed_1_update_bv_seed_1_update_reshape"Reshape
@@ -1041,8 +1031,8 @@ F
 seed_2_safe_row_i64
 seed_3_safe_row_i64fill_safe_rows_4fill_safe_rows"Concat*
 axis  
-‹
-seed_0_safe_col_i64
+†
+seed_0_col_i64
 seed_1_safe_col_i64
 seed_2_safe_col_i64
 seed_3_safe_col_i64fill_safe_cols_4fill_safe_cols"Concat*

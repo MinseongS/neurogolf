@@ -1813,7 +1813,6 @@
       62,
       66,
       67,
-      79,
       80,
       86,
       90,
@@ -1841,7 +1840,6 @@
       170,
       173,
       174,
-      178,
       182,
       187,
       191,
@@ -2422,7 +2420,6 @@
       76,
       78,
       80,
-      96,
       101,
       103,
       105,
@@ -3765,7 +3762,9 @@
       198,
       207,
       244,
-      325
+      280,
+      325,
+      392
     ],
     "TopK": [
       12,
@@ -6377,14 +6376,14 @@
       "initializer_summary": {
         "dtype_elem_counts": {
           "2": 14,
-          "6": 20,
+          "6": 19,
           "7": 32
         },
         "largest": [
           {
             "dtype": 6,
             "elems": 16,
-            "name": "forward_i32",
+            "name": "fwd",
             "shape": [
               16
             ]
@@ -6392,7 +6391,7 @@
           {
             "dtype": 2,
             "elems": 10,
-            "name": "channel_ids_u8",
+            "name": "chans",
             "shape": [
               1,
               10,
@@ -6403,7 +6402,7 @@
           {
             "dtype": 7,
             "elems": 8,
-            "name": "pad_color",
+            "name": "pad30",
             "shape": [
               8
             ]
@@ -6411,7 +6410,7 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "slice_axes",
+            "name": "ax",
             "shape": [
               3
             ]
@@ -6419,7 +6418,7 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "starts_c0",
+            "name": "s2",
             "shape": [
               3
             ]
@@ -6427,7 +6426,7 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "ends_c0_col0",
+            "name": "e2",
             "shape": [
               3
             ]
@@ -6435,7 +6434,7 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "ends_c0_row0",
+            "name": "s8",
             "shape": [
               3
             ]
@@ -6443,43 +6442,41 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "starts2",
+            "name": "e8",
             "shape": [
               3
             ]
           }
         ],
-        "total_elems": 66
+        "total_elems": 65
       },
       "memory": 5561,
-      "method": "ext:franksunp7166_65",
+      "method": "ext:biohack_mix_positive",
       "node_count": 57,
       "op_sequence": [
         "Slice",
         "Slice",
         "Slice",
         "Slice",
-        "Cast",
-        "Cast",
         "ReduceMax",
         "ReduceMax",
         "ReduceMax",
         "ReduceMax",
         "Max",
+        "Cast",
         "Max",
         "Cast",
-        "Cast",
         "ArgMax",
-        "ArgMax",
-        "ArgMax",
-        "ArgMax",
-        "Cast",
-        "Cast",
-        "Cast",
         "Cast",
         "ReduceSum",
+        "Cast",
+        "ArgMax",
+        "Cast",
         "ReduceSum",
         "Cast",
+        "ArgMax",
+        "Cast",
+        "ArgMax",
         "Cast",
         "Less",
         "Sub",
@@ -6487,28 +6484,30 @@
         "Sub",
         "Add",
         "Where",
-        "Where",
         "Sub",
         "Less",
         "Sub",
         "Add",
         "Where",
+        "Where",
+        "Where",
+        "Cast",
+        "Less",
+        "Add",
+        "Where",
+        "Less",
+        "Add",
         "Where",
         "Squeeze",
+        "Sub",
         "Squeeze",
-        "Less",
-        "Add",
-        "Where",
         "Sub",
         "Gather",
-        "Less",
-        "Add",
-        "Where",
-        "Sub",
         "Gather",
         "Where",
         "Where",
         "Where",
+        "Cast",
         "Where",
         "Pad",
         "Equal"
@@ -6532,11 +6531,11 @@
       "opset": [
         {
           "domain": "",
-          "version": 11
+          "version": 17
         }
       ],
-      "params": 66,
-      "points": 16.364668280566722,
+      "params": 65,
+      "points": 16.364846010950195,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [],
@@ -6867,7 +6866,7 @@
         "dtype_elem_counts": {
           "1": 1,
           "2": 12,
-          "7": 113
+          "7": 110
         },
         "largest": [
           {
@@ -6938,10 +6937,10 @@
             ]
           }
         ],
-        "total_elems": 126
+        "total_elems": 123
       },
       "memory": 1991,
-      "method": "ext:franksunp7166_65",
+      "method": "ext:biohack_mix_positive",
       "node_count": 40,
       "op_sequence": [
         "Slice",
@@ -7003,8 +7002,8 @@
           "version": 12
         }
       ],
-      "params": 126,
-      "points": 17.342244728865133,
+      "params": 123,
+      "points": 17.343662833569816,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
@@ -8897,9 +8896,9 @@
         ],
         "total_elems": 195
       },
-      "memory": 14072,
-      "method": "ext:franksunp7166_65",
-      "node_count": 62,
+      "memory": 14062,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 61,
       "op_sequence": [
         "ReduceSum",
         "ReduceSum",
@@ -8958,7 +8957,6 @@
         "Concat",
         "Cast",
         "Cast",
-        "Unsqueeze",
         "Mul",
         "Add",
         "Concat",
@@ -8979,7 +8977,7 @@
         "ReduceSum": 2,
         "Sub": 1,
         "TopK": 1,
-        "Unsqueeze": 3
+        "Unsqueeze": 2
       },
       "opset": [
         {
@@ -8988,7 +8986,7 @@
         }
       ],
       "params": 195,
-      "points": 15.434295542885186,
+      "points": 15.43499670684604,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
@@ -12600,9 +12598,9 @@
         ],
         "total_elems": 238
       },
-      "memory": 26894,
-      "method": "ext:franksunp7166_68",
-      "node_count": 301,
+      "memory": 26877,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 298,
       "op_sequence": [
         "Conv",
         "Cast",
@@ -12687,7 +12685,7 @@
       ],
       "ops": {
         "Add": 18,
-        "And": 29,
+        "And": 28,
         "ArgMax": 21,
         "Cast": 14,
         "Concat": 12,
@@ -12705,13 +12703,13 @@
         "Or": 8,
         "ReduceMax": 8,
         "ReduceSum": 4,
-        "Reshape": 34,
+        "Reshape": 33,
         "ScatterElements": 1,
         "ScatterND": 3,
         "Slice": 8,
         "Sub": 10,
         "Transpose": 1,
-        "Where": 34
+        "Where": 33
       },
       "opset": [
         {
@@ -12720,7 +12718,7 @@
         }
       ],
       "params": 238,
-      "points": 14.79153087793403,
+      "points": 14.79215764072484,
       "source_class": "exact_preserve",
       "source_has_build": true,
       "tags": [
@@ -15792,7 +15790,6 @@
       "initializer_summary": {
         "dtype_elem_counts": {
           "1": 40,
-          "10": 1,
           "2": 10,
           "6": 6,
           "7": 22
@@ -15869,10 +15866,10 @@
             ]
           }
         ],
-        "total_elems": 79
+        "total_elems": 78
       },
       "memory": 3065,
-      "method": "ext:franksunp7166_65",
+      "method": "ext:biohack_mix_positive",
       "node_count": 40,
       "op_sequence": [
         "Conv",
@@ -15894,11 +15891,11 @@
         "Slice",
         "Slice",
         "Equal",
-        "Greater",
+        "Cast",
         "And",
         "Cast",
         "Equal",
-        "Greater",
+        "Cast",
         "And",
         "Cast",
         "Pad",
@@ -15920,14 +15917,13 @@
         "Add": 2,
         "And": 2,
         "ArgMax": 1,
-        "Cast": 5,
+        "Cast": 7,
         "Concat": 1,
         "Conv": 1,
         "Div": 1,
         "Equal": 3,
         "Flatten": 1,
         "GatherElements": 1,
-        "Greater": 2,
         "MaxPool": 2,
         "Min": 1,
         "Mod": 1,
@@ -15942,8 +15938,8 @@
           "version": 18
         }
       ],
-      "params": 79,
-      "points": 16.9467488464509,
+      "params": 78,
+      "points": 16.94706696320243,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -17240,9 +17236,9 @@
         ],
         "total_elems": 82
       },
-      "memory": 3010,
-      "method": "ext:franksunp7166_65",
-      "node_count": 449,
+      "memory": 3009,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 448,
       "op_sequence": [
         "Slice",
         "Cast",
@@ -17339,7 +17335,7 @@
         "Slice": 1,
         "Split": 6,
         "Sub": 3,
-        "Where": 50
+        "Where": 49
       },
       "opset": [
         {
@@ -17348,7 +17344,7 @@
         }
       ],
       "params": 82,
-      "points": 16.963426590292688,
+      "points": 16.963750057867884,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
@@ -17748,7 +17744,7 @@
           {
             "dtype": 10,
             "elems": 14,
-            "name": "pos14_h",
+            "name": "d",
             "shape": [
               14
             ]
@@ -17756,7 +17752,7 @@
           {
             "dtype": 10,
             "elems": 14,
-            "name": "pos14_col_h",
+            "name": "e",
             "shape": [
               14,
               1
@@ -17765,7 +17761,7 @@
           {
             "dtype": 2,
             "elems": 14,
-            "name": "near_thresh_u8",
+            "name": "k",
             "shape": [
               1,
               1,
@@ -17775,7 +17771,7 @@
           {
             "dtype": 2,
             "elems": 14,
-            "name": "far_thresh_u8",
+            "name": "l",
             "shape": [
               1,
               1,
@@ -17785,7 +17781,7 @@
           {
             "dtype": 2,
             "elems": 10,
-            "name": "channel_u8",
+            "name": "m",
             "shape": [
               1,
               10,
@@ -17796,7 +17792,7 @@
           {
             "dtype": 7,
             "elems": 8,
-            "name": "pads_label",
+            "name": "n",
             "shape": [
               8
             ]
@@ -17804,7 +17800,7 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "slice_const_0",
+            "name": "o",
             "shape": [
               3
             ]
@@ -17812,7 +17808,7 @@
           {
             "dtype": 7,
             "elems": 3,
-            "name": "slice_const_1",
+            "name": "p",
             "shape": [
               3
             ]
@@ -17820,9 +17816,9 @@
         ],
         "total_elems": 103
       },
-      "memory": 3480,
-      "method": "ext:franksunp7166_65",
-      "node_count": 56,
+      "memory": 3456,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 50,
       "op_sequence": [
         "Slice",
         "Slice",
@@ -17830,18 +17826,12 @@
         "Cast",
         "ArgMax",
         "ArgMax",
-        "ArgMax",
-        "ArgMax",
         "ReduceMax",
         "ReduceMax",
         "Cast",
         "Cast",
         "Cast",
         "Cast",
-        "Cast",
-        "Cast",
-        "Add",
-        "Add",
         "Add",
         "Add",
         "Where",
@@ -17882,9 +17872,9 @@
         "Equal"
       ],
       "ops": {
-        "Add": 4,
-        "ArgMax": 4,
-        "Cast": 11,
+        "Add": 2,
+        "ArgMax": 2,
+        "Cast": 9,
         "Equal": 1,
         "Less": 6,
         "Or": 1,
@@ -17903,7 +17893,7 @@
         }
       ],
       "params": 103,
-      "points": 16.816044282695046,
+      "points": 16.822765114489805,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -18217,9 +18207,9 @@
         ],
         "total_elems": 805
       },
-      "memory": 8128,
-      "method": "ext:franksunp7166_68",
-      "node_count": 120,
+      "memory": 8108,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 118,
       "op_sequence": [
         "ReduceSum",
         "ReduceSum",
@@ -18231,8 +18221,6 @@
         "Cast",
         "Greater",
         "Equal",
-        "Not",
-        "And",
         "Cast",
         "ReduceMax",
         "ArgMax",
@@ -18300,11 +18288,13 @@
         "Add",
         "Div",
         "Mul",
-        "Add"
+        "Add",
+        "Where",
+        "Sub"
       ],
       "ops": {
         "Add": 11,
-        "And": 2,
+        "And": 1,
         "ArgMax": 8,
         "Cast": 16,
         "Div": 5,
@@ -18317,7 +18307,6 @@
         "Min": 1,
         "Mod": 1,
         "Mul": 4,
-        "Not": 1,
         "Pad": 1,
         "ReduceMax": 3,
         "ReduceSum": 3,
@@ -18335,7 +18324,7 @@
         }
       ],
       "params": 805,
-      "points": 15.90249243629816,
+      "points": 15.904733835869283,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
@@ -18768,7 +18757,7 @@
         "dtype_elem_counts": {
           "10": 395,
           "6": 72,
-          "7": 75,
+          "7": 71,
           "9": 367
         },
         "largest": [
@@ -18837,11 +18826,11 @@
             ]
           }
         ],
-        "total_elems": 909
+        "total_elems": 905
       },
-      "memory": 17015,
-      "method": "ext:franksunp7166_68",
-      "node_count": 352,
+      "memory": 16940,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 351,
       "op_sequence": [
         "Slice",
         "Slice",
@@ -18855,7 +18844,6 @@
         "Less",
         "Less",
         "Reshape",
-        "Reshape",
         "And",
         "Slice",
         "Slice",
@@ -18876,6 +18864,7 @@
         "Add",
         "Gather",
         "GreaterOrEqual",
+        "And",
         "Sub",
         "Mul",
         "Add",
@@ -18921,7 +18910,7 @@
         "GreaterOrEqual",
         "GreaterOrEqual",
         "Where",
-        "Where",
+        "Reshape",
         "Reshape"
       ],
       "ops": {
@@ -18931,8 +18920,8 @@
         "Cast": 32,
         "Concat": 7,
         "Div": 3,
-        "Equal": 14,
-        "Gather": 31,
+        "Equal": 16,
+        "Gather": 30,
         "Greater": 4,
         "GreaterOrEqual": 16,
         "Less": 17,
@@ -18943,12 +18932,12 @@
         "Pad": 1,
         "ReduceMax": 2,
         "ReduceSum": 8,
-        "Reshape": 29,
+        "Reshape": 28,
         "ScatterElements": 1,
         "Slice": 4,
         "Sub": 12,
         "TopK": 3,
-        "Where": 23,
+        "Where": 22,
         "Xor": 1
       },
       "opset": [
@@ -18957,8 +18946,8 @@
           "version": 13
         }
       ],
-      "params": 909,
-      "points": 15.206104124093967,
+      "params": 905,
+      "points": 15.210521364075738,
       "source_class": "exact_preserve",
       "source_has_build": true,
       "tags": [
@@ -19427,9 +19416,9 @@
         ],
         "total_elems": 106
       },
-      "memory": 2856,
-      "method": "ext:franksunp7166_65",
-      "node_count": 84,
+      "memory": 2854,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 82,
       "op_sequence": [
         "Slice",
         "Cast",
@@ -19488,8 +19477,6 @@
         "Not",
         "Or",
         "And",
-        "Not",
-        "And",
         "Where",
         "Where",
         "Equal",
@@ -19510,11 +19497,13 @@
         "Where",
         "Where",
         "LessOrEqual",
-        "Cast"
+        "Cast",
+        "BitwiseXor",
+        "BitwiseXor"
       ],
       "ops": {
         "Add": 5,
-        "And": 6,
+        "And": 5,
         "ArgMax": 5,
         "BitwiseXor": 2,
         "Cast": 14,
@@ -19527,7 +19516,7 @@
         "LessOrEqual": 4,
         "MatMul": 1,
         "Mod": 2,
-        "Not": 3,
+        "Not": 2,
         "Or": 8,
         "Pad": 1,
         "ReduceMax": 2,
@@ -19544,7 +19533,7 @@
         }
       ],
       "params": 106,
-      "points": 17.006380005172254,
+      "points": 17.007055452681893,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -25716,8 +25705,8 @@
           "1": 11,
           "2": 11,
           "3": 1722,
-          "6": 14,
-          "7": 585
+          "6": 13,
+          "7": 583
         },
         "largest": [
           {
@@ -25800,11 +25789,11 @@
             ]
           }
         ],
-        "total_elems": 2343
+        "total_elems": 2340
       },
-      "memory": 33053,
-      "method": "ext:franksunp7166_65",
-      "node_count": 101,
+      "memory": 32987,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 81,
       "op_sequence": [
         "ReduceSum",
         "ArgMax",
@@ -25836,8 +25825,6 @@
         "Or",
         "Cast",
         "QLinearConv",
-        "Greater",
-        "Cast",
         "ArgMax",
         "Reshape",
         "Gather",
@@ -25854,29 +25841,11 @@
         "Gather",
         "Equal",
         "Not",
-        "Equal",
-        "Not",
-        "Equal",
-        "Not",
-        "And",
-        "And",
         "Where",
         "Where",
         "Gather",
         "Where",
         "Gather",
-        "Gather",
-        "Equal",
-        "Where",
-        "Gather",
-        "Equal",
-        "Where",
-        "Gather",
-        "Equal",
-        "Where",
-        "Gather",
-        "Equal",
-        "Where",
         "Gather",
         "Equal",
         "Where",
@@ -25885,28 +25854,48 @@
         "Where",
         "Equal",
         "Cast",
-        "Equal"
+        "Equal",
+        "Equal",
+        "Cast",
+        "Cast",
+        "Concat",
+        "Gather",
+        "Reshape",
+        "QLinearConv",
+        "QLinearConv",
+        "Gather",
+        "Reshape",
+        "QLinearConv",
+        "QLinearConv",
+        "Gather",
+        "Reshape",
+        "QLinearConv",
+        "QLinearConv",
+        "Max",
+        "Greater",
+        "Where",
+        "Pad"
       ],
       "ops": {
         "Add": 2,
-        "And": 4,
+        "And": 2,
         "ArgMax": 3,
-        "Cast": 9,
+        "Cast": 8,
         "Concat": 1,
         "Conv": 1,
-        "Equal": 17,
-        "Gather": 17,
-        "Greater": 4,
+        "Equal": 11,
+        "Gather": 13,
+        "Greater": 3,
         "Max": 1,
         "Mul": 1,
-        "Not": 6,
+        "Not": 4,
         "Or": 2,
         "Pad": 1,
         "QLinearConv": 9,
         "ReduceSum": 1,
         "Reshape": 7,
         "Slice": 5,
-        "Where": 10
+        "Where": 6
       },
       "opset": [
         {
@@ -25914,8 +25903,8 @@
           "version": 12
         }
       ],
-      "params": 2343,
-      "points": 14.525645901612759,
+      "params": 2340,
+      "points": 14.52759717692328,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -27547,7 +27536,7 @@
           {
             "dtype": 1,
             "elems": 10,
-            "name": "lv_amx_0",
+            "name": "task173_label_conv_w",
             "shape": [
               1,
               10,
@@ -27601,9 +27590,9 @@
         ],
         "total_elems": 112
       },
-      "memory": 23159,
-      "method": "ext:franksunp7166_65",
-      "node_count": 124,
+      "memory": 23036,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 120,
       "op_sequence": [
         "Conv",
         "Cast",
@@ -27672,7 +27661,6 @@
         "Gather",
         "Gather",
         "Where",
-        "Where",
         "Cast",
         "Cast",
         "ScatterElements",
@@ -27683,19 +27671,20 @@
         "Gather",
         "Cast",
         "TopK",
-        "Greater",
-        "Cast"
+        "Cast",
+        "Gather",
+        "Gather"
       ],
       "ops": {
         "Add": 13,
-        "And": 9,
+        "And": 8,
         "Cast": 11,
         "Concat": 2,
         "Conv": 1,
         "Div": 1,
         "Equal": 14,
         "Gather": 19,
-        "Greater": 9,
+        "Greater": 8,
         "Max": 3,
         "Min": 2,
         "Mul": 1,
@@ -27706,8 +27695,8 @@
         "ScatterElements": 5,
         "Slice": 4,
         "TopK": 3,
-        "Unsqueeze": 4,
-        "Where": 12
+        "Unsqueeze": 3,
+        "Where": 11
       },
       "opset": [
         {
@@ -27716,7 +27705,7 @@
         }
       ],
       "params": 112,
-      "points": 14.94503677084102,
+      "points": 14.95033633730627,
       "source_class": "exact_preserve",
       "source_has_build": true,
       "tags": [
@@ -28027,9 +28016,9 @@
         ],
         "total_elems": 937
       },
-      "memory": 340,
-      "method": "ext:franksunp7166_65",
-      "node_count": 17,
+      "memory": 330,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 16,
       "op_sequence": [
         "Slice",
         "Slice",
@@ -28038,7 +28027,6 @@
         "Max",
         "ReduceMax",
         "ArgMax",
-        "Cast",
         "Cast",
         "Squeeze",
         "Cast",
@@ -28051,7 +28039,7 @@
       ],
       "ops": {
         "ArgMax": 3,
-        "Cast": 5,
+        "Cast": 4,
         "Equal": 1,
         "Gather": 1,
         "Max": 1,
@@ -28068,7 +28056,7 @@
         }
       ],
       "params": 937,
-      "points": 17.84773114396746,
+      "points": 17.85559281967886,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
@@ -28289,7 +28277,7 @@
         "dtype_elem_counts": {
           "1": 10,
           "10": 14,
-          "2": 12,
+          "2": 11,
           "6": 4,
           "7": 20,
           "9": 2
@@ -28365,10 +28353,10 @@
             ]
           }
         ],
-        "total_elems": 62
+        "total_elems": 61
       },
       "memory": 702,
-      "method": "ext:franksunp7166_65",
+      "method": "ext:biohack_mix_positive",
       "node_count": 35,
       "op_sequence": [
         "Conv",
@@ -28381,17 +28369,17 @@
         "Reshape",
         "Slice",
         "Slice",
-        "Greater",
+        "Cast",
         "Equal",
         "Not",
         "And",
         "Cast",
         "ReduceMax",
-        "Greater",
+        "Cast",
         "Where",
         "Slice",
         "Slice",
-        "Greater",
+        "Cast",
         "Equal",
         "Not",
         "And",
@@ -28409,12 +28397,11 @@
       ],
       "ops": {
         "And": 2,
-        "Cast": 3,
+        "Cast": 6,
         "Concat": 1,
         "Conv": 2,
         "Equal": 3,
         "Gather": 2,
-        "Greater": 3,
         "Not": 2,
         "Pad": 1,
         "ReduceMax": 1,
@@ -28429,8 +28416,8 @@
           "version": 18
         }
       ],
-      "params": 62,
-      "points": 18.361432210833478,
+      "params": 61,
+      "points": 18.362741968715543,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
@@ -33448,7 +33435,7 @@
       "initializer_summary": {
         "dtype_elem_counts": {
           "6": 61,
-          "7": 13
+          "7": 11
         },
         "largest": [
           {
@@ -33493,14 +33480,6 @@
           },
           {
             "dtype": 7,
-            "elems": 2,
-            "name": "s3",
-            "shape": [
-              2
-            ]
-          },
-          {
-            "dtype": 7,
             "elems": 1,
             "name": "ax3",
             "shape": [
@@ -33514,12 +33493,20 @@
             "shape": [
               1
             ]
+          },
+          {
+            "dtype": 7,
+            "elems": 1,
+            "name": "c2b",
+            "shape": [
+              1
+            ]
           }
         ],
-        "total_elems": 74
+        "total_elems": 72
       },
       "memory": 678,
-      "method": "ext:franksunp7166_65",
+      "method": "ext:biohack_mix_positive",
       "node_count": 12,
       "op_sequence": [
         "Slice",
@@ -33551,8 +33538,8 @@
           "version": 17
         }
       ],
-      "params": 74,
-      "points": 18.37726367605016,
+      "params": 72,
+      "points": 18.379926793469643,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [],
@@ -35549,9 +35536,9 @@
       "initializer_summary": {
         "dtype_elem_counts": {
           "1": 11,
-          "10": 461,
-          "2": 68,
-          "6": 88,
+          "10": 460,
+          "2": 24,
+          "6": 44,
           "7": 26
         },
         "largest": [
@@ -35561,14 +35548,6 @@
             "name": "scorew",
             "shape": [
               324
-            ]
-          },
-          {
-            "dtype": 2,
-            "elems": 45,
-            "name": "zeros45_u8",
-            "shape": [
-              45
             ]
           },
           {
@@ -35623,12 +35602,23 @@
               1,
               18
             ]
+          },
+          {
+            "dtype": 1,
+            "elems": 10,
+            "name": "wcol",
+            "shape": [
+              1,
+              10,
+              1,
+              1
+            ]
           }
         ],
-        "total_elems": 654
+        "total_elems": 565
       },
-      "memory": 59587,
-      "method": "teacher:urad7174_top15_public_probe",
+      "memory": 59147,
+      "method": "ext:biohack_mix_positive",
       "node_count": 400,
       "op_sequence": [
         "Conv",
@@ -35751,8 +35741,8 @@
           "version": 13
         }
       ],
-      "params": 654,
-      "points": 13.993891537398403,
+      "params": 565,
+      "points": 14.002711715792984,
       "source_class": "exact_preserve",
       "source_has_build": true,
       "tags": [
@@ -41618,7 +41608,7 @@
     {
       "initializer_summary": {
         "dtype_elem_counts": {
-          "1": 675,
+          "1": 676,
           "10": 22,
           "7": 35,
           "9": 20
@@ -41694,11 +41684,11 @@
             ]
           }
         ],
-        "total_elems": 752
+        "total_elems": 753
       },
-      "memory": 5302,
-      "method": "ext:franksunp7166_68",
-      "node_count": 117,
+      "memory": 5286,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 112,
       "op_sequence": [
         "Slice",
         "TopK",
@@ -41717,18 +41707,16 @@
         "Concat",
         "Add",
         "GatherND",
-        "Cast",
+        "Equal",
+        "Add",
+        "GatherND",
+        "Equal",
         "Add",
         "GatherND",
         "Cast",
         "Add",
         "GatherND",
         "Cast",
-        "Add",
-        "GatherND",
-        "Cast",
-        "Not",
-        "Not",
         "Not",
         "Not",
         "And",
@@ -41772,35 +41760,38 @@
         "Cast",
         "Cast",
         "Cast",
-        "Add",
-        "Add",
-        "Add",
-        "Add",
+        "Sum",
         "Add",
         "Unsqueeze",
         "Cast",
-        "Cast"
+        "Cast",
+        "Sub",
+        "Abs",
+        "Less",
+        "Equal",
+        "Sub"
       ],
       "ops": {
         "Abs": 2,
-        "Add": 21,
+        "Add": 17,
         "And": 7,
-        "Cast": 22,
+        "Cast": 20,
         "Concat": 8,
         "Div": 1,
         "Einsum": 1,
-        "Equal": 2,
+        "Equal": 4,
         "GatherND": 9,
         "Less": 2,
         "LessOrEqual": 2,
         "Mod": 1,
         "Mul": 2,
-        "Not": 4,
+        "Not": 2,
         "Or": 10,
         "Reshape": 1,
         "Slice": 1,
         "Split": 6,
         "Sub": 4,
+        "Sum": 1,
         "TopK": 2,
         "Unsqueeze": 9
       },
@@ -41810,8 +41801,8 @@
           "version": 13
         }
       ],
-      "params": 752,
-      "points": 16.291525510418335,
+      "params": 753,
+      "points": 16.2940062856921,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
@@ -42347,8 +42338,7 @@
     {
       "initializer_summary": {
         "dtype_elem_counts": {
-          "1": 11,
-          "10": 1,
+          "1": 10,
           "2": 42,
           "6": 426,
           "7": 47,
@@ -42433,23 +42423,23 @@
             ]
           }
         ],
-        "total_elems": 552
+        "total_elems": 550
       },
       "memory": 25080,
-      "method": "ext:franksunp7166_65",
+      "method": "ext:biohack_mix_positive",
       "node_count": 96,
       "op_sequence": [
         "Conv",
         "Cast",
         "Slice",
-        "Greater",
+        "Cast",
         "Transpose",
         "And",
         "Reshape",
         "Concat",
         "Cast",
         "TopK",
-        "Greater",
+        "Cast",
         "Cast",
         "Gather",
         "Reshape",
@@ -42477,7 +42467,7 @@
         "Reshape",
         "Cast",
         "TopK",
-        "Greater",
+        "Cast",
         "Cast",
         "Div",
         "Mod",
@@ -42523,13 +42513,13 @@
       "ops": {
         "Add": 6,
         "And": 12,
-        "Cast": 12,
+        "Cast": 16,
         "Concat": 1,
         "Conv": 1,
         "Div": 1,
         "Equal": 4,
         "Gather": 10,
-        "Greater": 9,
+        "Greater": 5,
         "MaxPool": 4,
         "Mod": 1,
         "Mul": 1,
@@ -42549,8 +42539,8 @@
           "version": 16
         }
       ],
-      "params": 552,
-      "points": 14.848403150131913,
+      "params": 550,
+      "points": 14.848481180641883,
       "source_class": "exact_preserve",
       "source_has_build": true,
       "tags": [
@@ -45902,9 +45892,9 @@
         ],
         "total_elems": 269
       },
-      "memory": 21973,
-      "method": "ext:franksunp7166_68",
-      "node_count": 322,
+      "memory": 21834,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 316,
       "op_sequence": [
         "Cast",
         "ReduceSum",
@@ -45929,9 +45919,6 @@
         "ArgMax",
         "ArgMax",
         "Gather",
-        "Gather",
-        "ArgMax",
-        "Sub",
         "ArgMax",
         "Sub",
         "Sub",
@@ -45985,25 +45972,28 @@
         "Pad",
         "Less",
         "And",
-        "Sub"
+        "Sub",
+        "Less",
+        "Less",
+        "And"
       ],
       "ops": {
-        "Add": 34,
+        "Add": 33,
         "And": 29,
-        "ArgMax": 24,
+        "ArgMax": 22,
         "Cast": 32,
         "Concat": 6,
         "Equal": 35,
-        "Gather": 44,
+        "Gather": 43,
         "Less": 11,
         "Mul": 13,
         "Or": 10,
         "Pad": 7,
-        "ReduceMax": 17,
+        "ReduceMax": 16,
         "ReduceMin": 13,
         "ReduceSum": 1,
         "Squeeze": 2,
-        "Sub": 19,
+        "Sub": 18,
         "TopK": 1,
         "Unsqueeze": 21,
         "Where": 3
@@ -46015,7 +46005,7 @@
         }
       ],
       "params": 269,
-      "points": 14.990262327621213,
+      "points": 14.996531375100558,
       "source_class": "exact_preserve",
       "source_has_build": true,
       "tags": [
@@ -46446,9 +46436,9 @@
         ],
         "total_elems": 1586
       },
-      "memory": 7330,
-      "method": "ext:franksunp7166_65",
-      "node_count": 48,
+      "memory": 7308,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 45,
       "op_sequence": [
         "ReduceSum",
         "TopK",
@@ -46469,10 +46459,7 @@
         "Not",
         "Or",
         "And",
-        "And",
         "ReduceMax",
-        "ReduceMax",
-        "Or",
         "ReduceMax",
         "ReduceMax",
         "And",
@@ -46500,16 +46487,16 @@
         "Equal"
       ],
       "ops": {
-        "And": 6,
+        "And": 5,
         "Cast": 2,
         "Conv": 1,
         "Equal": 4,
         "Greater": 1,
         "Not": 5,
-        "Or": 6,
+        "Or": 5,
         "Pad": 1,
         "QLinearConv": 1,
-        "ReduceMax": 12,
+        "ReduceMax": 11,
         "ReduceSum": 1,
         "Split": 1,
         "TopK": 1,
@@ -46522,7 +46509,7 @@
         }
       ],
       "params": 1586,
-      "points": 15.904397305494241,
+      "points": 15.906867828929359,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -46847,7 +46834,7 @@
       "initializer_summary": {
         "dtype_elem_counts": {
           "1": 13,
-          "2": 19,
+          "2": 18,
           "6": 128,
           "7": 1781
         },
@@ -46926,10 +46913,10 @@
             ]
           }
         ],
-        "total_elems": 1941
+        "total_elems": 1940
       },
       "memory": 4971,
-      "method": "ext:franksunp7166_65",
+      "method": "ext:biohack_mix_positive",
       "node_count": 71,
       "op_sequence": [
         "ReduceSum",
@@ -46958,10 +46945,10 @@
         "Cast",
         "Cast",
         "Cast",
-        "Greater",
-        "Greater",
-        "Greater",
-        "Greater",
+        "Cast",
+        "Cast",
+        "Cast",
+        "Cast",
         "Cast",
         "Cast",
         "Cast",
@@ -47007,12 +46994,12 @@
       "ops": {
         "Add": 6,
         "ArgMax": 5,
-        "Cast": 14,
+        "Cast": 18,
         "Concat": 7,
         "Div": 1,
         "Equal": 2,
         "Gather": 4,
-        "Greater": 6,
+        "Greater": 2,
         "Less": 1,
         "Mod": 1,
         "Mul": 4,
@@ -47030,8 +47017,8 @@
           "version": 16
         }
       ],
-      "params": 1941,
-      "points": 16.158985689516108,
+      "params": 1940,
+      "points": 16.159130375908603,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -49360,7 +49347,8 @@
       "initializer_summary": {
         "dtype_elem_counts": {
           "1": 21,
-          "7": 38,
+          "5": 12,
+          "7": 26,
           "9": 110
         },
         "largest": [
@@ -49387,7 +49375,7 @@
             ]
           },
           {
-            "dtype": 7,
+            "dtype": 5,
             "elems": 11,
             "name": "col_parity_i64",
             "shape": [
@@ -49443,9 +49431,9 @@
         ],
         "total_elems": 169
       },
-      "memory": 2108,
-      "method": "ext:franksunp7166_65",
-      "node_count": 23,
+      "memory": 2104,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 24,
       "op_sequence": [
         "Slice",
         "Slice",
@@ -49454,6 +49442,7 @@
         "Cast",
         "ReduceSum",
         "ArgMin",
+        "Cast",
         "Cast",
         "Equal",
         "Or",
@@ -49475,7 +49464,7 @@
         "Abs": 1,
         "And": 3,
         "ArgMin": 1,
-        "Cast": 3,
+        "Cast": 4,
         "Concat": 1,
         "Equal": 2,
         "GreaterOrEqual": 1,
@@ -49494,7 +49483,7 @@
         }
       ],
       "params": 169,
-      "points": 17.26938593393626,
+      "points": 17.27114417614746,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -50258,9 +50247,9 @@
         ],
         "total_elems": 27
       },
-      "memory": 2748,
-      "method": "ext:franksunp7166_65",
-      "node_count": 14,
+      "memory": 2728,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 15,
       "op_sequence": [
         "ReduceSum",
         "ReduceMax",
@@ -50275,11 +50264,12 @@
         "Equal",
         "Cast",
         "Unsqueeze",
+        "Cast",
         "Pad"
       ],
       "ops": {
         "ArgMax": 1,
-        "Cast": 1,
+        "Cast": 2,
         "Equal": 1,
         "Greater": 1,
         "Mul": 1,
@@ -50297,7 +50287,7 @@
         }
       ],
       "params": 27,
-      "points": 17.071593973819464,
+      "points": 17.078827278412987,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -52528,9 +52518,9 @@
         ],
         "total_elems": 1267
       },
-      "memory": 9144,
-      "method": "ext:franksunp7166_65",
-      "node_count": 69,
+      "memory": 9127,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 70,
       "op_sequence": [
         "ReduceSum",
         "ReduceSum",
@@ -52593,6 +52583,7 @@
         "And",
         "Gather",
         "Gather",
+        "Gather",
         "Where",
         "Where",
         "Where",
@@ -52610,7 +52601,7 @@
         "CumSum": 1,
         "Einsum": 4,
         "Equal": 1,
-        "Gather": 5,
+        "Gather": 6,
         "GatherND": 3,
         "Greater": 8,
         "Less": 1,
@@ -52631,7 +52622,7 @@
         }
       ],
       "params": 1267,
-      "points": 15.749381781525248,
+      "points": 15.751016004431612,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
@@ -54811,7 +54802,8 @@
         "dtype_elem_counts": {
           "1": 1,
           "2": 194,
-          "7": 23
+          "5": 1,
+          "7": 22
         },
         "largest": [
           {
@@ -54886,9 +54878,9 @@
         ],
         "total_elems": 218
       },
-      "memory": 2282,
-      "method": "ext:franksunp7166_65",
-      "node_count": 43,
+      "memory": 2278,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 44,
       "op_sequence": [
         "ReduceSum",
         "ReduceSum",
@@ -54897,6 +54889,7 @@
         "Add",
         "Slice",
         "ArgMax",
+        "Cast",
         "Add",
         "Cast",
         "Slice",
@@ -54938,7 +54931,7 @@
         "Add": 6,
         "And": 2,
         "ArgMax": 1,
-        "Cast": 7,
+        "Cast": 8,
         "Concat": 2,
         "Div": 1,
         "Equal": 1,
@@ -54963,7 +54956,7 @@
         }
       ],
       "params": 218,
-      "points": 17.175953989143707,
+      "points": 17.17755527051068,
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
@@ -55414,9 +55407,9 @@
         ],
         "total_elems": 349
       },
-      "memory": 1606,
-      "method": "ext:franksunp7166_65",
-      "node_count": 38,
+      "memory": 1602,
+      "method": "ext:biohack_mix_positive",
+      "node_count": 37,
       "op_sequence": [
         "ReduceSum",
         "Slice",
@@ -55430,8 +55423,7 @@
         "Einsum",
         "Mul",
         "Mul",
-        "Add",
-        "Add",
+        "Sum",
         "Cast",
         "Mod",
         "Cast",
@@ -55458,7 +55450,7 @@
         "Equal"
       ],
       "ops": {
-        "Add": 3,
+        "Add": 1,
         "ArgMax": 2,
         "Cast": 4,
         "Div": 1,
@@ -55473,6 +55465,7 @@
         "ReduceMax": 1,
         "ReduceSum": 1,
         "Slice": 3,
+        "Sum": 1,
         "Unsqueeze": 2,
         "Where": 3
       },
@@ -55483,7 +55476,7 @@
         }
       ],
       "params": 349,
-      "points": 17.421854527580535,
+      "points": 17.42390265937689,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
@@ -55580,7 +55573,7 @@
         "dtype_elem_counts": {
           "1": 3,
           "2": 1,
-          "6": 123,
+          "6": 122,
           "7": 776,
           "9": 27
         },
@@ -55656,10 +55649,10 @@
             "shape": []
           }
         ],
-        "total_elems": 930
+        "total_elems": 929
       },
       "memory": 1871,
-      "method": "ext:franksunp7166_65",
+      "method": "ext:biohack_mix_positive",
       "node_count": 29,
       "op_sequence": [
         "Slice",
@@ -55684,7 +55677,7 @@
         "Add",
         "Where",
         "Add",
-        "Where",
+        "Cast",
         "Where",
         "Gather",
         "Gather",
@@ -55695,7 +55688,7 @@
       "ops": {
         "Add": 2,
         "ArgMax": 2,
-        "Cast": 3,
+        "Cast": 4,
         "Equal": 3,
         "Gather": 3,
         "GatherND": 1,
@@ -55705,7 +55698,7 @@
         "ReduceMax": 3,
         "ReduceSum": 2,
         "Slice": 1,
-        "Where": 5
+        "Where": 4
       },
       "opset": [
         {
@@ -55713,8 +55706,8 @@
           "version": 13
         }
       ],
-      "params": 930,
-      "points": 17.062268224739892,
+      "params": 929,
+      "points": 17.062625303836704,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
