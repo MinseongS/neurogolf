@@ -4596,6 +4596,12 @@
       367,
       396
     ],
+    "infeasible_exact_wall": [
+      118
+    ],
+    "information_loss_wall": [
+      118
+    ],
     "local_stencil": [
       4,
       9,
@@ -21088,6 +21094,8 @@
         "exact_preserve",
         "heuristic",
         "high_memory",
+        "infeasible_exact_wall",
+        "information_loss_wall",
         "local_stencil",
         "low_score",
         "lut_selection",

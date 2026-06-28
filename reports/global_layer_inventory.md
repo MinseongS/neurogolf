@@ -65,3 +65,5 @@
 - `bitwise_program`: 12 tasks — 041 047 048 058 065 068 132 139 156 270 286 305
 - `marginal_wall`: 5 tasks — 029 158 181 350 361
 - `no_build`: 4 tasks — 140 233 241 311
+- `infeasible_exact_wall`: 1 tasks — 118
+- `information_loss_wall`: 1 tasks — 118

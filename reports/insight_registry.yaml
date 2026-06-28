@@ -6,12 +6,12 @@
     "source_tasks": [55, 80],
     "rationale": "Task055 and task080 showed that quantized integer routing can collapse large fp16/fp32 selection planes when scales are 1 and zero-points are 0.",
     "applies_when": {
-      "any_ops": ["MatMul", "QLinearConv", "QLinearMatMul"],
-      "any_tags": ["lut_selection", "qlinear", "onehot_final_equal"],
+      "any_ops": ["MatMul"],
+      "any_tags": ["lut_selection", "onehot_final_equal"],
       "min_memory": 500
     },
     "reject_when": {
-      "any_tags": ["mem0_single_op"]
+      "any_tags": ["mem0_single_op", "qlinear"]
     },
     "expected": {
       "gain_type": "memory",
