@@ -4796,6 +4796,13 @@
       382,
       398
     ],
+    "marginal_wall": [
+      29,
+      158,
+      181,
+      350,
+      361
+    ],
     "matmul": [
       39,
       44,
@@ -9223,6 +9230,7 @@
       "source_has_build": true,
       "tags": [
         "high_memory",
+        "marginal_wall",
         "open_angle"
       ],
       "task": 29,
@@ -25852,6 +25860,7 @@
         "gather_heavy",
         "high_memory",
         "low_score",
+        "marginal_wall",
         "open_angle",
         "qlinear"
       ],
@@ -28587,6 +28596,7 @@
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
+        "marginal_wall",
         "open_angle",
         "scatter"
       ],
@@ -49689,6 +49699,7 @@
         "connectivity_wall",
         "documented_wall",
         "lut_selection",
+        "marginal_wall",
         "open_angle"
       ],
       "task": 350,
@@ -50992,6 +51003,7 @@
       "tags": [
         "documented_wall",
         "lut_selection",
+        "marginal_wall",
         "open_angle",
         "scatter"
       ],

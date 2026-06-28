@@ -136,6 +136,11 @@ def tag_task(ops: Counter, manifest_row: dict, source_text: str, tasklog_text: s
         tags.add("connectivity_wall")
     if "wall" in lower_log or "infeasible" in lower_log or "underdetermined" in lower_log:
         tags.add("documented_wall")
+    if (
+        "marginal" in lower_log
+        and ("did not beat" in lower_log or "no beating net" in lower_log or "cannot beat" in lower_log)
+    ):
+        tags.add("marginal_wall")
     if has_actionable_open_angle(tasklog_text):
         tags.add("open_angle")
     if memory >= 10000:

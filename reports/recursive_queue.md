@@ -14,31 +14,31 @@ Replace fp16/fp32 one-hot LUT/MatMul selection with uint8 QLinearMatMul/QLinearC
 
 | rank | task | score | pts | mem | params | source | tags |
 |---:|---:|---:|---:|---:|---:|---|---|
-| 1 | 158 | 34338.3 | 14.526 | 33053 | 2343 | unknown | assignment_wall,conv_heavy,documented_wall,gather_heavy,high_memory,low_score,open_angle,qlinear |
-| 2 | 118 | 32870.1 | 14.553 | 31049 | 3387 | exact_preserve | connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,local_stencil,low_score |
-| 3 | 191 | 32530.1 | 14.623 | 31276 | 841 | unknown | assignment_wall,conv_heavy,high_memory,low_score,lut_selection,matmul,open_angle |
-| 4 | 133 | 32008.5 | 14.578 | 32294 | 1288 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory |
-| 5 | 367 | 25763.0 | 14.800 | 21268 | 5635 | unknown | connectivity_wall,conv_heavy,documented_wall,high_memory,local_stencil,low_score,lut_selection,open_angle |
-| 6 | 243 | 21460.4 | 14.972 | 22608 | 44 | unknown | connectivity_wall,conv_heavy,documented_wall,high_memory,low_score,qlinear |
-| 7 | 202 | 13743.1 | 15.483 | 13563 | 25 | semantic_or_handbuilt | connectivity_wall,high_memory,open_angle,qlinear |
-| 8 | 077 | 13556.2 | 15.393 | 14760 | 114 | heuristic | connectivity_wall,documented_wall,heuristic,high_memory,local_stencil,maxpool_scan,open_angle,qlinear |
-| 9 | 338 | 13232.7 | 15.414 | 13890 | 667 | unknown | connectivity_wall,documented_wall,high_memory,local_stencil,open_angle,qlinear |
-| 10 | 370 | 10486.2 | 15.749 | 9144 | 1267 | semantic_or_handbuilt | conv_heavy,qlinear,scan,scatter |
-| 11 | 080 | 9887.4 | 15.669 | 10834 | 454 | unknown | conv_heavy,documented_wall,high_memory,lut_selection,open_angle,qlinear |
-| 12 | 044 | 9797.9 | 15.634 | 11620 | 68 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,lut_selection |
-| 13 | 204 | 9280.3 | 15.722 | 10244 | 453 | semantic_or_handbuilt | connectivity_wall,conv_heavy,documented_wall,high_memory,local_stencil,maxpool_scan,open_angle,qlinear |
-| 14 | 222 | 8839.2 | 15.916 | 8736 | 78 | unknown | conv_heavy,local_stencil,maxpool_scan,onehot_final_equal,open_angle,qlinear |
-| 15 | 324 | 7444.7 | 15.904 | 7330 | 1586 | unknown | conv_heavy,documented_wall,local_stencil,qlinear,scan |
-| 16 | 216 | 7171.0 | 15.880 | 9048 | 87 | exact_preserve | connectivity_wall,documented_wall,exact_preserve,heuristic,matmul,open_angle,qlinear,scatter |
-| 17 | 005 | 6600.0 | 16.132 | 6610 | 490 | exact_preserve | conv_heavy,exact_preserve,heuristic,qlinear |
-| 18 | 208 | 6083.0 | 16.287 | 5974 | 109 | unknown | onehot_final_equal,open_angle,qlinear |
-| 19 | 055 | 5838.0 | 16.328 | 5790 | 48 | semantic_or_handbuilt | connectivity_wall,lut_selection,onehot_final_equal,open_angle,qlinear,scan |
-| 20 | 174 | 5655.0 | 16.124 | 7013 | 142 | unknown | connectivity_wall,documented_wall,lut_selection,matmul,open_angle |
-| 21 | 279 | 5555.0 | 16.378 | 5508 | 47 | semantic_or_handbuilt | conv_heavy,local_stencil,qlinear |
-| 22 | 340 | 4639.0 | 16.278 | 5860 | 279 | unknown | documented_wall,open_angle,qlinear |
-| 23 | 278 | 4631.0 | 16.279 | 6084 | 47 | semantic_or_handbuilt | documented_wall,local_stencil,open_angle,qlinear |
-| 24 | 117 | 4165.0 | 16.666 | 3922 | 243 | unknown | local_stencil,lut_selection,open_angle,qlinear |
-| 25 | 107 | 4078.0 | 16.687 | 2924 | 1154 | semantic_or_handbuilt | lut_selection,matmul,onehot_final_equal,open_angle,scatter |
+| 1 | 118 | 32870.1 | 14.553 | 31049 | 3387 | exact_preserve | connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,local_stencil,low_score |
+| 2 | 191 | 32530.1 | 14.623 | 31276 | 841 | unknown | assignment_wall,conv_heavy,high_memory,low_score,lut_selection,matmul,open_angle |
+| 3 | 133 | 32008.5 | 14.578 | 32294 | 1288 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory |
+| 4 | 367 | 25763.0 | 14.800 | 21268 | 5635 | unknown | connectivity_wall,conv_heavy,documented_wall,high_memory,local_stencil,low_score,lut_selection,open_angle |
+| 5 | 243 | 21460.4 | 14.972 | 22608 | 44 | unknown | connectivity_wall,conv_heavy,documented_wall,high_memory,low_score,qlinear |
+| 6 | 202 | 13743.1 | 15.483 | 13563 | 25 | semantic_or_handbuilt | connectivity_wall,high_memory,open_angle,qlinear |
+| 7 | 077 | 13556.2 | 15.393 | 14760 | 114 | heuristic | connectivity_wall,documented_wall,heuristic,high_memory,local_stencil,maxpool_scan,open_angle,qlinear |
+| 8 | 338 | 13232.7 | 15.414 | 13890 | 667 | unknown | connectivity_wall,documented_wall,high_memory,local_stencil,open_angle,qlinear |
+| 9 | 370 | 10486.2 | 15.749 | 9144 | 1267 | semantic_or_handbuilt | conv_heavy,qlinear,scan,scatter |
+| 10 | 080 | 9887.4 | 15.669 | 10834 | 454 | unknown | conv_heavy,documented_wall,high_memory,lut_selection,open_angle,qlinear |
+| 11 | 044 | 9797.9 | 15.634 | 11620 | 68 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,lut_selection |
+| 12 | 204 | 9280.3 | 15.722 | 10244 | 453 | semantic_or_handbuilt | connectivity_wall,conv_heavy,documented_wall,high_memory,local_stencil,maxpool_scan,open_angle,qlinear |
+| 13 | 222 | 8839.2 | 15.916 | 8736 | 78 | unknown | conv_heavy,local_stencil,maxpool_scan,onehot_final_equal,open_angle,qlinear |
+| 14 | 324 | 7444.7 | 15.904 | 7330 | 1586 | unknown | conv_heavy,documented_wall,local_stencil,qlinear,scan |
+| 15 | 216 | 7171.0 | 15.880 | 9048 | 87 | exact_preserve | connectivity_wall,documented_wall,exact_preserve,heuristic,matmul,open_angle,qlinear,scatter |
+| 16 | 005 | 6600.0 | 16.132 | 6610 | 490 | exact_preserve | conv_heavy,exact_preserve,heuristic,qlinear |
+| 17 | 208 | 6083.0 | 16.287 | 5974 | 109 | unknown | onehot_final_equal,open_angle,qlinear |
+| 18 | 055 | 5838.0 | 16.328 | 5790 | 48 | semantic_or_handbuilt | connectivity_wall,lut_selection,onehot_final_equal,open_angle,qlinear,scan |
+| 19 | 174 | 5655.0 | 16.124 | 7013 | 142 | unknown | connectivity_wall,documented_wall,lut_selection,matmul,open_angle |
+| 20 | 279 | 5555.0 | 16.378 | 5508 | 47 | semantic_or_handbuilt | conv_heavy,local_stencil,qlinear |
+| 21 | 340 | 4639.0 | 16.278 | 5860 | 279 | unknown | documented_wall,open_angle,qlinear |
+| 22 | 278 | 4631.0 | 16.279 | 6084 | 47 | semantic_or_handbuilt | documented_wall,local_stencil,open_angle,qlinear |
+| 23 | 117 | 4165.0 | 16.666 | 3922 | 243 | unknown | local_stencil,lut_selection,open_angle,qlinear |
+| 24 | 107 | 4078.0 | 16.687 | 2924 | 1154 | semantic_or_handbuilt | lut_selection,matmul,onehot_final_equal,open_angle,scatter |
+| 25 | 162 | 4068.0 | 16.689 | 4024 | 44 | unknown | local_stencil,open_angle,qlinear |
 
 ## free_final_onehot_equal
 

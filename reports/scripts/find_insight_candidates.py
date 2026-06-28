@@ -65,8 +65,9 @@ def candidate_score(task: dict, insight: dict) -> float:
     points = float(task.get("points") or 0.0)
     source_penalty = 0 if task.get("source_class") != "exact_preserve" else -500
     wall_penalty = -1500 if "documented_wall" in task.get("tags", []) else 0
+    marginal_penalty = -40000 if "marginal_wall" in task.get("tags", []) else 0
     low_score_bonus = max(0.0, 16.0 - points) * 300
-    return memory + params + low_score_bonus + source_penalty + wall_penalty
+    return memory + params + low_score_bonus + source_penalty + wall_penalty + marginal_penalty
 
 
 def build_applications(inventory: dict, registry: list[dict]) -> list[dict]:
