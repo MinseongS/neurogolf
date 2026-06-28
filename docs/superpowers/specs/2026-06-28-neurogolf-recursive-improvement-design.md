@@ -21,7 +21,10 @@ Add a lightweight recursive improvement loop:
    global inventory.
 4. When one task produces a new mechanism, add it to the registry, rerun the
    candidate finder, and apply/verify it across all matching tasks.
-5. Use a Codex skill so future sessions follow this loop by default instead of
+5. Treat public high-score ONNX files as teacher artifacts: scan them, extract a
+   source/insight draft, and only then consider adoption through the normal
+   source/fresh gates.
+6. Use a Codex skill so future sessions follow this loop by default instead of
    regressing to one-off task work.
 
 ## Components
@@ -38,6 +41,12 @@ Add a lightweight recursive improvement loop:
 - `reports/scripts/apply_insight.py`
   - Safe runner/skeleton for one insight/task pair.  It verifies the task source
     builder and tells whether an automated transformer exists.
+- `reports/scripts/public_teacher_scan.py`
+  - Compares public candidate ONNX files against live/source models and surfaces
+    score-up or mechanism-teacher rows.
+- `reports/scripts/public_teacher_extract.py`
+  - Writes non-mutating exact-source and insight drafts for selected public
+    teachers.
 - `~/.codex/skills/neurogolf-recursive-improvement/SKILL.md`
   - Forces future score work through global inventory → insight registry →
     queue → deep task → registry update → global rescan.
