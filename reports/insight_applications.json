@@ -1,61 +1,7 @@
 [
   {
-    "candidate_count": 7,
+    "candidate_count": 3,
     "candidates": [
-      {
-        "memory": 31276,
-        "method": "custom:task191+onnxsim",
-        "params": 841,
-        "points": 14.622859236052264,
-        "score": 32530.142,
-        "source_class": "unknown",
-        "tags": [
-          "assignment_wall",
-          "conv_heavy",
-          "high_memory",
-          "low_score",
-          "lut_selection",
-          "matmul",
-          "open_angle"
-        ],
-        "task": 191
-      },
-      {
-        "memory": 11620,
-        "method": "ext:franksunp7166_68",
-        "params": 68,
-        "points": 15.633682046569465,
-        "score": 9797.895,
-        "source_class": "exact_preserve",
-        "tags": [
-          "assignment_wall",
-          "connectivity_wall",
-          "conv_heavy",
-          "documented_wall",
-          "exact_preserve",
-          "heuristic",
-          "high_memory",
-          "lut_selection",
-          "matmul"
-        ],
-        "task": 44
-      },
-      {
-        "memory": 7013,
-        "method": "custom:task174+onnxsim",
-        "params": 142,
-        "points": 16.12443330800945,
-        "score": 5655.0,
-        "source_class": "unknown",
-        "tags": [
-          "connectivity_wall",
-          "documented_wall",
-          "lut_selection",
-          "matmul",
-          "open_angle"
-        ],
-        "task": 174
-      },
       {
         "memory": 2924,
         "method": "ext:franksunp7166_65",
@@ -80,26 +26,12 @@
         "score": 2962.0,
         "source_class": "unknown",
         "tags": [
-          "lut_selection",
+          "custom_win",
           "matmul",
           "onehot_final_equal",
           "open_angle"
         ],
         "task": 105
-      },
-      {
-        "memory": 1666,
-        "method": "custom:task398+u8+onnxsim",
-        "params": 1193,
-        "points": 17.041772807677688,
-        "score": 2859.0,
-        "source_class": "semantic_or_handbuilt",
-        "tags": [
-          "lut_selection",
-          "matmul",
-          "open_angle"
-        ],
-        "task": 398
       },
       {
         "memory": 1879,
@@ -161,6 +93,7 @@
         "score": 12870.633,
         "source_class": "semantic_or_handbuilt",
         "tags": [
+          "custom_win",
           "high_memory",
           "onehot_final_equal",
           "open_angle"
@@ -192,6 +125,7 @@
         "source_class": "unknown",
         "tags": [
           "conv_heavy",
+          "custom_win",
           "local_stencil",
           "maxpool_scan",
           "onehot_final_equal",
@@ -361,7 +295,7 @@
         "score": 2962.0,
         "source_class": "unknown",
         "tags": [
-          "lut_selection",
+          "custom_win",
           "matmul",
           "onehot_final_equal",
           "open_angle"
@@ -480,6 +414,7 @@
         "score": 1059.0,
         "source_class": "semantic_or_handbuilt",
         "tags": [
+          "custom_win",
           "onehot_final_equal",
           "open_angle",
           "scatter"
@@ -681,7 +616,8 @@
           "local_stencil",
           "low_score",
           "maxpool_scan",
-          "open_angle"
+          "open_angle",
+          "template_match"
         ],
         "task": 364
       },
@@ -886,6 +822,7 @@
         "source_class": "unknown",
         "tags": [
           "connectivity_wall",
+          "custom_win",
           "documented_wall",
           "high_memory",
           "lut_selection",
@@ -909,6 +846,7 @@
           "gather_heavy",
           "heuristic",
           "high_memory",
+          "lut_selection",
           "open_angle",
           "scatter"
         ],
@@ -939,6 +877,7 @@
         "tags": [
           "connectivity_wall",
           "conv_heavy",
+          "custom_win",
           "documented_wall",
           "high_memory",
           "local_stencil",
@@ -957,6 +896,7 @@
         "source_class": "unknown",
         "tags": [
           "conv_heavy",
+          "custom_win",
           "local_stencil",
           "maxpool_scan",
           "onehot_final_equal",
@@ -1049,7 +989,8 @@
           "connectivity_wall",
           "documented_wall",
           "maxpool_scan",
-          "open_angle"
+          "open_angle",
+          "template_match"
         ],
         "task": 251
       },
@@ -1062,6 +1003,7 @@
         "source_class": "unknown",
         "tags": [
           "connectivity_wall",
+          "custom_win",
           "documented_wall",
           "local_stencil",
           "maxpool_scan",
@@ -1278,7 +1220,8 @@
         "source_class": "semantic_or_handbuilt",
         "tags": [
           "local_stencil",
-          "open_angle"
+          "open_angle",
+          "template_match"
         ],
         "task": 74
       },
@@ -1291,6 +1234,7 @@
         "source_class": "unknown",
         "tags": [
           "conv_heavy",
+          "custom_win",
           "local_stencil",
           "maxpool_scan",
           "onehot_final_equal",
@@ -1454,6 +1398,7 @@
         "source_class": "semantic_or_handbuilt",
         "tags": [
           "conv_heavy",
+          "custom_win",
           "open_angle",
           "scatter"
         ],
@@ -1467,6 +1412,7 @@
         "score": 3144.0,
         "source_class": "unknown",
         "tags": [
+          "custom_win",
           "local_stencil",
           "open_angle"
         ],
@@ -2380,6 +2326,7 @@
           "gather_heavy",
           "heuristic",
           "high_memory",
+          "lut_selection",
           "open_angle",
           "scatter"
         ],
@@ -2400,7 +2347,6 @@
           "exact_preserve",
           "heuristic",
           "high_memory",
-          "lut_selection",
           "matmul"
         ],
         "task": 44
@@ -2423,7 +2369,6 @@
           "information_loss_wall",
           "local_stencil",
           "low_score",
-          "lut_selection",
           "matmul",
           "qlinear",
           "scatter"
@@ -2444,5 +2389,135 @@
       366
     ],
     "title": "Prioritize exact-preserve source builders for semantic replacement"
+  },
+  {
+    "candidate_count": 7,
+    "candidates": [
+      {
+        "memory": 31276,
+        "method": "custom:task191+onnxsim",
+        "params": 841,
+        "points": 14.622859236052264,
+        "score": 32530.142,
+        "source_class": "unknown",
+        "tags": [
+          "assignment_wall",
+          "conv_heavy",
+          "custom_win",
+          "high_memory",
+          "low_score",
+          "matmul",
+          "open_angle",
+          "template_match"
+        ],
+        "task": 191
+      },
+      {
+        "memory": 26860,
+        "method": "ext:franksunp7166_65",
+        "params": 114,
+        "points": 14.797371281923198,
+        "score": 27334.789,
+        "source_class": "unknown",
+        "tags": [
+          "connectivity_wall",
+          "high_memory",
+          "local_stencil",
+          "low_score",
+          "maxpool_scan",
+          "open_angle",
+          "template_match"
+        ],
+        "task": 364
+      },
+      {
+        "memory": 7462,
+        "method": "ext:franksunp7166_65",
+        "params": 1813,
+        "points": 15.864922112524365,
+        "score": 9315.523,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "local_stencil",
+          "open_angle",
+          "template_match"
+        ],
+        "task": 74
+      },
+      {
+        "memory": 4843,
+        "method": "ext:franksunp7166_65",
+        "params": 283,
+        "points": 16.457919093075983,
+        "score": 5126.0,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "connectivity_wall",
+          "local_stencil",
+          "open_angle",
+          "template_match"
+        ],
+        "task": 363
+      },
+      {
+        "memory": 1699,
+        "method": "ext:franksunp7166_65",
+        "params": 295,
+        "points": 17.402102049478216,
+        "score": 1994.0,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "open_angle",
+          "template_match"
+        ],
+        "task": 287
+      },
+      {
+        "memory": 1800,
+        "method": "ext:franksunp7166_65",
+        "params": 66,
+        "points": 17.468447618592712,
+        "score": 1866.0,
+        "source_class": "semantic_or_handbuilt",
+        "tags": [
+          "assignment_wall",
+          "connectivity_wall",
+          "open_angle",
+          "template_match"
+        ],
+        "task": 400
+      },
+      {
+        "memory": 33053,
+        "method": "ext:franksunp7166_65",
+        "params": 2343,
+        "points": 14.525645901612759,
+        "score": -5661.694,
+        "source_class": "unknown",
+        "tags": [
+          "assignment_wall",
+          "conv_heavy",
+          "documented_wall",
+          "gather_heavy",
+          "high_memory",
+          "low_score",
+          "marginal_wall",
+          "open_angle",
+          "qlinear",
+          "template_match"
+        ],
+        "task": 158
+      }
+    ],
+    "expected": {
+      "gain_type": "memory+accuracy",
+      "risk": "medium",
+      "verification": "fresh exact eval; compare against incumbent and propagate if template extraction is deterministic"
+    },
+    "insight_id": "dihedral_template_match_stacked_conv",
+    "source_tasks": [
+      191
+    ],
+    "title": "Use one stacked Conv for all dihedral orientations of a small runtime-extracted template"
   }
 ]

@@ -100,5 +100,26 @@
       "verification": "document semantic mechanism before implementation"
     },
     "transformer": null
+  },
+  {
+    "id": "dihedral_template_match_stacked_conv",
+    "title": "Use one stacked Conv for all dihedral orientations of a small runtime-extracted template",
+    "status": "active",
+    "source_tasks": [191],
+    "rationale": "Task191 showed that 8-orientation template matching is not a correspondence wall: extract a small template, permute it with fixed gather maps, fold present/no-extra predicates into one signed correlation kernel, then stamp with Conv/MaxPool.",
+    "applies_when": {
+      "any_ops": ["Conv", "Gather", "MatMul"],
+      "any_tags": ["template_match"],
+      "min_memory": 1500
+    },
+    "reject_when": {
+      "any_tags": ["mem0_single_op", "information_loss_wall"]
+    },
+    "expected": {
+      "gain_type": "memory+accuracy",
+      "risk": "medium",
+      "verification": "fresh exact eval; compare against incumbent and propagate if template extraction is deterministic"
+    },
+    "transformer": null
   }
 ]

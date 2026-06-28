@@ -4355,6 +4355,35 @@
       379,
       396
     ],
+    "custom_win": [
+      11,
+      17,
+      49,
+      56,
+      79,
+      81,
+      93,
+      105,
+      123,
+      145,
+      161,
+      183,
+      191,
+      196,
+      204,
+      222,
+      243,
+      280,
+      284,
+      290,
+      293,
+      329,
+      330,
+      358,
+      365,
+      379,
+      392
+    ],
     "documented_wall": [
       1,
       2,
@@ -4755,43 +4784,42 @@
       367
     ],
     "lut_selection": [
+      3,
       9,
       20,
       34,
-      39,
-      44,
+      47,
       53,
       55,
       58,
+      61,
       80,
       94,
       104,
-      105,
       107,
       117,
-      118,
       124,
       140,
       145,
+      157,
       168,
       169,
       170,
-      174,
       175,
       182,
       185,
-      191,
       195,
       205,
       209,
       219,
       230,
-      233,
       235,
       240,
+      244,
       264,
       265,
       266,
+      301,
       306,
       346,
       349,
@@ -4799,8 +4827,7 @@
       361,
       366,
       367,
-      382,
-      398
+      382
     ],
     "marginal_wall": [
       29,
@@ -5356,6 +5383,16 @@
       389,
       390,
       397
+    ],
+    "template_match": [
+      74,
+      158,
+      191,
+      251,
+      287,
+      363,
+      364,
+      400
     ]
   },
   "failures": [],
@@ -5777,6 +5814,7 @@
       "source_has_build": true,
       "tags": [
         "documented_wall",
+        "lut_selection",
         "open_angle"
       ],
       "task": 3,
@@ -6937,6 +6975,7 @@
       "source_has_build": true,
       "tags": [
         "connectivity_wall",
+        "custom_win",
         "documented_wall",
         "open_angle"
       ],
@@ -7678,6 +7717,7 @@
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
+        "custom_win",
         "high_memory",
         "onehot_final_equal",
         "open_angle"
@@ -10499,7 +10539,6 @@
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
-        "lut_selection",
         "matmul",
         "open_angle"
       ],
@@ -11191,7 +11230,6 @@
         "exact_preserve",
         "heuristic",
         "high_memory",
-        "lut_selection",
         "matmul"
       ],
       "task": 44,
@@ -11627,6 +11665,7 @@
       "tags": [
         "bitwise_program",
         "connectivity_wall",
+        "lut_selection",
         "open_angle"
       ],
       "task": 47,
@@ -11993,6 +12032,7 @@
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
+        "custom_win",
         "local_stencil",
         "open_angle"
       ],
@@ -12819,6 +12859,7 @@
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
+        "custom_win",
         "onehot_final_equal",
         "open_angle"
       ],
@@ -13283,6 +13324,7 @@
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
+        "lut_selection",
         "open_angle",
         "qlinear"
       ],
@@ -15108,7 +15150,8 @@
       "source_has_build": true,
       "tags": [
         "local_stencil",
-        "open_angle"
+        "open_angle",
+        "template_match"
       ],
       "task": 74,
       "tasklog_exists": true
@@ -15879,6 +15922,7 @@
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
+        "custom_win",
         "local_stencil",
         "open_angle"
       ],
@@ -16208,6 +16252,7 @@
       "tags": [
         "connectivity_wall",
         "conv_heavy",
+        "custom_win",
         "documented_wall",
         "local_stencil",
         "open_angle",
@@ -17838,6 +17883,7 @@
       "source_has_build": true,
       "tags": [
         "connectivity_wall",
+        "custom_win",
         "open_angle",
         "qlinear"
       ],
@@ -19477,7 +19523,7 @@
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
-        "lut_selection",
+        "custom_win",
         "matmul",
         "onehot_final_equal",
         "open_angle"
@@ -21098,7 +21144,6 @@
         "information_loss_wall",
         "local_stencil",
         "low_score",
-        "lut_selection",
         "matmul",
         "qlinear",
         "scatter"
@@ -21649,6 +21694,7 @@
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
+        "custom_win",
         "open_angle"
       ],
       "task": 123,
@@ -24258,6 +24304,7 @@
       "source_has_build": true,
       "tags": [
         "connectivity_wall",
+        "custom_win",
         "documented_wall",
         "high_memory",
         "lut_selection",
@@ -25647,6 +25694,7 @@
         "gather_heavy",
         "heuristic",
         "high_memory",
+        "lut_selection",
         "open_angle",
         "scatter"
       ],
@@ -25870,7 +25918,8 @@
         "low_score",
         "marginal_wall",
         "open_angle",
-        "qlinear"
+        "qlinear",
+        "template_match"
       ],
       "task": 158,
       "tasklog_exists": true
@@ -26310,6 +26359,7 @@
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
+        "custom_win",
         "open_angle"
       ],
       "task": 161,
@@ -27903,7 +27953,6 @@
       "tags": [
         "connectivity_wall",
         "documented_wall",
-        "lut_selection",
         "matmul",
         "open_angle"
       ],
@@ -28932,6 +28981,7 @@
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
+        "custom_win",
         "open_angle"
       ],
       "task": 183,
@@ -30181,11 +30231,12 @@
       "tags": [
         "assignment_wall",
         "conv_heavy",
+        "custom_win",
         "high_memory",
         "low_score",
-        "lut_selection",
         "matmul",
-        "open_angle"
+        "open_angle",
+        "template_match"
       ],
       "task": 191,
       "tasklog_exists": true
@@ -30725,6 +30776,7 @@
       "source_has_build": true,
       "tags": [
         "connectivity_wall",
+        "custom_win",
         "documented_wall",
         "local_stencil",
         "maxpool_scan",
@@ -31886,6 +31938,7 @@
       "tags": [
         "connectivity_wall",
         "conv_heavy",
+        "custom_win",
         "documented_wall",
         "high_memory",
         "local_stencil",
@@ -34595,6 +34648,7 @@
       "source_has_build": true,
       "tags": [
         "conv_heavy",
+        "custom_win",
         "local_stencil",
         "maxpool_scan",
         "onehot_final_equal",
@@ -35756,7 +35810,6 @@
         "gather_heavy",
         "high_memory",
         "low_score",
-        "lut_selection",
         "matmul",
         "no_build",
         "scan",
@@ -37054,6 +37107,7 @@
       "tags": [
         "connectivity_wall",
         "conv_heavy",
+        "custom_win",
         "documented_wall",
         "high_memory",
         "low_score",
@@ -37202,6 +37256,7 @@
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
+        "lut_selection",
         "open_angle"
       ],
       "task": 244,
@@ -38096,7 +38151,8 @@
         "connectivity_wall",
         "documented_wall",
         "maxpool_scan",
-        "open_angle"
+        "open_angle",
+        "template_match"
       ],
       "task": 251,
       "tasklog_exists": true
@@ -41829,6 +41885,7 @@
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
+        "custom_win",
         "documented_wall"
       ],
       "task": 280,
@@ -42350,6 +42407,7 @@
       "source_has_build": true,
       "tags": [
         "conv_heavy",
+        "custom_win",
         "open_angle",
         "scatter"
       ],
@@ -42884,7 +42942,8 @@
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
-        "open_angle"
+        "open_angle",
+        "template_match"
       ],
       "task": 287,
       "tasklog_exists": true
@@ -43202,6 +43261,7 @@
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
+        "custom_win",
         "open_angle"
       ],
       "task": 290,
@@ -43527,6 +43587,7 @@
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
+        "custom_win",
         "open_angle",
         "scatter"
       ],
@@ -44404,6 +44465,7 @@
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
+        "lut_selection",
         "open_angle"
       ],
       "task": 301,
@@ -47162,6 +47224,7 @@
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
+        "custom_win",
         "onehot_final_equal",
         "open_angle",
         "scatter"
@@ -47295,6 +47358,7 @@
       "source_has_build": true,
       "tags": [
         "connectivity_wall",
+        "custom_win",
         "documented_wall",
         "open_angle",
         "scatter"
@@ -50632,6 +50696,7 @@
       "source_class": "unknown",
       "source_has_build": true,
       "tags": [
+        "custom_win",
         "open_angle"
       ],
       "task": 358,
@@ -51308,7 +51373,8 @@
       "tags": [
         "connectivity_wall",
         "local_stencil",
-        "open_angle"
+        "open_angle",
+        "template_match"
       ],
       "task": 363,
       "tasklog_exists": true
@@ -51462,7 +51528,8 @@
         "local_stencil",
         "low_score",
         "maxpool_scan",
-        "open_angle"
+        "open_angle",
+        "template_match"
       ],
       "task": 364,
       "tasklog_exists": true
@@ -51675,6 +51742,7 @@
       "source_has_build": true,
       "tags": [
         "connectivity_wall",
+        "custom_win",
         "documented_wall",
         "gather_heavy",
         "open_angle"
@@ -53720,6 +53788,7 @@
       "tags": [
         "connectivity_wall",
         "conv_heavy",
+        "custom_win",
         "open_angle"
       ],
       "task": 379,
@@ -55432,6 +55501,7 @@
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
+        "custom_win",
         "open_angle"
       ],
       "task": 392,
@@ -56271,7 +56341,6 @@
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
-        "lut_selection",
         "matmul",
         "open_angle"
       ],
@@ -56490,7 +56559,8 @@
       "tags": [
         "assignment_wall",
         "connectivity_wall",
-        "open_angle"
+        "open_angle",
+        "template_match"
       ],
       "task": 400,
       "tasklog_exists": true

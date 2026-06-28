@@ -116,8 +116,12 @@ def tag_task(ops: Counter, manifest_row: dict, source_text: str, tasklog_text: s
         tags.add("qlinear")
     if ops.get("MatMul") or ops.get("MatMulInteger"):
         tags.add("matmul")
-    if "lut" in lower_src or "lut" in lower_log or (ops.get("MatMul") and ops.get("Gather")):
+    if "lut" in lower_src or "lut" in lower_log or "lookup" in lower_src or "lookup" in lower_log:
         tags.add("lut_selection")
+    if "template-match" in lower_src or "template match" in lower_src or "dihedral" in lower_src:
+        tags.add("template_match")
+    if "beats deployed" in lower_log or "adopt-candidate" in lower_log or "new custom" in lower_log:
+        tags.add("custom_win")
     if ops.get("Equal") and ("channel_values" in source_text or "onehot" in lower_src):
         tags.add("onehot_final_equal")
     if ops.get("CumSum") or ops.get("ReduceMax", 0) + ops.get("ReduceMin", 0) >= 10:
