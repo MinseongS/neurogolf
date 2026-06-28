@@ -151,6 +151,8 @@ def tag_task(ops: Counter, manifest_row: dict, source_text: str, tasklog_text: s
         tags.add("marginal_wall")
     if "information loss" in lower_log or "information-theoretically" in lower_log:
         tags.add("information_loss_wall")
+    if "intrinsically ambiguous" in lower_log or "genuinely ambiguous" in lower_log or "input→output map is not a function" in lower_log:
+        tags.add("ambiguity_wall")
     if "infeasible for an exact" in lower_log or "infeasible for exact" in lower_log:
         tags.add("infeasible_exact_wall")
     if has_actionable_open_angle(tasklog_text):

@@ -28,31 +28,31 @@ Delay 10-channel expansion to final Equal/Where output
 
 | rank | task | score | pts | mem | params | source | tags |
 |---:|---:|---:|---:|---:|---:|---|---|
-| 1 | 209 | 49701.7 | 14.158 | 50951 | 198 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,low_score |
-| 2 | 017 | 12870.6 | 15.548 | 10931 | 1804 | semantic_or_handbuilt | custom_win,high_memory,onehot_final_equal,open_angle |
-| 3 | 064 | 12087.7 | 15.494 | 13368 | 68 | semantic_or_handbuilt | connectivity_wall,documented_wall,high_memory,onehot_final_equal,open_angle |
-| 4 | 222 | 8839.2 | 15.916 | 8736 | 78 | unknown | conv_heavy,custom_win,local_stencil,maxpool_scan,onehot_final_equal,open_angle,qlinear |
-| 5 | 328 | 6912.0 | 16.159 | 4971 | 1941 | unknown | onehot_final_equal |
-| 6 | 208 | 6083.0 | 16.287 | 5974 | 109 | unknown | onehot_final_equal,open_angle,qlinear |
-| 7 | 055 | 5838.0 | 16.328 | 5790 | 48 | semantic_or_handbuilt | connectivity_wall,lut_selection,onehot_final_equal,open_angle,qlinear,scan |
-| 8 | 009 | 5624.0 | 16.129 | 7029 | 95 | unknown | connectivity_wall,documented_wall,local_stencil,lut_selection,onehot_final_equal,open_angle |
-| 9 | 165 | 4956.0 | 16.227 | 6144 | 312 | unknown | connectivity_wall,documented_wall,local_stencil,onehot_final_equal,open_angle |
-| 10 | 383 | 4570.0 | 16.289 | 5974 | 96 | unknown | assignment_wall,connectivity_wall,documented_wall,local_stencil,onehot_final_equal,open_angle |
-| 11 | 378 | 4489.0 | 16.591 | 4372 | 117 | unknown | onehot_final_equal,open_angle |
-| 12 | 335 | 4216.0 | 16.653 | 3546 | 670 | semantic_or_handbuilt | conv_heavy,local_stencil,onehot_final_equal,open_angle |
-| 13 | 107 | 4078.0 | 16.687 | 2924 | 1154 | semantic_or_handbuilt | lut_selection,matmul,onehot_final_equal,open_angle,scatter |
-| 14 | 387 | 3559.0 | 16.471 | 4954 | 105 | unknown | connectivity_wall,documented_wall,onehot_final_equal,open_angle,scatter |
-| 15 | 105 | 2962.0 | 17.006 | 2856 | 106 | unknown | custom_win,matmul,onehot_final_equal,open_angle |
-| 16 | 397 | 2848.0 | 17.046 | 2648 | 200 | semantic_or_handbuilt | local_stencil,onehot_final_equal,scatter |
-| 17 | 069 | 2412.0 | 16.728 | 3848 | 64 | unknown | connectivity_wall,documented_wall,onehot_final_equal,open_angle |
-| 18 | 051 | 1803.0 | 17.503 | 1702 | 101 | semantic_or_handbuilt | onehot_final_equal,open_angle |
-| 19 | 086 | 1636.0 | 16.949 | 2946 | 190 | unknown | assignment_wall,connectivity_wall,documented_wall,local_stencil,onehot_final_equal,open_angle,qlinear |
-| 20 | 303 | 1620.0 | 17.610 | 1598 | 22 | semantic_or_handbuilt | onehot_final_equal,open_angle |
-| 21 | 141 | 1505.0 | 17.683 | 1404 | 101 | unknown | onehot_final_equal,open_angle |
-| 22 | 346 | 1254.0 | 17.866 | 1224 | 30 | unknown | connectivity_wall,local_stencil,lut_selection,onehot_final_equal,open_angle,qlinear,scatter |
-| 23 | 329 | 1059.0 | 18.035 | 1029 | 30 | semantic_or_handbuilt | custom_win,onehot_final_equal,open_angle,scatter |
-| 24 | 239 | 947.0 | 18.147 | 897 | 50 | semantic_or_handbuilt | onehot_final_equal |
-| 25 | 048 | -354.0 | 17.956 | 1030 | 116 | unknown | bitwise_program,connectivity_wall,documented_wall,onehot_final_equal,open_angle |
+| 1 | 017 | 12870.6 | 15.548 | 10931 | 1804 | semantic_or_handbuilt | custom_win,high_memory,onehot_final_equal,open_angle |
+| 2 | 064 | 12087.7 | 15.494 | 13368 | 68 | semantic_or_handbuilt | connectivity_wall,documented_wall,high_memory,onehot_final_equal,open_angle |
+| 3 | 222 | 8839.2 | 15.916 | 8736 | 78 | unknown | conv_heavy,custom_win,local_stencil,maxpool_scan,onehot_final_equal,open_angle,qlinear |
+| 4 | 328 | 6912.0 | 16.159 | 4971 | 1941 | unknown | onehot_final_equal |
+| 5 | 208 | 6083.0 | 16.287 | 5974 | 109 | unknown | onehot_final_equal,open_angle,qlinear |
+| 6 | 055 | 5838.0 | 16.328 | 5790 | 48 | semantic_or_handbuilt | connectivity_wall,lut_selection,onehot_final_equal,open_angle,qlinear,scan |
+| 7 | 009 | 5624.0 | 16.129 | 7029 | 95 | unknown | connectivity_wall,documented_wall,local_stencil,lut_selection,onehot_final_equal,open_angle |
+| 8 | 165 | 4956.0 | 16.227 | 6144 | 312 | unknown | connectivity_wall,documented_wall,local_stencil,onehot_final_equal,open_angle |
+| 9 | 383 | 4570.0 | 16.289 | 5974 | 96 | unknown | assignment_wall,connectivity_wall,documented_wall,local_stencil,onehot_final_equal,open_angle |
+| 10 | 378 | 4489.0 | 16.591 | 4372 | 117 | unknown | onehot_final_equal,open_angle |
+| 11 | 335 | 4216.0 | 16.653 | 3546 | 670 | semantic_or_handbuilt | conv_heavy,local_stencil,onehot_final_equal,open_angle |
+| 12 | 107 | 4078.0 | 16.687 | 2924 | 1154 | semantic_or_handbuilt | lut_selection,matmul,onehot_final_equal,open_angle,scatter |
+| 13 | 387 | 3559.0 | 16.471 | 4954 | 105 | unknown | connectivity_wall,documented_wall,onehot_final_equal,open_angle,scatter |
+| 14 | 105 | 2962.0 | 17.006 | 2856 | 106 | unknown | custom_win,matmul,onehot_final_equal,open_angle |
+| 15 | 397 | 2848.0 | 17.046 | 2648 | 200 | semantic_or_handbuilt | local_stencil,onehot_final_equal,scatter |
+| 16 | 069 | 2412.0 | 16.728 | 3848 | 64 | unknown | connectivity_wall,documented_wall,onehot_final_equal,open_angle |
+| 17 | 051 | 1803.0 | 17.503 | 1702 | 101 | semantic_or_handbuilt | onehot_final_equal,open_angle |
+| 18 | 086 | 1636.0 | 16.949 | 2946 | 190 | unknown | assignment_wall,connectivity_wall,documented_wall,local_stencil,onehot_final_equal,open_angle,qlinear |
+| 19 | 303 | 1620.0 | 17.610 | 1598 | 22 | semantic_or_handbuilt | onehot_final_equal,open_angle |
+| 20 | 141 | 1505.0 | 17.683 | 1404 | 101 | unknown | onehot_final_equal,open_angle |
+| 21 | 346 | 1254.0 | 17.866 | 1224 | 30 | unknown | connectivity_wall,local_stencil,lut_selection,onehot_final_equal,open_angle,qlinear,scatter |
+| 22 | 239 | 947.0 | 18.147 | 897 | 50 | semantic_or_handbuilt | onehot_final_equal |
+| 23 | 048 | -354.0 | 17.956 | 1030 | 116 | unknown | bitwise_program,connectivity_wall,documented_wall,onehot_final_equal,open_angle |
+| 24 | 209 | -50298.3 | 14.158 | 50951 | 198 | exact_preserve | ambiguity_wall,assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory |
+| 25 | 329 | -98941.0 | 18.035 | 1029 | 30 | semantic_or_handbuilt | ambiguity_wall,custom_win,onehot_final_equal,open_angle,scatter |
 
 ## scan_dtype_and_shift_compression
 
@@ -65,30 +65,30 @@ Compress scan-style MaxPool/CumSum/Hillis-Steele pipelines with lower dtype or s
 | rank | task | score | pts | mem | params | source | tags |
 |---:|---:|---:|---:|---:|---:|---|---|
 | 1 | 233 | 70736.4 | 13.835 | 69943 | 644 | exact_preserve | conv_heavy,exact_preserve,gather_heavy,high_memory,low_score,matmul,scan,scatter |
-| 2 | 018 | 64925.6 | 13.898 | 63257 | 3038 | exact_preserve | documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score,maxpool_scan,scatter |
-| 3 | 209 | 49701.7 | 14.158 | 50951 | 198 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,low_score |
-| 4 | 187 | 43124.1 | 14.340 | 41700 | 926 | semantic_or_handbuilt | high_memory,local_stencil,low_score,maxpool_scan |
-| 5 | 002 | 38595.9 | 14.400 | 40084 | 32 | exact_preserve | connectivity_wall,documented_wall,exact_preserve,heuristic,high_memory,low_score,maxpool_scan |
-| 6 | 349 | 37967.4 | 14.429 | 37800 | 1196 | unknown | documented_wall,high_memory,local_stencil,low_score,lut_selection,open_angle,scan |
-| 7 | 366 | 35905.2 | 14.469 | 36955 | 491 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score |
-| 8 | 133 | 32008.5 | 14.578 | 32294 | 1288 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory |
-| 9 | 364 | 27334.8 | 14.797 | 26860 | 114 | unknown | connectivity_wall,high_memory,local_stencil,low_score,maxpool_scan,open_angle,template_match |
-| 10 | 054 | 26994.5 | 14.792 | 26894 | 238 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scan,scatter |
-| 11 | 285 | 25477.5 | 14.848 | 25080 | 552 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scatter |
-| 12 | 219 | 24569.2 | 14.826 | 26133 | 84 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score |
-| 13 | 173 | 23087.5 | 14.945 | 23159 | 112 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scatter |
-| 14 | 319 | 20544.9 | 14.990 | 21973 | 269 | exact_preserve | assignment_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score,scan |
-| 15 | 066 | 19532.5 | 15.108 | 19113 | 652 | exact_preserve | exact_preserve,heuristic,high_memory,matmul,scan |
-| 16 | 101 | 17662.2 | 15.206 | 17015 | 909 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,scatter |
-| 17 | 198 | 15821.0 | 15.253 | 16961 | 136 | semantic_or_handbuilt | connectivity_wall,documented_wall,gather_heavy,high_memory,open_angle,scan |
-| 18 | 025 | 14436.7 | 15.434 | 14072 | 195 | semantic_or_handbuilt | high_memory,open_angle,scan |
-| 19 | 077 | 13556.2 | 15.393 | 14760 | 114 | heuristic | connectivity_wall,documented_wall,heuristic,high_memory,local_stencil,maxpool_scan,open_angle,qlinear |
-| 20 | 110 | 12448.5 | 15.468 | 13155 | 634 | semantic_or_handbuilt | connectivity_wall,conv_heavy,documented_wall,high_memory,maxpool_scan,open_angle |
-| 21 | 145 | 11861.7 | 15.511 | 13104 | 111 | unknown | connectivity_wall,custom_win,documented_wall,high_memory,lut_selection,maxpool_scan,open_angle |
-| 22 | 157 | 10840.9 | 15.550 | 12118 | 588 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,lut_selection |
-| 23 | 370 | 10486.2 | 15.749 | 9144 | 1267 | semantic_or_handbuilt | conv_heavy,qlinear,scan,scatter |
-| 24 | 204 | 9280.3 | 15.722 | 10244 | 453 | semantic_or_handbuilt | connectivity_wall,conv_heavy,custom_win,documented_wall,high_memory,local_stencil,maxpool_scan,open_angle |
-| 25 | 222 | 8839.2 | 15.916 | 8736 | 78 | unknown | conv_heavy,custom_win,local_stencil,maxpool_scan,onehot_final_equal,open_angle,qlinear |
+| 2 | 187 | 43124.1 | 14.340 | 41700 | 926 | semantic_or_handbuilt | high_memory,local_stencil,low_score,maxpool_scan |
+| 3 | 002 | 38595.9 | 14.400 | 40084 | 32 | exact_preserve | connectivity_wall,documented_wall,exact_preserve,heuristic,high_memory,low_score,maxpool_scan |
+| 4 | 349 | 37967.4 | 14.429 | 37800 | 1196 | unknown | documented_wall,high_memory,local_stencil,low_score,lut_selection,open_angle,scan |
+| 5 | 366 | 35905.2 | 14.469 | 36955 | 491 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score |
+| 6 | 133 | 32008.5 | 14.578 | 32294 | 1288 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory |
+| 7 | 364 | 27334.8 | 14.797 | 26860 | 114 | unknown | connectivity_wall,high_memory,local_stencil,low_score,maxpool_scan,open_angle,template_match |
+| 8 | 054 | 26994.5 | 14.792 | 26894 | 238 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scan,scatter |
+| 9 | 285 | 25477.5 | 14.848 | 25080 | 552 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scatter |
+| 10 | 219 | 24569.2 | 14.826 | 26133 | 84 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score |
+| 11 | 173 | 23087.5 | 14.945 | 23159 | 112 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scatter |
+| 12 | 319 | 20544.9 | 14.990 | 21973 | 269 | exact_preserve | assignment_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score,scan |
+| 13 | 066 | 19532.5 | 15.108 | 19113 | 652 | exact_preserve | exact_preserve,heuristic,high_memory,matmul,scan |
+| 14 | 101 | 17662.2 | 15.206 | 17015 | 909 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,scatter |
+| 15 | 198 | 15821.0 | 15.253 | 16961 | 136 | semantic_or_handbuilt | connectivity_wall,documented_wall,gather_heavy,high_memory,open_angle,scan |
+| 16 | 025 | 14436.7 | 15.434 | 14072 | 195 | semantic_or_handbuilt | high_memory,open_angle,scan |
+| 17 | 110 | 12448.5 | 15.468 | 13155 | 634 | semantic_or_handbuilt | connectivity_wall,conv_heavy,documented_wall,high_memory,maxpool_scan,open_angle |
+| 18 | 145 | 11861.7 | 15.511 | 13104 | 111 | unknown | connectivity_wall,custom_win,documented_wall,high_memory,lut_selection,maxpool_scan,open_angle |
+| 19 | 157 | 10840.9 | 15.550 | 12118 | 588 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,lut_selection |
+| 20 | 370 | 10486.2 | 15.749 | 9144 | 1267 | semantic_or_handbuilt | conv_heavy,qlinear,scan,scatter |
+| 21 | 204 | 9280.3 | 15.722 | 10244 | 453 | semantic_or_handbuilt | connectivity_wall,conv_heavy,custom_win,documented_wall,high_memory,local_stencil,maxpool_scan,open_angle |
+| 22 | 222 | 8839.2 | 15.916 | 8736 | 78 | unknown | conv_heavy,custom_win,local_stencil,maxpool_scan,onehot_final_equal,open_angle,qlinear |
+| 23 | 324 | 7444.7 | 15.904 | 7330 | 1586 | unknown | conv_heavy,documented_wall,local_stencil,qlinear,scan |
+| 24 | 055 | 5838.0 | 16.328 | 5790 | 48 | semantic_or_handbuilt | connectivity_wall,lut_selection,onehot_final_equal,open_angle,qlinear,scan |
+| 25 | 382 | 5783.0 | 16.337 | 5648 | 135 | semantic_or_handbuilt | lut_selection,open_angle,scan |
 
 ## sparse_conv_single_op_floor
 
@@ -137,24 +137,24 @@ Prioritize exact-preserve source builders for semantic replacement
 | rank | task | score | pts | mem | params | source | tags |
 |---:|---:|---:|---:|---:|---:|---|---|
 | 1 | 233 | 70736.4 | 13.835 | 69943 | 644 | exact_preserve | conv_heavy,exact_preserve,gather_heavy,high_memory,low_score,matmul,scan,scatter |
-| 2 | 018 | 64925.6 | 13.898 | 63257 | 3038 | exact_preserve | documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score,maxpool_scan,scatter |
-| 3 | 286 | 50572.8 | 14.141 | 51276 | 739 | exact_preserve | bitwise_program,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score |
-| 4 | 209 | 49701.7 | 14.158 | 50951 | 198 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,low_score |
-| 5 | 002 | 38595.9 | 14.400 | 40084 | 32 | exact_preserve | connectivity_wall,documented_wall,exact_preserve,heuristic,high_memory,low_score,maxpool_scan |
-| 6 | 366 | 35905.2 | 14.469 | 36955 | 491 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score |
-| 7 | 133 | 32008.5 | 14.578 | 32294 | 1288 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory |
-| 8 | 054 | 26994.5 | 14.792 | 26894 | 238 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scan,scatter |
-| 9 | 285 | 25477.5 | 14.848 | 25080 | 552 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scatter |
-| 10 | 219 | 24569.2 | 14.826 | 26133 | 84 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score |
-| 11 | 076 | 24009.9 | 14.847 | 25375 | 289 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,heuristic,high_memory,low_score,open_angle |
-| 12 | 255 | 23399.7 | 14.871 | 24746 | 315 | exact_preserve | connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,low_score,matmul |
-| 13 | 173 | 23087.5 | 14.945 | 23159 | 112 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scatter |
-| 14 | 319 | 20544.9 | 14.990 | 21973 | 269 | exact_preserve | assignment_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score,scan |
-| 15 | 066 | 19532.5 | 15.108 | 19113 | 652 | exact_preserve | exact_preserve,heuristic,high_memory,matmul,scan |
-| 16 | 101 | 17662.2 | 15.206 | 17015 | 909 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,scatter |
-| 17 | 157 | 10840.9 | 15.550 | 12118 | 588 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,lut_selection |
-| 18 | 044 | 9797.9 | 15.634 | 11620 | 68 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,matmul |
-| 19 | 118 | 2870.1 | 14.553 | 31049 | 3387 | exact_preserve | connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,infeasible_exact_wall,information_loss_wall |
+| 2 | 286 | 50572.8 | 14.141 | 51276 | 739 | exact_preserve | bitwise_program,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score |
+| 3 | 002 | 38595.9 | 14.400 | 40084 | 32 | exact_preserve | connectivity_wall,documented_wall,exact_preserve,heuristic,high_memory,low_score,maxpool_scan |
+| 4 | 366 | 35905.2 | 14.469 | 36955 | 491 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score |
+| 5 | 133 | 32008.5 | 14.578 | 32294 | 1288 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory |
+| 6 | 054 | 26994.5 | 14.792 | 26894 | 238 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scan,scatter |
+| 7 | 285 | 25477.5 | 14.848 | 25080 | 552 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scatter |
+| 8 | 219 | 24569.2 | 14.826 | 26133 | 84 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score |
+| 9 | 076 | 24009.9 | 14.847 | 25375 | 289 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,heuristic,high_memory,low_score,open_angle |
+| 10 | 255 | 23399.7 | 14.871 | 24746 | 315 | exact_preserve | connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,low_score,matmul |
+| 11 | 173 | 23087.5 | 14.945 | 23159 | 112 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scatter |
+| 12 | 319 | 20544.9 | 14.990 | 21973 | 269 | exact_preserve | assignment_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score,scan |
+| 13 | 066 | 19532.5 | 15.108 | 19113 | 652 | exact_preserve | exact_preserve,heuristic,high_memory,matmul,scan |
+| 14 | 101 | 17662.2 | 15.206 | 17015 | 909 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,scatter |
+| 15 | 157 | 10840.9 | 15.550 | 12118 | 588 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,lut_selection |
+| 16 | 044 | 9797.9 | 15.634 | 11620 | 68 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,matmul |
+| 17 | 018 | -35074.4 | 13.898 | 63257 | 3038 | exact_preserve | ambiguity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score,maxpool_scan |
+| 18 | 209 | -50298.3 | 14.158 | 50951 | 198 | exact_preserve | ambiguity_wall,assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory |
+| 19 | 118 | -67129.9 | 14.553 | 31049 | 3387 | exact_preserve | connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,infeasible_exact_wall,information_loss_wall |
 
 ## dihedral_template_match_stacked_conv
 

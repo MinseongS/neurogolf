@@ -4149,6 +4149,12 @@
     ]
   },
   "by_tag": {
+    "ambiguity_wall": [
+      18,
+      77,
+      209,
+      329
+    ],
     "assignment_wall": [
       44,
       76,
@@ -7925,6 +7931,7 @@
       "source_class": "exact_preserve",
       "source_has_build": true,
       "tags": [
+        "ambiguity_wall",
         "documented_wall",
         "exact_preserve",
         "gather_heavy",
@@ -15637,6 +15644,7 @@
       "source_class": "heuristic",
       "source_has_build": true,
       "tags": [
+        "ambiguity_wall",
         "connectivity_wall",
         "documented_wall",
         "heuristic",
@@ -32894,6 +32902,7 @@
       "source_class": "exact_preserve",
       "source_has_build": true,
       "tags": [
+        "ambiguity_wall",
         "assignment_wall",
         "connectivity_wall",
         "conv_heavy",
@@ -47215,6 +47224,7 @@
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
+        "ambiguity_wall",
         "custom_win",
         "onehot_final_equal",
         "open_angle",

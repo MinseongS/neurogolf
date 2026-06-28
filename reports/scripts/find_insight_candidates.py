@@ -66,8 +66,9 @@ def candidate_score(task: dict, insight: dict) -> float:
     source_penalty = 0 if task.get("source_class") != "exact_preserve" else -500
     wall_penalty = -1500 if "documented_wall" in task.get("tags", []) else 0
     marginal_penalty = -40000 if "marginal_wall" in task.get("tags", []) else 0
-    exact_wall_penalty = -30000 if (
+    exact_wall_penalty = -100000 if (
         "information_loss_wall" in task.get("tags", [])
+        or "ambiguity_wall" in task.get("tags", [])
         or "infeasible_exact_wall" in task.get("tags", [])
     ) else 0
     low_score_bonus = max(0.0, 16.0 - points) * 300

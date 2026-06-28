@@ -65,5 +65,6 @@
 - `bitwise_program`: 12 tasks — 041 047 048 058 065 068 132 139 156 270 286 305
 - `template_match`: 8 tasks — 074 158 191 251 287 363 364 400
 - `marginal_wall`: 5 tasks — 029 158 181 350 361
+- `ambiguity_wall`: 4 tasks — 018 077 209 329
 - `infeasible_exact_wall`: 1 tasks — 118
 - `information_loss_wall`: 1 tasks — 118
