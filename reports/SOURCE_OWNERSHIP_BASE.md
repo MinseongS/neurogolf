@@ -9,8 +9,8 @@ counted as source ownership.
 ## Current status
 
 - Networks present: 400/400
-- Semantic/custom source files present: 333/400
-- Missing semantic source: 67/400
+- Semantic/custom source files present: 340/400
+- Missing semantic source: 60/400
 - Special missing case: task118 is live custom-derived but has no source file
 - External live with no local semantic source: 66
 
@@ -20,13 +20,12 @@ Priority order is roughly: low points / high memory first, then live-custom
 source recovery, then small public nets.
 
 ```text
-002 005 015 016 017 018 023 044 046 053
-054 066 076 077 081 083 087 095 098 101
-106 113 116 118 120 122 127 133 135 140
-146 147 151 157 164 171 172 173 179 200
-209 210 216 219 223 230 241 255 258 261
-272 276 282 283 285 286 294 307 309 311
-317 319 326 331 337 366 385
+002 005 015 017 018 023 044 046 053 054
+066 076 077 081 083 095 098 101 106 113
+116 118 120 122 127 133 135 146 147 151
+157 164 171 172 173 200 209 210 216 219
+230 255 258 261 272 276 282 283 285 286
+294 309 311 317 319 326 331 337 366 385
 ```
 
 ## Immediate base-first policy
