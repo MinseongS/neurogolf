@@ -9,8 +9,8 @@ counted as source ownership.
 ## Current status
 
 - Networks present: 400/400
-- Semantic/custom source files present: 351/400
-- Missing semantic source: 49/400
+- Semantic/custom source files present: 353/400
+- Missing semantic source: 47/400
 - Special missing case: task118 is live custom-derived but has no source file
 - External live with no local semantic source: 66
 
@@ -24,7 +24,7 @@ source recovery, then small public nets.
 076 077 081 083 095 098 101 106 118 120
 122 127 133 135 146 147 151 157 171 172
 173 200 209 216 219 230 255 258 261 272
-282 283 285 286 294 317 319 331 366
+283 285 286 294 319 331 366
 ```
 
 ## Immediate base-first policy

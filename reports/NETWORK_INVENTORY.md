@@ -5,10 +5,10 @@ Generated from `reports/manifest.json`, `networks/`, and `src/custom/`.
 ## Summary
 
 - LIVE_CUSTOM: 18
-- EXT_LIVE_CUSTOM_SHELVED: 334
-- EXT_LIVE_NO_CUSTOM_SOURCE: 48
+- EXT_LIVE_CUSTOM_SHELVED: 336
+- EXT_LIVE_NO_CUSTOM_SOURCE: 46
 - networks present: 400/400
-- custom source files present: 351/400
+- custom source files present: 353/400
 - manifest total: 7172.001177
 
 ## Meaning
@@ -304,7 +304,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 279 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.3775 | 5508 | 47 | yes | yes |
 | 280 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_68 | 16.2915 | 5302 | 752 | yes | yes |
 | 281 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.2226 | 2321 | 65 | yes | yes |
-| 282 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 18.8997 | 407 | 39 | yes | no |
+| 282 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.8997 | 407 | 39 | yes | yes |
 | 283 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 18.1866 | 0 | 910 | yes | no |
 | 284 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.7745 | 3082 | 653 | yes | yes |
 | 285 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 14.8484 | 25080 | 552 | yes | no |
@@ -339,7 +339,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 314 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 20.3948 | 0 | 100 | yes | yes |
 | 315 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 19.5619 | 0 | 230 | yes | yes |
 | 316 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.9456 | 388 | 38 | yes | yes |
-| 317 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 20.0164 | 128 | 18 | yes | no |
+| 317 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 20.0164 | 128 | 18 | yes | yes |
 | 318 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 20.3948 | 0 | 100 | yes | yes |
 | 319 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_68 | 14.9903 | 21973 | 269 | yes | no |
 | 320 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.3536 | 448 | 322 | yes | yes |
