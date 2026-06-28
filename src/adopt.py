@@ -45,7 +45,8 @@ def main():
     task = load_task(num)
     path = f"networks/task{num:03d}.onnx"
     manifest = json.load(open("reports/manifest.json"))["tasks"]
-    sys.path.insert(0, "/tmp/arc-gen")
+    if "/tmp/arc-gen" not in sys.path:
+        sys.path.append("/tmp/arc-gen")
     try:
         gen = load_gen(num)
     except Exception:

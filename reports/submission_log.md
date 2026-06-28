@@ -282,3 +282,15 @@ All are BELOW best **7170.45**. Reverted `networks/task220.onnx`, `task230.onnx`
 Lesson: do not trust a one-process 400-task eval for mem-0/simple Conv models; verify suspicious slots with
 `python -m src.harness networks/taskNNN.onnx NNN` in a fresh process. These three current public/base nets already
 score strongly on hidden despite local exact replacements looking clean; do NOT reattempt as a gap-closer.
+
+## #NEW-BEST 2026-06-28 — CONFIRMED 7171.00 (original QLinearMatMul dtype rewrite)
+Built a non-public, structural improvement on live `custom:task055`. The old solver used fp16
+one-hot `MatMul @ LUT @ MatMul` and carried three full 30x30 fp16 label planes. Rewrote the
+same integer LUT selection with `QLinearMatMul` using uint8 one-hots/LUT and scale=1, zero-point=0.
+This preserves exact labels and shrinks task055 from mem 8760 / params 46 / 15.9168 pts to
+mem 5790 / params 48 / **16.3279 pts**. Fresh verification: **1000/1000**.
+
+Submission `54127206` (`task055 qlinear uint8 matmul custom +0.411 local`) completed with
+**publicScore 7171.00**, improving previous best **7170.59** by **+0.41**. This is a meaningful
+original mechanism: for one-hot integer label LUTs feeding final `Equal(label, channel_ids)`,
+try uint8 `QLinearMatMul` before assuming fp16 MatMul planes are the floor.

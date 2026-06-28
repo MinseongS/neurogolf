@@ -1,8 +1,8 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-28 03:51_
+_Updated: 2026-06-28 12:48_
 
-**Total: 7170.49 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 7170.90 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
@@ -12,11 +12,11 @@ _Updated: 2026-06-28 03:51_
 | custom:task352 | 1 | 18.87 |
 | custom:task250+onnxsim | 1 | 16.78 |
 | custom:task398+onnxsim | 1 | 16.75 |
+| custom:task055 | 1 | 16.33 |
 | custom:task383 | 1 | 16.29 |
 | custom:task009+onnxsim | 1 | 16.13 |
 | custom:task174+onnxsim | 1 | 16.12 |
 | custom:task340+onnxsim | 1 | 16.03 |
-| custom:task055 | 1 | 15.92 |
 | custom:task222 | 1 | 15.92 |
 | custom:task379+onnxsim | 1 | 15.82 |
 | custom:task204+onnxsim | 1 | 15.72 |
@@ -85,7 +85,7 @@ _Updated: 2026-06-28 03:51_
 | 052 | ext:franksunp7166_65 | 213 | 14 | 19.58 |
 | 053 | ext:franksunp7166_65 | 0 | 30 | 21.60 |
 | 054 | ext:franksunp7166_68 | 26894 | 238 | 14.79 |
-| 055 | custom:task055 | 8760 | 46 | 15.92 |
+| 055 | custom:task055 | 5790 | 48 | 16.33 |
 | 056 | ext:franksunp7166_65 | 34 | 0 | 21.47 |
 | 057 | ext:franksunp7166_65 | 638 | 30 | 18.50 |
 | 058 | ext:franksunp7166_65 | 252 | 781 | 18.06 |

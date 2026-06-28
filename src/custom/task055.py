@@ -25,14 +25,16 @@ Encoding (separable band partition + double-MatMul LUT routed into FREE BOOL out
   Equal(L, arange[0..9]) writes straight into the FREE BOOL output so the
   10-channel expansion costs nothing.
 
-  Everything past the one fp16 MatMul output runs in fp16 (Where/overlays), so
-  the three full-canvas value planes count at half. Band cumsums and the
-  occupancy profiles stay as ~120 B row/col vectors (no full occupancy plane).
+  The LUT is evaluated with QLinearMatMul in uint8. This keeps the full-canvas
+  label planes at 1 byte/cell instead of fp16's 2 bytes/cell while still doing
+  the same one-hot @ LUT @ one-hot selection exactly (scale=1, zero-point=0).
+  Band cumsums and the occupancy profiles stay as ~120 B row/col vectors (no
+  full occupancy plane).
 
-  Dominant intermediate: the three [1,1,30,30] fp16 value planes (Lband, Lg, L
-  = 1800 B each). Irreducible because the LUT is rank>1 (a sum of 5 rank-1
-  blocks, needing the matmul) and the line/offgrid overrides are 2-D OR/AND of
-  row & col vectors, so each override genuinely materialises a 30x30 selection.
+  Dominant intermediate: the five [1,1,30,30] bool/uint8 planes (Lband, Lg, L,
+  isline, ingrid = 900 B each). The LUT is rank>1 (a sum of 5 rank-1 blocks),
+  so a bilinear selection is still needed, but quantized matmul avoids widening
+  the labels to fp16.
 """
 
 import numpy as np
@@ -43,8 +45,8 @@ from ..harness import IR_VERSION
 # LUT[rowband][colband] -> colour index. bands 0,1,2.
 LUT = np.array([[0, 2, 0],
                 [4, 6, 3],
-                [0, 1, 0]], dtype=np.float32)
-F16 = TensorProto.FLOAT16
+                [0, 1, 0]], dtype=np.uint8)
+U8 = TensorProto.UINT8
 
 
 def build(task):
@@ -73,25 +75,32 @@ def build(task):
     n("CumSum", ["hline", "ax2"], "rowband", exclusive=1)  # [1,1,30,1]
     n("CumSum", ["vline", "ax3"], "colband", exclusive=1)  # [1,1,1,30]
 
-    # band one-hots (fp16)
+    # band one-hots (uint8)
     init("kr", np.arange(3, dtype=np.float32).reshape(1, 1, 1, 3), np.float32)
     n("Equal", ["rowband", "kr"], "Reqb")
-    n("Cast", ["Reqb"], "Ronehot", to=F16)  # [1,1,30,3]
+    n("Cast", ["Reqb"], "Ronehot", to=U8)  # [1,1,30,3]
     init("kc", np.arange(3, dtype=np.float32).reshape(1, 1, 3, 1), np.float32)
     n("Equal", ["colband", "kc"], "Ceqb")
-    n("Cast", ["Ceqb"], "Conehot", to=F16)  # [1,1,3,30]
+    n("Cast", ["Ceqb"], "Conehot", to=U8)  # [1,1,3,30]
 
-    init("lut", LUT.reshape(1, 1, 3, 3), np.float16)
-    n("MatMul", ["Ronehot", "lut"], "RL")    # [1,1,30,3] f16
-    n("MatMul", ["RL", "Conehot"], "Lband")  # [1,1,30,30] f16 band colour
+    init("lut", LUT.reshape(1, 1, 3, 3), np.uint8)
+    init("qscale", np.array(1.0, np.float32), np.float32)
+    init("qzero", np.array(0, np.uint8), np.uint8)
+    qargs = ["qscale", "qzero"]
+    n("QLinearMatMul",
+      ["Ronehot", *qargs, "lut", *qargs, *qargs],
+      "RL")    # [1,1,30,3] uint8
+    n("QLinearMatMul",
+      ["RL", *qargs, "Conehot", *qargs, *qargs],
+      "Lband")  # [1,1,30,30] uint8 band colour
 
     # line overlay -> 8
     init("half", np.array(0.5, np.float32), np.float32)
     n("Greater", ["hline", "half"], "hb")  # [1,1,30,1] bool
     n("Greater", ["vline", "half"], "vb")  # [1,1,1,30] bool
     n("Or", ["hb", "vb"], "isline")        # [1,1,30,30] bool
-    init("c8", np.array(8, np.float16), np.float16)
-    n("Where", ["isline", "c8", "Lband"], "Lg")  # [1,1,30,30] f16
+    init("c8", np.array(8, np.uint8), np.uint8)
+    n("Where", ["isline", "c8", "Lband"], "Lg")  # [1,1,30,30] uint8
 
     # in-grid gate (separable occupancy profiles) -> off-grid sentinel 10
     n("ReduceSum", ["input"], "rowsum", axes=[1, 3], keepdims=1)  # [1,1,30,1]
@@ -99,10 +108,10 @@ def build(task):
     n("Greater", ["rowsum", "half"], "rin")  # bool
     n("Greater", ["colsum", "half"], "cin")  # bool
     n("And", ["rin", "cin"], "ingrid")       # [1,1,30,30] bool
-    init("c10", np.array(10, np.float16), np.float16)
-    n("Where", ["ingrid", "Lg", "c10"], "L")  # [1,1,30,30] f16
+    init("c10", np.array(10, np.uint8), np.uint8)
+    n("Where", ["ingrid", "Lg", "c10"], "L")  # [1,1,30,30] uint8
 
-    init("chan", np.arange(10, dtype=np.float16).reshape(1, 10, 1, 1), np.float16)
+    init("chan", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
     n("Equal", ["L", "chan"], "output")  # FREE bool [1,10,30,30]
 
     x = helper.make_tensor_value_info("input", TensorProto.FLOAT, [1, 10, 30, 30])

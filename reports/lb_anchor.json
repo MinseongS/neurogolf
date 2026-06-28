@@ -1,10 +1,10 @@
 {
- "comment": "NEW BEST 7170.59. Equivalent compression sweep over 11 tasks with onnxsim; every adopted candidate matched current outputs on stored + >=503 fresh samples. Submission 54118286 COMPLETE publicScore 7170.59. Biggest local gains: task379 +0.0403, task340 +0.0306, task080 +0.0124, task250 +0.0062; total local +0.0953. Prior best was task118 onnxsim semantic-equivalent param reduction, submission 54114451, 7170.49.",
- "stored_at_submit": 7170.488023707214,
- "lb": 7170.59,
- "time_utc": "2026-06-27 18:47 submission 54118286 COMPLETE",
+ "comment": "NEW BEST 7171.00. Original task055 QLinearMatMul uint8 LUT rewrite: fp16 one-hot@LUT@one-hot label path changed to uint8 quantized matmul (scale=1/zp=0), shrinking task055 mem 8760->5790 and local points 15.9168->16.3279. Fresh 1000/1000. Submission 54127206 COMPLETE publicScore 7171.00. Prior best was equivalent compression sweep submission 54118286, 7170.59.",
+ "stored_at_submit": 7170.899122008326,
+ "lb": 7171.0,
+ "time_utc": "2026-06-28 03:49 submission 54127206 COMPLETE",
  "pending": false,
- "pending_submit": "CONFIRMED 7170.59 (+0.10 over prior confirmed 7170.49)",
- "prev_stored_at_submit": 7170.393087159889,
- "prev_lb": 7170.49
+ "pending_submit": "CONFIRMED 7171.00 (+0.41 over prior confirmed 7170.59)",
+ "prev_stored_at_submit": 7170.488023707214,
+ "prev_lb": 7170.59
 }

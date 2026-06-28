@@ -11,12 +11,20 @@
 | 1 | CumSum band + double-MatMul LUT, fp32 planes, occ ReduceSum gate | A | 18900 | 51 | 15.15 | — | passes 263/263 |
 | 2 | fp16 downstream + separable rowin/colin gate | A | 9660 | 46 | 15.82 | — | passes |
 | 3 | drop uint8 cast, fp16 Equal directly into output | A | 8760 | 46 | 15.92 | 200/200 | FINAL |
+| 4 | QLinearMatMul uint8 LUT path (scale=1/zp=0), uint8 label overlays | A | 5790 | 48 | **16.33** | 1000/1000 | **ADOPTED, LB 7171.00** |
 
 ## Best achieved
-15.92 @ mem 8760 params 46 — adopted? pending (left at src/custom/task55.py). Beats prior 14.83? Y (+1.09).
+16.33 @ mem 5790 params 48 — adopted as `custom:task055`. Beats prior live 15.92 by **+0.411 local**.
+Submission `54127206` completed with **publicScore 7171.00**, up from 7170.59.
 
 ## Irreducible-floor analysis
-Three [1,1,30,30] fp16 value planes (Lband, Lg, L = 1800 B each = 5400) dominate. The (rowband,colband)->colour LUT is rank>1 (a sum of 5 rank-1 filled blocks) so the double-MatMul genuinely produces one full plane; the line override (hline_r OR vline_c) and the off-grid override (NOT(rowin AND colin)) are 2-D OR/AND of row & col vectors, so each Where materialises its own 30x30 selection. Band cumsums and occupancy gates are kept as ~120 B row/col vectors — no full occupancy plane.
+The old fp16 version was NOT at floor. Three [1,1,30,30] fp16 value planes
+(Lband, Lg, L = 1800 B each = 5400) dominated, but the LUT selection is integer-valued.
+Replacing the two fp16 MatMuls with `QLinearMatMul` on uint8 one-hots and a uint8 LUT
+(all scales=1, zero-points=0) keeps the same exact bilinear selection while shrinking
+the three full label planes to 900 B each. Current dominant full planes are:
+Lband/Lg/L uint8 + isline/ingrid bool = 5 × 900 B. The line and off-grid overrides still
+materialise real 2-D masks, but the label dtype is no longer forced to fp16.
 
 ## OPEN ANGLES (re-attack backlog)
 - Fold the line override into the double-MatMul by augmenting the band one-hots with hline/vline basis vectors. Blocked: a line cell still carries its band one-hot, so the bilinear term adds LUT[k][cb] that cannot be cancelled to a clean 8 — would need the band term zeroed, which the band one-hot does not provide. Could try a 5-component row/col factor where the line component DOMINATES additively (e.g. line weight 1000) then read back by magnitude bands in the final Equal threshold, collapsing Lg into Lband (~−1800 B, ~+0.2 pts).
@@ -24,3 +32,8 @@ Three [1,1,30,30] fp16 value planes (Lband, Lg, L = 1800 B each = 5400) dominate
 
 ## INSIGHT (transferable)
 A data-dependent rows×cols block grid drawn by FULL separator lines is a fully separable partition: the per-axis band index is the EXCLUSIVE CumSum of the line indicator sampled from the line colour along the first column/row (which is never itself a separator). A non-rank-1 (rowband,colband)->colour map is then the double-MatMul LUT idiom (Ronehot @ LUT3x3 @ Conehot), and preserving the input separator lines is free: just overlay the line colour (8) where the line indicator is set before the final Equal. No flood-fill, no NonZero — closed-form Tier A. ⭐ Reusable for any "fill specific cells of a line-delimited grid with fixed colours" task.
+⭐ New transferable mechanism: if a MatMul/MatMul LUT path selects small integer labels from
+one-hot factors and then feeds `Equal(label, channel_ids)`, try `QLinearMatMul` with uint8
+inputs/LUT and scale=1/zp=0. It preserves exact integer selection and can halve every full
+label plane versus fp16. This is directly relevant to other row×col LUT or packed-label
+builders, but not to true weighted sums that exceed uint8 or need fractional values.
