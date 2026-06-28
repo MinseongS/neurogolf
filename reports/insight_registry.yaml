@@ -121,5 +121,26 @@
       "verification": "fresh exact eval; compare against incumbent and propagate if template extraction is deterministic"
     },
     "transformer": null
+  },
+  {
+    "id": "bounded_crop_before_connectivity_scan",
+    "title": "Run iterative connectivity/flood-fill on the generator's true max canvas, not the 30x30 harness canvas",
+    "status": "active",
+    "source_tasks": [187],
+    "rationale": "Task187 showed that grids are generated in a bounded 20..25 box.  Cropping after reducing the 10-channel input to one-channel label/mask planes avoids a huge fp32 input slice while shrinking every repeated MaxPool/Min flood-fill plane from 30x30 to 25x25.  The final one-channel label map is padded back to 30x30 with sentinel label 10 before final Equal.",
+    "applies_when": {
+      "any_ops": ["MaxPool", "Min", "ReduceMax"],
+      "any_tags": ["connectivity_wall", "maxpool_scan", "high_memory"],
+      "min_memory": 10000
+    },
+    "reject_when": {
+      "any_tags": ["mem0_single_op"]
+    },
+    "expected": {
+      "gain_type": "memory+generalization",
+      "risk": "medium",
+      "verification": "confirm generator max height/width, stored eval, fresh adopt gate"
+    },
+    "transformer": null
   }
 ]

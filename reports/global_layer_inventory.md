@@ -15,8 +15,8 @@
 ## Largest op families
 
 - `Cast`: 296 tasks
-- `Slice`: 245 tasks
-- `Pad`: 229 tasks
+- `Slice`: 246 tasks
+- `Pad`: 230 tasks
 - `Equal`: 217 tasks
 - `Where`: 207 tasks
 - `Concat`: 183 tasks
@@ -26,9 +26,9 @@
 - `Sub`: 134 tasks
 - `And`: 126 tasks
 - `Conv`: 126 tasks
-- `ArgMax`: 125 tasks
+- `ArgMax`: 124 tasks
 - `ReduceSum`: 110 tasks
-- `Greater`: 108 tasks
+- `Greater`: 109 tasks
 - `Mul`: 99 tasks
 - `Less`: 95 tasks
 - `Einsum`: 90 tasks
@@ -45,7 +45,7 @@
 - `open_angle`: 294 tasks — 001 003 004 007 009 010 011 012 013 014 015 017 020 022 024 025 027 028 029 030
 - `local_stencil`: 125 tasks — 004 009 015 019 020 023 026 032 034 041 042 046 049 060 063 073 074 077 079 081
 - `documented_wall`: 112 tasks — 001 002 003 007 009 011 018 024 037 044 046 048 057 064 069 070 071 076 077 080
-- `connectivity_wall`: 105 tasks — 002 004 009 011 022 024 031 036 037 038 041 044 046 047 048 050 052 055 058 059
+- `connectivity_wall`: 106 tasks — 002 004 009 011 022 024 031 036 037 038 041 044 046 047 048 050 052 055 058 059
 - `scatter`: 61 tasks — 012 018 020 035 037 054 068 070 076 083 084 089 092 096 099 101 106 107 118 119
 - `conv_heavy`: 55 tasks — 005 020 023 034 042 044 063 080 081 094 102 110 118 133 138 149 158 160 168 169
 - `mem0_single_op`: 47 tasks — 015 016 026 032 053 060 073 082 097 098 113 114 116 120 122 128 130 135 144 151

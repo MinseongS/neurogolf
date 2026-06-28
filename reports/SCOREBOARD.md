@@ -1,15 +1,16 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-28 13:21_
+_Updated: 2026-06-28 17:31_
 
-**Total: 7172.00 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 7172.25 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
-| ext:franksunp7166_65 | 370 | 6700.26 |
+| ext:franksunp7166_65 | 369 | 6681.91 |
 | ext:franksunp7166_68 | 12 | 180.93 |
 | custom:task128 | 1 | 19.30 |
 | custom:task352 | 1 | 18.87 |
+| custom:task267 | 1 | 18.36 |
 | custom:task398+u8+onnxsim | 1 | 17.04 |
 | custom:task250+qlinear+onnxsim | 1 | 16.92 |
 | custom:task055 | 1 | 16.33 |
@@ -24,8 +25,8 @@ _Updated: 2026-06-28 13:21_
 | custom:task202+qlinear+onnxsim | 1 | 15.48 |
 | custom:task338+qlinear+onnxsim | 1 | 15.41 |
 | custom:task191+onnxsim | 1 | 14.62 |
+| custom:task187 | 1 | 14.58 |
 | custom:task118_tail_where+onnxsim | 1 | 14.55 |
-| custom:task187_label_flood | 1 | 14.34 |
 
 ## Per task
 
@@ -217,7 +218,7 @@ _Updated: 2026-06-28 13:21_
 | 184 | ext:franksunp7166_65 | 2460 | 60 | 17.17 |
 | 185 | ext:franksunp7166_65 | 1651 | 310 | 17.42 |
 | 186 | ext:franksunp7166_65 | 80 | 23 | 20.37 |
-| 187 | custom:task187_label_flood | 41700 | 926 | 14.34 |
+| 187 | custom:task187 | 32850 | 665 | 14.58 |
 | 188 | ext:franksunp7166_65 | 1146 | 60 | 17.90 |
 | 189 | ext:franksunp7166_65 | 866 | 49 | 18.18 |
 | 190 | ext:franksunp7166_65 | 2480 | 247 | 17.09 |
@@ -297,7 +298,7 @@ _Updated: 2026-06-28 13:21_
 | 264 | ext:franksunp7166_65 | 5348 | 706 | 16.29 |
 | 265 | ext:franksunp7166_65 | 4328 | 34 | 16.62 |
 | 266 | ext:franksunp7166_65 | 315 | 35 | 19.14 |
-| 267 | ext:franksunp7166_65 | 734 | 38 | 18.35 |
+| 267 | custom:task267 | 724 | 42 | 18.36 |
 | 268 | ext:franksunp7166_65 | 3328 | 256 | 16.82 |
 | 269 | ext:franksunp7166_65 | 685 | 24 | 18.44 |
 | 270 | ext:franksunp7166_65 | 2742 | 327 | 16.97 |

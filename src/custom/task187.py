@@ -1,4 +1,4 @@
-"""Task 187 (7b6016b9): label-map flood fill for red enclosed holes.
+"""Task 187 (7b6016b9): cropped label-map flood fill for red enclosed holes.
 
 Rule from the generator:
 - preserve every non-black drawing cell from the input;
@@ -6,9 +6,9 @@ Rule from the generator:
 - black enclosed box interiors become red(2);
 - off-grid cells are all-false.
 
-This keeps the public model's simple 3x3 flood-fill idea, but replaces the
-public full 10-channel uint8 output construction with a single uint8 label map
-and final free BOOL Equal.
+The generator emits grids with height/width in 20..25, so the flood-fill only
+needs to run on a 25x25 crop.  The final label map is padded back to the harness
+30x30 canvas with sentinel label 10 before the free Equal expansion.
 """
 
 import numpy as np
@@ -41,15 +41,21 @@ def build(task):
     init("three_u8", np.array(3, np.uint8), np.uint8)
     init("ten_u8", np.array(10, np.uint8), np.uint8)
     init("levels", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
+    init("crop_st", np.array([0, 0], np.int64), np.int64)
+    init("crop_en", np.array([25, 25], np.int64), np.int64)
+    init("axes_hw", np.array([2, 3], np.int64), np.int64)
+    init("out_pad", np.array([0, 0, 0, 0, 0, 0, 5, 5], np.int64), np.int64)
 
     n("ReduceMax", ["input"], "row_any_f", axes=[1, 3], keepdims=1)
     n("ReduceMax", ["input"], "col_any_f", axes=[1, 2], keepdims=1)
     n("Greater", ["row_any_f", "zero_f"], "row_any")
     n("Greater", ["col_any_f", "zero_f"], "col_any")
-    n("And", ["row_any", "col_any"], "ingrid")
+    n("And", ["row_any", "col_any"], "ingrid30")
+    n("Slice", ["ingrid30", "crop_st", "crop_en", "axes_hw"], "ingrid")
 
-    n("Conv", ["input", "Wlabel"], "label_f")
-    n("Cast", ["label_f"], "label_u8", to=U8)
+    n("Conv", ["input", "Wlabel"], "label_f30")
+    n("Cast", ["label_f30"], "label_u830", to=U8)
+    n("Slice", ["label_u830", "crop_st", "crop_en", "axes_hw"], "label_u8")
     n("Equal", ["label_u8", "zero_u8"], "is_zero")
     n("And", ["is_zero", "ingrid"], "black")
     n("Cast", ["black"], "black_u8", to=U8)
@@ -57,11 +63,11 @@ def build(task):
     n("Not", ["ingrid"], "invalid")
     n("Cast", ["invalid"], "invalid_u8", to=U8)
     n("MaxPool", ["invalid_u8"], "invalid_dil", kernel_shape=[3, 3], pads=[1, 1, 1, 1], strides=[1, 1])
-    border = np.zeros((1, 1, 30, 30), dtype=np.uint8)
+    border = np.zeros((1, 1, 25, 25), dtype=np.uint8)
     border[:, :, 0, :] = 1
     border[:, :, :, 0] = 1
-    border[:, :, 29, :] = 1
-    border[:, :, :, 29] = 1
+    border[:, :, 24, :] = 1
+    border[:, :, :, 24] = 1
     init("border", border, np.uint8)
     n("Max", ["invalid_dil", "border"], "edge")
     n("Min", ["black_u8", "edge"], "reach0")
@@ -75,7 +81,8 @@ def build(task):
     n("Equal", [prev, "one_u8"], "reachable")
     n("Where", ["reachable", "three_u8", "two_u8"], "black_label")
     n("Where", ["black", "black_label", "label_u8"], "in_label")
-    n("Where", ["ingrid", "in_label", "ten_u8"], "out_label")
+    n("Where", ["ingrid", "in_label", "ten_u8"], "out_label25")
+    n("Pad", ["out_label25", "out_pad", "ten_u8"], "out_label", mode="constant")
     n("Equal", ["out_label", "levels"], "output")
 
     graph = helper.make_graph(

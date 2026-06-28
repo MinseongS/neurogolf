@@ -375,7 +375,6 @@
       256,
       259,
       263,
-      267,
       268,
       270,
       271,
@@ -1867,6 +1866,7 @@
       255,
       256,
       260,
+      267,
       268,
       273,
       274,
@@ -2639,6 +2639,7 @@
       184,
       185,
       186,
+      187,
       188,
       189,
       190,
@@ -3394,6 +3395,7 @@
       181,
       183,
       185,
+      187,
       188,
       189,
       190,
@@ -4249,6 +4251,7 @@
       177,
       182,
       184,
+      187,
       190,
       193,
       194,
@@ -29385,18 +29388,19 @@
       "initializer_summary": {
         "dtype_elem_counts": {
           "1": 11,
-          "2": 915
+          "2": 640,
+          "7": 14
         },
         "largest": [
           {
             "dtype": 2,
-            "elems": 900,
+            "elems": 625,
             "name": "border",
             "shape": [
               1,
               1,
-              30,
-              30
+              25,
+              25
             ]
           },
           {
@@ -29422,59 +29426,61 @@
             ]
           },
           {
+            "dtype": 7,
+            "elems": 8,
+            "name": "out_pad",
+            "shape": [
+              8
+            ]
+          },
+          {
+            "dtype": 7,
+            "elems": 2,
+            "name": "crop_st",
+            "shape": [
+              2
+            ]
+          },
+          {
+            "dtype": 7,
+            "elems": 2,
+            "name": "crop_en",
+            "shape": [
+              2
+            ]
+          },
+          {
+            "dtype": 7,
+            "elems": 2,
+            "name": "axes_hw",
+            "shape": [
+              2
+            ]
+          },
+          {
             "dtype": 1,
             "elems": 1,
             "name": "zero_f",
             "shape": [
               1
             ]
-          },
-          {
-            "dtype": 2,
-            "elems": 1,
-            "name": "zero_u8",
-            "shape": [
-              1
-            ]
-          },
-          {
-            "dtype": 2,
-            "elems": 1,
-            "name": "one_u8",
-            "shape": [
-              1
-            ]
-          },
-          {
-            "dtype": 2,
-            "elems": 1,
-            "name": "two_u8",
-            "shape": [
-              1
-            ]
-          },
-          {
-            "dtype": 2,
-            "elems": 1,
-            "name": "three_u8",
-            "shape": [
-              1
-            ]
           }
         ],
-        "total_elems": 926
+        "total_elems": 665
       },
-      "memory": 41700,
-      "method": "custom:task187_label_flood",
-      "node_count": 48,
+      "memory": 32850,
+      "method": "custom:task187",
+      "node_count": 51,
       "op_sequence": [
         "ReduceMax",
         "ReduceMax",
         "Greater",
         "Greater",
         "And",
+        "Slice",
         "Conv",
         "Cast",
+        "Slice",
         "Equal",
         "And",
         "Cast",
@@ -29515,6 +29521,7 @@
         "Where",
         "Where",
         "Where",
+        "Pad",
         "Equal"
       ],
       "ops": {
@@ -29527,7 +29534,9 @@
         "MaxPool": 15,
         "Min": 15,
         "Not": 1,
+        "Pad": 1,
         "ReduceMax": 2,
+        "Slice": 2,
         "Where": 3
       },
       "opset": [
@@ -29536,18 +29545,19 @@
           "version": 14
         }
       ],
-      "params": 926,
-      "points": 14.339780325278817,
+      "params": 665,
+      "points": 14.580251621207942,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
+        "connectivity_wall",
         "high_memory",
         "local_stencil",
         "low_score",
         "maxpool_scan"
       ],
       "task": 187,
-      "tasklog_exists": false
+      "tasklog_exists": true
     },
     {
       "initializer_summary": {
@@ -39937,14 +39947,14 @@
       "initializer_summary": {
         "dtype_elem_counts": {
           "1": 1,
-          "2": 11,
-          "7": 26
+          "2": 10,
+          "7": 31
         },
         "largest": [
           {
             "dtype": 2,
             "elems": 10,
-            "name": "channel_codes",
+            "name": "bg_oh",
             "shape": [
               1,
               10,
@@ -39954,81 +39964,80 @@
           },
           {
             "dtype": 7,
-            "elems": 4,
-            "name": "ch0_starts",
+            "elems": 8,
+            "name": "mpads",
             "shape": [
-              4
+              8
             ]
           },
           {
             "dtype": 7,
-            "elems": 4,
-            "name": "ch0_ends",
+            "elems": 8,
+            "name": "pads",
             "shape": [
-              4
+              8
             ]
           },
           {
             "dtype": 7,
-            "elems": 4,
-            "name": "key_starts",
+            "elems": 3,
+            "name": "c0_st",
             "shape": [
-              4
+              3
             ]
           },
           {
             "dtype": 7,
-            "elems": 4,
-            "name": "key_ends",
+            "elems": 3,
+            "name": "c0_en",
             "shape": [
-              4
+              3
             ]
           },
           {
             "dtype": 7,
-            "elems": 4,
-            "name": "inner_pads",
+            "elems": 3,
+            "name": "axes_chw",
             "shape": [
-              4
-            ]
-          },
-          {
-            "dtype": 7,
-            "elems": 4,
-            "name": "output_pads",
-            "shape": [
-              4
+              3
             ]
           },
           {
             "dtype": 7,
             "elems": 2,
-            "name": "hw_axes",
+            "name": "m_st",
+            "shape": [
+              2
+            ]
+          },
+          {
+            "dtype": 7,
+            "elems": 2,
+            "name": "m_en",
             "shape": [
               2
             ]
           }
         ],
-        "total_elems": 38
+        "total_elems": 42
       },
-      "memory": 734,
-      "method": "ext:franksunp7166_65",
-      "node_count": 9,
+      "memory": 724,
+      "method": "custom:task267",
+      "node_count": 8,
       "op_sequence": [
         "Slice",
-        "Equal",
-        "Slice",
-        "ArgMax",
+        "Greater",
         "Cast",
-        "Where",
-        "Pad",
+        "Slice",
         "Equal",
+        "Pad",
+        "Where",
         "Pad"
       ],
       "ops": {
-        "ArgMax": 1,
         "Cast": 1,
-        "Equal": 2,
+        "Equal": 1,
+        "Greater": 1,
         "Pad": 2,
         "Slice": 2,
         "Where": 1
@@ -40036,11 +40045,11 @@
       "opset": [
         {
           "domain": "",
-          "version": 18
+          "version": 13
         }
       ],
-      "params": 38,
-      "points": 18.351015449975222,
+      "params": 42,
+      "points": 18.358817830259408,
       "source_class": "semantic_or_handbuilt",
       "source_has_build": true,
       "tags": [
