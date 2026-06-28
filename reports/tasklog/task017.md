@@ -16,7 +16,7 @@ is fully determined by the 3 scalars (mod,length,offset) — only 106 valid tupl
 | 2 | template-match params (kojimar idiom) + free-output routing | B | 10890 | 2826 | 15.47 | 199/200 | +0.17, below thresh |
 | 3 | + fold +1 into channel_values (drop labels21 plane), uint8 pad sentinel-200, channel0=255 wrap | B | 9549 | 2825 | 15.58 | 200/200 | +0.28 |
 | 4 | + drop 1 weak sample (NS=16→15, greedy) | B | 9182 | 2679 | 15.62 | 500/500 | **+0.32 ADOPT-CANDIDATE** |
-| 5 | source-owned final-Equal route + robust 13-sample set | B | **9330** | 2388 | **15.63** | 2998/3000 vs old 2971/3000 same pool | stored +0.083 vs current; lower rare-fail rate; submission-test candidate |
+| 5 | source-owned final-Equal route + robust 13-sample set | B | **9330** | 2388 | **15.63** | 2998/3000 vs old 2971/3000 same pool | public-probe accepted; adopted after LB 7172.43 |
 
 ## Best achieved
 15.62 @ mem 9182 params 2679 — beats prior 15.30 by +0.32 (✓ ≥+0.3). Fresh
@@ -31,6 +31,13 @@ scores 15.631 stored @ mem 9330 params 2388 and improves the same 3000 fresh
 pool from 2971/3000 (old live/source) to 2998/3000. It is still not strict
 fresh-all-pass, so it is recorded as a submission-test candidate rather than a
 strict adoption.
+
+2026-06-28 public-probe result: submitted only the task017 source-owned candidate
+as `t017_source_ahead_15631` (submission `54135366`, message
+`probe t017 source-owned +0.083 risky fresh`).  Public score moved to **7172.43**
+from the previous best 7172.10, so the candidate was promoted to live despite the
+strict fresh caveat.  This is explicitly a submission-validated, source-owned
+risk probe, not a blind public import.
 
 ## Irreducible-floor analysis
 Dominant intermediates: `matches_h` fp16 [1,106,15]=3180B and `matches_b` bool
