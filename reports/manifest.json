@@ -475,10 +475,10 @@
    "method": "ext:franksunp7166_65"
   },
   "80": {
-   "points": 15.625162656142415,
-   "memory": 11334,
+   "points": 15.66850450646735,
+   "memory": 10834,
    "params": 454,
-   "method": "custom:task080+onnxsim"
+   "method": "custom:task080+qconv+onnxsim"
   },
   "81": {
    "points": 18.860115447773744,

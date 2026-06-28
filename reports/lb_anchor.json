@@ -1,10 +1,10 @@
 {
- "comment": "NEW BEST 7172.06. Continued original dtype floor-break series: task398 fp16 Gather value plane -> uint8 (fresh 1000/1000), task338 parity MatMul -> uint8 QLinearMatMul (fresh 500/500), then task250 clamp MatMuls -> uint8 QLinearMatMul (fresh 500/500). Latest submission 54127715 COMPLETE publicScore 7172.06. Prior best was task398+338 submission 54127652, 7171.91; before QLinear/uint8 series best was 7170.59.",
- "stored_at_submit": 7171.957834664969,
- "lb": 7172.06,
- "time_utc": "2026-06-28 04:16 submission 54127715 COMPLETE",
+ "comment": "NEW BEST 7172.10. Continued original dtype floor-break series: task080 bitmap fp16 count Convs -> uint8 QLinearConv (fresh 300/300), after task055/340/202/398/338/250 QLinear/uint8 wins. Latest submission 54127830 COMPLETE publicScore 7172.10. Prior best was task250 QLinear submission 54127715, 7172.06; before QLinear/uint8 series best was 7170.59.",
+ "stored_at_submit": 7172.001176515293,
+ "lb": 7172.10,
+ "time_utc": "2026-06-28 04:21 submission 54127830 COMPLETE",
  "pending": false,
- "pending_submit": "CONFIRMED 7172.06 (+0.15 over prior confirmed 7171.91)",
- "prev_stored_at_submit": 7171.813432343037,
- "prev_lb": 7171.91
+ "pending_submit": "CONFIRMED 7172.10 (+0.04 over prior confirmed 7172.06)",
+ "prev_stored_at_submit": 7171.957834664969,
+ "prev_lb": 7172.06
 }

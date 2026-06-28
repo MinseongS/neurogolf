@@ -338,3 +338,13 @@ onnxsim result: mem 3164 / params 61 / **16.9213 pts** vs previous 16.7769. Fres
 Submission `54127715` (`task250 qlinear clamp matmul +0.144 local`) completed with
 **publicScore 7172.06**, improving previous best **7171.91** by **+0.15**. Total QLinear/uint8
 series lift from 7170.59 is now **+1.47 public**.
+
+## #NEW-BEST 2026-06-28 — CONFIRMED 7172.10 (QLinearConv bitmap count planes)
+Applied the same dtype-floor logic to `task080`: three 10x10 bitmap count Conv planes
+(`occ_cnt`, `edge_cnt`, `corner_cnt`) only feed equality/greater-than tests, so fp16 Conv
+was replaced with uint8 `QLinearConv` using scale=1, zero-point=0. onnxsim result:
+mem 10834 / params 454 / **15.6685 pts** vs previous 15.6252. Fresh verification: 300/300.
+
+Submission `54127830` (`task080 qlinearconv bitmap counts +0.043 local`) completed with
+**publicScore 7172.10**, improving previous best **7172.06** by **+0.04**. Total QLinear/uint8
+series lift from 7170.59 is now **+1.51 public**.

@@ -21,9 +21,11 @@ runtime" wall the blank note feared).
 | 4 | row-count via no-pad Conv (drop occ plane) + uint8 final | B | 19422 | 598 | 15.10 | 231/231 | removed occ + a tail Where |
 | 5 | TWO-SENTINEL-BLOCK upscale (line+offgrid folded into one double-Gather) | B | 18222 | 488 | 15.16 | 231/231 | no tail Where, no line/ingrid 30x30 masks |
 | 6 | pad-once-per-source shifts + uint8 outB12 (kills PrecisionFreeCast) | B | 17106 | 487 | 15.22 | 500/500 | **best** |
+| 7 | bitmap count Convs as uint8 QLinearConv + onnxsim | B | **10834** | **454** | **15.67** | 300/300 | ADOPTED |
 
 ## Best achieved
-15.22 @ mem 17106 params 487 — beats prior 14.36 by **+0.86**. (build agent does not adopt.)
+15.67 @ mem 10834 params 454 — adopted as `custom:task080+qconv+onnxsim`.
+Beats prior live 15.63 by +0.043; fresh 300/300.
 
 ## Irreducible-floor analysis
 Dominant = colf32 (3600B, the ONE fp32 30x30 colour-index Conv entry — irreducible per
@@ -58,3 +60,6 @@ remaining lever is <0.1 pt and risks the 600s watchdog.
   Equal both run under ORT_DISABLE_ALL.
 - Row/col occupancy COUNT as a no-pad Conv over channels 1..9 (W[1,10,1,30]) replaces the
   30x30 occupancy plane ReduceSum would force (per-row count = full-line detector).
+⭐ 2026-06-28 dtype update: small bitmap count Convs that only feed `Equal(count,k)` or
+`Greater(count,0)` should use uint8 `QLinearConv` with scale=1/zp=0, not fp16 Conv. Here it
+halved `occ_cnt`, `edge_cnt`, `corner_cnt`, and the seed/occupancy cast planes.

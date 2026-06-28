@@ -76,6 +76,8 @@ def build(task):
     init("KW", np.arange(10, dtype=np.float32).reshape(1, 10, 1, 1), F32)
     n("Conv", ["input", "KW"], "colf32")               # [1,1,30,30] fp32 = sum k*input_k
     n("Cast", ["colf32"], "colfu", to=U8)              # [1,1,30,30] uint8 (values 0-9)
+    init("qscale", np.array(1.0, np.float32), F32)
+    init("qzero", np.array(0, np.uint8), U8)
 
     # ---- row occupancy COUNTS as a no-pad conv (no 30x30 occ plane) --------------
     rk = np.zeros((1, 10, 1, W), np.float32); rk[0, 1:, 0, :] = 1.0
@@ -136,12 +138,14 @@ def build(task):
 
     # ---- center detection via ONE fp16 cross-conv: a center has all 4 ortho
     # neighbours occupied -> cross-conv of occupancy == 4 (no 4-shift+And machinery).
-    n("Cast", ["bocc_b"], "boccf", to=F16)                  # [1,1,10,10] fp16 {0,1}
+    n("Cast", ["bocc_b"], "bocc8", to=U8)                   # [1,1,10,10] uint8 {0,1}
     init("CROSSK", np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]],
-                            np.float16).reshape(1, 1, 3, 3), F16)
-    n("Conv", ["boccf", "CROSSK"], "occ_cnt", pads=[1, 1, 1, 1])  # ortho-occ count fp16
-    init("FOURH", np.array(4.0, np.float16), F16)
-    n("Equal", ["occ_cnt", "FOURH"], "all4_b")              # bool: 4 ortho neighbours
+                            np.uint8).reshape(1, 1, 3, 3), U8)
+    qargs = ["qscale", "qzero"]
+    n("QLinearConv", ["bocc8", *qargs, "CROSSK", *qargs, *qargs],
+      "occ_cnt", pads=[1, 1, 1, 1])                         # ortho-occ count uint8
+    init("FOURU", np.array(4, np.uint8), U8)
+    n("Equal", ["occ_cnt", "FOURU"], "all4_b")              # bool: 4 ortho neighbours
     n("And", ["bocc_b", "all4_b"], "iscenter_b")            # [1,1,10,10] bool decorated block
 
     # ---- colours c0,c1,c2 (scalars): mask the tiny block then fp16 ReduceMax -----
@@ -164,14 +168,15 @@ def build(task):
     n("Cast", ["c0"], "c0u8", to=U8)                        # [1,1,1,1] uint8 center colour
     n("Equal", ["B", "c0u8"], "seq_b")                      # bool
     n("And", ["seq_b", "bocc_b"], "seed_b")                 # [1,1,10,10] bool
-    n("Cast", ["seed_b"], "seedf", to=F16)                  # [1,1,10,10] fp16 {0,1}
+    n("Cast", ["seed_b"], "seed8", to=U8)                   # [1,1,10,10] uint8 {0,1}
     init("DIAGK", np.array([[1, 0, 1], [0, 0, 0], [1, 0, 1]],
-                           np.float16).reshape(1, 1, 3, 3), F16)
-    init("ZH", np.array(0.0, np.float16), F16)
-    n("Conv", ["seedf", "CROSSK"], "edge_cnt", pads=[1, 1, 1, 1])   # ortho count fp16
-    n("Conv", ["seedf", "DIAGK"], "corner_cnt", pads=[1, 1, 1, 1])  # diag count fp16
-    n("Greater", ["edge_cnt", "ZH"], "edge_b")             # ortho neighbours bool
-    n("Greater", ["corner_cnt", "ZH"], "corner_b")         # diagonal neighbours bool
+                           np.uint8).reshape(1, 1, 3, 3), U8)
+    n("QLinearConv", ["seed8", *qargs, "CROSSK", *qargs, *qargs],
+      "edge_cnt", pads=[1, 1, 1, 1])                        # ortho count uint8
+    n("QLinearConv", ["seed8", *qargs, "DIAGK", *qargs, *qargs],
+      "corner_cnt", pads=[1, 1, 1, 1])                      # diag count uint8
+    n("Greater", ["edge_cnt", "U8Z"], "edge_b")            # ortho neighbours bool
+    n("Greater", ["corner_cnt", "U8Z"], "corner_b")        # diagonal neighbours bool
 
     # ---- compose outB (uint8 colour index) on 10x10 -----------------------------
     n("Not", ["bocc_b"], "bbg_b")                           # background bitmap cells
