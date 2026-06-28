@@ -44,7 +44,8 @@ Add a lightweight recursive improvement loop:
 
 ## Acceptance criteria
 
-- Inventory builds for all 400 tasks.
+- Inventory indexes all 400 tasks and explicitly reports which tasks have no
+  source-controlled `build()`.
 - Candidate finder emits a non-empty queue from initial insights.
 - Skill exists locally and documents the recursive loop.
 - Existing dirty user files are not modified.

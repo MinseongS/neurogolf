@@ -28,6 +28,10 @@ def all_in(values: list[str], target: set[str]) -> bool:
 def matches(task: dict, insight: dict) -> bool:
     if insight.get("status") != "active":
         return False
+    if not task.get("source_has_build", False):
+        return False
+    if task.get("source_class") in {"no_build", "no_source"}:
+        return False
     pred = insight.get("applies_when") or {}
     reject = insight.get("reject_when") or {}
     ops = set(task.get("ops", {}).keys())

@@ -4880,6 +4880,12 @@
       372,
       385
     ],
+    "no_build": [
+      140,
+      233,
+      241,
+      311
+    ],
     "onehot_final_equal": [
       9,
       17,
@@ -5440,6 +5446,7 @@
       "params": 26,
       "points": 17.97802357692784,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "open_angle"
@@ -5623,6 +5630,7 @@
       "params": 32,
       "points": 14.400469463791902,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -5753,6 +5761,7 @@
       "params": 21,
       "points": 19.28957298262513,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "open_angle"
@@ -5886,6 +5895,7 @@
       "params": 92,
       "points": 16.31661463371969,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "local_stencil",
@@ -6091,6 +6101,7 @@
       "params": 490,
       "points": 16.132149936970592,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "exact_preserve",
@@ -6208,6 +6219,7 @@
       "params": 27,
       "points": 19.969562078607566,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 6,
       "tasklog_exists": false
@@ -6266,6 +6278,7 @@
       "params": 127,
       "points": 20.15581291354141,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "open_angle"
@@ -6438,6 +6451,7 @@
       "params": 66,
       "points": 16.364668280566722,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 8,
       "tasklog_exists": false
@@ -6611,6 +6625,7 @@
       "params": 95,
       "points": 16.12877535559045,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -6755,6 +6770,7 @@
       "params": 340,
       "points": 18.00606702477681,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -6905,6 +6921,7 @@
       "params": 126,
       "points": 17.342244728865133,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -7049,6 +7066,7 @@
       "params": 188,
       "points": 17.275111560676926,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle",
         "scatter"
@@ -7229,6 +7247,7 @@
       "params": 61,
       "points": 17.43472471810107,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -7401,6 +7420,7 @@
       "params": 89,
       "points": 16.003100403876644,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -7445,6 +7465,7 @@
       "params": 900,
       "points": 18.197605236675688,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "exact_preserve",
         "local_stencil",
@@ -7489,6 +7510,7 @@
       "params": 10,
       "points": 22.697414907005953,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "mem0_single_op"
       ],
@@ -7641,6 +7663,7 @@
       "params": 1804,
       "points": 15.547890612586443,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "high_memory",
         "onehot_final_equal",
@@ -7852,6 +7875,7 @@
       "params": 3038,
       "points": 13.898130241451181,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "exact_preserve",
@@ -8020,6 +8044,7 @@
       "params": 82,
       "points": 16.9676398520755,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil"
       ],
@@ -8162,6 +8187,7 @@
       "params": 170,
       "points": 17.6695947881556,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "local_stencil",
@@ -8286,6 +8312,7 @@
       "params": 98,
       "points": 17.9352409722082,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [],
       "task": 21,
       "tasklog_exists": false
@@ -8427,6 +8454,7 @@
       "params": 298,
       "points": 17.25846641071817,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "open_angle"
@@ -8600,6 +8628,7 @@
       "params": 111,
       "points": 14.983808957550787,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "high_memory",
@@ -8664,6 +8693,7 @@
       "params": 110,
       "points": 20.299519634207584,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -8841,6 +8871,7 @@
       "params": 195,
       "points": 15.434295542885186,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "high_memory",
         "open_angle",
@@ -8887,6 +8918,7 @@
       "params": 200,
       "points": 19.701682633451963,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op"
@@ -9015,6 +9047,7 @@
       "params": 48,
       "points": 17.822217583804804,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -9076,6 +9109,7 @@
       "params": 168,
       "points": 19.876036020596743,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -9186,6 +9220,7 @@
       "params": 34,
       "points": 15.715480229849566,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "high_memory",
         "open_angle"
@@ -9330,6 +9365,7 @@
       "params": 148,
       "points": 17.21844404076466,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -9484,6 +9520,7 @@
       "params": 46,
       "points": 17.70020263324184,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "open_angle"
@@ -9537,6 +9574,7 @@
       "params": 910,
       "points": 18.186555400489105,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op",
@@ -9619,6 +9657,7 @@
       "params": 33,
       "points": 17.59815842125617,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -9759,6 +9798,7 @@
       "params": 167,
       "points": 17.231466699073966,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "local_stencil",
@@ -9924,6 +9964,7 @@
       "params": 128,
       "points": 16.953770898924624,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle",
         "scatter"
@@ -10078,6 +10119,7 @@
       "params": 37,
       "points": 17.31429693876545,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "open_angle"
@@ -10232,6 +10274,7 @@
       "params": 132,
       "points": 16.534942563004293,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -10344,6 +10387,7 @@
       "params": 50,
       "points": 19.638707834290575,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall"
       ],
@@ -10439,6 +10483,7 @@
       "params": 56,
       "points": 18.826213896098064,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "lut_selection",
         "matmul",
@@ -10558,6 +10603,7 @@
       "params": 134,
       "points": 19.07574420258547,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -10654,6 +10700,7 @@
       "params": 59,
       "points": 17.510587916491282,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "bitwise_program",
         "connectivity_wall",
@@ -10789,6 +10836,7 @@
       "params": 318,
       "points": 16.95762199482672,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "local_stencil"
@@ -10916,6 +10964,7 @@
       "params": 206,
       "points": 18.322916538752864,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -11119,6 +11168,7 @@
       "params": 68,
       "points": 15.633682046569465,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "connectivity_wall",
@@ -11248,6 +11298,7 @@
       "params": 623,
       "points": 17.577626299013176,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -11427,6 +11478,7 @@
       "params": 97,
       "points": 17.251539976100304,
       "source_class": "heuristic",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -11557,6 +11609,7 @@
       "params": 36,
       "points": 18.240744729336306,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "bitwise_program",
         "connectivity_wall",
@@ -11765,6 +11818,7 @@
       "params": 116,
       "points": 17.955967102725314,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "bitwise_program",
         "connectivity_wall",
@@ -11923,6 +11977,7 @@
       "params": 134,
       "points": 19.04416263053517,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "open_angle"
@@ -12067,6 +12122,7 @@
       "params": 86,
       "points": 16.728451625244485,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "matmul",
@@ -12200,6 +12256,7 @@
       "params": 101,
       "points": 17.50279277679668,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "onehot_final_equal",
         "open_angle"
@@ -12279,6 +12336,7 @@
       "params": 14,
       "points": 19.575049982518596,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "open_angle"
@@ -12321,6 +12379,7 @@
       "params": 30,
       "points": 21.598802618337846,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "lut_selection",
         "mem0_single_op",
@@ -12542,6 +12601,7 @@
       "params": 238,
       "points": 14.79153087793403,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "exact_preserve",
         "gather_heavy",
@@ -12688,6 +12748,7 @@
       "params": 48,
       "points": 16.32785644858594,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "lut_selection",
@@ -12742,6 +12803,7 @@
       "params": 0,
       "points": 21.473639475383838,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "onehot_final_equal",
         "open_angle"
@@ -12857,6 +12919,7 @@
       "params": 30,
       "points": 18.495711826463356,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "open_angle"
@@ -12928,6 +12991,7 @@
       "params": 781,
       "points": 18.05977753088036,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "bitwise_program",
         "connectivity_wall",
@@ -13051,6 +13115,7 @@
       "params": 292,
       "points": 18.677434760072714,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "open_angle"
@@ -13104,6 +13169,7 @@
       "params": 1010,
       "points": 18.082294390164694,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op"
@@ -13201,6 +13267,7 @@
       "params": 35,
       "points": 17.58061941708131,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle",
         "qlinear"
@@ -13357,6 +13424,7 @@
       "params": 71,
       "points": 17.16165668444288,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "open_angle"
@@ -13490,6 +13558,7 @@
       "params": 283,
       "points": 17.393612610227347,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -13687,6 +13756,7 @@
       "params": 68,
       "points": 15.494307049267817,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -13830,6 +13900,7 @@
       "params": 59,
       "points": 18.53697054307933,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "bitwise_program",
         "open_angle"
@@ -14051,6 +14122,7 @@
       "params": 652,
       "points": 15.108332024269215,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "exact_preserve",
         "heuristic",
@@ -14117,6 +14189,7 @@
       "params": 8,
       "points": 21.14985239828994,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -14258,6 +14331,7 @@
       "params": 123,
       "points": 18.565453481212547,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "bitwise_program",
         "open_angle",
@@ -14456,6 +14530,7 @@
       "params": 64,
       "points": 16.72819596884529,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -14583,6 +14658,7 @@
       "params": 31,
       "points": 16.99096931493027,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -14732,6 +14808,7 @@
       "params": 55,
       "points": 17.0997339632323,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -14846,6 +14923,7 @@
       "params": 31,
       "points": 18.957367166317617,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -14890,6 +14968,7 @@
       "params": 40,
       "points": 21.311120545886062,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op",
@@ -15012,6 +15091,7 @@
       "params": 1813,
       "points": 15.864922112524365,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "open_angle"
@@ -15138,6 +15218,7 @@
       "params": 161,
       "points": 17.695484053539843,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -15340,6 +15421,7 @@
       "params": 289,
       "points": 14.847155489333758,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "connectivity_wall",
@@ -15501,6 +15583,7 @@
       "params": 114,
       "points": 15.392629998736755,
       "source_class": "heuristic",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -15618,6 +15701,7 @@
       "params": 33,
       "points": 17.835279621228143,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [],
       "task": 78,
       "tasklog_exists": false
@@ -15779,6 +15863,7 @@
       "params": 79,
       "points": 16.9467488464509,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "open_angle"
@@ -15993,6 +16078,7 @@
       "params": 454,
       "points": 15.66850450646735,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "documented_wall",
@@ -16104,6 +16190,7 @@
       "params": 72,
       "points": 18.860115447773744,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -16161,6 +16248,7 @@
       "params": 190,
       "points": 19.752975927839515,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -16268,6 +16356,7 @@
       "params": 71,
       "points": 18.89744140538643,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "exact_preserve",
         "scatter"
@@ -16345,6 +16434,7 @@
       "params": 241,
       "points": 17.38027578621733,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "scatter"
       ],
@@ -16412,6 +16502,7 @@
       "params": 881,
       "points": 16.409370490510582,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "open_angle"
@@ -16567,6 +16658,7 @@
       "params": 190,
       "points": 16.9492966185297,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "connectivity_wall",
@@ -16624,6 +16716,7 @@
       "params": 5,
       "points": 23.3905620875659,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 87,
       "tasklog_exists": false
@@ -16779,6 +16872,7 @@
       "params": 81,
       "points": 17.465237342962464,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -16971,6 +17065,7 @@
       "params": 160,
       "points": 16.110967428125257,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "connectivity_wall",
@@ -17171,6 +17266,7 @@
       "params": 82,
       "points": 16.963426590292688,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "scan"
       ],
@@ -17340,6 +17436,7 @@
       "params": 175,
       "points": 16.98434238544266,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "open_angle"
@@ -17547,6 +17644,7 @@
       "params": 182,
       "points": 16.145335071629468,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle",
         "scatter"
@@ -17723,6 +17821,7 @@
       "params": 103,
       "points": 16.816044282695046,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "open_angle",
@@ -17860,6 +17959,7 @@
       "params": 51,
       "points": 17.094189687341068,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -17944,6 +18044,7 @@
       "params": 100,
       "points": 19.15645558296864,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "documented_wall"
       ],
@@ -18151,6 +18252,7 @@
       "params": 805,
       "points": 15.90249243629816,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "open_angle",
@@ -18205,6 +18307,7 @@
       "params": 910,
       "points": 18.186555400489105,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "local_stencil",
@@ -18252,6 +18355,7 @@
       "params": 900,
       "points": 18.197605236675688,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "exact_preserve",
         "local_stencil",
@@ -18435,6 +18539,7 @@
       "params": 278,
       "points": 17.444618055759726,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle",
         "scatter"
@@ -18565,6 +18670,7 @@
       "params": 89,
       "points": 18.702890680066066,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "onehot_final_equal",
         "open_angle"
@@ -18769,6 +18875,7 @@
       "params": 909,
       "points": 15.206104124093967,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "exact_preserve",
         "gather_heavy",
@@ -18906,6 +19013,7 @@
       "params": 113,
       "points": 17.165211892611808,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "documented_wall",
@@ -19014,6 +19122,7 @@
       "params": 24,
       "points": 20.9056554377779,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 103,
       "tasklog_exists": false
@@ -19131,6 +19240,7 @@
       "params": 57,
       "points": 19.462665732981463,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "lut_selection",
@@ -19351,6 +19461,7 @@
       "params": 106,
       "points": 17.006380005172254,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "lut_selection",
         "matmul",
@@ -19467,6 +19578,7 @@
       "params": 93,
       "points": 18.23265687473461,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "local_stencil",
@@ -19631,6 +19743,7 @@
       "params": 1154,
       "points": 16.6866380488656,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "lut_selection",
         "matmul",
@@ -19720,6 +19833,7 @@
       "params": 107,
       "points": 18.121673531708673,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "open_angle"
@@ -19863,6 +19977,7 @@
       "params": 93,
       "points": 17.516193312334167,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -20057,6 +20172,7 @@
       "params": 634,
       "points": 15.468373548158258,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -20155,6 +20271,7 @@
       "params": 7,
       "points": 18.717733253103994,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -20310,6 +20427,7 @@
       "params": 158,
       "points": 17.519007837130474,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "open_angle"
@@ -20352,6 +20470,7 @@
       "params": 30,
       "points": 21.598802618337846,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "mem0_single_op",
         "open_angle"
@@ -20397,6 +20516,7 @@
       "params": 900,
       "points": 18.197605236675688,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op"
@@ -20546,6 +20666,7 @@
       "params": 63,
       "points": 18.050143544999226,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "open_angle"
@@ -20588,6 +20709,7 @@
       "params": 30,
       "points": 21.598802618337846,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "mem0_single_op"
       ],
@@ -20762,6 +20884,7 @@
       "params": 243,
       "points": 16.665528445399055,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "lut_selection",
@@ -20949,6 +21072,7 @@
       "params": 3387,
       "points": 14.553142192222154,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -21135,6 +21259,7 @@
       "params": 121,
       "points": 17.781090292380938,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "open_angle",
@@ -21189,6 +21314,7 @@
       "params": 910,
       "points": 18.186555400489105,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "exact_preserve",
@@ -21329,6 +21455,7 @@
       "params": 66,
       "points": 19.168117522716482,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -21381,6 +21508,7 @@
       "params": 810,
       "points": 18.302965752333517,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "exact_preserve",
         "local_stencil",
@@ -21503,6 +21631,7 @@
       "params": 940,
       "points": 17.797338803476762,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -21650,6 +21779,7 @@
       "params": 74,
       "points": 17.42287806912332,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "lut_selection",
         "matmul",
@@ -21760,6 +21890,7 @@
       "params": 29,
       "points": 16.850109455597575,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -21838,6 +21969,7 @@
       "params": 15,
       "points": 18.59477154196916,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "scatter"
       ],
@@ -21932,6 +22064,7 @@
       "params": 192,
       "points": 19.01858578874552,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "exact_preserve",
         "local_stencil"
@@ -21985,6 +22118,7 @@
       "params": 300,
       "points": 19.2962175253438,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op",
@@ -22021,6 +22155,7 @@
       "params": 0,
       "points": 20.61797336532612,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -22065,6 +22200,7 @@
       "params": 30,
       "points": 21.598802618337846,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op",
@@ -22274,6 +22410,7 @@
       "params": 675,
       "points": 16.709205652618643,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle",
         "scatter"
@@ -22462,6 +22599,7 @@
       "params": 99,
       "points": 16.683944279635355,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "bitwise_program",
         "gather_heavy",
@@ -22671,6 +22809,7 @@
       "params": 1288,
       "points": 14.578254511880585,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "connectivity_wall",
@@ -22836,6 +22975,7 @@
       "params": 34,
       "points": 17.266316429224098,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -22880,6 +23020,7 @@
       "params": 200,
       "points": 19.701682633451963,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "exact_preserve",
         "local_stencil",
@@ -23038,6 +23179,7 @@
       "params": 34,
       "points": 17.89914809105595,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -23167,6 +23309,7 @@
       "params": 93,
       "points": 16.832080637042182,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -23367,6 +23510,7 @@
       "params": 226,
       "points": 15.429749921575155,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "documented_wall",
@@ -23492,6 +23636,7 @@
       "params": 139,
       "points": 18.193170639607825,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "bitwise_program",
         "open_angle"
@@ -23543,10 +23688,12 @@
       ],
       "params": 5,
       "points": 23.3905620875659,
-      "source_class": "semantic_or_handbuilt",
+      "source_class": "no_build",
+      "source_has_build": false,
       "tags": [
         "documented_wall",
         "lut_selection",
+        "no_build",
         "open_angle"
       ],
       "task": 140,
@@ -23656,6 +23803,7 @@
       "params": 101,
       "points": 17.683451822817023,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "onehot_final_equal",
         "open_angle"
@@ -23727,6 +23875,7 @@
       "params": 138,
       "points": 19.358092929061886,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -23877,6 +24026,7 @@
       "params": 247,
       "points": 18.268981899517918,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "documented_wall",
@@ -23932,6 +24082,7 @@
       "params": 104,
       "points": 20.35560910085863,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op"
@@ -24088,6 +24239,7 @@
       "params": 111,
       "points": 15.51089217296161,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -24215,6 +24367,7 @@
       "params": 107,
       "points": 18.79544223743131,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "local_stencil",
@@ -24301,6 +24454,7 @@
       "params": 100,
       "points": 18.723356510658355,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "local_stencil",
@@ -24494,6 +24648,7 @@
       "params": 248,
       "points": 16.29931926514984,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "open_angle",
@@ -24552,6 +24707,7 @@
       "params": 100,
       "points": 20.087345114263947,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "local_stencil",
@@ -24601,6 +24757,7 @@
       "params": 30,
       "points": 19.937404966973034,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -24645,6 +24802,7 @@
       "params": 900,
       "points": 18.197605236675688,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "exact_preserve",
         "local_stencil",
@@ -24748,6 +24906,7 @@
       "params": 125,
       "points": 18.55586874329956,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "scatter"
@@ -24918,6 +25077,7 @@
       "params": 54,
       "points": 18.32165788534567,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "open_angle"
@@ -25059,6 +25219,7 @@
       "params": 99,
       "points": 17.077014041288805,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [],
       "task": 154,
       "tasklog_exists": true
@@ -25104,6 +25265,7 @@
       "params": 30,
       "points": 19.937404966973034,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 155,
       "tasklog_exists": false
@@ -25246,6 +25408,7 @@
       "params": 47,
       "points": 17.536063395531073,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "bitwise_program"
       ],
@@ -25459,6 +25622,7 @@
       "params": 588,
       "points": 15.550170398173522,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "connectivity_wall",
@@ -25680,6 +25844,7 @@
       "params": 2343,
       "points": 14.525645901612759,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "conv_heavy",
@@ -25836,6 +26001,7 @@
       "params": 149,
       "points": 17.642443799089648,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -25956,6 +26122,7 @@
       "params": 170,
       "points": 17.804062773524432,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "local_stencil",
@@ -26124,6 +26291,7 @@
       "params": 28,
       "points": 16.440322196977608,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -26238,6 +26406,7 @@
       "params": 44,
       "points": 16.68909324283155,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "open_angle",
@@ -26389,6 +26558,7 @@
       "params": 110,
       "points": 17.23995931911962,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "connectivity_wall",
@@ -26434,6 +26604,7 @@
       "params": 30,
       "points": 21.598802618337846,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "mem0_single_op"
       ],
@@ -26591,6 +26762,7 @@
       "params": 312,
       "points": 16.227234790050215,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -26646,6 +26818,7 @@
       "params": 24,
       "points": 21.821946169652055,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -26718,6 +26891,7 @@
       "params": 128,
       "points": 20.002787726235887,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -26855,6 +27029,7 @@
       "params": 143,
       "points": 17.286215383401245,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -26983,6 +27158,7 @@
       "params": 170,
       "points": 17.5794210945892,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -27176,6 +27352,7 @@
       "params": 329,
       "points": 17.158114071015376,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "conv_heavy",
@@ -27233,6 +27410,7 @@
       "params": 910,
       "points": 18.186555400489105,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "exact_preserve",
         "local_stencil",
@@ -27276,6 +27454,7 @@
       "params": 30,
       "points": 21.598802618337846,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "mem0_single_op"
       ],
@@ -27485,6 +27664,7 @@
       "params": 112,
       "points": 14.94503677084102,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "exact_preserve",
         "gather_heavy",
@@ -27702,6 +27882,7 @@
       "params": 142,
       "points": 16.12443330800945,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -27836,6 +28017,7 @@
       "params": 937,
       "points": 17.84773114396746,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "lut_selection",
         "open_angle"
@@ -27906,6 +28088,7 @@
       "params": 240,
       "points": 19.519361076658008,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [],
       "task": 176,
       "tasklog_exists": false
@@ -28038,6 +28221,7 @@
       "params": 130,
       "points": 16.751470875199782,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -28195,6 +28379,7 @@
       "params": 62,
       "points": 18.361432210833478,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "local_stencil",
@@ -28227,6 +28412,7 @@
       "params": 0,
       "points": 25.0,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 179,
       "tasklog_exists": false
@@ -28277,6 +28463,7 @@
       "params": 210,
       "points": 19.65289246928253,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op",
@@ -28398,6 +28585,7 @@
       "params": 168,
       "points": 19.089203355959473,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle",
         "scatter"
@@ -28551,6 +28739,7 @@
       "params": 95,
       "points": 16.00906019305919,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "connectivity_wall",
@@ -28723,6 +28912,7 @@
       "params": 222,
       "points": 17.885230551633537,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -28855,6 +29045,7 @@
       "params": 60,
       "points": 17.167985819494533,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -29025,6 +29216,7 @@
       "params": 310,
       "points": 17.418790173803654,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "documented_wall",
@@ -29112,6 +29304,7 @@
       "params": 23,
       "points": 20.365271011770364,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -29276,6 +29469,7 @@
       "params": 926,
       "points": 14.339780325278817,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "high_memory",
         "local_stencil",
@@ -29463,6 +29657,7 @@
       "params": 60,
       "points": 17.90493562271287,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "open_angle",
@@ -29606,6 +29801,7 @@
       "params": 49,
       "points": 18.18107593472448,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "open_angle"
@@ -29741,6 +29937,7 @@
       "params": 247,
       "points": 17.089042617154412,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -29962,6 +30159,7 @@
       "params": 841,
       "points": 14.622859236052264,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "conv_heavy",
@@ -30095,6 +30293,7 @@
       "params": 106,
       "points": 15.938043633790075,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "local_stencil",
@@ -30149,6 +30348,7 @@
       "params": 910,
       "points": 18.186555400489105,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "local_stencil",
@@ -30243,6 +30443,7 @@
       "params": 49,
       "points": 18.14459120139007,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "open_angle"
@@ -30377,6 +30578,7 @@
       "params": 39,
       "points": 18.174539963744692,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "lut_selection",
         "open_angle"
@@ -30502,6 +30704,7 @@
       "params": 36,
       "points": 16.53178699080548,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -30635,6 +30838,7 @@
       "params": 16,
       "points": 17.13596434092755,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 197,
       "tasklog_exists": false
@@ -30843,6 +31047,7 @@
       "params": 136,
       "points": 15.25334171149689,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -30986,6 +31191,7 @@
       "params": 88,
       "points": 17.484110914784875,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle",
         "scatter"
@@ -31114,6 +31320,7 @@
       "params": 186,
       "points": 18.37195862382047,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -31303,6 +31510,7 @@
       "params": 298,
       "points": 16.529060193101223,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "local_stencil",
@@ -31431,6 +31639,7 @@
       "params": 25,
       "points": 15.483057670719525,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "high_memory",
@@ -31489,6 +31698,7 @@
       "params": 1,
       "points": 18.986284843957197,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "onehot_final_equal"
       ],
@@ -31654,6 +31864,7 @@
       "params": 453,
       "points": 15.72228139269387,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -31867,6 +32078,7 @@
       "params": 651,
       "points": 15.103386016407045,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -32054,6 +32266,7 @@
       "params": 77,
       "points": 16.657398319315806,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "open_angle",
@@ -32177,6 +32390,7 @@
       "params": 44,
       "points": 19.53616819497439,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -32381,6 +32595,7 @@
       "params": 109,
       "points": 16.286746725679293,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "onehot_final_equal",
         "open_angle",
@@ -32612,6 +32827,7 @@
       "params": 198,
       "points": 14.157501779153469,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "connectivity_wall",
@@ -32663,6 +32879,7 @@
       "params": 30,
       "points": 21.598802618337846,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "mem0_single_op"
       ],
@@ -32741,6 +32958,7 @@
       "params": 156,
       "points": 19.01858578874552,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -32878,6 +33096,7 @@
       "params": 182,
       "points": 17.233583101980344,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -33070,6 +33289,7 @@
       "params": 49,
       "points": 17.440961744556617,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -33194,6 +33414,7 @@
       "params": 41,
       "points": 18.357513198632745,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "open_angle"
@@ -33311,6 +33532,7 @@
       "params": 74,
       "points": 18.37726367605016,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [],
       "task": 215,
       "tasklog_exists": false
@@ -33516,6 +33738,7 @@
       "params": 87,
       "points": 15.880131531187892,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -33641,6 +33864,7 @@
       "params": 41,
       "points": 17.70698232022722,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil"
       ],
@@ -33786,6 +34010,7 @@
       "params": 104,
       "points": 18.483806923957037,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -33989,6 +34214,7 @@
       "params": 84,
       "points": 14.825836665704346,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "connectivity_wall",
@@ -34043,6 +34269,7 @@
       "params": 900,
       "points": 18.197605236675688,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "local_stencil",
@@ -34199,6 +34426,7 @@
       "params": 354,
       "points": 18.309157722581435,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 221,
       "tasklog_exists": false
@@ -34346,6 +34574,7 @@
       "params": 78,
       "points": 15.915903354598068,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "local_stencil",
@@ -34393,6 +34622,7 @@
       "params": 5,
       "points": 23.3905620875659,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 223,
       "tasklog_exists": false
@@ -34542,6 +34772,7 @@
       "params": 371,
       "points": 17.0516147148881,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "local_stencil",
@@ -34694,6 +34925,7 @@
       "params": 107,
       "points": 18.05977753088036,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "open_angle"
@@ -34805,6 +35037,7 @@
       "params": 20,
       "points": 17.601825907029536,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -34849,6 +35082,7 @@
       "params": 100,
       "points": 20.394829814011906,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op",
@@ -34987,6 +35221,7 @@
       "params": 113,
       "points": 18.130985549334294,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle",
         "scatter"
@@ -35098,6 +35333,7 @@
       "params": 28,
       "points": 19.519361076658008,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [],
       "task": 229,
       "tasklog_exists": false
@@ -35140,6 +35376,7 @@
       "params": 900,
       "points": 18.197605236675688,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "local_stencil",
@@ -35226,6 +35463,7 @@
       "params": 39,
       "points": 19.6109282701835,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -35278,6 +35516,7 @@
       "params": 1410,
       "points": 17.748655016627787,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op",
@@ -35492,7 +35731,8 @@
       ],
       "params": 644,
       "points": 13.835398729451114,
-      "source_class": "semantic_or_handbuilt",
+      "source_class": "no_build",
+      "source_has_build": false,
       "tags": [
         "conv_heavy",
         "gather_heavy",
@@ -35500,6 +35740,7 @@
         "low_score",
         "lut_selection",
         "matmul",
+        "no_build",
         "scan",
         "scatter"
       ],
@@ -35694,6 +35935,7 @@
       "params": 45,
       "points": 16.16741229756545,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "gather_heavy",
@@ -35775,6 +36017,7 @@
       "params": 59,
       "points": 19.864201562949738,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "lut_selection",
         "matmul"
@@ -35885,6 +36128,7 @@
       "params": 29,
       "points": 19.531939858864867,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 236,
       "tasklog_exists": false
@@ -36041,6 +36285,7 @@
       "params": 140,
       "points": 17.440961744556617,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "open_angle"
@@ -36223,6 +36468,7 @@
       "params": 444,
       "points": 17.17795599181438,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -36349,6 +36595,7 @@
       "params": 50,
       "points": 18.146700906813923,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "onehot_final_equal"
       ],
@@ -36464,6 +36711,7 @@
       "params": 82,
       "points": 17.703586731226082,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "lut_selection",
@@ -36496,8 +36744,11 @@
       ],
       "params": 0,
       "points": 25.0,
-      "source_class": "semantic_or_handbuilt",
-      "tags": [],
+      "source_class": "no_build",
+      "source_has_build": false,
+      "tags": [
+        "no_build"
+      ],
       "task": 241,
       "tasklog_exists": false
     },
@@ -36607,6 +36858,7 @@
       "params": 60,
       "points": 18.93157441175589,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "open_angle"
@@ -36780,6 +37032,7 @@
       "params": 44,
       "points": 14.971996572766304,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -36929,6 +37182,7 @@
       "params": 103,
       "points": 17.92757809946263,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -37068,6 +37322,7 @@
       "params": 139,
       "points": 17.083192509062396,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -37222,6 +37477,7 @@
       "params": 419,
       "points": 17.079553494857393,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "local_stencil",
@@ -37352,6 +37608,7 @@
       "params": 62,
       "points": 18.847267305295894,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [],
       "task": 247,
       "tasklog_exists": false
@@ -37432,6 +37689,7 @@
       "params": 29,
       "points": 19.982720163185075,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -37525,6 +37783,7 @@
       "params": 39,
       "points": 19.34051778424038,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -37675,6 +37934,7 @@
       "params": 61,
       "points": 16.921311770770128,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle",
         "qlinear"
@@ -37813,6 +38073,7 @@
       "params": 168,
       "points": 16.362360655507896,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -37868,6 +38129,7 @@
       "params": 260,
       "points": 19.439318368984473,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -37990,6 +38252,7 @@
       "params": 52,
       "points": 18.616493365115993,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "open_angle"
@@ -38099,6 +38362,7 @@
       "params": 19,
       "points": 17.998754377930524,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -38319,6 +38583,7 @@
       "params": 315,
       "points": 14.870931868116244,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -38455,6 +38720,7 @@
       "params": 50,
       "points": 17.011117746690772,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 256,
       "tasklog_exists": false
@@ -38505,6 +38771,7 @@
       "params": 409,
       "points": 18.986284843957197,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op",
@@ -38559,6 +38826,7 @@
       "params": 160,
       "points": 19.924826184766175,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "exact_preserve",
@@ -38725,6 +38993,7 @@
       "params": 52,
       "points": 18.192065056300073,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "open_angle"
@@ -38903,6 +39172,7 @@
       "params": 310,
       "points": 17.343662833569816,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "open_angle",
@@ -38949,6 +39219,7 @@
       "params": 200,
       "points": 19.701682633451963,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "exact_preserve",
         "local_stencil",
@@ -39017,6 +39288,7 @@
       "params": 16,
       "points": 20.336560905887932,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -39180,6 +39452,7 @@
       "params": 117,
       "points": 18.477907201829847,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "conv_heavy",
@@ -39329,6 +39602,7 @@
       "params": 706,
       "points": 16.291525510418335,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "documented_wall",
@@ -39459,6 +39733,7 @@
       "params": 34,
       "points": 16.619314053238426,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "lut_selection",
         "open_angle",
@@ -39574,6 +39849,7 @@
       "params": 35,
       "points": 19.142066845516542,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "lut_selection",
@@ -39691,6 +39967,7 @@
       "params": 38,
       "points": 18.351015449975222,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "onehot_final_equal"
       ],
@@ -39895,6 +40172,7 @@
       "params": 256,
       "points": 16.81576522590518,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -40010,6 +40288,7 @@
       "params": 24,
       "points": 18.436144473467873,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 269,
       "tasklog_exists": false
@@ -40191,6 +40470,7 @@
       "params": 327,
       "points": 16.970892945380264,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "bitwise_program",
@@ -40326,6 +40606,7 @@
       "params": 46,
       "points": 17.92081560539033,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "open_angle",
@@ -40415,6 +40696,7 @@
       "params": 202,
       "points": 19.003547911380977,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "exact_preserve",
         "local_stencil",
@@ -40570,6 +40852,7 @@
       "params": 51,
       "points": 17.32213649932179,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "gather_heavy",
@@ -40708,6 +40991,7 @@
       "params": 80,
       "points": 19.579465000727716,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "open_angle"
@@ -40867,6 +41151,7 @@
       "params": 637,
       "points": 17.393612610227347,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "documented_wall",
@@ -40911,6 +41196,7 @@
       "params": 10,
       "points": 22.697414907005953,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "mem0_single_op"
       ],
@@ -41063,6 +41349,7 @@
       "params": 18,
       "points": 16.413280745935154,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "maxpool_scan"
       ],
@@ -41185,6 +41472,7 @@
       "params": 47,
       "points": 16.278886852237314,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "local_stencil",
@@ -41314,6 +41602,7 @@
       "params": 47,
       "points": 16.37754629792627,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "local_stencil",
@@ -41520,6 +41809,7 @@
       "params": 752,
       "points": 16.291525510418335,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "documented_wall"
       ],
@@ -41681,6 +41971,7 @@
       "params": 65,
       "points": 17.22262639734214,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "open_angle"
@@ -41778,6 +42069,7 @@
       "params": 39,
       "points": 18.899681047979936,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "documented_wall",
@@ -41833,6 +42125,7 @@
       "params": 910,
       "points": 18.186555400489105,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "exact_preserve",
@@ -42036,6 +42329,7 @@
       "params": 653,
       "points": 16.774496902433082,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "open_angle",
@@ -42252,6 +42546,7 @@
       "params": 552,
       "points": 14.848403150131913,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "exact_preserve",
         "gather_heavy",
@@ -42463,6 +42758,7 @@
       "params": 739,
       "points": 14.140712582495004,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "bitwise_program",
         "connectivity_wall",
@@ -42568,6 +42864,7 @@
       "params": 295,
       "points": 17.402102049478216,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -42687,6 +42984,7 @@
       "params": 189,
       "points": 18.13515222202914,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle",
         "scatter"
@@ -42770,6 +43068,7 @@
       "params": 124,
       "points": 18.39065075683262,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -42883,6 +43182,7 @@
       "params": 63,
       "points": 19.127882210524582,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -42945,6 +43245,7 @@
       "params": 28,
       "points": 20.780492294823894,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -43040,6 +43341,7 @@
       "params": 182,
       "points": 18.926955465899596,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "scatter"
       ],
@@ -43205,6 +43507,7 @@
       "params": 41,
       "points": 17.8391540933357,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle",
         "scatter"
@@ -43258,6 +43561,7 @@
       "params": 910,
       "points": 18.186555400489105,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op"
@@ -43386,6 +43690,7 @@
       "params": 47,
       "points": 17.61974421157354,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 295,
       "tasklog_exists": false
@@ -43531,6 +43836,7 @@
       "params": 45,
       "points": 19.200907345539473,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "onehot_final_equal",
         "open_angle"
@@ -43660,6 +43966,7 @@
       "params": 39,
       "points": 17.763660657245655,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 297,
       "tasklog_exists": false
@@ -43727,6 +44034,7 @@
       "params": 15,
       "points": 20.09472522156157,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -43786,6 +44094,7 @@
       "params": 50,
       "points": 21.087976994571854,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [],
       "task": 299,
       "tasklog_exists": false
@@ -43933,6 +44242,7 @@
       "params": 66,
       "points": 18.70843086044168,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -44074,6 +44384,7 @@
       "params": 64,
       "points": 17.960339650137925,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -44192,6 +44503,7 @@
       "params": 558,
       "points": 17.519007837130474,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "local_stencil",
@@ -44282,6 +44594,7 @@
       "params": 22,
       "points": 17.60981857177357,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "onehot_final_equal",
         "open_angle"
@@ -44406,6 +44719,7 @@
       "params": 37,
       "points": 17.726907404000478,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil"
       ],
@@ -44476,6 +44790,7 @@
       "params": 340,
       "points": 18.544801436659878,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "bitwise_program",
         "open_angle"
@@ -44546,6 +44861,7 @@
       "params": 300,
       "points": 19.2962175253438,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "lut_selection",
         "open_angle"
@@ -44589,6 +44905,7 @@
       "params": 5,
       "points": 23.3905620875659,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 307,
       "tasklog_exists": false
@@ -44774,6 +45091,7 @@
       "params": 103,
       "points": 17.694811784606962,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "open_angle",
@@ -44817,6 +45135,7 @@
       "params": 10,
       "points": 22.697414907005953,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "mem0_single_op"
       ],
@@ -44971,6 +45290,7 @@
       "params": 79,
       "points": 16.90226942633578,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -45013,9 +45333,11 @@
       ],
       "params": 30,
       "points": 21.598802618337846,
-      "source_class": "semantic_or_handbuilt",
+      "source_class": "no_build",
+      "source_has_build": false,
       "tags": [
-        "mem0_single_op"
+        "mem0_single_op",
+        "no_build"
       ],
       "task": 311,
       "tasklog_exists": false
@@ -45063,6 +45385,7 @@
       "params": 20,
       "points": 22.00426772644601,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -45125,6 +45448,7 @@
       "params": 192,
       "points": 19.742504627972217,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 313,
       "tasklog_exists": false
@@ -45175,6 +45499,7 @@
       "params": 100,
       "points": 20.394829814011906,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op"
@@ -45246,6 +45571,7 @@
       "params": 230,
       "points": 19.561920691076804,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -45364,6 +45690,7 @@
       "params": 38,
       "points": 18.94556065373063,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -45430,6 +45757,7 @@
       "params": 18,
       "points": 20.016393378291664,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -45474,6 +45802,7 @@
       "params": 100,
       "points": 20.394829814011906,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op",
@@ -45677,6 +46006,7 @@
       "params": 269,
       "points": 14.990262327621213,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "documented_wall",
@@ -45777,6 +46107,7 @@
       "params": 322,
       "points": 18.35360948515227,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "local_stencil",
@@ -45824,6 +46155,7 @@
       "params": 300,
       "points": 19.2962175253438,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op",
@@ -45907,6 +46239,7 @@
       "params": 56,
       "points": 19.701682633451963,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil"
       ],
@@ -46009,6 +46342,7 @@
       "params": 656,
       "points": 17.31429693876545,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "open_angle",
@@ -46179,6 +46513,7 @@
       "params": 1586,
       "points": 15.904397305494241,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "documented_wall",
@@ -46339,6 +46674,7 @@
       "params": 123,
       "points": 17.33471528152865,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -46385,6 +46721,7 @@
       "params": 30,
       "points": 21.598802618337846,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 326,
       "tasklog_exists": true
@@ -46485,6 +46822,7 @@
       "params": 71,
       "points": 18.218942374063822,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -46684,6 +47022,7 @@
       "params": 1941,
       "points": 16.158985689516108,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "onehot_final_equal"
       ],
@@ -46803,6 +47142,7 @@
       "params": 30,
       "points": 18.034919654398593,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "onehot_final_equal",
         "open_angle",
@@ -46934,6 +47274,7 @@
       "params": 222,
       "points": 16.986325857167316,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -46989,6 +47330,7 @@
       "params": 910,
       "points": 18.186555400489105,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "exact_preserve",
         "local_stencil",
@@ -47109,6 +47451,7 @@
       "params": 134,
       "points": 18.666720371860308,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "open_angle",
@@ -47324,6 +47667,7 @@
       "params": 435,
       "points": 16.92069180794804,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -47386,6 +47730,7 @@
       "params": 8,
       "points": 19.716796271262012,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -47507,6 +47852,7 @@
       "params": 670,
       "points": 16.6533579097788,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "local_stencil",
@@ -47591,6 +47937,7 @@
       "params": 1196,
       "points": 17.26456664750031,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -47635,6 +47982,7 @@
       "params": 10,
       "points": 22.697414907005953,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "mem0_single_op"
       ],
@@ -47777,6 +48125,7 @@
       "params": 667,
       "points": 15.414172743435339,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -47836,6 +48185,7 @@
       "params": 100,
       "points": 20.058357577390694,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -48051,6 +48401,7 @@
       "params": 279,
       "points": 16.277582858572504,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "open_angle",
@@ -48198,6 +48549,7 @@
       "params": 35,
       "points": 17.735269822070133,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -48371,6 +48723,7 @@
       "params": 75,
       "points": 17.63166031368862,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "gather_heavy",
         "open_angle",
@@ -48528,6 +48881,7 @@
       "params": 110,
       "points": 17.380766583773195,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "local_stencil",
@@ -48582,6 +48936,7 @@
       "params": 910,
       "points": 18.186555400489105,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op"
@@ -48726,6 +49081,7 @@
       "params": 64,
       "points": 17.690118514175214,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -48866,6 +49222,7 @@
       "params": 30,
       "points": 17.865906278807135,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "local_stencil",
@@ -48954,6 +49311,7 @@
       "params": 26,
       "points": 20.03715536974009,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 347,
       "tasklog_exists": false
@@ -49098,6 +49456,7 @@
       "params": 169,
       "points": 17.26938593393626,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -49231,6 +49590,7 @@
       "params": 1196,
       "points": 14.428785644250837,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "high_memory",
@@ -49324,6 +49684,7 @@
       "params": 26,
       "points": 15.890806810028774,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -49431,6 +49792,7 @@
       "params": 19,
       "points": 17.59086355607987,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -49483,6 +49845,7 @@
       "params": 460,
       "points": 18.86877351051686,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "mem0_single_op",
@@ -49581,6 +49944,7 @@
       "params": 62,
       "points": 19.1888590070233,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle",
         "scatter"
@@ -49758,6 +50122,7 @@
       "params": 79,
       "points": 16.968289624677958,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "local_stencil",
@@ -49875,6 +50240,7 @@
       "params": 27,
       "points": 17.071593973819464,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "open_angle"
@@ -49962,6 +50328,7 @@
       "params": 19,
       "points": 17.815370847282686,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -50071,6 +50438,7 @@
       "params": 33,
       "points": 19.326676732828506,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "open_angle"
@@ -50243,6 +50611,7 @@
       "params": 174,
       "points": 16.58683487900781,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -50358,6 +50727,7 @@
       "params": 16,
       "points": 16.4460892256486,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -50418,6 +50788,7 @@
       "params": 340,
       "points": 19.17105438238979,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -50617,6 +50988,7 @@
       "params": 367,
       "points": 16.51553663320668,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "lut_selection",
@@ -50739,6 +51111,7 @@
       "params": 113,
       "points": 18.744249958246634,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "scatter"
       ],
@@ -50911,6 +51284,7 @@
       "params": 283,
       "points": 16.457919093075983,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "local_stencil",
@@ -51061,6 +51435,7 @@
       "params": 114,
       "points": 14.797371281923198,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "high_memory",
@@ -51277,6 +51652,7 @@
       "params": 120,
       "points": 16.698974746161547,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -51504,6 +51880,7 @@
       "params": 491,
       "points": 14.469344825837902,
       "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "connectivity_wall",
@@ -51642,6 +52019,7 @@
       "params": 5635,
       "points": 14.800006916464858,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -51854,6 +52232,7 @@
       "params": 203,
       "points": 16.26367127866709,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "connectivity_wall",
@@ -51971,6 +52350,7 @@
       "params": 299,
       "points": 17.622866287166048,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -52179,6 +52559,7 @@
       "params": 1267,
       "points": 15.749381781525248,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "qlinear",
@@ -52271,6 +52652,7 @@
       "params": 91,
       "points": 18.853670742331104,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle",
         "scatter"
@@ -52324,6 +52706,7 @@
       "params": 710,
       "points": 18.43473502996464,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "local_stencil",
@@ -52376,6 +52759,7 @@
       "params": 60,
       "points": 20.9056554377779,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -52532,6 +52916,7 @@
       "params": 42,
       "points": 17.25759797818422,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -52641,6 +53026,7 @@
       "params": 242,
       "points": 19.142066845516542,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -52716,6 +53102,7 @@
       "params": 42,
       "points": 19.774253326286797,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 376,
       "tasklog_exists": false
@@ -52876,6 +53263,7 @@
       "params": 154,
       "points": 15.951590495170038,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "local_stencil",
@@ -53096,6 +53484,7 @@
       "params": 117,
       "points": 16.59061476121807,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "onehot_final_equal",
         "open_angle"
@@ -53307,6 +53696,7 @@
       "params": 653,
       "points": 15.8178533623946,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "conv_heavy",
@@ -53360,6 +53750,7 @@
       "params": 99,
       "points": 20.40488014986541,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [],
       "task": 380,
       "tasklog_exists": false
@@ -53495,6 +53886,7 @@
       "params": 70,
       "points": 17.304696865036433,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -53688,6 +54080,7 @@
       "params": 135,
       "points": 16.33732214184178,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "lut_selection",
         "open_angle",
@@ -53861,6 +54254,7 @@
       "params": 96,
       "points": 16.288886115946454,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "connectivity_wall",
@@ -53975,6 +54369,7 @@
       "params": 53,
       "points": 18.614805601002274,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [],
       "task": 384,
       "tasklog_exists": false
@@ -54014,6 +54409,7 @@
       "params": 30,
       "points": 21.598802618337846,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "mem0_single_op"
       ],
@@ -54128,6 +54524,7 @@
       "params": 31,
       "points": 19.648141866523932,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -54323,6 +54720,7 @@
       "params": 105,
       "points": 16.471075885708064,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "connectivity_wall",
         "documented_wall",
@@ -54492,6 +54890,7 @@
       "params": 218,
       "points": 17.175953989143707,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle",
         "scatter"
@@ -54567,6 +54966,7 @@
       "params": 12,
       "points": 20.058357577390694,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "open_angle",
@@ -54758,6 +55158,7 @@
       "params": 467,
       "points": 16.963750057867884,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "open_angle",
@@ -54850,6 +55251,7 @@
       "params": 24,
       "points": 19.93109579777977,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -55008,6 +55410,7 @@
       "params": 349,
       "points": 17.421854527580535,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -55089,6 +55492,7 @@
       "params": 19,
       "points": 20.030186700424,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "onehot_final_equal"
       ],
@@ -55236,6 +55640,7 @@
       "params": 930,
       "points": 17.062268224739892,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "open_angle"
@@ -55332,6 +55737,7 @@
       "params": 21,
       "points": 19.89405452609942,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [],
       "task": 395,
       "tasklog_exists": false
@@ -55528,6 +55934,7 @@
       "params": 137,
       "points": 15.516279340282896,
       "source_class": "unknown",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
         "high_memory"
@@ -55714,6 +56121,7 @@
       "params": 200,
       "points": 17.045627727468133,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "local_stencil",
         "onehot_final_equal",
@@ -55841,6 +56249,7 @@
       "params": 1193,
       "points": 17.041772807677688,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "lut_selection",
         "matmul",
@@ -55924,6 +56333,7 @@
       "params": 20,
       "points": 20.48914049348315,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "open_angle"
       ],
@@ -56056,6 +56466,7 @@
       "params": 66,
       "points": 17.468447618592712,
       "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "assignment_wall",
         "connectivity_wall",

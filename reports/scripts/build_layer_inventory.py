@@ -34,6 +34,10 @@ def read_text(path: Path) -> str:
         return ""
 
 
+def source_has_build(text: str) -> bool:
+    return bool(re.search(r"^def\s+build\s*\(", text, flags=re.M))
+
+
 def op_counts(model: onnx.ModelProto) -> Counter:
     return Counter(node.op_type for node in model.graph.node)
 
@@ -52,6 +56,10 @@ def initializer_summary(model: onnx.ModelProto) -> dict:
 
 
 def source_class(text: str) -> str:
+    if not text:
+        return "no_source"
+    if not source_has_build(text):
+        return "no_build"
     lower = text.lower()
     if "exact source reconstruction" in lower or "preserves the verified live behavior" in lower:
         return "exact_preserve"
@@ -89,7 +97,12 @@ def tag_task(ops: Counter, manifest_row: dict, source_text: str, tasklog_text: s
     lower_src = source_text.lower()
     lower_log = tasklog_text.lower()
 
-    if source_class(source_text) == "exact_preserve":
+    src_class = source_class(source_text)
+    if src_class == "no_build":
+        tags.add("no_build")
+    if src_class == "no_source":
+        tags.add("no_source")
+    if src_class == "exact_preserve":
         tags.add("exact_preserve")
     if "heuristic" in lower_src:
         tags.add("heuristic")
@@ -170,6 +183,7 @@ def build_inventory() -> dict:
                 "opset": [{"domain": op.domain, "version": op.version} for op in model.opset_import],
                 "initializer_summary": initializer_summary(model),
                 "source_class": source_class(source_text),
+                "source_has_build": source_has_build(source_text),
                 "tags": tags,
                 "tasklog_exists": bool(tasklog_text),
             }
@@ -186,15 +200,27 @@ def build_inventory() -> dict:
 
 
 def write_markdown(inv: dict, path: Path) -> None:
+    source_rows = Counter(task["source_class"] for task in inv["tasks"])
+    build_count = sum(1 for task in inv["tasks"] if task.get("source_has_build"))
+    no_build = [task["task"] for task in inv["tasks"] if not task.get("source_has_build")]
     lines = [
         "# Global layer inventory summary",
         "",
         f"- tasks indexed: {inv['task_count']}",
         f"- failures: {len(inv['failures'])}",
+        f"- source-controlled build(): {build_count}/{inv['task_count']}",
+        f"- no build(): {' '.join(f'{t:03d}' for t in no_build) or 'none'}",
+        "",
+        "## Source classes",
+        "",
+    ]
+    for cls, count in sorted(source_rows.items(), key=lambda x: (-x[1], x[0])):
+        lines.append(f"- `{cls}`: {count}")
+    lines.extend([
         "",
         "## Largest op families",
         "",
-    ]
+    ])
     op_rows = sorted(((op, len(tasks)) for op, tasks in inv["by_op"].items()), key=lambda x: (-x[1], x[0]))
     for op, count in op_rows[:25]:
         lines.append(f"- `{op}`: {count} tasks")

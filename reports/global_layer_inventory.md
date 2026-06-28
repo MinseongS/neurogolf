@@ -2,6 +2,16 @@
 
 - tasks indexed: 400
 - failures: 0
+- source-controlled build(): 396/400
+- no build(): 140 233 241 311
+
+## Source classes
+
+- `semantic_or_handbuilt`: 180
+- `unknown`: 179
+- `exact_preserve`: 35
+- `no_build`: 4
+- `heuristic`: 2
 
 ## Largest op families
 
@@ -53,3 +63,4 @@
 - `matmul`: 17 tasks — 039 044 050 066 104 105 107 118 124 174 191 216 233 235 255 381 398
 - `maxpool_scan`: 14 tasks — 002 018 077 110 125 145 187 196 204 222 240 251 277 364
 - `bitwise_program`: 12 tasks — 041 047 048 058 065 068 132 139 156 270 286 305
+- `no_build`: 4 tasks — 140 233 241 311

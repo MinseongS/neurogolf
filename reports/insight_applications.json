@@ -1,26 +1,7 @@
 [
   {
-    "candidate_count": 48,
+    "candidate_count": 47,
     "candidates": [
-      {
-        "memory": 69943,
-        "method": "ext:franksunp7166_68",
-        "params": 644,
-        "points": 13.835398729451114,
-        "score": 71236.38,
-        "source_class": "semantic_or_handbuilt",
-        "tags": [
-          "conv_heavy",
-          "gather_heavy",
-          "high_memory",
-          "low_score",
-          "lut_selection",
-          "matmul",
-          "scan",
-          "scatter"
-        ],
-        "task": 233
-      },
       {
         "memory": 33053,
         "method": "ext:franksunp7166_65",
@@ -1205,27 +1186,8 @@
     "title": "Delay 10-channel expansion to final Equal/Where output"
   },
   {
-    "candidate_count": 37,
+    "candidate_count": 36,
     "candidates": [
-      {
-        "memory": 69943,
-        "method": "ext:franksunp7166_68",
-        "params": 644,
-        "points": 13.835398729451114,
-        "score": 71236.38,
-        "source_class": "semantic_or_handbuilt",
-        "tags": [
-          "conv_heavy",
-          "gather_heavy",
-          "high_memory",
-          "low_score",
-          "lut_selection",
-          "matmul",
-          "scan",
-          "scatter"
-        ],
-        "task": 233
-      },
       {
         "memory": 63257,
         "method": "ext:franksunp7166_68",
@@ -1853,27 +1815,8 @@
     "title": "Compress scan-style MaxPool/CumSum/Hillis-Steele pipelines with lower dtype or shared shifts"
   },
   {
-    "candidate_count": 64,
+    "candidate_count": 63,
     "candidates": [
-      {
-        "memory": 69943,
-        "method": "ext:franksunp7166_68",
-        "params": 644,
-        "points": 13.835398729451114,
-        "score": 71236.38,
-        "source_class": "semantic_or_handbuilt",
-        "tags": [
-          "conv_heavy",
-          "gather_heavy",
-          "high_memory",
-          "low_score",
-          "lut_selection",
-          "matmul",
-          "scan",
-          "scatter"
-        ],
-        "task": 233
-      },
       {
         "memory": 41700,
         "method": "custom:task187_label_flood",

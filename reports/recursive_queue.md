@@ -9,36 +9,36 @@ Use this as a global queue.  When a deep task attempt creates a new mechanism, a
 Replace fp16/fp32 one-hot LUT/MatMul selection with uint8 QLinearMatMul/QLinearConv where exact
 
 - source tasks: 055 080
-- candidates: 48
+- candidates: 47
 - expected: {'gain_type': 'memory', 'risk': 'medium', 'verification': 'stored eval, fresh eval if generator available, then adopt gate'}
 
 | rank | task | score | pts | mem | params | source | tags |
 |---:|---:|---:|---:|---:|---:|---|---|
-| 1 | 233 | 71236.4 | 13.835 | 69943 | 644 | semantic_or_handbuilt | conv_heavy,gather_heavy,high_memory,low_score,lut_selection,matmul,scan,scatter |
-| 2 | 158 | 34338.3 | 14.526 | 33053 | 2343 | unknown | assignment_wall,conv_heavy,documented_wall,gather_heavy,high_memory,low_score,open_angle,qlinear |
-| 3 | 118 | 32870.1 | 14.553 | 31049 | 3387 | exact_preserve | connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,local_stencil,low_score |
-| 4 | 191 | 32530.1 | 14.623 | 31276 | 841 | unknown | assignment_wall,conv_heavy,high_memory,low_score,lut_selection,matmul,open_angle |
-| 5 | 133 | 32008.5 | 14.578 | 32294 | 1288 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory |
-| 6 | 367 | 25763.0 | 14.800 | 21268 | 5635 | unknown | connectivity_wall,conv_heavy,documented_wall,high_memory,local_stencil,low_score,lut_selection,open_angle |
-| 7 | 243 | 21460.4 | 14.972 | 22608 | 44 | unknown | connectivity_wall,conv_heavy,documented_wall,high_memory,low_score,qlinear |
-| 8 | 202 | 13743.1 | 15.483 | 13563 | 25 | semantic_or_handbuilt | connectivity_wall,high_memory,open_angle,qlinear |
-| 9 | 077 | 13556.2 | 15.393 | 14760 | 114 | heuristic | connectivity_wall,documented_wall,heuristic,high_memory,local_stencil,maxpool_scan,open_angle,qlinear |
-| 10 | 338 | 13232.7 | 15.414 | 13890 | 667 | unknown | connectivity_wall,documented_wall,high_memory,local_stencil,open_angle,qlinear |
-| 11 | 370 | 10486.2 | 15.749 | 9144 | 1267 | semantic_or_handbuilt | conv_heavy,qlinear,scan,scatter |
-| 12 | 080 | 9887.4 | 15.669 | 10834 | 454 | unknown | conv_heavy,documented_wall,high_memory,lut_selection,open_angle,qlinear |
-| 13 | 044 | 9797.9 | 15.634 | 11620 | 68 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,lut_selection |
-| 14 | 204 | 9280.3 | 15.722 | 10244 | 453 | semantic_or_handbuilt | connectivity_wall,conv_heavy,documented_wall,high_memory,local_stencil,maxpool_scan,open_angle,qlinear |
-| 15 | 222 | 8839.2 | 15.916 | 8736 | 78 | unknown | conv_heavy,local_stencil,maxpool_scan,onehot_final_equal,open_angle,qlinear |
-| 16 | 324 | 7444.7 | 15.904 | 7330 | 1586 | unknown | conv_heavy,documented_wall,local_stencil,qlinear,scan |
-| 17 | 216 | 7171.0 | 15.880 | 9048 | 87 | exact_preserve | connectivity_wall,documented_wall,exact_preserve,heuristic,matmul,open_angle,qlinear,scatter |
-| 18 | 005 | 6600.0 | 16.132 | 6610 | 490 | exact_preserve | conv_heavy,exact_preserve,heuristic,qlinear |
-| 19 | 208 | 6083.0 | 16.287 | 5974 | 109 | unknown | onehot_final_equal,open_angle,qlinear |
-| 20 | 055 | 5838.0 | 16.328 | 5790 | 48 | semantic_or_handbuilt | connectivity_wall,lut_selection,onehot_final_equal,open_angle,qlinear,scan |
-| 21 | 174 | 5655.0 | 16.124 | 7013 | 142 | unknown | connectivity_wall,documented_wall,lut_selection,matmul,open_angle |
-| 22 | 279 | 5555.0 | 16.378 | 5508 | 47 | semantic_or_handbuilt | conv_heavy,local_stencil,qlinear |
-| 23 | 340 | 4639.0 | 16.278 | 5860 | 279 | unknown | documented_wall,open_angle,qlinear |
-| 24 | 278 | 4631.0 | 16.279 | 6084 | 47 | semantic_or_handbuilt | documented_wall,local_stencil,open_angle,qlinear |
-| 25 | 117 | 4165.0 | 16.666 | 3922 | 243 | unknown | local_stencil,lut_selection,open_angle,qlinear |
+| 1 | 158 | 34338.3 | 14.526 | 33053 | 2343 | unknown | assignment_wall,conv_heavy,documented_wall,gather_heavy,high_memory,low_score,open_angle,qlinear |
+| 2 | 118 | 32870.1 | 14.553 | 31049 | 3387 | exact_preserve | connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,local_stencil,low_score |
+| 3 | 191 | 32530.1 | 14.623 | 31276 | 841 | unknown | assignment_wall,conv_heavy,high_memory,low_score,lut_selection,matmul,open_angle |
+| 4 | 133 | 32008.5 | 14.578 | 32294 | 1288 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory |
+| 5 | 367 | 25763.0 | 14.800 | 21268 | 5635 | unknown | connectivity_wall,conv_heavy,documented_wall,high_memory,local_stencil,low_score,lut_selection,open_angle |
+| 6 | 243 | 21460.4 | 14.972 | 22608 | 44 | unknown | connectivity_wall,conv_heavy,documented_wall,high_memory,low_score,qlinear |
+| 7 | 202 | 13743.1 | 15.483 | 13563 | 25 | semantic_or_handbuilt | connectivity_wall,high_memory,open_angle,qlinear |
+| 8 | 077 | 13556.2 | 15.393 | 14760 | 114 | heuristic | connectivity_wall,documented_wall,heuristic,high_memory,local_stencil,maxpool_scan,open_angle,qlinear |
+| 9 | 338 | 13232.7 | 15.414 | 13890 | 667 | unknown | connectivity_wall,documented_wall,high_memory,local_stencil,open_angle,qlinear |
+| 10 | 370 | 10486.2 | 15.749 | 9144 | 1267 | semantic_or_handbuilt | conv_heavy,qlinear,scan,scatter |
+| 11 | 080 | 9887.4 | 15.669 | 10834 | 454 | unknown | conv_heavy,documented_wall,high_memory,lut_selection,open_angle,qlinear |
+| 12 | 044 | 9797.9 | 15.634 | 11620 | 68 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,lut_selection |
+| 13 | 204 | 9280.3 | 15.722 | 10244 | 453 | semantic_or_handbuilt | connectivity_wall,conv_heavy,documented_wall,high_memory,local_stencil,maxpool_scan,open_angle,qlinear |
+| 14 | 222 | 8839.2 | 15.916 | 8736 | 78 | unknown | conv_heavy,local_stencil,maxpool_scan,onehot_final_equal,open_angle,qlinear |
+| 15 | 324 | 7444.7 | 15.904 | 7330 | 1586 | unknown | conv_heavy,documented_wall,local_stencil,qlinear,scan |
+| 16 | 216 | 7171.0 | 15.880 | 9048 | 87 | exact_preserve | connectivity_wall,documented_wall,exact_preserve,heuristic,matmul,open_angle,qlinear,scatter |
+| 17 | 005 | 6600.0 | 16.132 | 6610 | 490 | exact_preserve | conv_heavy,exact_preserve,heuristic,qlinear |
+| 18 | 208 | 6083.0 | 16.287 | 5974 | 109 | unknown | onehot_final_equal,open_angle,qlinear |
+| 19 | 055 | 5838.0 | 16.328 | 5790 | 48 | semantic_or_handbuilt | connectivity_wall,lut_selection,onehot_final_equal,open_angle,qlinear,scan |
+| 20 | 174 | 5655.0 | 16.124 | 7013 | 142 | unknown | connectivity_wall,documented_wall,lut_selection,matmul,open_angle |
+| 21 | 279 | 5555.0 | 16.378 | 5508 | 47 | semantic_or_handbuilt | conv_heavy,local_stencil,qlinear |
+| 22 | 340 | 4639.0 | 16.278 | 5860 | 279 | unknown | documented_wall,open_angle,qlinear |
+| 23 | 278 | 4631.0 | 16.279 | 6084 | 47 | semantic_or_handbuilt | documented_wall,local_stencil,open_angle,qlinear |
+| 24 | 117 | 4165.0 | 16.666 | 3922 | 243 | unknown | local_stencil,lut_selection,open_angle,qlinear |
+| 25 | 107 | 4078.0 | 16.687 | 2924 | 1154 | semantic_or_handbuilt | lut_selection,matmul,onehot_final_equal,open_angle,scatter |
 
 ## free_final_onehot_equal
 
@@ -81,72 +81,72 @@ Delay 10-channel expansion to final Equal/Where output
 Compress scan-style MaxPool/CumSum/Hillis-Steele pipelines with lower dtype or shared shifts
 
 - source tasks: 046 216
-- candidates: 37
+- candidates: 36
 - expected: {'gain_type': 'memory', 'risk': 'medium-high', 'verification': 'stored/fresh eval and compare against incumbent'}
 
 | rank | task | score | pts | mem | params | source | tags |
 |---:|---:|---:|---:|---:|---:|---|---|
-| 1 | 233 | 71236.4 | 13.835 | 69943 | 644 | semantic_or_handbuilt | conv_heavy,gather_heavy,high_memory,low_score,lut_selection,matmul,scan,scatter |
-| 2 | 018 | 64925.6 | 13.898 | 63257 | 3038 | exact_preserve | documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score,maxpool_scan,scatter |
-| 3 | 209 | 49701.7 | 14.158 | 50951 | 198 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,low_score |
-| 4 | 187 | 43124.1 | 14.340 | 41700 | 926 | semantic_or_handbuilt | high_memory,local_stencil,low_score,maxpool_scan |
-| 5 | 002 | 38595.9 | 14.400 | 40084 | 32 | exact_preserve | connectivity_wall,documented_wall,exact_preserve,heuristic,high_memory,low_score,maxpool_scan |
-| 6 | 349 | 37967.4 | 14.429 | 37800 | 1196 | unknown | documented_wall,high_memory,local_stencil,low_score,lut_selection,open_angle,scan |
-| 7 | 366 | 35905.2 | 14.469 | 36955 | 491 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score |
-| 8 | 133 | 32008.5 | 14.578 | 32294 | 1288 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory |
-| 9 | 364 | 27334.8 | 14.797 | 26860 | 114 | unknown | connectivity_wall,high_memory,local_stencil,low_score,maxpool_scan,open_angle |
-| 10 | 054 | 26994.5 | 14.792 | 26894 | 238 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scan,scatter |
-| 11 | 285 | 25477.5 | 14.848 | 25080 | 552 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scatter |
-| 12 | 219 | 24569.2 | 14.826 | 26133 | 84 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score |
-| 13 | 173 | 23087.5 | 14.945 | 23159 | 112 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scatter |
-| 14 | 319 | 20544.9 | 14.990 | 21973 | 269 | exact_preserve | assignment_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score,scan |
-| 15 | 066 | 19532.5 | 15.108 | 19113 | 652 | exact_preserve | exact_preserve,heuristic,high_memory,matmul,scan |
-| 16 | 101 | 17662.2 | 15.206 | 17015 | 909 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,scatter |
-| 17 | 198 | 15821.0 | 15.253 | 16961 | 136 | semantic_or_handbuilt | connectivity_wall,documented_wall,gather_heavy,high_memory,open_angle,scan |
-| 18 | 025 | 14436.7 | 15.434 | 14072 | 195 | semantic_or_handbuilt | high_memory,open_angle,scan |
-| 19 | 077 | 13556.2 | 15.393 | 14760 | 114 | heuristic | connectivity_wall,documented_wall,heuristic,high_memory,local_stencil,maxpool_scan,open_angle,qlinear |
-| 20 | 110 | 12448.5 | 15.468 | 13155 | 634 | semantic_or_handbuilt | connectivity_wall,conv_heavy,documented_wall,high_memory,maxpool_scan,open_angle |
-| 21 | 145 | 11861.7 | 15.511 | 13104 | 111 | unknown | connectivity_wall,documented_wall,high_memory,lut_selection,maxpool_scan,open_angle |
-| 22 | 157 | 10840.9 | 15.550 | 12118 | 588 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,open_angle |
-| 23 | 370 | 10486.2 | 15.749 | 9144 | 1267 | semantic_or_handbuilt | conv_heavy,qlinear,scan,scatter |
-| 24 | 204 | 9280.3 | 15.722 | 10244 | 453 | semantic_or_handbuilt | connectivity_wall,conv_heavy,documented_wall,high_memory,local_stencil,maxpool_scan,open_angle,qlinear |
-| 25 | 222 | 8839.2 | 15.916 | 8736 | 78 | unknown | conv_heavy,local_stencil,maxpool_scan,onehot_final_equal,open_angle,qlinear |
+| 1 | 018 | 64925.6 | 13.898 | 63257 | 3038 | exact_preserve | documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score,maxpool_scan,scatter |
+| 2 | 209 | 49701.7 | 14.158 | 50951 | 198 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,heuristic,high_memory,low_score |
+| 3 | 187 | 43124.1 | 14.340 | 41700 | 926 | semantic_or_handbuilt | high_memory,local_stencil,low_score,maxpool_scan |
+| 4 | 002 | 38595.9 | 14.400 | 40084 | 32 | exact_preserve | connectivity_wall,documented_wall,exact_preserve,heuristic,high_memory,low_score,maxpool_scan |
+| 5 | 349 | 37967.4 | 14.429 | 37800 | 1196 | unknown | documented_wall,high_memory,local_stencil,low_score,lut_selection,open_angle,scan |
+| 6 | 366 | 35905.2 | 14.469 | 36955 | 491 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score |
+| 7 | 133 | 32008.5 | 14.578 | 32294 | 1288 | exact_preserve | assignment_wall,connectivity_wall,conv_heavy,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory |
+| 8 | 364 | 27334.8 | 14.797 | 26860 | 114 | unknown | connectivity_wall,high_memory,local_stencil,low_score,maxpool_scan,open_angle |
+| 9 | 054 | 26994.5 | 14.792 | 26894 | 238 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scan,scatter |
+| 10 | 285 | 25477.5 | 14.848 | 25080 | 552 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scatter |
+| 11 | 219 | 24569.2 | 14.826 | 26133 | 84 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score |
+| 12 | 173 | 23087.5 | 14.945 | 23159 | 112 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,low_score,scatter |
+| 13 | 319 | 20544.9 | 14.990 | 21973 | 269 | exact_preserve | assignment_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,low_score,scan |
+| 14 | 066 | 19532.5 | 15.108 | 19113 | 652 | exact_preserve | exact_preserve,heuristic,high_memory,matmul,scan |
+| 15 | 101 | 17662.2 | 15.206 | 17015 | 909 | exact_preserve | exact_preserve,gather_heavy,heuristic,high_memory,scatter |
+| 16 | 198 | 15821.0 | 15.253 | 16961 | 136 | semantic_or_handbuilt | connectivity_wall,documented_wall,gather_heavy,high_memory,open_angle,scan |
+| 17 | 025 | 14436.7 | 15.434 | 14072 | 195 | semantic_or_handbuilt | high_memory,open_angle,scan |
+| 18 | 077 | 13556.2 | 15.393 | 14760 | 114 | heuristic | connectivity_wall,documented_wall,heuristic,high_memory,local_stencil,maxpool_scan,open_angle,qlinear |
+| 19 | 110 | 12448.5 | 15.468 | 13155 | 634 | semantic_or_handbuilt | connectivity_wall,conv_heavy,documented_wall,high_memory,maxpool_scan,open_angle |
+| 20 | 145 | 11861.7 | 15.511 | 13104 | 111 | unknown | connectivity_wall,documented_wall,high_memory,lut_selection,maxpool_scan,open_angle |
+| 21 | 157 | 10840.9 | 15.550 | 12118 | 588 | exact_preserve | assignment_wall,connectivity_wall,documented_wall,exact_preserve,gather_heavy,heuristic,high_memory,open_angle |
+| 22 | 370 | 10486.2 | 15.749 | 9144 | 1267 | semantic_or_handbuilt | conv_heavy,qlinear,scan,scatter |
+| 23 | 204 | 9280.3 | 15.722 | 10244 | 453 | semantic_or_handbuilt | connectivity_wall,conv_heavy,documented_wall,high_memory,local_stencil,maxpool_scan,open_angle,qlinear |
+| 24 | 222 | 8839.2 | 15.916 | 8736 | 78 | unknown | conv_heavy,local_stencil,maxpool_scan,onehot_final_equal,open_angle,qlinear |
+| 25 | 324 | 7444.7 | 15.904 | 7330 | 1586 | unknown | conv_heavy,documented_wall,local_stencil,qlinear,scan |
 
 ## sparse_conv_single_op_floor
 
 Collapse local neighborhood rules to one sparse Conv/QLinearConv when output is thresholded
 
 - source tasks: 015 095 230 294
-- candidates: 64
+- candidates: 63
 - expected: {'gain_type': 'memory+params', 'risk': 'low when rule is truly local', 'verification': 'fresh process eval; beware one-process mem0 false signals'}
 
 | rank | task | score | pts | mem | params | source | tags |
 |---:|---:|---:|---:|---:|---:|---|---|
-| 1 | 233 | 71236.4 | 13.835 | 69943 | 644 | semantic_or_handbuilt | conv_heavy,gather_heavy,high_memory,low_score,lut_selection,matmul,scan,scatter |
-| 2 | 187 | 43124.1 | 14.340 | 41700 | 926 | semantic_or_handbuilt | high_memory,local_stencil,low_score,maxpool_scan |
-| 3 | 349 | 37967.4 | 14.429 | 37800 | 1196 | unknown | documented_wall,high_memory,local_stencil,low_score,lut_selection,open_angle,scan |
-| 4 | 023 | 22690.9 | 14.984 | 22275 | 111 | semantic_or_handbuilt | conv_heavy,high_memory,local_stencil,low_score |
-| 5 | 396 | 13289.1 | 15.516 | 13007 | 137 | unknown | conv_heavy,high_memory |
-| 6 | 138 | 13003.1 | 15.430 | 14106 | 226 | unknown | conv_heavy,documented_wall,high_memory,local_stencil,open_angle |
-| 7 | 370 | 10486.2 | 15.749 | 9144 | 1267 | semantic_or_handbuilt | conv_heavy,qlinear,scan,scatter |
-| 8 | 080 | 9887.4 | 15.669 | 10834 | 454 | unknown | conv_heavy,documented_wall,high_memory,lut_selection,open_angle,qlinear |
-| 9 | 074 | 9315.5 | 15.865 | 7462 | 1813 | semantic_or_handbuilt | local_stencil,open_angle |
-| 10 | 222 | 8839.2 | 15.916 | 8736 | 78 | unknown | conv_heavy,local_stencil,maxpool_scan,onehot_final_equal,open_angle,qlinear |
-| 11 | 324 | 7444.7 | 15.904 | 7330 | 1586 | unknown | conv_heavy,documented_wall,local_stencil,qlinear,scan |
-| 12 | 192 | 7139.6 | 15.938 | 8515 | 106 | unknown | documented_wall,local_stencil,open_angle |
-| 13 | 005 | 6600.0 | 16.132 | 6610 | 490 | exact_preserve | conv_heavy,exact_preserve,heuristic,qlinear |
-| 14 | 279 | 5555.0 | 16.378 | 5508 | 47 | semantic_or_handbuilt | conv_heavy,local_stencil,qlinear |
-| 15 | 085 | 5381.0 | 16.409 | 4500 | 881 | unknown | local_stencil,open_angle |
-| 16 | 278 | 4631.0 | 16.279 | 6084 | 47 | semantic_or_handbuilt | documented_wall,local_stencil,open_angle,qlinear |
-| 17 | 335 | 4216.0 | 16.653 | 3546 | 670 | semantic_or_handbuilt | conv_heavy,local_stencil,onehot_final_equal,open_angle |
-| 18 | 117 | 4165.0 | 16.666 | 3922 | 243 | unknown | local_stencil,lut_selection,open_angle,qlinear |
-| 19 | 132 | 4089.0 | 16.684 | 3990 | 99 | unknown | bitwise_program,gather_heavy,local_stencil,open_angle |
-| 20 | 162 | 4068.0 | 16.689 | 4024 | 44 | unknown | local_stencil,open_angle,qlinear |
-| 21 | 284 | 3735.0 | 16.774 | 3082 | 653 | semantic_or_handbuilt | conv_heavy,open_angle,scatter |
-| 22 | 079 | 3144.0 | 16.947 | 3065 | 79 | unknown | local_stencil,open_angle |
-| 23 | 042 | 3110.0 | 16.958 | 2792 | 318 | semantic_or_handbuilt | conv_heavy,local_stencil |
-| 24 | 019 | 3079.0 | 16.968 | 2997 | 82 | semantic_or_handbuilt | local_stencil |
-| 25 | 354 | 3077.0 | 16.968 | 2998 | 79 | unknown | conv_heavy,local_stencil,open_angle |
+| 1 | 187 | 43124.1 | 14.340 | 41700 | 926 | semantic_or_handbuilt | high_memory,local_stencil,low_score,maxpool_scan |
+| 2 | 349 | 37967.4 | 14.429 | 37800 | 1196 | unknown | documented_wall,high_memory,local_stencil,low_score,lut_selection,open_angle,scan |
+| 3 | 023 | 22690.9 | 14.984 | 22275 | 111 | semantic_or_handbuilt | conv_heavy,high_memory,local_stencil,low_score |
+| 4 | 396 | 13289.1 | 15.516 | 13007 | 137 | unknown | conv_heavy,high_memory |
+| 5 | 138 | 13003.1 | 15.430 | 14106 | 226 | unknown | conv_heavy,documented_wall,high_memory,local_stencil,open_angle |
+| 6 | 370 | 10486.2 | 15.749 | 9144 | 1267 | semantic_or_handbuilt | conv_heavy,qlinear,scan,scatter |
+| 7 | 080 | 9887.4 | 15.669 | 10834 | 454 | unknown | conv_heavy,documented_wall,high_memory,lut_selection,open_angle,qlinear |
+| 8 | 074 | 9315.5 | 15.865 | 7462 | 1813 | semantic_or_handbuilt | local_stencil,open_angle |
+| 9 | 222 | 8839.2 | 15.916 | 8736 | 78 | unknown | conv_heavy,local_stencil,maxpool_scan,onehot_final_equal,open_angle,qlinear |
+| 10 | 324 | 7444.7 | 15.904 | 7330 | 1586 | unknown | conv_heavy,documented_wall,local_stencil,qlinear,scan |
+| 11 | 192 | 7139.6 | 15.938 | 8515 | 106 | unknown | documented_wall,local_stencil,open_angle |
+| 12 | 005 | 6600.0 | 16.132 | 6610 | 490 | exact_preserve | conv_heavy,exact_preserve,heuristic,qlinear |
+| 13 | 279 | 5555.0 | 16.378 | 5508 | 47 | semantic_or_handbuilt | conv_heavy,local_stencil,qlinear |
+| 14 | 085 | 5381.0 | 16.409 | 4500 | 881 | unknown | local_stencil,open_angle |
+| 15 | 278 | 4631.0 | 16.279 | 6084 | 47 | semantic_or_handbuilt | documented_wall,local_stencil,open_angle,qlinear |
+| 16 | 335 | 4216.0 | 16.653 | 3546 | 670 | semantic_or_handbuilt | conv_heavy,local_stencil,onehot_final_equal,open_angle |
+| 17 | 117 | 4165.0 | 16.666 | 3922 | 243 | unknown | local_stencil,lut_selection,open_angle,qlinear |
+| 18 | 132 | 4089.0 | 16.684 | 3990 | 99 | unknown | bitwise_program,gather_heavy,local_stencil,open_angle |
+| 19 | 162 | 4068.0 | 16.689 | 4024 | 44 | unknown | local_stencil,open_angle,qlinear |
+| 20 | 284 | 3735.0 | 16.774 | 3082 | 653 | semantic_or_handbuilt | conv_heavy,open_angle,scatter |
+| 21 | 079 | 3144.0 | 16.947 | 3065 | 79 | unknown | local_stencil,open_angle |
+| 22 | 042 | 3110.0 | 16.958 | 2792 | 318 | semantic_or_handbuilt | conv_heavy,local_stencil |
+| 23 | 019 | 3079.0 | 16.968 | 2997 | 82 | semantic_or_handbuilt | local_stencil |
+| 24 | 354 | 3077.0 | 16.968 | 2998 | 79 | unknown | conv_heavy,local_stencil,open_angle |
+| 25 | 091 | 3028.0 | 16.984 | 2853 | 175 | semantic_or_handbuilt | local_stencil,open_angle |
 
 ## exact_preserve_to_semantic_rewrite
 
