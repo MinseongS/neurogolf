@@ -59,8 +59,9 @@ def build(task):
         vinfos.append(helper.make_tensor_value_info(name, dtype, shape))
         return name
 
-    F16 = TensorProto.FLOAT16
     F32 = TensorProto.FLOAT
+    F16 = TensorProto.FLOAT16
+    U8 = TensorProto.UINT8
 
     # --- per-color row / col occupancy (1 iff color present in that row/col) ---
     n("ReduceMax", ["input"], "mrf", axes=[3], keepdims=0)   # [1,10,30] f32
@@ -68,24 +69,27 @@ def build(task):
     n("ReduceMax", ["input"], "mcf", axes=[2], keepdims=0)   # [1,10,30] f32
     vi("mcf", F32, [1, 10, 30])
 
-    # cast to fp16; fold channel-0 (black) zeroing into a single fp16 multiply
-    # so it never couples bands.  The occupancy stays RANK-3 ([1,10,30]) with NO
+    # Cast to uint8; fold channel-0 (black) zeroing with a Where so it never
+    # couples bands.  The occupancy stays RANK-3 ([1,10,30]) with NO
     # reshape (ReduceMax already yields that shape) and `black` stays its native
     # 4D [1,1,30,30]; ONNX MatMul rank-broadcasting (rank3 vs rank4) batches the
     # contraction without materialising a single extra [30,30] reshape.
-    cmask = np.ones((1, 10, 1), np.float16)
-    cmask[0, 0, 0] = 0.0
-    init("cmask", cmask, np.float16)
+    keep = np.ones((1, 10, 1), bool)
+    keep[0, 0, 0] = False
+    init("keep", keep, bool)
+    init("zero8", np.array(0, np.uint8), np.uint8)
+    init("qscale", np.array(1.0, np.float32), np.float32)
+    init("qzero", np.array(0, np.uint8), np.uint8)
 
-    n("Cast", ["mrf"], "mrh", to=F16)
-    vi("mrh", F16, [1, 10, 30])
-    n("Mul", ["mrh", "cmask"], "Rrow")                       # [1,10,30] color x row
-    vi("Rrow", F16, [1, 10, 30])
+    n("Cast", ["mrf"], "mr8", to=U8)
+    vi("mr8", U8, [1, 10, 30])
+    n("Where", ["keep", "mr8", "zero8"], "Rrow")             # [1,10,30] color x row
+    vi("Rrow", U8, [1, 10, 30])
 
-    n("Cast", ["mcf"], "mch", to=F16)
-    vi("mch", F16, [1, 10, 30])
-    n("Mul", ["mch", "cmask"], "Rcol")                       # [1,10,30] color x col
-    vi("Rcol", F16, [1, 10, 30])
+    n("Cast", ["mcf"], "mc8", to=U8)
+    vi("mc8", U8, [1, 10, 30])
+    n("Where", ["keep", "mc8", "zero8"], "Rcol")             # [1,10,30] color x col
+    vi("Rcol", U8, [1, 10, 30])
 
     # black[r,c] = input channel 0, extracted by one fp32 slice -> fp16 [1,1,30,30].
     init("st0", np.array([0], np.int64), np.int64)
@@ -93,28 +97,31 @@ def build(task):
     init("ax1", np.array([1], np.int64), np.int64)
     n("Slice", ["input", "st0", "en1", "ax1"], "blkslice")   # [1,1,30,30] f32
     vi("blkslice", F32, [1, 1, 30, 30])
-    n("Cast", ["blkslice"], "black", to=F16)                 # [1,1,30,30] f16
-    vi("black", F16, [1, 1, 30, 30])
+    n("Cast", ["blkslice"], "black", to=U8)                  # [1,1,30,30] u8
+    vi("black", U8, [1, 1, 30, 30])
 
     # non-transposed: obR = Rrow^T @ (Rrow @ black)
     # Rrow[1,10,30] x black[1,1,30,30] -> rank-broadcast batch -> [1,1,10,30]
-    n("MatMul", ["Rrow", "black"], "colblk")                 # [1,1,10,30] band x col
-    vi("colblk", F16, [1, 1, 10, 30])
+    qargs = ["qscale", "qzero"]
+    n("QLinearMatMul", ["Rrow", *qargs, "black", *qargs, *qargs], "colblk")  # [1,1,10,30]
+    vi("colblk", U8, [1, 1, 10, 30])
     n("Transpose", ["Rrow"], "RrowT", perm=[0, 2, 1])        # [1,30,10] row x band
-    vi("RrowT", F16, [1, 30, 10])
-    n("MatMul", ["RrowT", "colblk"], "obR")                  # [1,1,30,30]
-    vi("obR", F16, [1, 1, 30, 30])
+    vi("RrowT", U8, [1, 30, 10])
+    n("QLinearMatMul", ["RrowT", *qargs, "colblk", *qargs, *qargs], "obR")
+    vi("obR", U8, [1, 1, 30, 30])
 
     # transposed: obC = (black @ Rcol^T) @ Rcol
     n("Transpose", ["Rcol"], "RcolT", perm=[0, 2, 1])        # [1,30,10] col x band
-    vi("RcolT", F16, [1, 30, 10])
-    n("MatMul", ["black", "RcolT"], "rowblk")                # [1,1,30,10] row x band
-    vi("rowblk", F16, [1, 1, 30, 10])
-    n("MatMul", ["rowblk", "Rcol"], "obC")                   # [1,1,30,30]
-    vi("obC", F16, [1, 1, 30, 30])
+    vi("RcolT", U8, [1, 30, 10])
+    n("QLinearMatMul", ["black", *qargs, "RcolT", *qargs, *qargs], "rowblk")
+    vi("rowblk", U8, [1, 1, 30, 10])
+    n("QLinearMatMul", ["rowblk", *qargs, "Rcol", *qargs, *qargs], "obC")
+    vi("obC", U8, [1, 1, 30, 30])
 
     # orientation: max per-row distinct-color count.  ==1 -> not transposed.
-    n("ReduceSum", ["Rrow"], "rowcc", axes=[1], keepdims=0)  # [1,30] per-row count
+    n("Cast", ["Rrow"], "Rrow16", to=F16)
+    vi("Rrow16", F16, [1, 10, 30])
+    n("ReduceSum", ["Rrow16"], "rowcc", axes=[1], keepdims=0)  # [1,30] per-row count
     vi("rowcc", F16, [1, 30])
     n("ReduceMax", ["rowcc"], "maxcc", axes=[1], keepdims=1)  # [1,1]
     vi("maxcc", F16, [1, 1])
@@ -123,10 +130,9 @@ def build(task):
     vi("nonxpose", TensorProto.BOOL, [1, 1])
 
     n("Where", ["nonxpose", "obR", "obC"], "ob")             # [1,1,30,30]
-    vi("ob", F16, [1, 1, 30, 30])
+    vi("ob", U8, [1, 1, 30, 30])
 
-    init("zero", np.array(0.0, np.float16), np.float16)
-    n("Greater", ["ob", "zero"], "mask")                     # [1,1,30,30] bool
+    n("Greater", ["ob", "zero8"], "mask")                    # [1,1,30,30] bool
     vi("mask", TensorProto.BOOL, [1, 1, 30, 30])
 
     # output = mask ? black_onehot : input  (black cell = channel-0 one-hot)

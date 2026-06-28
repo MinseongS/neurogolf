@@ -19,9 +19,11 @@ mask + a single Where into the free output; no per-cell colour-index plane).
 | 1 | Slice-ch0 black + [10,30] colblk/rowblk contraction, all fp16 | A | 22863 | 33 | 14.96 | — | marginal (+0.17) |
 | 2 | full-4D batched matmuls, drop `black` reshape + obb reshape | A | 20163 | 29 | 15.087 | — | +0.295 (just short) |
 | 3 | rank-3 occupancy [1,10,30] + native-4D black, MatMul rank-broadcast (no reshapes) | A | **18963** | **25** | **15.148** | 500/500 | **beats +0.3** |
+| 4 | uint8 `QLinearMatMul` band contractions + uint8 black/ob planes | A | **13563** | **25** | **15.483** | 1000/1000 | **ADOPTED** |
 
 ## Best achieved
-15.148 @ mem 18963 params 25 — adopt recommended Y. Beats prior 14.79 by **+0.356** (≥+0.3). Fresh 500/500.
+15.483 @ mem 13563 params 25 — adopted as `custom:task202+qlinear+onnxsim`.
+Beats prior live 15.148 by **+0.335**. Fresh 1000/1000.
 
 ## Irreducible-floor analysis
 Memory now dominated by:
@@ -39,6 +41,12 @@ matmul, and selecting operands earlier would require a full `black^T` plane
 (+1800B for the transpose, +1800B for the Where) — strictly worse than just
 computing both [30,30] candidates. So we are at the practical floor for this
 two-orientation closed form.
+
+2026-06-28 update: the fp16 floor was false for the contraction path. The values are
+small integer counts and the final use is only `Greater(ob, 0)`, so `black`, `colblk`,
+`rowblk`, `obR`, `obC`, and `ob` can all stay uint8 via `QLinearMatMul`
+(scale=1, zero-point=0). This cuts each full candidate plane 1800→900 while preserving
+exact counts. `blkslice` remains a 3600B fp32 entry plane because it reads from the fp32 input.
 
 ## OPEN ANGLES (re-attack backlog)
 - Single-orientation: if a future op let you select the orientation BEFORE the

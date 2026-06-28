@@ -305,3 +305,15 @@ task340 16.0288. Verification: source 1000/1000 fresh, adopted sim 500/500 fresh
 Submission `54127287` (`task340 qlinear packed matmul custom +0.249 local`) completed with
 **publicScore 7171.25**, improving previous best **7171.00** by **+0.25**. The repeated win upgrades
 QLinearMatMul from one-off trick to a real search pattern for integer label assembly graphs.
+
+## #NEW-BEST 2026-06-28 — CONFIRMED 7171.58 (QLinearMatMul band-count contraction)
+Applied the same quantized-matmul mechanism to `task202`. The old graph used fp16 band contractions
+to produce `obR/obC/ob`, but these values are small integer counts and only feed `Greater(ob, 0)`.
+Changed `black`, `colblk`, `rowblk`, `obR`, `obC`, and `ob` to uint8 `QLinearMatMul` paths
+(scale=1, zero-point=0), keeping the fp32 input slice/reductions only where unavoidable.
+Result: task202 mem 18963 / params 24 / 15.1485 pts → mem 13563 / params 25 / **15.4831 pts**.
+Fresh verification: **1000/1000**.
+
+Submission `54127377` (`task202 qlinear uint8 band contraction +0.335 local`) completed with
+**publicScore 7171.58**, improving previous best **7171.25** by **+0.33**. This is the third
+consecutive successful QLinearMatMul floor break.

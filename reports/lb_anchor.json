@@ -1,10 +1,10 @@
 {
- "comment": "NEW BEST 7171.25. Original task340 QLinearMatMul packed uint8 outer-product rewrite, following task055. The packed fp16 MatMul integer label assembly was changed to uint8 QLinearMatMul (scale=1/zp=0), shrinking task340 local from 16.0288 to 16.2776 after onnxsim; fresh 1000/1000 source and 500/500 sim. Submission 54127287 COMPLETE publicScore 7171.25. Prior best was task055 QLinear submission 54127206, 7171.00.",
- "stored_at_submit": 7171.1478993300825,
- "lb": 7171.25,
- "time_utc": "2026-06-28 03:54 submission 54127287 COMPLETE",
+ "comment": "NEW BEST 7171.58. Original task202 QLinearMatMul uint8 band-contraction rewrite, following task055/task340. The fp16 band-count contractions only feed a >0 mask, so black/obR/obC/ob and band blocks were changed to uint8 QLinearMatMul (scale=1/zp=0), shrinking task202 local from 15.1485 to 15.4831; fresh 1000/1000. Submission 54127377 COMPLETE publicScore 7171.58. Prior best was task340 QLinear submission 54127287, 7171.25.",
+ "stored_at_submit": 7171.4824668142455,
+ "lb": 7171.58,
+ "time_utc": "2026-06-28 03:58 submission 54127377 COMPLETE",
  "pending": false,
- "pending_submit": "CONFIRMED 7171.25 (+0.25 over prior confirmed 7171.00)",
- "prev_stored_at_submit": 7170.899122008326,
- "prev_lb": 7171.0
+ "pending_submit": "CONFIRMED 7171.58 (+0.33 over prior confirmed 7171.25)",
+ "prev_stored_at_submit": 7171.1478993300825,
+ "prev_lb": 7171.25
 }
