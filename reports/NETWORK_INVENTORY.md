@@ -5,10 +5,10 @@ Generated from `reports/manifest.json`, `networks/`, and `src/custom/`.
 ## Summary
 
 - LIVE_CUSTOM: 18
-- EXT_LIVE_CUSTOM_SHELVED: 339
-- EXT_LIVE_NO_CUSTOM_SOURCE: 43
+- EXT_LIVE_CUSTOM_SHELVED: 341
+- EXT_LIVE_NO_CUSTOM_SOURCE: 41
 - networks present: 400/400
-- custom source files present: 356/400
+- custom source files present: 358/400
 - manifest total: 7172.001177
 
 ## Meaning
@@ -128,7 +128,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 103 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 20.9057 | 36 | 24 | yes | yes |
 | 104 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 19.4627 | 197 | 57 | yes | yes |
 | 105 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.0064 | 2856 | 106 | yes | yes |
-| 106 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 18.2327 | 776 | 93 | yes | no |
+| 106 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.2327 | 776 | 93 | yes | yes |
 | 107 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.6866 | 2924 | 1154 | yes | yes |
 | 108 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.1217 | 864 | 107 | yes | yes |
 | 109 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 17.5162 | 1686 | 93 | yes | yes |
@@ -168,7 +168,7 @@ All 400 tasks are operationally controllable because `networks/taskNNN.onnx` exi
 | 143 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.2690 | 591 | 247 | yes | yes |
 | 144 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 20.3556 | 0 | 104 | yes | yes |
 | 145 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 15.5109 | 13104 | 111 | yes | yes |
-| 146 | EXT_LIVE_NO_CUSTOM_SOURCE | ext:franksunp7166_65 | 18.7954 | 388 | 107 | yes | no |
+| 146 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.7954 | 388 | 107 | yes | yes |
 | 147 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 18.7234 | 432 | 100 | yes | yes |
 | 148 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 16.2993 | 5759 | 248 | yes | yes |
 | 149 | EXT_LIVE_CUSTOM_SHELVED | ext:franksunp7166_65 | 20.0873 | 36 | 100 | yes | yes |
