@@ -1497,10 +1497,10 @@
    "method": "ext:franksunp7166_65"
   },
   "250": {
-   "points": 16.776909448838467,
-   "memory": 3664,
-   "params": 62,
-   "method": "custom:task250+onnxsim"
+   "points": 16.921311770770128,
+   "memory": 3164,
+   "params": 61,
+   "method": "custom:task250+qlinear+onnxsim"
   },
   "251": {
    "points": 16.362360655507896,
@@ -2026,10 +2026,10 @@
    "method": "ext:franksunp7166_65"
   },
   "338": {
-   "points": 15.372200075067285,
-   "memory": 14515,
-   "params": 666,
-   "method": "custom:task338+onnxsim"
+   "points": 15.414172743435339,
+   "memory": 13890,
+   "params": 667,
+   "method": "custom:task338+qlinear+onnxsim"
   },
   "339": {
    "points": 20.058357577390694,
@@ -2386,10 +2386,10 @@
    "method": "ext:franksunp7166_65"
   },
   "398": {
-   "points": 16.752779947254773,
-   "memory": 2624,
+   "points": 17.041772807677688,
+   "memory": 1666,
    "params": 1193,
-   "method": "custom:task398+onnxsim"
+   "method": "custom:task398+u8+onnxsim"
   },
   "399": {
    "points": 20.48914049348315,

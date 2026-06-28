@@ -70,15 +70,19 @@ def build(task):
     n("Conv", ["red", "Wc", "bm2"], "c1h", pads=[0, 1, 0, 1])  # fp16 [1,1,25,25]
     n("Relu", ["c1h"], "Hm")                               # fp16 {0,1}
 
-    init("q", np.array(0.5, np.float16), np.float16)
-    init("two", np.array(2.0, np.float16), np.float16)
+    init("q8", np.array(0, np.uint8), np.uint8)
+    init("two8", np.array(2, np.uint8), np.uint8)
+    init("qscale", np.array(1.0, np.float32), np.float32)
+    init("qzero", np.array(0, np.uint8), np.uint8)
 
     # ---- enc = parity of Hm strictly above (column ray-cast) ---------------
-    Tl = np.tril(np.ones((W, W), np.float16), -1)          # Tl[r,r']=1 iff r'<r
-    init("Tl", Tl.reshape(1, 1, W, W), np.float16)
-    n("MatMul", ["Tl", "Hm"], "cnt")                       # count of Hm above [1,1,25,25]
-    n("Mod", ["cnt", "two"], "par", fmod=1)                # f16 {0,1} (integer-exact)
-    n("Greater", ["par", "q"], "encb")                     # bool: odd crossings above
+    Tl = np.tril(np.ones((W, W), np.uint8), -1)             # Tl[r,r']=1 iff r'<r
+    init("Tl", Tl.reshape(1, 1, W, W), np.uint8)
+    n("Cast", ["Hm"], "Hm8", to=U8)
+    qargs = ["qscale", "qzero"]
+    n("QLinearMatMul", ["Tl", *qargs, "Hm8", *qargs, *qargs], "cnt")  # count above, u8
+    n("Mod", ["cnt", "two8"], "par")                       # u8 {0,1}
+    n("Greater", ["par", "q8"], "encb")                    # bool: odd crossings above
 
     # ---- green = enc AND NOT red -------------------------------------------
     n("Not", ["redb"], "notred")

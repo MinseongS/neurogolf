@@ -62,6 +62,9 @@ def build(task):
 
     init("ZEROF", np.array(0.0, np.float32), np.float32)
     init("BIG", np.array(1e6, np.float32), np.float32)
+    init("ZERO8", np.array(0, np.uint8), np.uint8)
+    init("qscale", np.array(1.0, np.float32), np.float32)
+    init("qzero", np.array(0, np.uint8), np.uint8)
 
     # ---- min red row / min red col (box top-left) --------------------------
     def min_index(plane, axis_keep, tag):
@@ -95,7 +98,7 @@ def build(task):
         n("Max", [srcv, f"lo_{tag}"], f"cl1_{tag}")
         n("Min", [f"cl1_{tag}", f"hi_{tag}"], f"clv_{tag}")
         n("Equal", [f"clv_{tag}", outv], f"mat_b_{tag}")   # bool [1,1,W,W]
-        n("Cast", [f"mat_b_{tag}"], f"mat_{tag}", to=F16)  # fp16 [1,1,W,W]
+        n("Cast", [f"mat_b_{tag}"], f"mat_{tag}", to=U8)   # uint8 [1,1,W,W]
         return f"mat_{tag}"
 
     # Rmat[R(axis2), r(axis3)] : src=r on axis3, out=R on axis2
@@ -104,12 +107,12 @@ def build(task):
     CmatT = clamp_mat("min_bc", 2, "C")
 
     # ---- outgray = Rmat @ gray @ CmatT (OR via sum then >0) ----------------
-    # values are {0,1}, products/sums stay well under 2^11 so fp16 is exact.
-    n("Cast", ["gray"], "gray16", to=F16)             # fp16 [1,1,W,W]
-    n("MatMul", [Rmat, "gray16"], "rowmapped")        # fp16 [1,1,W,W] (R, c)
-    n("MatMul", ["rowmapped", CmatT], "colmapped")    # fp16 [1,1,W,W] (R, C)
-    init("ZEROH", np.array(0.0, np.float16), np.float16)
-    n("Greater", ["colmapped", "ZEROH"], "outgray_b")  # bool [1,1,W,W]
+    # values are {0,1} and the final use is only >0, so uint8 QLinearMatMul is exact.
+    n("Cast", ["gray"], "gray8", to=U8)               # uint8 [1,1,W,W]
+    qargs = ["qscale", "qzero"]
+    n("QLinearMatMul", [Rmat, *qargs, "gray8", *qargs, *qargs], "rowmapped")
+    n("QLinearMatMul", ["rowmapped", *qargs, CmatT, *qargs, *qargs], "colmapped")
+    n("Greater", ["colmapped", "ZERO8"], "outgray_b")  # bool [1,1,W,W]
 
     # ---- box mask (red, 2x2) -----------------------------------------------
     n("Greater", ["red", "ZEROF"], "redb")            # bool [1,1,W,W]

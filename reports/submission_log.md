@@ -317,3 +317,24 @@ Fresh verification: **1000/1000**.
 Submission `54127377` (`task202 qlinear uint8 band contraction +0.335 local`) completed with
 **publicScore 7171.58**, improving previous best **7171.25** by **+0.33**. This is the third
 consecutive successful QLinearMatMul floor break.
+
+## #NEW-BEST 2026-06-28 — CONFIRMED 7171.91 (uint8 Gather + QLinear parity)
+Continued the dtype floor-break scan:
+- `task398`: value plane `V` from Gather was fp16 but only carries colour labels 0..9 or sentinel
+  99 before final `Equal`. Changed `data6/vtab/V/ARANGE` to uint8; onnxsim result mem 1666 /
+  params 1193 / **17.0418 pts** vs previous 16.7528. Fresh 1000/1000.
+- `task338`: parity ray-cast count `Tl @ Hm` was fp16 and only feeds `Mod 2`. Changed the count
+  MatMul to uint8 `QLinearMatMul`; onnxsim result **15.4142 pts** vs previous 15.3722. Fresh
+  500/500.
+
+Submission `54127652` completed with **publicScore 7171.91**, improving previous best **7171.58**
+by **+0.33**.
+
+## #NEW-BEST 2026-06-28 — CONFIRMED 7172.06 (QLinear clamp MatMuls)
+Applied the same count-only QLinearMatMul conversion to `task250`: `Rmat @ gray @ CmatT` only
+feeds `Greater(count, 0)`, so the fp16 clamp MatMuls were replaced with uint8 QLinearMatMul.
+onnxsim result: mem 3164 / params 61 / **16.9213 pts** vs previous 16.7769. Fresh 500/500.
+
+Submission `54127715` (`task250 qlinear clamp matmul +0.144 local`) completed with
+**publicScore 7172.06**, improving previous best **7171.91** by **+0.15**. Total QLinear/uint8
+series lift from 7170.59 is now **+1.47 public**.

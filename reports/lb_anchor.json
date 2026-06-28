@@ -1,10 +1,10 @@
 {
- "comment": "NEW BEST 7171.58. Original task202 QLinearMatMul uint8 band-contraction rewrite, following task055/task340. The fp16 band-count contractions only feed a >0 mask, so black/obR/obC/ob and band blocks were changed to uint8 QLinearMatMul (scale=1/zp=0), shrinking task202 local from 15.1485 to 15.4831; fresh 1000/1000. Submission 54127377 COMPLETE publicScore 7171.58. Prior best was task340 QLinear submission 54127287, 7171.25.",
- "stored_at_submit": 7171.4824668142455,
- "lb": 7171.58,
- "time_utc": "2026-06-28 03:58 submission 54127377 COMPLETE",
+ "comment": "NEW BEST 7172.06. Continued original dtype floor-break series: task398 fp16 Gather value plane -> uint8 (fresh 1000/1000), task338 parity MatMul -> uint8 QLinearMatMul (fresh 500/500), then task250 clamp MatMuls -> uint8 QLinearMatMul (fresh 500/500). Latest submission 54127715 COMPLETE publicScore 7172.06. Prior best was task398+338 submission 54127652, 7171.91; before QLinear/uint8 series best was 7170.59.",
+ "stored_at_submit": 7171.957834664969,
+ "lb": 7172.06,
+ "time_utc": "2026-06-28 04:16 submission 54127715 COMPLETE",
  "pending": false,
- "pending_submit": "CONFIRMED 7171.58 (+0.33 over prior confirmed 7171.25)",
- "prev_stored_at_submit": 7171.1478993300825,
- "prev_lb": 7171.25
+ "pending_submit": "CONFIRMED 7172.06 (+0.15 over prior confirmed 7171.91)",
+ "prev_stored_at_submit": 7171.813432343037,
+ "prev_lb": 7171.91
 }

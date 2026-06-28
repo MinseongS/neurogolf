@@ -1,8 +1,8 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-28 12:58_
+_Updated: 2026-06-28 13:16_
 
-**Total: 7171.48 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 7171.96 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
@@ -10,8 +10,8 @@ _Updated: 2026-06-28 12:58_
 | ext:franksunp7166_68 | 12 | 180.93 |
 | custom:task128 | 1 | 19.30 |
 | custom:task352 | 1 | 18.87 |
-| custom:task250+onnxsim | 1 | 16.78 |
-| custom:task398+onnxsim | 1 | 16.75 |
+| custom:task398+u8+onnxsim | 1 | 17.04 |
+| custom:task250+qlinear+onnxsim | 1 | 16.92 |
 | custom:task055 | 1 | 16.33 |
 | custom:task383 | 1 | 16.29 |
 | custom:task340+qlinear+onnxsim | 1 | 16.28 |
@@ -22,7 +22,7 @@ _Updated: 2026-06-28 12:58_
 | custom:task204+onnxsim | 1 | 15.72 |
 | custom:task080+onnxsim | 1 | 15.63 |
 | custom:task202+qlinear+onnxsim | 1 | 15.48 |
-| custom:task338+onnxsim | 1 | 15.37 |
+| custom:task338+qlinear+onnxsim | 1 | 15.41 |
 | custom:task191+onnxsim | 1 | 14.62 |
 | custom:task118_tail_where+onnxsim | 1 | 14.55 |
 | custom:task187_label_flood | 1 | 14.34 |
@@ -280,7 +280,7 @@ _Updated: 2026-06-28 12:58_
 | 247 | ext:franksunp7166_65 | 408 | 62 | 18.85 |
 | 248 | ext:franksunp7166_65 | 122 | 29 | 19.98 |
 | 249 | ext:franksunp7166_65 | 248 | 39 | 19.34 |
-| 250 | custom:task250+onnxsim | 3664 | 62 | 16.78 |
+| 250 | custom:task250+qlinear+onnxsim | 3164 | 61 | 16.92 |
 | 251 | ext:franksunp7166_65 | 5472 | 168 | 16.36 |
 | 252 | ext:franksunp7166_65 | 0 | 260 | 19.44 |
 | 253 | ext:franksunp7166_65 | 540 | 52 | 18.62 |
@@ -368,7 +368,7 @@ _Updated: 2026-06-28 12:58_
 | 335 | ext:franksunp7166_65 | 3546 | 670 | 16.65 |
 | 336 | ext:franksunp7166_65 | 1092 | 1196 | 17.26 |
 | 337 | ext:franksunp7166_65 | 0 | 10 | 22.70 |
-| 338 | custom:task338+onnxsim | 14515 | 666 | 15.37 |
+| 338 | custom:task338+qlinear+onnxsim | 13890 | 667 | 15.41 |
 | 339 | ext:franksunp7166_65 | 40 | 100 | 20.06 |
 | 340 | custom:task340+qlinear+onnxsim | 5860 | 279 | 16.28 |
 | 341 | ext:franksunp7166_65 | 1394 | 35 | 17.74 |
@@ -428,6 +428,6 @@ _Updated: 2026-06-28 12:58_
 | 395 | ext:franksunp7166_65 | 144 | 21 | 19.89 |
 | 396 | ext:franksunp7166_65 | 13007 | 137 | 15.52 |
 | 397 | ext:franksunp7166_65 | 2648 | 200 | 17.05 |
-| 398 | custom:task398+onnxsim | 2624 | 1193 | 16.75 |
+| 398 | custom:task398+u8+onnxsim | 1666 | 1193 | 17.04 |
 | 399 | ext:franksunp7166_65 | 71 | 20 | 20.49 |
 | 400 | ext:franksunp7166_65 | 1800 | 66 | 17.47 |

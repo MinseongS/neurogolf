@@ -35,6 +35,7 @@ from onnx import helper, numpy_helper
 
 F16 = onnx.TensorProto.FLOAT16
 F32 = onnx.TensorProto.FLOAT
+U8 = onnx.TensorProto.UINT8
 I32 = onnx.TensorProto.INT32
 I64 = onnx.TensorProto.INT64
 BOOL = onnx.TensorProto.BOOL
@@ -98,14 +99,14 @@ def build(task):
     init("BS", np.array([[0.0, 99.0]], np.float32), np.float32)  # black, sentinel
     n("Concat", ["colvals", "BS"], "data6f", axis=1)            # [1,7] fp32
     n("Squeeze", ["data6f"], "data6f1", axes=[0])               # [7] fp32
-    n("Cast", ["data6f1"], "data6", to=F16)                     # [7] fp16
+    n("Cast", ["data6f1"], "data6", to=U8)                      # [7] uint8
 
     # --- output value per tuple, then the single value plane V ---
-    n("Gather", ["data6", "bvec"], "vtab", axis=0)             # [51] fp16
-    n("Gather", ["vtab", "KEY"], "V", axis=0)                  # [30,30] fp16
+    n("Gather", ["data6", "bvec"], "vtab", axis=0)             # [51] uint8
+    n("Gather", ["vtab", "KEY"], "V", axis=0)                  # [30,30] uint8
 
     # --- route the 10-channel expansion into the FREE bool output ---
-    init("ARANGE", np.arange(10, dtype=np.float16).reshape(1, 10, 1, 1), np.float16)
+    init("ARANGE", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
     n("Equal", ["V", "ARANGE"], "output")                     # BOOL [1,10,30,30]
 
     x = helper.make_tensor_value_info("input", F32, [1, 10, 30, 30])
