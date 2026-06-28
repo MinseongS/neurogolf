@@ -1,0 +1,104 @@
+[
+  {
+    "id": "qlinear_uint8_lut_or_matmul",
+    "title": "Replace fp16/fp32 one-hot LUT/MatMul selection with uint8 QLinearMatMul/QLinearConv where exact",
+    "status": "active",
+    "source_tasks": [55, 80],
+    "rationale": "Task055 and task080 showed that quantized integer routing can collapse large fp16/fp32 selection planes when scales are 1 and zero-points are 0.",
+    "applies_when": {
+      "any_ops": ["MatMul", "QLinearConv", "QLinearMatMul"],
+      "any_tags": ["lut_selection", "qlinear", "onehot_final_equal"],
+      "min_memory": 500
+    },
+    "reject_when": {
+      "any_tags": ["mem0_single_op"]
+    },
+    "expected": {
+      "gain_type": "memory",
+      "risk": "medium",
+      "verification": "stored eval, fresh eval if generator available, then adopt gate"
+    },
+    "transformer": null
+  },
+  {
+    "id": "free_final_onehot_equal",
+    "title": "Delay 10-channel expansion to final Equal/Where output",
+    "status": "active",
+    "source_tasks": [17, 95, 146],
+    "rationale": "Many solvers carry 10-channel planes too early.  A one-channel label plane plus final Equal often removes full-canvas intermediates.",
+    "applies_when": {
+      "any_ops": ["Equal", "Pad", "Concat", "Where"],
+      "any_tags": ["onehot_final_equal", "full_canvas_bool", "label_plane"],
+      "min_memory": 800
+    },
+    "reject_when": {
+      "any_tags": ["mem0_single_op"]
+    },
+    "expected": {
+      "gain_type": "memory",
+      "risk": "low-medium",
+      "verification": "output equivalence before adoption"
+    },
+    "transformer": null
+  },
+  {
+    "id": "scan_dtype_and_shift_compression",
+    "title": "Compress scan-style MaxPool/CumSum/Hillis-Steele pipelines with lower dtype or shared shifts",
+    "status": "active",
+    "source_tasks": [46, 216],
+    "rationale": "Scan and expansion pipelines dominate memory on wall-class tasks.  Reusing shift matrices or keeping uint8/bool until the last legal cast is often the only broad lever.",
+    "applies_when": {
+      "any_ops": ["CumSum", "MaxPool", "ReduceMax", "ReduceMin"],
+      "any_tags": ["scan", "maxpool_scan", "gather_heavy"],
+      "min_memory": 2000
+    },
+    "reject_when": {
+      "any_tags": ["bitwise_program"]
+    },
+    "expected": {
+      "gain_type": "memory",
+      "risk": "medium-high",
+      "verification": "stored/fresh eval and compare against incumbent"
+    },
+    "transformer": null
+  },
+  {
+    "id": "sparse_conv_single_op_floor",
+    "title": "Collapse local neighborhood rules to one sparse Conv/QLinearConv when output is thresholded",
+    "status": "active",
+    "source_tasks": [15, 95, 230, 294],
+    "rationale": "The scorer thresholds output > 0.  Local stencil rules can often be encoded directly as one convolution with zero memory.",
+    "applies_when": {
+      "any_ops": ["Conv", "QLinearConv"],
+      "any_tags": ["local_stencil", "conv_heavy"],
+      "max_points": 18.5
+    },
+    "reject_when": {
+      "any_tags": ["assignment_wall", "connectivity_wall"]
+    },
+    "expected": {
+      "gain_type": "memory+params",
+      "risk": "low when rule is truly local",
+      "verification": "fresh process eval; beware one-process mem0 false signals"
+    },
+    "transformer": null
+  },
+  {
+    "id": "exact_preserve_to_semantic_rewrite",
+    "title": "Prioritize exact-preserve source builders for semantic replacement",
+    "status": "active",
+    "source_tasks": [2, 18, 286, 366],
+    "rationale": "Exact-preserve builders provide control but not insight.  They should be the first targets for mechanism extraction when memory is high or score is low.",
+    "applies_when": {
+      "any_tags": ["exact_preserve"],
+      "min_memory": 10000
+    },
+    "reject_when": {},
+    "expected": {
+      "gain_type": "research",
+      "risk": "high",
+      "verification": "document semantic mechanism before implementation"
+    },
+    "transformer": null
+  }
+]
