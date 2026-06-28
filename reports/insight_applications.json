@@ -464,8 +464,27 @@
     "title": "Delay 10-channel expansion to final Equal/Where output"
   },
   {
-    "candidate_count": 36,
+    "candidate_count": 37,
     "candidates": [
+      {
+        "memory": 69943,
+        "method": "ext:franksunp7166_68",
+        "params": 644,
+        "points": 13.835398729451114,
+        "score": 70736.38,
+        "source_class": "exact_preserve",
+        "tags": [
+          "conv_heavy",
+          "exact_preserve",
+          "gather_heavy",
+          "high_memory",
+          "low_score",
+          "matmul",
+          "scan",
+          "scatter"
+        ],
+        "task": 233
+      },
       {
         "memory": 63257,
         "method": "ext:franksunp7166_68",
@@ -1100,8 +1119,27 @@
     "title": "Compress scan-style MaxPool/CumSum/Hillis-Steele pipelines with lower dtype or shared shifts"
   },
   {
-    "candidate_count": 63,
+    "candidate_count": 64,
     "candidates": [
+      {
+        "memory": 69943,
+        "method": "ext:franksunp7166_68",
+        "params": 644,
+        "points": 13.835398729451114,
+        "score": 70736.38,
+        "source_class": "exact_preserve",
+        "tags": [
+          "conv_heavy",
+          "exact_preserve",
+          "gather_heavy",
+          "high_memory",
+          "low_score",
+          "matmul",
+          "scan",
+          "scatter"
+        ],
+        "task": 233
+      },
       {
         "memory": 41700,
         "method": "custom:task187_label_flood",
@@ -2021,8 +2059,27 @@
     "title": "Collapse local neighborhood rules to one sparse Conv/QLinearConv when output is thresholded"
   },
   {
-    "candidate_count": 18,
+    "candidate_count": 19,
     "candidates": [
+      {
+        "memory": 69943,
+        "method": "ext:franksunp7166_68",
+        "params": 644,
+        "points": 13.835398729451114,
+        "score": 70736.38,
+        "source_class": "exact_preserve",
+        "tags": [
+          "conv_heavy",
+          "exact_preserve",
+          "gather_heavy",
+          "high_memory",
+          "low_score",
+          "matmul",
+          "scan",
+          "scatter"
+        ],
+        "task": 233
+      },
       {
         "memory": 63257,
         "method": "ext:franksunp7166_68",

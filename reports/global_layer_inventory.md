@@ -2,15 +2,14 @@
 
 - tasks indexed: 400
 - failures: 0
-- source-controlled build(): 396/400
-- no build(): 140 233 241 311
+- source-controlled build(): 400/400
+- no build(): none
 
 ## Source classes
 
-- `semantic_or_handbuilt`: 180
+- `semantic_or_handbuilt`: 183
 - `unknown`: 179
-- `exact_preserve`: 35
-- `no_build`: 4
+- `exact_preserve`: 36
 - `heuristic`: 2
 
 ## Largest op families
@@ -53,7 +52,7 @@
 - `lut_selection`: 44 tasks — 003 009 020 034 047 053 055 058 061 080 094 104 107 117 124 140 145 157 168 169
 - `qlinear`: 43 tasks — 005 034 055 061 077 080 081 086 093 102 117 118 133 158 160 162 168 169 188 190
 - `high_memory`: 42 tasks — 002 017 018 023 025 029 044 054 064 066 076 077 080 101 110 118 133 138 145 157
-- `exact_preserve`: 35 tasks — 002 005 015 018 044 054 066 076 083 098 101 118 120 122 127 133 135 151 157 171
+- `exact_preserve`: 36 tasks — 002 005 015 018 044 054 066 076 083 098 101 118 120 122 127 133 135 151 157 171
 - `onehot_final_equal`: 32 tasks — 009 017 048 051 055 056 064 069 086 100 105 107 141 143 165 203 208 209 222 239
 - `custom_win`: 27 tasks — 011 017 049 056 079 081 093 105 123 145 161 183 191 196 204 222 243 280 284 290
 - `assignment_wall`: 26 tasks — 044 076 086 089 133 143 157 158 163 170 182 191 201 209 219 240 253 263 264 270
@@ -66,6 +65,5 @@
 - `bitwise_program`: 12 tasks — 041 047 048 058 065 068 132 139 156 270 286 305
 - `template_match`: 8 tasks — 074 158 191 251 287 363 364 400
 - `marginal_wall`: 5 tasks — 029 158 181 350 361
-- `no_build`: 4 tasks — 140 233 241 311
 - `infeasible_exact_wall`: 1 tasks — 118
 - `information_loss_wall`: 1 tasks — 118

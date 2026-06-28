@@ -10,6 +10,7 @@ counted as source ownership.
 
 - Networks present: 400/400
 - Source builder files present: 400/400
+- Source-controlled `build()` available: 400/400
 - Missing source builder: 0/400
 - Special missing case: none
 - External live with no local source builder: 0

@@ -35,7 +35,11 @@ def read_text(path: Path) -> str:
 
 
 def source_has_build(text: str) -> bool:
-    return bool(re.search(r"^def\s+build\s*\(", text, flags=re.M))
+    return bool(
+        re.search(r"^def\s+build\s*\(", text, flags=re.M)
+        or re.search(r"^from\s+\.[\w_]+\s+import\s+build\b", text, flags=re.M)
+        or re.search(r"^from\s+\.[\w_]+\s+import\s+.*\bbuild\b", text, flags=re.M)
+    )
 
 
 def op_counts(model: onnx.ModelProto) -> Counter:

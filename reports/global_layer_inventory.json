@@ -4524,6 +4524,7 @@
       209,
       216,
       219,
+      233,
       255,
       258,
       261,
@@ -4919,12 +4920,6 @@
       352,
       372,
       385
-    ],
-    "no_build": [
-      140,
-      233,
-      241,
-      311
     ],
     "onehot_final_equal": [
       9,
@@ -23750,12 +23745,11 @@
       ],
       "params": 5,
       "points": 23.3905620875659,
-      "source_class": "no_build",
-      "source_has_build": false,
+      "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
         "documented_wall",
         "lut_selection",
-        "no_build",
         "open_angle"
       ],
       "task": 140,
@@ -35803,15 +35797,15 @@
       ],
       "params": 644,
       "points": 13.835398729451114,
-      "source_class": "no_build",
-      "source_has_build": false,
+      "source_class": "exact_preserve",
+      "source_has_build": true,
       "tags": [
         "conv_heavy",
+        "exact_preserve",
         "gather_heavy",
         "high_memory",
         "low_score",
         "matmul",
-        "no_build",
         "scan",
         "scatter"
       ],
@@ -36815,11 +36809,9 @@
       ],
       "params": 0,
       "points": 25.0,
-      "source_class": "no_build",
-      "source_has_build": false,
-      "tags": [
-        "no_build"
-      ],
+      "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
+      "tags": [],
       "task": 241,
       "tasklog_exists": false
     },
@@ -45413,11 +45405,10 @@
       ],
       "params": 30,
       "points": 21.598802618337846,
-      "source_class": "no_build",
-      "source_has_build": false,
+      "source_class": "semantic_or_handbuilt",
+      "source_has_build": true,
       "tags": [
-        "mem0_single_op",
-        "no_build"
+        "mem0_single_op"
       ],
       "task": 311,
       "tasklog_exists": false
