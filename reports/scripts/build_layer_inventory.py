@@ -124,6 +124,13 @@ def tag_task(ops: Counter, manifest_row: dict, source_text: str, tasklog_text: s
         tags.add("lut_selection")
     if "template-match" in lower_src or "template match" in lower_src or "dihedral" in lower_src:
         tags.add("template_match")
+    if (
+        "marker-routed hidden path" in lower_src
+        or "marker-routed hidden path" in lower_log
+        or "hidden path" in lower_log
+        or "endpoint pair" in lower_log
+    ):
+        tags.add("marker_routed_path")
     if "beats deployed" in lower_log or "adopt-candidate" in lower_log or "new custom" in lower_log:
         tags.add("custom_win")
     if ops.get("Equal") and ("channel_values" in source_text or "onehot" in lower_src):

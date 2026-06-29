@@ -48,6 +48,33 @@ flips the score to ~14.9; it's graph-order-dependent and not relied upon here (w
 - Drop PAD top/left if a re-derivation shows edge anchors never go negative (would shrink the
   conv canvas 27→25).
 
+## 2026-06-28 re-attack notes
+- Tried replacing `Relu(corrm)->M fp16` plus fp16 stamp Conv with
+  `Greater(corrm)>0 -> Cast uint8 -> QLinearConv`. Direct uint8 MaxPool is invalid in ORT
+  (`MaxPool` rejects tensor(uint8)).
+- Tried `QLinearConv -> Cast fp16 -> MaxPool`; stored/fresh passed (120/120), but score fell
+  from 14.622859 to 14.608577 (`memory=31733`, `params=846`). Do not adopt.
+- Tried changing active grid `G` to 20/21/22/24/25; all fail stored. `G=23` remains fixed by
+  generator/output alignment.
+
+## 2026-06-29 orientation-group probe
+
+Hypothesis: reduce the 8 orientation match channels before stamping, because
+the drawn blue box might depend only on oriented bbox shape.
+
+Result: rejected as a general mechanism for this task.
+
+- On square `3x3` patterns, all 8 stamp masks are identical.
+- On non-square or sparse patterns, the dynamic `Mconv` stamp can split into
+  4 or even 8 distinct masks depending on the oriented footprint.
+- Therefore a fixed 2-group or 4-group `ReduceMax(corrm)` before `Relu/stamp`
+  is not semantics-preserving.
+
+The main 8-channel `corrm` and `Relu(M)` floor remains real unless a different
+operator can threshold positive matches without materializing the 8-channel
+post-activation plane.  Prior `Greater -> QLinearConv -> Cast fp16 -> MaxPool`
+passed but was slightly worse.
+
 ## INSIGHT (transferable)
 ⭐ **8-orientation dihedral template matching is NOT a shape-correspondence BAIL** — it is a stacked
 Conv: extract the small pattern as a 3×3, build the 8 oriented kernels as FIXED gather-permutations

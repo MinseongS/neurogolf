@@ -12,8 +12,9 @@ import numpy as np
 import onnx
 import onnxruntime as ort
 
-sys.path.insert(0, "/tmp/arc-gen")
 from src.harness import load_task, sanitize_model
+
+sys.path.append("/tmp/arc-gen")
 
 N = int(sys.argv[1])
 TOPK = int(sys.argv[2]) if len(sys.argv) > 2 else 40

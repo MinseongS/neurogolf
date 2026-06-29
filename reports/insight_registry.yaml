@@ -1,5 +1,47 @@
 [
   {
+    "id": "sparse_edit_stream_without_mask_planes",
+    "title": "Replace monotonic full-canvas edit-mask cascades with sparse label updates when duplicate inactive writes are impossible",
+    "status": "candidate",
+    "source_tasks": [54],
+    "rationale": "Task054 showed a tempting pattern: several full 30x30 mask/edit planes only exist to apply a small number of row/column/stamp edits. A graph-surgery probe saved little and failed because inactive duplicate ScatterElements writes were semantically meaningful. The reusable mechanism is valid only for monotonic sparse overwrites where inactive duplicate writes cannot erase earlier edits.",
+    "applies_when": {
+      "any_ops": ["ScatterND", "ScatterElements", "Where"],
+      "any_tags": ["scatter", "high_memory"],
+      "min_memory": 5000
+    },
+    "reject_when": {
+      "any_tags": ["inactive_scatter_overwrite_semantics"]
+    },
+    "expected": {
+      "gain_type": "memory_if_monotonic",
+      "risk": "high unless duplicate scatter overwrite behaviour is proven irrelevant",
+      "verification": "compare against incumbent on stored and fresh; inspect duplicate indices before adoption"
+    },
+    "transformer": null
+  },
+  {
+    "id": "high_score_frontier_final_output_only",
+    "title": "Prioritize tasks that can reach the 20+ frontier by avoiding every full-canvas intermediate",
+    "status": "active",
+    "source_tasks": [87, 140, 223, 307, 16, 276, 309, 337, 56, 92],
+    "rationale": "The current 20+ group is dominated by mem=0/tiny-cost Gather, Einsum, Conv, RoiAlign/MaxRoiPool, or final-output-only one-hot patterns.  A full 30x30 uint8 label plane is already 900 bytes and caps a task below the 20+ band, so explosive score movement requires compilers that keep all full-canvas tensors as the graph output only.",
+    "applies_when": {
+      "any_tags": ["onehot_final_equal", "local_stencil", "scatter", "open_angle", "lut_selection"],
+      "max_points": 16.5,
+      "min_memory": 4000
+    },
+    "reject_when": {
+      "any_tags": ["connectivity_wall", "information_loss_wall", "ambiguity_wall"]
+    },
+    "expected": {
+      "gain_type": "frontier_research",
+      "risk": "medium-high because it often requires semantic recompilation rather than graph surgery",
+      "verification": "prove no counted full-canvas intermediates in mem profile, then fresh eval before adoption"
+    },
+    "transformer": null
+  },
+  {
     "id": "qlinear_uint8_lut_or_matmul",
     "title": "Replace fp16/fp32 one-hot LUT/MatMul selection with uint8 QLinearMatMul/QLinearConv where exact",
     "status": "active",
@@ -182,6 +224,49 @@
       "gain_type": "memory+params",
       "risk": "medium",
       "verification": "stored eval plus fresh; inspect for output-range saturation before adoption"
+    },
+    "transformer": null
+  },
+  {
+    "id": "marker_routed_hidden_path_compiler",
+    "title": "Compile endpoint-pair hidden paths from deliberate marker pixels instead of replaying scan-heavy exact graphs",
+    "status": "active",
+    "source_tasks": [66],
+    "rationale": "Task066 generator decomposes into S/U hidden path families.  Red and green endpoint pairs define side columns/rows; cyan markers disambiguate the turn/bottom, while random cyan noise requires soft legality/tie-breaks rather than marker-only selection.  A compiler can emit a bounded set of bool path masks instead of preserving a large scan/gather graph.",
+    "applies_when": {
+      "any_ops": ["GatherElements", "CumSum", "ReduceMax", "ReduceMin", "Where"],
+      "all_tags": ["marker_routed_path"],
+      "min_memory": 5000,
+      "max_points": 16.5
+    },
+    "reject_when": {
+      "any_tags": ["ambiguity_wall", "information_loss_wall", "mem0_single_op"]
+    },
+    "expected": {
+      "gain_type": "semantic_rewrite_memory",
+      "risk": "medium-high until tie-break is exact",
+      "verification": "stored validation plus large fresh generator eval before ONNX adoption"
+    },
+    "transformer": null
+  },
+  {
+    "id": "rotation_component_template_scatter",
+    "title": "Replace scan-heavy in-context sprite reconstruction with rotation-only 3x3 component template scatter",
+    "status": "active",
+    "source_tasks": [233],
+    "rationale": "Task233 rule reduces to extracting outside 3x3 sprites, finding 8-connected black components inside the dominant red rectangle, matching each component against only four rotations of the sprite's red mask, then scattering a coloured 3x3 patch.  This avoids replaying large gather/scatter heuristic graphs and halves the orientation bank vs dihedral matching.",
+    "applies_when": {
+      "any_ops": ["ScatterND", "Gather", "Where", "TopK"],
+      "any_tags": ["template_match", "gather_heavy", "scatter", "high_memory"],
+      "min_memory": 15000
+    },
+    "reject_when": {
+      "any_tags": ["assignment_wall", "information_loss_wall", "mem0_single_op"]
+    },
+    "expected": {
+      "gain_type": "semantic_rewrite_memory",
+      "risk": "medium-high until bbox/component edge cases are fully fresh-verified",
+      "verification": "Python reference stored plus large fresh, then source-owned ONNX compiler and adopt gate"
     },
     "transformer": null
   }

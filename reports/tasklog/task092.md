@@ -8,7 +8,9 @@ sticks occupy distinct rows; vertical sticks distinct cols; a horizontal and ver
 may CROSS — at a crossing the VERTICAL stick's colour wins (generator draws all horizontal
 sticks first, then all vertical, so the column over-writes). Verified 0/500 fresh:
 rowfill_k = rowPrefixOR ∧ rowSuffixOR; colfill_k = colPrefixOR ∧ colSuffixOR; col wins.
-**Current:** 14.56 pts, gen draft (this file's prior version), mem 32350, params 1830
+**Current live/source-owned exact:** 16.145335 pts, mem 6825, params 182.
+The old 14.866 custom draft below is superseded as an implementation, but its
+semantic analysis remains useful.
 **Target tier:** B/A — separable closed-form interval fill via 1-D row/col occupancy profiles
 + triangular prefix/suffix-OR; the per-cell colour-index plane is the floor.
 
@@ -20,10 +22,54 @@ rowfill_k = rowPrefixOR ∧ rowSuffixOR; colfill_k = colPrefixOR ∧ colSuffixOR
 | 2 | fuse Sub+Mul+Add+Where sentinel into ONE Where(ingrid_bool, stickColor, 10) | B | 24670 | 1828 | 14.82 | — | -4440B |
 | 3 | sentinel via 1-D offrow/offcol penalties in ONE variadic Sum (drops And bool plane) | B | 23950 | 1829 | 14.84 | — | -720B |
 | 4 | **col prefix/suffix as RIGHT-multiply on [1,10,1,30] — kills the colhas Transpose** | B | 23350 | 1829 | **14.866** | 500/500 | best |
+| 5 | public/live exact source-owned scatter compiler: endpoint moments + 1-channel scalar label scatter + final Equal | B+ | 6825 | 182 | **16.145** | stored 265/265 | current live/source baseline |
+| 6 | remove vertical column-map roundtrip; route `v_score TopK` directly to final ScatterElements | probe | 6610 | 152 | 0 | stored 264/265 | rejected: inactive TopK slots duplicate active columns and overwrite active vertical strokes with base values |
 
 ## Best achieved
-14.866 @ mem 23350 params 1829 — adopted? N (per instructions, not self-adopted).
-Beats prior 14.56 by **+0.306** (≥+0.3). official 3/3, fresh 500/500.
+16.145335 @ mem 6825 params 182 — current live/source-owned exact baseline.
+
+The prior 14.866 custom source is obsolete for score, but still documents the
+separable row/column semantics.  The current best graph instead avoids
+10-channel working planes: it computes per-colour endpoints as tiny vectors,
+uses 1-channel uint8 scatter planes for the scalar colour label, and routes
+one-hot expansion into the final free `Equal(..., palette) -> output`.
+
+## 2026-06-28 high-score frontier probe
+
+This task is a useful frontier seed because the semantic rule is simple but it
+still cannot currently enter the 20+ tier.
+
+Dominant current tensors:
+
+- `base_idx`: `[1,1,30,30]` uint8, 900B.
+- `h_canvas`: `[1,1,30,30]` uint8, 900B.
+- `scalar_color_u8`: `[1,1,30,30]` uint8, 900B.
+- two expanded scatter index planes: 600B + 600B.
+
+The live graph already delays 10-channel one-hot expansion until final output.
+The remaining floor is the 1-channel scalar colour carrier.  Since even one
+`30x30` uint8 carrier is 900B, this structure cannot reach 20+.
+
+Rejected direct-output idea:
+
+- Use the free `input` tensor as ScatterElements/ScatterND data so no zero
+  full-canvas data tensor is needed.
+- Scatter horizontal/vertical one-hot fills directly into `output`.
+- Problem: crossings require removing the horizontal channel under the vertical
+  stroke. A single scatter must either generate crossing negative updates or
+  avoid duplicate inactive writes. ScatterND requires int64 `[N,4]` dynamic
+  indices, which is large; ScatterElements direct routing creates inactive
+  TopK duplicate columns. A concrete probe that skipped the `col_color_u8`
+  column-map cut memory from 6825 to 6610 but failed stored example 26 because
+  inactive slots overwrote active vertical colour 8 at column 0.
+
+Current wall:
+
+To break 20+, task092 needs a fundamentally different primitive: either a
+single final-output op that can express interval-XOR/priority directly, or a
+compact way to generate scatter indices without full/dynamic `[N,4]` int64
+planes and without inactive duplicate writes. Simple graph surgery on the live
+scatter compiler is unlikely to be enough.
 
 ## Irreducible-floor analysis
 Memory now bound by FOUR [30,30] f16 planes (1800 each = 7200): the two colour MatMuls

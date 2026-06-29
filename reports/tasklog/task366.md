@@ -1,56 +1,66 @@
 # task366 — e6721834
 
-**Rule:** Input is two equal halves (stacked vertically or side-by-side; horiz/foreside random). Each
-half has a uniform background (two distinct `backs`). The FORE half contains 2–3 solid `forecolor`
-rectangles (size 2–7 each side, random positions) with colored dots punched inside; box `idx` carries
-`idx+1` dots, each box's dot color random. The NON-FORE half contains, for each box present there, ONLY
-the dots (same relative arrangement & color as the matching fore box), placed at an INDEPENDENT random
-position. The output = the non-fore half's background with each box RECONSTRUCTED: match each non-fore dot
-cluster to the fore box whose dot stencil (color + relative geometry) coincides, then stamp the full
-forecolor rectangle + dots there. (Box presence on the non-fore side is partial: idx0 always present,
-idx≥1 dropped ~1/3 of the time.) Input can be up to 30×34 → such instances are dropped by the harness
-(>30 returns None); ~95% fit.
+## Current live
 
-**Current:** 13.50 pts, gen:vyank6322, mem 97119, params 1451 — FAILS fresh (38/40 genverify), so a
-generalizing net would be a direct gap-closer (adopt scores the failing current ~0).
-**Target tier:** detection/correspondence — in-context template matching, hardest class.
+`memory=35927`, `params=490`, `points=14.497209022434086`.
+The deployed graph is a high-quality heuristic; prior fresh sanity was `39/40`, so any rewrite needs
+fresh validation.
 
-## Attempts
-| # | angle | tier | mem | params | pts | fresh | outcome |
-|---|---|---|---|---|---|---|---|
-| 1 | python ref: dot-COUNT key + anchor translate | — | — | — | — | 245/479 | rule incomplete (count not unique key) |
-| 2 | python ref: (count,colorset) key + pattern-equality align | — | — | — | — | 586/950 | nonfore dots NOT adjacent → CC grouping fails |
-| 3 | python ref: full-cell-CC templates + sliding dot-stencil CORRELATION | — | — | — | — | 885/958 | best; fails on fore-box adjacency CC-merge + false-positive placements |
-| 4 | python ref: forecolor-only-CC templates | — | — | — | — | 736/1426 | worse (adjacent fills merge) |
+## Semantic rule
 
-## Best achieved
-No ONNX net built. Best PYTHON reference (scipy CC + correlation) ≈92% — not even exact in Python.
+Input contains two same-sized panels, stacked or side-by-side.
+One panel is the template: a background plus 2–3 solid rectangles in a single `forecolor`, each with
+1/2/3 same-coloured dots punched into it.
+The other panel contains only the dot stencils at new positions.
+Output is the non-template panel background with the missing full rectangles reconstructed at those
+dot positions.
 
-## Irreducible-floor analysis
-This is multi-object in-context template matching with VARIABLE count (2–3), VARIABLE size (2–7 per axis),
-RANDOM positions, and a per-instance template SET that must be learned from the fore half and applied to
-the non-fore half. A correct solver requires, in sequence: (1) data-dependent axis split (vertical vs
-horizontal) — even a purity/2×2-block heuristic is ~2% ambiguous when both H and W are even; (2)
-connected-component labeling to isolate fore boxes (unrollable flood, ~30 rounds × 900B, but fore boxes
-can ABUT → CC merges them, breaking template extraction); (3) data-dependent extraction of up to 3
-arbitrary-size template rectangles; (4) a sliding 2D correlation of each VARIABLE-SIZE template's dot
-stencil against the non-fore half (a data-dependent-kernel Conv per box) to find placements, with
-false-positive resolution; (5) data-dependent stamping of each variable-size rect. None of (2)–(5) is
-expressible without Loop at reasonable memory, the variable kernel size defeats a fixed Conv, and the
-reference algorithm itself is not exact. Fresh 200/200 is unreachable.
+## Bottlenecks
 
-## OPEN ANGLES (exhausted-but-listed)
-- Per-template fixed-max-size (7×7) Conv-correlation bank with masked stencils, one Conv per fore box —
-  blocked by needing to first ISOLATE/extract each fore box (CC) before you have a kernel, and by
-  false-positive placements + fore-box adjacency. Would still need unrolled CC and is not exact.
-- Bounded enumeration of all (axis, fore-side, box-set) — combinatorial, not closed-form.
+- `label30` one-hot-to-colour Conv: ~3600B.
+- template colour-present machinery, including int32 template label lookup: ~1KB plus several
+  255/510B tensors.
+- repeated `k0/k1/k2` stencil matching blocks: roughly 7KB.
+- repeated placement/stamping blocks: roughly 5.5KB.
+- final label path: roughly 5.7KB.
 
-## INSIGHT (transferable)
-⭐ task366 is a GENUINE template-matching WALL, NOT a blank-note false-positive. The matching key is the
-full dot STENCIL (color + relative geometry), NOT dot-count (counts collide: idxs like [0,0,1,1] give two
-2-dot boxes) and NOT (count,colorset) (still ~0.3% collide). Non-fore dots of one box are SPREAD across the
-box footprint and non-adjacent, so connected-components does NOT group them — grouping requires sliding the
-fore template (the box size is only known from the matched template → circular without correlation). Best
-scipy reference solver ≈92%, capped by fore-box adjacency merging templates under CC and false-positive
-template placements. Diagnostic for this wall class: "reconstruct objects in region B from per-instance
-templates discovered in region A, with variable count/size/position" ⇒ in-context matching wall.
+## Re-attack angle
+
+Generator fact: punched dot colours exclude both backgrounds and `forecolor`.
+
+Therefore a cheaper template-dot mask may be:
+
+`T_dot = T_non_background AND T != forecolor`
+
+instead of the current “template cell colour appears in placement dots” machinery. If `forecolor`
+can be derived cheaply from the rectangle mask, this may remove 2–4KB. If deriving `forecolor`
+requires full per-colour counting, it probably gives the savings back.
+
+Larger idea: use the generator guarantee that rectangle `idx` has `idx+1` dots to map 1/2/3-dot
+templates to placement clusters and delete much of the `k0/k1/k2` matching. This is much riskier
+because count/color collisions exist; treat as research, not an immediate adoption path.
+
+## 2026-06-29 forecolor/dot-mask probe
+
+Hypothesis: replace the current placement-colour membership path
+
+`pos_color -> T_color_present -> GatherElements(T_idx_for_present) -> T_present`
+
+with `T_dot = T_non_background AND T != forecolor`, using the generator fact
+that dot colours exclude both backgrounds and `forecolor`.
+
+Generator probes:
+
+- First non-background template cell is a dot colour in about `30/300` samples,
+  so it is unsafe as a cheap `forecolor` proxy.
+- Component first-cell/majority proxies are also unsafe (`~8-40%` failures in
+  1000-sample probes depending on proxy).
+- Template non-background mode is safe in tested samples (`0/300` dot-colour
+  collisions), because rectangles dominate the dot pixels.
+
+Conclusion:
+
+The semantic fact is valid, but the safe `forecolor=mode(non-bg)` route likely
+needs per-colour counting over the template panel.  That may cost as much as or
+more than the current `T_present` path.  Do not patch until a cheap mode extractor
+is designed.

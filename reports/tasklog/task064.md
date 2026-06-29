@@ -13,6 +13,8 @@ union to one span); same per box-column. The box itself and the original dots re
 **Current:** 15.49 pts, ext:kojimar7113, mem 13368, params 68 (crowd net; SUPERSEDED
 our old 22104/14.99 custom via keep-best). Re-golf attempt 2026-06-19 (Opus): replicated
 kojimar's formulation exactly (15.494/13368, fresh 200/200) and could not beat +0.3.
+2026-06-28: source re-synced to the installed live graph via exact builder, so
+`src/custom/task064.py` now scores the same 15.494307 / mem 13368 / params 68.
 **Target tier:** detection/fill (4-direction box-blocked prefix/suffix). NOT S
 (output color per cell is not a fixed linear/permutation of input — it is a
 data-dependent directional fill). NOT A (row⊗col separable): horizontal fill in a
@@ -77,6 +79,13 @@ Per-plane floor (13368, every plane structurally required):
 - 900 fill_mask bool [1,1,30,30] (Pad accepts bool at opset 13) — needed for output.
 +0.3 bar (15.79) needs mem+par <= ~10010 = cut 3358B = delete one whole large block
 (marker_grid / presence / band). None is removable without breaking the rule. AT FLOOR.
+
+## 2026-06-28 high-score frontier check
+
+Not a 20+ frontier candidate.  20+ requires `mem+params <= ~148`, but this task
+requires per-row/per-column marker extrema and a 2-D ray mask.  The installed
+graph already keeps the final one-hot expansion at the output; the wall is the
+intermediate fill-mask construction, not a premature 10-channel output.
 
 ## OPEN ANGLES (re-attack backlog)
 - Drop R,C (2400) only if a single small Conv could prove "solid rect" exactly —

@@ -1,1126 +1,0 @@
-
-task054:´Ý
-H
-input
-label_conv_w	label_f32	label_f32"Conv*
-kernel_shape@@ 
-5
-	label_f32label_u8label_cast_u8"Cast*	
-to 
-B
-label_u8
-idx_0
-shape_1
-two_i64
-corner_row
-corner_row"Slice
-A
-
-corner_row
-idx_0
-shape_1
-
-axis_widthbg_u8	corner_bg"Slice
-,
-label_u8
-bg_u8	bg_mask_bbg_mask"Equal
-9
-	bg_mask_b
-zero_u8
-one_u8	not_bg_u8	not_bg_u8"Where
-d
-input
-	band_axesinput_color_counts_f32host_color_counts_from_input"	ReduceSum*
-keepdims 
-V
-input_color_counts_f32box_color_counts_i32host_color_counts_i32"Cast*	
-to 
-2
-color_values
-bg_u8
-bg_color_bbg_color"Equal
-g
-
-bg_color_b
-zero_i32
-box_color_counts_i32box_color_counts_no_bg_i32box_color_counts_no_bg"Where
-]
-box_color_counts_no_bg_i32box_i64box_color_argmax"ArgMax*
-axis *
-keepdims 
-2
-box_i64box_u8box_color_cast"Cast*	
-to 
-1
-label_u8
-box_u8host_mask_b	host_mask"Equal
-<
-host_mask_b
-zero_u8
-	not_bg_u8other_u8other_u8"Where
-M
-other_u8
-ref0_starts
-	ref0_ends
-	band_axesref0_crop_u8	ref0_crop"Slice
-i
-ref0_crop_u8
-ref_small_starts
-ref_small_ends_3
-	band_axesref0_count_crop_u8ref0_count_crop"Slice
-I
-ref0_count_crop_u8ref0_count_crop_i32ref0_crop_i32"Cast*	
-to 
-X
-ref0_count_crop_i32
-	band_axesref0_count_i32
-ref0_count"	ReduceSum*
-keepdims 
-M
-other_u8
-ref1_starts
-	ref1_ends
-	band_axesref1_crop_u8	ref1_crop"Slice
-i
-ref1_crop_u8
-ref_small_starts
-ref_small_ends_3
-	band_axesref1_count_crop_u8ref1_count_crop"Slice
-I
-ref1_count_crop_u8ref1_count_crop_i32ref1_crop_i32"Cast*	
-to 
-X
-ref1_count_crop_i32
-	band_axesref1_count_i32
-ref1_count"	ReduceSum*
-keepdims 
-M
-other_u8
-ref2_starts
-	ref2_ends
-	band_axesref2_crop_u8	ref2_crop"Slice
-i
-ref2_crop_u8
-ref_small_starts
-ref_small_ends_4
-	band_axesref2_count_crop_u8ref2_count_crop"Slice
-I
-ref2_count_crop_u8ref2_count_crop_i32ref2_crop_i32"Cast*	
-to 
-X
-ref2_count_crop_i32
-	band_axesref2_count_i32
-ref2_count"	ReduceSum*
-keepdims 
-G
-ref0_count_i32
-ref1_count_i32ref0_gt_ref1_bref0_gt_ref1"Greater
-U
-ref0_gt_ref1_b
-ref0_count_i32
-ref1_count_i32ref01_count_i32ref01_count"Where
-J
-ref01_count_i32
-ref2_count_i32ref01_gt_ref2_bref01_gt_ref2"Greater
-L
-ref01_gt_ref2_b
-ref0_gt_ref1_bref_is_top_right_bref_is_top_right"And
-3
-ref0_gt_ref1_bref0_le_ref1_bref0_le_ref1"Not
-P
-ref01_gt_ref2_b
-ref0_le_ref1_bref_is_bottom_left_bref_is_bottom_left"And
-B
-ref01_gt_ref2_bref_is_bottom_right_bref_is_bottom_right"Not
-V
-ref_is_top_right_b
-shape_1
-twenty_one_i64ref_row_start_i64ref_row_start"Where
-^
-ref_is_top_right_b
-	eight_i64
-twenty_eight_i64ref_row_end_alt_i64ref_row_end_alt"Where
-b
-ref_is_bottom_right_b
-twenty_nine_i64
-ref_row_end_alt_i64ref_row_end_i64ref_row_end"Where
-X
-ref_is_bottom_left_b
-shape_1
-twenty_one_i64ref_col_start_i64ref_col_start"Where
-`
-ref_is_bottom_left_b
-	eight_i64
-twenty_eight_i64ref_col_end_alt_i64ref_col_end_alt"Where
-b
-ref_is_bottom_right_b
-twenty_nine_i64
-ref_col_end_alt_i64ref_col_end_i64ref_col_end"Where
-Y
-row_coords_i64
-ref_row_start_i64ref_row_ge_start_bref_row_ge_start"GreaterOrEqual
-I
-row_coords_i64
-ref_row_end_i64ref_row_lt_end_bref_row_lt_end"Less
-E
-ref_row_ge_start_b
-ref_row_lt_end_bref_row_in_b
-ref_row_in"And
-Y
-col_coords_i64
-ref_col_start_i64ref_col_ge_start_bref_col_ge_start"GreaterOrEqual
-I
-col_coords_i64
-ref_col_end_i64ref_col_lt_end_bref_col_lt_end"Less
-E
-ref_col_ge_start_b
-ref_col_lt_end_bref_col_in_b
-ref_col_in"And
-;
-ref_row_in_b
-ref_col_in_bref_region_b
-ref_region"And
-<
-ref_region_b
-zero_u8
-other_u8seeds_u8seeds_u8"Where
-7
-other_u8
-seeds_u8motif_mask_b
-motif_mask"Greater
-S
-ref0_crop_u8ref0_row_hasref0_row_has"	ReduceMax*
-axes@ *
-keepdims 
-R
-ref0_row_has
-	rev_idx_7ref0_row_has_revref0_row_has_rev"Gather*
-axis 
-P
-ref0_row_hasref0_row_minref0_row_min"ArgMax*
-axis *
-keepdims 
-d
-ref0_row_has_revref0_row_from_bottomref0_row_from_bottom"ArgMax*
-axis *
-keepdims 
-@
-six_i64
-ref0_row_from_bottomref0_row_maxref0_row_max"Sub
-=
-ref0_row_min
-ref0_row_maxref0_row_sumref0_row_sum"Add
-J
-ref0_row_sum
-two_i64ref0_row_center_localref0_row_center_local"Div
-G
-ref0_row_center_local
-shape_1ref0_row_centerref0_row_center"Add
-S
-ref0_crop_u8ref0_col_hasref0_col_has"	ReduceMax*
-axes@ *
-keepdims 
-R
-ref0_col_has
-	rev_idx_7ref0_col_has_revref0_col_has_rev"Gather*
-axis 
-P
-ref0_col_hasref0_col_minref0_col_min"ArgMax*
-axis *
-keepdims 
-b
-ref0_col_has_revref0_col_from_rightref0_col_from_right"ArgMax*
-axis *
-keepdims 
-?
-six_i64
-ref0_col_from_rightref0_col_maxref0_col_max"Sub
-=
-ref0_col_min
-ref0_col_maxref0_col_sumref0_col_sum"Add
-J
-ref0_col_sum
-two_i64ref0_col_center_localref0_col_center_local"Div
-N
-ref0_col_center_local
-twenty_one_i64ref0_col_centerref0_col_center"Add
-S
-ref1_crop_u8ref1_row_hasref1_row_has"	ReduceMax*
-axes@ *
-keepdims 
-R
-ref1_row_has
-	rev_idx_7ref1_row_has_revref1_row_has_rev"Gather*
-axis 
-P
-ref1_row_hasref1_row_minref1_row_min"ArgMax*
-axis *
-keepdims 
-d
-ref1_row_has_revref1_row_from_bottomref1_row_from_bottom"ArgMax*
-axis *
-keepdims 
-@
-six_i64
-ref1_row_from_bottomref1_row_maxref1_row_max"Sub
-=
-ref1_row_min
-ref1_row_maxref1_row_sumref1_row_sum"Add
-J
-ref1_row_sum
-two_i64ref1_row_center_localref1_row_center_local"Div
-N
-ref1_row_center_local
-twenty_one_i64ref1_row_centerref1_row_center"Add
-S
-ref1_crop_u8ref1_col_hasref1_col_has"	ReduceMax*
-axes@ *
-keepdims 
-R
-ref1_col_has
-	rev_idx_7ref1_col_has_revref1_col_has_rev"Gather*
-axis 
-P
-ref1_col_hasref1_col_minref1_col_min"ArgMax*
-axis *
-keepdims 
-b
-ref1_col_has_revref1_col_from_rightref1_col_from_right"ArgMax*
-axis *
-keepdims 
-?
-six_i64
-ref1_col_from_rightref1_col_maxref1_col_max"Sub
-=
-ref1_col_min
-ref1_col_maxref1_col_sumref1_col_sum"Add
-J
-ref1_col_sum
-two_i64ref1_col_center_localref1_col_center_local"Div
-G
-ref1_col_center_local
-shape_1ref1_col_centerref1_col_center"Add
-S
-ref2_crop_u8ref2_row_hasref2_row_has"	ReduceMax*
-axes@ *
-keepdims 
-R
-ref2_row_has
-	rev_idx_8ref2_row_has_revref2_row_has_rev"Gather*
-axis 
-P
-ref2_row_hasref2_row_minref2_row_min"ArgMax*
-axis *
-keepdims 
-d
-ref2_row_has_revref2_row_from_bottomref2_row_from_bottom"ArgMax*
-axis *
-keepdims 
-B
-	seven_i64
-ref2_row_from_bottomref2_row_maxref2_row_max"Sub
-=
-ref2_row_min
-ref2_row_maxref2_row_sumref2_row_sum"Add
-J
-ref2_row_sum
-two_i64ref2_row_center_localref2_row_center_local"Div
-N
-ref2_row_center_local
-twenty_one_i64ref2_row_centerref2_row_center"Add
-S
-ref2_crop_u8ref2_col_hasref2_col_has"	ReduceMax*
-axes@ *
-keepdims 
-R
-ref2_col_has
-	rev_idx_8ref2_col_has_revref2_col_has_rev"Gather*
-axis 
-P
-ref2_col_hasref2_col_minref2_col_min"ArgMax*
-axis *
-keepdims 
-b
-ref2_col_has_revref2_col_from_rightref2_col_from_right"ArgMax*
-axis *
-keepdims 
-A
-	seven_i64
-ref2_col_from_rightref2_col_maxref2_col_max"Sub
-=
-ref2_col_min
-ref2_col_maxref2_col_sumref2_col_sum"Add
-J
-ref2_col_sum
-two_i64ref2_col_center_localref2_col_center_local"Div
-N
-ref2_col_center_local
-twenty_one_i64ref2_col_centerref2_col_center"Add
-]
-ref0_gt_ref1_b
-ref0_row_center
-ref1_row_centerref01_row_centerref01_row_center"Where
-]
-ref0_gt_ref1_b
-ref0_col_center
-ref1_col_centerref01_col_centerref01_col_center"Where
-_
-ref01_gt_ref2_b
-ref01_row_center
-ref2_row_centermotif_row_centermotif_row_center"Where
-_
-ref01_gt_ref2_b
-ref01_col_center
-ref2_col_centermotif_col_centermotif_col_center"Where
-R
-motif_row_center
-shape_1motif_row_center_1motif_row_center_reshape"Reshape
-R
-motif_col_center
-shape_1motif_col_center_1motif_col_center_reshape"Reshape
-B
-motif_row_center
-minus_one_i64fill_row_idxfill_row_add"Add
-B
-motif_col_center
-minus_one_i64fill_col_idxfill_col_add"Add
-?
-fill_row_idx
-shape_1fill_row_1dfill_row_reshape"Reshape
-?
-fill_col_idx
-shape_1fill_col_1dfill_col_reshape"Reshape
-S
-label_u8
-fill_row_1dfill_value_rowfill_value_gather_row"Gather*
-axis 
-U
-fill_value_row
-fill_col_1d
-fill_valuefill_value_gather_col"Gather*
-axis 
-[
-motif_mask_b
-fill_row_1dfill_present_rowfill_present_gather_row"Gather*
-axis 
-[
-fill_present_row
-fill_col_1dfill_presentfill_present_gather_col"Gather*
-axis 
-^
-fill_value_row
-motif_col_center_1north_valuenorth_value_gather_col"Gather*
-axis 
-Z
-label_u8
-motif_row_center_1west_value_rowwest_value_gather_row"Gather*
-axis 
-U
-west_value_row
-fill_col_1d
-west_valuewest_value_gather_col"Gather*
-axis 
-b
-motif_mask_b
-motif_row_center_1west_present_rowwest_present_gather_row"Gather*
-axis 
-D
-motif_row_center
-minus_two_i64vtail_row_idxvtail_row_add"Add
-B
-vtail_row_idx
-shape_1vtail_row_1dvtail_row_reshape"Reshape
-^
-motif_mask_b
-vtail_row_1dvtail_present_rowvtail_present_gather_row"Gather*
-axis 
-e
-vtail_present_row
-motif_col_center_1vtail_presentvtail_present_gather_col"Gather*
-axis 
-D
-motif_col_center
-minus_two_i64htail_col_idxhtail_col_add"Add
-_
-west_present_row
-htail_col_idxhtail_presenthtail_present_gather_col"Gather*
-axis 
-G
-vtail_present
-north_value
-
-west_value
-line_color
-line_color"Where
-`
-seeds_u8seed_pass_0_row_has_u8seed_pass_0_row_has"	ReduceMax*
-axes@ *
-keepdims 
-k
-seed_pass_0_row_has_u8seed_pass_0_first_row_4d_i64seed_0_row_4d"ArgMax*
-axis *
-keepdims 
-L
-seed_pass_0_first_row_4d_i64
-shape_1seed_0_row_i64
-seed_0_row"Reshape
-V
-seeds_u8
-seed_0_row_i64seed_0_row_value_u8seed_0_row_value"Gather*
-axis 
-]
-seed_0_row_value_u8seed_0_col_4d_i64seed_0_col_4d"ArgMax*
-axis *
-keepdims 
-A
-seed_0_col_4d_i64
-shape_1seed_0_col_i64
-seed_0_col"Reshape
-Y
-seed_0_row_value_u8
-seed_0_col_i64seed_0_value_u8seed_0_value"Gather*
-axis 
-B
-seed_0_value_u8
-one_u8seed_0_present_bseed_0_present"Equal
-N
-seed_0_present_b
-shape_1seed_0_present_1seed_0_present_reshape"Reshape
-J
-seed_0_present_b
-htail_presenth_seed_0_active_bh_seed_0_active"And
-b
-host_mask_b
-seed_0_row_i64h_seed_0_host_row_vec_bh_seed_0_host_row_vec"Gather*
-axis 
-K
-col_coords_i64
-seed_0_col_i64h_seed_0_col_eq_bh_seed_0_col_eq"Equal
-V
-h_seed_0_host_row_vec_b
-h_seed_0_col_eq_bh_seed_0_row_vec_bh_seed_0_row_vec"Or
-N
-h_seed_0_row_vec_b
-zero_i32
-one_i32h_seed_0_gap_i32h_seed_0_gap"Where
-Q
-h_seed_0_gap_i32
-
-axis_widthh_seed_0_seg_i32h_seed_0_segment_cumsum"CumSum
-e
-h_seed_0_seg_i32
-seed_0_col_i64h_seed_0_seed_seg_i32h_seed_0_seed_segment"Gather*
-axis 
-X
-h_seed_0_seg_i32
-h_seed_0_seed_seg_i32h_seed_0_same_raw_bh_seed_0_same_raw"Equal
-N
-h_seed_0_same_raw_b
-h_seed_0_row_vec_bh_seed_0_same_bh_seed_0_same"And
-W
-h_seed_0_same_b
-h_seed_0_active_bh_seed_0_same_active_bh_seed_0_same_active"And
-N
-h_seed_0_same_active_bh_seed_0_update_u8h_seed_0_update"Cast*	
-to 
-b
-host_mask_b
-seed_0_col_i64v_seed_0_host_col_vec_bv_seed_0_host_col_vec"Gather*
-axis 
-K
-row_coords_i64
-seed_0_row_i64v_seed_0_row_eq_bv_seed_0_row_eq"Equal
-V
-v_seed_0_host_col_vec_b
-v_seed_0_row_eq_bv_seed_0_col_vec_bv_seed_0_col_vec"Or
-N
-v_seed_0_col_vec_b
-zero_i32
-one_i32v_seed_0_gap_i32v_seed_0_gap"Where
-N
-v_seed_0_gap_i32
-two_i64v_seed_0_seg_i32v_seed_0_segment_cumsum"CumSum
-e
-v_seed_0_seg_i32
-seed_0_row_i64v_seed_0_seed_seg_i32v_seed_0_seed_segment"Gather*
-axis 
-X
-v_seed_0_seg_i32
-v_seed_0_seed_seg_i32v_seed_0_same_raw_bv_seed_0_same_raw"Equal
-N
-v_seed_0_same_raw_b
-v_seed_0_col_vec_bv_seed_0_same_bv_seed_0_same"And
-S
-v_seed_0_same_b
-vtail_presentv_seed_0_same_active_bv_seed_0_same_active"And
-]
-v_seed_0_same_active_b
-shape_1_1_1_30v_seed_0_update_bv_seed_0_update_reshape"Reshape
-I
-v_seed_0_update_bv_seed_0_update_u8v_seed_0_update"Cast*	
-to 
-c
-idx_0
-idx_0
-seed_0_row_i64
-seed_0_col_i64seed_0_index_i64seed_0_index"Concat*
-axis  
-R
-seed_0_index_i64
-	shape_1_4seed_0_index_1_4_i64seed_0_index_reshape"Reshape
-i
-seed_pass_0_row_has_u8
-
-rev_idx_30seed_pass_0_row_has_rev_u8seed_1_row_has_rev"Gather*
-axis 
-v
-seed_pass_0_row_has_rev_u8seed_1_row_from_bottom_i64seed_1_row_from_bottom"ArgMax*
-axis *
-keepdims 
-T
-twenty_nine_i64
-seed_1_row_from_bottom_i64seed_1_row_4d_i64seed_1_row_4d"Sub
-A
-seed_1_row_4d_i64
-shape_1seed_1_row_i64
-seed_1_row"Reshape
-V
-seeds_u8
-seed_1_row_i64seed_1_row_value_u8seed_1_row_value"Gather*
-axis 
-e
-seed_1_row_value_u8
-
-rev_idx_30seed_1_row_value_rev_u8seed_1_row_value_rev"Gather*
-axis 
-q
-seed_1_row_value_rev_u8seed_1_col_from_right_i64seed_1_col_from_right"ArgMax*
-axis *
-keepdims 
-S
-twenty_nine_i64
-seed_1_col_from_right_i64seed_1_col_4d_i64seed_1_col_4d"Sub
-A
-seed_1_col_4d_i64
-shape_1seed_1_col_i64
-seed_1_col"Reshape
-Y
-seed_1_row_value_u8
-seed_1_col_i64seed_1_value_u8seed_1_value"Gather*
-axis 
-B
-seed_1_value_u8
-one_u8seed_1_present_bseed_1_present"Equal
-N
-seed_1_present_b
-shape_1seed_1_present_1seed_1_present_reshape"Reshape
-c
-seed_1_present_1
-seed_1_row_i64
-motif_row_center_1seed_1_safe_row_i64seed_1_safe_row"Where
-c
-seed_1_present_1
-seed_1_col_i64
-motif_col_center_1seed_1_safe_col_i64seed_1_safe_col"Where
-J
-seed_1_present_b
-htail_presenth_seed_1_active_bh_seed_1_active"And
-b
-host_mask_b
-seed_1_row_i64h_seed_1_host_row_vec_bh_seed_1_host_row_vec"Gather*
-axis 
-K
-col_coords_i64
-seed_1_col_i64h_seed_1_col_eq_bh_seed_1_col_eq"Equal
-V
-h_seed_1_host_row_vec_b
-h_seed_1_col_eq_bh_seed_1_row_vec_bh_seed_1_row_vec"Or
-N
-h_seed_1_row_vec_b
-zero_i32
-one_i32h_seed_1_gap_i32h_seed_1_gap"Where
-Q
-h_seed_1_gap_i32
-
-axis_widthh_seed_1_seg_i32h_seed_1_segment_cumsum"CumSum
-e
-h_seed_1_seg_i32
-seed_1_col_i64h_seed_1_seed_seg_i32h_seed_1_seed_segment"Gather*
-axis 
-X
-h_seed_1_seg_i32
-h_seed_1_seed_seg_i32h_seed_1_same_raw_bh_seed_1_same_raw"Equal
-N
-h_seed_1_same_raw_b
-h_seed_1_row_vec_bh_seed_1_same_bh_seed_1_same"And
-W
-h_seed_1_same_b
-h_seed_1_active_bh_seed_1_same_active_bh_seed_1_same_active"And
-N
-h_seed_1_same_active_bh_seed_1_update_u8h_seed_1_update"Cast*	
-to 
-b
-host_mask_b
-seed_1_col_i64v_seed_1_host_col_vec_bv_seed_1_host_col_vec"Gather*
-axis 
-K
-row_coords_i64
-seed_1_row_i64v_seed_1_row_eq_bv_seed_1_row_eq"Equal
-V
-v_seed_1_host_col_vec_b
-v_seed_1_row_eq_bv_seed_1_col_vec_bv_seed_1_col_vec"Or
-N
-v_seed_1_col_vec_b
-zero_i32
-one_i32v_seed_1_gap_i32v_seed_1_gap"Where
-N
-v_seed_1_gap_i32
-two_i64v_seed_1_seg_i32v_seed_1_segment_cumsum"CumSum
-e
-v_seed_1_seg_i32
-seed_1_row_i64v_seed_1_seed_seg_i32v_seed_1_seed_segment"Gather*
-axis 
-X
-v_seed_1_seg_i32
-v_seed_1_seed_seg_i32v_seed_1_same_raw_bv_seed_1_same_raw"Equal
-N
-v_seed_1_same_raw_b
-v_seed_1_col_vec_bv_seed_1_same_bv_seed_1_same"And
-S
-v_seed_1_same_b
-vtail_presentv_seed_1_same_active_bv_seed_1_same_active"And
-]
-v_seed_1_same_active_b
-shape_1_1_1_30v_seed_1_update_bv_seed_1_update_reshape"Reshape
-I
-v_seed_1_update_bv_seed_1_update_u8v_seed_1_update"Cast*	
-to 
-c
-idx_0
-idx_0
-seed_1_row_i64
-seed_1_col_i64seed_1_index_i64seed_1_index"Concat*
-axis  
-R
-seed_1_index_i64
-	shape_1_4seed_1_index_1_4_i64seed_1_index_reshape"Reshape
-s
-seed_0_index_1_4_i64
-seed_1_index_1_4_i64seed_pass_0_indices_2_4_i64seed_pass_0_indices"Concat*
-axis  
-g
-seeds_u8
-seed_pass_0_indices_2_4_i64
-zero_updates_2seeds_grid_1_u8seed_pass_0_remove"	ScatterND
-g
-seeds_grid_1_u8seed_pass_1_row_has_u8seed_pass_1_row_has"	ReduceMax*
-axes@ *
-keepdims 
-k
-seed_pass_1_row_has_u8seed_pass_1_first_row_4d_i64seed_2_row_4d"ArgMax*
-axis *
-keepdims 
-L
-seed_pass_1_first_row_4d_i64
-shape_1seed_2_row_i64
-seed_2_row"Reshape
-]
-seeds_grid_1_u8
-seed_2_row_i64seed_2_row_value_u8seed_2_row_value"Gather*
-axis 
-]
-seed_2_row_value_u8seed_2_col_4d_i64seed_2_col_4d"ArgMax*
-axis *
-keepdims 
-A
-seed_2_col_4d_i64
-shape_1seed_2_col_i64
-seed_2_col"Reshape
-Y
-seed_2_row_value_u8
-seed_2_col_i64seed_2_value_u8seed_2_value"Gather*
-axis 
-B
-seed_2_value_u8
-one_u8seed_2_present_bseed_2_present"Equal
-N
-seed_2_present_b
-shape_1seed_2_present_1seed_2_present_reshape"Reshape
-c
-seed_2_present_1
-seed_2_row_i64
-motif_row_center_1seed_2_safe_row_i64seed_2_safe_row"Where
-c
-seed_2_present_1
-seed_2_col_i64
-motif_col_center_1seed_2_safe_col_i64seed_2_safe_col"Where
-J
-seed_2_present_b
-htail_presenth_seed_2_active_bh_seed_2_active"And
-b
-host_mask_b
-seed_2_row_i64h_seed_2_host_row_vec_bh_seed_2_host_row_vec"Gather*
-axis 
-K
-col_coords_i64
-seed_2_col_i64h_seed_2_col_eq_bh_seed_2_col_eq"Equal
-V
-h_seed_2_host_row_vec_b
-h_seed_2_col_eq_bh_seed_2_row_vec_bh_seed_2_row_vec"Or
-N
-h_seed_2_row_vec_b
-zero_i32
-one_i32h_seed_2_gap_i32h_seed_2_gap"Where
-Q
-h_seed_2_gap_i32
-
-axis_widthh_seed_2_seg_i32h_seed_2_segment_cumsum"CumSum
-e
-h_seed_2_seg_i32
-seed_2_col_i64h_seed_2_seed_seg_i32h_seed_2_seed_segment"Gather*
-axis 
-X
-h_seed_2_seg_i32
-h_seed_2_seed_seg_i32h_seed_2_same_raw_bh_seed_2_same_raw"Equal
-N
-h_seed_2_same_raw_b
-h_seed_2_row_vec_bh_seed_2_same_bh_seed_2_same"And
-W
-h_seed_2_same_b
-h_seed_2_active_bh_seed_2_same_active_bh_seed_2_same_active"And
-N
-h_seed_2_same_active_bh_seed_2_update_u8h_seed_2_update"Cast*	
-to 
-J
-seed_2_present_b
-vtail_presentv_seed_2_active_bv_seed_2_active"And
-b
-host_mask_b
-seed_2_col_i64v_seed_2_host_col_vec_bv_seed_2_host_col_vec"Gather*
-axis 
-K
-row_coords_i64
-seed_2_row_i64v_seed_2_row_eq_bv_seed_2_row_eq"Equal
-V
-v_seed_2_host_col_vec_b
-v_seed_2_row_eq_bv_seed_2_col_vec_bv_seed_2_col_vec"Or
-N
-v_seed_2_col_vec_b
-zero_i32
-one_i32v_seed_2_gap_i32v_seed_2_gap"Where
-N
-v_seed_2_gap_i32
-two_i64v_seed_2_seg_i32v_seed_2_segment_cumsum"CumSum
-e
-v_seed_2_seg_i32
-seed_2_row_i64v_seed_2_seed_seg_i32v_seed_2_seed_segment"Gather*
-axis 
-X
-v_seed_2_seg_i32
-v_seed_2_seed_seg_i32v_seed_2_same_raw_bv_seed_2_same_raw"Equal
-N
-v_seed_2_same_raw_b
-v_seed_2_col_vec_bv_seed_2_same_bv_seed_2_same"And
-W
-v_seed_2_same_b
-v_seed_2_active_bv_seed_2_same_active_bv_seed_2_same_active"And
-]
-v_seed_2_same_active_b
-shape_1_1_1_30v_seed_2_update_bv_seed_2_update_reshape"Reshape
-I
-v_seed_2_update_bv_seed_2_update_u8v_seed_2_update"Cast*	
-to 
-i
-seed_pass_1_row_has_u8
-
-rev_idx_30seed_pass_1_row_has_rev_u8seed_3_row_has_rev"Gather*
-axis 
-v
-seed_pass_1_row_has_rev_u8seed_3_row_from_bottom_i64seed_3_row_from_bottom"ArgMax*
-axis *
-keepdims 
-T
-twenty_nine_i64
-seed_3_row_from_bottom_i64seed_3_row_4d_i64seed_3_row_4d"Sub
-A
-seed_3_row_4d_i64
-shape_1seed_3_row_i64
-seed_3_row"Reshape
-]
-seeds_grid_1_u8
-seed_3_row_i64seed_3_row_value_u8seed_3_row_value"Gather*
-axis 
-e
-seed_3_row_value_u8
-
-rev_idx_30seed_3_row_value_rev_u8seed_3_row_value_rev"Gather*
-axis 
-q
-seed_3_row_value_rev_u8seed_3_col_from_right_i64seed_3_col_from_right"ArgMax*
-axis *
-keepdims 
-S
-twenty_nine_i64
-seed_3_col_from_right_i64seed_3_col_4d_i64seed_3_col_4d"Sub
-A
-seed_3_col_4d_i64
-shape_1seed_3_col_i64
-seed_3_col"Reshape
-Y
-seed_3_row_value_u8
-seed_3_col_i64seed_3_value_u8seed_3_value"Gather*
-axis 
-B
-seed_3_value_u8
-one_u8seed_3_present_bseed_3_present"Equal
-N
-seed_3_present_b
-shape_1seed_3_present_1seed_3_present_reshape"Reshape
-c
-seed_3_present_1
-seed_3_row_i64
-motif_row_center_1seed_3_safe_row_i64seed_3_safe_row"Where
-c
-seed_3_present_1
-seed_3_col_i64
-motif_col_center_1seed_3_safe_col_i64seed_3_safe_col"Where
-J
-seed_3_present_b
-htail_presenth_seed_3_active_bh_seed_3_active"And
-b
-host_mask_b
-seed_3_row_i64h_seed_3_host_row_vec_bh_seed_3_host_row_vec"Gather*
-axis 
-K
-col_coords_i64
-seed_3_col_i64h_seed_3_col_eq_bh_seed_3_col_eq"Equal
-V
-h_seed_3_host_row_vec_b
-h_seed_3_col_eq_bh_seed_3_row_vec_bh_seed_3_row_vec"Or
-N
-h_seed_3_row_vec_b
-zero_i32
-one_i32h_seed_3_gap_i32h_seed_3_gap"Where
-Q
-h_seed_3_gap_i32
-
-axis_widthh_seed_3_seg_i32h_seed_3_segment_cumsum"CumSum
-e
-h_seed_3_seg_i32
-seed_3_col_i64h_seed_3_seed_seg_i32h_seed_3_seed_segment"Gather*
-axis 
-X
-h_seed_3_seg_i32
-h_seed_3_seed_seg_i32h_seed_3_same_raw_bh_seed_3_same_raw"Equal
-N
-h_seed_3_same_raw_b
-h_seed_3_row_vec_bh_seed_3_same_bh_seed_3_same"And
-W
-h_seed_3_same_b
-h_seed_3_active_bh_seed_3_same_active_bh_seed_3_same_active"And
-N
-h_seed_3_same_active_bh_seed_3_update_u8h_seed_3_update"Cast*	
-to 
-J
-seed_3_present_b
-vtail_presentv_seed_3_active_bv_seed_3_active"And
-b
-host_mask_b
-seed_3_col_i64v_seed_3_host_col_vec_bv_seed_3_host_col_vec"Gather*
-axis 
-K
-row_coords_i64
-seed_3_row_i64v_seed_3_row_eq_bv_seed_3_row_eq"Equal
-V
-v_seed_3_host_col_vec_b
-v_seed_3_row_eq_bv_seed_3_col_vec_bv_seed_3_col_vec"Or
-N
-v_seed_3_col_vec_b
-zero_i32
-one_i32v_seed_3_gap_i32v_seed_3_gap"Where
-N
-v_seed_3_gap_i32
-two_i64v_seed_3_seg_i32v_seed_3_segment_cumsum"CumSum
-e
-v_seed_3_seg_i32
-seed_3_row_i64v_seed_3_seed_seg_i32v_seed_3_seed_segment"Gather*
-axis 
-X
-v_seed_3_seg_i32
-v_seed_3_seed_seg_i32v_seed_3_same_raw_bv_seed_3_same_raw"Equal
-N
-v_seed_3_same_raw_b
-v_seed_3_col_vec_bv_seed_3_same_bv_seed_3_same"And
-W
-v_seed_3_same_b
-v_seed_3_active_bv_seed_3_same_active_bv_seed_3_same_active"And
-]
-v_seed_3_same_active_b
-shape_1_1_1_30v_seed_3_update_bv_seed_3_update_reshape"Reshape
-I
-v_seed_3_update_bv_seed_3_update_u8v_seed_3_update"Cast*	
-to 
-‹
-h_seed_0_update_u8
-h_seed_1_update_u8
-h_seed_2_update_u8
-h_seed_3_update_u8h_updates_1_1_4_30h_updates_concat"Concat*
-axis 
-L
-h_updates_1_1_4_30
-
-shape_4_30h_updates_4_30h_updates_reshape"Reshape
-n
-seed_0_row_i64
-seed_1_row_i64
-seed_2_row_i64
-seed_3_row_i64h_rows_4h_rows_concat"Concat*
-axis  
-:
-h_rows_4
-	shape_4_1
-h_rows_4_1h_rows_reshape"Reshape
-_
-zero_indices_4_1
-zero_indices_4_1
-
-h_rows_4_1h_indices_4_3	h_indices"Concat*
-axis 
-d
-seeds_u8
-h_indices_4_3
-h_updates_4_30	h_line_u8h_line_scatter"	ScatterND*
-	reduction"max 
-‹
-v_seed_0_update_u8
-v_seed_1_update_u8
-v_seed_2_update_u8
-v_seed_3_update_u8v_updates_1_1_4_30v_updates_concat"Concat*
-axis 
-[
-v_updates_1_1_4_30v_updates_1_1_30_4v_updates_transpose"	Transpose*
-perm@ @@@ 
-n
-seed_0_col_i64
-seed_1_col_i64
-seed_2_col_i64
-seed_3_col_i64v_cols_4v_cols_concat"Concat*
-axis  
-B
-v_cols_4
-shape_1_1_1_4v_cols_1_1_1_4v_cols_reshape"Reshape
-G
-v_cols_1_1_1_4
-shape_1_1_30_4v_indices_1_1_30_4	v_indices"Expand
-Š
-	h_line_u8
-v_indices_1_1_30_4
-v_updates_1_1_30_4line_with_seeds_u8v_line_scatter"ScatterElements*
-axis *
-	reduction"max 
-C
-line_with_seeds_u8
-seeds_u8line_target_bline_target"Greater
-F
-motif_mask_b
-bg_u8
-label_u8cleared_labelclear_reference"Where
-†
-seed_0_row_i64
-seed_1_safe_row_i64
-seed_2_safe_row_i64
-seed_3_safe_row_i64fill_safe_rows_4fill_safe_rows"Concat*
-axis  
-†
-seed_0_col_i64
-seed_1_safe_col_i64
-seed_2_safe_col_i64
-seed_3_safe_col_i64fill_safe_cols_4fill_safe_cols"Concat*
-axis  
-R
-fill_safe_rows_4
-	shape_4_1fill_safe_rows_4_1fill_safe_rows_reshape"Reshape
-R
-fill_safe_cols_4
-	shape_4_1fill_safe_cols_4_1fill_safe_cols_reshape"Reshape
-E
-fill_safe_rows_4_1
-fill_row_offsetsfill_rows_4_8	fill_rows"Add
-E
-fill_safe_cols_4_1
-fill_col_offsetsfill_cols_4_8	fill_cols"Add
-I
-fill_rows_4_8
-shape_4_8_1fill_rows_4_8_1fill_rows_reshape"Reshape
-I
-fill_cols_4_8
-shape_4_8_1fill_cols_4_8_1fill_cols_reshape"Reshape
-
-zero_indices_4_8_1
-zero_indices_4_8_1
-fill_rows_4_8_1
-fill_cols_4_8_1fill_indices_4_8_4fill_indices"Concat*
-axis 
-M
-cleared_label
-fill_indices_4_8_4fill_current_4_8fill_current"GatherND
-D
-
-fill_value
-	shape_1_1fill_color_1_1fill_color_reshape"Reshape
-J
-fill_present
-	shape_1_1fill_present_1_1fill_present_reshape"Reshape
-‡
-seed_0_present_1
-seed_1_present_1
-seed_2_present_1
-seed_3_present_1fill_seed_presents_4fill_seed_presents"Concat*
-axis  
-^
-fill_seed_presents_4
-	shape_4_1fill_seed_presents_4_1fill_seed_presents_reshape"Reshape
-M
-fill_seed_presents_4_1
-fill_present_1_1fill_active_4_1fill_active"And
-Z
-fill_active_4_1
-fill_color_1_1
-fill_current_4_8fill_updates_4_8fill_updates"Where
-Z
-cleared_label
-fill_indices_4_8_4
-fill_updates_4_8filled_label
-paint_fill"	ScatterND
-K
-line_target_b
-
-line_color
-filled_labeloutput_labelpaint_lines"Where
-;
-output_label
-color_valuesoutputone_hot_output"Equaltask054*B
-Blabel_conv_wJ(      €?   @  @@  €@   @  À@  à@   A  A*$
-Bcolor_valuesJ
- 	*Bzero_u8J *Bone_u8J*Bzero_i32J    *Bone_i32J   *ƒB
-rev_idx_30Jð                                                                                                                                     
-       	                                                                       *IB	rev_idx_7J8                                                  *QB	rev_idx_8J@                                                         *Btwenty_nine_i64J       * Btwenty_eight_i64J       *Btwenty_one_i64J       *B	eight_i64J       *B	seven_i64J       *Bsix_i64J       *Btwo_i64J       *#Bminus_one_i64Jÿÿÿÿÿÿÿÿ*#Bminus_two_i64Jþÿÿÿÿÿÿÿ*Bshape_1J       *6Bshape_1_1_1_30J                             *5Bshape_1_1_1_4J                             *6Bshape_1_1_30_4J                             *!B	shape_1_4J              *!B	shape_1_1J              *+Bshape_4_8_1J                     *!B	shape_4_1J              *"B
-shape_4_30J              *:Bzero_indices_4_1J                                 *ŸBzero_indices_4_8_1J€                                                                                                                                                                                                                                                                *Bzero_updates_2J  *ZBfill_row_offsetsJ@ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ                                     *ZBfill_col_offsetsJ@ÿÿÿÿÿÿÿÿ               ÿÿÿÿÿÿÿÿ       ÿÿÿÿÿÿÿÿ               *Brow_coords_i64Jð                                                                	       
-                                                                                                                                            *Bcol_coords_i64Jð                                                                	       
-                                                                                                                                            *B
-axis_widthJ       *Bidx_0J        *!B	band_axesJ              *(Bref_small_startsJ              *(Bref_small_ends_3J              *(Bref_small_ends_4J              *#Bref0_startsJ              *!B	ref0_endsJ              *#Bref1_startsJ              *!B	ref1_endsJ              *#Bref2_startsJ              *!B	ref2_endsJ              Z
-input
-
-
-
-
-
-b 
-output
-	
-
-
-
-
-B
- 

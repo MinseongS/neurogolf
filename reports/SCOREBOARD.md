@@ -1,6 +1,6 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-06-28 20:04_
+_Updated: 2026-06-28 20:11_
 
 **Total: 7178.33 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 

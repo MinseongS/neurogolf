@@ -1,8 +1,11 @@
 # task396 (ARC-AGI fcb5c309) — crop largest hollow box, recolour to static colour
 
-P (ext:kojimar7113) = 14.72 → **15.29** (mem 16323, params 149), fresh 300/300.
-(Supersedes a leftover src/custom/task396.py that scored 14.49 with a k=2..7 run-conv army +
-full vertical+horizontal run-length on fp32 18×18 planes.)
+Current installed/source-owned exact = **15.551194** (mem 12557, params 136).
+2026-06-28: `src/custom/task396.py` was re-synced to the installed live graph.
+
+Earlier P (ext:kojimar7113) = 14.72 → **15.29** (mem 16323, params 149), fresh
+300/300.  That superseded an older k=2..7 run-conv source, but is itself now
+superseded by the installed GridSample-style live graph.
 
 ## Rule
 2-3 hollow rectangular boxes (1px outline colour c0, black interior) + scattered single-pixel
@@ -34,6 +37,15 @@ static (colour c1, some inside boxes). `wides`/`talls` sorted DESC ⇒ box 0 is 
 ## Dominant intermediates (irreducible)
 Conv entry 3600B (input is fp32 ⇒ Conv can't keep fp16); cumsum cast-up+cumsum 2×1296B
 (fp32-only op); colff slice 1296B (transient fp32 18×18 before fp16 cast); output Pad 900B.
+
+## 2026-06-28 high-score frontier check
+
+Not a 20+ candidate by simple local-stencil collapse.  The rule is a
+data-dependent crop: top-left, width, height, outline colour, and static colour
+must be inferred from the scene.  The installed graph's GridSample-style path is
+already compact for this kind of remap.  Since params are already 136, a 20+
+model would have only about 12 bytes of memory budget left, which is unrealistic
+without a new no-intermediate dynamic-crop primitive.
 
 ## Levers used / transferable
 - ⭐ Single-axis run-length suffices when the target object maximises BOTH axes (sorted DESC):

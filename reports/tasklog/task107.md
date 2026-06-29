@@ -26,6 +26,12 @@ fixed conv/permute) overlaid with non-separable 45-degree diagonal rays.
 **15.61 @ mem 11853 params 154 — fresh 500/500 (isolated temp-net).** Beats prior
 14.61 by **+1.00**. Adopted? N (build-only per brief).
 
+## 2026-06-28 source-control update
+The deployed live graph is now substantially ahead of this old semantic note:
+`memory=2924`, `params=1154`, `points=16.686638`.  `src/custom/task107.py` was
+converted to a live-exact source builder, so future work should treat the older
+11.85KB semantic builder as historical, not the active baseline.
+
 ## Irreducible-floor analysis
 Dominant intermediates (total ~9.2KB of 11.85KB):
 - **RmC, RpC [1,1,24,24] fp16 = 1152 each** — the two diagonal-distance planes

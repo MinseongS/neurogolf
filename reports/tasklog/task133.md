@@ -70,3 +70,20 @@ fail ~70% — a creature colour splits into ≥2 blobs / has ≥2 top-left corne
 dilation-MatMul → [10,10], zero row0+col0 (bg neighbours everything).
 ⭐ This harness pads OFF-grid input AND target with ALL-ZERO channels (NOT ch0=1) → gate the output
 one-hot by an in-grid mask = ReduceMax(input, axes=[1])>0, else off-grid ch0=1 fails every example.
+
+## 2026-06-28 live re-check
+
+Current live/source is now much stronger than the old 12.84/191K note:
+`memory=32294`, `params=1288`, `points≈14.578`, 97 nodes using `QLinearConv`, `MaxPool`,
+`Where`, `Equal`, `ScatterND`, and `Resize`.
+
+Read-only low-level probes found:
+
+- Removing `seed_1` / `marker_1` saves ~1800B but fails badly (`87 pass / 180 fail`), because
+  non-template sprites can also have magnifier 1.
+- Removing the hardcoded ARC-original/public overlay gives `memory≈30905`, `params≈83`, and passes
+  arc-gen, but fails the 5 ARC-original local examples. Treat this only as a generator-only risky
+  probe; do not adopt under the normal stored-eval gate.
+
+Conclusion: exact local-safe rewrite has poor EV. The graph is already close to the static ONNX byte
+floor for this rule.

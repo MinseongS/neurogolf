@@ -1,956 +1,0 @@
-
-:ÈH
-#
-input
-bs
-be
-cablack_f"Slice
-!
-black_fblack"Cast*	
-to 
-!
-input
-ns
-ne
-ncanz_f"Slice
-
-nz_fnz"Cast*	
-to 
-]
-nz
-SC
-ZP
-Ksb
-SC
-ZP
-SC
-ZPsb0"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-sb0
-FOURAS0"Div
-_
-AS0
-SC
-ZP
-Ksc
-SC
-ZP
-SC
-ZPnSq0"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-]
-nz
-SC
-ZP
-Khb
-SC
-ZP
-SC
-ZPhb0"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-hb0
-THREEHA0"Div
-_
-HA0
-SC
-ZP
-Khc
-SC
-ZP
-SC
-ZPnHL0"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-]
-nz
-SC
-ZP
-Kvb
-SC
-ZP
-SC
-ZPvb0"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-vb0
-THREEVA0"Div
-_
-VA0
-SC
-ZP
-Kvc
-SC
-ZP
-SC
-ZPnVL0"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-nSq0
-nHL0nt10"Add
-
-nt10
-nVL0nt0"Add
-
-nt0
-ONEisb0"Equal
-
-isb0isone0"Cast*	
-to 
-
-nSq0
-ONEsqpos0"Min
-
-isone0
-sqpos0fsq0"Mul
-e
-fsq0
-SC
-ZP
-Ksb
-SC
-ZP
-SC
-ZP	Sadd0_sel"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-	Sadd0_sel
-AS0Sadd0_a"Mul
-d
-Sadd0_a
-SC
-ZP
-Ksc
-SC
-ZP
-SC
-ZPSadd0"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-ONE
-sqpos0sqneg0"Sub
-
-isone0
-sqneg0fl0"Mul
-d
-fl0
-SC
-ZP
-Khb
-SC
-ZP
-SC
-ZP	Hadd0_sel"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-	Hadd0_sel
-HA0Hadd0_a"Mul
-d
-Hadd0_a
-SC
-ZP
-Khc
-SC
-ZP
-SC
-ZPHadd0"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-d
-fl0
-SC
-ZP
-Kvb
-SC
-ZP
-SC
-ZP	Vadd0_sel"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-	Vadd0_sel
-VA0Vadd0_a"Mul
-d
-Vadd0_a
-SC
-ZP
-Kvc
-SC
-ZP
-SC
-ZPVadd0"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-Sadd0
-Hadd0a10"Add
-
-a10
-Vadd0asgs0"Add
-
-asgs0
-ONEasg0"Min
-
-nz
-asg0u1"Sub
-]
-u1
-SC
-ZP
-Ksb
-SC
-ZP
-SC
-ZPsb1"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-sb1
-FOURAS1"Div
-_
-AS1
-SC
-ZP
-Ksc
-SC
-ZP
-SC
-ZPnSq1"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-]
-u1
-SC
-ZP
-Khb
-SC
-ZP
-SC
-ZPhb1"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-hb1
-THREEHA1"Div
-_
-HA1
-SC
-ZP
-Khc
-SC
-ZP
-SC
-ZPnHL1"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-]
-u1
-SC
-ZP
-Kvb
-SC
-ZP
-SC
-ZPvb1"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-vb1
-THREEVA1"Div
-_
-VA1
-SC
-ZP
-Kvc
-SC
-ZP
-SC
-ZPnVL1"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-nSq1
-nHL1nt11"Add
-
-nt11
-nVL1nt1"Add
-
-nt1
-ONEisb1"Equal
-
-isb1isone1"Cast*	
-to 
-
-nSq1
-ONEsqpos1"Min
-
-isone1
-sqpos1fsq1"Mul
-e
-fsq1
-SC
-ZP
-Ksb
-SC
-ZP
-SC
-ZP	Sadd1_sel"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-	Sadd1_sel
-AS1Sadd1_a"Mul
-d
-Sadd1_a
-SC
-ZP
-Ksc
-SC
-ZP
-SC
-ZPSadd1"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-Sadd0
-Sadd1Ss1"Add
-
-Ss1
-ONESacc1"Min
-
-ONE
-sqpos1sqneg1"Sub
-
-isone1
-sqneg1fl1"Mul
-d
-fl1
-SC
-ZP
-Khb
-SC
-ZP
-SC
-ZP	Hadd1_sel"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-	Hadd1_sel
-HA1Hadd1_a"Mul
-d
-Hadd1_a
-SC
-ZP
-Khc
-SC
-ZP
-SC
-ZPHadd1"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-d
-fl1
-SC
-ZP
-Kvb
-SC
-ZP
-SC
-ZP	Vadd1_sel"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-	Vadd1_sel
-VA1Vadd1_a"Mul
-d
-Vadd1_a
-SC
-ZP
-Kvc
-SC
-ZP
-SC
-ZPVadd1"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-asg0
-Sadd1b11"Add
-
-b11
-Hadd1b21"Add
-
-b21
-Vadd1asgs1"Add
-
-asgs1
-ONEasg1"Min
-
-nz
-asg1u2"Sub
-]
-u2
-SC
-ZP
-Ksb
-SC
-ZP
-SC
-ZPsb2"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-sb2
-FOURAS2"Div
-_
-AS2
-SC
-ZP
-Ksc
-SC
-ZP
-SC
-ZPnSq2"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-]
-u2
-SC
-ZP
-Khb
-SC
-ZP
-SC
-ZPhb2"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-hb2
-THREEHA2"Div
-_
-HA2
-SC
-ZP
-Khc
-SC
-ZP
-SC
-ZPnHL2"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-]
-u2
-SC
-ZP
-Kvb
-SC
-ZP
-SC
-ZPvb2"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-vb2
-THREEVA2"Div
-_
-VA2
-SC
-ZP
-Kvc
-SC
-ZP
-SC
-ZPnVL2"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-nSq2
-nHL2nt12"Add
-
-nt12
-nVL2nt2"Add
-
-nt2
-ONEisb2"Equal
-
-isb2isone2"Cast*	
-to 
-
-nSq2
-ONEsqpos2"Min
-
-isone2
-sqpos2fsq2"Mul
-e
-fsq2
-SC
-ZP
-Ksb
-SC
-ZP
-SC
-ZP	Sadd2_sel"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-	Sadd2_sel
-AS2Sadd2_a"Mul
-d
-Sadd2_a
-SC
-ZP
-Ksc
-SC
-ZP
-SC
-ZPSadd2"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-Sacc1
-Sadd2Ss2"Add
-
-Ss2
-ONESacc2"Min
-
-ONE
-sqpos2sqneg2"Sub
-
-isone2
-sqneg2fl2"Mul
-d
-fl2
-SC
-ZP
-Khb
-SC
-ZP
-SC
-ZP	Hadd2_sel"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-	Hadd2_sel
-HA2Hadd2_a"Mul
-d
-Hadd2_a
-SC
-ZP
-Khc
-SC
-ZP
-SC
-ZPHadd2"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-d
-fl2
-SC
-ZP
-Kvb
-SC
-ZP
-SC
-ZP	Vadd2_sel"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-	Vadd2_sel
-VA2Vadd2_a"Mul
-d
-Vadd2_a
-SC
-ZP
-Kvc
-SC
-ZP
-SC
-ZPVadd2"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-asg1
-Sadd2b12"Add
-
-b12
-Hadd2b22"Add
-
-b22
-Vadd2asgs2"Add
-
-asgs2
-ONEasg2"Min
-
-nz
-asg2u3"Sub
-]
-u3
-SC
-ZP
-Ksb
-SC
-ZP
-SC
-ZPsb3"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-sb3
-FOURAS3"Div
-_
-AS3
-SC
-ZP
-Ksc
-SC
-ZP
-SC
-ZPnSq3"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-]
-u3
-SC
-ZP
-Khb
-SC
-ZP
-SC
-ZPhb3"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-hb3
-THREEHA3"Div
-_
-HA3
-SC
-ZP
-Khc
-SC
-ZP
-SC
-ZPnHL3"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-]
-u3
-SC
-ZP
-Kvb
-SC
-ZP
-SC
-ZPvb3"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-vb3
-THREEVA3"Div
-_
-VA3
-SC
-ZP
-Kvc
-SC
-ZP
-SC
-ZPnVL3"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-nSq3
-nHL3nt13"Add
-
-nt13
-nVL3nt3"Add
-
-nt3
-ONEisb3"Equal
-
-isb3isone3"Cast*	
-to 
-
-nSq3
-ONEsqpos3"Min
-
-isone3
-sqpos3fsq3"Mul
-e
-fsq3
-SC
-ZP
-Ksb
-SC
-ZP
-SC
-ZP	Sadd3_sel"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-	Sadd3_sel
-AS3Sadd3_a"Mul
-d
-Sadd3_a
-SC
-ZP
-Ksc
-SC
-ZP
-SC
-ZPSadd3"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-Sacc2
-Sadd3Ss3"Add
-
-Ss3
-ONESacc3"Min
-
-ONE
-sqpos3sqneg3"Sub
-
-isone3
-sqneg3fl3"Mul
-d
-fl3
-SC
-ZP
-Khb
-SC
-ZP
-SC
-ZP	Hadd3_sel"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-	Hadd3_sel
-HA3Hadd3_a"Mul
-d
-Hadd3_a
-SC
-ZP
-Khc
-SC
-ZP
-SC
-ZPHadd3"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-d
-fl3
-SC
-ZP
-Kvb
-SC
-ZP
-SC
-ZP	Vadd3_sel"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-	Vadd3_sel
-VA3Vadd3_a"Mul
-d
-Vadd3_a
-SC
-ZP
-Kvc
-SC
-ZP
-SC
-ZPVadd3"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-asg2
-Sadd3b13"Add
-
-b13
-Hadd3b23"Add
-
-b23
-Vadd3asgs3"Add
-
-asgs3
-ONEasg3"Min
-
-nz
-asg3u4"Sub
-]
-u4
-SC
-ZP
-Ksb
-SC
-ZP
-SC
-ZPsb4"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-sb4
-FOURAS4"Div
-_
-AS4
-SC
-ZP
-Ksc
-SC
-ZP
-SC
-ZPnSq4"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-]
-u4
-SC
-ZP
-Khb
-SC
-ZP
-SC
-ZPhb4"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-hb4
-THREEHA4"Div
-_
-HA4
-SC
-ZP
-Khc
-SC
-ZP
-SC
-ZPnHL4"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-]
-u4
-SC
-ZP
-Kvb
-SC
-ZP
-SC
-ZPvb4"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-vb4
-THREEVA4"Div
-_
-VA4
-SC
-ZP
-Kvc
-SC
-ZP
-SC
-ZPnVL4"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-nSq4
-nHL4nt14"Add
-
-nt14
-nVL4nt4"Add
-
-nt4
-ONEisb4"Equal
-
-isb4isone4"Cast*	
-to 
-
-nSq4
-ONEsqpos4"Min
-
-isone4
-sqpos4fsq4"Mul
-e
-fsq4
-SC
-ZP
-Ksb
-SC
-ZP
-SC
-ZP	Sadd4_sel"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-	Sadd4_sel
-AS4Sadd4_a"Mul
-d
-Sadd4_a
-SC
-ZP
-Ksc
-SC
-ZP
-SC
-ZPSadd4"QLinearConv*
-kernel_shape@@ *
-pads@@@@ 
-
-Sacc3
-Sadd4Ss4"Add
-
-Ss4
-ONESacc4"Min
-
-nz
-Sacc4Lmask"Sub
-+
-Sacc4
-spadSg"Pad*
-mode"constant 
-+
-Lmask
-spadLg"Pad*
-mode"constant 
-G
-black
-zc
-Lg
-zc
-zc
-zc
-zc
-zc
-Sg
-zcsmall"Concat*
-axis 
-/
-small
-padsoutput"Pad*
-mode"constant g*BSCJ  €?*	BZPJ **BKsbJ                     **BKscJ                     **BKhbJ                      **BKhcJ                      **BKvbJ                      **BKvcJ                      **BcaJ                              **BbsJ                                 **BbeJ               	              *"BnsJ                       *"BneJ              	       *#BncaJ                     *BFOURJ*BTHREEJ*
-BONEJ*LBspadJ@                                                              *s	BzcJc                                                                                                   *LBpadsJ@                                                              Z
-input
-
-
-
-
-
-b 
-output
-
-
-
-
-
-B
- 

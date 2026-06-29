@@ -7,7 +7,10 @@ clipped at the top/bottom edge). Output redraws, per star: the MAROON center
 square centered on the block), and a BLUE(1) beam filling the center's columns
 from just below the block to the bottom edge. Per-cell priority MAROON>GREEN>BLUE>bg.
 
-**Current:** 14.31 pts, ext:kojimar6275, mem 40500, params 3579
+**Current installed/source-owned exact:** 14.826867 pts, mem 26100, params 90.
+2026-06-28: `src/custom/task349.py` was re-synced to the installed live graph;
+the older semantic source scored 14.389 / mem 39600 / params 960 and is
+superseded for implementation, though its analysis below remains useful.
 **Target tier:** detection/B — variable-per-object dilation + downward beam over a
 full-size (10..30) canvas; no crop (grid IS the data region).
 
@@ -18,7 +21,8 @@ full-size (10..30) canvas; no crop (grid IS the data region).
 | 2 | green = OR_d dilate_d(run≥2d) via single fused MaxPool/d; inclusive-blue | B | 39600 | 960 | 14.39 | 200/200 | best |
 
 ## Best achieved
-14.39 @ mem 39600 params 960 — adopted? N. Beats prior 14.31? +0.083 → **MARGINAL** (<+0.3).
+14.826867 @ mem 26100 params 90 — current installed/source-owned exact baseline.
+The 14.39 semantic implementation is retained only as analysis.
 
 ## Irreducible-floor analysis
 GREEN dominates: it needs per-radius detection AND per-radius dilation.
@@ -69,3 +73,11 @@ GREEN dominates: it needs per-radius detection AND per-radius dilation.
 - FLOOR: a multi-object task that needs BOTH per-object size detection AND
   per-object-size dilation over a full uncroppable canvas floors at ~2·5·900 fp16
   green planes ≈ 18kB; +0.3 is not reachable without a sub-resolution trick.
+
+## 2026-06-28 high-score frontier check
+
+Not a 20+ candidate under the current operator set.  The installed graph already
+uses the right family — uint8/QLinearConv run gates plus MaxPool/Max composition.
+The semantic wall is variable-radius halo dilation plus downward beam priority
+over a full uncroppable canvas.  A single Conv/QLinearConv cannot recover radius,
+dilate, beam-fill, and priority-compose with `mem+params <= ~148`.
