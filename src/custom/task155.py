@@ -10,14 +10,24 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('row_ids_1', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAgAAAAMAAAAEAAAABQAAAAYAAAAHAAAACAAAAAkAAAAKAAAACwAAAAwAAAANAAAADgAAAA8AAAAQAAAAEQAAABIAAAATAAAAFAAAABUAAAAWAAAAFwAAABgAAAAZAAAAGgAAABsAAAAcAAAAHQAAAB4AAAA=')),
+        tensor('minusone_i', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAr/////')),
+        tensor('thirtyone_i', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAofAAAA')),
     ]
     nodes = [
-        helper.make_node('ReduceL2', ['input'], ['side_f'], axes=[0, 1, 2, 3], keepdims=0),
-        helper.make_node('Cast', ['side_f'], ['side'], to=6),
-        helper.make_node('Sub', ['side', 'row_ids_1'], ['src_rows']),
-        helper.make_node('Gather', ['input', 'src_rows'], ['output'], axis=2),
+        helper.make_node('ReduceSum', ['input'], ['area'], keepdims=0),
+        helper.make_node('Sqrt', ['area'], ['height_f']),
+        helper.make_node('Cast', ['height_f'], ['height_i'], to=6),
+        helper.make_node('Add', ['height_i', 'minusone_i'], ['start_i']),
+        helper.make_node('Sub', ['height_i', 'thirtyone_i'], ['limit_i']),
+        helper.make_node('Range', ['start_i', 'limit_i', 'minusone_i'], ['idx_i']),
+        helper.make_node('Gather', ['input', 'idx_i'], ['output'], axis=2),
     ]
     value_infos = [
+        helper.make_tensor_value_info('idx_i', 6, [30]),
+        helper.make_tensor_value_info('area', 1, []),
+        helper.make_tensor_value_info('height_f', 1, []),
+        helper.make_tensor_value_info('height_i', 6, []),
+        helper.make_tensor_value_info('start_i', 6, []),
+        helper.make_tensor_value_info('limit_i', 6, []),
     ]
-    return model('task155_live_exact', nodes, inits, output_dtype=1, opset=11, value_infos=value_infos)
+    return model('task155_live_exact', nodes, inits, output_dtype=1, opset=13, value_infos=value_infos)

@@ -64,3 +64,12 @@ box-detection — already what the kojimar crowd net does. A "filled-2×2 + 20×
 re-encoding is STRICTLY WORSE here because the crop double-counts the forced 30×30
 entry plane (3600 + 1600). When the entry plane must stay 30×30 and is trace-counted,
 cropping never pays.
+
+## S9 (2026-07-03) — never-materialize-30×30 crop rebuild (+0.209) ADOPTED
+Old "crop = NET-ZERO" verdict refuted: that assumed downstream crop of a 30×30 score.
+New: 11×11 single-tap valid Conv → occ 20×20 direct; QLinearConv (scale1/zp0 exact)
+runs [[0,3,0],[1,6,1],[0,3,0]] with pads=1; all interior 20×20; target Pad fill=10 →
+free Equal output. mem 8515→5745, params 106→1251 (w_occ 1210 irreducible).
+Bit-identical 2500+600 uncached 0/0/0. Latency 0.095ms. Floors: occ_f 1600, target30 900.
+Fallback pure-f32 variant (no QLinearConv) exists in scratch at 6545+1248 (+0.101).
+Backup task192_pre_s9.onnx.

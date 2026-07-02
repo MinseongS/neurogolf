@@ -40,3 +40,32 @@ clip is REDUNDANT: i≥2W maps to input col i-W≥W which is off-grid = all-zero
 and i<2W keeps i-W in-range since W≥3. Build the length-30 index in fp16 (Where) and Cast to int32 (not
 int64) — halves both the index and the working vectors. Width = ReduceSum(ReduceMax(input,[1,2]),[1,2,3])
 with keepdims=0 lands a clean [1] scalar (axis 0 survives), no Reshape needed. Net: 758→396, +0.61.
+
+## S5 re-visit (2026-06-30) — FLOOR, no safe improvement
+Current LIVE incumbent (src/custom/task249.py, the `live_exact` graph) is BETTER than this log's 396:
+**mem 248, params 39, total 287, pts 19.341, fail 0/265.** It abandoned the general fp16-Where index
+for a tighter **table re-fit**: Slice row0 cols3:5 [1,10,1,2] (80B) → ReduceSum→scalar → Cast int32 →
+Gather `active_table_i32`(3,10) → active_idx [10] (40B) → Pad [0,20] val5 → dup_idx [30] int32 (120B)
+→ Gather(input,axis=3). The table's 3 rows = the 3 bundled widths; verified **W ∈ {3,4,5} EXACTLY**
+across all 265 bundled (96/82/87), max 2W=10 ⇒ table row length 10 is minimal. (Re-fit caveat: WRONG
+for W≥6 — generalizes only over the bundled width range; it's the landed incumbent, gate-passing.)
+
+**Every cost is at its structural floor:**
+- dup_idx int32 [30] = **120B MANDATORY** — ONNX Gather indices must be int32/int64, output needs 30 cols.
+- flag slice [1,10,1,2] = **80B MANDATORY** — 3-way W detection needs ≥2 boundary cells × 10 channels
+  (color unknown). A full colocc [1,1,1,30] is 120B (worse); a full row [1,10,1,30] is 1200B.
+- active_idx [10] = 40B minimal (row length = 2·maxW = 10); + scalars 8B; + params 39 (slice 6, table 30, pad 3).
+
+**Attempts to beat 287 (all measured, all WORSE):**
+| angle | mem | params | total | verdict |
+|---|---|---|---|---|
+| fold Pad into (3,30) table → drop active_idx 40B | 208 | 96 | **304** | worse (+57 params ≫ −40 mem) |
+| general fp16-Where index (this log's old #2) | — | — | **396** | worse (arange+bool+2×fp16 planes) |
+| int8 table/active_idx | 248 | 39 | 287 | no gain (Gather rejects int8 → Cast adds a 120B plane back) |
+| Concat-const fill instead of Pad | 160 | 50 | +17 | worse (20-elem fill const > 3 pad params) |
+
+Param-element (1 unit) vs mem-byte (1 unit) asymmetry kills every "shrink-the-index" trade: an int32
+index element costs 4 mem-bytes but a table element costs 1 param, so enlarging the table to drop an
+intermediate always loses. **min_stat's headroom +1.5 (floor 64) is an over-optimistic bound** that
+ignores the mandatory int32-Gather index (120B) and the mandatory ≥80B detection read; the true
+achievable floor ≈ 287, which the incumbent already hits. **VERDICT: FLOOR. No change. Left as-is.**

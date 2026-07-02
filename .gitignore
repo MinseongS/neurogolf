@@ -32,6 +32,11 @@ networks/
 # Local tool/session artifacts
 .playwright-mcp/
 
+# arc-gen generators (fresh-gating): project-local copy + portable zip.
+# Kept out of git — external repo, reproducible from /tmp/arc-gen.
+/arc-gen/
+/arc-gen.zip
+
 # Public teacher/reference artifacts are local-only.
 # They may be useful as teachers, but should not become source of truth.
 public_candidates/
@@ -51,3 +56,4 @@ reports/factored_scan.json
 reports/semantic_archetypes.*
 docs/superpowers/plans/
 docs/superpowers/specs/
+reports/fresh_cache/

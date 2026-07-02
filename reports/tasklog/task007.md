@@ -46,3 +46,25 @@ the [1,10,W·W] flatten; (b) recover the per-residue color index as a length-k v
 `L = Gather(colvec, idxmap[r,c]=(r+c)%k)` fills the plane with ZERO scatter-MatMul; (c) carry
 the final color-index plane in **uint8** (ORT Equal AND Pad both accept uint8) so the 30x30
 output-carrier is 900B, half of fp16 — pad sentinel 99 keeps off-grid all-False in every channel.
+
+## 2026-07-01 sequential deep pass
+
+Current source has advanced beyond the older 5079B carrier solution:
+
+- **memory 0, params 127, points 20.15581291354141**
+- single `Einsum`: `ncyx,c,jef,ey,fx,jab,ar,bd->ncrd`
+- initializers: `channel_mask [10]`, `rule [3,3,3]`, `period [3,30]`
+- fresh recheck: **1000/1000 pass**
+
+Rechecked smaller alternatives:
+
+- Use a `[3,7]` period and pad a 7x7 result: fewer period params, but introduces
+  a counted 10-channel 7x7 intermediate plus pad metadata, worse than 127.
+- Remove `channel_mask` by slicing non-black channels: creates a counted 9x7x7
+  float read, much worse than 10 params.
+- Replace the `rule [3,3,3]` cyclic coupling with gathered coordinate tables:
+  this trades 27 params for coordinate/table tensors or intermediates and does
+  not beat the mem0 one-op graph.
+
+Conclusion: no adoptable improvement.  The current graph is already in the
+20-point high-score family: direct symbolic `Einsum`, no counted memory.

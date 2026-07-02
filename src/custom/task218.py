@@ -23,7 +23,6 @@ def build(task):
         tensor('row_start_6_axes13', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAEAAAAAAAAAAwAAAAAAAAA=')),
         tensor('col_start_12_axes13', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAEAAAAAAAAAAgAAAAAAAAA=')),
         tensor('row_valid_col_18_axes13', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAA==')),
-        tensor('col_valid_row_19_axes13', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAA==')),
     ]
     nodes = [
         helper.make_node('Conv', ['input', 'channel_weights'], ['sample_grid'], dilations=[9, 9], strides=[3, 3]),
@@ -43,10 +42,11 @@ def build(task):
         helper.make_node('Gather', ['sample_grid_u8', 'row_idx'], ['sample_rows'], axis=2),
         helper.make_node('Gather', ['sample_rows', 'col_idx'], ['sample_colors'], axis=3),
         helper.make_node('Unsqueeze', ['row_valid', 'row_valid_col_18_axes13'], ['row_valid_col']),
-        helper.make_node('Unsqueeze', ['col_valid', 'col_valid_row_19_axes13'], ['col_valid_row']),
-        helper.make_node('And', ['row_valid_col', 'col_valid_row'], ['valid_cells']),
+        helper.make_node('And', ['row_valid_col', 'col_valid'], ['valid_cells']),
         helper.make_node('Where', ['valid_cells', 'sample_colors', 'zero_u8'], ['masked_colors']),
         helper.make_node('Equal', ['masked_colors', 'palette'], ['onehot_bool']),
         helper.make_node('Pad', ['onehot_bool', 'pad_pads', 'false'], ['output'], mode='constant'),
     ]
-    return model('task218_live_exact', nodes, inits, output_dtype=9, opset=13)
+    value_infos = [
+    ]
+    return model('task218_live_exact', nodes, inits, output_dtype=9, opset=13, value_infos=value_infos)

@@ -61,3 +61,38 @@ when same-colour fills provably never interleave, "fill between two same-colour 
 pack `pos*16+colour` at markers (bg→NEGBIG so it loses), prefix-MaxPool = nearest-left pack,
 suffix-MaxPool of the REVERSED ramp = nearest-right pack, fill iff decoded `lval==rval`.
 Replaces the public Einsum's persistent 9-channel plane with a stack of 200B f16 planes.
+
+## 2026-06-30 S1 — LANDED (redundant-plane fold, fresh-gated)
+mem 7029→6929, params 95, pts 16.1288→16.1429 (+0.014). Bundled fail=0; fresh 2000
+candidate==incumbent (diff 0). Folded `x_sep_u8=Where(And(v_sep_mask,h_sep_mask),lc,255)`
+→ `Where(h_sep_mask, v_sep_u8, 255)` (v_sep_u8 already = lc iff v_sep else 255), deleting
+the And op + x_sep_mask bool plane [1,1,10,10]=100B. Rest is load-bearing (2×900B DepthToSpace
+re-render, fp16 MaxPool span-fill planes, 400B f32 Conv). method custom:task009.
+
+## 2026-07-01 sequential deep pass
+
+Fresh recheck: **1000/1000 pass**.
+
+Current memory profile:
+
+- `scalar_blocks_u8 [1,9,10,10]`: **900B**.
+- `color_grid_u8 [1,1,30,30]`: **900B**.
+- `Lbm_f32 [1,1,10,10]`: **400B** from the strided 1x1 colour-index conv.
+- Span-fill stack: many `[1,1,10,10]` fp16 planes at **200B** each.
+- Separator masks/labels: several `[1,1,10,10]` bool/u8 planes at **100B** each.
+
+Rechecked remaining levers:
+
+- `linecolor` is random per instance, so the `line_color_onehot_f -> ArgMax`
+  path is necessary.
+- `x_sep_u8` cannot be replaced by `v_sep_u8` or `h_sep_u8` alone: the
+  bottom-right separator cell must be valid only when both horizontal and
+  vertical separator tails are in-grid.  Using either single mask leaks line
+  colour onto trailing edges.
+- A `Max(v_sep_u8,h_sep_u8)` version computes the same intersection using the
+  255 sentinel, but still materializes the same 100B plane as the current
+  `Where(h_sep_mask, v_sep_u8, 255)`.
+
+Conclusion: no adoptable improvement found beyond the landed 100B fold.
+
+## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-3 opus agent; see agent report in submission_log context). Do not re-attempt without a new mechanism.

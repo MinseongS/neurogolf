@@ -1,8 +1,31 @@
 # taskNNN — <arc_id>
 
-**Rule:** <one-paragraph exact rule from `src.show N --gen`>
+**Rule:** <one-paragraph exact visible/generator rule>
 **Current:** <pts> pts, <method>, mem <N>, params <M>
 **Target tier:** <S/A/B/detection> — <why this is the highest admissible tier>
+**Status:** <active / adopted / floor / wall / needs user review>
+
+## Human-readable rule
+
+- Inputs:
+- Outputs:
+- Invariants:
+- Edge cases:
+- Confidence: <verified / uncertain / contradicted>
+
+## Current graph anatomy
+
+| component | tensors / params | cost | reason it exists |
+|---|---|---:|---|
+|  |  |  |  |
+
+Dominant cost:
+
+## Mechanism hypotheses
+
+| mechanism | expected payoff | proof test | reject if |
+|---|---:|---|---|
+|  |  |  |  |
 
 ## Attempts
 | # | angle | tier | mem | params | pts | fresh | outcome |

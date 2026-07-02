@@ -39,3 +39,7 @@ mem-0 single Gather whose index length == the output extent along that axis (30)
 this is IRREDUCIBLE in params and CANNOT be undercut by Pad/Conv (those zero ch0 in
 the inserted line) nor by computed indices (Range/Concat add index-tensor mem that
 dwarfs the saved params). "Shift + preserve background one-hot" => 30-param Gather floor.
+
+## S9 (2026-07-03) — mechanism-14 probe: REJECTED (240 > 30)
+Single Gather 30-elem index = floor (documented INSIGHT re-confirmed). Scan's zero-pad
+premise also wrong: output row 0 = background sourced from input row 2, not zeros.

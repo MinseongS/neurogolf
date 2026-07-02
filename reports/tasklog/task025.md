@@ -44,6 +44,22 @@ unreachable while xpose is data-dependent.
 - Build the four position/mask tensors from a SINGLE shared signed-relpos field per branch
   (cut Sub/compare count) WITHOUT the extra Abs gates that sank attempt 5.
 
+## 2026-06-29 overlay-transfer check
+
+Checked whether task381's successful `Where(mask, onehot_color, input)` free-overlay
+mechanism transfers here.  It does not.  task025 changes the input in two
+different semantic directions: source dots are erased (`k -> 0`), while moved
+dots are written into empty adjacent cells (`0 -> k`) with `k` depending on the
+matched line colour.  The replacement is therefore not a single broadcastable
+one-hot colour.
+
+A free-overlay rewrite would need a dynamic per-colour full-canvas
+`moved_overlay [1,10,30,30]` plus erase/change masks before the final `Where`.
+That would turn the current excluded final full tensor into counted
+intermediates: roughly +18KB if fp16 or +36KB if fp32, while only saving small
+row/col feature slots.  Conclusion: task381's overlay variant is negative for
+task025; the current `Einsum` output-only construction is the right shape.
+
 ## INSIGHT (transferable)
 ⭐ **Per-channel batched matvec via MatMul kills the [1,10,30,30] floor.** To compute
 `has[k,r] = OR_c input[k,r,c]·mask[k,c]` without materialising the [1,10,30,30] product,
@@ -56,3 +72,25 @@ channels in the label sum (`L[r,c']=sum_k a[k,r]·b[k,c']`).
 arange-and-compare reformulation that removed it added several fp16 [1,10,30] (600 B each)
 intermediates and net LOST points. Prefer fixed matmul matrices over runtime index arithmetic
 when the latter spawns extra intermediates.
+
+## 2026-06-30 S1 — LANDED (fp16 position tensors, fresh-gated)
+mem 14062→13874, params 195, pts 15.435→15.4483 (+0.013). Bundled fail=0; fresh 2000
+candidate==incumbent (diff 0). Cast v_pos_f/h_pos_f/line_pos_f to fp16 (only feed TopK/
+ReduceMax, fp16-safe 0/1); cascades fp16 into v_any/h_any/top_values_3d/active_color;
+cast the 2 active_color masks back to fp32 where they Mul the fp32 desc-Einsum chain;
+dropped 3 redundant fp16→fp16 casts. int32 OneHot index rejected (ORT NOT_IMPLEMENTED).
+Remaining tensors structural floors (fp32 Einsum-vs-input forced, 26-ch slot full). ext→custom:task025.
+
+## S8 (2026-07-02) — priced FLOOR at 14069 (opus agent, full ablation)
+Already at the epilogue-fold endpoint: ONE free-output einsum 'bpr,bpw,bos,ps->borw' with
+in-op colour routing (dyn_channel + slot_projector). Decomposition: free-output entry ticket
+3120 (row/col_feat fp16 operands), input-einsum-forced fp32 5680 (free fp32 input ⇒ fp32
+contractions; fp16 input copy = 18000B ≫ savings), fp16 working 3900, routing 1174. Batched-K
+is BYTE-NEUTRAL (mem = sum of elements — batching only helps when it DELETES planes, not
+merges them). All levers closed; remove from backlog without a new mechanism.
+
+## S9 (2026-07-03) — kojimar teacher REJECTED (K-undercount artifact); floor re-confirmed
+Teacher's +0.187 = topk_k=[4] under-provisioning: generator makes 5 lines in 0.14%
+(28/20000) → teacher fails 5/2500 fresh (rightmost line dropped). Repaired K=5 variant:
+mem 14062 > incumbent 13874 — advantage fully erased. Incumbent floor stands.
+⭐ Always check borrowed nets' topk_k vs empirical max multiplicity.

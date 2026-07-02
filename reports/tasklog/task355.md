@@ -76,3 +76,8 @@ the marker is a distinct colour. Mask the marker channel itself (its own bbox sp
 - The two occupancy bands (2400B) are the remaining cost. No cheaper per-channel-per-row
   occupancy op is known (ReduceMax born f32; channel/region slicing trips symbolic dims). 2772
   is effectively the floor.
+
+## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
+mem 2688/17.09; CONST-OUTPUT false—output=colour of most-speck block; needs per-block speck count (area-cnt), two occupancy bands ~2400B floor. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).
+
+## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-1/2 opus agents; occupancy/max-semiring reductions or sub-400B u8 banks). Do not re-attempt without a new mechanism.

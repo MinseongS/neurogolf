@@ -97,3 +97,18 @@ only one Equal(L, arange)→free-BOOL-output at the end. Cheaper than masking th
 [1,10,30,30] output. Also: compare fp32 ReduceSum counts DIRECTLY to fp32 bbox
 dims (Equal is exact for ints ≤30) instead of recasting the count planes to
 fp16 — kills two 600 B [1,10,...] recasts.
+
+## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-4 opus agent). Do not re-attempt without a new mechanism.
+
+## S9 (2026-07-03) — kojimar 7184.85 teacher: GridSample crop + moment detection (+0.667) ADOPTED
+Teacher (overrides/task029.onnx; base_submission = our own mechanism): mem 10736→5436,
+params 34→89. Gates: stored fail=0 (re-checked); fresh 2500 uncached: both 0 fails;
+no TopK (ArgMax-on-u8 is safe). Latency 0.13ms.
+OLD FLOOR REFUTED on two counts:
+1. Crop carrier: ONE fp16 GridSample grid [1,30,30,2]=3600B replaces 2×3600B fp32 OneHot
+   einsum selectors — GridSample's grid has NO dtype-match constraint vs the fp32 input;
+   out-of-interior coords pushed to 3.0 + padding_mode=zeros. 7200→3600.
+2. Detection: hollow-rect ring colour via exact moment identity
+   n²(4(Σr²+Σc²)−n²−16n+16)==4(Σr²−Σc²)² ∧ n>7 on [1,10] free-input einsums (O(1) bytes)
+   replaces 2400B axis-count planes; only 120B presence planes remain for bbox ArgMax.
+Backup reports/retired_networks/task029_pre_s9.onnx.

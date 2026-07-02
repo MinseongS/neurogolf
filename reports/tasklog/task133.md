@@ -87,3 +87,59 @@ Read-only low-level probes found:
 
 Conclusion: exact local-safe rewrite has poor EV. The graph is already close to the static ONNX byte
 floor for this rule.
+
+## 2026-06-30 from-scratch recheck after user challenge
+
+Re-read `task_57aa92db.py` and current `networks/task133.onnx` without relying on
+the older verdict.
+
+Generator rule confirmed:
+
+- fresh generator uses a 3x3 continuous creature;
+- sprite 0 is `mag=1` and fully visible;
+- each later sprite shows only the signature pcolor block plus one adjacent body
+  block;
+- output fills all magnified creature cells for every sprite.
+
+Current graph mechanism:
+
+- `Conv(input)->border_grid_f->uint8 grid` builds one colour-index carrier;
+- pcolor/signature is selected by local patch range logic;
+- a small `shape_code` encodes the 3x3 reference body;
+- `Resize(ref_kernel)` builds mag 2/3/4 kernels;
+- four `seed_m -> QLinearConv(seed_m, ref_kernel_m)` paths stamp the body;
+- a `ScatterND` public overlay preserves the ARC-original OOD cases.
+
+Fresh probes on stored+arc-gen:
+
+| probe | result | conclusion |
+|---|---|---|
+| remove public overlay but keep `border_grid` as base | arc-gen `262/262`, ARC-original `0/5`, memory `30905`, params `83` | hardcoded overlay is only for OOD originals, not for generator generalization; cannot adopt under local stored gate |
+| inspect overlay cost | `public_overlay` 900B plus 232 update bytes and 928 index params | sparse `ScatterND` is already a compact hardcode; flattening to 1-D indices would save params but add full 900B reshape/scatter carriers, net worse |
+| generalize originals instead of overlay | not built | originals include signature positions not at the generator's fixed 3x3 corner assumptions and one width-4 shape; supporting them generally would expand the reference window/stamp machinery and likely exceed the sparse overlay cost |
+
+Important correction to the easy-rule intuition: "make the same shape at the same
+scale" is semantically simple, but the ONNX cost is in four full-canvas magnified
+stamp paths (`seed_1..4`, `marker_1..4`) and the OOD-original overlay.  A smaller
+generator-only graph exists, but the normal evaluation contract requires the five
+local ARC-original examples too.
+
+No source/net change adopted.
+
+## S8 (2026-07-02) — Einsum-vs-FREE-input pcolor block collapse (+0.125) ADOPTED
+pcolor-detection block (7 full 30×30 planes ~6.3KB, existed to derive ONE scalar) → colour-pair
+4-adjacency matrix contracted against the free input twice: V='nchw,hk,ndkw,cd->cd' (+H on cols),
+T tridiag 0/1 (900 params), MASK zeroes bg row/col AND the diagonal (solid-block self-adjacency
+trap!). key test = ReduceSum(M,1)>ReduceMax(M,1) ⟺ ≥2 distinct non-bg neighbours ⟺ pcolor.
+5 ARC originals violate the generator rule → key overridden per existing public_trigger_i probes.
+27333+2303 vs 32294+1288 → 14.578→14.703. Fresh 2500(×2)+5000: cand ≤ inc, div favors none;
+1000 fresh vs deployed onnx div=0. Stamp/anchor/overlay paths re-confirmed floor.
+Adopted via ONNX materialization + live_to_exact_source (cand imported the incumbent module).
+
+## S9 (2026-07-03) — Where×6 repeat-group angle: FLOOR (scanner false-positive)
+Where×6 5400B group = 4 parallel per-scale stamp seeds (distinct QLinearConv kernels
+3/6/9/12 — task204 reject-check, ONNX Conv has one kernel_shape) + body_grid (colour
+source, dual-consumed) + anchored_shape_code_grid. The tempting Where+ReduceMax→einsum
+fold is REFUTED with data: 43.4% (8686/20000) fresh have ≥2 anchors at mag1 → contraction
+returns code×count (out-of-table); ReduceMax superset-select is load-bearing.
+border_grid_f 3600 fp32 = detection floor. NOT an unrolled loop. DO NOT re-probe.

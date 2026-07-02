@@ -29,3 +29,6 @@ Dominant intermediate: **colf [1,1,30,30] fp32 = 3600B** — the single colour-i
 
 ## INSIGHT (transferable)
 ⭐ A "pure spatial COPY of a 10-channel one-hot" is NOT best done by gathering the 10-channel input (forces a [1,10,W,H] fp32 plane = 10×cost). Collapse to a SINGLE colour-index plane first (1×1 Conv Σk·input_k, 3600B once), do the data-dependent Gathers on the 1-CHANNEL index (6-10× cheaper), then expand back to one-hot ONLY on the small gathered block via Equal(block, arange_ch[1,10,1,1])→bool and Pad that tiny uint8 block into the FREE output. This is the count→one-hot-into-free-output lever applied to a COPY task. Also: Equal accepts fp32 operands under ORT_DISABLE_ALL (integer-exact), so the int32 cast before Equal is unnecessary. And: a "pure corner-quadrant copy" assumption can be FALSE even when the random generator clamps coordinates small — the STORED stress examples (evaluate) use much larger hand-coded offsets, so always check the stored examples' coordinate range, not just the generator's randint bounds.
+
+## S8 (2026-07-02) — rect-recipe conversion ADOPTED, div 0
+free-input einsum marker locate (25·(15−row) scalar), green12 plane dropped; 1632→1015, +0.487. Fresh: agent uncached 2500 div0 + my uncached 400 div0.

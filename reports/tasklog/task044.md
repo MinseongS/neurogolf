@@ -40,3 +40,10 @@ even the deployed kojimar net (which can, with 180 nodes) only reaches 15.56. A 
 scratch closed-form net cannot reach EXACTNESS, let alone beat the score.
 
 VERDICT: INFEASIBLE (assignment is input-underdetermined in ~5% of instances).
+
+## S8 (2026-07-02) — priced FLOOR at 11119 (opus agent)
+crop_f32 [1,10,10,10] 4000B = detection floor (per-colour matching needs the one-hot; fp16
+copy already net-optimal). EPILOGUE FOLD MEASURED NEUTRAL here: 30×30 u8 index-pad (900+100)
+== 10×10 one-hot bool (1000) exactly, +11 params → strictly worse. LESSON: the fold only wins
+when it ELIMINATES a separate pre-output plane (task187's label+flood planes), not when the
+index-pad swaps 1:1 with a small-grid one-hot.

@@ -105,3 +105,27 @@ min cannot be taken over the raw plane. uint8 area is impossible (max room area 
 tiny vector -> Greater -> And) is the cheapest "in-grid rectangle from a top-left-anchored grid"
 detector and cleanly replaces inside-MaxPools, but on an already-tight net the win is absorbed.
 opset note: this design needs opset>=14 (uint8 Add for the marker sums); deployed uses opset 19.
+
+---
+## Re-verify 2026-06-30 (session 118+145) — FLOOR reconfirmed
+Incumbent: mem=13104, params=111, points=15.51 (evaluate pass=267/267).
+fresh_verify 145 (1500 instances): incumbent fail=0 — genuinely correct, not a re-fit.
+Rule decoded: colour-2 walls partition grid into rooms; largest room's cells -> 1, smallest -> 8.
+Memory breakdown confirmed: fp32 bg read z_f32=1600B (2D detection floor at 20x20), 4 fp16 area
+planes (neg_w/neg_h/area/area_for_min = 3200B; area>255 so uint8 impossible; area_for_min
+mandatory to exclude walls from the global min), 8 uint8 directional src/marker planes (3200B) for
+per-cell room width/height via MaxPool wall-distance, uint8 colour-index chain + 900B pad-back
+output carrier. Tried: int16 area (same 3200), fewer directional planes (need 2/axis for
+both-side wall distance, can't fuse on pinwheel layouts), channel-wise Where output routing
+(makes a 9000B [1,10,30,30] intermediate — worse than the 900B colour-index+Equal carrier).
+No safe strictly-lower variant. FLOOR.
+
+# (appended) S8 2026-07-02 — WALK-EINSUM WIN (+0.230) ADOPTED — old FLOOR verdict REFUTED
+Rooms are rectangles ⇒ area = h-run × v-run. 8-plane directional-MaxPool machinery (~8.4KB) →
+TWO 41-operand fp16 einsums (800B each): EXACT run-length via 3-phase monotone walk
+{Stay,Right,Left} (Φ transition + shift operands) — each cell reached by exactly ONE walk ⇒
+einsum value = run length (NO multiplicity; self-loop walks only give >0 reachability, and
+(I+A)(I+A²) factored powers double-count). width einsum seeds the area einsum (height never
+materialized). fp16 exact ≤2048 (max area 360). 9244+1248 vs 13104+111 → 15.511→15.742.
+Fresh 2500+1500 fail 0 div 0; 5000 vs deployed onnx div 0. NEW TEMPLATE VARIANT for the
+registry: multiplicity-free exact-count walks (use for any run-length/area/size computation).

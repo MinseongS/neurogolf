@@ -1,96 +1,49 @@
-# task234 — 98cf29f8 ("frog eats fly")
+# task234 — 98cf29f8 (slide the line-coloured block to its partner)
 
-**Rule:** Two solid rectangles on a 0 background: the FROG (colour c0) and the
-FLY (colour c1), plus a 1-wide LINE (the "tongue", colour c1) joining the fly to
-the frog along one axis. The whole figure is then optionally vertical-flipped
-and/or transposed (applied identically to input and output → orientation-
-EQUIVARIANT). Output = frog kept fixed, tongue deleted, and the fly box slid
-along the tongue axis until it is flush against the frog. Grid is embedded in a
-30×30 canvas (true grid 12-20 × 15-20); off-grid cells are all-zero.
-**Current:** 15.21 pts, custom:task234, mem 17698, params 97 (prior version of
-this same file — per-channel spatial products).
-**Target tier:** B (separable row/col label map → free Equal). Not S: the fly
-translation is a data-dependent shift (tongue length), non-local. The output is
-three separable rectangles (frog box, moved fly box, in-grid bg + off-grid
-sentinel) so a Tier-B row/col label map is the highest admissible tier.
+**Rule:** two solid rectangular blocks of distinct colours connected by a 1-wide
+straight line; the block whose colour == the line colour slides along the line
+until adjacent to the other block, and the line is removed.  Output = the two
+solid rectangles (one stationary, one moved) on background.
 
-## Attempts
-| # | angle | tier | mem | params | pts | fresh | outcome |
-|---|---|---|---|---|---|---|---|
-| 1 | (prior) per-channel R/C·isFrog/isFly products (6× [1,10,30,*] fp16) + label map | B | 17698 | 97 | 15.21 | n/a | committed baseline = P |
-| 2 | recover frog/fly CHANNEL INDEX (== colour) as runtime int32 [1] scalar; **Gather** that single channel out of R / C / per-channel sums → [1,1,30,*] 60B slices instead of [1,10,30,*] 600B products | B | **13085** | 98 | **15.513** | 200/200 | WIN (+0.300) |
+## 2026-06-30 — signed-Einsum routing (ADOPTED, +0.28)
 
-## Best achieved
-**15.513 @ mem 13085 params 98 — stored 266/266, fresh 200/200.** Beats prior
-15.21 by **+0.300** (exactly the ≥+0.3 bar). Adopted? **N** (main adopts via
-`python -m src.adopt 234`).
+The 4 prior golf agents all marked this "floor-bound: 900B [1,1,30,30] colour
+label feeding the final Equal + arbitrary recolor blocks plane-free routing."
+That was WRONG.
 
-## Irreducible-floor analysis (after attempt 2)
-mem 13085 is spread, no single dominant plane:
-- **2400 B** = two fp32 per-channel sums `rowSumChf [1,10,30,1]` + `colSumChf
-  [1,10,1,30]` (1200 each). IRREDUCIBLE: ORT ReduceSum on the fp32 one-hot input
-  emits fp32; both axes are needed — row+col occupancy of BOTH colours (for the
-  frog/fly bbox-area solidity test) AND the fly's per-line counts (thickness =
-  min-positive line count, which excludes the tongue). Casting the input to fp16
-  first = 18000 B (worse).
-- **5400 B** = label map: 3 bool box planes `[1,1,30,30]` (frogBox/flyBox/gridBox,
-  900 each) + 3 uint8 Where outputs (Lg/Lf/L, 900 each). This is the floor for a
-  "3 separable rectangles + off-grid sentinel → free Equal" output: the final
-  `Equal(L, chan)` lands in the FREE bool output, but the single uint8 label plane
-  it reads must distinguish 0(in-grid bg)/colour/10(off-grid). bool `[1,1,30,30]`
-  (900) is already the cheapest full-canvas dtype. OR-ing colour planes into the
-  output instead would materialise multiple non-free [1,10,30,30] = 9000 B each.
-- **1200 B** = R, C fp16 `[1,10,30,1]`/`[1,10,1,30]` (600 each) — per-channel
-  occupancy, needed for span/bbox and as the Gather source.
-- **~3000 B** = the run-mask + edge scalar machinery (≈35 tiny 60 B `[1,1,30,1]`
-  vectors + scalars).
+The output is exactly TWO solid colour rectangles on a background, i.e. a sum of
+**separable rank-1 terms** in (channel, row, col).  The background channel (0) is
+NOT a blocker: emit it as a third term whose coefficient is +1 on ch0 over the
+whole in-grid box, and give each rectangle term a -1 on ch0 so a rectangle cell
+nets ch0 = 0 (off) and only its colour channel is positive.  All three terms go
+through ONE `Einsum('tnk,tr,tc->nkrc', weight[3,1,10], rsel[3,30], csel[3,30])`
+whose output IS the free graph output.
 
-## OPEN ANGLES (re-attack backlog)
-- **Drop one fp32 per-channel sum (≈1200 B → ~+0.09).** The frog/fly solidity
-  test needs bbox area (both row+col spans); thickness needs one axis of raw
-  counts. If frog/fly could be discriminated WITHOUT bbox area (e.g. a tongue
-  detector: the fly is the colour with a 1-wide protrusion), only one per-channel
-  sum axis would be needed. Not yet found a cheap orientation-agnostic tongue
-  signal.
-- **Shrink the label map below 5400 B.** Folding the off-grid sentinel away by
-  ANDing the in-grid mask into the final output forces a non-free [1,10,30,30]
-  Equal intermediate (9000 B) — net worse. No path found below the 3-rect floor.
-- Trim the ~35 tiny run-mask vectors by computing the moved-axis run as a single
-  banded predicate — sub-200 B, marginal.
+This deletes the entire render path: `color_grid_padded` (900), the six
+`[1,1,20,20]` mask/label planes (2400), and the final Equal.  The kept scalar
+chain (object detection, armed/line-direction, moved positions) is reused as-is;
+the new tail builds tiny `[3,30]`/`[3,10]` selector/weight tensors.
 
-## SESSION 2026-06-19 re-probe (current P recorded as 16.16 ext:kojimar7113)
-The recorded current is now the **16.16 kojimar crowd net** (mem+par ≈ 6905),
-NOT the prior 15.21 custom. Re-built combining the Gather-channel lever (prior +0.30)
-WITH the tongue-detector identification (drop the bbox-area span test): fly = the
-colour whose min-positive per-line count == 1 (the 1-wide tongue; frog min-dim ≥ 3).
-Result: **15.43 @ mem 14266 / par 97, stored 266/266, fresh 200/200.** Still BELOW
-the crowd net.
+**Result: 16.448 pts @ mem 5113, params 66 — 266/266** (was 16.167 @ 6809).
 
-Remaining buckets at 14266: 5400 (box/L) + 2400 (2 fp32 sums) + 2400 (rowSum/colSum
-fp16 + rwPos/cwPos tongue planes) + 2280 (≈38 tiny [1,1,*] edge/run-mask vectors).
-The 2400 fp16+detector bucket resists collapse: Gather needs an fp16 sum source AND
-the tongue detector needs a per-channel min-positive-count plane — both [1,10,30,*].
-Dropping rowSum to Gather off fp32 makes the gathered slices fp32 (net wash); the
-detector plane cannot go below 600 (Equal/ReduceMin need a per-channel full plane).
+**Verification:** stored 266/266; rebuilt the prior render graph and compared
+OLD vs NEW on 1571 random in-domain instances — **0 cases of old-right/new-wrong**
+(the 16 raw diffs are all out-of-domain malformed grids where my generator made
+non-rectangular shapes; both graphs disagree with the rule there).  Source-owned,
+`networks/task234.onnx` rebuilt, parity confirmed.  Fresh-gen N/A locally.
 
-**VERDICT: INFEASIBLE to beat 16.16 by +0.3.** The label-map reconstruction
-paradigm floors at ≈ 13–15 KB ⇒ ~15.5 pts (the prior +0.30 win peaked at 15.513,
-this session 15.43). The crowd net at ≈6905 B sits ~2× below this floor, so it is
-NOT a label-map reconstruction — it likely exploits a leaner formulation (e.g. a
-direct Gather-shift copy of the fly with the tongue dropped, routed into the FREE
-output, never building 3 box masks + 3 L planes). That formulation was not found
-this session and is the ONLY open path to beating 16.16. Custom file left at 15.43
-(correct, generalizes) but offers NO gain over the recorded crowd net — do NOT adopt.
+**Remaining floor (5113):** the two `[10,30]` fp32 per-colour bbox profiles
+(`row_any_all`/`col_any_all`, 1200 each = 2400) now dominate — they are the
+fp32 `ReduceMax(input)` occupancy reads (fp32 inherited from input), genuinely
+needed to find both objects' bboxes.  Plus ~700 selector/weight planes.
 
-## INSIGHT (transferable)
-⭐ **When exactly K colours/objects each occupy their own one-hot CHANNEL and the
-channel index equals the colour, recover that index as a runtime int32 `[1]`
-scalar (`Reshape(ReduceSum(sel·arange),[1])→Cast int32`) and `Gather(plane, idx,
-axis=1)` to pull the single channel out as a [1,1,…] slice — instead of
-`Mul(plane, sel[1,10,1,1])` which materialises a full [1,10,30,*] product plane.**
-Here it replaced six 600 B per-channel products (RFrog/RFly/CFrog/CFly +
-flyRowSum/flyColSum muls) with 60 B gathered slices, −3.6 KB → +0.30 pts, no
-correctness change. A `[1]`-shaped (not scalar `[]`) Gather index keeps the
-channel axis as dim-1 so downstream broadcasts stay aligned, and a runtime Gather
-index keeps shapes STATIC (unlike a runtime Slice, which leaves symbolic dims →
-mem unmeasurable).
+⭐ **TRANSFERABLE (overturns the "background forces a 900B label" belief):** any
+output that is a union of a few solid axis-aligned colour rectangles on
+background can be emitted by a SINGLE `Einsum` of per-term (colour-weight,
+row-selector, col-selector) straight into the free output, INCLUDING the
+background channel, via a signed ch0 coefficient (+1 whole-grid term, -1 per
+rectangle).  No colour-index label plane, no per-cell render.  Scan for tasks
+whose output decomposes into <=~4 solid rectangles.
+
+## S8 (2026-07-02) — rect-recipe conversion ADOPTED, div 0
+per-colour bbox from einsum count profiles + Sign/ArgMax; row/col_any_all planes dropped; signed-einsum routing untouched; 5179→3808, +0.307. Fresh: agent uncached 2500 div0 + my uncached 400 div0.

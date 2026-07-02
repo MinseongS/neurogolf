@@ -75,6 +75,23 @@ operator can threshold positive matches without materializing the 8-channel
 post-activation plane.  Prior `Greater -> QLinearConv -> Cast fp16 -> MaxPool`
 passed but was slightly worse.
 
+## 2026-06-29 no-Relu stamp probe
+
+Hypothesis: remove the `Relu(corrm)->M` 8-channel fp16 plane and feed `corrm`
+directly into the stamp Conv. This would drop memory from `31276` to roughly
+`22812` if valid.
+
+Result: rejected immediately.
+
+- Temp graph redirected `placed1` Conv input from `M` to `corrm` and removed the
+  Relu node/value_info.
+- Stored eval: `pass=0`, `fail=267`, `memory=22812`, `params=841`.
+
+Conclusion: negative non-match correlation scores are not harmless; they
+poison the positive stamp accumulation. A threshold/nonnegative activation
+before stamping is semantically required. Future attempts must replace Relu
+with a cheaper thresholding/stamping primitive, not simply delete it.
+
 ## INSIGHT (transferable)
 ⭐ **8-orientation dihedral template matching is NOT a shape-correspondence BAIL** — it is a stacked
 Conv: extract the small pattern as a 3×3, build the 8 oriented kernels as FIXED gather-permutations
@@ -89,3 +106,34 @@ the 3×3 frame exceeds a smaller tall×wide sprite and silently captures adjacen
 rows≥tall / cols≥wide (derived as scalars from the bbox extent) before using it.
 ⭐ ConvTranspose(M, stamp, group=C) is the clean "scatter a fixed stamp at every firing anchor"
 primitive; reduce over channels then a single MaxPool dilates the union.
+
+## Safe-golf pass (S4, 2026-06-30)
+Bit-identical dtype narrowing: Gather index intermediates `ridx` [3] and `cidx` [3]
+came from `Cast(to=int64)`, each feeding ONLY a `Gather` index input (bbox-corner coords,
+fit int32). Narrowed both `Cast`→int32 (`to=6`) + matching value_info.
+- **mem 31276 → 31252** (−24B), params 841 (unchanged), **pts 14.6229 → 14.6236 (+0.0007)**.
+- Gate: bundled fail=0; equivalence vs incumbent = **0 divergences / 1602** random
+  in-domain recolorings. Grader-safe (int32 Gather index, not *ND, not TopK).
+  (Task remains floor-bound — dominated by a ~31KB fp32 detection plane; this is the
+  only landable lever.)
+
+## S8 (2026-07-02) — dihedral-match-in-einsum (+0.420) ADOPTED, div 0
+Detect/threshold/stamp block (~23KB: corrm Conv [1,8,23,23] + Relu + glue) → ONE 49-operand
+44-letter einsum producing the box plane [23,23] directly. NEW TRICK: exact 8-orientation
+pattern match as PRODUCT-OF-SUMS inside the einsum — per window cell a 2-branch factor
+(α_c[o]·CONST + β_c[o]·Y[shifted]) with α=1−K, β=2K−M; the CONST branch reads input at fixed
+on-grid (0,0) with all-ones channel weights (≡1), giving exact pad-black semantics for
+don't-care cells sticking off-grid (naive [1−Y,Y] basis silently kills those matches).
+Stamp folded via Q[g,i,y]=[−2≤y−i−g≤0] reused for rows+cols. 14070+6576 vs 22971+8464 →
+14.644→15.065. Fresh 2500 (uncached) + 2500 cached + 500 uncached + 600 vs live onnx: div 0.
+Latency 27.9ms. Old "8-orientation grouping rejected" verdict applied to pre-stamp REDUCTION,
+not to keeping o as an einsum axis. Product-of-sums = general template for k-orientation/
+k-template matching without materializing per-orientation planes.
+
+## S9 (2026-07-03) — kojimar teacher REJECTED (fresh 23/2500 = 0.92%)
+Teacher = QLinearConv int8 template match with RUNTIME-built dihedral kernels
+(Slice/Transpose/flip/Concat of gathered 5×5 motif) + int32 bias threshold → params 171
+vs our 6576. But int8 quantization not bit-exact: 23/2500 fresh fails vs our 0.
+Stored +0.44 is illusory. KEEP exact fp32 product-of-sums einsum.
+⭐ QLinearConv runtime-kernel matching = real param lever ONLY for tasks already
+spending a fresh-fail budget (toolbox #13) — cannot displace an exact 0-fail einsum.

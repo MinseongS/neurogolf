@@ -1,5 +1,113 @@
 # task270 — ae3edfdc
 
+## 2026-07-01 task-only deep dive — current live/source already beats old scalar note
+
+**Status:** verified no-adopt, useful failure.  The prior notes below are stale in
+their score framing: `src/custom/task270.py` is now an exact source reconstruction
+of the current live graph, and both source and `networks/task270.onnx` measure:
+
+| artifact | stored pass | mem | params | pts | fresh |
+|---|---:|---:|---:|---:|---:|
+| source `task270.build` | 266/266 | 2742 | 327 | 16.970892945380264 | — |
+| `networks/task270.onnx` | 266/266 | 2742 | 327 | 16.970892945380264 | 200/200 |
+
+### Human rule, verified
+
+All stored examples are 15x15 with colours `{0,1,2,3,7}`.  There are two
+independent flowers:
+
+- centre colour `2`, petal colour `3`;
+- centre colour `1`, petal colour `7`.
+
+Each centre is a single pixel.  Same-colour petals, if present, lie on the same
+row or same column as their centre, at distance at least 2.  Output keeps the
+centre and pulls every existing petal back to the adjacent cell in the same
+direction.  Missing directions remain background.
+
+Python oracle over all stored examples:
+
+```text
+oracle fails 0 []
+axis violations 0 []
+distance min/max 2 12
+```
+
+This makes the semantic rule **verified** for stored data.  Fresh generator
+availability was also verified (`gen270` from `/tmp/arc-gen/tasks/task_ae3edfdc.py`).
+
+### Current mechanism
+
+The current graph is **not** the old 8235B scalar matrix-rebuild candidate.  It
+is a lower-cost packed 1-D profile graph:
+
+1. `Einsum(input, chan_w)` builds row/column packed colour profiles.
+2. `Slice`/`BitwiseAnd` extracts centre and petal profiles for colours
+   `1,2,3,7`.
+3. `CumSum`, `ArgMax`, `GatherElements`, and scalar `Sub`s compute the four ray
+   flags for each flower.
+4. `Pad`s place row/column centre and adjacent-neighbour basis vectors.
+5. One final float16 `Einsum` emits the full thresholded 10-channel output
+   directly.  No `[15,15]` or `[30,30]` label plane is materialized.
+
+### Cost anatomy
+
+| component | tensors / params | bytes or params | semantic job |
+|---|---:|---:|---|
+| final row/column basis stacks | `row_basis`, `col_basis` `[7,30]` fp16 | 840B | carry board, centres, and four adjacent rows/cols into the output-only final `Einsum` |
+| 1-D packed profiles | `row_pack`, `col_pack` `[1,30]` fp32 | 240B | reduce 10 input channels into row/column colour bitmasks |
+| shifted centre/petal basis pads | twelve `[1,30]`/`[1,15]` fp16/int16 intermediates | ~900B | align centre and adjacent cells without full 2-D planes |
+| prefix/flag scalars | `CumSum`, `ArgMax`, `GatherElements`, `ReduceSum`, scalar `Sub`s | ~200B | decide up/down/left/right petal existence for each flower |
+| final selector params | `coef` 110, `row_sel` 77, `col_sel` 77, `board` 30, `chan_w` 10, small scalars | 327 params | route each candidate rank-1 placement to colour channels, including channel-0 background |
+
+Dominant live memory is the two basis stacks (840B), not directional MatMuls or
+full-canvas carriers.  The graph is already tier A/S-adjacent: the only
+full-canvas tensor is the official output, which is free under the scorer.
+
+### Prior notes challenged
+
+- **Contradicted/stale:** "Current prior adopted 14.85" and "best achieved
+  15.97 @ mem 8235 params 146" are no longer current.  The source and live
+  artifact both verify at 16.9709 @ mem 2742 params 327.
+- **Still valid conceptually:** the task is a 12-scalar / 1-D-profile
+  reconstruction problem, not a full directional plane pipeline.
+- **Superseded:** the old irreducible-floor analysis about ~34 fp16 15x15 planes
+  is not a current floor.  The live graph has no 15x15 working plane and no
+  directional MatMul stack.
+- **Still useful:** uint8/full-label carrier notes remain useful historically,
+  but they are worse than the current direct-output `Einsum` route.
+
+### Mechanism tests
+
+1. **Scalar pull-back / 12-scalar rebuild (NEAR_18 claim).**
+   - Expected payoff: delete directional MatMuls and rebuild from centres plus
+     direction flags.
+   - Proof test: compare current source/live score and check whether the claimed
+     scalar route still removes a live dominant cost.
+   - Result: concept validated historically, but not adoptable now.  Current
+     graph already implements a cheaper 1-D profile/direct-output variant and
+     beats the claimed `8235+146` total by a wide margin (`2742+327`).
+   - Kill condition hit: an old scalar label route necessarily pays at least a
+     `[15,15]` label carrier plus `[30,30]` pad carrier (>=1350B before profile
+     and selector costs), while current direct-output basis stacks are 840B and
+     avoid the label carrier entirely.
+
+2. **Integer dtype shrink for the final direct-output algebra.**
+   - Expected payoff: halve `row_basis`/`col_basis` and pad-chain memory if the
+     final `Einsum` accepted int8/uint8/int16.
+   - Proof test: construct minimal ORT `Einsum` kernels for int8, uint8, int16,
+     float16, and float32 under opset 18.
+   - Result: int8/uint8/int16 all fail with `NOT_IMPLEMENTED`; float16 and
+     float32 work.
+   - Kill condition hit: ORT has no CPU kernel for integer `Einsum`, so the live
+     final algebra cannot be dtype-shrunk without replacing the output primitive.
+
+### Next exact experiment
+
+Look for a non-`Einsum` final emitter that preserves output-only materialization
+but consumes smaller integer/bool basis tensors.  A scatter route is unlikely to
+win unless it can avoid a full zero-data input, because a full `[1,10,30,30]`
+zero carrier would dominate current memory.
+
 **Rule:** Fixed 15x15 grid, background 0, two "flowers". Flower 0 = centre colour 2 with
 petals colour 3; flower 1 = centre colour 1 with petals colour 7. Each flower's centre is a
 single pixel; in each of the 4 orthogonal directions a petal MAY exist, placed somewhere along

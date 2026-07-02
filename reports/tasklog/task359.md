@@ -16,10 +16,14 @@ selected, so no single fixed Conv/permute routes it.
 | # | angle | tier | mem | params | pts | fresh | outcome |
 |---|---|---|---|---|---|---|---|
 | 1 | per-line argmax of ReduceSum counts + peak-sum orientation select + separable in-grid mask, routed into FREE Equal->output | A | 6190 | 12 | 16.27 | 200/200 | WIN (+1.59 vs ~14.68) |
+| 2 | (live incumbent) same family, masked=rA+cB [1,1,30,30] label plane, Equal(masked,chidx)->output | A | 4452 | 15 | 16.60 | — | incumbent |
+| 3 | S8 safe-golf: replace 900B `masked` plane. masked[i,j]=rA[i]+cB[j] is SEPARABLE, and output[ch,i,j]=(rA[i]+cB[j]==ch)=(rA[i]==ch-cB[j]). So D=Sub(chidx[1,10,1,1],cB[1,1,1,30])->[1,10,1,30] (300B), Equal(rA[1,1,30,1],D)->output. Drops the [1,1,30,30] plane for a [1,10,1,30] strip. | A | 3852 | 15 | **16.74** | 2500/2500 in-domain + 266/266 bundled bit-identical | **WIN (+0.145, mem 4452->3852)** |
 
 ## Best achieved
-16.27 @ mem 6190 params 12 — adopted? N (orchestrator gates). Beats prior ~14.68? YES (+1.59),
-GENERALIZES (fresh 200/200 + 2000/2000 numpy prototype, both train+test pass).
+**16.74 @ mem 3852 params 15 (S8, landed 2026-06-30).** Bit-identical to the 16.60 incumbent
+(2500/2500 random in-domain + 266/266 bundled, 0 OLD-correct/NEW-wrong). Pure output-preserving
+safe-golf: the final `masked[1,1,30,30]` separable label plane (900B) was rerouted as the narrow
+channel-strip D=chidx-cB [1,10,1,30] (300B) — same Equal-to-FREE-output, 600B cheaper.
 
 ## Irreducible-floor analysis
 Dominant intermediates: the two count tensors colcount[1,10,1,30] and rowcount[1,10,30,1] (fp32,
@@ -47,3 +51,5 @@ simultaneously SELECTS orientation and BROADCASTS the chosen per-line vector acr
 avoiding building two full candidate planes. And remember convert_to_numpy leaves OFF-grid cells
 with ALL channels = 0 (NOT channel-0 = background), so the in-grid mask must be "any channel set",
 never "channel 0 == 0".
+
+## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-1/2 opus agents; occupancy/max-semiring reductions or sub-400B u8 banks). Do not re-attempt without a new mechanism.

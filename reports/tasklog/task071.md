@@ -21,6 +21,20 @@ augmentation reflects the whole instance, which only changes the axis value).
 ## Best achieved
 14.59 @ mem 29898 params 3424 — beats prior 13.79 by **+0.80**. fresh 200/200.
 
+## 2026-06-29 live-frontier refresh
+
+Current live/source is much smaller: **17.100253 pts @ mem 2643 params 55**.  It
+uses the generator's fixed active crop (`bg_active` [1,1,11,13]) rather than the
+old full reflection-overlap stack.  Axis recovery comes from the top visible
+sprite row, then a 13-wide reflected gather restores the mask; output is a
+one-channel uint8 active label padded to 16 and then 30 before final Equal.
+
+The obvious 900B `color30` label plane is not a free gain.  Making bool one-hot
+before Pad costs 10x16x16 = 2560B, or 10x11x13 = 1430B plus pads, both worse
+than the current one-channel label carrier.  The next largest tensors are
+`bg_active` 572B and 143B bool active/reflection masks, so +0.3 would need a new
+axis/output carrier, not local graph surgery.
+
 ## Key construction
 - Box channel = SOLID (cnt == bboxW*bboxH) AND bboxW == 4 (0/5000 fresh).
   (`solid` alone fails ~1/3000; `width==4` alone ~1.8%; AND-ed = 0/5000.)

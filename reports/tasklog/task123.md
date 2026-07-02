@@ -37,6 +37,10 @@ else is tiny — the colour recovery (col-0 slice 200 B), the length-10 band vec
 - Build the 30×30 label by a single Gather of band-colours with a const 30×30 max-index
   plane (off-grid index → a sentinel slot) — folds Pad + Reshape into one Gather, may
   trim ~100 B but keeps the 900 B floor.
+- 2026-06-29 sparse-initializer probe: replacing the dense 30×30 `canvas_index`
+  with a sparse initializer and moving the sentinel to default index 0 is invalid.
+  ONNX shape inference reports Gather indices as `sparse_tensor(int32)`, and ORT
+  rejects the model because sparse initializers are not dense tensor operands.
 
 ## INSIGHT (transferable)
 ⭐ When the output colour at (r,c) depends ONLY on a scalar function of the coordinates

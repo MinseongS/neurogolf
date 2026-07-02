@@ -39,3 +39,6 @@ couple of small fp32 helpers and the [101] histogram buffer (404B). No 30x30 fp3
   verified 0-mismatch in proto; used 7 for margin). Marginal (~−ln saving).
 - The ScatterND updates plane is fp32 [100] (ScatterND wanted f32); a uint8/f16 updates path
   could shave a few hundred bytes if ORT accepts it.
+
+## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
+mem 2800/16.99; root_idx int32 400B=min index buffer, ch5_f 400B forced-fp32 crop; no input+delta route (in gray5→out ch0/1/2). No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).

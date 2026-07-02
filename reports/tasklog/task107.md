@@ -59,6 +59,28 @@ Dominant intermediates (total ~9.2KB of 11.85KB):
   free input into a [1,1,5,5] colour-index could dodge the 1000 slice, but the
   contraction weight still reads 10 channels — likely no win.
 
+## 2026-06-29 re-attack: diagonal table arithmetic
+
+Current source/live exact graph is **16.686638 @ mem 2924 params 1154**.
+The largest apparent lever is `diag_points_table` (720 initializer elements).
+I derived the exact formula for the 15 cases:
+`f = num_changes + 2`, `k = min(arange(6), f-1)`, with four rays whose
+row/col affine coefficients depend on `pos_idx`.  A temp ONNX replaced the
+720-entry table gather with coefficient gathers and vector arithmetic:
+`/tmp/task107_diag_arith.onnx`.
+
+Stored result: exact `266/266`, but **16.360943 @ mem 4756 params 892**.  The
+params drop (1154 -> 892) is more than erased by the new 24-wide int32
+intermediates and coefficient-gather tensors.  Conclusion: the dense diagonal
+point table is currently the better compression for ONNX's memory model.
+
+Checked related decode angle: replacing the `GatherND -> MatMul -> Cast`
+colour decoder with `ArgMax`/LUT or QLinearMatMul is structurally worse here.
+`ArgMax` emits int64 and still needs a non-contiguous colour-value map
+({1,3,4,5,6,7,8,9}); QLinearMatMul would require casting the gathered fp32
+one-hot block to uint8 before multiplication, adding more counted memory than
+the existing tiny fp32 `[1,6]` MatMul output plus uint8 cast.
+
 ## INSIGHT (transferable)
 ⭐⭐ **SENTINEL-VIA-GATHER**: for a variable-size upscale/crop whose out-of-grid
 cells must be "no channel on", pad the small source grid with ONE extra

@@ -58,3 +58,22 @@ smaller input (e.g. a 21x21 single-channel SLICE of input for the count Conv) �
 Slice is still fp32 (Slice preserves dtype), so the "fp16-after-entry" lever buys nothing when the
 fp32 slice itself is the entry plane. Net lesson: count the ENTRY fp32 plane, not the post-cast
 copy — casting to fp16 after a mandatory fp32 slice ADDS a plane rather than shrinking one.
+
+## 2026-06-30 — S6-deep WIN: Einsum profiles vs FREE input (drop 19×19 mask plane)
+- Incumbent materialized a 19×19 fp32 boxcolor mask (1444B) + 2 ReduceSum to get
+  box-0 row/col count profiles. Replaced with two Einsum contractions against the
+  FREE input via a boxcolor one-hot selector: 'bchw,c->bh' and 'bchw,c->bw' (120B each),
+  argmax corrected by -1 (full-grid vs sliced). 2-D black-hole detection (QLinearConv→TopK)
+  left intact (floor).
+- Verified vs REAL networks/task208.onnx: 0 divergence on 3000 fresh, cand_fail=0, bundled 266/266.
+- **mem+params 6083→4726, pts 16.287→16.539 (+0.252). ADOPTED (custom:task208).**
+
+## S8 (2026-07-02) — uint8-TopK re-landing analysis: NOT re-landable (floor at safe dtypes)
+The reverted −512B was the f16 Cast `rect_flat` (256-elem) before TopK; the saving WAS the
+unsigned dtype. All safe alternatives measured WORSE:
+- fp32 Conv path (drop QLinearConv): height_score fp32 1024 + rect_flat 1024 = 2048 vs 1338 now.
+- f16 Conv path: zero21_f16 578 + kernel f16 50 + score 512 + reshape 512 = 1652 vs 1338.
+- ConvInteger → int32 TopK feed: 1024 + 1024 = 2048.
+- Cast u8→int64 feed: 256×8 = 2048.
+- Cast-before-Reshape: 512+512 vs 256+512.
+Verdict: task208 stays at 4612+114 (16.539). Do NOT re-attempt without a new mechanism.

@@ -70,3 +70,5 @@ cost ~2500 params and Transposing to share them ADDS a materialized matrix plane
 under ORT_DISABLE_ALL on fp16 (uint8 MaxPool is rejected). Use this for any per-row/per-col span /
 bbox-as-mask where params matter. ⚠️ Non-separable per-line spans need all 4 directional planes —
 this is a genuine ~16.8KB structural floor (≈15.27 pts), MARGINAL over a near-floor public net.
+
+## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-1/2 opus agents; occupancy/max-semiring reductions or sub-400B u8 banks). Do not re-attempt without a new mechanism.

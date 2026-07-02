@@ -83,3 +83,26 @@ The prior floor analysis double-counted: the real core is og 1800 + 2 counts 240
   collisions and produced phantom "failures"; the net is exact on the real distribution (500/500).
   Always read the constraint off the STORED data (min pixel-to-wall distance) before trusting a
   fresh-gen fail.
+
+## FLOOR RE-CONFIRM (2026-06-30, session S7)
+Incumbent measured: mem **5860**, params **279**, pts **16.278** (fresh 2000/2000 fail=0).
+Independent essential-variable re-derivation confirms the documented floor — no safe strict
+reduction found:
+- **counts 2×1200 (rowcount/colcount fp32):** each = `ReduceSum(input)` and consumed by
+  Slice + Gather on the CHANNEL axis (axis=1, per-row/col count of a runtime-dynamic wall
+  colour) AND the SPATIAL axis (axis=2/3, per-channel count at border rows/cols). Both index
+  axes are runtime-dynamic ⇒ the full [1,10,30,1]/[1,10,1,30] plane is required; neither axis
+  can be pre-narrowed. ReduceSum/MatMul/Conv all emit fp32 from the fp32 FREE input; casting a
+  count→fp16 KEEPS the 1200B fp32 plane and ADDS a 600B plane (dead-end #2, measured). No count
+  op emits a narrow dtype without first quantizing the input (the 9000B detection floor).
+- **og 900 (uint8 index grid [1,1,30,30]):** the one genuinely-2D dense output grid; already
+  uint8 (cut 1800→900 in attempt 6). Equal→FREE bool output needs the materialized plane.
+- **Acol/Brow 2×270 (uint8 [1,1,30,9]/[1,1,9,30]):** the 9 rank-1 MatMul slots are 4 horizontal
+  + 4 vertical border/projection lines + 1 in-grid sentinel — each geometrically distinct, none
+  mergeable; inner dim already minimal at 9.
+- **18 casts:** 10→uint8 (distinct line operands), 6→int32 (Gather indices, ALREADY int32 — no
+  int64→int32 lever), 2→fp16 (H/W). None redundant.
+- **params 279:** dominated by fundamental constants (arow/acol ramps 60, rs0/rs1/cs0/cs1
+  selectors 120, ci_lo/ri_lo masks 60, chramp/chan 20). Swapping a const init for a computed
+  plane is mem-for-params neutral (no score change).
+**VERDICT: FLOOR.** 16.278 stands; no strict mem+params reduction lands without re-fit risk.

@@ -34,8 +34,8 @@ def build(task):
     ]
     nodes = [
         helper.make_node('MaxPool', ['input'], ['pool_values', 'pool_indices4'], kernel_shape=[30, 30], strides=[1, 1]),
-        helper.make_node('Reshape', ['pool_indices4', 'shape_1x10'], ['pool_indices']),
-        helper.make_node('Cast', ['pool_indices'], ['pool_indices_f'], to=1),
+        helper.make_node('Cast', ['pool_indices4'], ['pool_indices4_f'], to=1),
+        helper.make_node('Reshape', ['pool_indices4_f', 'shape_1x10'], ['pool_indices_f']),
         helper.make_node('Div', ['pool_indices_f', 'thirty_f32'], ['first_row_raw']),
         helper.make_node('Floor', ['first_row_raw'], ['first_row_with_channel']),
         helper.make_node('Sub', ['first_row_with_channel', 'channel_row_offsets'], ['first_row']),
@@ -142,7 +142,7 @@ def build(task):
     value_infos = [
         helper.make_tensor_value_info('pool_values', 1, [1, 10, 1, 1]),
         helper.make_tensor_value_info('pool_indices4', 7, [1, 10, 1, 1]),
-        helper.make_tensor_value_info('pool_indices', 7, [1, 10]),
+        helper.make_tensor_value_info('pool_indices4_f', 1, [1, 10, 1, 1]),
         helper.make_tensor_value_info('pool_indices_f', 1, [1, 10]),
         helper.make_tensor_value_info('first_row_raw', 1, [1, 10]),
         helper.make_tensor_value_info('first_row_with_channel', 1, [1, 10]),

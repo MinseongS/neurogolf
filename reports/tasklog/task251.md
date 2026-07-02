@@ -69,3 +69,6 @@ Whole net floors near 7101 → 16.04.
   Conv+ConvTranspose mechanism is the right structure and golfs only ~ +0.2 (crop to active canvas).
 - A documented "200/200 fresh" on-disk custom that was NOT adopted usually means it scored BELOW the
   public net (here a flood version at 15.54 < 15.82) — measure before trusting the docstring's tier.
+
+## S8 (2026-07-02) — walk-einsum border flood (+0.432) ADOPTED, div 0
+9-iter Min-gated QLC flood chain (17×144B u8 planes) → ONE 8-conn 14-slot walk einsum on the 12×12 crop (task002 pattern: ring seeds, S entries 1.0, Greater(non,W) epilogue). 2772+272 vs 4500+187 → 16.547→16.979. Fresh 2500 cached + 5000 uncached + 600 div 0.

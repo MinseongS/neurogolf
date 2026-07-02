@@ -1,766 +1,766 @@
 {
  "tasks": {
   "1": {
-   "points": 17.97802357692784,
-   "memory": 1095,
-   "params": 26,
-   "method": "ext:franksunp7166_65"
+   "points": 19.519361,
+   "memory": 0,
+   "params": 240,
+   "method": "custom:task001"
   },
   "2": {
-   "points": 14.895737212011671,
-   "memory": 24320,
-   "params": 127,
-   "method": "teacher:urad7174_top15_public_probe"
+   "points": 16.191780334881592,
+   "memory": 6100,
+   "params": 589,
+   "method": "custom:task002"
   },
   "3": {
    "points": 19.28957298262513,
    "memory": 281,
    "params": 21,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task003"
   },
   "4": {
-   "points": 16.406957496300326,
-   "memory": 5300,
-   "params": 94,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "points": 16.454413734082543,
+   "memory": 5044,
+   "params": 100,
+   "method": "custom:task004"
   },
   "5": {
    "points": 16.163335413642574,
    "memory": 6392,
    "params": 490,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "method": "custom:task005"
   },
   "6": {
    "points": 19.969562078607566,
    "memory": 126,
    "params": 27,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task006"
   },
   "7": {
    "points": 20.15581291354141,
    "memory": 0,
    "params": 127,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task007"
   },
   "8": {
    "points": 16.364846010950195,
    "memory": 5561,
    "params": 65,
-   "method": "ext:biohack_mix_positive"
+   "method": "custom:task008"
   },
   "9": {
-   "points": 16.12877535559045,
-   "memory": 7029,
+   "points": 16.142911864685047,
+   "memory": 6929,
    "params": 95,
-   "method": "custom:task009+onnxsim"
+   "method": "custom:task009"
   },
   "10": {
    "points": 18.024586072544047,
    "memory": 730,
    "params": 340,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "method": "custom:task010"
   },
   "11": {
-   "points": 17.343662833569816,
-   "memory": 1991,
-   "params": 123,
-   "method": "ext:biohack_mix_positive"
+   "points": 17.3995976654996,
+   "memory": 1836,
+   "params": 163,
+   "method": "custom:task011"
   },
   "12": {
    "points": 17.275111560676926,
    "memory": 2076,
    "params": 188,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task012"
   },
   "13": {
    "points": 17.43472471810107,
    "memory": 1869,
    "params": 61,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task013"
   },
   "14": {
-   "points": 16.014679939350888,
-   "memory": 7878,
-   "params": 107,
-   "method": "ext:lucifer_positive"
+   "points": 16.664088905803055,
+   "memory": 4088,
+   "params": 83,
+   "method": "custom:task014"
   },
   "15": {
    "points": 18.197605236675688,
    "memory": 0,
    "params": 900,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task015"
   },
   "16": {
    "points": 22.697414907005953,
    "memory": 0,
    "params": 10,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task016"
   },
   "17": {
-   "points": 15.631118599895267,
-   "memory": 9330,
-   "params": 2388,
-   "method": "custom:task017+source-ahead-public-probe"
+   "points": 15.743826211680645,
+   "memory": 8448,
+   "params": 2021,
+   "method": "custom:task017"
   },
   "18": {
-   "points": 14.156837275356981,
-   "memory": 48196,
-   "params": 2987,
-   "method": "teacher:urad7174_top15_public_probe"
+   "points": 14.658676959325257,
+   "memory": 29807,
+   "params": 1180,
+   "method": "custom:task018"
   },
   "19": {
    "points": 17.063339844774575,
    "memory": 2709,
    "params": 89,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "method": "custom:task019"
   },
   "20": {
    "points": 17.6695947881556,
    "memory": 1356,
    "params": 170,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task020"
   },
   "21": {
-   "points": 17.9352409722082,
-   "memory": 1072,
-   "params": 98,
-   "method": "ext:franksunp7166_65"
+   "points": 18.400129500787163,
+   "memory": 675,
+   "params": 60,
+   "method": "custom:task021"
   },
   "22": {
    "points": 17.25846641071817,
    "memory": 2004,
    "params": 298,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task022"
   },
   "23": {
-   "points": 15.517040433249083,
-   "memory": 12843,
-   "params": 291,
-   "method": "teacher:urad7174_top15_public_probe"
+   "points": 16.234073486270557,
+   "memory": 6163,
+   "params": 249,
+   "method": "custom:task023"
   },
   "24": {
    "points": 20.299519634207584,
    "memory": 0,
    "params": 110,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task024"
   },
   "25": {
-   "points": 15.43499670684604,
-   "memory": 14062,
+   "points": 15.448270925622786,
+   "memory": 13874,
    "params": 195,
-   "method": "ext:biohack_mix_positive"
+   "method": "custom:task025"
   },
   "26": {
    "points": 19.701682633451963,
    "memory": 0,
    "params": 200,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task026"
   },
   "27": {
    "points": 17.822217583804804,
    "memory": 1262,
    "params": 48,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task027"
   },
   "28": {
    "points": 19.876036020596743,
    "memory": 0,
    "params": 168,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task028"
   },
   "29": {
-   "points": 15.715480229849566,
-   "memory": 10736,
-   "params": 34,
-   "method": "ext:franksunp7166_65"
+   "points": 16.382961473614046,
+   "memory": 5436,
+   "params": 89,
+   "method": "custom:task029"
   },
   "30": {
    "points": 17.21844404076466,
    "memory": 2248,
    "params": 148,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task030"
   },
   "31": {
-   "points": 17.70020263324184,
-   "memory": 1434,
-   "params": 46,
-   "method": "ext:franksunp7166_65"
+   "points": 18.466211162066656,
+   "memory": 578,
+   "params": 110,
+   "method": "custom:task031"
   },
   "32": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task032"
   },
   "33": {
    "points": 17.59815842125617,
    "memory": 1606,
    "params": 33,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task033"
   },
   "34": {
    "points": 17.231466699073966,
    "memory": 2198,
    "params": 167,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task034"
   },
   "35": {
-   "points": 16.953770898924624,
-   "memory": 2994,
-   "params": 128,
-   "method": "ext:franksunp7166_65"
+   "points": 17.27643752772203,
+   "memory": 2132,
+   "params": 129,
+   "method": "custom:task035"
   },
   "36": {
    "points": 17.31429693876545,
    "memory": 2140,
    "params": 37,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task036"
   },
   "37": {
-   "points": 16.534942563004293,
-   "memory": 4614,
-   "params": 132,
-   "method": "ext:franksunp7166_65"
+   "points": 16.81548624696628,
+   "memory": 3384,
+   "params": 201,
+   "method": "custom:task037"
   },
   "38": {
    "points": 19.638707834290575,
    "memory": 163,
    "params": 50,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task038"
   },
   "39": {
    "points": 18.826213896098064,
    "memory": 424,
    "params": 56,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task039"
   },
   "40": {
    "points": 19.07574420258547,
    "memory": 240,
    "params": 134,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task040"
   },
   "41": {
    "points": 17.510587916491282,
    "memory": 1730,
    "params": 59,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task041"
   },
   "42": {
    "points": 16.95762199482672,
    "memory": 2792,
    "params": 318,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task042"
   },
   "43": {
    "points": 18.322916538752864,
    "memory": 588,
    "params": 206,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task043"
   },
   "44": {
-   "points": 15.650941708711995,
-   "memory": 11420,
-   "params": 68,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "points": 15.68358936429675,
+   "memory": 11050,
+   "params": 69,
+   "method": "custom:task044"
   },
   "45": {
    "points": 17.577626299013176,
    "memory": 1050,
    "params": 623,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task045"
   },
   "46": {
    "points": 17.251539976100304,
    "memory": 2221,
    "params": 97,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task046"
   },
   "47": {
    "points": 18.240744729336306,
    "memory": 826,
    "params": 36,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task047"
   },
   "48": {
    "points": 17.955967102725314,
    "memory": 1030,
    "params": 116,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task048"
   },
   "49": {
    "points": 19.04416263053517,
    "memory": 252,
    "params": 134,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task049"
   },
   "50": {
    "points": 16.728451625244485,
    "memory": 3825,
    "params": 86,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task050"
   },
   "51": {
    "points": 17.50279277679668,
    "memory": 1702,
    "params": 101,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task051"
   },
   "52": {
    "points": 19.575049982518596,
    "memory": 213,
    "params": 14,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task052"
   },
   "53": {
    "points": 21.598802618337846,
    "memory": 0,
    "params": 30,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task053"
   },
   "54": {
-   "points": 14.79215764072484,
-   "memory": 26877,
-   "params": 238,
-   "method": "ext:biohack_mix_positive"
+   "points": 15.077739762140588,
+   "memory": 20091,
+   "params": 288,
+   "method": "custom:task054"
   },
   "55": {
-   "points": 16.32785644858594,
-   "memory": 5790,
-   "params": 48,
+   "points": 16.963426590292688,
+   "memory": 3030,
+   "params": 62,
    "method": "custom:task055"
   },
   "56": {
    "points": 21.473639475383838,
    "memory": 34,
    "params": 0,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task056"
   },
   "57": {
    "points": 18.495711826463356,
    "memory": 638,
    "params": 30,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task057"
   },
   "58": {
    "points": 18.05977753088036,
    "memory": 252,
    "params": 781,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task058"
   },
   "59": {
    "points": 18.677434760072714,
    "memory": 265,
    "params": 292,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task059"
   },
   "60": {
    "points": 18.082294390164694,
    "memory": 0,
    "params": 1010,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task060"
   },
   "61": {
    "points": 17.58061941708131,
    "memory": 1633,
    "params": 35,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task061"
   },
   "62": {
    "points": 17.16165668444288,
    "memory": 2465,
    "params": 71,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task062"
   },
   "63": {
    "points": 17.393612610227347,
    "memory": 1728,
    "params": 283,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task063"
   },
   "64": {
-   "points": 15.494307049267817,
-   "memory": 13368,
-   "params": 68,
-   "method": "ext:franksunp7166_65"
+   "points": 15.791060608939445,
+   "memory": 9852,
+   "params": 134,
+   "method": "custom:task064"
   },
   "65": {
    "points": 18.53697054307933,
    "memory": 582,
    "params": 59,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task065"
   },
   "66": {
-   "points": 15.179079171120835,
-   "memory": 17763,
-   "params": 652,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "points": 15.777632247811098,
+   "memory": 9955,
+   "params": 166,
+   "method": "custom:task066"
   },
   "67": {
    "points": 21.14985239828994,
    "memory": 39,
    "params": 8,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task067"
   },
   "68": {
    "points": 18.565453481212547,
    "memory": 500,
    "params": 123,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task068"
   },
   "69": {
    "points": 16.72819596884529,
    "memory": 3848,
    "params": 64,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task069"
   },
   "70": {
    "points": 16.99096931493027,
    "memory": 2977,
    "params": 31,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task070"
   },
   "71": {
    "points": 17.0997339632323,
    "memory": 2643,
    "params": 55,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task071"
   },
   "72": {
    "points": 18.957367166317617,
    "memory": 390,
    "params": 31,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task072"
   },
   "73": {
    "points": 21.311120545886062,
    "memory": 0,
    "params": 40,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task073"
   },
   "74": {
    "points": 15.889479963306028,
    "memory": 9000,
    "params": 50,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "method": "custom:task074"
   },
   "75": {
    "points": 17.695484053539843,
    "memory": 1326,
    "params": 161,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task075"
   },
   "76": {
-   "points": 14.931506612879605,
-   "memory": 23296,
-   "params": 292,
-   "method": "ext:lucifer_positive"
+   "points": 15.106764823928224,
+   "memory": 19456,
+   "params": 340,
+   "method": "custom:task076"
   },
   "77": {
-   "points": 15.392629998736755,
-   "memory": 14760,
-   "params": 114,
-   "method": "ext:franksunp7166_65"
+   "points": 16.246786519455874,
+   "memory": 4500,
+   "params": 1831,
+   "method": "custom:task077"
   },
   "78": {
    "points": 17.835279621228143,
    "memory": 1260,
    "params": 33,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task078"
   },
   "79": {
    "points": 16.94706696320243,
    "memory": 3065,
    "params": 78,
-   "method": "ext:biohack_mix_positive"
+   "method": "custom:task079"
   },
   "80": {
-   "points": 15.66850450646735,
-   "memory": 10834,
+   "points": 15.734887392176837,
+   "memory": 10109,
    "params": 454,
-   "method": "custom:task080+qconv+onnxsim"
+   "method": "custom:task080"
   },
   "81": {
    "points": 18.860115447773744,
    "memory": 392,
    "params": 72,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task081"
   },
   "82": {
    "points": 19.752975927839515,
    "memory": 0,
    "params": 190,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task082"
   },
   "83": {
-   "points": 18.89744140538643,
-   "memory": 376,
-   "params": 71,
-   "method": "ext:franksunp7166_65"
+   "points": 18.959745288722587,
+   "memory": 0,
+   "params": 420,
+   "method": "custom:task083"
   },
   "84": {
-   "points": 17.38027578621733,
-   "memory": 1797,
-   "params": 241,
-   "method": "ext:franksunp7166_65"
+   "points": 17.453025882483473,
+   "memory": 1817,
+   "params": 78,
+   "method": "custom:task084"
   },
   "85": {
    "points": 16.409370490510582,
    "memory": 4500,
    "params": 881,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task085"
   },
   "86": {
    "points": 16.9492966185297,
    "memory": 2946,
    "params": 190,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task086"
   },
   "87": {
    "points": 23.3905620875659,
    "memory": 0,
    "params": 5,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task087"
   },
   "88": {
    "points": 17.465237342962464,
    "memory": 1791,
    "params": 81,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task088"
   },
   "89": {
-   "points": 16.110967428125257,
-   "memory": 7092,
+   "points": 16.13454717424638,
+   "memory": 6923,
    "params": 160,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task089"
   },
   "90": {
    "points": 16.963750057867884,
    "memory": 3009,
    "params": 82,
-   "method": "ext:biohack_mix_positive"
+   "method": "custom:task090"
   },
   "91": {
    "points": 16.98434238544266,
    "memory": 2853,
    "params": 175,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task091"
   },
   "92": {
-   "points": 16.145335071629468,
-   "memory": 6825,
+   "points": 16.16478953633591,
+   "memory": 6690,
    "params": 182,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task092"
   },
   "93": {
    "points": 16.822765114489805,
    "memory": 3456,
    "params": 103,
-   "method": "ext:biohack_mix_positive"
+   "method": "custom:task093"
   },
   "94": {
    "points": 17.094189687341068,
    "memory": 2662,
    "params": 51,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task094"
   },
   "95": {
    "points": 19.15645558296864,
    "memory": 245,
    "params": 100,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task095"
   },
   "96": {
-   "points": 15.904733835869283,
-   "memory": 8108,
-   "params": 805,
-   "method": "ext:biohack_mix_positive"
+   "points": 15.918857566495499,
+   "memory": 7987,
+   "params": 801,
+   "method": "custom:task096"
   },
   "97": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task097"
   },
   "98": {
    "points": 18.197605236675688,
    "memory": 0,
    "params": 900,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task098"
   },
   "99": {
    "points": 17.444618055759726,
    "memory": 1633,
    "params": 278,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task099"
   },
   "100": {
    "points": 18.702890680066066,
    "memory": 454,
    "params": 89,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task100"
   },
   "101": {
-   "points": 15.210521364075738,
-   "memory": 16940,
-   "params": 905,
-   "method": "ext:biohack_mix_positive"
+   "points": 15.421757940470618,
+   "memory": 13573,
+   "params": 874,
+   "method": "custom:task101"
   },
   "102": {
    "points": 17.165211892611808,
    "memory": 2414,
    "params": 113,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task102"
   },
   "103": {
    "points": 20.9056554377779,
    "memory": 36,
    "params": 24,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task103"
   },
   "104": {
    "points": 19.462665732981463,
    "memory": 197,
    "params": 57,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task104"
   },
   "105": {
    "points": 17.007055452681893,
    "memory": 2854,
    "params": 106,
-   "method": "ext:biohack_mix_positive"
+   "method": "custom:task105"
   },
   "106": {
    "points": 18.23265687473461,
    "memory": 776,
    "params": 93,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task106"
   },
   "107": {
    "points": 16.6866380488656,
    "memory": 2924,
    "params": 1154,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task107"
   },
   "108": {
-   "points": 18.121673531708673,
-   "memory": 864,
-   "params": 107,
-   "method": "ext:franksunp7166_65"
+   "points": 19.2962175253438,
+   "memory": 0,
+   "params": 300,
+   "method": "custom:task108"
   },
   "109": {
    "points": 17.516193312334167,
    "memory": 1686,
    "params": 93,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task109"
   },
   "110": {
-   "points": 15.468373548158258,
-   "memory": 13155,
-   "params": 634,
-   "method": "ext:franksunp7166_65"
+   "points": 16.332492047924895,
+   "memory": 264,
+   "params": 5547,
+   "method": "custom:task110"
   },
   "111": {
    "points": 18.717733253103994,
    "memory": 528,
    "params": 7,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task111"
   },
   "112": {
    "points": 17.519007837130474,
    "memory": 1616,
    "params": 158,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task112"
   },
   "113": {
    "points": 21.598802618337846,
    "memory": 0,
    "params": 30,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task113"
   },
   "114": {
    "points": 18.197605236675688,
    "memory": 0,
    "params": 900,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task114"
   },
   "115": {
    "points": 18.050143544999226,
    "memory": 980,
    "params": 63,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task115"
   },
   "116": {
    "points": 21.598802618337846,
    "memory": 0,
    "params": 30,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task116"
   },
   "117": {
    "points": 16.665528445399055,
    "memory": 3922,
    "params": 243,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task117"
   },
   "118": {
-   "points": 14.553142192222154,
-   "memory": 31049,
-   "params": 3387,
-   "method": "custom:task118_tail_where+onnxsim"
+   "points": 14.855725460977068,
+   "memory": 24722,
+   "params": 723,
+   "method": "custom:task118"
   },
   "119": {
    "points": 17.781090292380938,
    "memory": 1244,
    "params": 121,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task119"
   },
   "120": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task120"
   },
   "121": {
    "points": 19.168117522716482,
    "memory": 275,
    "params": 66,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task121"
   },
   "122": {
    "points": 18.302965752333517,
    "memory": 0,
    "params": 810,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task122"
   },
   "123": {
    "points": 17.797338803476762,
    "memory": 403,
    "params": 940,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task123"
   },
   "124": {
    "points": 17.42287806912332,
    "memory": 1879,
    "params": 74,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task124"
   },
   "125": {
    "points": 16.850109455597575,
    "memory": 3434,
    "params": 29,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task125"
   },
   "126": {
    "points": 18.59477154196916,
    "memory": 590,
    "params": 15,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task126"
   },
   "127": {
    "points": 19.01858578874552,
    "memory": 204,
    "params": 192,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task127"
   },
   "128": {
    "points": 19.2962175253438,
@@ -772,831 +772,829 @@
    "points": 20.61797336532612,
    "memory": 80,
    "params": 0,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task129"
   },
   "130": {
    "points": 21.598802618337846,
    "memory": 0,
    "params": 30,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task130"
   },
   "131": {
    "points": 16.709205652618643,
    "memory": 3312,
    "params": 675,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task131"
   },
   "132": {
    "points": 16.683944279635355,
    "memory": 3990,
    "params": 99,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task132"
   },
   "133": {
-   "points": 14.578254511880585,
-   "memory": 32294,
-   "params": 1288,
-   "method": "ext:franksunp7166_65"
+   "points": 14.703254882463453,
+   "memory": 27333,
+   "params": 2303,
+   "method": "custom:task133"
   },
   "134": {
    "points": 17.266316429224098,
    "memory": 2250,
    "params": 34,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task134"
   },
   "135": {
    "points": 19.701682633451963,
    "memory": 0,
    "params": 200,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task135"
   },
   "136": {
    "points": 17.89914809105595,
    "memory": 1179,
    "params": 34,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task136"
   },
   "137": {
    "points": 16.832080637042182,
    "memory": 3433,
    "params": 93,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task137"
   },
   "138": {
-   "points": 15.455976993011353,
-   "memory": 13789,
-   "params": 172,
-   "method": "ext:lucifer_positive"
+   "points": 15.552455393061273,
+   "memory": 12215,
+   "params": 462,
+   "method": "custom:task138"
   },
   "139": {
    "points": 18.193170639607825,
    "memory": 765,
    "params": 139,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task139"
   },
   "140": {
    "points": 23.3905620875659,
    "memory": 0,
    "params": 5,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task140"
   },
   "141": {
    "points": 17.683451822817023,
    "memory": 1404,
    "params": 101,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task141"
   },
   "142": {
-   "points": 19.358092929061886,
-   "memory": 144,
-   "params": 138,
-   "method": "ext:franksunp7166_65"
+   "points": 19.807043149109788,
+   "memory": 0,
+   "params": 180,
+   "method": "custom:task142"
   },
   "143": {
    "points": 18.268981899517918,
    "memory": 591,
    "params": 247,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task143"
   },
   "144": {
    "points": 20.35560910085863,
    "memory": 0,
    "params": 104,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task144"
   },
   "145": {
-   "points": 15.51089217296161,
-   "memory": 13104,
-   "params": 111,
-   "method": "ext:franksunp7166_65"
+   "points": 15.741631659013235,
+   "memory": 9244,
+   "params": 1248,
+   "method": "custom:task145"
   },
   "146": {
-   "points": 18.79544223743131,
-   "memory": 388,
+   "points": 18.81173587691741,
+   "memory": 380,
    "params": 107,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task146"
   },
   "147": {
    "points": 18.723356510658355,
    "memory": 432,
    "params": 100,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task147"
   },
   "148": {
-   "points": 16.29931926514984,
+   "points": 16.322560459441668,
    "memory": 5759,
-   "params": 248,
-   "method": "ext:franksunp7166_65"
+   "params": 110,
+   "method": "custom:task148"
   },
   "149": {
    "points": 20.087345114263947,
    "memory": 36,
    "params": 100,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task149"
   },
   "150": {
-   "points": 19.937404966973034,
-   "memory": 128,
-   "params": 30,
-   "method": "ext:franksunp7166_65"
+   "points": 20.072746314842796,
+   "memory": 136,
+   "params": 2,
+   "method": "custom:task150"
   },
   "151": {
    "points": 18.197605236675688,
    "memory": 0,
    "params": 900,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task151"
   },
   "152": {
-   "points": 18.55586874329956,
-   "memory": 504,
-   "params": 125,
-   "method": "ext:franksunp7166_65"
+   "points": 19.807043149109788,
+   "memory": 0,
+   "params": 180,
+   "method": "custom:task152"
   },
   "153": {
    "points": 18.32165788534567,
    "memory": 741,
    "params": 54,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task153"
   },
   "154": {
    "points": 17.077014041288805,
    "memory": 2661,
    "params": 99,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task154"
   },
   "155": {
-   "points": 19.937404966973034,
-   "memory": 128,
-   "params": 30,
-   "method": "ext:franksunp7166_65"
+   "points": 20.04417294239874,
+   "memory": 140,
+   "params": 2,
+   "method": "custom:task155"
   },
   "156": {
    "points": 17.536063395531073,
    "memory": 1697,
    "params": 47,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task156"
   },
   "157": {
    "points": 15.9719011880176,
    "memory": 7983,
    "params": 351,
-   "method": "teacher:urad7174_top15_public_probe"
+   "method": "custom:task157"
   },
   "158": {
-   "points": 14.52759717692328,
-   "memory": 32987,
-   "params": 2340,
-   "method": "ext:biohack_mix_positive"
+   "points": 15.05201720757732,
+   "memory": 18263,
+   "params": 2647,
+   "method": "custom:task158"
   },
   "159": {
    "points": 17.642443799089648,
    "memory": 1419,
    "params": 149,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task159"
   },
   "160": {
    "points": 17.804062773524432,
    "memory": 1164,
    "params": 170,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task160"
   },
   "161": {
-   "points": 16.684188868116458,
-   "memory": 4055,
-   "params": 33,
-   "method": "ext:lucifer_positive"
+   "points": 17.148338822110734,
+   "memory": 2471,
+   "params": 99,
+   "method": "custom:task161"
   },
   "162": {
    "points": 16.68909324283155,
    "memory": 4024,
    "params": 44,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task162"
   },
   "163": {
-   "points": 17.23995931911962,
-   "memory": 2235,
-   "params": 110,
-   "method": "ext:franksunp7166_65"
+   "points": 17.50612611321644,
+   "memory": 1655,
+   "params": 142,
+   "method": "custom:task163"
   },
   "164": {
    "points": 21.598802618337846,
    "memory": 0,
    "params": 30,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task164"
   },
   "165": {
-   "points": 16.275792639199437,
+   "points": 16.289545311751475,
    "memory": 5836,
-   "params": 314,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "params": 230,
+   "method": "custom:task165"
   },
   "166": {
    "points": 21.821946169652055,
    "memory": 0,
    "params": 24,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task166"
   },
   "167": {
    "points": 20.002787726235887,
    "memory": 20,
    "params": 128,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task167"
   },
   "168": {
    "points": 17.286215383401245,
    "memory": 2096,
    "params": 143,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task168"
   },
   "169": {
    "points": 17.5794210945892,
    "memory": 1500,
    "params": 170,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task169"
   },
   "170": {
    "points": 17.158114071015376,
    "memory": 2216,
    "params": 329,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task170"
   },
   "171": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task171"
   },
   "172": {
    "points": 21.598802618337846,
    "memory": 0,
    "params": 30,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task172"
   },
   "173": {
-   "points": 14.95033633730627,
-   "memory": 23036,
-   "params": 112,
-   "method": "ext:biohack_mix_positive"
+   "points": 15.13858522388578,
+   "memory": 18717,
+   "params": 459,
+   "method": "custom:task173"
   },
   "174": {
-   "points": 16.12443330800945,
-   "memory": 7013,
+   "points": 16.130039489476047,
+   "memory": 6973,
    "params": 142,
-   "method": "custom:task174+onnxsim"
+   "method": "custom:task174"
   },
   "175": {
    "points": 17.85559281967886,
    "memory": 330,
    "params": 937,
-   "method": "ext:biohack_mix_positive"
+   "method": "custom:task175"
   },
   "176": {
    "points": 19.519361076658008,
    "memory": 0,
    "params": 240,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task176"
   },
   "177": {
    "points": 16.751470875199782,
    "memory": 3692,
    "params": 130,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task177"
   },
   "178": {
    "points": 18.362741968715543,
    "memory": 702,
    "params": 61,
-   "method": "ext:biohack_mix_positive"
+   "method": "custom:task178"
   },
   "179": {
    "points": 25.0,
    "memory": 0,
    "params": 0,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task179"
   },
   "180": {
    "points": 19.65289246928253,
    "memory": 0,
    "params": 210,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task180"
   },
   "181": {
    "points": 19.089203355959473,
    "memory": 201,
    "params": 168,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task181"
   },
   "182": {
-   "points": 16.176352050808696,
-   "memory": 6695,
-   "params": 98,
-   "method": "teacher:urad7174_top15_public_probe"
+   "points": 16.229405670108854,
+   "memory": 6345,
+   "params": 97,
+   "method": "custom:task182"
   },
   "183": {
    "points": 17.885230551633537,
    "memory": 1008,
    "params": 222,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task183"
   },
   "184": {
    "points": 17.167985819494533,
    "memory": 2460,
    "params": 60,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task184"
   },
   "185": {
    "points": 17.418790173803654,
    "memory": 1651,
    "params": 310,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task185"
   },
   "186": {
    "points": 20.365271011770364,
    "memory": 80,
    "params": 23,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task186"
   },
   "187": {
-   "points": 14.580251621207942,
-   "memory": 32850,
-   "params": 665,
+   "points": 15.973342110457114,
+   "memory": 5000,
+   "params": 3322,
    "method": "custom:task187"
   },
   "188": {
    "points": 17.92081560539033,
    "memory": 1128,
    "params": 59,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "method": "custom:task188"
   },
   "189": {
    "points": 18.18107593472448,
    "memory": 866,
    "params": 49,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task189"
   },
   "190": {
-   "points": 17.089042617154412,
-   "memory": 2480,
+   "points": 17.165211892611808,
+   "memory": 2280,
    "params": 247,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task190"
   },
   "191": {
-   "points": 14.622859236052264,
-   "memory": 31276,
-   "params": 841,
-   "method": "custom:task191+onnxsim"
+   "points": 15.064723124974465,
+   "memory": 14070,
+   "params": 6576,
+   "method": "custom:task191"
   },
   "192": {
-   "points": 15.938043633790075,
-   "memory": 8515,
-   "params": 106,
-   "method": "ext:franksunp7166_65"
+   "points": 16.14690616386151,
+   "memory": 5745,
+   "params": 1251,
+   "method": "custom:task192"
   },
   "193": {
-   "points": 18.186555400489105,
-   "memory": 0,
-   "params": 910,
-   "method": "ext:franksunp7166_65"
+   "points": 15.63009505835248,
+   "memory": 9984,
+   "params": 1746,
+   "method": "custom:task193"
   },
   "194": {
    "points": 18.14459120139007,
    "memory": 900,
    "params": 49,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task194"
   },
   "195": {
    "points": 18.174539963744692,
    "memory": 882,
    "params": 39,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task195"
   },
   "196": {
    "points": 16.579758334660212,
    "memory": 4500,
    "params": 38,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "method": "custom:task196"
   },
   "197": {
    "points": 17.13596434092755,
    "memory": 2586,
    "params": 16,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task197"
   },
   "198": {
    "points": 15.48423587409588,
    "memory": 13434,
    "params": 138,
-   "method": "teacher:urad7174_top15_public_probe"
+   "method": "custom:task198"
   },
   "199": {
    "points": 17.484110914784875,
    "memory": 1749,
    "params": 88,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task199"
   },
   "200": {
    "points": 18.37195862382047,
    "memory": 570,
    "params": 186,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task200"
   },
   "201": {
-   "points": 16.5631495612663,
-   "memory": 4476,
-   "params": 138,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "points": 16.881494932412902,
+   "memory": 3202,
+   "params": 154,
+   "method": "custom:task201"
   },
   "202": {
-   "points": 15.669479467767712,
-   "memory": 11253,
-   "params": 24,
-   "method": "teacher:urad7174_top15_public_probe"
+   "points": 16.90226942633578,
+   "memory": 3253,
+   "params": 34,
+   "method": "custom:task202"
   },
   "203": {
    "points": 18.986284843957197,
    "memory": 408,
    "params": 1,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task203"
   },
   "204": {
-   "points": 15.72228139269387,
-   "memory": 10244,
-   "params": 453,
-   "method": "custom:task204+onnxsim"
+   "points": 15.76672465674132,
+   "memory": 9780,
+   "params": 452,
+   "method": "custom:task204"
   },
   "205": {
-   "points": 15.359697048315265,
-   "memory": 14734,
-   "params": 638,
-   "method": "teacher:urad7174_top15_public_probe"
+   "points": 15.588107502953084,
+   "memory": 11598,
+   "params": 635,
+   "method": "custom:task205"
   },
   "206": {
    "points": 16.657398319315806,
    "memory": 4122,
    "params": 77,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task206"
   },
   "207": {
    "points": 19.53616819497439,
    "memory": 192,
    "params": 44,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task207"
   },
   "208": {
-   "points": 16.286746725679293,
-   "memory": 5974,
-   "params": 109,
-   "method": "ext:franksunp7166_65"
+   "points": 16.539165542253144,
+   "memory": 4612,
+   "params": 114,
+   "method": "custom:task208"
   },
   "209": {
-   "points": 14.619905667084565,
-   "memory": 32027,
-   "params": 185,
-   "method": "teacher:urad7174_top15_public_probe"
+   "points": 14.969175199002677,
+   "memory": 21298,
+   "params": 1418,
+   "method": "custom:task209"
   },
   "210": {
    "points": 21.598802618337846,
    "memory": 0,
    "params": 30,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task210"
   },
   "211": {
-   "points": 19.01858578874552,
-   "memory": 240,
-   "params": 156,
-   "method": "ext:franksunp7166_65"
+   "points": 19.2962175253438,
+   "memory": 0,
+   "params": 300,
+   "method": "custom:task211"
   },
   "212": {
    "points": 17.233583101980344,
    "memory": 2178,
    "params": 182,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task212"
   },
   "213": {
    "points": 17.457256454631448,
    "memory": 1838,
    "params": 49,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "method": "custom:task213"
   },
   "214": {
    "points": 18.357513198632745,
    "memory": 726,
    "params": 41,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task214"
   },
   "215": {
    "points": 18.379926793469643,
    "memory": 678,
    "params": 72,
-   "method": "ext:biohack_mix_positive"
+   "method": "custom:task215"
   },
   "216": {
-   "points": 15.880131531187892,
-   "memory": 9048,
-   "params": 87,
-   "method": "ext:franksunp7166_65"
+   "points": 15.93352999844352,
+   "memory": 8584,
+   "params": 76,
+   "method": "custom:task216"
   },
   "217": {
    "points": 17.70698232022722,
    "memory": 1429,
    "params": 41,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task217"
   },
   "218": {
-   "points": 18.50473444406299,
-   "memory": 558,
-   "params": 104,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "points": 18.510795068674682,
+   "memory": 555,
+   "params": 103,
+   "method": "custom:task218"
   },
   "219": {
-   "points": 15.16238519161458,
-   "memory": 18633,
-   "params": 92,
-   "method": "teacher:urad7174_top15_public_probe"
+   "points": 16.116775769721006,
+   "memory": 7078,
+   "params": 132,
+   "method": "custom:task219"
   },
   "220": {
    "points": 18.197605236675688,
    "memory": 0,
    "params": 900,
-   "method": "ext:franksunp7166_65",
-   "local_stored_ok": false
+   "method": "ext:franksunp7166_65"
   },
   "221": {
    "points": 18.309157722581435,
    "memory": 451,
    "params": 354,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task221"
   },
   "222": {
-   "points": 15.915903354598068,
-   "memory": 8736,
-   "params": 78,
+   "points": 16.001863239299695,
+   "memory": 5136,
+   "params": 2952,
    "method": "custom:task222"
   },
   "223": {
    "points": 23.3905620875659,
    "memory": 0,
    "params": 5,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task223"
   },
   "224": {
    "points": 17.0516147148881,
    "memory": 2460,
    "params": 371,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task224"
   },
   "225": {
    "points": 18.05977753088036,
    "memory": 926,
    "params": 107,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task225"
   },
   "226": {
    "points": 17.601825907029536,
    "memory": 1613,
    "params": 20,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task226"
   },
   "227": {
    "points": 20.394829814011906,
    "memory": 0,
    "params": 100,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task227"
   },
   "228": {
    "points": 18.130985549334294,
    "memory": 849,
    "params": 113,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task228"
   },
   "229": {
    "points": 19.519361076658008,
    "memory": 212,
    "params": 28,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task229"
   },
   "230": {
    "points": 18.197605236675688,
    "memory": 0,
    "params": 900,
-   "method": "ext:franksunp7166_65",
-   "local_stored_ok": false
+   "method": "ext:franksunp7166_65"
   },
   "231": {
    "points": 19.6109282701835,
    "memory": 180,
    "params": 39,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task231"
   },
   "232": {
    "points": 17.748655016627787,
    "memory": 0,
    "params": 1410,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task232"
   },
   "233": {
-   "points": 14.002711715792984,
-   "memory": 59147,
-   "params": 565,
-   "method": "ext:biohack_mix_positive"
+   "points": 14.588430584368945,
+   "memory": 32796,
+   "params": 446,
+   "method": "custom:task233"
   },
   "234": {
-   "points": 16.16741229756545,
-   "memory": 6809,
-   "params": 45,
-   "method": "ext:franksunp7166_65"
+   "points": 16.755140604088744,
+   "memory": 3744,
+   "params": 64,
+   "method": "custom:task234"
   },
   "235": {
    "points": 19.864201562949738,
    "memory": 111,
    "params": 59,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task235"
   },
   "236": {
    "points": 19.531939858864867,
    "memory": 208,
    "params": 29,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task236"
   },
   "237": {
-   "points": 17.440961744556617,
-   "memory": 1778,
-   "params": 140,
-   "method": "ext:franksunp7166_65"
+   "points": 17.449864657511572,
+   "memory": 1763,
+   "params": 138,
+   "method": "custom:task237"
   },
   "238": {
    "points": 17.17795599181438,
    "memory": 2051,
    "params": 444,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task238"
   },
   "239": {
    "points": 18.146700906813923,
    "memory": 897,
    "params": 50,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task239"
   },
   "240": {
    "points": 17.703586731226082,
    "memory": 1393,
    "params": 82,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task240"
   },
   "241": {
    "points": 25.0,
    "memory": 0,
    "params": 0,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task241"
   },
   "242": {
    "points": 18.93157441175589,
    "memory": 372,
    "params": 60,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task242"
   },
   "243": {
-   "points": 14.971996572766304,
-   "memory": 22608,
-   "params": 44,
-   "method": "ext:franksunp7166_65"
+   "points": 16.29832092896043,
+   "memory": 5112,
+   "params": 901,
+   "method": "custom:task243"
   },
   "244": {
    "points": 17.92757809946263,
    "memory": 1076,
    "params": 103,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task244"
   },
   "245": {
    "points": 17.083192509062396,
    "memory": 2604,
    "params": 139,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task245"
   },
   "246": {
    "points": 17.079553494857393,
    "memory": 2334,
    "params": 419,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task246"
   },
   "247": {
    "points": 18.847267305295894,
    "memory": 408,
    "params": 62,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task247"
   },
   "248": {
    "points": 19.982720163185075,
    "memory": 122,
    "params": 29,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task248"
   },
   "249": {
    "points": 19.34051778424038,
    "memory": 248,
    "params": 39,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task249"
   },
   "250": {
    "points": 16.921311770770128,
    "memory": 3164,
    "params": 61,
-   "method": "custom:task250+qlinear+onnxsim"
+   "method": "custom:task250"
   },
   "251": {
-   "points": 16.498936190513646,
-   "memory": 4752,
-   "params": 168,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "points": 16.979072281018425,
+   "memory": 2772,
+   "params": 272,
+   "method": "custom:task251"
   },
   "252": {
    "points": 19.439318368984473,
    "memory": 0,
    "params": 260,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task252"
   },
   "253": {
    "points": 18.616493365115993,
    "memory": 540,
    "params": 52,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task253"
   },
   "254": {
    "points": 17.998754377930524,
    "memory": 1079,
    "params": 19,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task254"
   },
   "255": {
-   "points": 14.940149929840013,
-   "memory": 23123,
-   "params": 262,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "points": 15.387132163902995,
+   "memory": 14663,
+   "params": 293,
+   "method": "custom:task255"
   },
   "256": {
-   "points": 17.011117746690772,
-   "memory": 2898,
-   "params": 50,
-   "method": "ext:franksunp7166_65"
+   "points": 17.268507970754314,
+   "memory": 2223,
+   "params": 56,
+   "method": "custom:task256"
   },
   "257": {
    "points": 18.986284843957197,
    "memory": 0,
    "params": 409,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task257"
   },
   "258": {
    "points": 19.924826184766175,
    "memory": 0,
    "params": 160,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task258"
   },
   "259": {
    "points": 18.192065056300073,
    "memory": 853,
    "params": 52,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task259"
   },
   "260": {
-   "points": 17.343662833569816,
+   "points": 17.3488798242973,
    "memory": 1804,
-   "params": 310,
-   "method": "ext:franksunp7166_65"
+   "params": 299,
+   "method": "custom:task260"
   },
   "261": {
    "points": 19.701682633451963,
    "memory": 0,
    "params": 200,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task261"
   },
   "262": {
    "points": 20.336560905887932,
    "memory": 90,
    "params": 16,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task262"
   },
   "263": {
    "points": 18.477907201829847,
    "memory": 563,
    "params": 117,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task263"
   },
   "264": {
    "points": 16.291525510418335,
    "memory": 5348,
    "params": 706,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task264"
   },
   "265": {
    "points": 16.619314053238426,
    "memory": 4328,
    "params": 34,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task265"
   },
   "266": {
    "points": 19.142066845516542,
    "memory": 315,
    "params": 35,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task266"
   },
   "267": {
    "points": 18.358817830259408,
@@ -1608,506 +1606,505 @@
    "points": 16.81576522590518,
    "memory": 3328,
    "params": 256,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task268"
   },
   "269": {
    "points": 18.436144473467873,
    "memory": 685,
    "params": 24,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task269"
   },
   "270": {
    "points": 16.970892945380264,
    "memory": 2742,
    "params": 327,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task270"
   },
   "271": {
    "points": 17.92081560539033,
    "memory": 1141,
    "params": 46,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task271"
   },
   "272": {
    "points": 19.003547911380977,
    "memory": 200,
    "params": 202,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task272"
   },
   "273": {
    "points": 17.32213649932179,
    "memory": 2109,
    "params": 51,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task273"
   },
   "274": {
    "points": 19.579465000727716,
    "memory": 146,
    "params": 80,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task274"
   },
   "275": {
    "points": 17.393612610227347,
    "memory": 1374,
    "params": 637,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task275"
   },
   "276": {
    "points": 22.697414907005953,
    "memory": 0,
    "params": 10,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task276"
   },
   "277": {
-   "points": 16.62690815255802,
-   "memory": 4101,
-   "params": 228,
-   "method": "teacher:urad7174_top15_public_probe"
+   "points": 16.72487836978349,
+   "memory": 3701,
+   "params": 224,
+   "method": "custom:task277"
   },
   "278": {
-   "points": 16.278886852237314,
-   "memory": 6084,
+   "points": 16.39059232459595,
+   "memory": 5436,
    "params": 47,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task278"
   },
   "279": {
-   "points": 16.37754629792627,
+   "points": 16.37916777382428,
    "memory": 5508,
-   "params": 47,
-   "method": "ext:franksunp7166_65"
+   "params": 38,
+   "method": "custom:task279"
   },
   "280": {
-   "points": 16.2940062856921,
-   "memory": 5286,
-   "params": 753,
-   "method": "ext:biohack_mix_positive"
+   "points": 16.670100707004273,
+   "memory": 3363,
+   "params": 783,
+   "method": "custom:task280"
   },
   "281": {
    "points": 17.22262639734214,
    "memory": 2321,
    "params": 65,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task281"
   },
   "282": {
    "points": 18.899681047979936,
    "memory": 407,
    "params": 39,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task282"
   },
   "283": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task283"
   },
   "284": {
    "points": 16.774496902433082,
    "memory": 3082,
    "params": 653,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task284"
   },
   "285": {
-   "points": 14.848481180641883,
-   "memory": 25080,
+   "points": 14.864052429512313,
+   "memory": 24684,
    "params": 550,
-   "method": "ext:biohack_mix_positive"
+   "method": "custom:task285"
   },
   "286": {
-   "points": 14.241820561808675,
-   "memory": 46272,
-   "params": 741,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "points": 14.91539995462659,
+   "memory": 21090,
+   "params": 2881,
+   "method": "custom:task286"
   },
   "287": {
    "points": 17.402102049478216,
    "memory": 1699,
    "params": 295,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task287"
   },
   "288": {
    "points": 18.13515222202914,
    "memory": 769,
    "params": 189,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task288"
   },
   "289": {
    "points": 18.39065075683262,
    "memory": 618,
    "params": 124,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task289"
   },
   "290": {
    "points": 19.127882210524582,
    "memory": 292,
    "params": 63,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task290"
   },
   "291": {
    "points": 20.780492294823894,
    "memory": 40,
    "params": 28,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task291"
   },
   "292": {
    "points": 18.926955465899596,
    "memory": 252,
    "params": 182,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task292"
   },
   "293": {
    "points": 17.8391540933357,
    "memory": 1247,
    "params": 41,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task293"
   },
   "294": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
-   "method": "ext:franksunp7166_65",
-   "local_stored_ok": false
+   "method": "custom:task294"
   },
   "295": {
    "points": 17.61974421157354,
    "memory": 1557,
    "params": 47,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task295"
   },
   "296": {
    "points": 19.200907345539473,
    "memory": 285,
    "params": 45,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task296"
   },
   "297": {
    "points": 17.763660657245655,
    "memory": 1350,
    "params": 39,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task297"
   },
   "298": {
    "points": 20.09472522156157,
    "memory": 120,
    "params": 15,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task298"
   },
   "299": {
    "points": 21.087976994571854,
    "memory": 0,
    "params": 50,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task299"
   },
   "300": {
    "points": 18.70843086044168,
    "memory": 474,
    "params": 66,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task300"
   },
   "301": {
    "points": 17.960339650137925,
    "memory": 1077,
    "params": 64,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task301"
   },
   "302": {
    "points": 17.519007837130474,
    "memory": 1216,
    "params": 558,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task302"
   },
   "303": {
-   "points": 17.60981857177357,
-   "memory": 1598,
+   "points": 17.71930280461526,
+   "memory": 1430,
    "params": 22,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task303"
   },
   "304": {
    "points": 17.726907404000478,
    "memory": 1404,
    "params": 37,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task304"
   },
   "305": {
    "points": 18.544801436659878,
    "memory": 296,
    "params": 340,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task305"
   },
   "306": {
    "points": 19.2962175253438,
    "memory": 0,
    "params": 300,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task306"
   },
   "307": {
    "points": 23.3905620875659,
    "memory": 0,
    "params": 5,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task307"
   },
   "308": {
    "points": 17.694811784606962,
    "memory": 1385,
    "params": 103,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task308"
   },
   "309": {
    "points": 22.697414907005953,
    "memory": 0,
    "params": 10,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task309"
   },
   "310": {
    "points": 16.90226942633578,
    "memory": 3208,
    "params": 79,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task310"
   },
   "311": {
    "points": 21.598802618337846,
    "memory": 0,
    "params": 30,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task311"
   },
   "312": {
    "points": 22.00426772644601,
    "memory": 0,
    "params": 20,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task312"
   },
   "313": {
-   "points": 19.742504627972217,
+   "points": 19.76355803717005,
    "memory": 0,
-   "params": 192,
-   "method": "ext:franksunp7166_65"
+   "params": 188,
+   "method": "custom:task313"
   },
   "314": {
    "points": 20.394829814011906,
    "memory": 0,
    "params": 100,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task314"
   },
   "315": {
    "points": 19.561920691076804,
    "memory": 0,
    "params": 230,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task315"
   },
   "316": {
    "points": 18.94556065373063,
    "memory": 388,
    "params": 38,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task316"
   },
   "317": {
    "points": 20.016393378291664,
    "memory": 128,
    "params": 18,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task317"
   },
   "318": {
    "points": 20.394829814011906,
    "memory": 0,
    "params": 100,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task318"
   },
   "319": {
-   "points": 14.996531375100558,
-   "memory": 21834,
-   "params": 269,
-   "method": "ext:biohack_mix_positive"
+   "points": 15.160890981400078,
+   "memory": 18645,
+   "params": 108,
+   "method": "custom:task319"
   },
   "320": {
    "points": 18.35360948515227,
    "memory": 448,
    "params": 322,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task320"
   },
   "321": {
    "points": 19.2962175253438,
    "memory": 0,
    "params": 300,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task321"
   },
   "322": {
    "points": 19.701682633451963,
    "memory": 144,
    "params": 56,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task322"
   },
   "323": {
    "points": 17.31429693876545,
    "memory": 1521,
    "params": 656,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task323"
   },
   "324": {
    "points": 15.906867828929359,
    "memory": 7308,
    "params": 1586,
-   "method": "ext:biohack_mix_positive"
+   "method": "custom:task324"
   },
   "325": {
    "points": 17.33471528152865,
    "memory": 2010,
    "params": 123,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task325"
   },
   "326": {
    "points": 21.598802618337846,
    "memory": 0,
    "params": 30,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task326"
   },
   "327": {
    "points": 18.218942374063822,
    "memory": 810,
    "params": 71,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task327"
   },
   "328": {
-   "points": 16.159130375908603,
-   "memory": 4971,
+   "points": 16.179005354252098,
+   "memory": 4835,
    "params": 1940,
-   "method": "ext:biohack_mix_positive"
+   "method": "custom:task328"
   },
   "329": {
    "points": 18.034919654398593,
    "memory": 1029,
    "params": 30,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task329"
   },
   "330": {
    "points": 16.986325857167316,
    "memory": 2800,
    "params": 222,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task330"
   },
   "331": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task331"
   },
   "332": {
    "points": 18.666720371860308,
    "memory": 429,
    "params": 134,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task332"
   },
   "333": {
    "points": 16.92069180794804,
    "memory": 2792,
    "params": 435,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task333"
   },
   "334": {
    "points": 19.716796271262012,
    "memory": 189,
    "params": 8,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task334"
   },
   "335": {
-   "points": 16.839196079045337,
-   "memory": 2840,
-   "params": 661,
-   "method": "teacher:urad7174_top15_public_probe"
+   "points": 17.296992317520765,
+   "memory": 2106,
+   "params": 109,
+   "method": "custom:task335"
   },
   "336": {
-   "points": 17.26456664750031,
-   "memory": 1092,
-   "params": 1196,
-   "method": "ext:franksunp7166_65"
+   "points": 17.42904141683099,
+   "memory": 755,
+   "params": 1186,
+   "method": "custom:task336"
   },
   "337": {
    "points": 22.697414907005953,
    "memory": 0,
    "params": 10,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task337"
   },
   "338": {
-   "points": 15.414172743435339,
-   "memory": 13890,
-   "params": 667,
-   "method": "custom:task338+qlinear+onnxsim"
+   "points": 15.725183608839453,
+   "memory": 10000,
+   "params": 666,
+   "method": "custom:task338"
   },
   "339": {
    "points": 20.058357577390694,
    "memory": 40,
    "params": 100,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task339"
   },
   "340": {
-   "points": 16.277582858572504,
-   "memory": 5860,
+   "points": 16.285432449163515,
+   "memory": 5812,
    "params": 279,
-   "method": "custom:task340+qlinear+onnxsim"
+   "method": "custom:task340"
   },
   "341": {
    "points": 17.735269822070133,
    "memory": 1394,
    "params": 35,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task341"
   },
   "342": {
    "points": 17.63166031368862,
    "memory": 1510,
    "params": 75,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task342"
   },
   "343": {
-   "points": 17.380766583773195,
-   "memory": 1927,
-   "params": 110,
-   "method": "ext:franksunp7166_65"
+   "points": 17.89175586026846,
+   "memory": 1147,
+   "params": 75,
+   "method": "custom:task343"
   },
   "344": {
    "points": 18.186555400489105,
    "memory": 0,
    "params": 910,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task344"
   },
   "345": {
    "points": 17.690118514175214,
    "memory": 1431,
    "params": 64,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task345"
   },
   "346": {
    "points": 17.865906278807135,
    "memory": 1224,
    "params": 30,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task346"
   },
   "347": {
    "points": 20.03715536974009,
    "memory": 117,
    "params": 26,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task347"
   },
   "348": {
-   "points": 17.27114417614746,
-   "memory": 2104,
-   "params": 169,
-   "method": "ext:biohack_mix_positive"
+   "points": 17.452498317185032,
+   "memory": 1824,
+   "params": 72,
+   "method": "custom:task348"
   },
   "349": {
-   "points": 14.826867062498243,
-   "memory": 26100,
-   "params": 90,
-   "method": "teacher:urad7174_top15_public_probe"
+   "points": 15.28942994347123,
+   "memory": 15300,
+   "params": 1191,
+   "method": "custom:task349"
   },
   "350": {
    "points": 15.890806810028774,
    "memory": 9012,
    "params": 26,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task350"
   },
   "351": {
-   "points": 17.59086355607987,
-   "memory": 1632,
-   "params": 19,
-   "method": "ext:franksunp7166_65"
+   "points": 18.077356108524114,
+   "memory": 956,
+   "params": 59,
+   "method": "custom:task351"
   },
   "352": {
    "points": 18.86877351051686,
@@ -2119,181 +2116,181 @@
    "points": 19.1888590070233,
    "memory": 272,
    "params": 62,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task353"
   },
   "354": {
-   "points": 16.968289624677958,
-   "memory": 2998,
-   "params": 79,
-   "method": "ext:franksunp7166_65"
+   "points": 17.080280239075424,
+   "memory": 2674,
+   "params": 77,
+   "method": "custom:task354"
   },
   "355": {
-   "points": 17.078827278412987,
-   "memory": 2728,
+   "points": 17.093452767631966,
+   "memory": 2688,
    "params": 27,
-   "method": "ext:biohack_mix_positive"
+   "method": "custom:task355"
   },
   "356": {
    "points": 17.815370847282686,
    "memory": 1300,
    "params": 19,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task356"
   },
   "357": {
    "points": 19.326676732828506,
    "memory": 258,
    "params": 33,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task357"
   },
   "358": {
-   "points": 16.58683487900781,
-   "memory": 4332,
-   "params": 174,
-   "method": "ext:franksunp7166_65"
+   "points": 16.60927747263771,
+   "memory": 4256,
+   "params": 150,
+   "method": "custom:task358"
   },
   "359": {
-   "points": 16.595527678647883,
-   "memory": 4452,
+   "points": 16.739765708392703,
+   "memory": 3852,
    "params": 15,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "method": "custom:task359"
   },
   "360": {
    "points": 19.17105438238979,
    "memory": 0,
    "params": 340,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task360"
   },
   "361": {
-   "points": 16.51553663320668,
-   "memory": 4472,
-   "params": 367,
-   "method": "ext:franksunp7166_65"
+   "points": 16.54723866874315,
+   "memory": 4322,
+   "params": 366,
+   "method": "custom:task361"
   },
   "362": {
    "points": 18.744249958246634,
    "memory": 408,
    "params": 113,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task362"
   },
   "363": {
-   "points": 16.558392795540357,
-   "memory": 4339,
-   "params": 297,
-   "method": "ext:lucifer_positive"
+   "points": 16.67275739254221,
+   "memory": 3839,
+   "params": 296,
+   "method": "custom:task363"
   },
   "364": {
-   "points": 14.90049346354632,
-   "memory": 24220,
-   "params": 111,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "points": 15.115134771591967,
+   "memory": 18500,
+   "params": 1131,
+   "method": "custom:task364"
   },
   "365": {
    "points": 16.698974746161547,
    "memory": 3908,
    "params": 120,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task365"
   },
   "366": {
-   "points": 14.497209022434086,
-   "memory": 35927,
-   "params": 490,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "points": 14.640385911220264,
+   "memory": 30983,
+   "params": 576,
+   "method": "custom:task366"
   },
   "367": {
-   "points": 14.800006916464858,
-   "memory": 21268,
-   "params": 5635,
-   "method": "ext:franksunp7166_65"
+   "points": 15.120549025292114,
+   "memory": 14800,
+   "params": 4725,
+   "method": "custom:task367"
   },
   "368": {
    "points": 16.26367127866709,
    "memory": 6022,
    "params": 203,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task368"
   },
   "369": {
    "points": 17.622866287166048,
    "memory": 1300,
    "params": 299,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task369"
   },
   "370": {
-   "points": 15.751016004431612,
-   "memory": 9127,
-   "params": 1267,
-   "method": "ext:biohack_mix_positive"
+   "points": 15.823319829516452,
+   "memory": 8645,
+   "params": 1024,
+   "method": "custom:task370"
   },
   "371": {
    "points": 18.853670742331104,
    "memory": 376,
    "params": 91,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task371"
   },
   "372": {
    "points": 18.43473502996464,
    "memory": 0,
    "params": 710,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task372"
   },
   "373": {
    "points": 20.9056554377779,
    "memory": 0,
    "params": 60,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task373"
   },
   "374": {
    "points": 17.25759797818422,
    "memory": 2262,
    "params": 42,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task374"
   },
   "375": {
    "points": 19.142066845516542,
    "memory": 108,
    "params": 242,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task375"
   },
   "376": {
    "points": 19.774253326286797,
    "memory": 144,
    "params": 42,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task376"
   },
   "377": {
-   "points": 15.951590495170038,
-   "memory": 8351,
-   "params": 154,
-   "method": "ext:franksunp7166_65"
+   "points": 15.980699075437494,
+   "memory": 8111,
+   "params": 150,
+   "method": "custom:task377"
   },
   "378": {
-   "points": 16.59061476121807,
-   "memory": 4372,
+   "points": 16.59956536919396,
+   "memory": 4332,
    "params": 117,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task378"
   },
   "379": {
-   "points": 15.8178533623946,
-   "memory": 9069,
-   "params": 653,
-   "method": "custom:task379+onnxsim"
+   "points": 15.847076898893768,
+   "memory": 9309,
+   "params": 133,
+   "method": "custom:task379"
   },
   "380": {
    "points": 20.40488014986541,
    "memory": 0,
    "params": 99,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task380"
   },
   "381": {
-   "points": 17.304696865036433,
-   "memory": 2128,
-   "params": 70,
-   "method": "ext:franksunp7166_65"
+   "points": 17.41777080572354,
+   "memory": 1908,
+   "params": 55,
+   "method": "custom:task381"
   },
   "382": {
    "points": 16.33732214184178,
    "memory": 5648,
    "params": 135,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task382"
   },
   "383": {
    "points": 16.288886115946454,
@@ -2305,103 +2302,103 @@
    "points": 18.614805601002274,
    "memory": 540,
    "params": 53,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task384"
   },
   "385": {
    "points": 21.598802618337846,
    "memory": 0,
    "params": 30,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task385"
   },
   "386": {
    "points": 19.648141866523932,
    "memory": 180,
    "params": 31,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task386"
   },
   "387": {
    "points": 16.471075885708064,
    "memory": 4954,
    "params": 105,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task387"
   },
   "388": {
    "points": 17.17755527051068,
    "memory": 2278,
    "params": 218,
-   "method": "ext:biohack_mix_positive"
+   "method": "custom:task388"
   },
   "389": {
    "points": 20.058357577390694,
    "memory": 128,
    "params": 12,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task389"
   },
   "390": {
    "points": 16.963750057867884,
    "memory": 2624,
    "params": 467,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task390"
   },
   "391": {
    "points": 19.93109579777977,
    "memory": 135,
    "params": 24,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task391"
   },
   "392": {
    "points": 17.42390265937689,
    "memory": 1602,
    "params": 349,
-   "method": "ext:biohack_mix_positive"
+   "method": "custom:task392"
   },
   "393": {
    "points": 20.030186700424,
    "memory": 125,
    "params": 19,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task393"
   },
   "394": {
    "points": 17.062625303836704,
    "memory": 1871,
    "params": 929,
-   "method": "ext:biohack_mix_positive"
+   "method": "custom:task394"
   },
   "395": {
    "points": 19.89405452609942,
    "memory": 144,
    "params": 21,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task395"
   },
   "396": {
-   "points": 15.551194060611822,
-   "memory": 12557,
-   "params": 136,
-   "method": "teacher:urad7174_remaining_public_probe"
+   "points": 15.824768805137385,
+   "memory": 7842,
+   "params": 1813,
+   "method": "custom:task396"
   },
   "397": {
-   "points": 17.045627727468133,
-   "memory": 2648,
+   "points": 17.067996847638614,
+   "memory": 2585,
    "params": 200,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task397"
   },
   "398": {
    "points": 17.041772807677688,
    "memory": 1666,
    "params": 1193,
-   "method": "custom:task398+u8+onnxsim"
+   "method": "custom:task398"
   },
   "399": {
    "points": 20.48914049348315,
    "memory": 71,
    "params": 20,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task399"
   },
   "400": {
    "points": 17.468447618592712,
    "memory": 1800,
    "params": 66,
-   "method": "ext:franksunp7166_65"
+   "method": "custom:task400"
   }
  }
 }

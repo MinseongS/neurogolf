@@ -4,15 +4,27 @@ points on the real Kaggle LB if it passes EVERY example, so a net that fails any
 fresh instance is treated as scoring 0 (Kaggle uses held-out arc-gen instances).
 """
 import importlib.util, json, sys, multiprocessing
+from pathlib import Path
 import numpy as np
 import onnxruntime as ort
 from src.harness import convert_to_numpy, load_task, evaluate
 
 MAPPING = json.load(open("reports/arc_mapping.json"))
-sys.path.insert(0, "/tmp/arc-gen")
+ROOT = Path(__file__).resolve().parent.parent
+ARCGEN = ROOT / "arc-gen" if (ROOT / "arc-gen").is_dir() else Path("/tmp/arc-gen")
+if str(ARCGEN) not in sys.path:
+    sys.path.append(str(ARCGEN))
+
+
+def generator_path(num):
+    mapped = Path(MAPPING[str(num)]["generator"])
+    local = ROOT / "arc-gen" / "tasks" / mapped.name
+    if local.exists():
+        return local
+    return mapped
 
 def load_gen(num):
-    path = MAPPING[str(num)]["generator"]
+    path = generator_path(num)
     spec = importlib.util.spec_from_file_location(f"gen{num}", path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)

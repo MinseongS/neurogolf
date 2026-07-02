@@ -73,3 +73,12 @@ channel-stacking and fp16 is the dtype floor (Max rejects uint8), so this whole
 "segment + global-argmax + crop" class floors near the memorizer/CumSum level (~13.4)
 for everyone. This is the non-local detection wall the sweep guidance warns about:
 the public net is already at it.
+
+## S9 (2026-07-03) — free-operand einsum red-count (+0.053) ADOPTED
+NOTE: this tasklog was STALE (described a 92k segmentation net); live incumbent was
+already 9135 via QLinearConv-corner + integral-free design. S9 golf: red plane (400B) +
+2×MatMulInteger contractions (320B i32 + 64B cross-terms) replaced by ONE 4-operand
+Einsum 'nkrc,k,br,bc->b' reusing counted c12_f32 as free operand → per-box red counts
+(4,) direct. mem 9048→8584, params 87→76. Bit-identical: 2500+600 uncached fresh 0/0/0.
+FLOORS: c12_f32 3200 = entry floor (both channels needed at 20×20; alternatives ≥cost),
+corner-finding 1200 + run-scan 1120 near-minimal u8. Backup task216_pre_s9.onnx.

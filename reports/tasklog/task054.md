@@ -53,3 +53,14 @@ overwrites.  It is not safe when the intermediate mask uses inactive duplicate
 scatter writes as part of the logic.  For task054, a successful rewrite must
 either preserve the exact mask-space overwrite semantics or avoid generating
 duplicate inactive vertical indices at the source.
+
+## S8 (2026-07-02) — sparse-edit chain + free-input profiles (+0.234) ADOPTED
+15×900B mask planes + 1920B CumSum stream → 4-plane sparse-edit chain: seeds via free-input
+einsum row profiles ('bchw,c->h' + col-weighted) with motif 3×3 zone masked (seeds Chebyshev≥4
+from centre); ScatterND ref-wipe → ring → row → col. KEY: line cells written as 255 with
+reduction='max' → duplicate scatter writes = idempotent union (kills the 2026-06-29 overwrite
+failure mode); final Equal matches 255-adjusted colour table. 20335+336 vs 25885+238 → +0.234.
+Fresh 2500+5000+1500 div 0. TRAP: train[2] = fixed 3-box validation example outside the random
+generator's 2-box path — box-agnostic segment spans required.
+
+## S8 (2026-07-02, late) — select_last_index idiom ×4 (+0.014) ADOPTED, div 0

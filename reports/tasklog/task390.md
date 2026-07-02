@@ -62,3 +62,6 @@ vs gating at the matrix level — gate scalars/vectors, never full planes.
 per-row red count = ReduceSum(red,[col-axis]); a "full edge" row = count ≥ box-width(5),
 and min/max of the full-edge indices give the two reflection axes directly — this also
 distinguishes orientation for free (full edges are horizontal ⇔ row-box).
+
+## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
+mem 2624/16.96; color_padded 900B min pre-Equal carrier (15x15 Equal=2250B worse), red_core_code_f 400B forced-fp32, gray_indices ScatterND minimal. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).

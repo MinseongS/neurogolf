@@ -55,3 +55,9 @@ keeps a pure-copy task marginal. Discriminator: a fixed-small copy/mirror/tile i
 Tier-S geometry, but the single materialized output-content tensor (here 10ch×9×4 fp16 =
 720B) plus the fp16-entry + grid is a real ~1166B floor — re-derive e^(25−P_target)
 before promising +0.3.
+
+## S9 (2026-07-03) — mechanism-14 separable-remap einsum (+0.277) ADOPTED
+Single 5-operand Einsum 'ra,ai,zcij,bj,sb->zcrs', mem=0: mirror-stack 3x2->9x4, rowmap [2,1,0]x3 colmap [1,0,0,1], 396->300.
+Gates: stored fail=0; uncached fresh 2000+600: 0/0/0 (bit-identical). No TopK.
+NOTE: scan projection was ~8x optimistic — output axis must span the FULL 30 (grading
+tensor [1,10,30,30]), so U tables are [30,K] not [out,K]. Backup task211_pre_s9.onnx.

@@ -1,6 +1,20 @@
 # task396 (ARC-AGI fcb5c309) — crop largest hollow box, recolour to static colour
 
-Current installed/source-owned exact = **15.551194** (mem 12557, params 136).
+WIN 2026-06-30: **15.551194 → 15.632656** (mem **12557 → 11567**, params **136 → 133**).
+Leaner box-colour (L=J+1) detection on the GridSample live graph: the live graph spent
+D(MaxPool 540B)+E(Slice 450B)+I(Equal 225B) = ~1215B as a black-exclusion guard
+(`I = Equal(E,H)`, E = horizontal MaxPool-over-4 of the colour plane) feeding `J = And(I,G)`.
+Replaced that guard with a single `Greater(H, 1.0)` nonzero-colour mask (+225B), keeping the
+4×4 corner conv `F` and the 15×15 colour slice `H` untouched. Net −990B mem; dropped now-unused
+slice inits e,f,g (−3 params). Everything from `M = Equal(C,L)` onward is byte-identical.
+Robustness: the 4×4 corner stencil (7 cells of an L-shape uniform) is essentially impossible
+for the 5%-sparse static colour to forge, so excluding only black (value>1) is as robust as the
+incumbent's E==H guard. Gate: bundled 266/266 fail=0; fresh arc-gen **9000/9000** fail=0 AND
+**0 divergence vs incumbent** (genuine equivalence, not a re-fit). Note: pure count-based J
+(ReduceSum→ArgMax) was REJECTED — it disagrees with the generator in ~2/4000 static-dense cases
+(static out-counts box borders), which the corner detector handles correctly.
+
+Prior: installed/source-owned exact = 15.551194 (mem 12557, params 136).
 2026-06-28: `src/custom/task396.py` was re-synced to the installed live graph.
 
 Earlier P (ext:kojimar7113) = 14.72 → **15.29** (mem 16323, params 149), fresh
@@ -56,3 +70,13 @@ without a new no-intermediate dynamic-crop primitive.
 - Reduce a full-plane argmin to a per-row/col profile BEFORE the masking Where.
 - Pitfall: a "first stop below" probe must fall back to the canvas EDGE, not a huge sentinel,
   when the object touches the grid boundary (+1 overshoot bug, caught at 263/266).
+
+## S9 (2026-07-03) — single-tap valid-Conv in-op crop (+0.147) ADOPTED
+Playbook #7: replaced 1×1 Conv 30×30 read (A 3600B fp32) + full-canvas Cast (Au 900B)
++ Slice with ONE 13×13 valid Conv (only tap at (0,0), out 18×18=1296B) — grids ≤18×18
+per generator. mem 11046→7842 (−3204), params 135→1813 (+1678), total 11181→9655.
+Gates: stored fail=0; bit-identical 0/3000 fresh + 0/400 random (orchestrator re-check);
+uncached fresh 2000: inc 0 / cand 0 / div 0. Latency 0.345ms.
+Floors: 1690-param 13×13×10 kernel irreducible (two-conv splits re-add ≥1444B plane;
+sparse_initializer blocked by sanitize_model rename gap). Backup reports/retired_networks/
+task396_pre_s9.onnx.

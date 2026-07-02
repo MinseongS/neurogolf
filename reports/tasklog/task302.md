@@ -44,3 +44,6 @@ ReduceProd-over-channels enclosure test (pack the 4 directional within-k sums in
 product>0 ⇔ marker present in every direction; a sum-threshold FAILS under adjacency). And
 `interior = (plane==0) AND enclosed` removes a whole second channel slice when the in-grid
 palette is just {bg, marker}.
+
+## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
+mem 1216/17.52; ch5 576B fp32 gray slice=min entry, features concat + ch5_u8 feed final QLinearConv (both needed). No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).

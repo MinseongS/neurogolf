@@ -103,3 +103,15 @@ offcol[c]=10·(c>=W) to the colour plane in ONE variadic Sum (broadcast) — off
 >=10 so Equal(L, arange[0..9]) matches nothing (all-zero target), in-grid background stays 0
 (ch0=1). Recover H/W as ReduceMax of per-channel occupancy over the CHANNEL axis (bg ch0=1
 fills every in-grid cell), no separate frame ReduceMax over the full input.
+
+## 2026-06-30 (S2) — int64→int32 gather-index micro-golf (LANDED)
+
+Output-preserving safe-golf. `v_color_i64_flat = Cast(v_color_f32_flat, to=int64)`
+feeds only two GatherElements as the index (top_u8 / bottom_u8). Retargeted the Cast
+to int32 (one-attr change, no added plane). GatherElements accepts int32 indices;
+values are colour ids 0–9 (no overflow).
+
+- Before: `memory=6825`, `params=182`, `points=16.145335`.
+- After:  `memory=6805`, `params=182`, `points=16.148193` (−20B, +0.0029).
+- Gate: bundled 265/265 identical (old vs new, 0 divergence) + **fresh 1500/1500
+  pass**. Bit-identical by construction (dtype-only on bounded index).

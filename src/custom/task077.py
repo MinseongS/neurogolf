@@ -1,9 +1,19 @@
-"""Task 077 — red-support heuristic recolour.
+"""Task 077 candidate — rectangle restore as ONE checkpoint-walk Einsum
+(walk_einsum_iteration_collapse).
 
-This task is underdetermined by the visible grid; the live model uses a compact
-heuristic around red-channel support.  It estimates supported rectangle cells
-from red rows/columns with small max-pool expansions, then recolours predicted
-static rectangle cells to yellow (channel 4).
+Exact rule (validated stored 266/266 + fresh 20000/20000):
+- Reds cluster by Chebyshev<=2 connectivity; generator gap>=2 => cross-rect red
+  distance >=3, so clusters never bridge rects.
+- Rect == bbox(red cluster); cell (r,c) filled yellow iff it is static (not red,
+  not empty) and lies in some cluster's bbox.
+- bbox membership as ONE walk through red cells (jumps Chebyshev<=2, penta band J)
+  with 4 checkpoint constraints against the output indices r,c via ONE shared
+  triangular matrix T (subscript order swapped for >=):
+    row(p0)<=r, row(p4)>=r, col(p8)<=c, col(p12)>=c.
+  Measured max intra-cluster jump diameter = 3 -> segments of 4 have margin.
+- Red plane is read straight from the FREE graph input via channel selector e2,
+  so counted tensors are only walk (3600B) and fill bool (900B).
+- All operands nonnegative, J dyadic 0.5 -> fp32 rounding cannot flip >0.
 """
 
 from __future__ import annotations
@@ -13,63 +23,64 @@ from onnx import TensorProto, helper
 
 from ._exact import model, tensor
 
+STEPS = 12          # 3 segments of 4 jumps; measured max needed segment = 3
+CHECK1, CHECK2 = 4, 8
+LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
 
 def build(task):
+    # penta-band jump matrix (Chebyshev<=2 per axis), dyadic 0.5, shared row/col
+    J = np.zeros((30, 30), np.float32)
+    for i in range(30):
+        for j in range(max(0, i - 2), min(30, i + 3)):
+            J[i, j] = 0.5
+
+    # upper triangular incl. diagonal: T[i, j] = 1 iff i <= j
+    T = np.triu(np.ones((30, 30), np.float32))
+
+    e2 = np.zeros(10, np.float32)
+    e2[2] = 1.0
+    stat = np.ones(10, np.float32)   # static = not empty, not red
+    stat[0] = 0.0
+    stat[2] = 0.0
+
     inits = [
-        tensor("slice_starts", np.array([2, 0, 0], dtype=np.int64)),
-        tensor("slice_ends", np.array([3, 20, 21], dtype=np.int64)),
-        tensor("slice_axes", np.array([1, 2, 3], dtype=np.int64)),
-        tensor("row_values", np.arange(20, dtype=np.uint8).reshape(1, 1, 20, 1)),
-        tensor("row_inv_values", (30 - np.arange(20, dtype=np.uint8)).reshape(1, 1, 20, 1)),
-        tensor("row_min_values", (31 - np.arange(20, dtype=np.uint8)).reshape(1, 1, 20, 1)),
-        tensor("row_max_values", (1 + np.arange(20, dtype=np.uint8)).reshape(1, 1, 20, 1)),
-        tensor("zero_u8", np.array([0], dtype=np.uint8)),
-        tensor("one_u8", np.array([1], dtype=np.uint8)),
-        tensor("pad_pads", np.array([0, 0, 0, 0, 0, 0, 10, 9], dtype=np.int64)),
-        tensor("channel4_vec", np.eye(10, dtype=np.float32)[4].reshape(1, 10, 1, 1)),
-        tensor("q_scale", np.array(1.0, dtype=np.float32)),
-        tensor("q_zero", np.array(0, dtype=np.uint8)),
-        tensor("col_kernel", np.array([1, 2, 1], dtype=np.uint8).reshape(1, 1, 1, 3)),
+        tensor("J", J),
+        tensor("T", T),
+        tensor("e2", e2),
+        tensor("stat", stat),
+        tensor("zero_f", np.array(0.0, dtype=np.float32)),
+        tensor("yellow", np.eye(10, dtype=np.float32)[4].reshape(1, 10, 1, 1)),
     ]
 
+    pool = list(LETTERS)
+    n = pool.pop(0)
+    r = pool.pop(0)
+    c = pool.pop(0)
+    a = [pool.pop(0) for _ in range(STEPS + 1)]
+    b = [pool.pop(0) for _ in range(STEPS + 1)]
+    q = [pool.pop(0) for _ in range(STEPS + 2)]
+
+    subs = [n + q[0] + a[0] + b[0], q[0], a[0] + r]     # red at p0, row(p0) <= r
+    ops = ["input", "e2", "T"]
+    for j in range(1, STEPS + 1):
+        subs += [a[j - 1] + a[j], b[j - 1] + b[j], n + q[j] + a[j] + b[j], q[j]]
+        ops += ["J", "J", "input", "e2"]
+        if j == CHECK1:
+            subs.append(r + a[j])       # r <= row(p4)
+            ops.append("T")
+        elif j == CHECK2:
+            subs.append(b[j] + c)       # col(p8) <= c
+            ops.append("T")
+    subs.append(c + b[STEPS])           # c <= col(p12)
+    ops.append("T")
+    subs += [n + q[STEPS + 1] + r + c, q[STEPS + 1]]    # static at (r,c)
+    ops += ["input", "stat"]
+    equation = ",".join(subs) + "->" + n + r + c
+
     nodes = [
-        helper.make_node("Slice", ["input", "slice_starts", "slice_ends", "slice_axes"], ["x2_float"]),
-        helper.make_node("Cast", ["x2_float"], ["x2_bool"], to=TensorProto.BOOL),
-        helper.make_node("Cast", ["x2_float"], ["x2_u8"], to=TensorProto.UINT8),
-        helper.make_node("Where", ["x2_bool", "row_min_values", "zero_u8"], ["rmin_neg0"]),
-        helper.make_node("Where", ["x2_bool", "row_max_values", "zero_u8"], ["rmax0"]),
-        helper.make_node("MaxPool", ["x2_u8"], ["vertical_red"], kernel_shape=[5, 1], pads=[2, 0, 2, 0], strides=[1, 1]),
-        helper.make_node(
-            "QLinearConv",
-            ["vertical_red", "q_scale", "q_zero", "col_kernel", "q_scale", "q_zero", "q_scale", "q_zero"],
-            ["col_score"],
-            pads=[0, 1, 0, 1],
-            strides=[1, 1],
-        ),
-        helper.make_node("Less", ["one_u8", "col_score"], ["col_supported"]),
-        helper.make_node("MaxPool", ["rmin_neg0"], ["bbox1_rmin_neg_pool"], kernel_shape=[5, 5], pads=[2, 2, 2, 2], strides=[1, 1]),
-        helper.make_node("Where", ["x2_bool", "bbox1_rmin_neg_pool", "zero_u8"], ["bbox1_rmin_neg"]),
-        helper.make_node("MaxPool", ["rmax0"], ["bbox1_rmax_pool"], kernel_shape=[5, 5], pads=[2, 2, 2, 2], strides=[1, 1]),
-        helper.make_node("Where", ["x2_bool", "bbox1_rmax_pool", "zero_u8"], ["bbox1_rmax"]),
-        helper.make_node("MaxPool", ["bbox1_rmin_neg"], ["bbox2_rmin_neg_pool"], kernel_shape=[5, 5], pads=[2, 2, 2, 2], strides=[1, 1]),
-        helper.make_node("Where", ["x2_bool", "bbox2_rmin_neg_pool", "zero_u8"], ["bbox2_rmin_neg"]),
-        helper.make_node("MaxPool", ["bbox1_rmax"], ["bbox2_rmax_pool"], kernel_shape=[5, 5], pads=[2, 2, 2, 2], strides=[1, 1]),
-        helper.make_node("Where", ["x2_bool", "bbox2_rmax_pool", "zero_u8"], ["bbox2_rmax"]),
-        helper.make_node("MaxPool", ["bbox2_rmin_neg"], ["fill1_rmin_neg_pool"], kernel_shape=[3, 3], pads=[1, 1, 1, 1], strides=[1, 1]),
-        helper.make_node("MaxPool", ["bbox2_rmax"], ["fill1_rmax_pool"], kernel_shape=[3, 3], pads=[1, 1, 1, 1], strides=[1, 1]),
-        helper.make_node("Less", ["row_inv_values", "fill1_rmin_neg_pool"], ["fill1_row_ok_min"]),
-        helper.make_node("Less", ["row_values", "fill1_rmax_pool"], ["fill1_row_ok_max"]),
-        helper.make_node("And", ["fill1_row_ok_min", "fill1_row_ok_max"], ["fill1_b"]),
-        helper.make_node("Where", ["fill1_b", "fill1_rmin_neg_pool", "zero_u8"], ["fill1_rmin_neg"]),
-        helper.make_node("Where", ["fill1_b", "fill1_rmax_pool", "zero_u8"], ["fill1_rmax"]),
-        helper.make_node("MaxPool", ["fill1_rmin_neg"], ["fill2_rmin_neg_pool"], kernel_shape=[3, 3], pads=[1, 1, 1, 1], strides=[1, 1]),
-        helper.make_node("MaxPool", ["fill1_rmax"], ["fill2_rmax_pool"], kernel_shape=[3, 3], pads=[1, 1, 1, 1], strides=[1, 1]),
-        helper.make_node("Less", ["row_inv_values", "fill2_rmin_neg_pool"], ["fill2_row_ok_min"]),
-        helper.make_node("Less", ["row_values", "fill2_rmax_pool"], ["fill2_row_ok_max"]),
-        helper.make_node("And", ["fill2_row_ok_min", "fill2_row_ok_max"], ["fill2_b"]),
-        helper.make_node("And", ["fill2_b", "col_supported"], ["inside_supported"]),
-        helper.make_node("Xor", ["x2_bool", "inside_supported"], ["fill_bool"]),
-        helper.make_node("Pad", ["fill_bool", "pad_pads"], ["fill_full"], mode="constant"),
-        helper.make_node("Where", ["fill_full", "channel4_vec", "input"], ["output"]),
+        helper.make_node("Einsum", ops, ["walk"], equation=equation),
+        helper.make_node("Greater", ["walk", "zero_f"], ["fill"]),
+        helper.make_node("Where", ["fill", "yellow", "input"], ["output"]),
     ]
-    return model("task077", nodes, inits, output_dtype=TensorProto.FLOAT, opset=13)
+    return model("task077_walk_einsum", nodes, inits, output_dtype=TensorProto.FLOAT, opset=17)

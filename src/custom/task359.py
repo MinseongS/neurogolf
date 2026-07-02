@@ -44,8 +44,12 @@ def build(task):
         helper.make_node('Add', ['cterm', 'fifty8'], ['cB0']),
         helper.make_node('Mul', ['cB0', 'cnon8'], ['cB1']),
         helper.make_node('Sub', ['cB1', 'fifty8'], ['cB']),
-        helper.make_node('Add', ['rA', 'cB'], ['masked']),
-        helper.make_node('Equal', ['masked', 'chidx'], ['output']),
+        # masked[i,j] = rA[i] + cB[j]; output[ch,i,j] = (masked == ch)
+        #             = (rA[i] == ch - cB[j]).  Route the channel dim through the
+        # narrow [1,10,1,30] strip D = chidx - cB instead of materializing the
+        # full [1,1,30,30] `masked` plane (900B -> 300B, bit-identical).
+        helper.make_node('Sub', ['chidx', 'cB'], ['D']),
+        helper.make_node('Equal', ['rA', 'D'], ['output']),
     ]
     value_infos = [
     ]

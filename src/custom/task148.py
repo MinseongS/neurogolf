@@ -36,7 +36,6 @@ def build(task):
         tensor('four_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoE')),
         tensor('eight_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoI')),
         tensor('color_ids', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBYwJjBGNjYwhj')),
-        tensor('false_mid', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGIxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDIzLCA2KSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
     ]
     nodes = [
         helper.make_node('Slice', ['input', 'starts_row_tail', 'ends_row_tail', 'axes_chw'], ['row_tail_f']),
@@ -86,7 +85,7 @@ def build(task):
         helper.make_node('ScatterElements', ['zero_rows_b', 'dest_idx_i', 'row_has_8'], ['dest_rows'], axis=2),
         helper.make_node('Slice', ['dest_rows', 'starts_top', 'ends_top', 'axes_row'], ['dest_top']),
         helper.make_node('Slice', ['dest_rows', 'ends_top', 'ends_tail', 'axes_row'], ['dest_tail']),
-        helper.make_node('Concat', ['left_rows', 'false_mid', 'right_red_area_b'], ['red23_b'], axis=3),
+        helper.make_node('Concat', ['left_rows', 'zero_rows_b', 'zero_rows_b', 'zero_rows_b', 'zero_rows_b', 'zero_rows_b', 'zero_rows_b', 'right_red_area_b'], ['red23_b'], axis=3),
         helper.make_node('Or', ['source_fill_top', 'dest_top'], ['fill_top_pre']),
         helper.make_node('And', ['fill_top_pre', 'col_valid'], ['fill_top']),
         helper.make_node('And', ['dest_tail', 'valid_tail'], ['fill_tail']),

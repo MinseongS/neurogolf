@@ -90,3 +90,50 @@ ONLY safe lever = dedup ~3 bool/u8 near-duplicate pairs (nonbg_bool+nonbg_u8, ma
 ≈1950B ⇒ pts ~14.58, gain ~+0.057 << +0.3.
 ⇒ MARGINAL. Algorithm is SOLVED + generalizing; this is a MEM floor, not an accuracy wall, and the
 fp32 entry plane plus the irreducible 12-pass uint8 stamp planes pin it. No beating net written.
+
+## 2026-06-30 from-scratch recheck after user challenge
+
+Re-read the generator instead of trusting this log.  Confirmed semantics:
+
+- reference mega is always `mag=1` and fully visible;
+- later megas have `mag∈{1,2,3}` and arbitrary h/v flips;
+- later input keeps only the two diagonal corner blocks and hides body pixels;
+- body mask comes only from the reference 3x3 sprite.
+
+New probes:
+
+| probe | result | conclusion |
+|---|---|---|
+| reference anchor by `3x3 non-bg count >= 5` and `>=3 distinct non-bg colours` | unique on stored+arc-gen `266/266` | semantic anchor is simple, but ONNX distinct-colour counting would require a 10-channel local count or equivalent, worse than current diagonal detector |
+| relaxed anchor by count plus opposite-corner inequality | many false positives | corner non-bg / distinct-colour condition is load-bearing |
+| direct-fill oracle that combines pair detection and stamping | `265/266`; one phantom fill case | pair+stamp cannot be fused naively; strict per-config separation prevents accidental corner-pair recombination |
+| replace `invalid_or_bg -> Not -> Cast` with direct invalid-mask QLinearConv detector | failed (`194/266`, then `1/266`; int8 QLinearConv unsupported) | current diagonal QLinearConv is not just both-corners-non-bg; it is a tuned threshold over total non-bg plus diagonal weight, and ORT uint8 QLinearConv cannot cheaply express the inverted signed form |
+
+Important correction to the cheap-anchor intuition: the human anchor rule is easier
+to state, but not cheaper in this ONNX cost model.  Current graph already avoids a
+10-channel local distinct-colour plane.  The counted slack that remains is mostly
+small bool/u8 carriers; the only verified deletable-looking 650B plane could not
+be removed under ORT's QLinearConv type constraints.
+
+No source/net change adopted.
+
+## S8 (2026-07-02) — counting-model rebuild (+0.524) ADOPTED, bit-identical
+Anchor detector (~12.1KB: 5×650B nonbg + 16×552B QLC-diagonal planes) → free-input einsum
+MOMENT STATISTICS per colour (n, Σr, Σc, Σr², Σc² from five [10]-output einsums); integer
+score n(Σr²+Σc²)−((Σr)²+(Σc)²) ≤ 2n² identifies the 3×3-confined sprite colour (exact fp32,
+products <2²⁴). Entry = single-tap valid Conv [1,10,5,6] (label+crop in-op, kills 4.5KB).
+Refpos: bbox-min einsum profiles + 4-candidate diagonal corner-pair test (clip needs BOTH
+lower/upper validity masks). Backbone kept verbatim. 18263+2647 vs 32979+2340 → +0.524.
+30000 numpy 0 fails; 20000 fresh vs live onnx bit-identical (7/20000 shared inherent fails);
+fresh_verify 2500+1500 div 0. Adopted via ONNX materialization (cand read incumbent inits).
+TRANSFERABLE: moment-statistics einsums = O(1) counted bytes for any "find the small/confined
+component colour" detection.
+
+## S9 (2026-07-03) — epilogue-fold 2nd pass: FLOOR re-confirmed (no change)
+13a inapplicable: no walk-einsum carrier — output backbone = 6 QLinearConv stamp passes
+(3 mags × correlate+spread) → Where→Pad→Equal; nothing to fold the epilogue into.
+Byte-rank: lab_f 2600 fp32-locked (Conv on fp32 input), pair_u8{1,2,3} 2208/1680/1224,
+ab 1300×2, painted 900+650, fills 650×5. Params 2647 = per-mag kernels 5/8/11
+(200/512/968) → task204 reject-check (per-size convs non-collapsible). Both Cast pairs
+load-bearing (QLinearConv needs u8; bool Where mux). Front-end already O(1) (S8 moment-stat).
+Slack ≈ 0 clean bytes; +0.1 needs −1990B. DO NOT re-probe without a new mechanism.

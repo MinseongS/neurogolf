@@ -50,3 +50,6 @@ vertical beam), GATE the small per-object broadcast vectors by the axis flag and
 over the object axis BEFORE the outer product — kills every [K,30,30] plane; (3) uint8 ArgMax
 + uint8 ScatterElements both run under ORT_DISABLE_ALL (900 B vs fp32 3600 B for the flat);
 (4) drop in-grid `<n` clamps when a final `AND ingrid` already suppresses off-grid fill.
+
+## S8 (2026-07-02) — rect-recipe conversion ADOPTED, div 0
+moment einsums (Σr,Σc,Σr²,Σc²,Σrc) + closed-form quadratic (Sqrt IEEE-exact on perfect squares) locate the 2 red cells; red_f + double-TopK dropped; 6039→4146, +0.376. Fresh: agent uncached 2500 div0 + my uncached 400 div0.

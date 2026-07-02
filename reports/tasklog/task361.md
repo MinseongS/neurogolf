@@ -83,3 +83,6 @@ mandatory int32 Gather-index over that product blew past the public floor. This
 confirms the briefing: non-local detection tasks whose public net is already near
 the memorizer/detection floor are MARGINAL — an exact net can be built and
 generalises 100%, but cannot beat the floor by +0.3.
+
+## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
+mem 4322/16.55; completed_scalar30 900B=min 30x30 carrier, sampled_colors 600B GridSample=cheap 15-pt read, TopK k=15=empirical bundled max. int16 Clip unimplemented in ORT. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).

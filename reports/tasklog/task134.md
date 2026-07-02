@@ -93,3 +93,5 @@ clustered-noise or noise>mega instances.
   occupied-row-count == row-SPAN, so the SAME two ReduceMax profiles give rmin/cmin (ArgMax)
   AND span/mag (ReduceSum) — no third/reversed plane, and the proxy still separates mega
   (≥0.33) from scatter (≤0.28) with 0/20000 overlap (worst gap 0.143).
+
+## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-1/2 opus agents; occupancy/max-semiring reductions or sub-400B u8 banks). Do not re-attempt without a new mechanism.

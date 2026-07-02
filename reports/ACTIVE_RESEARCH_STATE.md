@@ -61,7 +61,23 @@ Public models can be used to extract ideas, but not as final authority. If a pub
 
 Keep detailed notes in `reports/tasklog/` and promote only reusable mechanisms to `reports/insight_registry.yaml`.
 
-## Next work queue
+## 2026-06-30 update — per-task mechanism transfer is a dead end
+
+A full screen of ALL 119 sub-17pt tasks (6 parallel agents) found **0 tasks
+convertible to 20+**. The blocker is a SHARED structural floor, not per-task
+effort: reading per-cell colour from the [1,10,30,30] one-hot input forces an
+fp32 entry plane (3600B; 900B even as uint8) by ORT type rules, plus a 900B
+label plane for data-dependent recolour — so any per-cell-colour task caps at
+~17.9pt. The 48 tasks already at 20+ are exactly those whose rule never needed a
+per-cell plane; none remain below 17. See `reports/B_RESEARCH_SCREEN.md`.
+
+Therefore the queue below (mechanism catalogue → per-task rewrite) is retired as
+a 7800 path. The real lever is the shared floor itself: a representation that
+avoids the forced fp32 entry plane (bit-packing / directional-cummax bets) or a
+stronger public base. Per-task rewrites only yield incremental NEAR_18 wins
+(~6 tasks at +0.6..+1.8, low confidence).
+
+## Retired work queue (per-task transfer — yields +0 toward 20+)
 
 1. Build a high-score mechanism catalogue from all tasks scoring 20+.
 2. Map each mechanism to operators, cost, and semantic preconditions.

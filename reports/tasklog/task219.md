@@ -66,6 +66,14 @@ no-Loop ONNX wall (long-range gather, not bounded local propagation — master k
 The handoff's "info-bottleneck / connectivity wall" label is CONFIRMED and now quantified: the bottleneck is band-0's
 internally-ambiguous A|B|C segmentation, the sole carrier of the C-pattern.
 
+## 2026-06-29 public/source parity recheck
+
+Read-only parallel analysis rechecked the current live/source/public state.
+
+- Current manifest/inventory entry is the URAD teacher overlay: `points=15.162385`, `memory=18633`, `params=92`.
+- Public candidates under `boristown`, `lucifer`, `biohack_mix`, and `urad` have no useful structural delta from live/source: same computation, op histogram, initializers, and attributes aside from serialization/naming details.
+- The older wall conclusion still stands. Public artifacts do not provide a new mechanism, and the task remains a poor source-owned rewrite target because the needed variable-count long-range band copy is not cleanly expressible in the available no-loop ONNX subset.
+
 ## INSIGHT (transferable) ⭐
 - ⭐ When a "deterministic-looking" generator hides ONE template in a single object and that object's internal
   segmentation can coincide, RUN THE COLLISION SCAN (`dict[input.tobytes()] → set(output.tobytes())` over 50k–100k
@@ -75,3 +83,14 @@ internally-ambiguous A|B|C segmentation, the sole carrier of the C-pattern.
   (here the always-present A-region) — gives a per-object reference that is consistent across objects (= top +
   min(pattern-rows)) WITHOUT needing the true top, which can be empty. Useful for any "repeat this object N times"
   recovery. But it does NOT make the cross-object COPY ONNX-expressible when N and positions are data-dependent.
+
+## S8 (2026-07-02) — batched-band + placement einsum (+0.922) ADOPTED; "18k floor" REFUTED
+5 copy-pasted per-band blocks (~2KB each) → ONE K=6-batched block (also fixes the missing 7th
+band); placement+accumulation → ONE fp16 einsum 'kjr,ks,jsc,k->rc' (placement one-hots ×
+shift selectors × shifted patterns × exists flags → [15,10] mask, 7.8KB→1.4KB); shift variants
+via init index-table Gather (params not memory); epilogue Max(8·cyan, mask) + Pad-255 + Equal.
+7078+132 vs 18033+93 → 15.195→16.117. Fresh 20000: cand-only-fail 0, inc-only 13 (candidate
+strictly ⊆); fresh_verify 2500 (1042≤1046) + 1500 (632≤633). Incumbent inherent fail ~42%
+(public LB = bundled → still pointed). LOAD-BEARING QUIRKS preserved: 4-shift set {+2,+1,0,−1}
+(Δ=−2 spuriously wins), k=2 block uses band-0's occ[1] validity (bands can have internal empty
+rows). Latency 0.04ms.

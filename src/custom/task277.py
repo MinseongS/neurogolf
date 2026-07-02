@@ -12,7 +12,6 @@ def build(task):
     inits = [
         tensor('cs', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==')),
         tensor('ce', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAkAAAAAAAAACgAAAAAAAAAKAAAAAAAAAA==')),
-        tensor('ca', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAA==')),
         tensor('ABSEED', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDIsIDEwLCAxMCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAgMEBQYHCAkKAQIDBAUGBwgJCgECAwQFBgcICQoBAgMEBQYHCAkKAQIDBAUGBwgJCgECAwQFBgcICQoBAgMEBQYHCAkKAQIDBAUGBwgJCgECAwQFBgcICQoBAgMEBQYHCAkKCgkIBwYFBAMCAQoJCAcGBQQDAgEKCQgHBgUEAwIBCgkIBwYFBAMCAQoJCAcGBQQDAgEKCQgHBgUEAwIBCgkIBwYFBAMCAQoJCAcGBQQDAgEKCQgHBgUEAwIBCgkIBwYFBAMCAQ==')),
         tensor('sa', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAA==')),
         tensor('sb', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAA==')),
@@ -23,7 +22,7 @@ def build(task):
         tensor('pfalse', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGIxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
     ]
     nodes = [
-        helper.make_node('Slice', ['input', 'cs', 'ce', 'ca'], ['ch8']),
+        helper.make_node('Slice', ['input', 'cs', 'ce'], ['ch8']),
         helper.make_node('Cast', ['ch8'], ['P'], to=2),
         helper.make_node('Mul', ['ABSEED', 'P'], ['AB0']),
         helper.make_node('MaxPool', ['AB0'], ['mp0'], kernel_shape=[3, 3], pads=[1, 1, 1, 1], strides=[1, 1]),
@@ -36,10 +35,8 @@ def build(task):
         helper.make_node('Mul', ['mp3', 'P'], ['AB4']),
         helper.make_node('MaxPool', ['AB4'], ['mp4'], kernel_shape=[3, 3], pads=[1, 1, 1, 1], strides=[1, 1]),
         helper.make_node('Mul', ['mp4', 'P'], ['AB5']),
-        helper.make_node('MaxPool', ['AB5'], ['mp5'], kernel_shape=[3, 3], pads=[1, 1, 1, 1], strides=[1, 1]),
-        helper.make_node('Mul', ['mp5', 'P'], ['AB6']),
-        helper.make_node('Slice', ['AB6', 'sa', 'sb', 'sb'], ['A']),
-        helper.make_node('Slice', ['AB6', 'sb', 'se', 'sb'], ['B']),
+        helper.make_node('Slice', ['AB5', 'sa', 'sb', 'sb'], ['A']),
+        helper.make_node('Slice', ['AB5', 'sb', 'se', 'sb'], ['B']),
         helper.make_node('Add', ['A', 'B'], ['wsum']),
         helper.make_node('ReduceMax', ['wsum'], ['smax'], keepdims=1),
         helper.make_node('Equal', ['wsum', 'smax'], ['iswide']),
@@ -63,8 +60,6 @@ def build(task):
         helper.make_tensor_value_info('AB4', 2, [1, 2, 10, 10]),
         helper.make_tensor_value_info('mp4', 2, [1, 2, 10, 10]),
         helper.make_tensor_value_info('AB5', 2, [1, 2, 10, 10]),
-        helper.make_tensor_value_info('mp5', 2, [1, 2, 10, 10]),
-        helper.make_tensor_value_info('AB6', 2, [1, 2, 10, 10]),
         helper.make_tensor_value_info('A', 2, [1, 1, 10, 10]),
         helper.make_tensor_value_info('B', 2, [1, 1, 10, 10]),
         helper.make_tensor_value_info('wsum', 2, [1, 1, 10, 10]),

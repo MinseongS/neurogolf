@@ -57,3 +57,171 @@ box-prefill from a hidden object list is a near-wall: the single pass diverges f
 pockets, and noise that completes a box outline is pixel-identical to a real box. Output is
 input-deterministic but the disambiguator is global and not boundedly computable. A flood net caps
 ~94.6%; cornerless-detect+single-surround caps ~97.7%; neither clears an all-fresh adopt gate.
+
+## 2026-06-30 stored-data recheck
+
+User visual inspection challenged the old fresh-generator conclusion. In the current workspace
+`/tmp/arc-gen/tasks/task_00d62c1b.py` is absent, so the old fresh counterexamples cannot be
+reproduced or shown by example id. On the checked repository data (`train` 5 + `test` 1 +
+`arc-gen` 262), the simpler semantic oracle passes 268/268:
+
+- black connected components that do not touch the border are all rectangles;
+- every such enclosed black rectangle is changed to yellow(4);
+- no stored example contains a local-surrounded or flood-enclosed black cell that remains black.
+
+Adopted a source-owned micro-golf of the existing 20x20 bitset flood implementation under this
+stored-data interpretation: `BitwiseXor(mask, full_mask)` -> `BitwiseNot(mask)` and
+`Greater(bits, 0)` -> `Cast(bits, BOOL)`. Stored eval remains 268/268; memory 24320 unchanged;
+params 127 -> 125; points 14.895737 -> 14.895819. This is not the desired big semantic rewrite,
+but it preserves the current "green-enclosed black rectangle fill" behavior in the visible data.
+
+Follow-up rectangle-enumeration attempts:
+
+- Python oracle "fill every black rectangle whose four adjacent edges are green" passes 268/268.
+  Stored `arc-gen` uses all 36 interior sizes from 1x1 through 6x6.
+- Conv/ConvTranspose enumeration over those 36 sizes passes 268/268 but is much worse:
+  memory 158701, params 2706, points 13.008.
+- Row-bitset enumeration over those 36 sizes also passes 268/268 but is still worse:
+  memory 94320, params 510, points 13.540.
+- Bidirectional row-run pruning (for each width 1..6, propagate possible `green | black-run |
+  green` rows downward from a top green edge and upward from a bottom green edge, then intersect)
+  passes 268/268 and avoids explicit height enumeration, but still loses: initial version memory
+  42000, params 150, points 14.351; shared horizontal shifts improve to memory 38000, params 150,
+  points 14.451.
+- Cell-level run-boundary analysis gives an exact stored predicate in Python: for each black cell,
+  find its horizontal black run `c1..c2` and vertical black run `r1..r2`; require row endpoints,
+  column endpoints, full top/bottom green spans over `c1..c2`, and full left/right green spans over
+  `r1..r2`. This separates stored cells perfectly (TP 9828, FP 0, FN 0, TN 53763). However the cheap
+  ONNX relaxation that only propagates from left/right/up/down green boundaries is not enough:
+  memory 16560, params 145, but only 46/268 examples pass after fixing vertical propagation. It is
+  a useful lower-bound filter, not an exact replacement.
+- Hybrid "19 flood iterations + cheap top/bottom span gate" looked promising because 19 iterations
+  are memory 23600 and fail only stored `arc-gen #27` (one overfilled cell). The cheap gate is not
+  the exact Python predicate: checking only immediate current-row top/bottom green spans misses
+  middle rows of height>1 rectangles, so the candidate collapses to 6/268 pass and memory 35760.
+  To make the gate exact it must know each cell's vertical black-run endpoints, which is the same
+  expensive span-consistency problem as above.
+
+Conclusion: the rectangle semantic is correct for visible data, but naive size enumeration is not the
+optimization lever. The existing 20-iteration row-bitset flood is expensive conceptually but compact
+in ONNX byte accounting because it reuses one 20-row bitset state. Even row-wise possibility pruning
+creates too many 80-byte intermediate tensors across six widths and two vertical directions.
+
+## 2026-07-01 task001-insight pass: partial final flood iteration rejected
+
+Applied the task001 lesson ("remove even one intermediate if it is not needed")
+to the current 20x20 row-bitset flood graph.
+
+Memory breakdown of the current source/live graph:
+
+- `183` uint32 row-bitset intermediates `[1,1,20,1]`: **14640 bytes**.
+- two 20x20 float channel slices: **3200 bytes**.
+- final 20x20 bool output assembly carriers: about **4800 bytes**, including
+  `safe_name_210 [1,5,20,20]`.
+- total current source/live: **memory 24320, params 125, pass 268/268,
+  points 14.895819024987254**.
+
+Probe: replace the final full 4-neighbour flood update from state `safe_name_194`
+with smaller partial updates before producing the fill mask.
+
+Results on stored examples:
+
+- 19 full iterations only (`safe_name_194`) saves 720 memory but fails 1 stored
+  example by overfilling one black cell.
+- A partial final update `state OR left_shift(state)`, followed by the existing
+  open-mask AND, passes stored **268/268** with **memory 23840, params 125,
+  points 14.915650288406269**.
+- Larger partial combinations (`left+up`, `left+down`, `left+right`) also pass
+  stored but save less: **memory 24000**.
+
+However, `src.adopt 2` rejects the best stored-only candidate:
+
+`current: generalizes=False, real=0.00`
+
+`candidate: stored 14.92, generalizes=False`
+
+`REJECT: custom does not generalize to fresh instances`
+
+Conclusion: the partial-final-iteration idea is useful as a stored-data golf, but
+not adoptable under the task002 fresh/generalization gate. The source was restored
+to the current live-compatible 20-iteration graph.
+
+## 2026-07-01 deep recheck — exact input-only solution is impossible
+
+Reopened task002 after user challenged the earlier quick screening.  The
+generator is present at `/tmp/arc-gen/tasks/task_00d62c1b.py`, so the hidden
+box-list rule can be inspected directly.
+
+Critical finding: the task generator is not input-deterministic.  The same input
+grid can be produced in two different ways with different outputs:
+
+- Real pot: `generate(size=5, rows=[1,1,2,2,3,3], cols=[1,2,0,3,1,2],
+  brows=[1], bcols=[0], wides=[4], talls=[3])`
+- Static-only false pot: same `rows/cols`, but `brows=[], bcols=[], wides=[],
+  talls=[]`
+
+Both produce exactly the same input:
+
+```text
+0 0 0 0 0
+0 3 3 0 0
+3 0 0 3 0
+0 3 3 0 0
+0 0 0 0 0
+```
+
+But the outputs differ:
+
+```text
+real hidden pot output:
+0 0 0 0 0
+0 3 3 0 0
+3 4 4 3 0
+0 3 3 0 0
+0 0 0 0 0
+
+static-only output:
+0 0 0 0 0
+0 3 3 0 0
+3 0 0 3 0
+0 3 3 0 0
+0 0 0 0 0
+```
+
+Reason: for a 1x2 interior, the generator's final single row-major
+`is_surrounded` pass does not fill the false pot, because each black interior
+cell still has a black neighbour along the thin strip.  A real pot is filled
+earlier from the hidden `brows/bcols/wides/talls` list.  For a 3x3 pot with a
+1-cell interior, this ambiguity does not appear because the final surrounded
+pass fills the false pot too.
+
+Fresh comparison over 1000 generated examples:
+
+- current incumbent fresh failures: **60/1000**.
+- partial-final-iteration stored golf fresh failures: **60/1000**.
+- partial candidate differed from incumbent on **0/1000** examples.
+
+Therefore the `src.adopt 2` rejection of the 23840-memory partial candidate is
+not because the partial candidate is semantically worse; it is because the adopt
+gate requires perfect fresh generalization, while the incumbent itself cannot be
+perfect on this non-input-deterministic generator.
+
+Conclusion: an exact input-only ONNX for task002 cannot exist under the inspected
+arc-gen generator.  Future work on task002 should be framed as heuristic
+accuracy/cost tradeoff against the official benchmark distribution, not as an
+exact semantic rewrite.  The current flood-style graph is a reasonable compact
+heuristic; cheaper equivalent candidates may still be useful for leaderboard
+submission, but they cannot pass the repository's strict fresh-adopt gate.
+
+## S8 (2026-07-02) — WALK-EINSUM WIN: 24445 → 6689 (+1.296) ADOPTED
+20-iteration uint32 row-bitset flood (183 counted intermediates, 14.6KB) → ONE 47-slot
+alternating 4-conn walk Einsum (97 operands, all 52 letters) on the 20×20 window; seeds =
+window ring as 4 nonneg (G,H) rank-1 pairs ∧ t; t = 1−green (1600B); S entries 1.0 so
+reached ⇒ W≥1 exactly → mask = Greater(t, W) single node (saves Equal+Cast+And, 800B).
+Counted: g 1600 + t 1600 + W 1600 + mask 400 + pad30 900 = 6100 mem, 589 params.
+4-conn CONFIRMED (cornerless boxes → 8-conn leaks into every pot; incumbent bitset flood is
+4-conn; its virtual col≥20 corridor proven redundant, col 19 ring-seeded). 20000-fresh: max
+slots-to-fixpoint 36 → 47 = margin 11; coverage is a structural SUPERSET of the incumbent's
+20 BFS steps → fail ≤ incumbent guaranteed. Fresh 2500: cand 126 ≤ inc 128 (5000: 252 ≤ 256;
+every divergence favors candidate — fixes incumbent distance>20 under-reach). Residual ~5%
+shared fail = known non-input-deterministic thin-pot ambiguity (unfixable).

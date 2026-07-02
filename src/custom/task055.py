@@ -1,121 +1,99 @@
-"""Task 55 (ARC-GEN 272f95fa): fill a cyan 3x3 grid's plus-shaped cells.
+"""Task 055 — line-delimited 3x3 grid fill via category-augmented LUT.
 
-Rule (from generator, verified fresh 200/200):
-  The grid is partitioned into a 3x3 arrangement of variable-size blocks by two
-  full horizontal cyan(8) lines and two full vertical cyan(8) lines (always all
-  four lines present). The input already contains the cyan cross. The output
-  keeps the input cyan lines and fills 5 of the 9 blocks (a plus shape) with
-  FIXED colours by (rowband, colband):
-      (0,1)=red 2   (1,0)=yellow 4   (1,1)=magenta 6   (1,2)=green 3   (2,1)=blue 1
-  The four corner blocks and everything off-grid stay background 0.
-
-Encoding (separable band partition + double-MatMul LUT routed into FREE BOOL output):
-  Block boundaries are data-dependent (block sizes random 1..10), so the rowband
-  and colband indices are recovered per-row/per-col as EXCLUSIVE CumSums of the
-  cyan-line indicator. col 0 is never a vertical line and row 0 never a
-  horizontal line, so the cyan channel along the first column gives the
-  horizontal-line indicator (hline[1,1,30,1]) and along the first row the
-  vertical-line indicator (vline[1,1,1,30]); their exclusive cumsums are the band
-  indices {0,1,2,...}. The (rowband,colband)->colour LUT is NOT rank-1, so it is
-  applied as the double-MatMul idiom Ronehot[1,1,30,3] @ LUT[3,3] @ Conehot[1,1,3,30]
-  -> a single [1,1,30,30] band-colour plane. Two overlays then fix the special
-  regions: where a cell is on a cyan line (hline_r OR vline_c) force colour 8;
-  where a cell is off-grid (NOT (rowin AND colin), from separable channel-sum
-  occupancy profiles) force sentinel 10 (matches no colour channel). The final
-  Equal(L, arange[0..9]) writes straight into the FREE BOOL output so the
-  10-channel expansion costs nothing.
-
-  The LUT is evaluated with QLinearMatMul in uint8. This keeps the full-canvas
-  label planes at 1 byte/cell instead of fp16's 2 bytes/cell while still doing
-  the same one-hot @ LUT @ one-hot selection exactly (scale=1, zero-point=0).
-  Band cumsums and the occupancy profiles stay as ~120 B row/col vectors (no
-  full occupancy plane).
-
-  Dominant intermediate: the five [1,1,30,30] bool/uint8 planes (Lband, Lg, L,
-  isline, ingrid = 900 B each). The LUT is rank>1 (a sum of 5 rank-1 blocks),
-  so a bilinear selection is still needed, but quantized matmul avoids widening
-  the labels to fp16.
+Rows and columns are classified into five categories: band 0..2, separator
+line, and off-grid.  A single 5x5 uint8 LUT then emits the block colour, cyan
+line colour, or off-grid sentinel directly, avoiding the old full-canvas line
+and in-grid overlay planes.
 """
 
 import numpy as np
-from onnx import helper, numpy_helper, TensorProto
+from onnx import TensorProto, helper, numpy_helper
 
 from ..harness import IR_VERSION
 
-# LUT[rowband][colband] -> colour index. bands 0,1,2.
-LUT = np.array([[0, 2, 0],
-                [4, 6, 3],
-                [0, 1, 0]], dtype=np.uint8)
-U8 = TensorProto.UINT8
+
+LUT = np.zeros((5, 5), dtype=np.uint8)
+LUT[:3, :3] = np.array(
+    [
+        [0, 2, 0],
+        [4, 6, 3],
+        [0, 1, 0],
+    ],
+    dtype=np.uint8,
+)
+LUT[3, :] = 8
+LUT[:, 3] = 8
+LUT[4, :] = 10
+LUT[:, 4] = 10
+LUT[4, 3] = 10
+LUT[3, 4] = 10
 
 
 def build(task):
-    inits, nodes = [], []
+    inits = []
+    nodes = []
 
     def init(name, arr, dtype):
         inits.append(numpy_helper.from_array(np.ascontiguousarray(arr, dtype=dtype), name))
-        return name
 
-    def n(op, ins, out, **attrs):
+    def node(op, ins, out, **attrs):
         nodes.append(helper.make_node(op, ins, [out], **attrs))
-        return out
 
     init("ax", np.array([0, 1, 2, 3], np.int64), np.int64)
-    # cyan(8) along first column -> per-row horizontal-line indicator
     init("hs", np.array([0, 8, 0, 0], np.int64), np.int64)
     init("he", np.array([1, 9, 30, 1], np.int64), np.int64)
-    n("Slice", ["input", "hs", "he", "ax"], "hline")  # [1,1,30,1] f32
-    # cyan(8) along first row -> per-col vertical-line indicator
     init("ve", np.array([1, 9, 1, 30], np.int64), np.int64)
-    n("Slice", ["input", "hs", "ve", "ax"], "vline")  # [1,1,1,30] f32
+    node("Slice", ["input", "hs", "he", "ax"], "hline")
+    node("Slice", ["input", "hs", "ve", "ax"], "vline")
 
-    # band indices = exclusive cumsum of the line indicators (fp32, int-exact)
     init("ax2", np.array(2, np.int64), np.int64)
     init("ax3", np.array(3, np.int64), np.int64)
-    n("CumSum", ["hline", "ax2"], "rowband", exclusive=1)  # [1,1,30,1]
-    n("CumSum", ["vline", "ax3"], "colband", exclusive=1)  # [1,1,1,30]
+    node("CumSum", ["hline", "ax2"], "rowband", exclusive=1)
+    node("CumSum", ["vline", "ax3"], "colband", exclusive=1)
 
-    # band one-hots (uint8)
     init("kr", np.arange(3, dtype=np.float32).reshape(1, 1, 1, 3), np.float32)
-    n("Equal", ["rowband", "kr"], "Reqb")
-    n("Cast", ["Reqb"], "Ronehot", to=U8)  # [1,1,30,3]
     init("kc", np.arange(3, dtype=np.float32).reshape(1, 1, 3, 1), np.float32)
-    n("Equal", ["colband", "kc"], "Ceqb")
-    n("Cast", ["Ceqb"], "Conehot", to=U8)  # [1,1,3,30]
+    node("Equal", ["rowband", "kr"], "Reqb")
+    node("Equal", ["colband", "kc"], "Ceqb")
 
-    init("lut", LUT.reshape(1, 1, 3, 3), np.uint8)
+    init("half", np.array(0.5, np.float32), np.float32)
+    node("Greater", ["hline", "half"], "hb")
+    node("Greater", ["vline", "half"], "vb")
+    node("ReduceSum", ["input"], "rowsum", axes=[1, 3], keepdims=1)
+    node("ReduceSum", ["input"], "colsum", axes=[1, 2], keepdims=1)
+    node("Greater", ["rowsum", "half"], "rin")
+    node("Greater", ["colsum", "half"], "cin")
+    node("Not", ["rin"], "roff")
+    node("Not", ["cin"], "coff")
+    node("Not", ["hb"], "not_hb")
+    node("Not", ["vb"], "not_vb")
+    node("And", ["rin", "not_hb"], "rband_ok")
+    node("And", ["cin", "not_vb"], "cband_ok")
+    node("And", ["Reqb", "rband_ok"], "Rbands_b")
+    node("And", ["Ceqb", "cband_ok"], "Cbands_b")
+    node("Concat", ["Rbands_b", "hb", "roff"], "Rcat_b", axis=3)
+    node("Concat", ["Cbands_b", "vb", "coff"], "Ccat_b", axis=2)
+    node("Cast", ["Rcat_b"], "Rcat", to=TensorProto.UINT8)
+    node("Cast", ["Ccat_b"], "Ccat", to=TensorProto.UINT8)
+
+    init("lut5", LUT.reshape(1, 1, 5, 5), np.uint8)
     init("qscale", np.array(1.0, np.float32), np.float32)
     init("qzero", np.array(0, np.uint8), np.uint8)
-    qargs = ["qscale", "qzero"]
-    n("QLinearMatMul",
-      ["Ronehot", *qargs, "lut", *qargs, *qargs],
-      "RL")    # [1,1,30,3] uint8
-    n("QLinearMatMul",
-      ["RL", *qargs, "Conehot", *qargs, *qargs],
-      "Lband")  # [1,1,30,30] uint8 band colour
-
-    # line overlay -> 8
-    init("half", np.array(0.5, np.float32), np.float32)
-    n("Greater", ["hline", "half"], "hb")  # [1,1,30,1] bool
-    n("Greater", ["vline", "half"], "vb")  # [1,1,1,30] bool
-    n("Or", ["hb", "vb"], "isline")        # [1,1,30,30] bool
-    init("c8", np.array(8, np.uint8), np.uint8)
-    n("Where", ["isline", "c8", "Lband"], "Lg")  # [1,1,30,30] uint8
-
-    # in-grid gate (separable occupancy profiles) -> off-grid sentinel 10
-    n("ReduceSum", ["input"], "rowsum", axes=[1, 3], keepdims=1)  # [1,1,30,1]
-    n("ReduceSum", ["input"], "colsum", axes=[1, 2], keepdims=1)  # [1,1,1,30]
-    n("Greater", ["rowsum", "half"], "rin")  # bool
-    n("Greater", ["colsum", "half"], "cin")  # bool
-    n("And", ["rin", "cin"], "ingrid")       # [1,1,30,30] bool
-    init("c10", np.array(10, np.uint8), np.uint8)
-    n("Where", ["ingrid", "Lg", "c10"], "L")  # [1,1,30,30] uint8
-
+    q = ["qscale", "qzero"]
+    node("QLinearMatMul", ["Rcat", *q, "lut5", *q, *q], "RL")
+    node("QLinearMatMul", ["RL", *q, "Ccat", *q, *q], "L")
     init("chan", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1), np.uint8)
-    n("Equal", ["L", "chan"], "output")  # FREE bool [1,10,30,30]
+    node("Equal", ["L", "chan"], "output")
 
-    x = helper.make_tensor_value_info("input", TensorProto.FLOAT, [1, 10, 30, 30])
-    y = helper.make_tensor_value_info("output", TensorProto.BOOL, [1, 10, 30, 30])
-    graph = helper.make_graph(nodes, "g55", [x], [y], inits)
-    return helper.make_model(graph, ir_version=IR_VERSION,
-                             opset_imports=[helper.make_opsetid("", 11)])
+    graph = helper.make_graph(
+        nodes,
+        "task055_category_lut",
+        [helper.make_tensor_value_info("input", TensorProto.FLOAT, [1, 10, 30, 30])],
+        [helper.make_tensor_value_info("output", TensorProto.BOOL, [1, 10, 30, 30])],
+        inits,
+    )
+    return helper.make_model(
+        graph,
+        ir_version=IR_VERSION,
+        opset_imports=[helper.make_opsetid("", 11)],
+    )

@@ -55,3 +55,6 @@ CumSum needs fp32, rejects fp16); (2) run the wall-line Gather directly on the f
 input Slice to avoid keeping a separate fp16 gray copy. The interior/drip terms are
 inherently bg-only (the input interior and gap-line are empty), so the final `&bg`
 gate is provably redundant — drop it (verified 0/10000).
+
+## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
+mem 1188/17.30; fill_weights [13,36]=full rank 13 (no low-rank), scatter_indices [2,52,4] clear-pass required for one-hot validity. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).

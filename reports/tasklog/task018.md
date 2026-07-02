@@ -44,3 +44,23 @@ for sprite-rotation-reconstruction tasks: before investing in an ONNX rebuild, r
 enumerator* over fresh instances and check whether the markers/visible-pixels UNIQUELY determine the answer.
 When wide==tall or markers are rotation-symmetric, a 90°-rotation set leaves multiple valid placements ⇒
 unsolvable. Don't chase fresh 200/200 on tasks whose generator picks an unobservable random rigid transform.
+
+# (appended) S8 2026-07-02 — iteration collapse via graph surgery (+0.193) ADOPTED
+Candidate replaced part of the 10-MaxPool iteration with einsum-based planes (graph surgery on
+the incumbent module): mem 38441→31367, params 1018→1180 (total 39459→32547), 14.417→14.610.
+Bit-identical on all 266 bundled vs deployed onnx; fresh 2500: cand 39 = inc 39, div 0
+(the ~1.6% fail is the incumbent's own inherent rate). Adopted via ONNX materialization +
+live_to_exact_source (candidate imported src.custom.task018). NOTE: agent report incomplete
+(stuck in a monitor wait-loop) — mechanism details in the candidate file docstring at the
+S8 scratchpad task018/cand.py if ever needed.
+
+## S9 (2026-07-03) — fp16 walk-einsum chain recast (+0.049) ADOPTED
+Sign-only consumption proof: cand_WA/WB [1,1,13,13] einsums + their ReduceMax reductions
+feed only Greater(_,0); operands bounded nonneg → fp16 bit-identical. 6 Casts to=1→10,
+2 inits recast, 12 value_info fixed. mem 31367→29807 (−1560), params 1180 unchanged.
+Gates: stored fail=0; div 0/400 random (agent + orchestrator independent); fresh cached
+2500: 55/55 inc=cand, uncached 600: 18/18, 0 divergence. Latency 0.9ms.
+Adopted via ONNX materialization + live_to_exact_source (backup reports/retired_networks/
+task018_pre_s9.onnx). Remaining floors priced: 3600 fp32 Conv read, 2×1800 fp16 TopK
+ramps (values>255 so fp16 minimal legal), 14×900B+20×169B 1-byte planes, 0 CSE dups,
+13a N/A (rotated-body ScatterND output). This was the last clean lever on this net.

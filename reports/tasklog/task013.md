@@ -62,3 +62,119 @@ build (the "reduce ops reject fp16" gotcha is STALE) — so the whole integer
 position/colour recovery chain runs in fp16 with NO fp32 bridge casts, halving every
 [30] working vector (120→60B). Only Conv and the input-ReduceMax outputs are forced
 fp32 (born from the fp32 input); Cast them to fp16 immediately.
+
+## 2026-07-01 sequential deep pass
+
+Current source has advanced beyond the older 4379B fp16 combine-plane solution:
+
+- **memory 1869, params 61, points 17.43472471810107**
+- fresh recheck: **1000/1000 pass**
+- mechanism: recover horizontal/vertical seed profiles, build one 30-long
+  alternating `line_pattern`, then emit the final one-hot output directly by
+  comparing `row_side [1,10,30,1]` with `col_side [1,10,1,30]`.
+
+Dominant costs:
+
+- `row_side`: **300B**.
+- `col_side`: **300B**.
+- profile lines and base-valid slices: four 30-long fp32 vectors = **480B**.
+- all remaining row/col pattern and validity vectors are 30B or scalar.
+
+Rechecked direct-output alternatives:
+
+- Building per-orientation full bool outputs and selecting between them would
+  introduce full 10x30x30 planes, much worse.
+- Replacing `row_side/col_side` with separate `Equal(channel_ids, row_code)` and
+  `Equal(channel_ids, col_code)` still materializes the same 300B+300B side
+  tensors, just as bool instead of uint8.
+- The current representation is the compact broadcast form; it avoids every
+  counted full 30x30 plane.
+
+Conclusion: no adoptable improvement found.  This task is already using the
+high-score-style direct output comparison pattern.
+
+## 2026-07-01 parallel task013 deep dive
+
+Scope: task013 only.  I did not edit `src/custom/task013.py`, `networks/`, the
+manifest, or any global registry/script output.
+
+Human-readable rule, verified:
+
+- Stored examples have 4 train, 1 test, and 262 arc-gen cases.
+- Input shape is either the generator's `height x width` with `height in 6..12`
+  and `width in 20..30`, or its transpose.  Fresh generator sampling confirms
+  reachable scored shapes span both axes: H 6..30, W 6..30.
+- There are exactly two nonzero seed pixels with colors in 1..9.  In the
+  untransposed form they are at columns `start` and `start + sep + 1`, each on
+  either the top or bottom row.  The output paints full vertical stripes starting
+  at `start`, stepping by `sep + 1`, alternating the two seed colors.
+- If transposed, the same pattern becomes full horizontal stripes.  Edge cases
+  include same-top/same-bottom seeds, same-left/same-right seeds after transpose,
+  and max axis length 30; all are represented in fresh samples.
+
+Current source/live state:
+
+| item | result |
+|---|---:|
+| manifest / `measure_task.py 013` | 17.43472471810107 pts, mem 1869, params 61 |
+| source stored eval | 267/267 pass |
+| live `networks/task013.onnx` eval | 267/267 pass, mem 1869, params 61 |
+| fresh verify | 1500/1500 incumbent pass |
+| Python semantic oracle | stored 267/267, fresh 2000/2000 |
+
+Cost anatomy from the live ONNX profile:
+
+| component | bytes | semantic job |
+|---|---:|---|
+| `row_side [1,10,30,1]` | 300 | channel/row-side code for final broadcast equality |
+| `col_side [1,10,1,30]` | 300 | channel/col-side code for final broadcast equality |
+| `row_color_line`, `col_color_line` | 240 | color-weighted row/col seed profiles |
+| `row_valid_base_f`, `col_valid_base_f` | 240 | recover in-grid row/col validity from padded input |
+| 21 pattern/presence/gate vectors | 630 | 30-long bool/uint8 line, phase, validity, and code vectors |
+| scalar/index recovery values | 159 | endpoints, colors, period, mode, and modulo scalars |
+| output | 0 counted | final `[1,10,30,30]` bool tensor is scorer-exempt |
+
+Dominant cost is the two 300B side tensors.  They exist because the final output
+must be a 10-channel one-hot grid, but the scorer does not count the final
+output tensor itself; the current graph pays for two skinny broadcasts and lets
+`Equal(row_side, col_side)` materialize the free output directly.
+
+Prior-note challenge:
+
+- The older 4379B/fp16-combine-plane floor is contradicted by current source and
+  live ONNX: the current graph has no full color-index combine plane and scores
+  mem 1869.
+- The 2026-07-01 sequential note claiming 1869B/61 params and direct output
+  comparison is still valid.  I strengthened its fresh evidence from 1000/1000
+  to 1500/1500 and added a separate Python oracle proof.
+- The old "smaller profile kernel unavailable" claim is still valid: generator
+  sampling found H=30 and W=30, so a fixed sub-30 axis would miss reachable
+  cases.
+
+Mechanism hypotheses tested:
+
+1. Direct output threshold algebra / side-tensor deletion.
+   - Expected payoff: remove one 300B side tensor, possibly +0.15 points if the
+     output can be produced from one channel-axis comparison plus 30-long gates.
+   - Proof test: inspect scorer accounting and broadcast shapes for alternative
+     forms such as `Equal(channel_ids, row_code)`/`Equal(channel_ids, col_code)`
+     plus orientation selection.
+   - Kill condition met: every exact one-hot formulation still needs a
+     channel-by-axis 10x30 broadcast for the stripe axis in each possible
+     orientation, or else creates one or more full 10x30x30 bool intermediates.
+     Current `row_side`/`col_side` is the compact two-orientation broadcast form.
+
+2. Bounded crop before scan / shorter line vectors.
+   - Expected payoff: if one axis were strictly below 30, the 30-long vectors
+     and 300B side tensors could shrink proportionally.
+   - Proof test: inspect `/tmp/arc-gen/tasks/task_0a938d79.py`, run a Python
+     oracle, and sample 10000 fresh generator cases for reachable dimensions.
+   - Kill condition met: fresh cases reached H=30 and W=30, with both row and
+     column stripe orientations.  The 30-long line vectors and 10x30 side
+     tensors are semantically required under the fixed scorer shape.
+
+No source-owned candidate was created.  Recommended next experiment: only revisit
+if a new primitive can produce orientation-swapped channel equality as a single
+counted 10x30 side tensor, or if official/runtime accounting changes to exempt
+one broadcast input to the final output op.  Otherwise this is a verified
+no-adopt but useful failure.

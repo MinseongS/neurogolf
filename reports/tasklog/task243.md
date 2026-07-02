@@ -66,3 +66,24 @@ the floor lands at 14.06 — the smaller Wk and D give a HIGHER floor than task2
 to beat the deployed 13.86 by +0.20 via cropping+fusion, but the +0.3 crossover D (=33) sits BELOW the true
 worst-case geodesic (=38), so reaching +0.3 is only possible by silently leaking the high-D tail (the scout's
 14.30 @ D=28 is exactly such a non-generalizing net). Verdict: MARGINAL (+0.20, fully general).
+
+## S8 (2026-07-02) — WALK-EINSUM WIN: 22652 → 9040 (+0.918) ADOPTED, also fixes 0.04% leak
+Two chained 4-conn walk Einsums (46+47 alternating H/V slots), ZERO materialized masks:
+free `input` used repeatedly with (10,) colour selectors; all traversability slots share one
+colour letter q pinned to black by a single P0[q] operand (1 letter per 4-conn step); blue
+seeds via Qb; slot-1 uses P01 (black∪blue) for seed self-loop. Counted: W1 3600 + W2 3600 +
+bool 900 = 8100 mem, 940 params. Chain covers geodesic D≤46 (200k-audit worst = 38, margin 8).
+Deep-tail head-to-head: 12 fresh instances with D>28 → candidate 12/12, incumbent 0/12 (the
+D=28 incumbent's known silent leak is FIXED). Gates: stored fail=0; fresh 2500+1500 fail 0/0.
+TRANSFERABLE: shared-colour-letter trick makes traversability FREE (no 3600B t plane as in
+task187); chain einsums restart parity — worst-case slot cost 2D−1 across a chain boundary.
+
+## S9 (2026-07-03) — 18×18 crop via unified-passability redesign (+0.408) ADOPTED
+Naive crop blocked (einsum can't partially read a 30-axis; both walks at 52-letter cap).
+Fix: replace two colour letters (q1 P01/q P0) with ONE passable plane P=black∪blue
+cropped by valid-crop einsum 'ncij,c,ia,jb->nab' (pass-through-blue harmless: every blue
+= flood source; PROVEN 0/5000 vs gen truth). Frees letters → walks emit [1,18,18].
+K1=46/K2=47 UNCHANGED (leak-incident constraint respected). W1/W2 3600→1296 each,
++P 1296+bool 324; mem 8100→5112, params 940→901, total 9040→6013. Bit-identical:
+0/800 vs deployed onnx, 2500+600 uncached fresh 0/0/0. Latency 4.5ms (was ~100-150ms).
+Backup task243_pre_s9.onnx.

@@ -10,14 +10,22 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('arange_one_to_thirty', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAgAAAAMAAAAEAAAABQAAAAYAAAAHAAAACAAAAAkAAAAKAAAACwAAAAwAAAANAAAADgAAAA8AAAAQAAAAEQAAABIAAAATAAAAFAAAABUAAAAWAAAAFwAAABgAAAAZAAAAGgAAABsAAAAcAAAAHQAAAB4AAAA=')),
+        tensor('minusone_i', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAr/////')),
+        tensor('thirtyone_i', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAofAAAA')),
     ]
     nodes = [
         helper.make_node('ReduceL2', ['input'], ['size_f'], axes=[0, 1, 2, 3], keepdims=0),
         helper.make_node('Cast', ['size_f'], ['size_i32'], to=6),
-        helper.make_node('Sub', ['size_i32', 'arange_one_to_thirty'], ['mirror_indices']),
+        helper.make_node('Add', ['size_i32', 'minusone_i'], ['start_i']),
+        helper.make_node('Sub', ['size_i32', 'thirtyone_i'], ['limit_i']),
+        helper.make_node('Range', ['start_i', 'limit_i', 'minusone_i'], ['mirror_indices']),
         helper.make_node('Gather', ['input', 'mirror_indices'], ['output'], axis=3),
     ]
     value_infos = [
+        helper.make_tensor_value_info('mirror_indices', 6, [30]),
+        helper.make_tensor_value_info('size_f', 1, []),
+        helper.make_tensor_value_info('size_i32', 6, []),
+        helper.make_tensor_value_info('start_i', 6, []),
+        helper.make_tensor_value_info('limit_i', 6, []),
     ]
-    return model('task150_live_exact', nodes, inits, output_dtype=1, opset=9, value_infos=value_infos)
+    return model('task150_live_exact', nodes, inits, output_dtype=1, opset=13, value_infos=value_infos)

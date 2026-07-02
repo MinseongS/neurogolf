@@ -58,3 +58,33 @@ IS the occupancy — one tiny [30] vector serves both period detection and exten
 eliminating the [1,10,1,30] MatMul intermediate (1200B -> 0). ⭐ Bake the off-grid
 pad-column redirect (c>=W -> col 29) straight into the period table so the gathered
 row is already the final source index — no separate Where/keep-mask plane.
+
+## 2026-06-29 direct one-hot Gather adoption
+
+Re-attacked the final output path.  The previous source built a compact label
+grid, then paid for `Equal(output_ids, channel_ids)` over `[1,10,5,15]` and
+`Pad` to the harness canvas.  But the generator guarantees the output is just
+the input's visible period repeated horizontally:
+
+`output[:, :, :, c] = input[:, :, :, c mod period]`
+
+for columns `0..14`, while columns `15..29` are off-grid all-zero.  Therefore
+the final graph can concatenate `chosen_cols` with fifteen copies of input
+column `29`, then make the graph output directly:
+
+`Gather(input, final_cols, axis=3) -> output`
+
+This deletes the label-to-one-hot Equal/Pad path and lets the 10-channel result
+be the free graph output.
+
+Result:
+
+- stored: `mem=1927, params=110, pts=17.380766` ->
+  `mem=1147, params=75, pts=17.891756`;
+- fresh: `1000/1000`, then `5000/5000`;
+- adopted with `python -m src.adopt 343`.
+
+Transferable rule: when the output is a pure crop/periodic remap of the original
+one-hot input, route the original one-hot tensor to the graph output with Gather
+instead of rebuilding labels and expanding them with Equal.  Off-grid columns can
+point at an already-zero padded input column to avoid Pad entirely.

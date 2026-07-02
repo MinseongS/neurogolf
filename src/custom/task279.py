@@ -9,11 +9,15 @@ Generator rule:
 * The output restores only closed boxes to cyan; open boxes and barnacles remain
   blue.
 
-This builder mirrors the compact deployed graph in source form.  On the 16x16
-active crop it repeatedly erodes the blue mask with a 3x3 all-ones QLinearConv,
-then grows the surviving closed-box cores back two cross-neighbour steps inside
-the original blue mask.  The resulting mask is padded to 30x30 and used to
-select cyan(8) versus the original input.
+A blue pixel belongs to a closed box iff its 4-connected blue component encloses
+a maroon pocket.  On the 16x16 active crop the graph repeatedly erodes the blue
+mask with a 3x3 "degree" QLinearConv (a cell survives only with >=2 orthogonal
+neighbours), which peels open paths from their endpoints while leaving closed
+loops intact.  The surviving loop cores are then grown two masked steps back
+inside the original blue mask to recover attached tails.  The same degree kernel
+is reused for the dilation (any set neighbour lights the cell), so only one 3x3
+kernel is stored.  The resulting mask is padded to 30x30 and used to select
+cyan(8) versus the original input.
 """
 
 import numpy as np
@@ -24,6 +28,8 @@ from ..harness import IR_VERSION
 
 S = 30
 CROP = 16
+ERODE = 8
+GROW = 2
 
 
 def build(task):
@@ -44,7 +50,6 @@ def build(task):
 
     F = TensorProto.FLOAT
     U8 = TensorProto.UINT8
-    B = TensorProto.BOOL
 
     init("slice_starts", np.array([0, 1, 0, 0], np.int64), np.int64)
     init("slice_ends", np.array([1, 2, CROP, CROP], np.int64), np.int64)
@@ -53,26 +58,32 @@ def build(task):
     init("degree_y_scale", np.array(9.0, np.float32), np.float32)
     degree = np.array([[0, 1, 0], [1, 3, 1], [0, 1, 0]], np.uint8).reshape(1, 1, 3, 3)
     init("degree_kernel_u8", degree, np.uint8)
-    cross = np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]], np.uint8).reshape(1, 1, 3, 3)
-    init("cross_kernel_u8", cross, np.uint8)
 
+    # Crop the blue channel to the 16x16 active region and quantise to uint8.
     n("Slice", ["input", "slice_starts", "slice_ends"], "blue_f32")
     n("Cast", ["blue_f32"], "blue", to=U8)
 
+    # Erode: a cell survives iff 3*center + sum(orth neighbours) >= 9, i.e. it has
+    # at least two orthogonal neighbours.  Open paths peel from their endpoints;
+    # closed loops (every cell has two neighbours) survive untouched.
     cur = "blue"
-    for i in range(8):
+    for i in range(ERODE):
         cur = n(
             "QLinearConv",
-            [cur, "scale_f", "zero_u8", "degree_kernel_u8", "scale_f", "zero_u8", "degree_y_scale", "zero_u8"],
+            ["blue" if i == 0 else cur, "scale_f", "zero_u8", "degree_kernel_u8",
+             "scale_f", "zero_u8", "degree_y_scale", "zero_u8"],
             f"core_{i}",
             kernel_shape=[3, 3],
             pads=[1, 1, 1, 1],
         )
 
-    for i in range(2):
+    # Regrow the surviving loop cores back into the original blue mask to recover
+    # tails.  y_scale=1 makes the same degree kernel act as a 4-connected dilation
+    # (any set cell in the plus-neighbourhood lights the centre).
+    for i in range(GROW):
         neigh = n(
             "QLinearConv",
-            [cur, "scale_f", "zero_u8", "cross_kernel_u8", "scale_f", "zero_u8", "scale_f", "zero_u8"],
+            [cur, "scale_f", "zero_u8", "degree_kernel_u8", "scale_f", "zero_u8", "scale_f", "zero_u8"],
             f"neighbor_{i}",
             kernel_shape=[3, 3],
             pads=[1, 1, 1, 1],

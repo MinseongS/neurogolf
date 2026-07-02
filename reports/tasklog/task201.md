@@ -1,5 +1,38 @@
 # task201 — 846bdb03
 
+## 2026-06-30 — Conv dual-axis crop (ADOPTED, +0.32)
+
+Live was already a better `live_exact` reconstruction (**16.563 @ mem 4476**,
+266/266) than the 15.46 attempt below — that table is stale.
+
+Found and adopted a structural win: the colour-index entry Conv had
+`kernel [2,1] dil [17,1]` → output `labels_f [1,1,13,30]` (1560 B fp32), then a
+`Slice` cropped width 30→13. The +17 vertical tap only ever reads the empty
+region (all 266 inputs are fixed **13×13**, content ≤ row/col 12), so it
+contributes nothing. Extending to `kernel [2,2] dil [17,17]` crops BOTH spatial
+dims to 13×13 inside the Conv, so `labels_f` → 676 B and the width `Slice`
+(plus `slice_starts`/`slice_ends`) disappears.
+
+**Result: 16.881 pts @ mem 3202, params 154 — 266/266 (exact by construction).**
+Same domain assumption as the original (already sliced to [0:13,0:13]); the
+extra taps read provably-empty cells, so this is mathematically identical, not a
+heuristic. Source-owned in `src/custom/task201.py`; `networks/task201.onnx`
+rebuilt; source/live parity confirmed. Fresh-gen N/A (generator absent locally,
+like task001) — but exactness is structural, not sample-gated.
+
+**Remaining floor (3202):** `labels_f` 676 (fp32 Conv entry, irreducible),
+`output_small` 560 (bool one-hot at the 7×8 max output size, bound by the scored
+set), `crop_labels` 240, and six 169 B (13×13) detection planes. Next gains are
+<0.1 each (fuse the transient `yellow_mask`→`yellow_u8` Cast, etc.) — low ROI.
+
+⭐ **TRANSFERABLE:** a colour-index entry Conv should crop EVERY bounded spatial
+dim in one op via `kernel[2,2]/dilation[gridsize]` — never emit a half-cropped
+`[H,30]` plane and then `Slice` the width. Scan all tasks whose entry is
+`Conv → Cast → Slice`: each wasted `[H,30]`/`[30,W]` fp32 entry plane is ~900 B
+of free memory.
+
+## (stale) prior analysis below
+
 **Rule:** INPUT has two disjoint objects on black: a hollow h×w BOX (h=max(rows)+3, w=2*(max(cols)+2)) with YELLOW(4) corners, left col=colors[0], right col=colors[1]; and a SPRITE CLUSTER = two conway sprites side-by-side (idx0 in colors[0], idx1 in colors[1]), horizontally FLIPPED inside its own (h-2)×(w-2) bbox iff flip==1. OUTPUT (exactly h×w) = the box border + its interior filled by the cluster DE-FLIPPED (colors[0] sprite left, colors[1] right). Verified 500/500 numpy: yellow bbox gives (r0,c0,h,w) exactly; colors=colf[r0+1,c0]/[r0+1,c0+w-1]; cluster = nonzero outside the box bbox, its bbox is exactly (h-2)×(w-2); flip iff mean-col(colors[0] px in cluster) > mean-col(colors[1] px); interior[i-1,j-1]=colf[sr0+i-1, sc0+(flip? w-2-j : j-1)].
 **Current (prior public net):** 13.72 pts, 137-node ArgMax/Gather/Where/Pad chain, mem 79002, params 308.
 **Target tier:** B (closed-form scalar recovery + spatial copy/mirror into a fixed small index plane). Not Tier-S because the colour-index entry plane is an irreducible 30×30 f32 Conv.

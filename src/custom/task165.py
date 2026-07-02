@@ -10,7 +10,7 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('eligible_kernel', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDIxLCAxMSksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAAAAAAAAADwAPAA8ADwAPAAAAAAAAAAAAAAAPAA8ADwAPAA8ADwAPAAAAAAAAAAAADwAPAA8ADwAPAA8ADwAAAAAAAAAAAA8ADwAPAA8ADwAPAA8AAAAAAAAAAAAPAA8ADwAPAA8ADwAPAAAAAAAAAAAADwAPAA8ADwAPAA8ADwAAAAAAAAAAAA8ADwAPAA8ADwAPAA8AAAAAAAAAAAAPAA8ADwAPAA8ADwAPAAAAAAAAAAAADwAPAA8ADwAPAA8ADwAAAAAAAAAAAA8ADwAPAA8ADwAPAA8AAAAAAAAAAAAPAA8ADwAPAA8ADwAPAAAAAAAAAAAADwAPAA8ADwAPAA8ADwAAAAAAAAAAAA8ADwAPAA8ADwAPAA8AAAAAAAAAAAAPAA8ADwAPAA8ADwAPAAAAAAAAAAAADwAPAA8ADwAPAA8ADwAAAAAAAAAAAA8ADwAPAA8ADwAPAA8AAAAAAAAAAAAPAA8ADwAPAA8ADwAPAAAAAA=')),
+        tensor('eligible_kernel', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDIxLCA3KSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAADwAPAA8ADwAPAAAADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADw=')),
         tensor('starts_bg', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA==')),
         tensor('ends_bg', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAEAAAAAAAAAFAAAAAAAAAASAAAAAAAAAA==')),
         tensor('false_color', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAA')),
@@ -33,7 +33,7 @@ def build(task):
         helper.make_node('QLinearConv', ['nonzero_region_float', 'q165_scale', 'q165_zero_u8', 'kite_template_q165_u8', 'q165_scale', 'q165_zero_u8', 'q165_scale', 'q165_zero_u8'], ['kite_nonzero_count']),
         helper.make_node('Greater', ['kite_nonzero_count', 'q165_c9_u8'], ['kite_hit']),
         helper.make_node('Cast', ['kite_hit'], ['kite_hit_float'], to=10),
-        helper.make_node('ConvTranspose', ['kite_hit_float', 'eligible_kernel'], ['eligible_float'], pads=[0, 2, 10, 2]),
+        helper.make_node('ConvTranspose', ['kite_hit_float', 'eligible_kernel'], ['eligible_float'], pads=[0, 0, 10, 0]),
         helper.make_node('Cast', ['eligible_float'], ['eligible'], to=9),
         helper.make_node('And', ['nonzero', 'eligible'], ['seed']),
         helper.make_node('Cast', ['seed'], ['seed_u8'], to=2),
@@ -54,30 +54,5 @@ def build(task):
         helper.make_node('Where', ['fill30', 'sparse10_float', 'input'], ['output']),
     ]
     value_infos = [
-        helper.make_tensor_value_info('bg', 1, [1, 1, 20, 16]),
-        helper.make_tensor_value_info('nonzero', 9, [1, 1, 20, 16]),
-        helper.make_tensor_value_info('nonzero_region', 9, [1, 1, 13, 16]),
-        helper.make_tensor_value_info('nonzero_region_float', 2, [1, 1, 13, 16]),
-        helper.make_tensor_value_info('kite_nonzero_count', 2, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('kite_hit', 9, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('kite_hit_float', 10, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('eligible_float', 10, [1, 1, 20, 16]),
-        helper.make_tensor_value_info('eligible', 9, [1, 1, 20, 16]),
-        helper.make_tensor_value_info('seed', 9, [1, 1, 20, 16]),
-        helper.make_tensor_value_info('seed_u8', 2, [1, 1, 20, 16]),
-        helper.make_tensor_value_info('active_column_u8', 2, [1, 1, 1, 16]),
-        helper.make_tensor_value_info('active_column', 9, [1, 1, 1, 16]),
-        helper.make_tensor_value_info('fill20', 9, [1, 1, 20, 16]),
-        helper.make_tensor_value_info('fill30', 9, [1, 1, 30, 30]),
-        helper.make_tensor_value_info('seed_row_score', 2, [1, 1, 20]),
-        helper.make_tensor_value_info('seed_row', 7, [1, 1]),
-        helper.make_tensor_value_info('seed_row_values', 2, [1, 1, 1, 1, 16]),
-        helper.make_tensor_value_info('seed_col_raw', 7, [1, 1, 1, 1]),
-        helper.make_tensor_value_info('seed_col', 7, [1, 1]),
-        helper.make_tensor_value_info('row_col', 7, [1, 9, 1, 1, 1]),
-        helper.make_tensor_value_info('col_col', 7, [1, 9, 1, 1, 1]),
-        helper.make_tensor_value_info('seed_indices', 7, [1, 9, 1, 1, 4]),
-        helper.make_tensor_value_info('sparse9_score', 1, [1, 9, 1, 1]),
-        helper.make_tensor_value_info('sparse10_float', 1, [1, 10, 1, 1]),
     ]
     return model('task165_live_exact', nodes, inits, output_dtype=1, opset=17, value_infos=value_infos)

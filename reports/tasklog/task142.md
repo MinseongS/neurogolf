@@ -47,3 +47,9 @@ The "fp16 doesn't help / don't cast the input" rule is about the 30x30 ENTRY pla
 the working block is tiny, fp16 halves it for free. ⭐ Also: re-check the scorer's expected
 output for off-grid fill — here off-grid is ALL-ZERO (no ch0=1 background), which removed
 an entire OR/mask branch the "obvious" Tier-S build wrongly added (and tanked it to 14.0).
+
+## S9 (2026-07-03) — mechanism-14 separable-remap einsum (+0.449) ADOPTED
+Single 5-operand Einsum 'ra,ai,zcij,bj,sb->zcrs', mem=0: mirror-tile 3x3->6x6, U(30,3)/S(3,30) shared both axes, 282->180.
+Gates: stored fail=0; uncached fresh 2000+600: 0/0/0 (bit-identical). No TopK.
+NOTE: scan projection was ~8x optimistic — output axis must span the FULL 30 (grading
+tensor [1,10,30,30]), so U tables are [30,K] not [out,K]. Backup task142_pre_s9.onnx.

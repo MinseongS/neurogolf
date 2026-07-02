@@ -30,6 +30,22 @@ below the detection floor.
 GENERALIZES: fresh 200/200 AND a separate 1000/1000 in-memory run; the core "min-span colour = blob"
 idea is 0/20000 exact.
 
+## 2026-06-29 live-frontier refresh
+
+Current live/source is far beyond the older semantic build: **17.314071 pts @
+mem 2140 params 37**.  It avoids the full 30x30 blob-plane Gather entirely:
+`MaxPool(input, kernel=[30,1])` gives per-channel column occupancy (1200B), the
+minimum-width colour identifies the blob, a scalar `target_idx` drives a tiny
+5x5 `Slice`, and `Equal` builds only a 10x5x5 bool crop before final bool `Pad`
+to `output`.
+
+Rechecked for a +0.3 lever.  The dominant 1200B occupancy profile is the actual
+colour-selection statistic; it replaces the old 3600B full selected blob plane.
+The next largest tensor is only the 250B crop one-hot.  A label-plane Pad would
+reintroduce a 900B full-canvas label and is worse.  This is no longer a high-ROI
+candidate unless a way appears to compute per-channel min/max column spans
+without materialising the 10x30 fp32 profile.
+
 ## Irreducible-floor analysis
 Dominant intermediates: (a) the 3600 B fp32 `bplane` = `Gather(input, blobcolor, axis=1)` — the full
 30×30 blob mask plane, irreducible because the 5×5 crop WINDOW position (min_row,min_col) is
@@ -59,3 +75,5 @@ build a uint8 label map on that window, `Pad` to 30×30 with sentinel 10, finish
 `Equal(L, arange[0..9])` into the free BOOL output. Watch the scorer trap: a Reshape-to-scalar target
 must be a length-1 (`[1]`) initializer, NOT an empty `[]` array — an init with a 0 dim makes
 `calculate_params` return None ("performance could not be measured").
+
+## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-1/2 opus agents; occupancy/max-semiring reductions or sub-400B u8 banks). Do not re-attempt without a new mechanism.

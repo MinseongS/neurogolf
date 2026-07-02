@@ -114,3 +114,9 @@ NOT help — the mandatory pad-back of the fill mask to 30x30 (and ORT's bool-Pa
 rejection forcing an fp16 pad + re-threshold) costs as much as the cropping saved.
 The active-canvas lever only pays off when the FINAL output plane is itself the
 small canvas, not when it must be padded back for a 30x30 broadcast.
+
+## S8 (2026-07-02) — pow2-log extremes + u8 wraparound range (+0.297) ADOPTED, div 0
+CAUTION LOGGED: count-profile ArgMax was WRONG here (multiple dots per row possible) — landed
+instead: per-row first/last via pow2-weight einsums 'bchw,cxy,dw->bdhy' + trunc(log2) (grid≤24
+⇒ sums <2^24 exact fp32; Cast fp32→u8 truncates). u8 wraparound range test
+(coord−low mod 256 ≤ high−low) fuses GE/LE/And pairs. 9852+134 vs 13302+134 → 15.494→15.791.

@@ -75,3 +75,6 @@ priority Where-CHAIN whose BASE CASE is the original colour plane C (a gated cel
 has carry 0 == background C) — this folds the "beam>0?beam:C" select and all the Adds into the
 chain for free. These four levers cut a 10068B scalar-recovery label-map to 7880B (15.76->16.0).
 The residual ~16.0 floor = 3600B fp32 colour-Conv + 900B uint8 output-route, both irreducible.
+
+## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
+mem 2792/16.92; full_idx 900B uint8 30x30 label carrier for free Equal->output, idx_f32 400B forced-fp32 crop, spatial_select [10,30] shape-locked. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).

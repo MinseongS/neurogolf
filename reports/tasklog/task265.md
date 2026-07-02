@@ -59,3 +59,15 @@ a banded conv (band weights 1/10/100 reading a small neighborhood) replaces 3 se
 predicate convs, but only wins when the painted condition is a SINGLE clean threshold —
 for a 2-D product-of-counts condition the membership disjunction reintroduces ~7 bool
 planes and the net gain shrinks.
+
+## 2026-06-30 — S6 re-confirm: FLOOR (input-side dead, external incumbent best)
+- Incumbent is NOT the stale custom 2-pass cascade above (15.25). Manifest shows
+  `method=ext:franksunp7166_65`, **pts=16.619, mem=4328, params=34** — a previous
+  session already adopted the external public-teacher net, well above the custom best.
+- S6 primary queue listed 265 as LOCAL_1 cov=0.996 (+1.58 input-side headroom).
+  Re-ran `reports/scripts/conv_fit.py 265` → **no single-Conv fit** (k=1/3/5 all FAIL,
+  channel 0 not separable, ≥4435 err on 300 ex). Confirms playbook §5.1: the LOCAL_1
+  label is a collision-free-window artifact, NOT linear separability. A nonlinear-local
+  fit needs a hidden 3600B fp32 plane → no win. **Input-side = measured dry well.**
+- Output is per-cell red painting over the full 18×18 active grid (not ≤K separable
+  rects) → signed-Einsum output routing does not apply. **FLOOR.**

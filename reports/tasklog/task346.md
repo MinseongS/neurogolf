@@ -57,3 +57,6 @@ row⊗col rule; the rule is an inherently 2-D 8-neighbour monochrome-ring detect
 - The `S1>0` (ring-non-empty) gate is LOAD-BEARING, not cosmetic: an isolated noise pixel has 8 EMPTY
   neighbours which trivially satisfy "all 8 equal (==0)"; without the gate `Where(mono,V,0)` reads that
   pixel's OWN colour and ReduceMax can pick it over the real centre. (Verified: dropping it → 0 pts.)
+
+## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
+mem 1224/17.87; CONST-OUTPUT false—output=centre colour of mono 3x3 ring (per-cell); fewer-pixel shortcut only 262/266. int8 QLinearConv ring test already minimal. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).

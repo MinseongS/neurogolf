@@ -57,3 +57,5 @@ failed 21/266 until the representation was matched.
 flood in fp16 with MaxPool3x3 (0 params, 8-conn respects 1px walls), interior = notblue−reach,
 then green = blue·dilate8(interior) (corners reach centre interior diagonally → 8-conn dilate,
 not 4-conn). Build the {0,1,3} label on the CROP and Pad once to 30×30 with a 99 sentinel.
+
+## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-1/2 opus agents; occupancy/max-semiring reductions or sub-400B u8 banks). Do not re-attempt without a new mechanism.

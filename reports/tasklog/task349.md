@@ -81,3 +81,21 @@ uses the right family — uint8/QLinearConv run gates plus MaxPool/Max compositi
 The semantic wall is variable-radius halo dilation plus downward beam priority
 over a full uncroppable canvas.  A single Conv/QLinearConv cannot recover radius,
 dilate, beam-fill, and priority-compose with `mem+params <= ~148`.
+
+## 2026-06-30 (S7) — LANDED refit, fresh-gated
+Fresh generators are present (/tmp/arc-gen, arc_id db93a21d). The held
+reports/candidates/task349_refit_19800.py was fresh-gated: 2500/2500 fresh
+instances candidate fail=0 AND candidate==incumbent (the earlier "random 400/400
+mismatch" was OFF-DISTRIBUTION garbage, not valid task instances). Bundled 267/267
+fail=0. LANDED: mem 26100->19800, params 90, pts 14.827->15.102 (+0.275).
+Mechanism: one fp32 1x1 Conv carries maroon+valid; halo detection kernels scaled
+x3 to emit colour directly into a Max compose (fuses away bool-cast+Where planes).
+
+# (appended) S8 2026-07-02 — parallel-plane conv-count union (+0.092) ADOPTED, bit-identical
+5 per-radius dilation MaxPools (4500B) → ONE QLinearConv gw[1,5,11,20] (per-radius windows as
+channels) + gsum>0 union via Min(gsum,3) (u8 Min IS supported in ORT CPU). 5 detector
+QLinearConvs → one [5,1,1,12] stack. 15300+1191 vs 18000+90 → 15.197→15.289. Fresh 2500+1500
+div 0; 400 random vs deployed onnx div 0. Full walk-einsum priced and REJECTED: radius-gated
+growth needs phase-gated shift tensors ≥7-9k params vs 4.5KB removable — parallel per-radius
+planes collapse via CONV-CHANNEL UNION, not walks (registry pattern for parallel banks).
+Floors: colf 3600 fp32 entry, hp_all 4500.

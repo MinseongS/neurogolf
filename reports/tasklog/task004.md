@@ -66,3 +66,154 @@ L=shiftR1(colf·shiftmask)+colf·copymask (masks partition the occupied cells wi
 collisions, so Add == Or). Pairs with the active-region crop (generator size bound) for the
 big byte win — the 30×30 floor only really bites the two fp32 entry planes and the final
 int32 Equal plane.
+
+## 2026-06-30 source-owned live rewrite
+
+Current source/live before this pass was already a compact public-teacher reconstruction,
+not the older 15.207 graph above:
+
+- incumbent: `custom`/teacher exact, `points=16.406957496300326`, `mem=5300`, `params=94`;
+- adopted: `custom:task004`, `points=16.45421935173185`, `mem=5044`, `params=101`,
+  stored `265/265`.
+
+Mechanism: keep the 16x16 scalar colour workspace, but replace
+`below_any = Gather(any_color, axis=2)`, `right_any = Gather(any_color, axis=3)`,
+`endpoint = Greater(below_any, right_any)` with a single uint8
+`QLinearConv(any_color, [[0,1],[2,0]], pads=[0,0,1,1]) -> end_code`, then
+`endpoint = Equal(end_code, 2)`.  This packs `2*below + right`; endpoint is exactly
+`below && !right`.  Net result saves one 16x16 uint8/bool plane (256B) after paying
+small scale/zp/kernel params.
+
+Important negatives:
+
+- 15x15 crop fails 64 stored `arc-gen` cases, so the 16x16 active box is real.
+- Replacing colour-derived occupancy with `valid` is wrong because in-grid black cells are
+  valid but not occupied.
+- Shifting the raw code directly is wrong because the move/stay condition belongs to the
+  source cell, not the destination cell.
+- Bool occupancy rewrite with sentinel-preserving value path measured worse/failed.
+
+Answer to the user hypothesis: size and exact position are not the expensive part in the
+current graph.  They are already encoded cheaply by the dilated 2x2 `Conv` that emits a
+16x16 colour/sentinel plane, plus fixed gather/pad indices.  The remaining cost is mostly
+the mandatory fp32 `code_f` entry plane, the padded 30x30 scalar output plane before final
+`Equal`, and repeated 16x16 condition/value planes.
+
+Follow-up mechanical cleanup: reuse existing uint8 scalar `u0` as the QLinearConv
+zero-point instead of carrying a separate identical `zp` initializer.  Stored eval
+unchanged `265/265`; params `101 -> 100`; points
+`16.45421935173185 -> 16.454413734082543`.
+
+## 2026-06-30 Session S1 verdict — FLOOR (compact encoding at optimum)
+
+Incumbent: `custom:task004`, points=16.45441, mem=5044, params=100. Re-confirmed
+1500/1500 fresh-generated instances + 265/265 bundled (0 divergence).
+
+**Per-tensor mem breakdown (measured):**
+- `code_f` 1024B fp32 — the mandatory 10→1 channel-collapse entry (16×16 dilated Conv).
+  fp32 forced by fp32 input; per structural-ceiling this is the detection floor.
+- `scalar_full` 900B uint8 — the 30×30 carrier for the arbitrary per-cell colour
+  output (un-slanted shapes are NOT separable rects → a real carrier is required;
+  uint8 is already the min byte-width; Equal(palette) routes to the FREE output last).
+- 12× ~256B 16×16 uint8/bool working planes (code, valid, vals, any_color, end_code,
+  endpoint, move_cond, move_vals, stay_vals, shifted, scalar_out, scalar_valid) +
+  3× 16B strips (row_has). Each is load-bearing for the local row-classification +
+  right-shift partition (copy vs shift masks are per-cell because the special
+  "rightmost-of-2nd-last-row" pixel is per-cell).
+
+**Empirically falsified golf attempt:** dropping the off-grid re-mask
+`Where(valid,scalar_out,255)` and padding `scalar_out` directly → 263/265 bundled
+FAIL, 1980/2000 fresh divergent (a shape's rightmost coloured col DOES shift into the
+off-grid col, leaking colour). The plane is essential — confirms the tasklog claim.
+
+**No sub-4-plane formulation found** for the move/stay/shift/merge block; the 12
+per-cell masks are structurally required. The +1.75 min_stat headroom is an artifact
+of its floor=900 assumption (which presumes a separable/count output); this task's
+output is a genuine per-cell colour map → floor ≈ 1024 (entry) + 900 (carrier) +
+~12×256 (masks) ≈ current 5044. **VERDICT: FLOOR at the compact encoding. No land.**
+
+**Tooling finding (broadly relevant):** all 400 arc-gen generators ARE present under
+/tmp/arc-gen/tasks/ (load with sys.path.append('/tmp/arc-gen') — note its own `src/`
+shadows ours if inserted at path[0]). The incumbent passes 1500/1500 fresh, so REAL
+generalization fresh-gating is available — contradicts the playbook/memory "generator
+wiped → equivalence-to-incumbent only" claim. Re-fits can now be locally fresh-gated.
+
+## 2026-07-01 task001-insight pass
+
+Rechecked with the task001 strategy: remove intermediate carriers where direct
+`output` routing is cheaper, and exploit the exact colour domain.
+
+Current source/live remains:
+
+- **memory 5044, params 100, pass 265/265, points 16.454413734082543**.
+
+Measured memory breakdown:
+
+- `code_f [1,1,16,16] fp32`: **1024**.  This is the 10-channel one-hot input
+  collapsed to a scalar colour/sentinel plane.  The dilated `Conv` is already the
+  cheap way to crop and collapse without materializing a 10x16x16 slice.
+- `scalar_full [1,1,30,30] uint8`: **900**.  This is the final arbitrary-colour
+  scalar plane before `Equal(palette) -> output`.
+- twelve 16x16 uint8/bool planes at **256** each for validity, occupancy,
+  endpoint, move/stay/shift, and scalar merge.
+- three 16-byte row strips.
+
+Checked implications:
+
+- Replacing `scalar_full -> Equal(palette)` with `Equal(scalar_valid,palette) ->
+  Pad(output)` would materialize a `[1,10,16,16]` bool block (**2560 bytes**),
+  worse than the 900-byte scalar carrier.
+- Direct final-output routing would need either 16x16-to-30x30 spatial selectors
+  or an equivalent full-canvas one-hot carrier; both are larger than the current
+  scalar `Pad`.
+- The move/stay/shift block can be algebraically rearranged
+  (`shifted values + shifted condition` instead of `move_vals -> Gather`), but it
+  still needs the same number of 16x16 working planes.  No task001-style factor
+  sharing removes a plane here because the move condition belongs to the source
+  cell while the shifted value is consumed at the destination cell.
+- Colour handling is already optimal for arbitrary copied colours: keep a scalar
+  colour plane until the final free `output` expansion.  Expanding colour earlier
+  loses.
+
+Conclusion: no new adoptable improvement.  For task004, the task001 lesson
+confirms the incumbent design rather than replacing it: defer one-hot expansion
+to the final `Equal`, and keep all geometry in one-byte scalar/mask planes.
+
+## 2026-07-01 deep generator/bounds recheck
+
+Generator `/tmp/arc-gen/tasks/task_025d127b.py` is input-deterministic.  The
+visible slanted outlines fully determine the output shear; no hidden generator
+state affects the target.  Incumbent verification: **1000/1000 fresh, 0 fail**.
+
+Generator bounds:
+
+- `width,height` are independently sampled in `[8,16]`.
+- shapes start at row `1`, are row-separated by one blank row, and satisfy
+  `row + tall <= height`.
+- `wide in [4,width-1]`, `tall in [3,wide-1]`, `col <= width-wide`.
+- output never needs a coloured pixel at column 0, but column 0 and row 0 are
+  still in-grid background for many examples.
+
+Deep recheck of possible reductions:
+
+- Cropping the workspace below 16x16 is not a free win.  Row 0 / col 0 may be
+  semantically all background, but they are still inside the variable grid.  The
+  final full-canvas scalar plane must distinguish in-grid background value `0`
+  from off-grid sentinel `255`; a single `Pad` constant cannot both create
+  top/left in-grid background and right/bottom off-grid sentinel.  Removing
+  row0/col0 would require an additional validity carrier, which is larger than
+  the saved 16x16 strip.
+- The 2x2 dilated `Conv` is doing two jobs at once: channel collapse and active
+  16x16 crop.  A 1x1 colour conv would cut kernel params but would emit a
+  30x30 fp32 plane before cropping, which is much more expensive than the current
+  1024-byte `code_f`.
+- `sidx`/`bidx` gather vectors are parameter-heavy but memory-cheap.  Replacing
+  them with `Pad+Slice` style shifts removes some params but adds 16x16 or
+  16x17 intermediate planes, losing on total cost.
+- Sparse Conv weights would help the 2x2 `Wc` params in theory, but sparse Conv
+  was already rejected by official shape inference in the task001 sparse probe.
+
+Conclusion: task004 is a real compact optimum under the current operator family.
+The apparent 15x15/top-left crop opportunity is blocked by the in-grid-background
+vs off-grid-sentinel distinction, the same reason `scalar_valid` and
+`scalar_full` remain load-bearing.

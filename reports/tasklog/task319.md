@@ -46,3 +46,29 @@ so it isn't a clean 2x2-block image, and (b) the two candidate sprites are same-
 no size/count margin. Both the anchor (which color is magnified) and the selection (which small sprite matches)
 require full 2-D cross-correlation — best fresh accuracy ~88%, no separable/scalar/bounded-unroll escape.
 This matches the BUILD_PROMPT "shape-correspondence + global argmax across data-dependent components" floor.
+
+## 2026-06-30 (S7) — LANDED safe-golf, fresh-gated
+The incumbent cast the WHOLE [1,10,30,30] one-hot input to uint8 (9000B plane) then
+did per-colour Gather-by-channel object masks. Replaced with a 3600B Einsum
+channel-collapse colour-index (`'bchw,c->bhw'`, weight=[1..10] so inside-board
+cell→colour+1, padding→0); object masks become Equal(cplane, colorX+1)→Cast(uint8),
+bit-identical (the +1 keeps colour-0 objects distinct from zero padding).
+row_occ/col_occ now reduce the FREE fp32 input directly. Bit-identical to incumbent
+on 3000/3000 fresh (both share the incumbent's pre-existing 8/3000 ambiguous-case
+fails — unchanged). mem 21834→19530, params 269→279, pts 14.9965→15.1061 (+0.110).
+LESSON: the 9000B full-input-cast is NOT always a dead-end — when downstream only
+needs per-colour comparisons, a 3600B Einsum collapse replaces it. Cross-task scan
+found only task286 still does Cast(input) (consumer=Slice, different pattern).
+
+## S8 (2026-07-02) — reverse-ArgMax → select_last_index (+0.022) ADOPTED, div 0
+Gather(rev30)+ArgMax+(30−tail) ×7 → ArgMax(select_last_index=1)+1; drops rev planes + rev30/thirty inits. FLEET-WIDE IDIOM: scan for Gather(reversed)+ArgMax patterns.
+
+## S9 (2026-07-03) — fallback-table dead-row shrink (+0.020) ADOPTED
+fallback_sig_table[38,3]+slots[38] memorization patch fires on only 3 bundled rows
+(22/26/36) and 0/3000 fresh → kept 3 rows, bit-identical. mem 18890→18645, params
+248→108, total 19138→18753. Gates: stored fail=0; div 0/3000 fresh + 0/400 random
+(orchestrator); cached 3000: 3/3; uncached 800: 1/1, div 0. Latency 0.2ms.
+FLOORS re-priced: cplane 3600 fp32 (input fp32 locks einsum out-dtype), 3× Equal+Cast
+masks 5400B (K-batch neutral), 12 pairwise all-equal 2400B (fp16 bilinear-dot = exact
+wash, single-use views), Gather×16 views non-uniform indices + dynamic-Slice banned.
+Backup reports/retired_networks/task319_pre_s9.onnx. DO NOT re-probe repeat-group here.

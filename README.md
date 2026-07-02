@@ -8,7 +8,9 @@ handoff docs as authority.
 ## Source of truth
 
 - `NEXT_SESSION.md` — copyable next-session prompt.
+- `AGENTS.md` — repository-local agent instructions.
 - `skills/neurogolf-recursive-improvement/SKILL.md` — project-local workflow skill.
+- `reports/USER_REVIEW_WORKFLOW.md` — human-in-the-loop task review workflow.
 - `reports/ACTIVE_RESEARCH_STATE.md` — current research state and next direction.
 - `reports/HIGH_SCORE_FRONTIER.md` — high-score mechanism frontier.
 - `reports/source_live_reconcile.md` — source/live parity status.

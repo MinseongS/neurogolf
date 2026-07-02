@@ -56,6 +56,26 @@ row-gather, 3x3 sprite, [9,9] bool/uint8 kron+label).
   pair, not a single row⊗col outer product, so a clean Tier-A row⊗col And does not
   apply here. (This is exactly what broke attempt #1.)
 
+## 2026-06-30 task001 threshold-product transfer probe
+
+The live/source graph is now ahead of the older note above:
+`18.174539963744692`, `mem=882`, `params=39`, method `ext:franksunp7166_65`.
+It uses a tiny recovered 3x3 gray mask, a bool 9x9 kron, and a
+`out6ch [1,6,9,9]` carrier before `Pad`.
+
+Probed task001's direct factorized product in
+`reports/scripts/task195_threshold_product_probe.py`.
+
+- ch5-only direct product: invalid, because a fixed background constant cannot
+  be formed from a binary occupancy sprite inside one `Einsum`.
+- ch0/ch5 one-hot product: exact stored `265/265`, but **worse**:
+  `17.921658420442327`, `mem=775`, `params=411`.
+
+Conclusion: task195 is a semantic sibling of task001, but not a scoring sibling.
+The current `out6ch` carrier is cheaper than paying dense coordinate/channel
+selector params for direct-output factorization.  Revisit only if sparse
+`Einsum` initializers become scoreable.
+
 ## INSIGHT (transferable)
 ⭐⭐ **ARC "fractal self-tiling" (a shape rendered with copies of itself) = the
 Kronecker product `kron(S,S)`. kron is NOT the outer product of one flattened

@@ -46,3 +46,14 @@ in the FREE output conv — no per-cell Where/Equal label plane. (task204 11364 
 ⭐ QLinearConv perimeter-anchor SHARP threshold: weight-scale = 1/(2*peri-1) makes conv==peri
 round to 1 and conv==peri-1 round to 0 (one missing ring pixel kills the anchor) — exact box
 detection with no comparison op.
+
+# (appended) S8 2026-07-02 — walk-einsum verdict: GENUINE FLOOR (no candidate)
+20000/20000 rule reproduction (4-conn border flood + vertical blue-gap parity) but the economics
+lose: max flood slots = 50 > 47 (needs 2 chained einsums, 3200B+1650p) + parity einsum ≥4650
+units + glue 2-2.4KB ⇒ best ≈12.2-13.4k vs incumbent 10232. STRUCTURAL REASONS (transferable):
+(1) the "7 MaxPool rounds" are PARALLEL per-size anchor dilations (324B u8 each), not a
+sequential chain — only CHAINS collapse; (2) uint8 conv banks (sub-400B planes) are
+einsum-proof: an Einsum's entry ticket = one fp32 spatial output (1600-3600B) + step params.
+NEW TRICK (unused, bank for later): signed parity-of-distance einsum — colour-state absorbing
+chain (move weight −1 through colour-0, self-loop +1 on colour-1) = exact (−1)^dist ±1 in one
+einsum, 3 letters/slot. Do NOT re-attempt task204 without a new mechanism.

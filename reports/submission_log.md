@@ -351,3 +351,221 @@ mem 10834 / params 454 / **15.6685 pts** vs previous 15.6252. Fresh verification
 Submission `54127830` (`task080 qlinearconv bitmap counts +0.043 local`) completed with
 **publicScore 7172.10**, improving previous best **7172.06** by **+0.04**. Total QLinear/uint8
 series lift from 7170.59 is now **+1.51 public**.
+
+## #NEW-BEST 2026-06-29 — CONFIRMED 7179.31 (task343 direct one-hot Gather output)
+
+Applied the `direct_onehot_gather_output` semantic rewrite to `task343`.  The previous source
+built a compact label grid and expanded it through `Equal(output_ids, channel_ids)` plus `Pad`.
+The generator rule is a pure horizontal periodic remap, so the graph can instead concatenate
+`chosen_cols = c mod period` with off-grid column `29` and make `Gather(input, final_cols,
+axis=3)` the graph output.  This routes the original one-hot input directly into the free
+output and deletes the counted one-hot rebuild path.
+
+Local task343 result: `mem=1927, params=110, pts=17.380766` ->
+`mem=1147, params=75, pts=17.891756`.  Fresh verification: **1000/1000** and **5000/5000**.
+Stored total at submission: **7179.21**.
+
+Submission `54172137` (`task343 direct onehot gather output local 7179.21`) completed with
+**publicScore 7179.31**, improving previous best **7178.43** by **+0.88**.  This is a
+source-owned mechanism, not a public ONNX import.
+
+## #NEW-BEST 2026-06-30 — CONFIRMED 7182.09 (full-task improvement pass, after fixing uint8-TopK grader-killer)
+
+Submitted the full source-owned improvement pass (33 modified tasks, local 7181.32). First
+submission `54192655` and an identical resubmit `54192919` both returned **SubmissionStatus.ERROR**
+(systematic, not transient — confirmed by submitting a known boristown ~7174 base which scored
+cleanly at **7174.16**, proving the grader was healthy and the fault was in our zip).
+
+Root cause isolated by bisection (replacing modified-task slots with boristown's grader-safe
+networks, then binary-searching): **task208** errored alone; the trigger was the "safe-golf"
+change that dropped the `Cast(uint8→fp16)` before `TopK`, feeding a **uint8 tensor directly into
+TopK**. This passes local `onnxruntime==1.26` and even `onnx.checker.check_model(full_check=True)`
+locally, but the **Kaggle grader raises on unsigned-int TopK input** → whole-submission ERROR
+(uncaught, since `calculate_memory` calls `check_model` outside any try/except). A comprehensive
+scan found 8 modified tasks with unsigned TopK input: **208, 285, 308, 316, 366, 368, 388, 397**.
+Note `int64` TopK input is GRADER-SAFE (task366's HEAD `cnt_prio` INT64 TopK shipped in prior
+working submissions); only **unsigned** dtypes are the killer.
+
+Fix: reverted those 8 tasks' source to HEAD (float/fp16 TopK), rebuilt, reconciled. Cost was only
+~0.24 local pts (the dropped-Cast golf gain on these 8 was negligible). Honest local total
+**7181.08**.
+
+Submission `54193588` (`FIXED: removed uint8-TopK grader-killer, local 7181.08`) completed with
+**publicScore 7182.09**, improving previous best **7179.31** by **+2.78**.
+
+Operational notes for next time:
+- Kaggle CLI rejects the upload with `400 Bad Request` unless the file basename is exactly
+  `submission.zip`.
+- Before submitting a rebuild, scan all 400 nets for **unsigned-int TopK input** — it is invisible
+  to local verification and errors the entire submission.
+
+## #NEW-BEST 2026-07-01 — CONFIRMED 7182.46 (further improvement pass, after reverting a false-positive leak-fix)
+
+The follow-up improvement pass (35 changed nets vs the 7182.09 set) as-is scored WORSE:
+submission `54221614` (local bundled 7181.22) completed at **publicScore 7181.32** — DOWN 0.77
+from best 7182.09, despite local going UP +0.14. Cause: local-measured memory != grader-measured
+memory, and two "leak-audit fix" tasks dominated the delta.
+
+Per-task grader-side diff (sanitize + ORT profiler trace + score_network, old-zip vs new) isolated
+exactly two regressions; all other 33 changes were small positives (+0.001..+0.67):
+- **task294: -1.137** — old net grader mem=0 (18.19pts). But 5000-fresh: **old=5000/5000 CORRECT**.
+  The leak-audit "fix" was a FALSE POSITIVE; old was both higher-scoring AND fresh-safe. Its HEAD
+  source `src/custom/task294.py` reproduces the mem=0 net source-owned. Reverted (git checkout HEAD).
+- **task193: -2.826** — old grader mem=0 (18.19pts) but 5000-fresh: **old=4901/5000 (1.98% fail)** =
+  REAL leak → old risks ~0 on private LB. New net = 1500/1500 correct, 15.36pts. User chose to KEEP
+  the new (private-safe) version, accepting the public cost.
+
+Final: reverted only task294 (+1.137, no private cost), kept task193 new. Local 7182.36.
+Submission `54222245` completed with **publicScore 7182.46**, improving previous best **7182.09**
+by **+0.37**, and this set is private-safer (task193 leak removed).
+
+Lessons: (1) local mem reduction does NOT guarantee LB gain — verify grader-side memory (profiler
+trace) on changed tasks before assuming a win; (2) leak-audit can false-positive — confirm the OLD
+net actually fails fresh (5000+) BEFORE replacing it, since the replacement usually costs public LB.
+
+## #NEW-BEST 2026-07-02 — 7186.61 (kojimar 7180.86 task-level positive overlay, fresh-gated)
+
+Downloaded `kojimar/neurogolf-7180-86-minimal-onnx-blend-assets` (base_submission 400 + overrides 4),
+ran `public_teacher_scan.py`: 26 base wins + 2 override wins vs our live nets (+7.5 gross).
+Fresh-gated ALL candidates (1500 fresh; 5000 on known-leak families) with rule
+"adopt only if candidate fresh-fail <= incumbent fresh-fail":
+
+- ADOPTED 19 (+2.34 local): 152 35 336 277 397 92 165 237 218 260 31 (clean), 161 205 44 285 18
+  (equal fail count, div=0 or equal rate), overrides 233(+0.363, 0 div!) 313 358.
+- REJECTED on fresh: **193 (92/5000 fail — kojimar ships the leaky mem0 variant, as predicted)**,
+  191 (12 vs 0), 17 (21 vs 2), 25 (6/5000 vs 0), 21 (5/432 vs 0), 2 (89 vs 80), 209 (174 vs 170),
+  219 (kojimar worse than ours).
+- task76 (+0.175) fresh-gate still running at session end (generator extremely slow) — pending.
+
+Submission 54255339 (local 7186.74) **ERRORED**: full-400 pre-zip scan found uint8-TopK inputs in
+task173(x3)/task208(x1)/task366(x5) — RE-INTRODUCED by earlier S6/S7 refit work that was never
+submitted. My pre-scan only covered the 19 newly-adopted nets; the killer was in the OTHER 26
+changed-since-last-submission nets. Reverted 173/208/366 to last-submitted nets via exact source
+(cost -0.223; re-landable with float/int32 TopK feeds).
+
+Submission 54255466 (local 7186.51) **COMPLETE publicScore 7186.61**, +4.15 vs previous best
+7182.46. Delta = kojimar overlay +2.34 + previously-unsubmitted S6/S7 refits ~+1.8.
+
+Lessons:
+- The uint8-TopK scan must run on ALL 400 nets of the final zip (or at least all nets changed vs
+  the last COMPLETE submission), never just the current session's additions.
+- Grader-side per-task diff old-zip vs new (evaluate on both) predicted +4.36; actual +4.15
+  (delta from the 3 reverts -0.22 happened after the diff). Prediction accuracy confirms
+  evaluate() (ORT profiler) == grader memory model.
+- opset 18/20/21 nets exist in prior COMPLETE submissions -> opset itself is NOT the grader-killer.
+
+## #NEW-BEST 2026-07-02 — 7187.32 (walk-einsum mechanism PROVEN on LB)
+
+Investigated (a) forum hints + (b) grader counting model per user direction.
+
+(a) Forum (via Playwright agent): Fritz Cremer (#1) posted full per-bucket scores (~7580 at
+6/15) → saved `reports/fritz_buckets.txt`; our gap (+394 vs 6/15-Fritz) is DIFFUSE: +4..+20
+per 10-task bucket. Tony Li: 7600 via massive per-task LLM iteration, "not one simple idea".
+Banned ops = Loop/Scan/NonZero/Unique/Script/Function/Compress (LSTM legal, unexplored).
+Legit score-25 tasks exist (Deotte). 9th place: meta = "onnx tool profiling micro-interpretations".
+
+(b) Read data/neurogolf_utils.py: only NODE OUTPUTS counted; op INTERNALS free; input/output
+free; free >0 threshold. task313 (kojimar) = whole task in ONE 10-operand Einsum (input
+repeated, tensor cores) = the precedent. Generalized to WALK-COUNTING: K flood steps = one
+Einsum (see insight_registry `walk_einsum_iteration_collapse` + tasklog/task187.md).
+
+task187 pilot: 14.580 (32850+665) → 15.290 (15300+1176), fresh 17≤19 incumbent, 20000-instance
+numpy verification, 8-conn connectivity trap documented. Submission 54257728 (only task187
+changed) **COMPLETE 7187.32 (+0.71 exactly as predicted)** → 74-operand Einsum grader-safe.
+
+Next: fan out the template to 364/243/018/077/110/366/133/233/002/286 + directional-scan tasks.
+
+## #NEW-BEST 2026-07-02 S8 — 7190.17 (walk-einsum fan-out wave 1)
+- 54258484 COMPLETE **7187.53** (local 7187.43): task076 kojimar absorb (+0.175, fresh 24=24
+  div0, exact-source) + task173 padded-coordinate TopK reorg (+0.034, bit-identical).
+- 54258782 COMPLETE **7190.17** (local 7190.07, offset +0.1 exact): walk-einsum wave 1 —
+  task110 +0.864 (period restoration → 3 einsums, gates-as-einsum-operands),
+  task243 +0.918 (chained 46+47-slot 4-conn walk einsums, free-input traversability;
+  FIXES incumbent's 0.04% deep-tail leak), task077 +0.854 (59-operand checkpoint-bbox einsum).
+  All fresh-gated 2500+1500 fail 0 div 0. Grader accepts 59-operand einsums + einsum chains.
+- Negative: task208 uint8-TopK re-landing = floor at safe dtypes (tasklog/task208.md S8);
+  the old "+0.223 re-landable" estimate is retired.
+- New pre-submit tool: reports/scripts/scan_unsigned_topk.py (all-400 unsigned TopK scan).
+
+## #NEW-BEST 2026-07-02 S8 (cont) — 7191.92 → 7193.24
+- 54259376 COMPLETE **7191.92**: task002 +1.296 (47-slot walk einsum, beats inc fresh 252≤256)
+  + task018 +0.193 + task366 +0.143 (surgery; no-bool-Where/rank-0-init traps) + task133 +0.125.
+- 54260115 COMPLETE **7193.24**: task286 +0.574 (4 chained walk einsums, inc fresh 20→0!)
+  + task209 +0.349 (counting-model rebuild, div0) + task145 +0.230 (exact run-length einsum —
+  multiplicity-free 3-phase walk, old FLOOR refuted) + task364 +0.159 (feature-seed reachability).
+- task204 = genuine floor (parallel fan-out MaxPools ≠ chain; u8 conv banks einsum-proof).
+- Day total so far: 7187.32 → 7193.24 (+5.92). Scanner reports/scripts/walk_einsum_scan.py
+  drives the queue; blind-spot list (no repeat signature) pending different-lens audit.
+
+## #NEW-BEST 2026-07-02 S8 (cont2) — 7196.37 (54261662 COMPLETE, local 7196.27)
+Wave 4 (7 wins, +3.13): task219 +0.922 (batched-band placement einsum 'kjr,ks,jsc,k->rc';
+"18k floor" REFUTED; cand-only-fail 0/20000) + task023 +0.618 (3-round unit-propagation golf +
+residual majority rule, fresh fail 147→50) + task158 +0.524 (moment-statistics einsums: per-
+colour n,Σr,Σc,Σr²,Σc² detection at O(1) bytes) + task066 +0.522 (free-input einsum plane
+deletion, div0) + task054 +0.234 (sparse ScatterND chain, reduction=max idempotent unions) +
+task233 +0.223 (single-Conv detector collapse, div0) + task349 +0.092 (conv-channel union).
+DAY TOTAL: 7187.32 → 7196.37 (+9.05). Mechanism census: einsum-family ≈ +7.4, other counting-
+model golf ≈ +1.6. Running: 018v2, 118, 191, 367 (FIXED_DELTA blind-spot wave).
+
+## #NEW-BEST 2026-07-02 S8 (cont3) — 7197.62: EPILOGUE FOLD GRADER-PROVEN
+- 54262620 COMPLETE **7197.09**: task191 +0.420 (dihedral product-of-sums einsum) + task118 +0.293.
+- 54267065 COMPLETE **7197.62** (A/B B-leg): task187 epilogue fold +0.530 — whole net = Conv +
+  ONE ellipsis-einsum (s-index rides the walk chain; signed mixer T[s,v,w]). **Ellipsis einsum
+  + signed mixer CONFIRMED grader-safe** → mass-propagate to COPY class (285/025/044/017/074…)
+  and every walk net still paying a label epilogue.
+- Day: 7187.32 → 7197.62 (+10.30, 21 tasks rebuilt).
+
+## #NEW-BEST 2026-07-02 S8 (cont4) — 7199.33 (54267540 COMPLETE, local 7199.23)
+Wave 6: rect-recipe batch 4/4 (351 +0.487 free-input marker einsum, 280 +0.376 moment+Sqrt
+closed form, 234 +0.307 profile bbox, 163 +0.266 scalar-einsum locate) + task101 +0.206
+(+ fixes incumbent ORT-crash on 0.1% fresh — private-LB risk removed) + task367 +0.070.
+Floors priced & logged: 025 (fold endpoint), 017 (NS=13 robust floor; cache-overfit warning
+validated), 044 (fold measured neutral — 1:1 pad swap). Infra: fresh_cache RESHAPE bug fixed;
+fresh_verify crash-tolerant. DAY: 7187.32 → 7199.33 (+12.01, 27 tasks rebuilt).
+
+## #NEW-BEST 2026-07-02 S8 (cont5) — 7200.41: crossed 7200 (54267737 COMPLETE, local 7200.31)
+Wave 7: task202 +0.784 (code_f/iszero/black planes DELETED — band colours via integer-Div
+free-input einsums, orientation via Cauchy uniformity Σx²==(Σx)² einsum) + task064 +0.297
+(per-row first/last via pow2-weight einsums + trunc(log2); u8 wraparound range fuse; NOTE:
+count-profile ArgMax was WRONG for multi-dot rows — corrected mechanism).
+DAY: 7187.32 → 7200.41 (+13.09, 29 tasks). Matrix sweep (recipe_matrix.json, est +8.9 over
+25 tasks) running on 4 opus block agents.
+
+## #NEW-BEST 2026-07-02 S8 (final) — 7201.18 (54268275 COMPLETE)
+Wave 8 (matrix sweep): task251 +0.432 (walk einsum, 12×12 border flood) + task037 +0.280
+(pow2-log extremes, ReduceSum==2 gate) + task089 +0.024 (chained-scatter fold) + task319
++0.022 / task205 +0.012 (reverse-ArgMax → select_last_index idiom). Wave 9 pending: task054
+idiom +0.014 (local 7201.10).
+MATRIX SWEEP VERDICT: 30 tasks examined → 7 wins (+1.22) / 23 priced floors (all logged in
+tasklogs). Matrix est. +8.9 was ~7× optimistic: REPEAT_GROUP K-batching is BYTE-NEUTRAL
+(grader sums elements — wins require ELIMINATING planes); REDUCE_ONLY converts only when
+≤1 px per reduced line (pow2-exact) — occupancy/max-semiring reductions are floors.
+DAY TOTAL: 7187.32 → 7201.18 (+13.86, 36 tasks rebuilt, 0 submission errors, 9 waves).
+- 54268381 COMPLETE **7201.20** (wave 9 final, task054 idiom). S8 CLOSED: 7187.32 → 7201.20
+  (+13.88, 36 tasks, 9/9 submissions clean).
+
+## #NEW-BEST 2026-07-03 S9 wave 1 — **7206.71** (54270415 COMPLETE, local 7206.60)
+Three engines this wave:
+1. kojimar 7184.85 teacher sweep (+3.9 adopted / +1.1 rejected-by-fresh-gate): 108 +1.175
+   (separable-remap einsum, mem=0 — playbook mech 14), 031 +0.761 (log-space bbox +
+   ConvInteger), 029 +0.667 (fp16 GridSample crop + moment identity — old floor refuted),
+   014 +0.626 (in-op Slice crop; fixes incumbent 0.1% bug), 021 +0.465 (REPAIRED height-cap
+   bug), 303 +0.109 (fractional encoding), 155 +0.107 (Range swap; old ORT bug refuted).
+   REJECTED by uncached fresh gate: 193 (2.36%), 017 (NS=9 1.27%), 191 (int8 0.92%),
+   025 (K=4 undercount), 090 (15/2500). ⭐ overrides/ dir = the real teachers.
+2. Native-crop sweep (verified generator bounds, reports/grid_crop_bounds.md): 243 +0.408
+   (unified-passability letter-budget redesign), 187 +0.153 (in-einsum 25→30 index re-embed),
+   192 +0.209 (never-materialize-30×30 QLinearConv), 193 +0.136, 138 +0.096, 222 +0.086,
+   173 +0.082, 396 +0.147 (the S9 opener). REJECTED: 077 (crop backfires on free-input walk
+   einsums — playbook reject-check added), 233/080/205 not croppable.
+3. Micro: 018 fp16 recast +0.049, 216 einsum fold +0.053, 150 Range +0.135, 319/096/377.
+Floors re-confirmed & logged: 158, 366, 133, 286, 338, 209, 233 (crop lens included).
+DAY: 7201.20 → 7206.71 (+5.51, 21 tasks changed, submission clean).
+
+## #NEW-BEST 2026-07-03 S9 wave 2 — **7208.43** (54270903 COMPLETE, local 7208.33)
+Separable-remap einsum sweep (mechanism 14, from full-400 numpy scan
+reports/separable_remap_scan.md): 152 +0.934, 142 +0.449, 211 +0.277, 083 +0.063 —
+all mem=0 single 5-operand einsums. Scan projections were ~8× optimistic (output axis
+must span full 30 → U tables [30,K]); 135/053/164/172/210/311 rejected (incumbent
+Gather/Conv-pads already at/below the mech-14 floor). LSTM/GRU scout: DEAD, priced in
+playbook. S9 CLOSED: 7201.20 → 7208.43 (+7.23, 25 tasks changed, 2/2 submissions clean).

@@ -70,6 +70,19 @@ without the 2-D-tile-plus-hardcoded-stored hack (which is fitting → rejected).
 No improvement. Deployed `ext:kojimar7113` 15.46 stands. **MARGINAL — provably
 cannot reach +0.3.**
 
+## 2026-06-30 — independent re-confirmation (FLOOR)
+Re-measured current src/custom/task110.py: evaluate ok=True, fail=0, mem **13155**,
+params **634**, 15.468 pts. Per-tensor: two 3600B fp32 Conv planes (labels_f, inv30_f)
+= 7200B (55%), 900B uint8 recolour Gather carrier, period-ladder MaxPools 100–324B each.
+Intermediates already fully golfed: **0 int64** (all indices int32), 5 Casts all
+load-bearing (fp32→uint8 before each table Pad/Gather), no redundant plane.
+Independently re-derived the irreducibility: any per-shift correlation period-detector
+must slice the 10-channel input → [1,10,29,~22] ≈ 88KB per shift (vs collapsing to 1
+channel = 3600B), so the dual 1-channel value/negated-value planes ARE the cheapest
+detection+validation. Native 29×29 crop impossible (Conv on the 10-ch input already
+emits 3600B; slicing after only ADDS planes). Fresh periods span 2–9 (square); the
+5–9 ladder covers all via in-range multiples — none droppable. Verdict unchanged: FLOOR.
+
 ## Irreducible-floor analysis (decisive)
 Two mandatory f32 30×30 planes:
 1. `labels_f` (3600) — the colour-index value plane; needed for the dilated
@@ -112,3 +125,16 @@ floor at TWO f32 planes.
 ⭐ FEASIBILITY-MATH FIRST: when the only lever is removing ONE 3600B plane from a
 ~13.3KB net, compute 25−ln(mem−3600+par) BEFORE building — here it's 15.758, below
 the +0.3 bar even at zero replacement cost. Bail fast.
+
+## S8 (2026-07-02) — WALK-EINSUM WIN: 13789 → 5811 (+0.864) ADOPTED
+Old "irreducible two-plane floor" (labels_f/inv30_f 3600B Convs) REFUTED under the
+grader-counting lens. New mechanism (see src/custom/task110.py docstring):
+- per-axis period validity = ONE einsum each → [6] conf vector (24B): 'nvxy,nwzy,pxz,vw->p'
+  with stacked congruence matrices A_stack[p] (p=0 identity fallback, p=1..5 ↔ L=5..9) and
+  color-difference matrix D; nonneg terms → ==0 exact.
+- largest-valid one-hot gate: g = valid · [U·valid == 0], strictly-lower-tri U.
+- reconstruction directly to free output: 'p,q,v,nvxy,pxr,qyc->nvrc' (input free, >0 free).
+Counted outputs 264B total; params 5547 (A_stack dominates). Gates: stored 266/266 fail0;
+fresh 2500+1500 div=0 vs incumbent AND 800 fresh div=0 vs real networks/task110.onnx.
+TRANSFERABLE: period/tiling tasks with small selection vectors → gates-as-einsum-operands
+(selection one-hot multiplies INSIDE the einsum; heterogeneous fallback stays stacked).

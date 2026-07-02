@@ -62,3 +62,10 @@ uint8 indices.) ⭐ Scalar (shape `[]`) QLinearConv scale/zero-point inputs are 
 SHAREABLE across many convs → quant params cost ~3 elements total. This is the kojimar
 QLinearConv idiom generalised — and it beats the deployed kojimar net because collapsing
 10→1 colour index FIRST (3600B) is far cheaper than its per-channel 7056B fp32 slice.
+
+## S9 (2026-07-03) — single-tap 17×17 valid-Conv crop (+0.086) ADOPTED
+Entry Conv1x1→colf30 3600B + Slice → ONE [1,10,17,17] valid Conv, pack weights at tap
+(1,1), emits box interior 14×14 direct. mem 8736→5136, params 78→2952 (dense kernel —
+params count zeros, sparse banned; caps the win at +0.086 not +0.3). Bit-identical
+2500+600 uncached 0/0/0, no TopK. Trade curve checked: s=14 optimal (u8 downstream
+scales s²). Floors: keep_b 900 bool (off-grid OR), colf 784. Backup task222_pre_s9.onnx.

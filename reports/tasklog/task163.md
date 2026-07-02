@@ -57,3 +57,6 @@ MatMul where each selection matrix is `Equal(s, o+off) AND (mt ≤ o < mt+3)` �
 fixed gray-square background is a free additive fp16 initializer (copied content never lands on a
 line cell, so no overlap). Costs only the one 3600 B colour-index Conv (arbitrary colours) + 900 B
 Pad above the small 11×11 working planes.
+
+## S8 (2026-07-02) — rect-recipe conversion ADOPTED, div 0
+two scalar einsums 'bchw,c,h->' locate the single yellow; yellow11 plane dropped; 2345→1797, +0.266. Fresh: agent uncached 2500 div0 + my uncached 400 div0.

@@ -28,6 +28,24 @@ ANY Gather-based column permutation. The remaining ~16B are three scalars
 (total/size/size-1). No full-grid (30×30) plane ever materialises — the result plane
 is the FREE output, and `size` is recovered from a single scalar reduction.
 
+## S3 re-attack (2026-06-30) — Range param-trick TESTED & HELD (grader-fragile)
+Live incumbent is mem 128 / params 30 / **19.937 pts** (ReduceL2→Cast→Sub(arange[1..30])
+→Gather; arange is a 30-elem int32 initializer = 30 params). The 30-param arange is the
+only remaining cost beyond the 120B index + 8B scalars.
+
+Angle: build the mirror indices with `Range(start=G-1, limit=G-31, delta=-1)` instead of
+`Sub(G, arange)`. This is bit-identical (`[G-1..G-30]`) and drops the arange initializer:
+**params 30→3, mem 128→136, total 158→139, 20.066 pts (+0.128)**. Verified 266/266 bundled
++ 1600/1600 random in-domain, 0 divergence — UNDER the grader's `ORT_DISABLE_ALL`.
+
+REJECTED FOR LANDING: under `ORT_ENABLE_ALL` the optimizer collapses the dynamic Range to a
+**0-width output on 1600/1600 inputs** (graph breaks entirely). If the Kaggle grader applies
+any graph optimization, task150 scores ~0 (−15). Asymmetry +0.13 vs −15 is unacceptable; same
+class as the uint8-TopK grader-killer (local≠grader). Held at `reports/candidates/task150_range_flip.py`
+for an optional one-at-a-time Kaggle A/B probe (zip = submission.zip). **Incumbent KEPT.**
+Conclusion stands: the incumbent (158) is optimal among ROBUST (optimization-safe) formulations;
+the +0.90 min_stat headroom is the confound-2 variable-size-transform mirage.
+
 ## OPEN ANGLES (re-attack backlog)
 - A negative-step Slice (steps=[-1], axis=3) reverses the WHOLE 30-col axis with 0
   params/0 mem, but lands the grid at the right edge (shifted by 30-size); undoing
@@ -47,3 +65,11 @@ is the FREE output, and `size` is recovered from a single scalar reduction.
    block lands every out-of-grid column on columns [size..29] — all off-grid/zero —
    so the output zero-fills with NO Where/clamp/fallback constant. Replaces a
    Where(mask, rev, fallback) (drops a bool mask + a const + an op).
+
+## S9 (2026-07-03) — Range swap (task155 sibling) (+0.135) ADOPTED
+30-elem arange init → Add/Sub scalars + Range(size-1, size-31, -1). mem 128→136,
+params 30→2, total 158→138. Gates: stored fail=0; uncached 2000 fresh 0/0/0;
+edge sizes G=1..30 (600, DISABLE_ALL) 0 mismatch. Known trade: ENABLE_ALL optimizer
+collapses dynamic Range to 0-width — same profile as adopted task155, whose teacher
+shipped in kojimar's LIVE 7184.85 LB submission (real-grader-proven). S3 rejection was
+ENABLE_ALL-specific. Backup task150_pre_s9.onnx.

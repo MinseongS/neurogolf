@@ -52,3 +52,5 @@ collapses to a tiny K×K conv; here length is the full grid so no collapse.
 ⭐ Reusable entry lever: a DILATED (dil=10) 2×2 Conv whose only nonzero tap is
 [.,.,0,0]=arange yields the colour-index plane ALREADY cropped to 20×20
 (30−(2−1)·10=20) in ONE op, so every downstream plane counts at 20×20 not 30×30.
+
+## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-4 opus agent). Do not re-attempt without a new mechanism.

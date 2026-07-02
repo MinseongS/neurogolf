@@ -54,3 +54,16 @@ for a big win at IDENTICAL behavior. ⭐ Some "confirmed" nets only generalize ~
 hand-crafted validate() examples can be ILLEGAL w.r.t. the generator invariant, forcing a
 positional heuristic that's a false-positive tradeoff); matching that profile at lower mem
 is still a strict LB win even if fresh < 200/200.
+
+## 2026-07-01 (S7 re-run) — LANDED delta-route refit
+Output = input with painted black-cells→red = input + small delta. Replaced the
+6-channel output assembly (out0/out2/zero_plane/active Concat + Pad) and the gray
+channel slice/cast with ONE `Where(pad(paint_mask), red_onehot, FREE input)`.
+Eliminated active(600B)+gray_f(400B)+gray_u8/black_u8/out0/out2/zero_plane(500B);
+added only paint_mask30(900B bool)+paint2_b(100B). Net −500B.
+Old: mem 4339, params 293, 16.559. New: mem 3839, params 296, **16.673 (+0.114)**.
+Gate: bundled 265/265 fail=0. Side-by-side vs HEAD incumbent on 4000 fresh arc-gen:
+old_wrong=12, new_wrong=12, **OLD-correct/NEW-wrong=0** → strict-equivalent refit at
+lower mem (both share the 12 baked-in illegal-validate edge failures). networks/
+task363.onnx rebuilt; manifest updated. Mechanism = the Einsum/delta-route-onto-FREE-
+input lever.

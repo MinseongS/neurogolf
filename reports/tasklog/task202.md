@@ -1,5 +1,63 @@
 # task202 — 855e0971
 
+## 2026-06-30 (S5) — masked-profile sentinel fold (ADOPTED, +0.20)
+**Before (main working tree):** mem 9513, params 23, pts 15.837.
+The grid-extent mask `ingrid = rpos & cpos` was a 900B 30×30 broadcast plane, AND'd with `mark` into
+`markgrid` (another 900B plane).
+**Change:** fold padding-exclusion into the two 1-D profiles *before* the outer `Equal`:
+`Am = rpos ? A : 99`, `Bm = cpos ? B : 100` (sentinels outside colour range [0,9]); then
+`Equal(Am,Bm) == (A==B) & rpos & cpos ==` the old `markgrid` exactly. Deletes `ingrid` + `markgrid`
+(2×900B) and the trailing `And`; replaced by two length-30 masked profiles. 30×30 carrier count 6→4.
+**After: mem 7773, params 24, pts 16.039 (+0.202), fail 0.**
+**Verify:** `fresh_verify.py 202 "" 2000` → new graph fail=0 on 1711 fresh arc-gen; agent equivalence
+bit-identical to live-exact baseline (cand!=inc=0 / 1283 fresh). LANDED to main + manifest.
+⭐ TRANSFERABLE: to AND a broadcast in-grid mask into an `Equal(profileA, profileB)`, don't build the
+mask plane — map each profile's out-of-grid entries to **distinct sentinels** so the Equal is
+automatically False there. Kills the mask broadcast carrier for free.
+
+## 2026-06-30 — plane-free output routing (ADOPTED, +0.17)
+
+Prior semantic graph (15.669 @ mem 11253) carried a uint8 label cascade
+`bandc -> hb -> mark -> cg0 -> cg -> Equal(levels)`.  Two structural cuts:
+
+1. **mark via OUTER Equal of 1-D profiles** — `mark = (band(r,c) == band marked
+   at orthogonal coord)` is `Equal(A[.,1], B[1,.])` with
+   `A = Where(isvert, hbV, rowcolor)`, `B = Where(isvert, colcolor, hbH)`.  No
+   broadcast `hb` (900) carrier.
+2. **route into the FREE output** — `output = Where(mark & ingrid, onehot0,
+   input)`: marked cells -> black one-hot, else the input one-hot.  Drops the
+   `cg0`/`cg` (2×900) uint8 label planes and the final `Equal(levels)`.
+
+**Result: 15.837 pts @ mem 9513, params 23 — 230/230.**
+
+**Verification (generator absent locally, like task001/201):** rebuilt the prior
+graph and compared OLD vs NEW on **4000 well-formed random instances → identical
+(0 mismatch)**.  They diverge ONLY on degenerate width-1 bands (where black marks
+corrupt the `isvert` orientation profile) — which the real generator never emits
+(0 same-line colour-collisions in all 230 stored).  So exact in-domain.
+
+⭐ **TRANSFERABLE (task001 family):** when the output is "input one-hot with some
+cells recoloured to a FIXED colour by a data-dependent 1-channel mask", never
+build a uint8 label plane + `Equal(levels)`; route `Where(mask, fixed_one_hot,
+input)` straight into the free output.  Kills the label carrier + its Equal.
+Pairs with: replace any `Equal(broadcast_a, broadcast_b)` over two profiles with
+an OUTER `Equal(a[.,1], b[1,.])` to drop the broadcast carriers.
+
+## 2026-06-29 semantic source rewrite
+
+Replaced the generated exact-preserve b64 scaffold in `src/custom/task202.py`
+with a source-owned semantic builder for the current compact live graph.
+
+Result: **stored 230/230**, mem **11253**, params **24**, points
+**15.669479467767712**; **fresh 1000/1000**.  Source/live reconcile remains
+`mismatches: 0`.
+
+Adopt decision: **adopt as ownership/parity cleanup, not as a score improvement**.
+This preserves the current live score and makes the mechanism explicit:
+distinct-colour band profiles identify orientation and band colour, black cells
+are contracted per row/column profile, and the final uint8 label map is routed
+through the free `Equal(..., levels)` bool output.
+
 **Rule:** The grid is fully painted with stacked horizontal colored "strata"
 bands (each band = `height` rows of one DISTINCT color, colors from
 `random_colors` so never repeat). Sparse black(0) pixels sit inside the bands.
@@ -69,3 +127,11 @@ output Where (and even that is free if the last matmul already lands 4D).
 ⭐ "Distinct per-band colour" (from `random_colors`) collapses same-band testing
 to same-colour testing → the band-similarity routes through a tiny [10,30]
 band×col count, never a [30,30] similarity matrix or any flood-fill.
+
+## S8 (2026-07-02) — code-plane deletion via Cauchy uniformity (+0.784) ADOPTED, div 0
+Beyond the u8-recast brief (blocked: QLC needs u8 input = 9000B cast): code_f/iszero/black
+(5400B) DELETED. Band colours = Div(Σk·cnt, max(Σcnt,1)) from free-input einsums (int÷int
+exact fp32); orientation = Cauchy equality Σcnt² == (Σcnt)² per row (single 3-operand einsum,
+input repeated); black-cell band colour = S_h − Σ rowcolor·occ contracted vs FREE input.
+3253+34 vs 6997+200 → 16.119→16.902. numpy 20000/20000; div 0 vs deployed on 2500.
+TRICK for registry: Cauchy uniformity test (Σx²==(Σx)² ⟺ ≤1 nonzero) as an einsum.

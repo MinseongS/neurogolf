@@ -30,6 +30,33 @@ materialise real 2-D masks, but the label dtype is no longer forced to fp16.
 - Fold the line override into the double-MatMul by augmenting the band one-hots with hline/vline basis vectors. Blocked: a line cell still carries its band one-hot, so the bilinear term adds LUT[k][cb] that cannot be cancelled to a clean 8 — would need the band term zeroed, which the band one-hot does not provide. Could try a 5-component row/col factor where the line component DOMINATES additively (e.g. line weight 1000) then read back by magnitude bands in the final Equal threshold, collapsing Lg into Lband (~−1800 B, ~+0.2 pts).
 - Merge offgrid+line into a single override plane (disjoint regions) to drop one Where — but building `8*isline + 10*offgrid` costs as many full planes as it saves.
 
+## 2026-06-30 category-LUT rewrite adopted
+
+The old open angle was too pessimistic because the row/col one-hots do not need
+to keep the original band component active on separator or off-grid cells.  Build
+five mutually-exclusive row categories and five column categories instead:
+
+- row/col bands `0..2`, gated by `in-grid && not separator`;
+- separator line category;
+- off-grid category.
+
+Then a single `5x5` uint8 `QLinearMatMul` LUT emits the normal block colour,
+cyan line colour `8`, or off-grid sentinel `10` directly.  This removes the
+full-canvas `isline`, `Lg`, `ingrid`, and second overlay `Where` path, replacing
+them with only small row/column category vectors.
+
+Adopted result:
+
+- previous: `points=16.32877535559045`, `memory=5790`, `params=48`;
+- new: `points=16.963426590292688`, `memory=3030`, `params=62`, stored `263/263`;
+- delta: `+0.634651` points, `-2760` memory, `+14` params.
+
+Reusable mechanism: when a separable row×column LUT has full-canvas override
+planes for separator/off-grid/sentinel regions, first try promoting those
+regions to explicit row/column categories and folding the overrides into the
+LUT.  This is profitable when the override predicate is row-separable,
+column-separable, or an OR/product of the two.
+
 ## INSIGHT (transferable)
 A data-dependent rows×cols block grid drawn by FULL separator lines is a fully separable partition: the per-axis band index is the EXCLUSIVE CumSum of the line indicator sampled from the line colour along the first column/row (which is never itself a separator). A non-rank-1 (rowband,colband)->colour map is then the double-MatMul LUT idiom (Ronehot @ LUT3x3 @ Conehot), and preserving the input separator lines is free: just overlay the line colour (8) where the line indicator is set before the final Equal. No flood-fill, no NonZero — closed-form Tier A. ⭐ Reusable for any "fill specific cells of a line-delimited grid with fixed colours" task.
 ⭐ New transferable mechanism: if a MatMul/MatMul LUT path selects small integer labels from
@@ -37,3 +64,7 @@ one-hot factors and then feeds `Equal(label, channel_ids)`, try `QLinearMatMul` 
 inputs/LUT and scale=1/zp=0. It preserves exact integer selection and can halve every full
 label plane versus fp16. This is directly relevant to other row×col LUT or packed-label
 builders, but not to true weighted sums that exceed uint8 or need fractional values.
+⭐ Category-augmented row/column LUT: line/off-grid overrides that look like
+post-LUT full-canvas `Where` planes can often be folded into the LUT by making
+the row/column factors mutually exclusive over `{bands, separator, off-grid}`.
+This turns multiple 30x30 override planes into small 1-D category vectors.

@@ -27,3 +27,13 @@ Colours (ch1-9) upscale EXACTLY for free with a depthwise stride-2 K-4 ones Conv
 
 ## INSIGHT (transferable)
 ⭐ A FIXED block-upscale of an odd-cell sublattice is a single depthwise `ConvTranspose` (stride 2, pad_top=2 to align odd cell a=2r+1 → block [4r..4r+3], asymmetric `pads=[2,2,30,30]` to crop the 58×58 back to top-left 30×30) — **mem 0, writes `output` directly, colour channels EXACT for free**. The catch that defeats a pure depthwise upscale of one-hot grids: **channel 0 (background) is 1 at the even cells**, and even/odd cells collide on the same ConvTranspose kernel tap, so ch0 leaks into colour cells. Fix = a group=1 weight where ch0 also reads and SUBTRACTS the colour channels (`W[k,0]=−BIG`), pushing ch0 negative wherever a colour sits; after (out>0) it's exact. Cost is the dense [10,10,K,K] (here 1600) since the 81 zero pairs are still counted. ⭐ Sparse `graph.sparse_initializer` is UNUSABLE with this harness: `sanitize_model` renames only dense `graph.initializer`, leaving sparse-init names un-remapped → ORT "input is not a graph input/initializer" load error. Do not chase sparse-weight param savings.
+
+## S9 (2026-07-03) — kojimar 7184.85 teacher: separable-remap Einsum (+1.175) ADOPTED
+Single Einsum 'ra,ai,zcij,bj,sb->zcrs' with U(30,5) row-block table + S(5,30)
+latent→odd-col table; out = P·in·Pᵀ per channel (P=U@S) = 4× block-upscale of the
+odd-cell 5×5 sublattice, zero-padded past 19. mem=0 (single node writes free output),
+params=300. REFUTES this tasklog's old "no separable-remap op" OPEN-ANGLE floor.
+Gates: stored fail=0 (my re-check too); fresh 2500 uncached: teacher 0, incumbent 0,
+div 0 (bit-identical). No TopK. Source: overrides/task108.onnx (base_submission was
+our own mechanism). Backup reports/retired_networks/task108_pre_s9.onnx.
+⭐ TRANSFERABLE: fixed separable spatial remap/upscale = one 5-operand einsum, mem 0.

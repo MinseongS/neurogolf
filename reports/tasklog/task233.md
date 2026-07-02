@@ -66,3 +66,58 @@ memory by tens of KB, making this a high-value semantic rewrite target.
 
 Current gate: do not implement ONNX yet.  The Python semantic reference must pass
 large fresh content checks first; 200/200 was not enough for this generator.
+
+## 2026-06-30 deep reauthor attempt → FLOOR (confirms prior "assignment is hard")
+
+Re-verified baseline: ok=True, pass=266, fail=0, **mem 59147, params 565,
+points 14.0027**.
+
+New lever found but proven insufficient: `counts = common.sample(range(4,9), k)`
+⇒ every sprite has a DISTINCT popcount (4..8), so COLOUR assignment is trivial
+(hole-cluster popcount n ↔ the unique outside sprite with n red pixels). This
+removes the rotation-hash→colour matching (the `[5,324]` mul/equ/or planes ≈16 KB,
+mat45/wrot/pow2w/scorew). BUT colour is not the cost driver — exact PLACEMENT is,
+and the popcount trick does nothing for it.
+
+Stateless numpy reauthors built and pushed to 9/80 wrong (best). The residual
+failures are structural and match the prior session's "component/template
+assignment" wall — three generator-allowed configs defeat every stateless form:
+1. **count-4 shapes with <3×3 bbox** (generator only blocks 2×2-for-4, 2×3-for-6):
+   two 3×3 windows contain the holes; only the shape orientation picks the right
+   one → mis-placement.
+2. **Adjacent patches** (`overlaps(..., margin 0)`): patches may touch, so any
+   isolated-window / 5×5-ring test drops or merges a sprite.
+3. **Disconnected shapes** (pixels sampled from all 9 cells): 8-connected components
+   split one patch into popcount-1 fragments.
+p() handles all three only via its ordered, consume-once two-pass `popitem()`
+matching — i.e. exactly the incumbent's 2-pass-TopK + 9× ScatterND placement/scatter
+unroll (400 nodes). No cheaper stateless graph reaches 0/1500.
+
+Floor structure: con1 `[1,1,30,30]` fp32 = 3600 (per-cell colour read; sprites can
+be anywhere in ≤30×30 → unavoidable). Exact placement keeps a ~324-wide 3×3-hash
+plane and the stateful per-sprite scatter unroll regardless. Safe micro-golf nil:
+the 17 Gathers' int64 indices feed ScatterND (must stay int64) or int64 arithmetic
+(converting adds Cast planes for ≤160B tensors → net-negative); big planes already
+fp16/uint8/bool; params already 565.
+
+**Verdict: FLOOR. Incumbent kept (59147 / 565 / 14.00). Lowest mem reached by any
+correct candidate: none below incumbent (stateless forms top out ~11% wrong on
+fresh).**
+
+## S8 (2026-07-02, late) — counting-model re-encode (+0.223) ADOPTED, bit-identical
+Sprite-window detector (11 planes ~6.2KB) → ONE Conv (w=16·[v≥1]−[v==2], sprite ⟺ v>135.5);
+{0,2} profiles feed ReduceMax directly (comparators doubled); 4D Gathers for crop; hole hash
+via Cast+Conv(−2^k, b=511) fp16; scorew deleted (TopK asc-index tie-break = scan order);
+4 chained ScatterND → 1 (sequential last-wins verified). 32796+446 vs 40808+722 → +0.223.
+Fresh 2500×2 + 400 re-run div 0; 600 vs live onnx div 0. Walk-einsum proper N/A (TopK/argmin
+rounds on [5,3] 60B planes = not a walk polynomial; memory was in parallel mask parades).
+Floors: con1 3600, mul103 3240+equ97 1620 (TopK feed), vspr 3136.
+
+## S9 (2026-07-03) — fold 2nd pass: FLOOR re-confirmed (incl. crop lens)
+13a N/A (no walk chain; output = ScatterND sprite placement). fp16 recast of vspr/con1
+net-negative (Conv dtype-match: input cast 6000B or output cast +1568). Hash-matcher
+Equal→Cast(f16)→TopK minimal (324 positions inherent). pub bundled-override machinery
+MEASURED load-bearing: pruned cand fails exactly the 3 rotated bundled examples;
+pub 1387B+165p < 4-rotation matcher blowup (+~9700B) — pub already optimal encoding.
+Crop lens checked by orchestrator: generator width=wide+randint(2,10), wide≤20 → grids
+reach 30×30. NOT croppable. Floor final. DO NOT re-probe.

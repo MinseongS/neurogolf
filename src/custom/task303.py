@@ -10,28 +10,32 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('black_selector', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')),
-        tensor('two_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoC')),
-        tensor('zero_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
-        tensor('red_onehot', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')),
+        tensor('sel', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')),
+        tensor('one', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoB')),
+        tensor('two', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoC')),
+        tensor('red', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')),
     ]
     nodes = [
-        helper.make_node('Einsum', ['input', 'black_selector'], ['row_sum'], equation='nchw,ca->nha'),
-        helper.make_node('Einsum', ['input', 'black_selector'], ['col_sum'], equation='nchw,ca->naw'),
-        helper.make_node('Sign', ['row_sum'], ['row_active_f']),
-        helper.make_node('Sign', ['col_sum'], ['col_active_f']),
-        helper.make_node('ReduceSum', ['row_active_f'], ['height'], keepdims=0),
-        helper.make_node('ReduceSum', ['col_active_f'], ['width'], keepdims=0),
-        helper.make_node('Equal', ['row_sum', 'width'], ['marker_rows']),
-        helper.make_node('Equal', ['col_sum', 'height'], ['marker_cols']),
-        helper.make_node('Cast', ['row_active_f'], ['row_active_u8'], to=2),
-        helper.make_node('Cast', ['col_active_f'], ['col_active_u8'], to=2),
-        helper.make_node('Where', ['marker_rows', 'two_u8', 'row_active_u8'], ['row_code']),
-        helper.make_node('Sub', ['two_u8', 'col_active_u8'], ['col_nonmarker_code']),
-        helper.make_node('Where', ['marker_cols', 'zero_u8', 'col_nonmarker_code'], ['col_code']),
-        helper.make_node('Greater', ['row_code', 'col_code'], ['red_mask']),
-        helper.make_node('Where', ['red_mask', 'red_onehot', 'input'], ['output']),
+        helper.make_node('Einsum', ['input', 'sel'], ['b_row'], equation='bchw,cd->bhd'),
+        helper.make_node('Einsum', ['input', 'sel'], ['b_col'], equation='bchw,cd->bdw'),
+        helper.make_node('Cast', ['b_row'], ['b8r'], to=2),
+        helper.make_node('Cast', ['b_col'], ['b8c'], to=2),
+        helper.make_node('Min', ['b8r', 'one'], ['ir8']),
+        helper.make_node('Min', ['b8c', 'one'], ['ic8']),
+        helper.make_node('ArgMax', ['ir8'], ['amh'], axis=1, keepdims=1, select_last_index=1),
+        helper.make_node('ArgMax', ['ic8'], ['amw'], axis=2, keepdims=1, select_last_index=1),
+        helper.make_node('Cast', ['amh'], ['h8m1'], to=2),
+        helper.make_node('Cast', ['amw'], ['w8m1'], to=2),
+        helper.make_node('Add', ['h8m1', 'one'], ['h8']),
+        helper.make_node('Add', ['w8m1', 'one'], ['w8']),
+        helper.make_node('Div', ['b8r', 'w8'], ['fr8']),
+        helper.make_node('Div', ['b8c', 'h8'], ['fc8']),
+        helper.make_node('Add', ['ir8', 'fr8'], ['a']),
+        helper.make_node('Add', ['ic8', 'fc8'], ['t']),
+        helper.make_node('Sub', ['two', 't'], ['bv']),
+        helper.make_node('Greater', ['a', 'bv'], ['mask']),
+        helper.make_node('Where', ['mask', 'red', 'input'], ['output']),
     ]
     value_infos = [
     ]
-    return model('task303_live_exact', nodes, inits, output_dtype=1, opset=14, value_infos=value_infos)
+    return model('task303_live_exact', nodes, inits, output_dtype=1, opset=16, value_infos=value_infos)

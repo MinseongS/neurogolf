@@ -27,6 +27,21 @@ output colours copy arbitrary input colours).
 15.186 @ mem 18248 params 49 — adopted? **N (recommend N)**. Beats prior 15.01 by
 +0.176 only (< +0.3 threshold). Exact: 267/267 stored, fresh 200/200.
 
+## 2026-06-29 live-frontier refresh
+
+Current live/source is much better than the old fp16 D4 reconstruction:
+**15.889480 pts @ mem 9000 params 50**.  It uses a single 1x1 colour-index Conv
+with maroon mapped to 0, then all D4 pullbacks are uint8 (`Transpose`, row/col
+`Gather`, `Max`) and final `Equal` writes the free bool output.  Mem profile:
+`color_f` 3600B fp32 plus six 900B uint8 D4/label planes.
+
+The remaining floor is structural.  The 3600B colour-index plane is needed
+because arbitrary non-maroon colours are copied.  The six 900B planes are the
+minimal uint8 max-of-D4 chain in the current formulation; switching to bool
+one-hot before the final Pad would expand to 10 channels and is worse.  Treat
+this as current floor unless a fused D4 gather/max op or sub-byte carrier is
+available.
+
 ## Irreducible-floor analysis
 Entry colour-index plane val32 is fp32 [1,1,30,30] = 3600B (cannot go below; the
 10→1 reduction must be fp32 per FLOOR_RESEARCH). val30 fp16 1800B (cast, also the
@@ -64,3 +79,5 @@ integer-exact for colour values 0..8 and emits the bool one-hot straight into th
 FREE output (saves the 900B uint8 plane vs cast-then-Equal-uint8).
 This task is at floor (+0.18) — confirms the ~3600+N·1800 fp16 reconstruction
 ceiling: a 6-downstream-plane D4 fill simply lands ~15.2, just under a 15.0 floor.
+
+## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-3 opus agent; see agent report in submission_log context). Do not re-attempt without a new mechanism.

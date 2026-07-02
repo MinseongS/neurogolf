@@ -1,73 +1,147 @@
-# task368 — e76a88a6
+# task368 - e76a88a6
 
-**Rule:** A 10x10 grid holds 3-4 IDENTICAL solid HxW rectangles (H,W in {3,4}, never both 4)
-at random non-overlapping positions. Each rectangle is the same 2-colour pattern P (palette of
-2 colours, gray excluded). Exactly ONE sprite (the first drawn) is shown in its real colours;
-every other sprite is shown all-gray (colour 5). OUTPUT = redraw EVERY sprite (gray ones and the
-coloured one) in the real pattern P, aligned to each sprite's own top-left corner.
-**Current (stored):** 14.69 pts, gen:thbdh6332, mem 29948, params 84.
-**Target tier:** B (label-map). NOT S (output colour is non-local — depends on the cell's offset
-within its sprite + the revealed pattern). NOT A-separable (P is an arbitrary 2-colour pattern, so
-the per-cell colour is NOT rowcond⊗colcond). The per-cell offset is recoverable LOCALLY though, so
-the whole thing collapses to a label map + final Equal.
+## 2026-07-01 deep dive - current live-exact anchor scatter verified
 
-## Key structure
-Every sprite is a SOLID HxW rectangle, so for any occupied cell (r,c) its offset within its own
-sprite is a LOCAL run-length:
-  dr = (#consecutive occupied cells upward incl. self) - 1   (0..3)
-  dc = (#consecutive occupied cells leftward incl. self) - 1 (0..3)
-computed by the product-chain of shifted occupancy (resets at gaps; sprites are separated so a run
-never spans two sprites). key = dr*4+dc (0..15). The colour at offset (dr,dc) is identical for every
-sprite and is revealed by the ONE coloured sprite. Binary-partition the 2 palette colours lo/hi by
-channel index; learn tableHi[dr,dc] = "coloured sprite's cell at (dr,dc) is the hi colour" as a 4x4
-histogram via a double-MatMul over offset one-hots of the (sparse) hi-colour cells:
-  tableHi = dr_ohw @ dc_ohT   ([4,N]@[N,4] -> [4,4]),  dr_ohw already isHi-weighted via a -1 sentinel.
-Then per occupied cell outHi = Gather(tableHi_flat[16], key). Label L = occ ? (outHi?hi_idx:lo_idx) : 0,
-Pad to 30x30 with sentinel 99 (off-grid -> all-channels-off), final `output = Equal(L, arange)` (BOOL, free).
+**Rule confidence: verified.** A 10x10 input contains 3 or 4 non-overlapping copies
+of the same solid rectangle footprint. The rectangle size is one of 3x3, 3x4, or
+4x3; 4x4 did not occur in 1000 fresh samples and is not supported by the current
+12-offset graph. One rectangle is shown in its true two-colour pattern, using two
+non-gray colours from channels 1,2,3,4,6,7,8,9. Every other rectangle is all gray
+5. The output keeps the same rectangle placements, but recolours every gray
+rectangle with the pattern from the coloured rectangle.
 
-## Attempts
-| # | angle | tier | mem | params | pts | fresh | outcome |
-|---|---|---|---|---|---|---|---|
-| 1 | runlen dr/dc + matmul-histogram + Gather + Where(occ,Where(outHi,hi,lo),input) | B | 100268 | 341 | 13.48 | 200/200 | works but heavy (full [1,10,30,30] inner Where + full-input channel contract) |
-| 2 | label-map L + final Equal (drop the inner Where 36000) | B | 31356 | 364 | 14.64 | 200/200 | correct (needed sentinel-99 pad so off-grid = all-channels-off) |
-| 3 | fp16 working canvas everywhere (occ/dr/dc/histogram/label all fp16) | B | 21676 | 364 | 15.00 | 200/200 | |
-| 4 | colour-index via 1x1 Conv (Sum k*input_k) -> occ=colf>0, isHi=colf==hi_idx (drop inp10+hi_sel 8000) | B | 17056 | 362 | 15.23 | 200/200 | |
-| 5 | fold isHi into dr via -1 sentinel (drop standalone dr_oh/dc_oh + Transpose) | B | 15856 | 369 | 15.31 | 200/200 | |
-| 6 | one Pad+3 Slices per axis for the run-length shifts (drop 4 Pad planes) | B | **14936** | **314** | **15.37** | **500/500** | FINAL |
+Visible examples:
 
-## Best achieved
-**15.37 pts @ mem 14936, params 314 — 265/265 stored, fresh 500/500.** Adopted? **N** (orchestrator
-gates). Beats stored 14.69 by **+0.68 (Y, generalizes both train+test+arc-gen).**
+- train 0: a 3x3 coloured `2/4` block at rows 1..3, cols 1..3; two gray 3x3
+  blocks at rows 4..6, cols 6..8 and rows 7..9, cols 2..4. Output copies the
+  exact 3x3 `222/244/444` pattern to all three placements.
+- train 1: a 3x4 coloured `6/8` block and two gray 3x4 blocks. Output copies the
+  `6666/8868/6888` pattern to each placement.
+- test 0: a 4x3 coloured `4/1` block and three gray 4x3 blocks. Output copies
+  the four-row pattern to all four placements.
 
-## Irreducible-floor analysis
-Dominant intermediates:
-- **colf30 3600 B fp32 [1,1,30,30]** — the 1x1 Conv colour-index plane. fp32 because any linear combo
-  of the FREE fp32 input is fp32; casting input->fp16 would materialise an 18000B one-hot first. This
-  is the input-read floor (same "conv-3600 entry floor" lesson as task358).
-- **L30 900 B uint8 [1,1,30,30]** — the label feeding the free final Equal; output spans 30x30, uint8
-  is the cheapest dtype, sentinel-99 pad off-grid. Irreducible for any per-cell colour rewrite.
-- **histogram operands ~2400 B**: dr_ohw [4,100] + dc_ohT [100,4] fp16 (800 each) + their bool [4,100]
-  (400 each). N=100 because the coloured sprite can sit anywhere in the 10x10; the table is genuinely
-  4x4 (P is an arbitrary 2-colour pattern, not separable). fp16 is exact ({0,1}, sums<=16).
-- run-length shifts ~1700 B fp16 (two Pad-by-3 planes + 6 sliced occ + 6 products). fp16 forced (ORT
-  Mul rejects uint8; products need a float type).
-Floor ~= 3600 + 900 + 2400 + 1700 + smalls ~= 14900 -> ~15.37.
+Python oracle:
 
-## OPEN ANGLES (re-attack backlog)
-- Trim the run-length shift chain (~1700 B): a single Conv can't compute the run-length PRODUCT
-  (sum doesn't reset at gaps), but a cleverer cumulative-with-reset (e.g. cumulative-max of a
-  position ramp masked by occ, then subtract) might do dr/dc in fewer planes. ~0.1 pt, untried.
-- The colf30 3600 fp32 is the binding constraint; no free-input fp16 colour-index path exists
-  (shared wall with task358). If a future op-fusion lets Conv emit fp16 from fp32 input, this drops.
-- Tier A is blocked: P is an arbitrary 2-colour pattern, so the per-cell output colour is NOT a
-  row-cond AND col-cond product (the 4x4 table is irreducibly 2-D). Tier S blocked (non-local).
+- Find connected nonzero components.
+- The unique component containing a nonzero non-gray cell is the source pattern.
+- Copy its bounding-box pattern to every component's top-left corner.
+- Verification: stored oracle `0/265` failures; fresh oracle `0/1000` failures.
+- Fresh rectangle/component counts observed: `(3,3,3)`, `(3,3,4)`, `(3,4,3)`,
+  `(3,4,4)`, `(4,3,3)`, `(4,3,4)`.
 
-## INSIGHT (transferable)
-⭐ "Recolour every gray stamp using the one coloured stamp" (identical solid rectangles at random
-non-overlapping positions) is NOT a shape-correspondence BAIL. The offset of a cell within its own
-solid-rectangle sprite is a LOCAL run-length (product-chain of shifted occupancy, resets at gaps),
-so key = dr*4+dc is computable per cell with no flood-fill. The colour-by-offset map is a 4x4
-histogram learned from the single coloured sprite via a double-MatMul over offset one-hots
-(weight the hi-colour cells by folding isHi into the offset with a -1 sentinel so one Equal does
-the mask+one-hot), then a 1-D Gather propagates it to all sprites. Whole thing lands as a label-map
-+ final Equal (Tier B). The recurring 3600B fp32 colour-index Conv is the input-read floor.
+## Current source/live state
+
+The previous notes below were stale. Current `src/custom/task368.py` is an exact
+source reconstruction of `networks/task368.onnx`, and manifest has:
+
+| item | points | memory | params | stored | fresh/adopt |
+|---|---:|---:|---:|---|---|
+| current source | 16.26367127866709 | 6022 | 203 | 265/265 | fresh 500/500 |
+| live ONNX | 16.26367127866709 | 6022 | 203 | 265/265 | fresh_pass 500/500 |
+| adopt gate | 16.26 | 6022 | 203 | pass | rejected: candidate <= current real |
+
+Current mechanism:
+
+1. Slice color-5 and color-0 planes from the 10x10 input.
+2. Locate the coloured source rectangle as the first cell where input is neither
+   zero nor gray.
+3. Locate gray rectangle anchors by taking gray cells with no gray above or left,
+   then `TopK(k=3)`. If there are only two gray rectangles, duplicate the first
+   gray anchor for the unused third placement.
+4. Infer rectangle height/width from the first gray anchor by probing `+30` and
+   `+3`, so each dimension is 3 or 4.
+5. Generate the 12 possible offsets for the source and all placements. Invalid
+   offsets are masked when area is 9.
+6. Gather the source pattern's first colour at the source anchor, probe all
+   source offsets to build a 12-cell colour mask, discover the second colour from
+   the first non-first-colour offset, then form the 12 colour updates.
+7. Scatter 4 copies of the 12 updates into a 10x10 uint8 label grid, pad to
+   30x30 with sentinel 10, and finish with `Equal(label, channels_u8)`.
+
+This is strictly better than the old run-length/histogram route because it uses
+the task-specific fact that every rectangle is a solid 3x3/3x4/4x3 footprint and
+only the anchor plus the source 12-cell pattern is needed. It avoids full-canvas
+run-length planes, a 4x4 histogram, and a 30x30 colour-index plane.
+
+## Cost anatomy
+
+Actual scorer memory from sanitized runtime trace:
+
+| component | dominant tensors | bytes | semantic job | keep/attack |
+|---|---|---:|---|---|
+| final 30x30 label | `placed_color_30_u8 [1,1,30,30]` | 900 | feed free final `Equal` and suppress off-grid with sentinel 10 | required unless output can be written directly |
+| entry planes | `five_f`, `zero_f` | 800 | read gray anchors and distinguish coloured source from background/gray | likely floor for this sparse-anchor graph |
+| source-offset gather indices | `a_indices_i64 [1,12,3]`, row/col/color expands | about 576 | gather the 12 source cells of the source colour | possible small int64-index target |
+| anchor/source masks | gray/source 10x10 bool/uint8 planes, padded gray, `ph_flat_f16` | about 1621 | find source cell and gray top-left anchors | dominant non-final working set |
+| placement/update indices | `all_pos_i32 [48]`, per-placement 12-cell position vectors | about 576 | scatter source pattern to up to four rectangles | small, structurally useful |
+| colour discovery | `a0_indices_i64`, `b_indices_i64`, one-hot gathers | about 448 | identify the two non-gray palette colours | possible small target, not a big win |
+| initializers | 34 tensors | 203 params | slice constants, offsets, channel vectors, blank grid | already small |
+
+Largest individual non-output tensors:
+
+| tensor | bytes | dtype/shape | why it exists |
+|---|---:|---|---|
+| `placed_color_30_u8` | 900 | uint8 `[1,1,30,30]` | final label plane for `Equal` |
+| `five_f` | 400 | fp32 `[1,1,10,10]` | gray rectangle occupancy |
+| `zero_f` | 400 | fp32 `[1,1,10,10]` | background exclusion for coloured-source mask |
+| `a_indices_i64` | 288 | int64 `[1,12,3]` | source-pattern `GatherND` indices |
+| `ph_flat_f16` | 200 | fp16 `[1,100]` | `TopK` anchor selector input |
+
+Tier assessment: high-B / anchor-scatter. It has one final full label plane and
+two 10x10 entry planes, but no full 30x30 colour-index plane and no full 10x30x30
+input carrier. S/A remain blocked by arbitrary 2-colour source pattern plus
+multiple placements, but the current graph is much closer to the practical floor
+than the old tasklog claimed.
+
+## Challenged prior claims
+
+| prior claim | status | evidence |
+|---|---|---|
+| "Current stored 14.69, mem 29948, params 84" | contradicted | manifest and `measure_task.py 368` report 16.26367127866709, mem 6022, params 203 |
+| "Best achieved 15.37, mem 14936, params 314, not adopted" | superseded | current source/live ONNX is already better and task-scoped adopt rejects only because candidate equals current |
+| "Dominant floor is 3600B fp32 colour-index plane" | contradicted for current graph | no `colf30`; largest current tensor is 900B `placed_color_30_u8`; input reads are two 400B slices |
+| "Run-length product-chain is the key structure" | semantically valid but no longer cost-competitive | oracle confirms solid-rectangle offset idea, but current anchor-scatter avoids computing offsets for every occupied cell |
+| "Tier A blocked because pattern is arbitrary 2-D" | still valid | source pattern is arbitrary over the 3x3/3x4/4x3 footprint; row/col separability is not guaranteed |
+| "4x4 table needed" | overgeneralized | reachable fresh sizes are area <= 12; current `idx12_i32` and height/width probes are enough for stored + 1000 fresh oracle + 500 fresh ONNX |
+
+## Mechanism hypotheses tested
+
+### 1. Solid-rectangle/run-length product-chain
+
+- Expected payoff at time of old note: +0.68 over a 14.69/29948 baseline.
+- Proof test: stored eval and fresh verify; old note reports 265/265 and 500/500.
+- Current kill condition: if measured current source/live is already better in
+  points and memory, do not resurrect this mechanism.
+- Result: killed for adoption. The mechanism was real against the older baseline
+  but loses badly to current anchor-scatter: 15.37/14936/314 versus
+  16.263671/6022/203.
+
+### 2. Current sparse anchor-scatter instead of per-cell run-length
+
+- Expected payoff: delete the old full-canvas run-length/histogram stack and
+  reduce work to anchors plus 12 source-pattern cells.
+- Proof test: Python oracle on stored and fresh; source/live stored eval; fresh
+  verifier; task-scoped adopt gate.
+- Kill condition: any stored/fresh failure, or measured cost not beating the old
+  15.37 candidate.
+- Result: verified current incumbent. Stored source and live both pass 265/265 at
+  mem 6022/params 203; fresh verifier and `fresh_pass` both pass 500/500; adopt
+  rejects only because source is equal to current real score.
+
+## Next experiment
+
+No main-session adoption is recommended from this pass; task368 is already on the
+better current graph. The next exact experiment, if this task is revisited, is a
+small-index golf of the current graph:
+
+- Try replacing some int64 `GatherND` index construction (`a_indices_i64`,
+  `a0_indices_i64`, `b_indices_i64` and row/col expands) with cheaper int32 paths
+  only if ORT accepts the relevant op signatures.
+- Expected payoff: at most a few hundred bytes, roughly +0.03 to +0.08 points.
+- Kill condition: ONNX checker/ORT rejects int32 indices, or the replacement
+  materializes casts whose memory exceeds the saved int64 tensors.
+
+Reusable insight: for "copy one coloured solid rectangle pattern to gray copies,"
+first check whether generator bounds reduce the problem to a small fixed list of
+source offsets and rectangle anchors. If yes, sparse anchor-scatter can dominate
+the more general run-length/histogram formulation.

@@ -53,3 +53,24 @@ detection territory. Then the deciding question is whether the discriminating ob
 background noise by a *separable* (row⊗col / connected-component / local-window) rule — if noise abuts the
 object (no guaranteed margin), all of those leak, and if even an unrestricted brute-force reconstruction is
 ambiguous (>50% mismatch), the task is INFEASIBLE for a static ONNX graph regardless of memory budget.
+
+# task077 (appended S8 2026-07-02) — WALK-EINSUM WIN: 14874 → 6331 (+0.854) ADOPTED
+EXACT rule derived (old "underdetermined/heuristic" framing retired): every rect = bbox of its
+red cells clustered by Chebyshev-≤2 connectivity (cross-rect red distance ≥3 ⇒ never bridges);
+fill = static-coloured cell inside some cluster bbox. ONE 59-operand einsum: red plane read
+straight from free `input` via channel selector e2[q] each step (NO counted red/t plane);
+12-step penta-band walk with 4 checkpoint constraints (row(p0)≤r, row(p4)≥r, col(p8)≤c,
+col(p12)≥c — one shared triangular T, subscripts swapped for ≥); stat[q] folds the static-at-
+(r,c) factor in. Counted: walk 3600 + fill bool 900 = 4500 mem, 1831 params.
+TRAP LOGGED: the 2 bundled original-ARC train examples VIOLATE the generator's row/col
+red-visibility guarantee — a row/col-witness variant passed 20000/20000 fresh but failed
+bundled. Checkpoint-bbox form covers both. Gates: stored 266/266; fresh 2500+1500 fail 0 div 0.
+
+## S9 (2026-07-03) — native-crop lever: REJECTED, floor confirmed (measured)
+Binding max 20×21 verified (gen + all 3 splits). Crop cand built & evaluated: 9167 vs
+incumbent 6331 (+2836, fails mem gate). WHY CROP BACKFIRES on free-input walk einsums:
+(1) fixed [1,10,30,30] output forces a 900B Pad of cropped fill; (2) static-at-(r,c)
+read was FREE inside the einsum, cropped needs a counted 1680B+1100p conv plane;
+(3) shared 30×30 T triangular splits into rectangular pairs (900→2460p). Best theoretical
+config 10261 > 6331. ⭐ RULE: single-tap crop only wins when the 30×30 plane is a
+COUNTED entry read; nets whose einsums read the free input in-op get WORSE. DO NOT re-probe.

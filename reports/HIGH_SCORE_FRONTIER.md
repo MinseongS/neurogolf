@@ -51,6 +51,28 @@ The 20+ group is dominated by:
 
 These are the mechanisms that can plausibly create explosive score movement.
 
+## 2026-06-29 20+ mechanism catalogue
+
+Inventory/manifest recatalogued the current 48 tasks scoring 20+ by operator
+family, cost, and semantic precondition:
+
+| mechanism | count | cost range | tasks | semantic precondition |
+|---|---:|---:|---|---|
+| tiny scalar / final Equal | 15 | 0..146 | 056 067 103 129 179 186 241 262 291 298 317 347 389 393 399 | output is a fixed scalar/tiny predicate or can delay channel expansion to the final bool output |
+| mem0 Gather / tiny LUT | 12 | 10..30 | 016 053 113 116 164 172 210 276 309 311 337 385 | solution is a fixed lookup, channel remap, or tiny coordinate table with no full-canvas state |
+| mem0 Einsum / symbolic | 8 | 20..127 | 007 024 166 299 312 326 373 380 | rule is expressible as a direct symbolic contraction rather than a materialized mask cascade |
+| single/local Conv floor | 7 | 30..136 | 073 130 144 149 227 314 318 | local stencil can emit final scores directly and threshold at the graph output |
+| RoiAlign / MaxRoiPool tiny op | 4 | 5..5 | 087 140 223 307 | crop/pool primitive directly represents the task's spatial selection |
+| other tiny final-output-only | 2 | 140..148 | 167 339 | all full-canvas work is avoided except final scoring/output |
+
+Transfer rule: a 15-18 point task is only a serious 20+ candidate if its
+semantics can delete every full `[30,30]` intermediate, not merely compress dtype.
+The best current transfer targets are therefore final-output-only symbolic
+predicates, tiny LUT/remap tasks, or true single-stencil tasks.  Profile
+contraction tasks like `task202` are useful source-owned semantic rewrites, but
+still sit above the 20+ floor when they require a full colour-index entry plane
+and full label-map composition.
+
 ## Low-score candidates with high-score upside
 
 Not every low-score task is equally valuable. Prioritize candidates where the

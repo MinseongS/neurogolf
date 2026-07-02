@@ -52,3 +52,6 @@ a small fixed one. Re-check every gen-bounded span/fill task for its true active
 plane (0/colour), Pad with a 99 sentinel (off-grid → matches no channel), Equal(L,arange)→BOOL FREE
 output. Drops the 900B bool-carrier the Where path forces. Sentinel pad is load-bearing: off-grid cells
 must be all-zero one-hot (convert_to_numpy leaves them blank), NOT background ch0=1.
+
+## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
+mem 1300/17.82; crop_f 400B min fp32 entry, 4 MaxPool span planes irreducible (Mul not Add), ConvInteger needs {0,2} symmetric zp. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).

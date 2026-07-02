@@ -102,3 +102,13 @@ axis** cleanly resolves the nested-stamp ambiguity (a clipped large stamp matche
 true one is the smallest-idx match). ⭐ For a permutation-indexed concentric figure, **K = max(visible
 idx)+1**, robust to an invisible (bg-coloured) inner ring — count-of-present is WRONG when bg ∈ colours
 (the hand-authored ARC examples) even though the random generator excludes bg.
+
+## S9 (2026-07-03) — drop color_grid_4d Unsqueeze plane (+0.014) ADOPTED
+Pad 2D color_grid [11,11]→[30,30] directly; final Equal broadcasts [1,10,1,1]×[30,30].
+mem 8108→7987, params 805→801. Bit-identical: uncached fresh 800 (agent) + 600
+(orchestrator): inc 0 / cand 0 / div 0. Latency 0.048ms. NOTE random-input div check
+inapplicable (data-dependent Gather OOB on invalid instances — expected).
+FLOORS re-priced: row/col_sum_full 2400 (fp16 reduce type-rejected by ORT), padded_color
+900 optimal (index-first < one-hot-first 1210), radius_i32 484 (Gather needs int32+),
+int16 arithmetic dead (Add/Sub/Mul/Div reject int16; Where/Min/Max NOT_IMPLEMENTED).
+Backup reports/retired_networks/task096_pre_s9.onnx.

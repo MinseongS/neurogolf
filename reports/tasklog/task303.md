@@ -37,3 +37,10 @@ single-axis col/row reduce `ReduceSum(input,[3])`/`[2]` (1200 B), splitting blac
 channel-0 slice. CRITICAL: a 1-D row line broadcasts across ALL 30 cols incl. off-grid, so the
 final mask MUST be gated by the in-grid rectangle `row_ingrid ∧ col_ingrid`, else off-grid cells
 get painted red.
+
+## S9 (2026-07-03) — kojimar teacher: fractional-encoding line detect (+0.109) ADOPTED
+Div(black_count,dim) + ArgMax(Min(count,1)) derives height/width; Greater(a,bv) builds
+the red mask arithmetically — no separate bool line planes. mem 1598→1430. Bit-identical
+2500 uncached (0/0/0). ArgMax-on-u8 safe (not TopK). Backup task303_pre_s9.onnx.
+⭐ TRANSFERABLE: fractional/ArgMax arithmetic encoding collapses bool line-detection
+cascades on all-black row/col recolour tasks.

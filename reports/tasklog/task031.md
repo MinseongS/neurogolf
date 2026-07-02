@@ -46,3 +46,10 @@ machinery — just `colf=Σk·input_k`, recover (min_row,min_col,H,W) from 1-D o
 profiles, Gather a small fixed-size window (size = generator's max-bbox bound, here
 9×9), gate with (r<H)∧(c<W), Pad with sentinel 10, final Equal→bool. Floor = the one
 3600 B fp32 colour plane forced by the data-dependent crop position.
+
+## S9 (2026-07-03) — kojimar 7184.85 teacher (overrides/) ADOPTED (+0.761)
+Log-space bbox extents: free-input Einsum weighted by powers → Log/Div/Floor decode
+min/max row/col as scalars (no 30×30 profile planes); Slice crop; ConvInteger epilogue
+(u8 feed + u8 weight — designed dtypes, safe; NO TopK). mem 1426→578, params 46→110.
+Gates: stored fail=0 (re-checked); fresh 6000 uncached: both 0. base_submission variant
+= our own mechanism, ignore. Backup reports/retired_networks/task031_pre_s9.onnx.

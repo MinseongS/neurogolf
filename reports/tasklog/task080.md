@@ -27,6 +27,12 @@ runtime" wall the blank note feared).
 15.67 @ mem 10834 params 454 — adopted as `custom:task080+qconv+onnxsim`.
 Beats prior live 15.63 by +0.043; fresh 300/300.
 
+2026-07-01 source/live parity cleanup: source was already ahead of live after the
+latest qconv simplification.  Fresh verify passed (`428/500` eligible
+instances, 0 failures) and `src.adopt 80` promoted the source-owned build:
+`memory=10198`, `params=454`, `points=15.726497` stored 231/231.  This is a
+small parity adoption, not a new task001-style mechanism.
+
 ## Irreducible-floor analysis
 Dominant = colf32 (3600B, the ONE fp32 30x30 colour-index Conv entry — irreducible per
 FLOOR_RESEARCH) + the downsample Gather Bg2 [1,1,10,30] (1200B fp32, inherits colf dtype)

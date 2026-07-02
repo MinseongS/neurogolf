@@ -29,8 +29,8 @@ def build(task):
     init("pads_out", np.array([0, 1, 0, 0, 0, 0, 27, 27], np.int64), np.int64)
 
     nodes = [
-        helper.make_node("Conv", ["input", "w_checksum"], ["checks"], kernel_shape=[3, 3], pads=[0, 0, -21, 0], strides=[3, 30]),
-        helper.make_node("Split", ["checks"], ["b0_check", "b1_check", "b2_check"], axis=2, split=[1, 1, 1]),
+        helper.make_node("Conv", ["input", "w_checksum"], ["checks"], kernel_shape=[3, 3], pads=[-3, 0, -21, 0], strides=[3, 30]),
+        helper.make_node("Split", ["checks"], ["b1_check", "b2_check"], axis=2, split=[1, 1]),
         helper.make_node("Equal", ["b1_check", "zero_f32"], ["b1_eq0"]),
         helper.make_node("Equal", ["b2_check", "zero_f32"], ["b2_eq0"]),
         helper.make_node("Squeeze", ["b1_eq0"], ["b1_sym"], axes=[1, 2, 3]),

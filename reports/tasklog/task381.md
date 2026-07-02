@@ -37,6 +37,22 @@ once the reduce itself was deleted.
 16.89 @ mem 3200 params 129 (src/custom/task381.py).  Beats adopted 16.84 by
 +0.05.  Reaches +0.3 (target 17.14, mem+params <= 2588)?  NO -> MARGINAL.
 
+## 2026-06-29 live-frontier refresh
+
+Current live/source is ahead of this older semantic note: **17.304697 pts @
+mem 2128 params 70** (`ext:franksunp7166_65` structure captured in
+`src/custom/task381.py`).  Mem profile:
+`color30` Pad 900, `red8_f` Slice 320, `lower_bits` Mod 160, `color10` Concat
+100, then eight 80B bool/uint8 inner tensors and small top/bottom slices.
+
+Rechecked the apparent 900B lever.  Replacing one-channel `color10 -> Pad
+color30 -> Equal(output)` with an inner bool one-hot and `Pad(output)` is not a
+gain: the inner 10x10 bool one-hot is 1000B, while the current one-channel
+carrier is 100B + 900B.  The 30x30 label plane is already tied with the cheapest
+bool-output carrier, and the remaining 320/160/80B tensors are the compact
+bit-code between-red computation.  No +0.3 mechanism remains here without a new
+sub-byte/fused final-output representation.
+
 ## Irreducible-floor analysis (updated for attempt #4 @ 3200)
 mem 3200 = inner_u8 Concat carrier [1,10,10,10] 1000 (10-channel output carrier;
 Pad-rejects-bool so it must be uint8 before the final Pad->output; can't place the
@@ -61,6 +77,31 @@ cast-bool(900)=1800 > Concat(1000), netting ~3600.  Concat carrier wins.
 - Confirm whether the official sanitize_model path makes bool Concat→Pad legal
   (the adopted ghiotto net uses it) — if so a Where(maroon30,onehot9,input)
   output could drop the Lm/L10 label-build, but still needs a 30x30 plane.
+
+## 2026-06-29 adopted: free maroon overlay via bool Pad
+
+The open angle above was real under the current opset18/ORT path: bool `Pad` is
+accepted.  Replaced the final label carrier:
+`fill_color/top_color/inner_color/bottom_color -> Concat color10 -> Pad color30 -> Equal`
+with a free-output overlay:
+
+`not_red8 = Not(red8); maroon8 = And(span, not_red8); maroon30 = Pad(maroon8); output = Where(maroon30, onehot9, input)`.
+
+Why exact: the incumbent only changes non-red inner cells in the span to maroon
+9.  Red cells, black cells, and the off-grid harness area are already present in
+the free one-hot `input`, so they do not need to be re-materialized through a
+one-channel label map.  The bool maroon mask pads from `[1,1,8,10]` to
+`[1,1,30,30]` with pads `[1,0,21,20]` on axes `[2,3]`.
+
+Stored eval: **17.41777080572354 @ mem 1908 params 55**, exact `265/265`,
+improving from **17.304696865036433 @ mem 2128 params 70**.  Fresh generator:
+**1000/1000**.  Adopted as `custom:task381+free-maroon-overlay`.
+
+Transfer note: when the output differs from input only on a single semantic
+overlay class, prefer a one-class bool mask plus `Where(mask, onehot_color,
+input)` over rebuilding a one-channel label plane and final `Equal`.  This is
+strongest when the unchanged background/red/other classes are already present
+in the free input and the overlay mask can be padded as bool.
 
 ## INSIGHT (transferable)
 ⭐ "Fill the run BETWEEN two markers, whole-run gated by a per-cell predicate"

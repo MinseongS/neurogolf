@@ -61,3 +61,13 @@ opset-11 "uint8 MaxPool rejected" note wrongly closes. Halves every fill plane v
 a hard ~14k floor (~15.4 pts): the 3600 entry + ~3100 crop/pad + ~5000 ray-plane stack
 cannot be squeezed below the +0.3 bar. A net already at ~15.4 with one fp32 decode plane
 + uint8 crop/ray (kojimar pattern) is AT FLOOR — BAIL.
+
+## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-3 opus agent; see agent report in submission_log context). Do not re-attempt without a new mechanism.
+
+## S9 (2026-07-03) — 5×6 single-tap valid-Conv crop to 26×25 (+0.096) ADOPTED
+Rectangular binding max H26×W25 (height=width±1). Entry planes cropped: cgf32 3600→2600,
+cg 900→650, cgp 961→729 (pad end [1,1]→[1,2] keeps 27×27 square), crop_r 713→621,
+sentinel 30→26. mem 13789→12215, params 172→462. Bit-identical: 2000+600 uncached,
+inc fail=2 = cand fail=2 (pre-existing 24-row edge case), div 0. Orthogonal to S8
+CODE_PLANE floor (pure size cut). Box 23×23 stack + cg30 exit-Pad = remaining floor.
+Backup task138_pre_s9.onnx.

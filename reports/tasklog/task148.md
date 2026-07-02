@@ -51,3 +51,12 @@ merging is possible but yields <0.1 pts.
   freely over-paint off-grid cells, so drop all per-override in-grid ANDs.
 - Orientation (flip) handled with ZERO duplicate planes: select per-row scalars lo/hi via f32
   `Where(scalar_bool, A, B)`; for BOOL operands use (s∧A)∨(¬s∧B) since ORT Where rejects bool operands.
+
+## S3 safe-golf WIN (2026-06-30) — param dedup, fresh-gated
+The `false_mid` initializer was an all-False bool `(1,1,23,6)` = **138 params** (55% of the
+model's params), Concat'd in as the dead middle columns 1–6 of `red23_b`. The graph already
+has an all-False `zero_rows_b` `(1,1,23,1)`. Dropped `false_mid` and reference `zero_rows_b`
+×6 in that Concat instead — bit-identical values, NO new initializer, NO new plane.
+- Before: mem 5759 / params 248 / 16.299 pts.  After: mem 5759 / params **110** / **16.323 pts (+0.023)**.
+- Gates: evaluate fail=0 (266/266); fresh_verify 148 = **0 fail / 1500 fresh instances, 0 divergence**
+  from incumbent; correct under ORT_ENABLE_ALL. Clean structural dedup, not a re-fit. LANDED.

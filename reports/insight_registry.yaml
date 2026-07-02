@@ -1,17 +1,65 @@
 [
   {
+    "id": "category_augmented_separable_lut",
+    "title": "Fold row/column-separable override planes into an augmented LUT",
+    "status": "active",
+    "source_tasks": [
+      55
+    ],
+    "rationale": "Task055 improved 16.328775->16.963427 by replacing post-LUT full-canvas line/off-grid overlays with mutually-exclusive row and column categories: band 0..2, separator line, and off-grid.  A single 5x5 uint8 QLinearMatMul LUT emits block colour, cyan line, or sentinel directly, removing multiple 30x30 Where/mask planes while adding only small row/column vectors.",
+    "applies_when": {
+      "any_ops": [
+        "MatMul",
+        "QLinearMatMul",
+        "Where"
+      ],
+      "any_tags": [
+        "lut_selection",
+        "onehot_final_equal"
+      ],
+      "min_memory": 2500
+    },
+    "reject_when": {
+      "any_tags": [
+        "assignment_wall",
+        "connectivity_wall"
+      ],
+      "any_ops": [
+        "ScatterND",
+        "ScatterElements"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_by_deleting_full_canvas_overrides",
+      "risk": "low-medium when override predicates are row/column separable and categories are mutually exclusive",
+      "verification": "stored eval plus fresh/adopt; inspect separator/off-grid category priority in LUT"
+    },
+    "transformer": null
+  },
+  {
     "id": "sparse_edit_stream_without_mask_planes",
     "title": "Replace monotonic full-canvas edit-mask cascades with sparse label updates when duplicate inactive writes are impossible",
     "status": "candidate",
-    "source_tasks": [54],
+    "source_tasks": [
+      54
+    ],
     "rationale": "Task054 showed a tempting pattern: several full 30x30 mask/edit planes only exist to apply a small number of row/column/stamp edits. A graph-surgery probe saved little and failed because inactive duplicate ScatterElements writes were semantically meaningful. The reusable mechanism is valid only for monotonic sparse overwrites where inactive duplicate writes cannot erase earlier edits.",
     "applies_when": {
-      "any_ops": ["ScatterND", "ScatterElements", "Where"],
-      "any_tags": ["scatter", "high_memory"],
+      "any_ops": [
+        "ScatterND",
+        "ScatterElements",
+        "Where"
+      ],
+      "any_tags": [
+        "scatter",
+        "high_memory"
+      ],
       "min_memory": 5000
     },
     "reject_when": {
-      "any_tags": ["inactive_scatter_overwrite_semantics"]
+      "any_tags": [
+        "inactive_scatter_overwrite_semantics"
+      ]
     },
     "expected": {
       "gain_type": "memory_if_monotonic",
@@ -24,15 +72,36 @@
     "id": "high_score_frontier_final_output_only",
     "title": "Prioritize tasks that can reach the 20+ frontier by avoiding every full-canvas intermediate",
     "status": "active",
-    "source_tasks": [87, 140, 223, 307, 16, 276, 309, 337, 56, 92],
+    "source_tasks": [
+      87,
+      140,
+      223,
+      307,
+      16,
+      276,
+      309,
+      337,
+      56,
+      92
+    ],
     "rationale": "The current 20+ group is dominated by mem=0/tiny-cost Gather, Einsum, Conv, RoiAlign/MaxRoiPool, or final-output-only one-hot patterns.  A full 30x30 uint8 label plane is already 900 bytes and caps a task below the 20+ band, so explosive score movement requires compilers that keep all full-canvas tensors as the graph output only.",
     "applies_when": {
-      "any_tags": ["onehot_final_equal", "local_stencil", "scatter", "open_angle", "lut_selection"],
+      "any_tags": [
+        "onehot_final_equal",
+        "local_stencil",
+        "scatter",
+        "open_angle",
+        "lut_selection"
+      ],
       "max_points": 16.5,
       "min_memory": 4000
     },
     "reject_when": {
-      "any_tags": ["connectivity_wall", "information_loss_wall", "ambiguity_wall"]
+      "any_tags": [
+        "connectivity_wall",
+        "information_loss_wall",
+        "ambiguity_wall"
+      ]
     },
     "expected": {
       "gain_type": "frontier_research",
@@ -42,18 +111,65 @@
     "transformer": null
   },
   {
+    "id": "threshold_linearize_pairwise_onehot_and",
+    "title": "Replace pairwise one-hot AND/Kronecker products with direct thresholded product scores",
+    "status": "active",
+    "source_tasks": [
+      1
+    ],
+    "rationale": "Task001's Kronecker self-product looked multiplicative, but the official verifier thresholds output > 0.  One-hot pairwise equality/AND can be encoded as signed scores, removing the counted 10-channel 9x9 carrier.  The final adopted family emits the full 30x30 output directly with one Einsum: dense macro/micro coordinate selectors plus a symmetric rank-3 channel factor fitted only on reachable monochrome input states.  This improved task001 from 17.978 to 19.519 with mem 0 and params 240.  The remaining cost is mostly dense spatial routing (macro/micro [3,30] = 180); sparse initializer versions would explain a 94-ish frontier but are rejected by official shape inference for Einsum sparse inputs.",
+    "applies_when": {
+      "any_ops": [
+        "Einsum",
+        "Where",
+        "Equal",
+        "Pad"
+      ],
+      "any_tags": [
+        "lut_selection",
+        "onehot_final_equal",
+        "direct_onehot_gather_output"
+      ],
+      "max_points": 19.0
+    },
+    "reject_when": {
+      "any_tags": [
+        "multi_colour_pair_product",
+        "requires_exact_numeric_output"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_by_deleting_boolean_product_carrier",
+      "risk": "medium; relies on one-hot inputs, positive-threshold scoring, and class-specific margins",
+      "verification": "stored eval plus fresh/adopt when generator samples exist; inspect off-footprint scores are non-positive"
+    },
+    "transformer": null
+  },
+  {
     "id": "qlinear_uint8_lut_or_matmul",
     "title": "Replace fp16/fp32 one-hot LUT/MatMul selection with uint8 QLinearMatMul/QLinearConv where exact",
     "status": "active",
-    "source_tasks": [55, 80],
-    "rationale": "Task055 and task080 showed that quantized integer routing can collapse large fp16/fp32 selection planes when scales are 1 and zero-points are 0.",
+    "source_tasks": [
+      55,
+      80,
+      338
+    ],
+    "rationale": "Task055 and task080 showed that quantized integer routing can collapse large fp16/fp32 selection planes when scales are 1 and zero-points are 0.  task338 extended this to a small thresholded run detector: fp16 Conv+bias(-2)+Relu for a 3-red horizontal wall is exactly bool->uint8 QLinearConv(sum3)+Equal(3), removing fp16 full-canvas planes and improving 15.414->15.552.",
     "applies_when": {
-      "any_ops": ["MatMul"],
-      "any_tags": ["lut_selection", "onehot_final_equal"],
+      "any_ops": [
+        "MatMul"
+      ],
+      "any_tags": [
+        "lut_selection",
+        "onehot_final_equal"
+      ],
       "min_memory": 500
     },
     "reject_when": {
-      "any_tags": ["mem0_single_op", "qlinear"]
+      "any_tags": [
+        "mem0_single_op",
+        "qlinear"
+      ]
     },
     "expected": {
       "gain_type": "memory",
@@ -66,15 +182,31 @@
     "id": "free_final_onehot_equal",
     "title": "Delay 10-channel expansion to final Equal/Where output",
     "status": "active",
-    "source_tasks": [17, 95, 146],
-    "rationale": "Many solvers carry 10-channel planes too early.  A one-channel label plane plus final Equal often removes full-canvas intermediates.",
+    "source_tasks": [
+      17,
+      95,
+      146,
+      381
+    ],
+    "rationale": "Many solvers carry 10-channel planes too early.  A one-channel label plane plus final Equal often removes full-canvas intermediates.  task381 adds a sharper variant: if the result differs from the free input only on one overlay class, build only that bool mask and use Where(mask, onehot_color, input), avoiding the label carrier and final Equal entirely.  This improved task381 from 17.304697 to 17.417771 by replacing color10->Pad->Equal with a padded maroon mask overlay.",
     "applies_when": {
-      "any_ops": ["Equal", "Pad", "Concat", "Where"],
-      "any_tags": ["onehot_final_equal", "full_canvas_bool", "label_plane"],
+      "any_ops": [
+        "Equal",
+        "Pad",
+        "Concat",
+        "Where"
+      ],
+      "any_tags": [
+        "onehot_final_equal",
+        "full_canvas_bool",
+        "label_plane"
+      ],
       "min_memory": 800
     },
     "reject_when": {
-      "any_tags": ["mem0_single_op"]
+      "any_tags": [
+        "mem0_single_op"
+      ]
     },
     "expected": {
       "gain_type": "memory",
@@ -87,15 +219,29 @@
     "id": "scan_dtype_and_shift_compression",
     "title": "Compress scan-style MaxPool/CumSum/Hillis-Steele pipelines with lower dtype or shared shifts",
     "status": "active",
-    "source_tasks": [46, 216],
+    "source_tasks": [
+      46,
+      216
+    ],
     "rationale": "Scan and expansion pipelines dominate memory on wall-class tasks.  Reusing shift matrices or keeping uint8/bool until the last legal cast is often the only broad lever.",
     "applies_when": {
-      "any_ops": ["CumSum", "MaxPool", "ReduceMax", "ReduceMin"],
-      "any_tags": ["scan", "maxpool_scan", "gather_heavy"],
+      "any_ops": [
+        "CumSum",
+        "MaxPool",
+        "ReduceMax",
+        "ReduceMin"
+      ],
+      "any_tags": [
+        "scan",
+        "maxpool_scan",
+        "gather_heavy"
+      ],
       "min_memory": 2000
     },
     "reject_when": {
-      "any_tags": ["bitwise_program"]
+      "any_tags": [
+        "bitwise_program"
+      ]
     },
     "expected": {
       "gain_type": "memory",
@@ -108,15 +254,29 @@
     "id": "sparse_conv_single_op_floor",
     "title": "Collapse local neighborhood rules to one sparse Conv/QLinearConv when output is thresholded",
     "status": "active",
-    "source_tasks": [15, 95, 230, 294],
+    "source_tasks": [
+      15,
+      95,
+      230,
+      294
+    ],
     "rationale": "The scorer thresholds output > 0.  Local stencil rules can often be encoded directly as one convolution with zero memory.",
     "applies_when": {
-      "any_ops": ["Conv", "QLinearConv"],
-      "any_tags": ["local_stencil", "conv_heavy"],
+      "any_ops": [
+        "Conv",
+        "QLinearConv"
+      ],
+      "any_tags": [
+        "local_stencil",
+        "conv_heavy"
+      ],
       "max_points": 18.5
     },
     "reject_when": {
-      "any_tags": ["assignment_wall", "connectivity_wall"]
+      "any_tags": [
+        "assignment_wall",
+        "connectivity_wall"
+      ]
     },
     "expected": {
       "gain_type": "memory+params",
@@ -129,10 +289,17 @@
     "id": "exact_preserve_to_semantic_rewrite",
     "title": "Prioritize exact-preserve source builders for semantic replacement",
     "status": "active",
-    "source_tasks": [2, 18, 286, 366],
+    "source_tasks": [
+      2,
+      18,
+      286,
+      366
+    ],
     "rationale": "Exact-preserve builders provide control but not insight.  They should be the first targets for mechanism extraction when memory is high or score is low.",
     "applies_when": {
-      "any_tags": ["exact_preserve"],
+      "any_tags": [
+        "exact_preserve"
+      ],
       "min_memory": 10000
     },
     "reject_when": {},
@@ -147,15 +314,26 @@
     "id": "dihedral_template_match_stacked_conv",
     "title": "Use one stacked Conv for all dihedral orientations of a small runtime-extracted template",
     "status": "active",
-    "source_tasks": [191],
+    "source_tasks": [
+      191
+    ],
     "rationale": "Task191 showed that 8-orientation template matching is not a correspondence wall: extract a small template, permute it with fixed gather maps, fold present/no-extra predicates into one signed correlation kernel, then stamp with Conv/MaxPool.",
     "applies_when": {
-      "any_ops": ["Conv", "Gather", "MatMul"],
-      "any_tags": ["template_match"],
+      "any_ops": [
+        "Conv",
+        "Gather",
+        "MatMul"
+      ],
+      "any_tags": [
+        "template_match"
+      ],
       "min_memory": 1500
     },
     "reject_when": {
-      "any_tags": ["mem0_single_op", "information_loss_wall"]
+      "any_tags": [
+        "mem0_single_op",
+        "information_loss_wall"
+      ]
     },
     "expected": {
       "gain_type": "memory+accuracy",
@@ -168,15 +346,27 @@
     "id": "bounded_crop_before_connectivity_scan",
     "title": "Run iterative connectivity/flood-fill on the generator's true max canvas, not the 30x30 harness canvas",
     "status": "active",
-    "source_tasks": [187],
+    "source_tasks": [
+      187
+    ],
     "rationale": "Task187 showed that grids are generated in a bounded 20..25 box.  Cropping after reducing the 10-channel input to one-channel label/mask planes avoids a huge fp32 input slice while shrinking every repeated MaxPool/Min flood-fill plane from 30x30 to 25x25.  The final one-channel label map is padded back to 30x30 with sentinel label 10 before final Equal.",
     "applies_when": {
-      "any_ops": ["MaxPool", "Min", "ReduceMax"],
-      "any_tags": ["connectivity_wall", "maxpool_scan", "high_memory"],
+      "any_ops": [
+        "MaxPool",
+        "Min",
+        "ReduceMax"
+      ],
+      "any_tags": [
+        "connectivity_wall",
+        "maxpool_scan",
+        "high_memory"
+      ],
       "min_memory": 10000
     },
     "reject_when": {
-      "any_tags": ["mem0_single_op"]
+      "any_tags": [
+        "mem0_single_op"
+      ]
     },
     "expected": {
       "gain_type": "memory+generalization",
@@ -189,15 +379,28 @@
     "id": "public_teacher_bitwise_scan_replacement",
     "title": "Replace repeated MaxPool/Max/Min scan stacks with bitwise shift/mask routing when the state is binary",
     "status": "active",
-    "source_tasks": [2, 209],
+    "source_tasks": [
+      2,
+      209
+    ],
     "rationale": "URAD 7174.10 teacher overlays for task002 and task209 replaced large repeated MaxPool/Max/Min scan stacks with BitShift/BitwiseAnd/BitwiseOr/Gather or small QLinearConv routing, cutting 15k-19k memory and producing +0.46..+0.50 stored gains.  Treat as a teacher-derived mechanism: extract the exact binary state encoding before applying broadly.",
     "applies_when": {
-      "any_ops": ["MaxPool", "Max", "Min"],
-      "any_tags": ["maxpool_scan", "connectivity_wall", "high_memory"],
+      "any_ops": [
+        "MaxPool",
+        "Max",
+        "Min"
+      ],
+      "any_tags": [
+        "maxpool_scan",
+        "connectivity_wall",
+        "high_memory"
+      ],
       "min_memory": 15000
     },
     "reject_when": {
-      "any_tags": ["mem0_single_op"]
+      "any_tags": [
+        "mem0_single_op"
+      ]
     },
     "expected": {
       "gain_type": "memory",
@@ -210,15 +413,34 @@
     "id": "public_teacher_qlinear_conv_rewrite",
     "title": "Convert repeated binary/count Conv/ConvTranspose towers to QLinearConv/uint8 routes",
     "status": "active",
-    "source_tasks": [23, 349, 182, 233, 255],
-    "rationale": "URAD 7174.10 teacher overlays showed broad gains from replacing fp32/fp16 Conv-heavy shape logic with QLinearConv/uint8 equivalents.  task023 gained +0.533 stored with 56 QLinearConv nodes; task349 gained +0.398 with lower memory and params.  This extends the local task055/task080 QLinear insight to ConvTranspose/shape-detection towers.",
+    "source_tasks": [
+      23,
+      349,
+      182,
+      233,
+      255,
+      364,
+      338,
+      4
+    ],
+    "rationale": "URAD 7174.10 teacher overlays showed broad gains from replacing fp32/fp16 Conv-heavy shape logic with QLinearConv/uint8 equivalents.  task023 gained +0.533 stored with 56 QLinearConv nodes; task349 gained +0.398 with lower memory and params.  task364 confirmed the local form: a fp32 3x3 bit-index Conv over a uint8 mask can become exact QLinearConv with unit scales, improving 14.900493->14.956012.  task338 confirmed a related thresholded detector form: fp16 Conv+bias+Relu can be replaced by uint8 QLinearConv plus Equal when the accepted count is exact.  task004 confirmed the small packed-neighbour variant: replace two shifted uint8 planes plus comparison with one asymmetric-padded QLinearConv code, saving one 16x16 plane and improving 16.406957->16.454219.  This extends the local task055/task080 QLinear insight to ConvTranspose/shape-detection towers and compact local predicate packing.",
     "applies_when": {
-      "any_ops": ["Conv", "ConvTranspose"],
-      "any_tags": ["conv_heavy", "local_stencil", "qlinear"],
+      "any_ops": [
+        "Conv",
+        "ConvTranspose"
+      ],
+      "any_tags": [
+        "conv_heavy",
+        "local_stencil",
+        "qlinear"
+      ],
       "min_memory": 2000
     },
     "reject_when": {
-      "any_tags": ["mem0_single_op", "assignment_wall"]
+      "any_tags": [
+        "mem0_single_op",
+        "assignment_wall"
+      ]
     },
     "expected": {
       "gain_type": "memory+params",
@@ -231,16 +453,30 @@
     "id": "marker_routed_hidden_path_compiler",
     "title": "Compile endpoint-pair hidden paths from deliberate marker pixels instead of replaying scan-heavy exact graphs",
     "status": "active",
-    "source_tasks": [66],
+    "source_tasks": [
+      66
+    ],
     "rationale": "Task066 generator decomposes into S/U hidden path families.  Red and green endpoint pairs define side columns/rows; cyan markers disambiguate the turn/bottom, while random cyan noise requires soft legality/tie-breaks rather than marker-only selection.  A compiler can emit a bounded set of bool path masks instead of preserving a large scan/gather graph.",
     "applies_when": {
-      "any_ops": ["GatherElements", "CumSum", "ReduceMax", "ReduceMin", "Where"],
-      "all_tags": ["marker_routed_path"],
+      "any_ops": [
+        "GatherElements",
+        "CumSum",
+        "ReduceMax",
+        "ReduceMin",
+        "Where"
+      ],
+      "all_tags": [
+        "marker_routed_path"
+      ],
       "min_memory": 5000,
       "max_points": 16.5
     },
     "reject_when": {
-      "any_tags": ["ambiguity_wall", "information_loss_wall", "mem0_single_op"]
+      "any_tags": [
+        "ambiguity_wall",
+        "information_loss_wall",
+        "mem0_single_op"
+      ]
     },
     "expected": {
       "gain_type": "semantic_rewrite_memory",
@@ -253,20 +489,452 @@
     "id": "rotation_component_template_scatter",
     "title": "Replace scan-heavy in-context sprite reconstruction with rotation-only 3x3 component template scatter",
     "status": "active",
-    "source_tasks": [233],
+    "source_tasks": [
+      233
+    ],
     "rationale": "Task233 rule reduces to extracting outside 3x3 sprites, finding 8-connected black components inside the dominant red rectangle, matching each component against only four rotations of the sprite's red mask, then scattering a coloured 3x3 patch.  This avoids replaying large gather/scatter heuristic graphs and halves the orientation bank vs dihedral matching.",
     "applies_when": {
-      "any_ops": ["ScatterND", "Gather", "Where", "TopK"],
-      "any_tags": ["template_match", "gather_heavy", "scatter", "high_memory"],
+      "any_ops": [
+        "ScatterND",
+        "Gather",
+        "Where",
+        "TopK"
+      ],
+      "any_tags": [
+        "template_match",
+        "gather_heavy",
+        "scatter",
+        "high_memory"
+      ],
       "min_memory": 15000
     },
     "reject_when": {
-      "any_tags": ["assignment_wall", "information_loss_wall", "mem0_single_op"]
+      "any_tags": [
+        "assignment_wall",
+        "information_loss_wall",
+        "mem0_single_op"
+      ]
     },
     "expected": {
       "gain_type": "semantic_rewrite_memory",
       "risk": "medium-high until bbox/component edge cases are fully fresh-verified",
       "verification": "Python reference stored plus large fresh, then source-owned ONNX compiler and adopt gate"
+    },
+    "transformer": null
+  },
+  {
+    "id": "band_profile_contraction_final_equal",
+    "title": "Use distinct-colour row/column profiles to avoid full connectivity for band-fill tasks",
+    "status": "active",
+    "source_tasks": [
+      202
+    ],
+    "rationale": "Task202's strata colours are distinct, so same-band membership reduces to equality against row/column colour profiles.  The current semantic source keeps only one fp32 colour-index entry plane, contracts black markers along the correct row/column profile, and emits a one-channel uint8 label map into the free final Equal output.  This is a frontier-style final-output-only mechanism for band/stripe tasks, though task202 itself remains above the 20+ cost floor because it still needs a full colour-index entry plane and full label-map composition.",
+    "applies_when": {
+      "any_ops": [
+        "ReduceMax",
+        "ReduceMin",
+        "Where",
+        "Equal"
+      ],
+      "any_tags": [
+        "local_stencil",
+        "onehot_final_equal",
+        "high_memory"
+      ],
+      "min_memory": 4000,
+      "max_points": 18.0
+    },
+    "reject_when": {
+      "any_tags": [
+        "connectivity_wall",
+        "assignment_wall",
+        "information_loss_wall"
+      ]
+    },
+    "expected": {
+      "gain_type": "semantic_rewrite_memory_or_source_ownership",
+      "risk": "medium; requires generator proof that colours are distinct per band/profile",
+      "verification": "stored eval plus large fresh generator eval; source/live reconcile after rewrite"
+    },
+    "transformer": null
+  },
+  {
+    "id": "bounded_multicopy_slot_topk_floor",
+    "title": "Do not shrink multi-copy reconstruction candidate lists below generator extrema",
+    "status": "candidate",
+    "source_tasks": [
+      101
+    ],
+    "rationale": "Task101 looked like a task351/task201-style copy compiler target, but the fixed two-colour palette makes direct ch1/ch2 slices cheaper than a full 1x1 colour-index plane.  Its red-candidate TopK width is also not stored slack: stored max red count was 22, while 20k fresh samples reached 30.  Shrinking the candidate list would create rare generator failures.",
+    "applies_when": {
+      "any_ops": [
+        "TopK",
+        "ScatterElements",
+        "Gather"
+      ],
+      "any_tags": [
+        "gather_heavy",
+        "scatter",
+        "high_memory"
+      ],
+      "min_memory": 5000
+    },
+    "reject_when": {
+      "any_tags": [
+        "mem0_single_op"
+      ]
+    },
+    "expected": {
+      "gain_type": "negative_filter",
+      "risk": "high if candidate-list bounds are inferred from stored examples only",
+      "verification": "measure generator extrema before reducing TopK/list widths; compare direct channel slices against colour-index entry plane when palette is fixed"
+    },
+    "transformer": null
+  },
+  {
+    "id": "sparse_initializer_not_dense_operand",
+    "title": "Sparse initializers cannot be used as params loopholes for dense ONNX operands",
+    "status": "negative_filter",
+    "source_tasks": [
+      123,
+      232
+    ],
+    "rationale": "Task123 sparse canvas-index Gather and task232 sparse Conv-weight probes both failed. ONNX shape inference treats the operand as sparse_tensor(T), and ORT/scorer rejects Gather indices and Conv weights instead of densifying them. The scorer also checks sparse_initializer separately, so this is not a valid way to keep dense semantics while counting only nonzero values.",
+    "applies_when": {
+      "any_ops": [
+        "Conv",
+        "Gather"
+      ],
+      "any_tags": [
+        "mem0_single_op",
+        "lut_selection"
+      ],
+      "min_params": 500
+    },
+    "reject_when": {},
+    "expected": {
+      "gain_type": "negative_filter",
+      "risk": "certain rejection by shape inference/ORT for dense operator operands",
+      "verification": "do not pursue sparse_initializer substitutions for standard dense inputs; use algebraic operator rewrites instead"
+    },
+    "transformer": null
+  },
+  {
+    "id": "generator_extrema_before_topk_shrink",
+    "title": "Prove generator extrema before shrinking sparse TopK candidate lists",
+    "status": "negative_filter",
+    "source_tasks": [
+      173,
+      285
+    ],
+    "rationale": "Task285's visible-cell TopK width 33 matched a 20k fresh maximum and the generator ceiling. Task173's 20k fresh maximum was only 31, but a valid constructed generator instance reaches the current TopK width 51. Shrinking sparse candidate lists by stored/fresh sample maxima creates rare held-out failures unless the symbolic generator bound is proven lower.",
+    "applies_when": {
+      "any_ops": [
+        "TopK",
+        "Gather",
+        "ScatterElements"
+      ],
+      "any_tags": [
+        "gather_heavy",
+        "scatter",
+        "high_memory"
+      ],
+      "min_memory": 5000
+    },
+    "reject_when": {
+      "any_tags": [
+        "mem0_single_op"
+      ]
+    },
+    "expected": {
+      "gain_type": "negative_filter",
+      "risk": "high if list width is reduced from empirical samples only",
+      "verification": "derive the generator maximum and, when possible, build an explicit adversarial fresh example before reducing TopK widths"
+    },
+    "transformer": null
+  },
+  {
+    "id": "variable_size_mask_requires_onehot_input",
+    "title": "Variable-size output masks may require the original one-hot input, not compact labels",
+    "status": "negative_filter",
+    "source_tasks": [
+      173
+    ],
+    "rationale": "Task173 needs to distinguish in-grid black cells from out-of-grid padded zeros. The compact label grid cannot provide that information because both are label 0 after one-hot-to-label conversion. The current ReduceMax(input) dimension mask is expensive but semantically necessary unless another size signal is available.",
+    "applies_when": {
+      "any_ops": [
+        "ReduceMax",
+        "Pad",
+        "Slice",
+        "Equal"
+      ],
+      "any_tags": [
+        "onehot_final_equal",
+        "open_angle",
+        "high_memory"
+      ],
+      "min_memory": 4000
+    },
+    "reject_when": {
+      "any_tags": [
+        "fixed_size_grid",
+        "mem0_single_op"
+      ]
+    },
+    "expected": {
+      "gain_type": "negative_filter",
+      "risk": "medium-high for crop rewrites that remove one-hot validity masks",
+      "verification": "check whether outside-grid all-zero padding must differ from true black channel-0 cells before replacing input-based size masks"
+    },
+    "transformer": null
+  },
+  {
+    "id": "flood_fill_iteration_count_lb_tradeoff",
+    "title": "Flood-fill iteration count is a correctness and score tradeoff, not sample slack",
+    "status": "negative_filter",
+    "source_tasks": [
+      187
+    ],
+    "rationale": "Task187's cropped flood-fill is source-owned and scores better than the old incumbent, but a 1000 fresh audit still found rare failures. Adding brute-force MaxPool+Min iterations improves safety only by increasing memory and reducing stored points. Do not shrink or under-provision flood iterations from small fresh samples; derive a distance bound or find a cheaper long-range primitive.",
+    "applies_when": {
+      "any_ops": [
+        "MaxPool",
+        "Min",
+        "Where"
+      ],
+      "any_tags": [
+        "connectivity_wall",
+        "maxpool_scan",
+        "high_memory"
+      ],
+      "min_memory": 5000
+    },
+    "reject_when": {
+      "any_tags": [
+        "mem0_single_op"
+      ]
+    },
+    "expected": {
+      "gain_type": "negative_filter",
+      "risk": "rare fresh/LB failures when iteration count is below generator path-distance maximum",
+      "verification": "measure exterior/reachable distance on adversarial or large fresh samples before reducing scan depth; adoption requires stored and fresh tradeoff decision"
+    },
+    "transformer": null
+  },
+  {
+    "id": "zero_concat_tail_to_pad",
+    "title": "Replace zero-mask Concat tails with Pad when extending an active crop to the harness canvas",
+    "status": "active",
+    "source_tasks": [
+      66
+    ],
+    "rationale": "Task066 replaced two zero bool mask concatenations and two large zero initializers with a single Pad from 20x20 to 30x30. Stored score improved from 15.179079 to 15.240210 by reducing memory 17763->17163 and params 652->160. Fresh side-by-side against the incumbent showed 0 output divergence over 2000 eligible examples.",
+    "applies_when": {
+      "any_ops": [
+        "Concat",
+        "Pad",
+        "Where"
+      ],
+      "any_tags": [
+        "onehot_final_equal",
+        "scatter",
+        "open_angle",
+        "high_memory"
+      ],
+      "min_memory": 1000
+    },
+    "reject_when": {
+      "any_tags": [
+        "nonzero_tail_fill",
+        "data_dependent_padding"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory+params",
+      "risk": "low when concatenated tails are constant zero/false and Pad fill defaults to zero",
+      "verification": "stored eval plus side-by-side fresh output equivalence against incumbent"
+    },
+    "transformer": null
+  },
+  {
+    "id": "bounded_exact_cover_without_mode_background",
+    "title": "Use bounded exact-cover over sparse generator objects instead of mode-colour background assumptions",
+    "status": "candidate",
+    "source_tasks": [
+      366
+    ],
+    "rationale": "Task366's rectangle/stencil compiler became exact on 1000 seed-0 and 5000 seed-1 fresh examples after dropping the unsafe assumption that the template background is the panel mode. Generated foreground rectangles can dominate the template panel area, so background must be enumerated among non-sparse colours while dot colours are excluded by their <=3 count bound. The successful reference then extracts one rectangle per dot count via bounded exact cover and matches placement dot stencils.",
+    "applies_when": {
+      "any_tags": [
+        "exact_preserve",
+        "gather_heavy",
+        "scatter",
+        "high_memory",
+        "open_angle"
+      ],
+      "any_ops": [
+        "TopK",
+        "Gather",
+        "ScatterElements",
+        "Where"
+      ],
+      "min_memory": 10000
+    },
+    "reject_when": {
+      "any_tags": [
+        "unbounded_object_count",
+        "connectivity_wall"
+      ]
+    },
+    "expected": {
+      "gain_type": "semantic_rewrite_research",
+      "risk": "high until the exact-cover search is lowered to a compact ONNX graph",
+      "verification": "derive generator object-count and sparse-colour bounds, validate a Python reference on large fresh samples, then compare any ONNX lowering against stored and fresh"
+    },
+    "transformer": null
+  },
+  {
+    "id": "direct_onehot_gather_output",
+    "title": "Route original one-hot input directly to graph output for crop/periodic remaps",
+    "status": "active",
+    "source_tasks": [
+      343
+    ],
+    "rationale": "Task343 improved 17.380766->17.891756 by replacing a label-grid -> Equal(channel_ids) -> Pad output path with Gather(input, final_cols, axis=3) as the graph output. For active columns, final_cols is c mod period; for off-grid columns it points to input col29, which is already all-zero. This removed the counted [1,10,5,15] bool Equal tensor and the label concat path while preserving fresh correctness over 5000 examples.",
+    "applies_when": {
+      "any_ops": [
+        "Gather",
+        "Equal",
+        "Pad",
+        "Concat"
+      ],
+      "any_tags": [
+        "onehot_final_equal",
+        "open_angle",
+        "lut_selection"
+      ],
+      "min_memory": 500
+    },
+    "reject_when": {
+      "any_tags": [
+        "non_input_colors",
+        "output_not_input_remap"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory+params",
+      "risk": "low when every output on-cell is copied from the original one-hot input and off-grid can point at an all-zero padded input coordinate",
+      "verification": "stored eval plus fresh side-by-side; confirm black in-grid cells and off-grid all-zero semantics are both preserved"
+    },
+    "transformer": null
+  },
+  {
+    "id": "uint8_topk_compact_label_grid",
+    "title": "Run TopK directly on compact uint8 label grids when only nonzero-cell enumeration is needed",
+    "status": "active",
+    "source_tasks": [
+      285,
+      366
+    ],
+    "rationale": "Task285 removed a full 900-cell fp16 cast before TopK by feeding TopK with the existing uint8 color-label vector. Stored score improved from 14.848481 to 14.922685 by reducing memory 25080->23247 with unchanged params. Task366 extended the same family to bool masks: bool TopK is invalid in ORT, but bool->uint8 full-vector casts plus tiny TopK-value fp16 recasts improved 14.497209->14.532108 by reducing memory 35927->34678. Because both incumbents have rare large-fresh failures, adoption was justified by 20000/20000 side-by-side incumbent equivalence, not by truth-fresh pass.",
+    "applies_when": {
+      "any_ops": [
+        "TopK",
+        "Cast",
+        "Gather"
+      ],
+      "any_tags": [
+        "scatter",
+        "gather_heavy",
+        "high_memory",
+        "open_angle"
+      ],
+      "min_memory": 3000
+    },
+    "reject_when": {
+      "any_tags": [
+        "topk_tie_order_semantic",
+        "requires_float_scores"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory",
+      "risk": "medium because TopK tie ordering and dtype support must be checked in ORT",
+      "verification": "stored eval plus large side-by-side incumbent equivalence; truth-fresh failure shared with incumbent is not by itself a reject"
+    },
+    "transformer": null
+  },
+  {
+    "id": "strided_conv_fixed_block_counts",
+    "title": "Replace many fixed-block Slice+ReduceSum branches with one strided Conv",
+    "status": "active",
+    "source_tasks": [
+      11
+    ],
+    "rationale": "Task011 improved 17.343663->17.386181 by replacing nine channel-8 3x3 Slice+ReduceSum branches with one stride-4 3x3 Conv over the original one-hot input, followed by a compact Slice+Reshape. The Conv adds weight params, but removes repeated fp32 block slices and scalar reductions; stored and fresh 1500/1500 matched the incumbent exactly.",
+    "applies_when": {
+      "any_ops": [
+        "Slice",
+        "ReduceSum",
+        "Concat"
+      ],
+      "any_tags": [
+        "local_stencil",
+        "exact_preserve",
+        "onehot_final_equal"
+      ],
+      "min_memory": 1000
+    },
+    "reject_when": {
+      "any_tags": [
+        "variable_block_stride",
+        "data_dependent_block_layout"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_when_repeated_block_reads_share_one_channel_or_kernel",
+      "risk": "low-medium; Conv weight params can outweigh memory savings when few blocks are read or the input crop is already tiny",
+      "verification": "stored eval plus fresh side-by-side; inspect Conv output shape because full 30x30 input may produce trailing off-grid stride positions that must be sliced away"
+    },
+    "transformer": null
+  },
+  {
+    "id": "walk_einsum_iteration_collapse",
+    "title": "Collapse iterative flood/scan/propagation into ONE multi-operand Einsum via scaled walk counting (internal computation uncounted)",
+    "status": "active",
+    "source_tasks": [
+      187,
+      313,
+      110,
+      243,
+      77
+    ],
+    "rationale": "S8 additions (late): EXACT-COUNT walks via 3-phase monotone machine {Stay,Move...} — each cell reached by exactly one walk, einsum value = run length/area, fp16-exact <=2048 (task145, refutes FLOOR verdicts on size/area tasks); checkerboard-parity paint via rank-1 stacked-parity einsums (task286); latency: repeated-operand SIZE dominates ORT multi-op einsum (use one small mask plane over repeating the 9000-elem input); single-tap KxK Conv = free crop. S8 additions: free-traversability (input repeated with (10,) colour selectors, shared colour letter pinned by P0[q] -> 1 letter/4-conn step, no t plane; task243), checkpoint constraints (triangular operands bind walk positions to output indices -> bbox conditions in-einsum; task077), gates-as-einsum-operands (data-dependent [K] selection vectors from tiny einsums multiply inside the big einsum, stacked fallback plane; task110). Original: Grader counts only NODE OUTPUTS (data/neurogolf_utils.py calculate_memory); everything inside a single op is free, and run_network applies a free >0 threshold at 'output'. Reachability = #walks > 0 is a polynomial in the input, so K propagation steps compile into ONE Einsum: operands G[m,r0],H[m,c0] (nonneg rank-terms for the seed set), then per step S[r_j,r_j+1], S[c_j,c_j+1] (tridiagonal-with-self, entries 0.5 -> 8-connected Chebyshev step; alternate single-axis S for 4-connected at 1 letter/step), and t[n,z,r_j,c_j] (traversable plane from one Conv). All operand values nonnegative -> no cancellation -> fp32 rounding/overflow cannot flip >0 semantics; keep per-step scale dyadic (0.5) so min path weight stays in normal-float range (subnormal-flush-safe). Letter budget 52: 8-conn = (52-5)/2 = 23 steps/einsum; 4-conn alternating H/V = 45 steps. task187 landed: 15 MaxPool+Min rounds (18.75KB) -> 1 Einsum (74 operands, 51 letters): mem 32850->15300, 14.58->15.29 (+0.71), fresh 17<=19 incumbent, and Kaggle grader accepts it (task313 = kojimar's 10-operand einsum precedent; 187 A/B submitted). Same-arity constraint: one einsum sums only uniform operand-set products, so heterogeneous output composition (drawing-copy + flood colours) still needs the classic uint8 label epilogue (~11.7KB floor here: t 3600 + W 3600 + label 3600+900 + 4x900 bool/uint8 planes).",
+    "applies_when": {
+      "any_ops": [
+        "MaxPool",
+        "Max",
+        "Min",
+        "CumSum",
+        "And",
+        "Or"
+      ],
+      "any_tags": [
+        "maxpool_scan",
+        "connectivity_wall",
+        "scan",
+        "high_memory"
+      ],
+      "min_memory": 8000
+    },
+    "reject_when": {
+      "any_tags": []
+    },
+    "expected": {
+      "gain_type": "memory_by_deleting_all_iteration_planes",
+      "risk": "medium: verify connectivity model (4 vs 8-conn!) matches incumbent semantics on fresh; verify step-count covers measured max BFS distance + margin; keep operands nonnegative or prove no cancellation. REJECT-CHECKS (task204 S8): parallel fan-out MaxPools (per-size anchor dilations) are NOT collapsible chains; uint8 conv banks of sub-400B planes are einsum-proof (fp32 entry ticket 1600-3600B + step params loses)",
+      "verification": "numpy walk-vs-BFS on 20000 fresh, stored eval, fresh_verify candidate<=incumbent, A/B submission for grader safety on first use"
     },
     "transformer": null
   }

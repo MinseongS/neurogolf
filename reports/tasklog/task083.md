@@ -55,3 +55,9 @@ mem 0, params 1800. This is a HARD FLOOR (~17.50) — the grid cannot be shrunk 
 30*30*2 for a 30x30 output, and any Slice/Concat/Pad rebuild needs the [1,10,6,8] fp32
 Pad-input (1920B -> ~17.43) which is strictly worse. Do NOT spend time trying to beat a
 GridSample-based ext import on a full-canvas geometric remap; it is at floor.
+
+## S9 (2026-07-03) — mechanism-14 separable-remap einsum (+0.063) ADOPTED
+Single 5-operand Einsum 'ra,ai,zcij,bj,sb->zcrs', mem=0: mirror-tile 3x4->6x8, Ur/Sr(3) + Tc/Vc(4), 447->420 (thin).
+Gates: stored fail=0; uncached fresh 2000+600: 0/0/0 (bit-identical). No TopK.
+NOTE: scan projection was ~8x optimistic — output axis must span the FULL 30 (grading
+tensor [1,10,30,30]), so U tables are [30,K] not [out,K]. Backup task083_pre_s9.onnx.

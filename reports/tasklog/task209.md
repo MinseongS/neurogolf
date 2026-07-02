@@ -64,3 +64,21 @@ best-tie-break rate (~99.6%). 209 is a genuine wall on BOTH the determinism axis
 no-separable-form axis (Wall 2) — the earlier "suspected near-wall" verdict is confirmed: it is a wall.
 The base net's 13.357 stored is unbeatable AND non-generalizing; there is no clean generalizing
 replacement. (Lesson mirrors task255/198 connectivity walls but here the wall is generator non-determinism.)
+
+## S8 (2026-07-02) — counting-model rebuild (+0.349) ADOPTED, div 0
+Not iterative — the win is the COUNTING-MODEL rebuild: free-input Einsum contractions for all
+row/col bounds ([30] f32 profiles 120B replace ~55 400B bool planes); spread-based S-detection
+(MaxPool(lab)+MaxPool(9−lab)−9, global-max==9 test); separable two-stage axis Gathers (kills
+[20,20] i32 flat-index plane); 11×11 valid-Conv label read at 20×20 (1600+400 vs 4900, +1200p);
+QLinearConv int32 bias folds +1; Pad-with-negative-crop replaces Slice+Pad.
+21298+1418 vs 32027+185 → 14.620→14.969. Fresh 2500/1500/800: div 0; inherent fail ~9.8%
+(generator-ambiguity wall) unchanged. ORT-OK under strict inference: u8 MaxPool (incl 20×20
+global), u8 Where/Add/Equal, QLinearConv+i32 bias, repeated-free-input einsums.
+
+## S9 (2026-07-03) — fold 2nd pass: FLOOR re-confirmed (no change)
+13a N/A: output = runtime-factor/offset Kronecker gather (not fixed-mixer einsum).
+All candidate plane-merges measured byte-NEUTRAL with only 2 magnification sizes
+(S-detect keep-mask, vote, stamp, box). W11 1210p = optimal trade vs 3600B 1×1-conv
+plane. Existence-based mag detector: 1/20000 fresh errors + saves only ~800-1200B
+(+0.04-0.05) on a net at 10.1% ambiguity wall — rejected under cand≤inc gate.
+Clean-corner+universality detector numpy 0/20000. DO NOT re-probe.

@@ -26,6 +26,29 @@ the output IS row-cond ⊗ col-cond separable, so all memory lives in box DETECT
 ## Best achieved
 14.257 @ mem 46074 params 239 — adopted? N (build-only). Beats prior 13.81 by **+0.45** (>= +0.3). 266/266 stored, 500/500 fresh under ORT_DISABLE_ALL (scorer-exact).
 
+## 2026-06-29 live-frontier refresh and rejected compression
+
+Current live/source is far ahead of this older note: **15.359697 pts @ mem
+14734 params 638** (`teacher:urad7174_top15_public_probe`, source-owned exact
+builder).  Mem profile is dominated by `cgrid` 3600B fp32, `bmh` 1800B fp16,
+two 6-run Conv outputs at 1500B each, and the 10x10 output one-hot crop.
+
+Tried replacing the box-mask run detector
+`Cast(bm)->fp16; Conv(kh/kv); GreaterOrEqual(..., six_fp16)` with an opset-17
+uint8 route:
+`Cast(bm)->uint8; QLinearConv(kh_i8/kv_i8, scales=1,zp=0); GreaterOrEqual(..., six_u8)`.
+Stored result improved to **15.533855 pts @ mem 12274 params 641** (266/266),
+saving 2460B.  However a stronger fresh run failed at **934/935**, and comparing
+against the incumbent public/live graph showed the candidate output was identical
+to incumbent on the failure (`candidate == old`, old also wrong).  Because this
+session requires stored + fresh success before adoption, the compression was
+rejected and source/network/manifest were restored to the incumbent.
+
+Reusable negative: uint8/QLinear run-sum compression can be stored-equivalent and
+score-higher locally, but do not adopt it on tasks whose incumbent already has
+rare generator failures unless the candidate passes the agreed fresh gate or the
+project explicitly switches to an equivalence-to-incumbent compression policy.
+
 ## Irreducible-floor analysis
 Remaining memory is the box-DETECTION pipeline run at full 30x30: Gf (3600 fp32 colour Conv,
 unavoidable Conv output), G/coord/Gms (sentinel-shifted grid, 5400), two neighbour-diff Convs +
@@ -60,3 +83,6 @@ is 0 — it removes the otherwise-separate {0,1} mask plane.  Pair with reading 
 Net: an over-engineered detection net (69.5KB/2882p) shrank to 46KB/239p with NO algorithm change,
 purely by (a) separable 1-D in-grid mask off the free input, (b) Gather-shift vs MatMul-matrix,
 (c) integer fp16-Equal collapses, (d) the +1-bias single-plane colour/occupancy merge.
+
+## S8 (2026-07-02) — reverse-ArgMax → select_last_index (+0.012) ADOPTED, div 0
+Same idiom as task319 (Slice-reverse variant).

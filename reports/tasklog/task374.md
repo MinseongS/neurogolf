@@ -42,3 +42,6 @@ per-row/col length vector. This replaces O(W) product-chain run-length planes (2
 cheap planes (6k mem). Distinct lengths ⇒ rank without sorting: color = (L==global-min)?short :
 (L==global-max)?long : middle. Base-the-Where-chain-at-the-common-case trick (start label=4,
 override min→2/max→1) drops 4 bool intermediates vs an explicit "and-not-min-and-not-max".
+
+## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
+mem 2262/17.26; output5 [1,5,10,10] bool 500B beats 900B pad-then-Equal; gray_crop_f 400B forced-fp32; fp16 counts already minimal. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).

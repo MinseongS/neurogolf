@@ -10,8 +10,6 @@ import datetime
 import json
 import multiprocessing
 import zipfile
-
-from . import solvers
 from .harness import ROOT, evaluate, load_task
 
 NETWORKS = ROOT / "networks"
@@ -33,9 +31,6 @@ def solve_custom(task, task_num=None):
 
 
 SOLVER_CHAIN = {
-    "conv": solvers.solve_conv,
-    "memorizer": solvers.solve_memorizer,
-    "memorizer4": solvers.solve_memorizer_v4,
     "custom": solve_custom,
 }
 
@@ -60,12 +55,10 @@ def solve_one(job):
     for name in methods:
         try:
             cur_pts = best["points"] if best else 0.0
-            if name == "conv":
-                res = SOLVER_CHAIN[name](task, beat=cur_pts)
-            elif name == "custom":
+            if name == "custom":
                 res = SOLVER_CHAIN[name](task, task_num=task_num)
             else:
-                res = SOLVER_CHAIN[name](task)
+                raise ValueError(f"unsupported method after cleanup: {name}")
         except Exception as e:
             print(f"task{task_num:03d}: {name} crashed: {e}", flush=True)
             continue
@@ -130,7 +123,7 @@ def pack():
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--tasks", default=f"1-{N_TASKS}")
-    parser.add_argument("--methods", default="conv")
+    parser.add_argument("--methods", default="custom")
     parser.add_argument("--jobs", type=int, default=10)
     parser.add_argument("--pack", action="store_true")
     parser.add_argument("--report-only", action="store_true")

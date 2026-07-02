@@ -5,6 +5,7 @@ This owns the live ONNX graph in Python source; it is a control baseline,
 not a semantic optimization.
 """
 from onnx import TensorProto, helper
+import numpy as np
 from ._exact import arr_b64, model, tensor
 
 
@@ -12,17 +13,10 @@ def build(task):
     inits = [
         tensor('red8_starts', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAA=')),
         tensor('red8_ends', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoDAAAAAAAAAAkAAAAAAAAACgAAAAAAAAA=')),
-        tensor('top_starts', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
-        tensor('top_ends', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoDAAAAAAAAAAEAAAAAAAAACgAAAAAAAAA=')),
-        tensor('bottom_starts', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAAkAAAAAAAAAAAAAAAAAAAA=')),
-        tensor('bottom_ends', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoDAAAAAAAAAAoAAAAAAAAACgAAAAAAAAA=')),
         tensor('axes_chw', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAIAAAAAAAAAAwAAAAAAAAA=')),
-        tensor('pads_output', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAUAAAAAAAAAA==')),
+        tensor('pads_output', np.array([1, 0, 21, 20], dtype=np.int64)),
         tensor('pad_axes', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAAMAAAAAAAAA')),
-        tensor('one_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoB')),
-        tensor('three_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoD')),
-        tensor('ten_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoK')),
-        tensor('channel_values', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAgMEBQYHCAkK')),
+        tensor('maroon9', np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 1], dtype=np.float32).reshape(1, 10, 1, 1)),
         tensor('powers_f', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAQAAAgEAAAABBAACAQQAAAEIAAIBCAAAAQwAAgEMAAABE')),
         tensor('powers_u16', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPHUyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEsIDEwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAIABAAIABAAIABAAIAAAAEAAg==')),
         tensor('next_powers_u16', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPHUyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEsIDEwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAQACAAQACAAQACAAAABAAIABA==')),
@@ -36,17 +30,10 @@ def build(task):
         helper.make_node('Cast', ['lower_bits'], ['left_seen'], to=9),
         helper.make_node('Cast', ['red8_f'], ['red8'], to=9),
         helper.make_node('And', ['left_seen', 'right_seen'], ['span']),
-        helper.make_node('Where', ['span', 'ten_u8', 'one_u8'], ['fill_color']),
-        helper.make_node('Slice', ['input', 'top_starts', 'top_ends', 'axes_chw'], ['top_f']),
-        helper.make_node('Cast', ['top_f'], ['top'], to=9),
-        helper.make_node('Slice', ['input', 'bottom_starts', 'bottom_ends', 'axes_chw'], ['bottom_f']),
-        helper.make_node('Cast', ['bottom_f'], ['bottom'], to=9),
-        helper.make_node('Where', ['top', 'three_u8', 'one_u8'], ['top_color']),
-        helper.make_node('Where', ['red8', 'three_u8', 'fill_color'], ['inner_color']),
-        helper.make_node('Where', ['bottom', 'three_u8', 'one_u8'], ['bottom_color']),
-        helper.make_node('Concat', ['top_color', 'inner_color', 'bottom_color'], ['color10'], axis=2),
-        helper.make_node('Pad', ['color10', 'pads_output', '', 'pad_axes'], ['color30'], mode='constant'),
-        helper.make_node('Equal', ['color30', 'channel_values'], ['output']),
+        helper.make_node('Not', ['red8'], ['not_red8']),
+        helper.make_node('And', ['span', 'not_red8'], ['maroon8']),
+        helper.make_node('Pad', ['maroon8', 'pads_output', '', 'pad_axes'], ['maroon30'], mode='constant'),
+        helper.make_node('Where', ['maroon30', 'maroon9', 'input'], ['output']),
     ]
     value_infos = [
         helper.make_tensor_value_info('red8_f', 1, [1, 1, 8, 10]),
@@ -57,15 +44,8 @@ def build(task):
         helper.make_tensor_value_info('left_seen', 9, [1, 1, 8, 10]),
         helper.make_tensor_value_info('red8', 9, [1, 1, 8, 10]),
         helper.make_tensor_value_info('span', 9, [1, 1, 8, 10]),
-        helper.make_tensor_value_info('fill_color', 2, [1, 1, 8, 10]),
-        helper.make_tensor_value_info('top_f', 1, [1, 1, 1, 10]),
-        helper.make_tensor_value_info('top', 9, [1, 1, 1, 10]),
-        helper.make_tensor_value_info('bottom_f', 1, [1, 1, 1, 10]),
-        helper.make_tensor_value_info('bottom', 9, [1, 1, 1, 10]),
-        helper.make_tensor_value_info('top_color', 2, [1, 1, 1, 10]),
-        helper.make_tensor_value_info('inner_color', 2, [1, 1, 8, 10]),
-        helper.make_tensor_value_info('bottom_color', 2, [1, 1, 1, 10]),
-        helper.make_tensor_value_info('color10', 2, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('color30', 2, [1, 1, 30, 30]),
+        helper.make_tensor_value_info('not_red8', 9, [1, 1, 8, 10]),
+        helper.make_tensor_value_info('maroon8', 9, [1, 1, 8, 10]),
+        helper.make_tensor_value_info('maroon30', 9, [1, 1, 30, 30]),
     ]
-    return model('task381_live_exact', nodes, inits, output_dtype=9, opset=18, value_infos=value_infos)
+    return model('task381_live_exact', nodes, inits, output_dtype=1, opset=18, value_infos=value_infos)

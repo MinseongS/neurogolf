@@ -54,23 +54,26 @@ def _candidate_params() -> np.ndarray:
                 if key in seen:
                     continue
                 seen.add(key)
-                rows.append([mod, length, offset, length // 2])
+                rows.append([mod, length, offset])
     return np.array(rows, dtype=np.uint8)
 
 
 def _candidate_samples(params: np.ndarray) -> np.ndarray:
     samples = []
-    for mod, length, offset, _half in params:
+    for mod, length, offset in params:
         pat = _pattern(int(mod), int(length), int(offset))
         samples.append([pat[r, c] for r, c in SAMPLE_POSITIONS])
     return np.array(samples, dtype=np.uint8)[None, :, :]
 
 
 def _sample_indices() -> np.ndarray:
-    idx = np.zeros((10, len(SAMPLE_POSITIONS), 4), dtype=np.int64)
+    # GatherND with batch_dims=2: data [1,10,30,30], indices [1,10,NS,2]
+    # selecting (r, c) within the trailing H,W dims, replicated per channel.
+    ns = len(SAMPLE_POSITIONS)
+    idx = np.zeros((1, 10, ns, 2), dtype=np.int64)
     for ch in range(10):
         for j, (r, c) in enumerate(SAMPLE_POSITIONS):
-            idx[ch, j] = [0, ch, r, c]
+            idx[0, ch, j] = [r, c]
     return idx
 
 
@@ -85,15 +88,16 @@ def build(task):
         tensor("idx_mod", np.array([0], dtype=np.int64)),
         tensor("idx_len", np.array([1], dtype=np.int64)),
         tensor("idx_offset", np.array([2], dtype=np.int64)),
-        tensor("idx_half", np.array([3], dtype=np.int64)),
-        tensor("one_f16", np.array(1.0, dtype=np.float16)),
-        tensor("channel_values", np.arange(10, dtype=np.uint8).reshape(1, 10, 1, 1)),
+        tensor("half_two", np.array(2.0, dtype=np.float16)),
+        # channel ch (0..9) lights where pattern0 == ch-1; ch0 compares 255
+        # (never matches in-grid 0..mod-1 nor off-grid sentinel 200).
+        tensor("channel_values", np.array([255, 0, 1, 2, 3, 4, 5, 6, 7, 8], dtype=np.uint8).reshape(1, 10, 1, 1)),
         tensor("pads", np.array([0, 0, 0, 0, 0, 0, 9, 9], dtype=np.int64)),
         tensor("pad_value", np.array(200, dtype=np.uint8)),
     ]
     nodes = [
-        helper.make_node("GatherND", ["input", "sample_nd_idx"], ["sample_planes"]),
-        helper.make_node("ArgMax", ["sample_planes"], ["input_sample_i64"], axis=0, keepdims=1),
+        helper.make_node("GatherND", ["input", "sample_nd_idx"], ["sample_planes"], batch_dims=2),
+        helper.make_node("ArgMax", ["sample_planes"], ["input_sample_i64"], axis=1, keepdims=1),
         helper.make_node("Cast", ["input_sample_i64"], ["input_sample_u8"], to=TensorProto.UINT8),
         helper.make_node("Equal", ["candidate_samples", "input_sample_u8"], ["matches_b"]),
         helper.make_node("Cast", ["matches_b"], ["matches_h"], to=TensorProto.FLOAT16),
@@ -103,11 +107,12 @@ def build(task):
         helper.make_node("Gather", ["selected_params_u8", "idx_mod"], ["mod_u8"], axis=1),
         helper.make_node("Gather", ["selected_params_u8", "idx_len"], ["length_u8"], axis=1),
         helper.make_node("Gather", ["selected_params_u8", "idx_offset"], ["offset_u8"], axis=1),
-        helper.make_node("Gather", ["selected_params_u8", "idx_half"], ["half_u8"], axis=1),
         helper.make_node("Cast", ["mod_u8"], ["mod"], to=TensorProto.FLOAT16),
         helper.make_node("Cast", ["length_u8"], ["length"], to=TensorProto.FLOAT16),
         helper.make_node("Cast", ["offset_u8"], ["offset"], to=TensorProto.FLOAT16),
-        helper.make_node("Cast", ["half_u8"], ["half"], to=TensorProto.FLOAT16),
+        # half = floor(length / 2)
+        helper.make_node("Div", ["length", "half_two"], ["length_half"]),
+        helper.make_node("Floor", ["length_half"], ["half"]),
         helper.make_node("Add", ["row_grid", "offset"], ["row_plus_offset"]),
         helper.make_node("Add", ["col_grid", "offset"], ["col_plus_offset"]),
         helper.make_node("Mod", ["row_plus_offset", "length"], ["row_mod"], fmod=1),
@@ -118,9 +123,8 @@ def build(task):
         helper.make_node("Mul", ["c", "c"], ["cc"]),
         helper.make_node("Add", ["rr", "cc"], ["rrcc"]),
         helper.make_node("Mod", ["rrcc", "mod"], ["pattern0"], fmod=1),
-        helper.make_node("Add", ["pattern0", "one_f16"], ["selected_labels"]),
-        helper.make_node("Cast", ["selected_labels"], ["selected_labels_u8"], to=TensorProto.UINT8),
-        helper.make_node("Pad", ["selected_labels_u8", "pads", "pad_value"], ["selected_labels_full"], mode="constant"),
-        helper.make_node("Equal", ["selected_labels_full", "channel_values"], ["output"]),
+        helper.make_node("Cast", ["pattern0"], ["pattern0_u8"], to=TensorProto.UINT8),
+        helper.make_node("Pad", ["pattern0_u8", "pads", "pad_value"], ["pattern0_full"], mode="constant"),
+        helper.make_node("Equal", ["pattern0_full", "channel_values"], ["output"]),
     ]
     return model("task017", nodes, inits, output_dtype=TensorProto.BOOL, opset=13)

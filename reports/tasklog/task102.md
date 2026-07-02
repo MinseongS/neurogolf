@@ -52,3 +52,37 @@ expanded FREE via Equal(lab, arange); this beats both a separate fill-mask+Where
 (needs 2x 30x30 planes) and a 10-channel uint8 carrier Concat. ⭐ Pad the
 colour-index with a SENTINEL (99, not 0) so off-grid cells map to all-channels-
 false under Equal, while in-grid black-bg (lab=0) correctly lights ch0.
+
+## 2026-06-30 current compressed graph re-attack
+
+Current live/source parity is stronger than the older custom best:
+
+- method `ext:franksunp7166_65`
+- stored `267/267`
+- memory `2414`, params `113`, points `17.165211892611808`
+- graph: `Slice(ch5 12x12) -> Cast(uint8) -> 4 QLinearConv ring detectors
+  for sides 3/4/5/6 -> MaxPool interior stamp -> Max -> Pad 30x30 bool ->
+  Where(red_vec, input)`
+
+This graph is already the compact version of the square-ring detector.  It uses
+one gray channel only and routes the final output through the free `Where(...,
+input)` false branch, avoiding explicit 30x30 ch0/ch5 reconstruction.
+
+Re-attack probes:
+
+| candidate | result | reason |
+|---|---|---|
+| `onnxsim` | no gain | graph already simplified |
+| exhaustive square oracle | 267/267 | confirms rule, but equivalent to per-size ring checks |
+| merge 4 QLinearConv into one padded 4-channel Conv | load/shape fail in first prototype; expected memory worse if fixed | smaller kernels produce larger valid-output grids; padding to common 6x6 requires fp32 multi-channel Conv output |
+| process 12x12 crop then Pad output | fail/worse (`7418` mem in prototype) | must preserve all 10 input channels in the crop; current full-input false branch is cheaper |
+| shrink active 12x12 slice | shape fail without broader graph rewrite | current downstream assumes 10x10 fill core padded by `[1,1,19,19]` |
+| remove any one side detector 3/4/5/6 | fails stored/bundled | every side size appears in examples |
+
+Updated floor: the current main costs are `fill30_bool` 900B, fp32 `x5_grid`
+576B, `x5_u8` 144B, and small uint8 detector/stamp planes.  Removing
+`fill30_bool` requires reconstructing/cropping the input output channels and is
+worse.  Removing the fp32 `x5_grid` would require quantizing/casting the full
+input or using fp32 Conv detectors, also worse.  A genuinely new mechanism would
+need to detect all side sizes without four separate ring detectors and without
+building a 30x30 condition plane; no such mechanism passed this probe.

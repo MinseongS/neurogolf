@@ -41,3 +41,6 @@ and the col-bands of the two same-row pixels are disjoint, reduce the row-band 2
 col-profile (ReduceMax over rows) FIRST, then split left/right by 1-D col masks — turns 4×400B
 masked-2D-plane reductions into 2×400B + tiny [1,1,1,W] tensors. Build the 2x2 output label as an
 outer product rEQ[1,1,W,1] ⊗ rowvec[1,1,1,W] (color-per-column) instead of 4 separate corner planes.
+
+## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
+mem 1510/17.63; ScatterND int64 idx machinery, all 16 scatter points semantically required; channels-first avoids 36kB transpose. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).

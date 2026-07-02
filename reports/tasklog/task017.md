@@ -73,3 +73,23 @@ net's onehot_raw [1,10,21,21]=4410B. ⭐ uint8 pad-back with channel0 compare-va
 (off-grid sentinel 200 matches no channel → background-free off-grid; channel0's
 255 never appears in-grid). ⭐ ReduceSum accepts int32 but NOT bool/uint8 (re-
 confirmed) → a bool match plane is pinned to an fp16 cast before counting.
+
+## 2026-06-30 S1 — LANDED (behaviour-preserving golf, fresh-gated)
+mem 9330→8448, params 2388→2021, pts 15.631→15.7438 (+0.113). Bundled fail=0;
+fresh 2000 candidate==incumbent (diff 0). 3 cuts: (1) GatherND batch_dims=2 shrinks
+sample-read idx [10,13,4]→[1,10,13,2] (−260 par); (2) drop stored `half` column,
+compute Floor(length/2) in-graph (−106 par); (3) drop the +1 colour-offset 21×21 fp16
+plane (−882B) by shifting channel_values to [255,0,1,…]. Floor planes (matches_h/b,
+candidate_samples, 3×882 formula planes) untouched. method ext→custom:task017.
+
+## S8 (2026-07-02) — priced FLOOR at 10469 (opus agent)
+matches_h fp16 already landed (S1); einsum-vs-plane needs [106,13,10] one-hot table = +12402
+params (break-even V<3.9, unreachable). NS<13 sample reduction OVERFITS the cache: greedy-12 =
+1 fail cached but 23 vs 11 uncached/8000 — the 13-set is the robust floor. Label epilogue
+already fold-optimal. CACHE-OVERFIT WARNING VALIDATED: cached fail understates true fail ~3×
+on fitted parameters; the uncached final gate is load-bearing.
+
+## S9 (2026-07-03) — kojimar teacher REJECTED (NS=9 overfit, fresh 38/3000 = 1.27%)
+Teacher = SAME algorithm, just NS=9 sample cells vs our robust NS=13 (+int64 castfold).
+Reproduces this tasklog's S8 warning exactly (NS<13 overfits; cached gate would
+understate ~3×). Incumbent 2/3000. No new mechanism, no headroom. Floor stands.

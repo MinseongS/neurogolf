@@ -67,3 +67,45 @@ hasHorizEndpoint): U's tips share an axis (one orientation), L's are perpendicul
 seed type, not a single worst-case; (2) drop the re-gate on the FINAL flood step — leaked
 gap-cell values are non-green and get discarded by the downstream green-gated Where chain
 (gate the classify bools by the green mask once instead).
+
+## 2026-06-29 verified uint8 QLinear neighbor-index rewrite
+
+The current live/source graph was the URAD teacher overlay (`points=14.900493`,
+`memory=24220`, `params=111`), structurally identical across public candidates.
+
+Parallel read-only analysis identified the fp32 3x3 neighbor-index Conv as an
+exact uint8 quantization target:
+
+- old: `Conv(Gf, convW) -> nb`, fp32 `1x1x20x22`, then `Cast(nb)->idx`;
+- new: `QLinearConv(Gu, ql_w) -> nb`, all scales `1.0`, zero-points `0`,
+  with the same bit weights `[[0,1,0],[8,16,2],[0,4,0]]`.
+
+Verification:
+
+- source build stored eval: `points=14.956012`, `memory=22900`, `params=117`,
+  stored `266/266`;
+- fresh side-by-side against previous live graph: `1000` eligible examples,
+  output divergence `0`, both `0` failures.
+
+Adopted as source-owned semantic compression. This is a direct instance of the
+`public_teacher_qlinear_conv_rewrite` mechanism on a local-stencil bit-index
+encoder.
+
+Follow-up cleanup reused `ql_x_scale`/`ql_x_zp` for the weight and output
+scale/zero-point inputs instead of carrying four duplicate scalar initializers.
+Stored eval is now `points=14.956185447372594`, `memory=22900`, `params=113`;
+fresh side-by-side against the previous live graph on 500 eligible examples had
+output divergence `0` and candidate failures `0`.
+
+# (appended) S8 2026-07-02 — WALK-EINSUM WIN (+0.159) ADOPTED (candE)
+14 MaxPool + 12 Mul max-propagation (~11.4KB) → TWO walk einsums on the 20×22 crop:
+sprite-type features from 4-neighbor codes (V-endpoints {17,20}, H-endpoints {18,24},
+T-junction {23,27,29,30}; 20000/20000: aitch⟺T-junction, el⟺V∧H endpoints, else you).
+Einsum1 = 8-conn reach from T seeds (8 steps); Einsum2 = chain V-end →(mid-plane constraint
+at step 10 = seedH)→ cell (20 steps) — computes reach-from-V AND component-has-H in ONE
+einsum. candE extras: strided-Slice 2-ch crop, code=32·black+16·green+neighbors → single u8
+Gather emits base value plane; green channel selected in-einsum via shared-letter sel[z].
+18500+1131 vs 22900+113 → 14.956→15.115. Fresh 2500+5000+2000 all 0/0 div0.
+Rows≠cols ⇒ two S matrices (20×20, 22×22; 884 params — params = ELEMENTS not bytes).
+fp16 einsum REJECTED (0·inf NaN risk under masking). Conservative fallback cand.py (+0.142,
+LB-proven ops only) kept in S8 scratchpad if candE ever hits a grader issue.

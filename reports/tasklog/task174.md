@@ -84,3 +84,11 @@ plane `A*Mf` instead of two `diff`+`diff^2`). Once the box colour is a scalar, t
 translate-to-origin is the task036 Gather-shift + uint8 sentinel-Pad + final Equal finish.
 Also: the canvas was a fixed 10x10 → slice to the active region and run every working plane at fp16
 (whole-geometry fp16 works under ORT_DISABLE_ALL); the lone irreducible fp32 cost is the entry Slice.
+
+## Safe-golf pass (S4, 2026-06-30)
+Bit-identical dtype narrowing: the two Gather index intermediates (`cidx` [5], `ridx2` [5])
+were produced by `Cast(to=int64)`; both feed ONLY `Gather` index inputs and hold grid
+coordinates (≤30, fit int32). Narrowed both `Cast`→int32 (`to=6`) + matching value_info.
+- **mem 7013 → 6973** (−40B), params 142 (unchanged), **pts 16.1244 → 16.1300 (+0.0056)**.
+- Gate: bundled fail=0; equivalence vs incumbent = **0 divergences / 1596** random
+  in-domain recolorings (layout preserved). Grader-safe (int32 Gather index, not *ND, not TopK).

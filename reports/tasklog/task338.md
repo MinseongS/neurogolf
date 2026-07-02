@@ -48,3 +48,33 @@ prefix/suffix-OR enclosure merges separated boxes when a gap cell happens to hav
 sides; (b) horizontal red-run-start left-scanline parity leaks rightward on solid edge rows (one
 unmatched crossing). The Hm restriction to genuine horizontal walls is exactly what makes the crossing
 count local and edge-row-safe.
+
+## 2026-06-29 — adopted uint8 red-run detector
+
+Current source replaced the remaining fp16 horizontal-wall detector:
+`Cast(red_f)->fp16; Conv([1,1,1], bias=-2); Relu; Cast->uint8`
+with the exact integer form:
+`Greater(red_f, 0.5); Cast->uint8; QLinearConv(sum3); Equal(3); Cast->uint8`.
+
+Stored eval: **15.552139910765101 pts @ mem 12015 params 666**, 267/267.
+Fresh side-by-side against previous live on 1000 eligible generator examples:
+**divergence=0, base_fail=0, candidate_fail=0**. Adopted as
+`custom:task338+qlinear-red3`.
+
+Follow-up source cleanup reused the existing `three8` scalar for the green label
+instead of carrying a duplicate `u3` initializer. Stored eval is now
+**15.552218772008784 pts @ mem 12015 params 665**; fresh side-by-side against the
+previous live on 500 eligible examples had divergence 0 and candidate_fail 0.
+
+Reusable insight: thresholded fp16 Conv+bias+Relu run detectors can become
+uint8 QLinearConv plus exact `Equal(count)` when the rule accepts one integer
+count. This removes fp16 full-canvas Conv/Relu planes without changing the
+semantic detector.
+
+## S9 (2026-07-03) — RESHAPE-lens probe: FLOOR (rule is recolor, not reshape)
+Output shape == input shape (fill hollow red-box interiors green) — Kronecker/crop levers
+N/A. 18 counted planes all load-bearing at minimal dtype: red_f 2500 fp32 entry,
+L30 900 one-hot carrier, 10×625 u8/bool chain, extent 1D 350, params 666 (Tl cumsum 625).
+Measured rejections: u8-cond Where INVALID_GRAPH; CumSum no u8/fp16 (int32=2500B worse);
+arithmetic mux ≥11 planes; free-input einsum loses (fp32 25×25 + red mask still needed);
+signed-einsum N/A (variable #rects). DO NOT re-probe without new mechanism.

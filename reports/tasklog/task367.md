@@ -117,6 +117,26 @@ WHY +0.3 IS UNREACHABLE (proven, not estimated):
 
 VERDICT: kojimar's net is at the practical floor for this rule. No structural lever crosses +0.3.
 
+## 2026-06-30 (S8) — OUTPUT-ROUTING beats the "15.00 ceiling" the verdict missed
+The +0.3 verdict above only costed the DETECTION (v9 = 10000B u8 bank, irreducible — agreed). It
+treated the OUTPUT reconstruction as fixed, but it wasn't: the live net rebuilt the 10-channel output
+with a `Concat` of THREE Pad-to-30×30 planes (v5/v11/v13 = 2700B) + a **900-param `zero_full` carrier**
++ a Split/Where re-derivation of channel 0. Because the rule is purely ADDITIVE (output = input with
+interior 0-cells → colour 4), all of that is dead weight — the FREE input already carries every
+unchanged channel. Collapsed to one routed op:
+
+    cond   = Cast(Pad(v10))            # [1,1,30,30] bool interior mask
+    output = Where(cond, e4, input)    # e4 = one-hot[1,10,1,1] @ ch4, fp32
+
+**14.90 → 15.05 (mem 18700→16200, params 5623→4733), LANDED.** Fresh-gated on 2000 generated
+instances (/tmp/arc-gen): 0 divergence vs incumbent, 0 wrong vs truth. This crosses the 15.00 the
+verdict called a hard cap (that cap assumed the output planes were mandatory). The detection v9
+(10000B) remains the floor, so further gains still need a cheaper enclosure discriminator.
+Transferable: **additive task ⇒ `Where(mask_pad, e_color, input)` onto the FREE input** — never
+Concat-reconstruct channels the input already has. (Most of 351-400 was already so-routed by the
+base; 367 was the lone Concat-rebuild holdout. 363 LOOKED additive but fresh-gate caught 3/2000
+divergences — its channel reconstruction is load-bearing — so it was rejected, not landed.)
+
 ## INSIGHT (transferable)
 ⭐ "fill box-outline interiors over line clutter" IS closed-form & exact (not a flood wall): the
 discriminator between a real box wall and a fake line-loop wall is **HORIZONTAL CORNER-TERMINATION**
@@ -128,3 +148,11 @@ border); detect clip via the in-grid mask and set the clipped side's boundary to
 ⭐ FLAT-INDEX GatherND (index [N,1] over a flattened [H*W] tensor) HALVES the int64 index cost vs a
 2-coord [N,2] index AND removes the Concat — but int64 is still mandatory (full_check rejects int32),
 so 12 per-cell 2-D reads still floor a 20x20 net near ~12.9 pts.
+
+## S8 (2026-07-02) — anchor-row crop + Pad fold (+0.070) ADOPTED, div 0
+v9 anchor rows 20→18 (generator proof: boxes never vertically clipped ⇒ rows 0/19 never fire;
+10000→9000B); output Pad folded into fill conv pads (kills 900B Pad + 400B v10 + 8p).
+14800+4725 vs 16200+4733 → 15.051→15.121. Fresh 2500 cached + 800 + 400 uncached + 3000 vs
+live onnx: all div 0. Epilogue-fold REJECTED here (u8 QLC domain; einsum entry ≥3600B vs
+1800B Where). Floors: v9 9000B (25 non-separable templates), Slice+Cast 4000B, epilogue 1800B
+(opset-11 checker rejects bool Pad).
