@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import html
 import importlib.util
+import json
 import math
 import pathlib
 import sys
@@ -34,6 +35,7 @@ from src.harness import (
 NETWORKS = ROOT / "networks"
 CUSTOM = ROOT / "src" / "custom"
 FRESH_CACHE = ROOT / "reports" / "fresh_cache"
+REPORTS = ROOT / "reports"
 
 ARC_COLORS = {
     -1: "#f3f4f6",
@@ -286,6 +288,160 @@ def graph_dot(model_or_path: Any, limit: int = 80) -> tuple[str | None, str | No
         return None, f"graph render failed: {exc}"
 
 
+def summarize_data_diff(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    changed_counts = []
+    changed_colors: Counter[int] = Counter()
+    bboxes = []
+    mostly_copy = 0
+    examples = 0
+    changed_examples = 0
+    for row in rows:
+        inp = np.asarray(row["input_grid"])
+        out = np.asarray(row["expected_grid"])
+        examples += 1
+        changed = inp != out
+        count = int(changed.sum())
+        changed_counts.append(count)
+        if count == 0:
+            mostly_copy += 1
+            continue
+        changed_examples += 1
+        if count <= 0.25 * 900:
+            mostly_copy += 1
+        vals, counts = np.unique(out[changed], return_counts=True)
+        for value, n in zip(vals, counts):
+            changed_colors[int(value)] += int(n)
+        rr, cc = np.where(changed)
+        bboxes.append((int(rr.min()), int(cc.min()), int(rr.max()), int(cc.max())))
+
+    bbox_min = None
+    bbox_max = None
+    bbox_regular = False
+    if bboxes:
+        bbox_min = (min(b[0] for b in bboxes), min(b[1] for b in bboxes))
+        bbox_max = (max(b[2] for b in bboxes), max(b[3] for b in bboxes))
+        areas = [(b[2] - b[0] + 1) * (b[3] - b[1] + 1) for b in bboxes]
+        bbox_regular = max(areas) <= 4 * max(1, min(areas))
+
+    fixed_delta = len(changed_colors) <= 2 and changed_examples > 0
+    return {
+        "examples": examples,
+        "changed_examples": changed_examples,
+        "avg_changed_cells": float(np.mean(changed_counts)) if changed_counts else 0.0,
+        "max_changed_cells": max(changed_counts) if changed_counts else 0,
+        "changed_colors": dict(changed_colors),
+        "bbox_min": bbox_min,
+        "bbox_max": bbox_max,
+        "bbox_regular": bbox_regular,
+        "mostly_copy": mostly_copy >= max(1, int(0.8 * examples)),
+        "fixed_delta": fixed_delta,
+    }
+
+
+def model_cost_anatomy(model_or_path: Any, limit: int = 12) -> tuple[dict[str, Any] | None, str | None]:
+    try:
+        if isinstance(model_or_path, (str, pathlib.Path)):
+            model = onnx.load(model_or_path)
+        else:
+            model = model_or_path
+        graph = onnx.shape_inference.infer_shapes(model, strict_mode=True).graph
+        tensor_map = {t.name: t for t in list(graph.value_info) + list(graph.output)}
+        node_by_output = {}
+        for node in graph.node:
+            for out in node.output:
+                if out:
+                    node_by_output[out] = node.op_type
+
+        rows = []
+        repeated = Counter()
+        full_label_planes = []
+        for name, value_info in tensor_map.items():
+            if name in {"input", "output"} or not value_info.type.HasField("tensor_type"):
+                continue
+            tt = value_info.type.tensor_type
+            if not tt.HasField("shape"):
+                continue
+            shape = []
+            elems = 1
+            dynamic = False
+            for dim in tt.shape.dim:
+                if not dim.HasField("dim_value"):
+                    dynamic = True
+                    break
+                shape.append(int(dim.dim_value))
+                elems *= int(dim.dim_value)
+            if dynamic:
+                continue
+            dtype = onnx.helper.tensor_dtype_to_np_dtype(tt.elem_type)
+            bytes_ = elems * np.dtype(dtype).itemsize
+            op = node_by_output.get(name, "?")
+            repeated[(op, tuple(shape), str(np.dtype(dtype)))] += bytes_
+            if len(shape) >= 2 and shape[-2:] == [30, 30] and bytes_ >= 900:
+                full_label_planes.append(name)
+            rows.append({"tensor": name, "op": op, "shape": shape, "dtype": str(np.dtype(dtype)), "bytes": int(bytes_)})
+
+        rows.sort(key=lambda r: r["bytes"], reverse=True)
+        expensive_ops = [
+            {"op": op, "shape": list(shape), "dtype": dtype, "bytes": int(bytes_)}
+            for (op, shape, dtype), bytes_ in repeated.most_common(8)
+            if bytes_ >= 900
+        ]
+        return {
+            "top_tensors": rows[:limit],
+            "expensive_ops": expensive_ops,
+            "has_full_label_plane": bool(full_label_planes),
+            "full_label_planes": full_label_planes[:8],
+            "has_repeated_planes": any(item["bytes"] >= 3600 for item in expensive_ops),
+        }, None
+    except Exception as exc:
+        return None, f"cost anatomy failed: {exc}"
+
+
+def review_questions(data_summary: dict[str, Any], cost_summary: dict[str, Any]) -> list[str]:
+    questions = []
+    if data_summary.get("mostly_copy"):
+        questions.append("Output is mostly input copy: can this be a small overlay mask instead of rebuilding a full label/output plane?")
+    if data_summary.get("fixed_delta"):
+        questions.append("Changed cells use fixed colour(s): can colour routing be fixed colour rather than copied per-cell colour?")
+    if data_summary.get("bbox_regular"):
+        questions.append("Changed cells have regular bbox-like bounds: can a row/column profile or bbox factor replace a full 30x30 mask?")
+    if cost_summary.get("has_full_label_plane"):
+        questions.append("There is a full label plane: can the full label plane be folded into final Equal/Where/Einsum output?")
+    if cost_summary.get("has_repeated_planes"):
+        questions.append("Repeated full planes are expensive: can repeated scan/flood work collapse into walk-einsum or a stacked axis?")
+    for item in cost_summary.get("expensive_ops", []):
+        if item.get("op") in {"MaxPool", "Where", "QLinearConv", "Equal", "And", "Or"}:
+            questions.append(f"Expensive {item['op']} block ({item['bytes']}B): is it solving a general case the generator never emits?")
+            break
+    if not questions:
+        questions.append("No obvious visual-cost mismatch: inspect tasklog for known wall reasons before probing.")
+    return questions
+
+
+def task_context(task_num: int) -> dict[str, Any]:
+    context: dict[str, Any] = {}
+    for path, key in [
+        (REPORTS / "color_source_scan.json", "color"),
+        (REPORTS / "walk_einsum_scan.json", "walk"),
+        (REPORTS / "rect_sweep.json", "rect"),
+    ]:
+        if not path.exists():
+            continue
+        try:
+            data = json.loads(path.read_text())
+            if key == "rect" and isinstance(data, dict):
+                row = next((r for r in data.get("rows", []) if int(r.get("task", -1)) == task_num), None)
+            elif isinstance(data, list):
+                row = next((r for r in data if int(r.get("task", -1)) == task_num), None)
+            else:
+                row = None
+            if row:
+                context[key] = row
+        except Exception:
+            continue
+    return context
+
+
 def stored_examples(task: dict) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for split in ("train", "test", "arc-gen"):
@@ -370,6 +526,21 @@ def metric_text(result: dict[str, Any]) -> tuple[str, str, str]:
         f"{params:,}" if isinstance(params, int) else "-",
         f"{points:.6f}" if isinstance(points, float) else "-",
     )
+
+
+def append_proposal(task_num: int, proposal: str, questions: list[str]) -> pathlib.Path:
+    path = REPORTS / "tasklog" / f"task{task_num:03d}.md"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    checked = "\n".join(f"- {q}" for q in questions)
+    text = (
+        "\n\n## Human review proposal\n\n"
+        f"{proposal.strip()}\n\n"
+        "Prompt context:\n"
+        f"{checked}\n"
+    )
+    with path.open("a") as f:
+        f.write(text)
+    return path
 
 
 def main() -> None:
@@ -461,6 +632,68 @@ def main() -> None:
         st.caption("Fast mode: cost is profiled from one sample; pass/fail below is only for displayed rows. Enable full official eval for exact full stored verification.")
     if eval_result.get("error"):
         st.error(eval_result["error"])
+
+    preview_rows = preview_examples(examples)
+    data_summary = summarize_data_diff(preview_rows)
+    cost_summary, cost_err = model_cost_anatomy(model_or_path)
+    context = task_context(int(task_num))
+    st.subheader("Human Review Board")
+    r1, r2, r3, r4 = st.columns(4)
+    r1.metric("changed examples", f"{data_summary['changed_examples']} / {data_summary['examples']}")
+    r2.metric("avg changed cells", f"{data_summary['avg_changed_cells']:.1f}")
+    r3.metric("output class", context.get("color", {}).get("class", "-"))
+    r4.metric("walk repeat bytes", f"{context.get('walk', {}).get('repeat_bytes', 0):,}")
+
+    with st.container(border=True):
+        left, right = st.columns([1, 1])
+        with left:
+            st.markdown("**Data signals**")
+            st.write(
+                {
+                    "mostly_copy": data_summary["mostly_copy"],
+                    "fixed_delta": data_summary["fixed_delta"],
+                    "bbox_regular": data_summary["bbox_regular"],
+                    "changed_colors": data_summary["changed_colors"],
+                    "bbox_min": data_summary["bbox_min"],
+                    "bbox_max": data_summary["bbox_max"],
+                }
+            )
+            if context:
+                st.markdown("**Scanner context**")
+                st.json(context, expanded=False)
+        with right:
+            st.markdown("**Cost anatomy**")
+            if cost_err:
+                st.warning(cost_err)
+                cost_summary = {"expensive_ops": [], "has_full_label_plane": False, "has_repeated_planes": False, "top_tensors": []}
+            assert cost_summary is not None
+            st.write(
+                {
+                    "has_full_label_plane": cost_summary["has_full_label_plane"],
+                    "has_repeated_planes": cost_summary["has_repeated_planes"],
+                    "full_label_planes": cost_summary["full_label_planes"],
+                }
+            )
+            st.dataframe(cost_summary["top_tensors"], use_container_width=True, hide_index=True)
+
+    questions = review_questions(data_summary, cost_summary or {})
+    with st.container(border=True):
+        st.markdown("**Challenge prompts**")
+        selected_questions = []
+        for idx, question in enumerate(questions):
+            if st.checkbox(question, value=False, key=f"q-{int(task_num)}-{idx}"):
+                selected_questions.append(question)
+        proposal = st.text_area(
+            "Proposal",
+            placeholder="예: output은 input copy + fixed green flood로 보임. full label plane 대신 walk-einsum 안에서 red/green mixer로 접을 수 있는지 probe.",
+            height=100,
+        )
+        if st.button("Save proposal to tasklog"):
+            if proposal.strip():
+                path = append_proposal(int(task_num), proposal, selected_questions or questions)
+                st.success(f"Saved to {path}")
+            else:
+                st.warning("Write a proposal first.")
 
     summary, summary_err = graph_summary(model_or_path)
     dot, dot_err = graph_dot(model_or_path)
