@@ -232,6 +232,60 @@ def graph_summary(model_or_path: Any, limit: int = 120) -> tuple[dict[str, Any] 
         return None, f"graph summary failed: {exc}"
 
 
+def graph_dot(model_or_path: Any, limit: int = 80) -> tuple[str | None, str | None]:
+    try:
+        if isinstance(model_or_path, (str, pathlib.Path)):
+            model = onnx.load(model_or_path)
+        else:
+            model = model_or_path
+        nodes = list(model.graph.node)
+        visible = nodes[:limit]
+        node_ids = {id(node): f"n{idx}" for idx, node in enumerate(visible)}
+        output_owner: dict[str, str] = {}
+        for node in visible:
+            node_id = node_ids[id(node)]
+            for out in node.output:
+                if out:
+                    output_owner[out] = node_id
+
+        lines = [
+            "digraph G {",
+            "rankdir=LR;",
+            "graph [bgcolor=\"transparent\", pad=\"0.15\", nodesep=\"0.35\", ranksep=\"0.45\"];",
+            "node [shape=box, style=\"rounded,filled\", color=\"#334155\", fillcolor=\"#f8fafc\", fontname=\"Menlo\", fontsize=10];",
+            "edge [color=\"#64748b\", arrowsize=0.7, fontname=\"Menlo\", fontsize=8];",
+            "input [shape=oval, fillcolor=\"#dbeafe\", label=\"input\"];",
+            "output [shape=oval, fillcolor=\"#dcfce7\", label=\"output\"];",
+        ]
+        for idx, node in enumerate(visible):
+            node_id = node_ids[id(node)]
+            raw_name = node.name or (node.output[0] if node.output else "")
+            name = raw_name if len(raw_name) <= 28 else raw_name[:25] + "..."
+            label = html.escape(f"{idx}: {node.op_type}\\n{name}")
+            lines.append(f'{node_id} [label="{label}"];')
+
+        for node in visible:
+            dst = node_ids[id(node)]
+            for inp in node.input:
+                if not inp:
+                    continue
+                src = output_owner.get(inp)
+                if src:
+                    lines.append(f"{src} -> {dst};")
+                elif inp == "input":
+                    lines.append(f"input -> {dst};")
+            for out in node.output:
+                if out == "output":
+                    lines.append(f"{dst} -> output;")
+
+        if len(nodes) > limit:
+            lines.append(f'trunc [shape=note, label="showing first {limit} of {len(nodes)} nodes"];')
+        lines.append("}")
+        return "\n".join(lines), None
+    except Exception as exc:
+        return None, f"graph render failed: {exc}"
+
+
 def stored_examples(task: dict) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for split in ("train", "test", "arc-gen"):
@@ -287,6 +341,21 @@ def run_examples(model_or_path: Any, examples: list[dict[str, Any]]) -> list[dic
                 "output_grid": output_grid,
                 "mismatches": mismatches,
                 "ok": not bool(mismatches.any()),
+            }
+        )
+    return rows
+
+
+def preview_examples(examples: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows = []
+    for example in examples:
+        input_grid, expected_grid, _ = example_to_arrays(example)
+        rows.append(
+            {
+                "source": example.get("source", "stored"),
+                "index": example.get("index", len(rows)),
+                "input_grid": input_grid,
+                "expected_grid": expected_grid,
             }
         )
     return rows
@@ -394,7 +463,8 @@ def main() -> None:
         st.error(eval_result["error"])
 
     summary, summary_err = graph_summary(model_or_path)
-    with st.expander("ONNX graph structure", expanded=False):
+    dot, dot_err = graph_dot(model_or_path)
+    with st.expander("ONNX graph structure", expanded=True):
         if summary_err:
             st.warning(summary_err)
         elif summary is not None:
@@ -412,9 +482,26 @@ def main() -> None:
             st.dataframe(summary["rows"], use_container_width=True, hide_index=True)
             if summary["truncated"]:
                 st.caption("Node list truncated for UI speed.")
+        if dot_err:
+            st.warning(dot_err)
+        elif dot:
+            st.caption("Graph view")
+            st.graphviz_chart(dot, use_container_width=True)
 
     if not run_clicked:
-        st.info("Press Build / generate outputs to run the candidate on the displayed examples.")
+        st.info("Press Build / generate outputs to run the candidate. Data preview is shown below.")
+        rows = preview_examples(examples)
+        st.caption(f"Displayed examples: {len(rows)}")
+        for row in rows:
+            label = f"{row['source']} #{row['index']}"
+            st.markdown(f"**{label}**")
+            c1, c2 = st.columns(2)
+            with c1:
+                st.caption("input")
+                render_grid(row["input_grid"], f"{label}-input")
+            with c2:
+                st.caption("expected output")
+                render_grid(row["expected_grid"], f"{label}-expected")
         return
 
     try:
@@ -428,21 +515,21 @@ def main() -> None:
 
     for row in rows:
         label = f"{row['source']} #{row['index']} - {'PASS' if row['ok'] else 'FAIL'}"
-        with st.expander(label, expanded=not row["ok"]):
-            c1, c2, c3, c4 = st.columns(4)
-            with c1:
-                st.caption("input")
-                render_grid(row["input_grid"], f"{label}-input")
-            with c2:
-                st.caption("expected")
-                render_grid(row["expected_grid"], f"{label}-expected")
-            with c3:
-                st.caption("candidate output")
-                render_grid(row["output_grid"], f"{label}-output", row["mismatches"])
-            with c4:
-                st.caption("diff")
-                diff_grid = np.where(row["mismatches"], 2, -1).astype(np.int16)
-                render_grid(diff_grid, f"{label}-diff", row["mismatches"])
+        st.markdown(f"**{label}**")
+        c1, c2, c3, c4 = st.columns(4)
+        with c1:
+            st.caption("input")
+            render_grid(row["input_grid"], f"{label}-input")
+        with c2:
+            st.caption("expected output")
+            render_grid(row["expected_grid"], f"{label}-expected")
+        with c3:
+            st.caption("candidate output")
+            render_grid(row["output_grid"], f"{label}-output", row["mismatches"])
+        with c4:
+            st.caption("diff")
+            diff_grid = np.where(row["mismatches"], 2, -1).astype(np.int16)
+            render_grid(diff_grid, f"{label}-diff", row["mismatches"])
 
 
 if __name__ == "__main__":
