@@ -12,6 +12,7 @@ import math
 import pathlib
 import sys
 import tempfile
+from collections import Counter
 from typing import Any
 
 import numpy as np
@@ -26,6 +27,7 @@ from src.harness import (
     load_task,
     run_network,
     sanitize_model,
+    score_network,
 )
 
 
@@ -136,6 +138,8 @@ def load_candidate_model(
     if mode == "source":
         return load_python_builder(CUSTOM / f"task{task_num:03d}.py", task)
     if mode == "scratch path":
+        if not cand_path.strip():
+            return None, "enter a cand.py path, or choose deployed/source"
         return load_python_builder(pathlib.Path(cand_path).expanduser(), task)
     if mode == "code editor":
         if "def build(" not in code:
@@ -161,6 +165,71 @@ def make_session(model_or_path: Any) -> tuple[onnxruntime.InferenceSession | Non
         return onnxruntime.InferenceSession(sanitized.SerializeToString(), options), None
     except Exception as exc:
         return None, f"ONNX Runtime load failed: {exc}"
+
+
+def quick_score_model(model_or_path: Any, sample_input: np.ndarray) -> dict[str, Any]:
+    """Profile one run for memory/params without verifying every stored example."""
+    result = {"memory": None, "params": None, "points": 0.0, "error": None}
+    try:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp = pathlib.Path(tmpdir)
+            if isinstance(model_or_path, (str, pathlib.Path)):
+                model = onnx.load(model_or_path)
+            else:
+                model = model_or_path
+            sanitized = sanitize_model(onnx.ModelProto().FromString(model.SerializeToString()))
+            if sanitized is None:
+                result["error"] = "sanitize failed"
+                return result
+            options = onnxruntime.SessionOptions()
+            options.enable_profiling = True
+            options.graph_optimization_level = onnxruntime.GraphOptimizationLevel.ORT_DISABLE_ALL
+            options.profile_file_prefix = str(tmp / "viewer_prof")
+            session = onnxruntime.InferenceSession(sanitized.SerializeToString(), options)
+            run_network(session, sample_input)
+            trace_path = session.end_profiling()
+            memory, params = score_network(sanitized, trace_path)
+            if memory is None or params is None:
+                result["error"] = "performance could not be measured"
+                return result
+            result["memory"] = memory
+            result["params"] = params
+            result["points"] = max(1.0, 25.0 - math.log(max(1.0, memory + params)))
+            return result
+    except Exception as exc:
+        result["error"] = f"quick score failed: {exc}"
+        return result
+
+
+def graph_summary(model_or_path: Any, limit: int = 120) -> tuple[dict[str, Any] | None, str | None]:
+    try:
+        if isinstance(model_or_path, (str, pathlib.Path)):
+            model = onnx.load(model_or_path)
+        else:
+            model = model_or_path
+        nodes = list(model.graph.node)
+        op_counts = Counter(node.op_type for node in nodes)
+        rows = []
+        for idx, node in enumerate(nodes[:limit]):
+            rows.append(
+                {
+                    "#": idx,
+                    "op": node.op_type,
+                    "name": node.name or "",
+                    "inputs": ", ".join(node.input[:4]) + (" ..." if len(node.input) > 4 else ""),
+                    "outputs": ", ".join(node.output),
+                }
+            )
+        return {
+            "nodes": len(nodes),
+            "initializers": len(model.graph.initializer) + len(model.graph.sparse_initializer),
+            "value_info": len(model.graph.value_info),
+            "op_counts": dict(op_counts.most_common()),
+            "rows": rows,
+            "truncated": len(nodes) > limit,
+        }, None
+    except Exception as exc:
+        return None, f"graph summary failed: {exc}"
 
 
 def stored_examples(task: dict) -> list[dict[str, Any]]:
@@ -223,16 +292,11 @@ def run_examples(model_or_path: Any, examples: list[dict[str, Any]]) -> list[dic
     return rows
 
 
-def metric_text(result: dict[str, Any]) -> tuple[str, str, str, str]:
+def metric_text(result: dict[str, Any]) -> tuple[str, str, str]:
     memory = result.get("memory")
     params = result.get("params")
     points = result.get("points")
-    if memory is None or params is None:
-        total = "-"
-    else:
-        total = f"{memory + params:,}"
     return (
-        f"{result.get('pass', 0)} / {result.get('fail', 0)}",
         f"{memory:,}" if isinstance(memory, int) else "-",
         f"{params:,}" if isinstance(params, int) else "-",
         f"{points:.6f}" if isinstance(points, float) else "-",
@@ -246,11 +310,36 @@ def main() -> None:
     with st.sidebar:
         st.header("Task")
         task_num = st.number_input("Task", min_value=1, max_value=400, value=187, step=1)
-        data_source = st.radio("Examples", ["stored", "fresh cache"], horizontal=True)
+        data_source = st.radio(
+            "Examples",
+            ["stored", "fresh cache"],
+            horizontal=True,
+            help="stored = bundled train/test/arc-gen examples. fresh cache = pre-generated random generator examples under reports/fresh_cache.",
+        )
         max_examples = st.slider("Rows", min_value=1, max_value=200, value=30, step=1)
         st.divider()
         st.header("Candidate")
-        mode = st.radio("Model source", ["deployed", "source", "scratch path", "code editor"])
+        mode = st.radio(
+            "Model source",
+            ["deployed", "source", "scratch path", "code editor"],
+            help="deployed = networks/taskNNN.onnx. source = src/custom/taskNNN.py build(task). scratch path = any cand.py. code editor = edit a build(task) directly here.",
+        )
+        full_eval = st.checkbox(
+            "Run full official eval",
+            value=False,
+            help="Slow: verifies all stored examples and profiles official cost. Keep off while browsing tasks.",
+        )
+        with st.expander("What do these mean?"):
+            st.markdown(
+                """
+                - **stored**: task JSON에 들어있는 bundled `train`, `test`, `arc-gen` 예제입니다.
+                - **fresh cache**: `reports/fresh_cache/taskNNN.npz`에 미리 생성해둔 랜덤 generator 예제입니다.
+                - **deployed**: 현재 제출/패킹 대상인 `networks/taskNNN.onnx`입니다.
+                - **source**: `src/custom/taskNNN.py`의 `build(task)`로 새로 만든 ONNX입니다.
+                - **scratch path**: 임시 `cand.py` 경로를 넣어 `build(task)`를 실행합니다.
+                - **code editor**: 이 UI에서 `build(task)` 코드를 직접 고쳐 실행합니다.
+                """
+            )
         cand_path = ""
         code = ""
         if mode == "scratch path":
@@ -259,7 +348,7 @@ def main() -> None:
             default_path = CUSTOM / f"task{int(task_num):03d}.py"
             default_code = default_path.read_text() if default_path.exists() else "def build(task):\n    return None\n"
             code = st.text_area("Python candidate code", default_code, height=360)
-        run_clicked = st.button("Run", type="primary")
+        run_clicked = st.button("Build / generate outputs", type="primary")
 
     task = load_task(int(task_num))
     examples = stored_examples(task)
@@ -273,25 +362,60 @@ def main() -> None:
         st.info("No examples available.")
         return
 
+    if not run_clicked and mode in {"scratch path", "code editor"}:
+        st.info("Edit the candidate, then press Run.")
+        return
+
     model_or_path, model_err = load_candidate_model(int(task_num), task, mode, cand_path, code)
     if model_err:
         st.error(model_err)
         return
 
     assert model_or_path is not None
-    eval_result = evaluate(model_or_path, task)
-    pass_fail, memory, params, points = metric_text(eval_result)
+    first_input = example_to_arrays(examples[0])[2]
+    eval_result = evaluate(model_or_path, task) if full_eval else quick_score_model(model_or_path, first_input)
+    memory, params, points = metric_text(eval_result)
     total = "-"
     if eval_result.get("memory") is not None and eval_result.get("params") is not None:
         total = f"{eval_result['memory'] + eval_result['params']:,}"
-    cols = st.columns(5)
-    cols[0].metric("pass / fail", pass_fail)
-    cols[1].metric("memory", memory)
-    cols[2].metric("params", params)
-    cols[3].metric("mem + params", total)
-    cols[4].metric("points", points)
+    cols = st.columns(4 if not full_eval else 5)
+    if full_eval:
+        cols[0].metric("official pass / fail", f"{eval_result.get('pass', 0)} / {eval_result.get('fail', 0)}")
+        metric_cols = cols[1:]
+    else:
+        metric_cols = cols
+    metric_cols[0].metric("memory", memory)
+    metric_cols[1].metric("params", params)
+    metric_cols[2].metric("mem + params", total)
+    metric_cols[3].metric("points", points)
+    if not full_eval:
+        st.caption("Fast mode: cost is profiled from one sample; pass/fail below is only for displayed rows. Enable full official eval for exact full stored verification.")
     if eval_result.get("error"):
         st.error(eval_result["error"])
+
+    summary, summary_err = graph_summary(model_or_path)
+    with st.expander("ONNX graph structure", expanded=False):
+        if summary_err:
+            st.warning(summary_err)
+        elif summary is not None:
+            s1, s2, s3 = st.columns(3)
+            s1.metric("nodes", f"{summary['nodes']:,}")
+            s2.metric("initializers", f"{summary['initializers']:,}")
+            s3.metric("value_info", f"{summary['value_info']:,}")
+            st.caption("Operator counts")
+            st.dataframe(
+                [{"op": op, "count": count} for op, count in summary["op_counts"].items()],
+                use_container_width=True,
+                hide_index=True,
+            )
+            st.caption("Node list")
+            st.dataframe(summary["rows"], use_container_width=True, hide_index=True)
+            if summary["truncated"]:
+                st.caption("Node list truncated for UI speed.")
+
+    if not run_clicked:
+        st.info("Press Build / generate outputs to run the candidate on the displayed examples.")
+        return
 
     try:
         rows = run_examples(model_or_path, examples)
