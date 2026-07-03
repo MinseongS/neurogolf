@@ -56,3 +56,14 @@ the seed channel); the background channel is maintained by copying input ch0 and
 the ring contribution. No flood-fill, no argmax, no intermediates. ⭐ Whenever a task is a
 per-seed fixed-shape stamp with an overlap-free generator guarantee, reach for conv_network
 first.
+
+## S10 (2026-07-03) — knife-edge hardening ADOPTED (±0 pts, robustness)
+Single-Conv logits sat on {0,1} grid with off-cells EXACTLY at the >0.0 decode threshold →
+any prior same-shape-Conv evaluate() in the process (ORT arena state) flipped ALL examples
+to fail (local batch totals under-counted; grader currently unaffected — LB clean).
+Fix: subtract 0.5 from W[:,:,1,1] (all 10 center taps) → in-grid logits shift −0.5
+(on ≥ +0.5, off ≤ −0.5), padded cells stay exact-0/OFF. mem 0 / params 900 UNCHANGED.
+Gates: fresh-process bundled 0-fail, dirty-process (pollutants 230,294) 0-fail vs incumbent
+267-fail positive control, fresh-2000 0/0. Backup task220_pre_s10_knifeedge.onnx.
+⭐ TRANSFERABLE: any mem=0 single-Conv net — screen max off-cell logit == 0.0 on a clean
+run; fix via center-tap (no-bias) or bias epsilon shift. task193 screened healthy (gap 1.0).

@@ -38,9 +38,10 @@ S10에서 증명된 것:
    과소평가됨 → 격리 재평가로 보정할 것. 메모리 knife-edge-conv-flip.
 
 이번 세션 작업 큐 (사용자 새 방향성이 우선):
-1. 칼끝-넷 강화 마무리: 후보 3개가 reports/harden_candidates/에 있음 (task220/230/294,
-   epsilon-bias, mem/params 불변). 게이트 미완: fresh-프로세스 + dirty-프로세스(오염 평가 후)
-   bundled fail=0 + fresh 2000 → 채택 (dirty_gate.py 동봉). private LB ~54pt 보험.
+1. task294 dirty-flip 미해결: 220/230은 epsilon 강화 채택 완료(격리+오염 게이트 통과,
+   ±0pt), 294는 −0.5 bias 후보가 fresh는 통과하나 dirty에선 여전히 전멸 — 드리프트가
+   sub-epsilon이 아님 (원인 미측정; dirty-vs-clean 출력 델타 덤프부터. 후보/게이트 =
+   reports/harden_candidates/). 무검증 채택 금지 (이 태스크의 가짜-수정 전례).
 2. kojimar/bobmyers 일일 재스캔 (S10과 동일 절차: kaggle datasets list -s neurogolf
    --sort-by updated → public_teacher_scan.py → 완화 게이트로 채택).
 3. Conv→랭킹-전용 int8 전수 스캔 (위 3번 레버).

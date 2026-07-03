@@ -61,3 +61,10 @@ per-marker shift/add army). Disjoint markers + body never collide so the label i
 just `body_colour*body + stamp`. opset-10 Equal needs int32 (float/fp16 both rejected
 by shape-inference) so the final value plane must be cast to int32 before the FREE
 output Equal — but the upstream arithmetic can all run in fp16 (half the bytes).
+
+## S10 (2026-07-03) — knife-edge hardening ADOPTED (±0 pts, robustness)
+Same phenomenon as task220 (logit grid {−.5,0,.5,1}, off-cells exactly 0.0; dirty-process
+flip = 266/266 fail). Fix: subtract 0.25 from W[:,:,1,1] center taps (min_on 0.5) →
+on ≥ +0.25 / off ≤ −0.25. mem 0 / params 900 UNCHANGED. Gates: fresh-process 0-fail,
+dirty-process 0-fail (incumbent positive control 266-fail), fresh-2000 0/0.
+Backup task230_pre_s10_knifeedge.onnx. See task220 S10 entry for the mechanism.

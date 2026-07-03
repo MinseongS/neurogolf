@@ -49,3 +49,9 @@ merging them, where the cheaper separable per-direction OR (task125 idiom) cross
 1800B uint8+bool pair to ONE 900B uint8 plane. The catch on a sub-30x30 active grid: Pad OFF-GRID
 with a SENTINEL (e.g. 99, not a valid colour) so Equal leaves those cells all-False (matching the
 all-zero target) — padding with 0 would wrongly light channel-0 across the whole off-grid border.
+
+## S10 (2026-07-03) — tasklog CORRECTION: net already resolved at 2109 mem
+Scout re-measured live net: mem 2109 / params 51 / 17.322 pts, corner-detect + bbox-fill
+(TopK(4) yellow rows → Greater/Less/And rect masks → Pad 900B → Where). The 4000-mem
+quadrant-count description above is STALE (superseded net). Only 30×30 plane = the Where
+cond (900B) = free-output-axis welded (un-croppable, S10 crop class). FLOOR at 2109.

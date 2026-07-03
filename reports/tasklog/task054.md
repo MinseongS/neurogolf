@@ -64,3 +64,9 @@ Fresh 2500+5000+1500 div 0. TRAP: train[2] = fixed 3-box validation example outs
 generator's 2-box path — box-agnostic segment spans required.
 
 ## S8 (2026-07-02, late) — select_last_index idiom ×4 (+0.014) ADOPTED, div 0
+
+## S10 (2026-07-03) — scout re-confirm: FLOOR (label-read floor + irreducible edit chain)
+Counted 20091 = labf 3600 (per-cell colour read, structural floor, measured 7 ways) +
+fidx i64 1024 (ScatterND requires int64) + 4× uint8 edit boards 3600 (S8 golf result;
+stages consumed sequentially, reduction='max' union semantics block fusion) + CumSum
+segment planes. Seeds already free-input einsum profiles. Only sub-300B micro-levers left.

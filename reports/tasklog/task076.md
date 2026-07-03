@@ -57,3 +57,9 @@ so no closed-form local conv collapses it. When a re-probe target's existing net
 1000+ node exact solver that already passes fresh and whose memory is spread across
 many medium planes (no single dominant removable plane, and the final one-hot is already
 the free output), the +0.3 lever almost certainly does not exist — re-confirm WALL fast.
+
+## S10 (2026-07-03) — scout re-confirm: correspondence WALL, FLOOR
+Full seam analysis vs playbook 14: flood already minimal uint8 MaxPool×3; detection already
+minimal dilated-Conv read; bulk cost = distributed scalar TopK-position arithmetic (588B
+candidate planes ×~12) — nothing to contract against free input; rule provably non-local
+(~48% radius-2-4 ambiguous). No single ≥300B seam. Do not re-scout without new mechanism.
