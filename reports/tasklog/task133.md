@@ -143,3 +143,5 @@ source, dual-consumed) + anchored_shape_code_grid. The tempting Where+ReduceMax�
 fold is REFUTED with data: 43.4% (8686/20000) fresh have ≥2 anchors at mag1 → contraction
 returns code×count (out-of-table); ReduceMax superset-select is load-bearing.
 border_grid_f 3600 fp32 = detection floor. NOT an unrolled loop. DO NOT re-probe.
+
+## S11 (2026-07-03) — signed-priority overlay (playbook 15) scout: KILL — output = variable-magnify (m=1..4) stamp of a data-dependent 3x3 bitmap; 4 distinct kernel_shapes cannot fold. Cost = 3600B detection + stamp working planes + 7.4KB OOD ScatterND overlay params. The one label plane was already collapsed in S8.

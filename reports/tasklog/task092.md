@@ -26,7 +26,26 @@ semantic analysis remains useful.
 | 6 | remove vertical column-map roundtrip; route `v_score TopK` directly to final ScatterElements | probe | 6610 | 152 | 0 | stored 264/265 | rejected: inactive TopK slots duplicate active columns and overwrite active vertical strokes with base values |
 
 ## Best achieved
-16.145335 @ mem 6825 params 182 — current live/source-owned exact baseline.
+16.406031 @ mem 4940 params 459 — S11 signed-channel priority overlay (adopted 2026-07-03).
+
+## S11 (2026-07-03) — ADOPTED: signed-channel priority overlay (NEW MECHANISM, playbook 15)
+Replaced the scatter compiler (3× [30,30] canvas planes, 2700B) with ONE free final einsum
+`bqr,qc,qv->bvrc` = RS[q,r]·CS[q,c]·W[q,v] writing the graph output directly.
+KEY INSIGHT: grader decodes with `(out > 0.0)` per channel (src/harness.py:218), so the
+"vertical wins at crossings" priority is LINEAR — signed weight matrix W[10,10]:
+horizontal q → e_q − e_0; vertical q → 2·e_q − 𝟙; slot 0 = background band. No [30,30]
+priority/label carrier at all. Fill is orientation-uniform: rowspan_q ⊗ colspan_q
+(between min/max occupied index per colour), spans from fp16 endpoint-moment einsums.
+Gates: bundled 265/265; fresh_verify 2000/2000 uncached, 0 divergence vs old incumbent
+(bit-identical); +5000 fresh random; 4 hand-built crossing-heavy grids.
+16.165 → 16.406 (+0.241, 6872B → 5399B). Backup: reports/retired_networks/task092_pre_s11_signedpriority.onnx.
+FLOOR NOTE: remaining cost dominated by the two [10,30] band profiles + compare
+transients (~3000B) — data-dependent 2-D interval fill floor; ≤1100B (18+) not reachable
+with this construction. ORT einsum rejects uint8/int8 operands → bands must be fp16.
+⭐TRANSFERABLE: (1) overlap/paint-order priority ⇒ signed channel matrix, deletes any
+[30,30] scalar-label/priority carrier; (2) separable axis-aligned fill ⇒ one free
+`sr,sc,sv->vrc` einsum. Cohort: 054/076/101/118/133/206/216/233/265/285/330/342/366/368/370
+(prior FLOOR verdicts there predate this mechanism — label-plane floors are re-attackable).
 
 The prior 14.866 custom source is obsolete for score, but still documents the
 separable row/column semantics.  The current best graph instead avoids

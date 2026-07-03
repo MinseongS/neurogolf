@@ -24,3 +24,19 @@ Dominant intermediate = the 3600B fp32 channel slice `ch [1,9,10,10]` — the si
 
 ## INSIGHT (transferable)
 ⭐ NEAREST-pixel-in-a-direction on a SINGLE colour-index plane = pack value into units + (distance-from-far-edge) into hundreds, then a suffix/prefix MAX selects the nearest one; recover the value by `Mod(M, base)` (fp16-exact when packed < 2048). ⭐ A SUFFIX-MAX (or prefix-max) down a column over an N-tall grid is ONE `MaxPool` with an [N,1] kernel and asymmetric pad on the far side — collapses the whole log-depth shift+Max doubling chain into a single op. ⭐ A vertical "fill from a per-colour apex down to each column's pixel" is NOT connectivity: pay one fp32 entry, collapse to an index plane, and the cross-shape vertical-gap bleed is killed for free by the `r >= apex_{nearest-below-colour}` test (the gap cell's nearest-below pixel belongs to the LOWER shape whose apex sits below it).
+
+## S11 (2026-07-03) — FLOOR CONFIRMED at 1789B (both dossier levers refuted by measurement)
+- fp16 recast of color_f [1,1,10,10] fp32 (400B): REFUTED — producer Conv is fed by the fp32
+  FREE input and ORT binds Conv output dtype to input dtype. Cast-after leaves the fp32 plane
+  counted and ADDS 200B (1930B, worse); fp16-input Conv needs an 18000B input copy; mixed-dtype
+  Conv = ORT type error. ⭐TRANSFERABLE trap: "fp16 recast" is invalid for any float plane whose
+  producer consumes the free input directly (PRODUCER_BOUND class).
+- task259 sub-900 carrier trick: REAL but NOT portable here. 259 builds the 10-ch one-hot at
+  CONTENT resolution (3×3 → [1,10,3,3] bool = 90B) and Pads bool straight to the free output
+  (bool Pad works, opset 13). Crossover rule: Equal-then-Pad costs 10·h·w vs Pad-then-Equal
+  fixed 900B → Equal-then-Pad wins iff content area < 90 cells. task041 content = 10×10 = 100
+  → 1000B, 100B WORSE. ⭐TRANSFERABLE rule for the full_label_plane_floor cohort.
+- Toggle machinery (330B: Split/XOR/OR/Concat prefix-parity) and params 59 near-minimal.
+- Control candidate (bit-identical floor reconstruction): reports/candidates/task041_signed.py,
+  fresh 2000/2000, divergence 0. Frontier-queue rank #3 was a false positive (oracle char-count
+  ⊥ output-carrier byte floor).

@@ -34,6 +34,12 @@ Score = 25 − ln(mem+params). This file is the single onboarding doc for per-ta
    ('bchw,c->h' etc.), spread-based uniformity tests, separable two-stage axis Gathers,
    single-tap valid-Conv label read (crops in-op for free), QLinearConv i32-bias folds,
    Pad-with-negative-crop. `src/custom/task209.py`.
+   S11 output-routing crossover: final one-hot emission = Equal-then-Pad (10·h·w bytes,
+   bool Pad legal) vs Pad-then-Equal (fixed 900B index carrier) → pick Equal-then-Pad iff
+   content area < 90 cells (task259 vs task041). S11 recast trap: fp16/u8 recast is INVALID
+   for a float plane whose producer consumes the fp32 FREE input directly (ORT binds output
+   dtype to input dtype; a Cast after it ADDS a plane) — PRODUCER_BOUND class, needs
+   producer-replacement surgery instead.
 8. **Moment-statistics detection**: per-colour n, Σr, Σc, Σr², Σc² from five [10]-output
    free-input einsums → O(1) counted bytes for "find the confined/small component colour".
    `src/custom/task158.py`.
@@ -61,7 +67,36 @@ Score = 25 − ln(mem+params). This file is the single onboarding doc for per-ta
     (+1.175). Candidate lever for any fixed block-upscale/tile/sublattice-read task.
     `src/custom/task108.py`.
 
+15. **Signed-channel priority overlay (S11)**: grader decodes `(out > 0.0)` per channel
+    (src/harness.py:218) ⇒ overlap/paint-order priority is LINEAR — no [30,30] label/priority
+    carrier. Each fill class q contributes fill_q(r,c)·W[q,v] with SIGNED channel vectors
+    (loser classes get suppressed negative at overlaps: horizontal q → e_q−e_0, winner
+    vertical q → (M+1)e_q−M·𝟙, M ≥ max fill multiplicity; bg = extra slot e_0). Separable
+    axis-aligned fills ride ONE free final einsum `sr,sc,sv->vrc`. Killed task092's 3-plane
+    scatter epilogue (6872→5399, +0.241; fresh 7000/7000 bit-identical). Reference:
+    `src/custom/task092.py`. FLOOR it hits: data-dependent 2-D interval fill still needs
+    [10,30] band profiles + compare transients ≈3000B (einsum rejects uint8 → fp16 operands).
+    APPLICABILITY: output = union of separable rect/segment fills with a FIXED per-class
+    overlap ordering; wins where the incumbent pays for scalar-label/priority/canvas planes.
+    S11 cohort sweep verdict: 233/285/370/133/054/366 ALL KILL (costs sit in detection
+    reads / assignment / sprite-stamp machinery, which signed-W cannot touch; sparse_scatter
+    class label ≠ separable fills). Hits so far: 092/234/335. Screen candidates by RENDERING
+    the output and checking separability + constant colour roster, not by class labels.
+    S11 COMPOSITION CONSTRAINT (task084 pricing): only ONE op writes the free output —
+    free-einsum + residual-scatter hybrids cannot compose (counted [1,10,30,30] bridge
+    = 18-36KB); the fold is ALL-OR-NOTHING. If any output component is non-separable and
+    data-dependent (e.g. A-dependent anti-diagonal), the whole fold pays a counted
+    [K,30,30] fp32 operand → ScatterElements-into-FREE-input beats it. Also:
+    ScatterElements updates are dtype-bound to data (fp32 input ⇒ fp32 updates, no recast).
+
 ## Reject-checks (priced floors — don't re-attempt without a new idea)
+- S11 Conv→int8 QLinearConv on PRODUCER_BOUND colour-index Convs: DRY WELL (0/32 net wins,
+  3 measured refutation builds at reports/candidates/task{074,080,383}_qconv.py). QLinearConv
+  needs a QUANTIZED input → free 10-ch fp32 input forces a counted 9000B uint8 copy >> any
+  single-channel output saving (≤2700B). The S10 wins (264/184/365/191) fed it ≤2-channel
+  integer planes — that's the only working shape. The per-cell colour read off the free input
+  stays floored at G²×4 fp32 (8th independent confirmation of the detection floor).
+  Full data: reports/int8_ranking_scan.{md,json}, reports/dtype_overpay_scan.{md,json}.
 - Parallel fan-out MaxPools/convs (per-size anchors) ≠ collapsible chain (task204).
 - Sub-400B uint8 conv banks are einsum-proof: einsum entry ticket = fp32 spatial output
   (1600–3600B) + step params (task204/023 — but 023 shows ROUND GOLF can still win there).

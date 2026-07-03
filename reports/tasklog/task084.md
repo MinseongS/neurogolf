@@ -14,3 +14,17 @@ masked col-0 writes into padding so the coloured col 0 is never wiped).
 **After: mem 1837 (+40), params 83 (−158), total 1920, pts 17.44.** evaluate fail 0/175;
 `fresh_verify 84 "" 1500` fail 0. ⭐ TRANSFERABLE: a param table replicated identically across the
 channel axis → store 1 channel + broadcast (params are element-count, so dedup beats the small mem add).
+
+## S11 (2026-07-03) — FLOOR CONFIRMED at 1895B; free-einsum route priced at 41172B (23x worse)
+Dossier lever (+0.85 via mech-15 bottom row + residual diagonal scatter) REFUTED by build:
+⭐TRANSFERABLE CONSTRAINT — only ONE op writes the free graph output. A hybrid
+(free einsum for the separable part + scatter for the rest) cannot compose without a
+counted [1,10,30,30] intermediate (18-36KB). Full epilogue-fold forces the A-dependent
+non-separable anti-diagonal operand to a counted [3,30,30] fp32 plane (fp32 mandatory —
+input-matching) → measured 41172/1299 = 14.34 (gates clean, kept as pricing artifact at
+reports/candidates/task084_signed.py). Incumbent ScatterElements-into-FREE-input encodes
+row=last_row−c in a [1,5,2,21] index plane — already optimal. Every scatter operand priced
+minimal: indices int32 floor, updates dtype-BOUND to fp32 data (⭐ScatterElements updates
+can never be recast when data is the free input), 5-ch/2-slot/21-col spans forced,
+data-dependent updates (invalid-col masking) can't become initializer. dtype_overpay_scan's
+084 entry (+0.458 U8 updates) = false positive by the same dtype-binding rule.

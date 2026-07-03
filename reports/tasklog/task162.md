@@ -50,3 +50,18 @@ radius (here 12 of the 5×5). ⚠️ A 5000-sample fresh check can show ZERO
 parallel-vs-sequential mismatches yet the rare overlap STILL appears in a stored
 example → always reproduce the generator's in-place scan exactly, don't trust a
 parallel approximation just because fresh-N agrees.
+
+## S11 (2026-07-03) — FLOOR CONFIRMED at 4068B; both dossier levers refuted by measurement
+- Lever 1 (occupancy fp32→u8): REFUTED — Slice preserves dtype (channel-0 crop = mandatory
+  1600B fp32; Cast-before-Slice = 9000B input copy). Occupancy floor = 2000B.
+- Lever 2 (block30 900B einsum-routed away): REFUTED — output COPIES the input field, so the
+  final einsum needs the fp32 free input as operand → fire-mask forced fp32 [.,20,20]=1600B
+  > the 900B bool it replaces. Where(block30, blue, input) is the routing floor.
+- Key mechanism insight: incumbent's fused 4x4 QLinearConv det_weight (8/9-core + −1 L-border,
+  rank 3) does detection AND row-major causal suppression in ONE 324B u8 plane. A free-input
+  einsum is rank-1 separable → computes detection but provably cannot express the rank-3
+  suppression; separate suppression ops cost ~4550B total (> incumbent).
+- ⚠️ Negative artifact worth keeping: reports/candidates/task162_signed.py is bit-identical
+  to the incumbent on 2000 fresh (0 div) and 136B cheaper, but fails original-ARC bundled
+  train#2 (real H+V hole overlap — violates the generator's unambiguity filter). Public-LB
+  fatal (bundled=LB), private-safe. Do NOT adopt under current rules.

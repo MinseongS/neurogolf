@@ -900,6 +900,43 @@
     "transformer": null
   },
   {
+    "id": "solid_marker_profile_reconstruction",
+    "title": "Replace full solid-marker channel slices with row/column profile contractions",
+    "status": "active",
+    "source_tasks": [
+      8
+    ],
+    "rationale": "Task008 removed the cyan [1,1,16,16] fp32 slice by observing that the cyan object is always a solid 2x2 marker. Two small Einsum contractions over the free input recover row and column occupancy profiles; their broadcast And reconstructs the marker mask for overlay and locator logic. Stored score improved 16.364846->16.500360 with memory 5561->4809 and params 65->104; fresh 3000/3000 passed.",
+    "applies_when": {
+      "any_ops": [
+        "Slice",
+        "ReduceMax",
+        "Cast",
+        "Where"
+      ],
+      "any_tags": [
+        "fixed_marker",
+        "solid_rectangle_marker",
+        "onehot_final_equal",
+        "move_translate"
+      ],
+      "min_memory": 1000
+    },
+    "reject_when": {
+      "any_tags": [
+        "marker_has_holes",
+        "needs_exact_marker_pixels_not_rectangle",
+        "profile_params_exceed_slice_savings"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_by_deleting_full_marker_plane",
+      "risk": "low when the marker is generator-proven solid and separable; medium when the marker may touch borders or share rows/cols with other same-colour pixels",
+      "verification": "stored eval plus fresh generation; sample generator border cases because flip/xpose can invalidate assumed crop margins"
+    },
+    "transformer": null
+  },
+  {
     "id": "walk_einsum_iteration_collapse",
     "title": "Collapse iterative flood/scan/propagation into ONE multi-operand Einsum via scaled walk counting (internal computation uncounted)",
     "status": "active",

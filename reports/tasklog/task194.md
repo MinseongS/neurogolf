@@ -41,6 +41,14 @@ intermediate). The GridSample is NOT required and NOT at floor.
 - The two 360B planes (fp32 slice + uint8 6x6) are the genuine floor; no opset-11
   op produces a sub-fp32 sample of an fp32 input, so 360B entry is hard.
 
+## S12 (2026-07-03) — attribute-form Slice/Pad param shave REJECTED
+Tried moving the tiny `Slice`/`Pad` tensors into older-opset attributes to save
+about 10 params.  `Slice` attributes are fine, but attribute-form `Pad` in
+opset 9 rejects bool and uint8 inputs under ORT/scorer:
+`Type 'tensor(uint8)' ... Pad ... is invalid`; bool fails shape inference too.
+Current opset-18 `Pad` accepts the bool block but requires pads as an input
+tensor.  No adoptable small-param shave found.
+
 ## INSIGHT (transferable)
 ⭐ A FIXED full-coverage coordinate scatter where EACH output cell reads exactly ONE
 input cell (C4/Cn rotation, arbitrary permutation, non-separable remap) is NOT a

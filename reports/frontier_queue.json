@@ -1,0 +1,7082 @@
+{
+  "meta": {
+    "target_points_at_148B": 20.002788,
+    "median_oracle_len": 233.5,
+    "n_tasks": 400,
+    "n_in_queue": 350,
+    "n_already_20plus": 50,
+    "missing_oracle": [],
+    "total_gain_to_20_available": 853.9497
+  },
+  "queue": [
+    {
+      "task": 162,
+      "points": 16.6891,
+      "mem": 4024,
+      "params": 44,
+      "cost": 4068,
+      "method": "custom:task162",
+      "gain_to_20": 3.3137,
+      "oracle_len": 119,
+      "simplicity": 1.9622,
+      "rank_score": 4.6418,
+      "classes": [
+        "c:bounded_scan",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 84,
+      "points": 17.453,
+      "mem": 1817,
+      "params": 78,
+      "cost": 1895,
+      "method": "custom:task084",
+      "gain_to_20": 2.5498,
+      "oracle_len": 73,
+      "simplicity": 3.1986,
+      "rank_score": 4.5602,
+      "classes": [
+        "c:sparse_scatter"
+      ],
+      "flags": []
+    },
+    {
+      "task": 41,
+      "points": 17.5106,
+      "mem": 1730,
+      "params": 59,
+      "cost": 1789,
+      "method": "custom:task041",
+      "gain_to_20": 2.4922,
+      "oracle_len": 73,
+      "simplicity": 3.1986,
+      "rank_score": 4.4572,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 118,
+      "points": 14.8557,
+      "mem": 24722,
+      "params": 723,
+      "cost": 25445,
+      "method": "custom:task118",
+      "gain_to_20": 5.1471,
+      "oracle_len": 357,
+      "simplicity": 0.6541,
+      "rank_score": 4.1626,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_onehot_gather",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "wall"
+      ]
+    },
+    {
+      "task": 177,
+      "points": 16.8055,
+      "mem": 3500,
+      "params": 121,
+      "cost": 3621,
+      "method": "custom:task177",
+      "gain_to_20": 3.1973,
+      "oracle_len": 138,
+      "simplicity": 1.692,
+      "rank_score": 4.159,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:roi_pool_crop",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 4,
+      "points": 16.4558,
+      "mem": 5044,
+      "params": 93,
+      "cost": 5137,
+      "method": "custom:task004",
+      "gain_to_20": 3.547,
+      "oracle_len": 182,
+      "simplicity": 1.283,
+      "rank_score": 4.0176,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "wall"
+      ]
+    },
+    {
+      "task": 377,
+      "points": 15.9807,
+      "mem": 8111,
+      "params": 150,
+      "cost": 8261,
+      "method": "custom:task377",
+      "gain_to_20": 4.0221,
+      "oracle_len": 255,
+      "simplicity": 0.9157,
+      "rank_score": 3.8488,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 29,
+      "points": 16.383,
+      "mem": 5436,
+      "params": 89,
+      "cost": 5525,
+      "method": "custom:task029",
+      "gain_to_20": 3.6198,
+      "oracle_len": 209,
+      "simplicity": 1.1172,
+      "rank_score": 3.8261,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 350,
+      "points": 15.891,
+      "mem": 9012,
+      "params": 24,
+      "cost": 9036,
+      "method": "custom:task350",
+      "gain_to_20": 4.1118,
+      "oracle_len": 272,
+      "simplicity": 0.8585,
+      "rank_score": 3.8097,
+      "classes": [
+        "c:bounded_scan",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 243,
+      "points": 16.2983,
+      "mem": 5112,
+      "params": 901,
+      "cost": 6013,
+      "method": "custom:task243",
+      "gain_to_20": 3.7045,
+      "oracle_len": 222,
+      "simplicity": 1.0518,
+      "rank_score": 3.7992,
+      "classes": [
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 338,
+      "points": 15.7252,
+      "mem": 10000,
+      "params": 666,
+      "cost": 10666,
+      "method": "custom:task338",
+      "gain_to_20": 4.2776,
+      "oracle_len": 304,
+      "simplicity": 0.7681,
+      "rank_score": 3.7489,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 398,
+      "points": 17.0418,
+      "mem": 1666,
+      "params": 1193,
+      "cost": 2859,
+      "method": "custom:task398",
+      "gain_to_20": 2.961,
+      "oracle_len": 149,
+      "simplicity": 1.5671,
+      "rank_score": 3.7067,
+      "classes": [
+        "c:direct_onehot_gather",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 233,
+      "points": 14.5884,
+      "mem": 32796,
+      "params": 446,
+      "cost": 33242,
+      "method": "custom:task233",
+      "gain_to_20": 5.4144,
+      "oracle_len": 499,
+      "simplicity": 0.4679,
+      "rank_score": 3.7037,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_onehot_gather",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 297,
+      "points": 17.7637,
+      "mem": 1350,
+      "params": 39,
+      "cost": 1389,
+      "method": "custom:task297",
+      "gain_to_20": 2.2391,
+      "oracle_len": 89,
+      "simplicity": 2.6236,
+      "rank_score": 3.6268,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 187,
+      "points": 15.9733,
+      "mem": 5000,
+      "params": 3322,
+      "cost": 8322,
+      "method": "custom:task187",
+      "gain_to_20": 4.0294,
+      "oracle_len": 292,
+      "simplicity": 0.7997,
+      "rank_score": 3.6033,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 92,
+      "points": 16.1648,
+      "mem": 6690,
+      "params": 182,
+      "cost": 6872,
+      "method": "custom:task092",
+      "gain_to_20": 3.838,
+      "oracle_len": 267,
+      "simplicity": 0.8745,
+      "rank_score": 3.5892,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 256,
+      "points": 17.2685,
+      "mem": 2223,
+      "params": 56,
+      "cost": 2279,
+      "method": "custom:task256",
+      "gain_to_20": 2.7343,
+      "oracle_len": 136,
+      "simplicity": 1.7169,
+      "rank_score": 3.5828,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 45,
+      "points": 17.5776,
+      "mem": 1050,
+      "params": 623,
+      "cost": 1673,
+      "method": "custom:task045",
+      "gain_to_20": 2.4252,
+      "oracle_len": 107,
+      "simplicity": 2.1822,
+      "rank_score": 3.5825,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 14,
+      "points": 16.6641,
+      "mem": 4088,
+      "params": 83,
+      "cost": 4171,
+      "method": "custom:task014",
+      "gain_to_20": 3.3387,
+      "oracle_len": 206,
+      "simplicity": 1.1335,
+      "rank_score": 3.5546,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 2,
+      "points": 16.1918,
+      "mem": 6100,
+      "params": 589,
+      "cost": 6689,
+      "method": "custom:task002",
+      "gain_to_20": 3.811,
+      "oracle_len": 271,
+      "simplicity": 0.8616,
+      "rank_score": 3.5375,
+      "classes": [
+        "c:direct_onehot_gather",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "wall"
+      ]
+    },
+    {
+      "task": 199,
+      "points": 17.4841,
+      "mem": 1749,
+      "params": 88,
+      "cost": 1837,
+      "method": "custom:task199",
+      "gain_to_20": 2.5187,
+      "oracle_len": 125,
+      "simplicity": 1.868,
+      "rank_score": 3.4424,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 368,
+      "points": 16.2637,
+      "mem": 6022,
+      "params": 203,
+      "cost": 6225,
+      "method": "custom:task368",
+      "gain_to_20": 3.7391,
+      "oracle_len": 277,
+      "simplicity": 0.843,
+      "rank_score": 3.433,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 69,
+      "points": 16.7282,
+      "mem": 3848,
+      "params": 64,
+      "cost": 3912,
+      "method": "custom:task069",
+      "gain_to_20": 3.2746,
+      "oracle_len": 215,
+      "simplicity": 1.086,
+      "rank_score": 3.4126,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 85,
+      "points": 16.4094,
+      "mem": 4500,
+      "params": 881,
+      "cost": 5381,
+      "method": "custom:task085",
+      "gain_to_20": 3.5934,
+      "oracle_len": 261,
+      "simplicity": 0.8946,
+      "rank_score": 3.3988,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 388,
+      "points": 17.1776,
+      "mem": 2278,
+      "params": 218,
+      "cost": 2496,
+      "method": "custom:task388",
+      "gain_to_20": 2.8252,
+      "oracle_len": 163,
+      "simplicity": 1.4325,
+      "rank_score": 3.3815,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 232,
+      "points": 17.7487,
+      "mem": 0,
+      "params": 1410,
+      "cost": 1410,
+      "method": "custom:task232",
+      "gain_to_20": 2.2541,
+      "oracle_len": 106,
+      "simplicity": 2.2028,
+      "rank_score": 3.3456,
+      "classes": [
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 17,
+      "points": 16.038,
+      "mem": 5997,
+      "params": 1804,
+      "cost": 7801,
+      "method": "custom:task017",
+      "gain_to_20": 3.9648,
+      "oracle_len": 329,
+      "simplicity": 0.7097,
+      "rank_score": 3.3402,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 10,
+      "points": 18.0246,
+      "mem": 730,
+      "params": 340,
+      "cost": 1070,
+      "method": "custom:task010",
+      "gain_to_20": 1.9782,
+      "oracle_len": 84,
+      "simplicity": 2.7798,
+      "rank_score": 3.2982,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 37,
+      "points": 16.8155,
+      "mem": 3384,
+      "params": 201,
+      "cost": 3585,
+      "method": "custom:task037",
+      "gain_to_20": 3.1873,
+      "oracle_len": 222,
+      "simplicity": 1.0518,
+      "rank_score": 3.2688,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 359,
+      "points": 16.7398,
+      "mem": 3852,
+      "params": 15,
+      "cost": 3867,
+      "method": "custom:task359",
+      "gain_to_20": 3.263,
+      "oracle_len": 236,
+      "simplicity": 0.9894,
+      "rank_score": 3.2457,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 329,
+      "points": 18.0349,
+      "mem": 1029,
+      "params": 30,
+      "cost": 1059,
+      "method": "custom:task329",
+      "gain_to_20": 1.9679,
+      "oracle_len": 86,
+      "simplicity": 2.7151,
+      "rank_score": 3.2426,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "dead_crop"
+      ]
+    },
+    {
+      "task": 132,
+      "points": 16.6839,
+      "mem": 3990,
+      "params": 99,
+      "cost": 4089,
+      "method": "custom:task132",
+      "gain_to_20": 3.3188,
+      "oracle_len": 247,
+      "simplicity": 0.9453,
+      "rank_score": 3.2269,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 267,
+      "points": 18.3588,
+      "mem": 724,
+      "params": 42,
+      "cost": 766,
+      "method": "custom:task267",
+      "gain_to_20": 1.644,
+      "oracle_len": 61,
+      "simplicity": 3.8279,
+      "rank_score": 3.2164,
+      "classes": [
+        "c:final_equal_overlay"
+      ],
+      "flags": []
+    },
+    {
+      "task": 50,
+      "points": 16.7285,
+      "mem": 3825,
+      "params": 86,
+      "cost": 3911,
+      "method": "custom:task050",
+      "gain_to_20": 3.2743,
+      "oracle_len": 243,
+      "simplicity": 0.9609,
+      "rank_score": 3.2097,
+      "classes": [
+        "c:direct_onehot_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 246,
+      "points": 17.0796,
+      "mem": 2334,
+      "params": 419,
+      "cost": 2753,
+      "method": "custom:task246",
+      "gain_to_20": 2.9232,
+      "oracle_len": 194,
+      "simplicity": 1.2036,
+      "rank_score": 3.2071,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 32,
+      "points": 18.1866,
+      "mem": 0,
+      "params": 910,
+      "cost": 910,
+      "method": "custom:task032",
+      "gain_to_20": 1.8162,
+      "oracle_len": 75,
+      "simplicity": 3.1133,
+      "rank_score": 3.2047,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 365,
+      "points": 16.7231,
+      "mem": 3808,
+      "params": 124,
+      "cost": 3932,
+      "method": "custom:task365",
+      "gain_to_20": 3.2797,
+      "oracle_len": 245,
+      "simplicity": 0.9531,
+      "rank_score": 3.2018,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 91,
+      "points": 16.9843,
+      "mem": 2853,
+      "params": 175,
+      "cost": 3028,
+      "method": "custom:task091",
+      "gain_to_20": 3.0184,
+      "oracle_len": 211,
+      "simplicity": 1.1066,
+      "rank_score": 3.1753,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 397,
+      "points": 17.0691,
+      "mem": 2582,
+      "params": 200,
+      "cost": 2782,
+      "method": "custom:task397",
+      "gain_to_20": 2.9337,
+      "oracle_len": 203,
+      "simplicity": 1.1502,
+      "rank_score": 3.1464,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 278,
+      "points": 16.3906,
+      "mem": 5436,
+      "params": 47,
+      "cost": 5483,
+      "method": "custom:task278",
+      "gain_to_20": 3.6122,
+      "oracle_len": 308,
+      "simplicity": 0.7581,
+      "rank_score": 3.1451,
+      "classes": [
+        "c:bounded_scan",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 354,
+      "points": 17.0803,
+      "mem": 2674,
+      "params": 77,
+      "cost": 2751,
+      "method": "custom:task354",
+      "gain_to_20": 2.9225,
+      "oracle_len": 204,
+      "simplicity": 1.1446,
+      "rank_score": 3.1267,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 345,
+      "points": 17.6901,
+      "mem": 1431,
+      "params": 64,
+      "cost": 1495,
+      "method": "custom:task345",
+      "gain_to_20": 2.3127,
+      "oracle_len": 128,
+      "simplicity": 1.8242,
+      "rank_score": 3.1236,
+      "classes": [
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "dead_crop"
+      ]
+    },
+    {
+      "task": 381,
+      "points": 17.4178,
+      "mem": 1908,
+      "params": 55,
+      "cost": 1963,
+      "method": "custom:task381",
+      "gain_to_20": 2.585,
+      "oracle_len": 160,
+      "simplicity": 1.4594,
+      "rank_score": 3.1228,
+      "classes": [
+        "c:direct_onehot_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 171,
+      "points": 18.1866,
+      "mem": 0,
+      "params": 910,
+      "cost": 910,
+      "method": "custom:task171",
+      "gain_to_20": 1.8162,
+      "oracle_len": 79,
+      "simplicity": 2.9557,
+      "rank_score": 3.1225,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 295,
+      "points": 17.6197,
+      "mem": 1557,
+      "params": 47,
+      "cost": 1604,
+      "method": "custom:task295",
+      "gain_to_20": 2.383,
+      "oracle_len": 138,
+      "simplicity": 1.692,
+      "rank_score": 3.0998,
+      "classes": [
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 110,
+      "points": 16.3325,
+      "mem": 264,
+      "params": 5547,
+      "cost": 5811,
+      "method": "custom:task110",
+      "gain_to_20": 3.6703,
+      "oracle_len": 329,
+      "simplicity": 0.7097,
+      "rank_score": 3.0921,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 335,
+      "points": 17.297,
+      "mem": 2106,
+      "params": 109,
+      "cost": 2215,
+      "method": "custom:task335",
+      "gain_to_20": 2.7058,
+      "oracle_len": 179,
+      "simplicity": 1.3045,
+      "rank_score": 3.0904,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "dead_crop"
+      ]
+    },
+    {
+      "task": 22,
+      "points": 17.2585,
+      "mem": 2004,
+      "params": 298,
+      "cost": 2302,
+      "method": "custom:task022",
+      "gain_to_20": 2.7443,
+      "oracle_len": 185,
+      "simplicity": 1.2622,
+      "rank_score": 3.0831,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:roi_pool_crop",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 131,
+      "points": 16.7092,
+      "mem": 3312,
+      "params": 675,
+      "cost": 3987,
+      "method": "custom:task131",
+      "gain_to_20": 3.2936,
+      "oracle_len": 268,
+      "simplicity": 0.8713,
+      "rank_score": 3.0743,
+      "classes": [
+        "c:bounded_scan",
+        "c:sparse_scatter",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 372,
+      "points": 18.4347,
+      "mem": 0,
+      "params": 710,
+      "cost": 710,
+      "method": "custom:task372",
+      "gain_to_20": 1.5681,
+      "oracle_len": 61,
+      "simplicity": 3.8279,
+      "rank_score": 3.0679,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 70,
+      "points": 16.991,
+      "mem": 2977,
+      "params": 31,
+      "cost": 3008,
+      "method": "custom:task070",
+      "gain_to_20": 3.0118,
+      "oracle_len": 228,
+      "simplicity": 1.0241,
+      "rank_score": 3.0479,
+      "classes": [
+        "c:bounded_scan",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 145,
+      "points": 15.7416,
+      "mem": 9244,
+      "params": 1248,
+      "cost": 10492,
+      "method": "custom:task145",
+      "gain_to_20": 4.2612,
+      "oracle_len": 461,
+      "simplicity": 0.5065,
+      "rank_score": 3.0326,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 237,
+      "points": 17.4499,
+      "mem": 1763,
+      "params": 138,
+      "cost": 1901,
+      "method": "custom:task237",
+      "gain_to_20": 2.5529,
+      "oracle_len": 166,
+      "simplicity": 1.4066,
+      "rank_score": 3.0278,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 275,
+      "points": 17.3936,
+      "mem": 1374,
+      "params": 637,
+      "cost": 2011,
+      "method": "custom:task275",
+      "gain_to_20": 2.6092,
+      "oracle_len": 176,
+      "simplicity": 1.3267,
+      "rank_score": 3.0053,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 396,
+      "points": 15.8248,
+      "mem": 7842,
+      "params": 1813,
+      "cost": 9655,
+      "method": "custom:task396",
+      "gain_to_20": 4.178,
+      "oracle_len": 452,
+      "simplicity": 0.5166,
+      "rank_score": 3.0029,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:roi_pool_crop",
+        "c:single_conv_qlinear",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 12,
+      "points": 17.2773,
+      "mem": 2071,
+      "params": 188,
+      "cost": 2259,
+      "method": "custom:task012",
+      "gain_to_20": 2.7255,
+      "oracle_len": 194,
+      "simplicity": 1.2036,
+      "rank_score": 2.9901,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 19,
+      "points": 17.0633,
+      "mem": 2709,
+      "params": 89,
+      "cost": 2798,
+      "method": "custom:task019",
+      "gain_to_20": 2.9394,
+      "oracle_len": 228,
+      "simplicity": 1.0241,
+      "rank_score": 2.9747,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 9,
+      "points": 16.1429,
+      "mem": 6929,
+      "params": 95,
+      "cost": 7024,
+      "method": "custom:task009",
+      "gain_to_20": 3.8599,
+      "oracle_len": 394,
+      "simplicity": 0.5926,
+      "rank_score": 2.9715,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 286,
+      "points": 14.9154,
+      "mem": 21090,
+      "params": 2881,
+      "cost": 23971,
+      "method": "custom:task286",
+      "gain_to_20": 5.0874,
+      "oracle_len": 694,
+      "simplicity": 0.3365,
+      "rank_score": 2.9509,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 310,
+      "points": 16.9023,
+      "mem": 3208,
+      "params": 79,
+      "cost": 3287,
+      "method": "custom:task310",
+      "gain_to_20": 3.1005,
+      "oracle_len": 258,
+      "simplicity": 0.905,
+      "rank_score": 2.9496,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 123,
+      "points": 17.7973,
+      "mem": 403,
+      "params": 940,
+      "cost": 1343,
+      "method": "custom:task123",
+      "gain_to_20": 2.2054,
+      "oracle_len": 131,
+      "simplicity": 1.7824,
+      "rank_score": 2.9445,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 303,
+      "points": 17.7193,
+      "mem": 1430,
+      "params": 22,
+      "cost": 1452,
+      "method": "custom:task303",
+      "gain_to_20": 2.2835,
+      "oracle_len": 142,
+      "simplicity": 1.6444,
+      "rank_score": 2.9282,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 197,
+      "points": 17.136,
+      "mem": 2586,
+      "params": 16,
+      "cost": 2602,
+      "method": "custom:task197",
+      "gain_to_20": 2.8668,
+      "oracle_len": 224,
+      "simplicity": 1.0424,
+      "rank_score": 2.927,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 348,
+      "points": 17.4525,
+      "mem": 1824,
+      "params": 72,
+      "cost": 1896,
+      "method": "custom:task348",
+      "gain_to_20": 2.5503,
+      "oracle_len": 178,
+      "simplicity": 1.3118,
+      "rank_score": 2.9209,
+      "classes": [
+        "c:final_equal_overlay",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 188,
+      "points": 18.0744,
+      "mem": 869,
+      "params": 149,
+      "cost": 1018,
+      "method": "custom:task188",
+      "gain_to_20": 1.9284,
+      "oracle_len": 103,
+      "simplicity": 2.267,
+      "rank_score": 2.9035,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 112,
+      "points": 17.519,
+      "mem": 1616,
+      "params": 158,
+      "cost": 1774,
+      "method": "custom:task112",
+      "gain_to_20": 2.4838,
+      "oracle_len": 174,
+      "simplicity": 1.342,
+      "rank_score": 2.8773,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 265,
+      "points": 16.6193,
+      "mem": 4328,
+      "params": 34,
+      "cost": 4362,
+      "method": "custom:task265",
+      "gain_to_20": 3.3835,
+      "oracle_len": 324,
+      "simplicity": 0.7207,
+      "rank_score": 2.8723,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 378,
+      "points": 16.5996,
+      "mem": 4332,
+      "params": 117,
+      "cost": 4449,
+      "method": "custom:task378",
+      "gain_to_20": 3.4032,
+      "oracle_len": 328,
+      "simplicity": 0.7119,
+      "rank_score": 2.8714,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 215,
+      "points": 18.3799,
+      "mem": 678,
+      "params": 72,
+      "cost": 750,
+      "method": "custom:task215",
+      "gain_to_20": 1.6229,
+      "oracle_len": 76,
+      "simplicity": 3.0724,
+      "rank_score": 2.8446,
+      "classes": [
+        "c:bounded_scan",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 198,
+      "points": 15.4847,
+      "mem": 13428,
+      "params": 138,
+      "cost": 13566,
+      "method": "custom:task198",
+      "gain_to_20": 4.5181,
+      "oracle_len": 595,
+      "simplicity": 0.3924,
+      "rank_score": 2.8304,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 8,
+      "points": 16.3648,
+      "mem": 5561,
+      "params": 65,
+      "cost": 5626,
+      "method": "custom:task008",
+      "gain_to_20": 3.6379,
+      "oracle_len": 390,
+      "simplicity": 0.5987,
+      "rank_score": 2.8149,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 78,
+      "points": 17.8353,
+      "mem": 1260,
+      "params": 33,
+      "cost": 1293,
+      "method": "custom:task078",
+      "gain_to_20": 2.1675,
+      "oracle_len": 139,
+      "simplicity": 1.6799,
+      "rank_score": 2.8093,
+      "classes": [
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 94,
+      "points": 17.0957,
+      "mem": 2662,
+      "params": 47,
+      "cost": 2709,
+      "method": "custom:task094",
+      "gain_to_20": 2.9071,
+      "oracle_len": 252,
+      "simplicity": 0.9266,
+      "rank_score": 2.7984,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 222,
+      "points": 16.0019,
+      "mem": 5136,
+      "params": 2952,
+      "cost": 8088,
+      "method": "custom:task222",
+      "gain_to_20": 4.0009,
+      "oracle_len": 478,
+      "simplicity": 0.4885,
+      "rank_score": 2.7963,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 74,
+      "points": 15.8895,
+      "mem": 9000,
+      "params": 50,
+      "cost": 9050,
+      "method": "custom:task074",
+      "gain_to_20": 4.1133,
+      "oracle_len": 512,
+      "simplicity": 0.4561,
+      "rank_score": 2.7778,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 30,
+      "points": 17.2184,
+      "mem": 2248,
+      "params": 148,
+      "cost": 2396,
+      "method": "custom:task030",
+      "gain_to_20": 2.7843,
+      "oracle_len": 236,
+      "simplicity": 0.9894,
+      "rank_score": 2.7696,
+      "classes": [
+        "c:bounded_scan",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 107,
+      "points": 16.6866,
+      "mem": 2924,
+      "params": 1154,
+      "cost": 4078,
+      "method": "custom:task107",
+      "gain_to_20": 3.3161,
+      "oracle_len": 335,
+      "simplicity": 0.697,
+      "rank_score": 2.7686,
+      "classes": [
+        "c:direct_onehot_gather",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 194,
+      "points": 18.1446,
+      "mem": 900,
+      "params": 49,
+      "cost": 949,
+      "method": "custom:task194",
+      "gain_to_20": 1.8582,
+      "oracle_len": 106,
+      "simplicity": 2.2028,
+      "rank_score": 2.7579,
+      "classes": [
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 325,
+      "points": 17.3347,
+      "mem": 2010,
+      "params": 123,
+      "cost": 2133,
+      "method": "custom:task325",
+      "gain_to_20": 2.6681,
+      "oracle_len": 219,
+      "simplicity": 1.0662,
+      "rank_score": 2.755,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 217,
+      "points": 17.707,
+      "mem": 1429,
+      "params": 41,
+      "cost": 1470,
+      "method": "custom:task217",
+      "gain_to_20": 2.2958,
+      "oracle_len": 168,
+      "simplicity": 1.3899,
+      "rank_score": 2.7066,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 224,
+      "points": 17.0516,
+      "mem": 2460,
+      "params": 371,
+      "cost": 2831,
+      "method": "custom:task224",
+      "gain_to_20": 2.9512,
+      "oracle_len": 278,
+      "simplicity": 0.8399,
+      "rank_score": 2.7047,
+      "classes": [
+        "c:bounded_scan",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 55,
+      "points": 16.9634,
+      "mem": 3030,
+      "params": 62,
+      "cost": 3092,
+      "method": "custom:task055",
+      "gain_to_20": 3.0394,
+      "oracle_len": 303,
+      "simplicity": 0.7706,
+      "rank_score": 2.6681,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 114,
+      "points": 18.1976,
+      "mem": 0,
+      "params": 900,
+      "cost": 900,
+      "method": "custom:task114",
+      "gain_to_20": 1.8052,
+      "oracle_len": 107,
+      "simplicity": 2.1822,
+      "rank_score": 2.6667,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 204,
+      "points": 15.7667,
+      "mem": 9780,
+      "params": 452,
+      "cost": 10232,
+      "method": "custom:task204",
+      "gain_to_20": 4.2361,
+      "oracle_len": 591,
+      "simplicity": 0.3951,
+      "rank_score": 2.6626,
+      "classes": [
+        "c:bounded_scan",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 11,
+      "points": 17.3996,
+      "mem": 1836,
+      "params": 163,
+      "cost": 1999,
+      "method": "custom:task011",
+      "gain_to_20": 2.6032,
+      "oracle_len": 225,
+      "simplicity": 1.0378,
+      "rank_score": 2.6519,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 293,
+      "points": 17.8392,
+      "mem": 1247,
+      "params": 41,
+      "cost": 1288,
+      "method": "custom:task293",
+      "gain_to_20": 2.1636,
+      "oracle_len": 156,
+      "simplicity": 1.4968,
+      "rank_score": 2.6471,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 289,
+      "points": 18.3907,
+      "mem": 618,
+      "params": 124,
+      "cost": 742,
+      "method": "custom:task289",
+      "gain_to_20": 1.6121,
+      "oracle_len": 89,
+      "simplicity": 2.6236,
+      "rank_score": 2.6113,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": [
+        "dead_crop"
+      ]
+    },
+    {
+      "task": 75,
+      "points": 17.6955,
+      "mem": 1326,
+      "params": 161,
+      "cost": 1487,
+      "method": "custom:task075",
+      "gain_to_20": 2.3073,
+      "oracle_len": 184,
+      "simplicity": 1.269,
+      "rank_score": 2.5992,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "dead_crop"
+      ]
+    },
+    {
+      "task": 323,
+      "points": 17.3143,
+      "mem": 1521,
+      "params": 656,
+      "cost": 2177,
+      "method": "custom:task323",
+      "gain_to_20": 2.6885,
+      "oracle_len": 250,
+      "simplicity": 0.934,
+      "rank_score": 2.5983,
+      "classes": [
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 269,
+      "points": 18.4361,
+      "mem": 685,
+      "params": 24,
+      "cost": 709,
+      "method": "custom:task269",
+      "gain_to_20": 1.5666,
+      "oracle_len": 86,
+      "simplicity": 2.7151,
+      "rank_score": 2.5815,
+      "classes": [
+        "c:roi_pool_crop",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 212,
+      "points": 17.2336,
+      "mem": 2178,
+      "params": 182,
+      "cost": 2360,
+      "method": "custom:task212",
+      "gain_to_20": 2.7692,
+      "oracle_len": 271,
+      "simplicity": 0.8616,
+      "rank_score": 2.5705,
+      "classes": [
+        "c:bounded_scan",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 287,
+      "points": 17.4021,
+      "mem": 1699,
+      "params": 295,
+      "cost": 1994,
+      "method": "custom:task287",
+      "gain_to_20": 2.6007,
+      "oracle_len": 241,
+      "simplicity": 0.9689,
+      "rank_score": 2.5599,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 141,
+      "points": 17.6835,
+      "mem": 1404,
+      "params": 101,
+      "cost": 1505,
+      "method": "custom:task141",
+      "gain_to_20": 2.3193,
+      "oracle_len": 199,
+      "simplicity": 1.1734,
+      "rank_score": 2.5124,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 163,
+      "points": 17.5061,
+      "mem": 1655,
+      "params": 142,
+      "cost": 1797,
+      "method": "custom:task163",
+      "gain_to_20": 2.4967,
+      "oracle_len": 231,
+      "simplicity": 1.0108,
+      "rank_score": 2.5101,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 115,
+      "points": 18.0501,
+      "mem": 980,
+      "params": 63,
+      "cost": 1043,
+      "method": "custom:task115",
+      "gain_to_20": 1.9526,
+      "oracle_len": 142,
+      "simplicity": 1.6444,
+      "rank_score": 2.5039,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 63,
+      "points": 17.3936,
+      "mem": 1728,
+      "params": 283,
+      "cost": 2011,
+      "method": "custom:task063",
+      "gain_to_20": 2.6092,
+      "oracle_len": 256,
+      "simplicity": 0.9121,
+      "rank_score": 2.4919,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 90,
+      "points": 16.9699,
+      "mem": 2990,
+      "params": 82,
+      "cost": 3072,
+      "method": "custom:task090",
+      "gain_to_20": 3.0329,
+      "oracle_len": 347,
+      "simplicity": 0.6729,
+      "rank_score": 2.4879,
+      "classes": [
+        "c:bounded_scan",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 60,
+      "points": 18.0823,
+      "mem": 0,
+      "params": 1010,
+      "cost": 1010,
+      "method": "custom:task060",
+      "gain_to_20": 1.9205,
+      "oracle_len": 140,
+      "simplicity": 1.6679,
+      "rank_score": 2.4802,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 196,
+      "points": 16.5798,
+      "mem": 4500,
+      "params": 38,
+      "cost": 4538,
+      "method": "custom:task196",
+      "gain_to_20": 3.423,
+      "oracle_len": 448,
+      "simplicity": 0.5212,
+      "rank_score": 2.4712,
+      "classes": [
+        "c:bounded_scan",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 251,
+      "points": 16.9791,
+      "mem": 2772,
+      "params": 272,
+      "cost": 3044,
+      "method": "custom:task251",
+      "gain_to_20": 3.0237,
+      "oracle_len": 350,
+      "simplicity": 0.6671,
+      "rank_score": 2.4697,
+      "classes": [
+        "c:bounded_scan",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 374,
+      "points": 17.2576,
+      "mem": 2262,
+      "params": 42,
+      "cost": 2304,
+      "method": "custom:task374",
+      "gain_to_20": 2.7452,
+      "oracle_len": 292,
+      "simplicity": 0.7997,
+      "rank_score": 2.4548,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 327,
+      "points": 18.2189,
+      "mem": 810,
+      "params": 71,
+      "cost": 881,
+      "method": "custom:task327",
+      "gain_to_20": 1.7838,
+      "oracle_len": 126,
+      "simplicity": 1.8532,
+      "rank_score": 2.4284,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 190,
+      "points": 17.1652,
+      "mem": 2280,
+      "params": 247,
+      "cost": 2527,
+      "method": "custom:task190",
+      "gain_to_20": 2.8376,
+      "oracle_len": 320,
+      "simplicity": 0.7297,
+      "rank_score": 2.4239,
+      "classes": [
+        "c:bounded_scan",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 184,
+      "points": 17.2155,
+      "mem": 2340,
+      "params": 63,
+      "cost": 2403,
+      "method": "custom:task184",
+      "gain_to_20": 2.7873,
+      "oracle_len": 312,
+      "simplicity": 0.7484,
+      "rank_score": 2.4113,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 151,
+      "points": 18.1976,
+      "mem": 0,
+      "params": 900,
+      "cost": 900,
+      "method": "custom:task151",
+      "gain_to_20": 1.8052,
+      "oracle_len": 131,
+      "simplicity": 1.7824,
+      "rank_score": 2.4101,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 83,
+      "points": 18.9597,
+      "mem": 0,
+      "params": 420,
+      "cost": 420,
+      "method": "custom:task083",
+      "gain_to_20": 1.043,
+      "oracle_len": 44,
+      "simplicity": 5.3068,
+      "rank_score": 2.4028,
+      "classes": [
+        "c:bounded_scan",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 226,
+      "points": 17.6018,
+      "mem": 1613,
+      "params": 20,
+      "cost": 1633,
+      "method": "custom:task226",
+      "gain_to_20": 2.401,
+      "oracle_len": 236,
+      "simplicity": 0.9894,
+      "rank_score": 2.3882,
+      "classes": [
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 304,
+      "points": 17.7269,
+      "mem": 1404,
+      "params": 37,
+      "cost": 1441,
+      "method": "custom:task304",
+      "gain_to_20": 2.2759,
+      "oracle_len": 214,
+      "simplicity": 1.0911,
+      "rank_score": 2.3773,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 5,
+      "points": 16.1633,
+      "mem": 6392,
+      "params": 490,
+      "cost": 6882,
+      "method": "custom:task005",
+      "gain_to_20": 3.8395,
+      "oracle_len": 610,
+      "simplicity": 0.3828,
+      "rank_score": 2.3755,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 183,
+      "points": 17.8852,
+      "mem": 1008,
+      "params": 222,
+      "cost": 1230,
+      "method": "custom:task183",
+      "gain_to_20": 2.1176,
+      "oracle_len": 189,
+      "simplicity": 1.2354,
+      "rank_score": 2.3537,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 33,
+      "points": 17.5982,
+      "mem": 1606,
+      "params": 33,
+      "cost": 1639,
+      "method": "custom:task033",
+      "gain_to_20": 2.4046,
+      "oracle_len": 244,
+      "simplicity": 0.957,
+      "rank_score": 2.3523,
+      "classes": [
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 271,
+      "points": 17.9208,
+      "mem": 1141,
+      "params": 46,
+      "cost": 1187,
+      "method": "custom:task271",
+      "gain_to_20": 2.082,
+      "oracle_len": 183,
+      "simplicity": 1.276,
+      "rank_score": 2.3518,
+      "classes": [
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 64,
+      "points": 15.7911,
+      "mem": 9852,
+      "params": 134,
+      "cost": 9986,
+      "method": "custom:task064",
+      "gain_to_20": 4.2117,
+      "oracle_len": 752,
+      "simplicity": 0.3105,
+      "rank_score": 2.3469,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 363,
+      "points": 16.6728,
+      "mem": 3839,
+      "params": 296,
+      "cost": 4135,
+      "method": "custom:task363",
+      "gain_to_20": 3.33,
+      "oracle_len": 476,
+      "simplicity": 0.4905,
+      "rank_score": 2.3323,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 201,
+      "points": 16.8815,
+      "mem": 3202,
+      "params": 154,
+      "cost": 3356,
+      "method": "custom:task201",
+      "gain_to_20": 3.1213,
+      "oracle_len": 423,
+      "simplicity": 0.552,
+      "rank_score": 2.319,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 43,
+      "points": 18.3229,
+      "mem": 588,
+      "params": 206,
+      "cost": 794,
+      "method": "custom:task043",
+      "gain_to_20": 1.6799,
+      "oracle_len": 123,
+      "simplicity": 1.8984,
+      "rank_score": 2.3146,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": [
+        "dead_crop"
+      ]
+    },
+    {
+      "task": 57,
+      "points": 18.4957,
+      "mem": 638,
+      "params": 30,
+      "cost": 668,
+      "method": "custom:task057",
+      "gain_to_20": 1.5071,
+      "oracle_len": 99,
+      "simplicity": 2.3586,
+      "rank_score": 2.3145,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 161,
+      "points": 17.1483,
+      "mem": 2471,
+      "params": 99,
+      "cost": 2570,
+      "method": "custom:task161",
+      "gain_to_20": 2.8544,
+      "oracle_len": 362,
+      "simplicity": 0.645,
+      "rank_score": 2.2925,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 193,
+      "points": 18.1866,
+      "mem": 0,
+      "params": 910,
+      "cost": 910,
+      "method": "custom:task193",
+      "gain_to_20": 1.8162,
+      "oracle_len": 147,
+      "simplicity": 1.5884,
+      "rank_score": 2.2891,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 36,
+      "points": 17.3143,
+      "mem": 2140,
+      "params": 37,
+      "cost": 2177,
+      "method": "custom:task036",
+      "gain_to_20": 2.6885,
+      "oracle_len": 324,
+      "simplicity": 0.7207,
+      "rank_score": 2.2823,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 346,
+      "points": 17.8659,
+      "mem": 1224,
+      "params": 30,
+      "cost": 1254,
+      "method": "custom:task346",
+      "gain_to_20": 2.1369,
+      "oracle_len": 208,
+      "simplicity": 1.1226,
+      "rank_score": 2.2641,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 216,
+      "points": 15.9335,
+      "mem": 8584,
+      "params": 76,
+      "cost": 8660,
+      "method": "custom:task216",
+      "gain_to_20": 4.0693,
+      "oracle_len": 762,
+      "simplicity": 0.3064,
+      "rank_score": 2.2526,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_onehot_gather",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 136,
+      "points": 17.8991,
+      "mem": 1179,
+      "params": 34,
+      "cost": 1213,
+      "method": "custom:task136",
+      "gain_to_20": 2.1036,
+      "oracle_len": 207,
+      "simplicity": 1.128,
+      "rank_score": 2.2342,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 294,
+      "points": 18.1866,
+      "mem": 0,
+      "params": 910,
+      "cost": 910,
+      "method": "custom:task294",
+      "gain_to_20": 1.8162,
+      "oracle_len": 159,
+      "simplicity": 1.4686,
+      "rank_score": 2.201,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:mem0_param_game"
+      ],
+      "flags": [
+        "knife_edge"
+      ]
+    },
+    {
+      "task": 292,
+      "points": 18.927,
+      "mem": 252,
+      "params": 182,
+      "cost": 434,
+      "method": "custom:task292",
+      "gain_to_20": 1.0758,
+      "oracle_len": 56,
+      "simplicity": 4.1696,
+      "rank_score": 2.1968,
+      "classes": [
+        "c:sparse_scatter",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 344,
+      "points": 18.1866,
+      "mem": 0,
+      "params": 910,
+      "cost": 910,
+      "method": "custom:task344",
+      "gain_to_20": 1.8162,
+      "oracle_len": 160,
+      "simplicity": 1.4594,
+      "rank_score": 2.1941,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 320,
+      "points": 18.3536,
+      "mem": 448,
+      "params": 322,
+      "cost": 770,
+      "method": "custom:task320",
+      "gain_to_20": 1.6492,
+      "oracle_len": 132,
+      "simplicity": 1.7689,
+      "rank_score": 2.1934,
+      "classes": [
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 31,
+      "points": 18.4662,
+      "mem": 578,
+      "params": 110,
+      "cost": 688,
+      "method": "custom:task031",
+      "gain_to_20": 1.5366,
+      "oracle_len": 115,
+      "simplicity": 2.0304,
+      "rank_score": 2.1895,
+      "classes": [
+        "c:bounded_scan",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 331,
+      "points": 18.1866,
+      "mem": 0,
+      "params": 910,
+      "cost": 910,
+      "method": "custom:task331",
+      "gain_to_20": 1.8162,
+      "oracle_len": 161,
+      "simplicity": 1.4503,
+      "rank_score": 2.1873,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 192,
+      "points": 16.1469,
+      "mem": 5745,
+      "params": 1251,
+      "cost": 6996,
+      "method": "custom:task192",
+      "gain_to_20": 3.8559,
+      "oracle_len": 735,
+      "simplicity": 0.3177,
+      "rank_score": 2.1733,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 214,
+      "points": 18.3575,
+      "mem": 726,
+      "params": 41,
+      "cost": 767,
+      "method": "custom:task214",
+      "gain_to_20": 1.6453,
+      "oracle_len": 134,
+      "simplicity": 1.7425,
+      "rank_score": 2.1718,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 342,
+      "points": 17.6317,
+      "mem": 1510,
+      "params": 75,
+      "cost": 1585,
+      "method": "custom:task342",
+      "gain_to_20": 2.3711,
+      "oracle_len": 279,
+      "simplicity": 0.8369,
+      "rank_score": 2.1692,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 98,
+      "points": 18.1976,
+      "mem": 0,
+      "params": 900,
+      "cost": 900,
+      "method": "custom:task098",
+      "gain_to_20": 1.8052,
+      "oracle_len": 163,
+      "simplicity": 1.4325,
+      "rank_score": 2.1606,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 369,
+      "points": 17.6229,
+      "mem": 1300,
+      "params": 299,
+      "cost": 1599,
+      "method": "custom:task369",
+      "gain_to_20": 2.3799,
+      "oracle_len": 284,
+      "simplicity": 0.8222,
+      "rank_score": 2.158,
+      "classes": [
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 259,
+      "points": 18.1921,
+      "mem": 853,
+      "params": 52,
+      "cost": 905,
+      "method": "custom:task259",
+      "gain_to_20": 1.8107,
+      "oracle_len": 168,
+      "simplicity": 1.3899,
+      "rank_score": 2.1347,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 301,
+      "points": 17.9603,
+      "mem": 1077,
+      "params": 64,
+      "cost": 1141,
+      "method": "custom:task301",
+      "gain_to_20": 2.0424,
+      "oracle_len": 215,
+      "simplicity": 1.086,
+      "rank_score": 2.1285,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 239,
+      "points": 18.1467,
+      "mem": 897,
+      "params": 50,
+      "cost": 947,
+      "method": "custom:task239",
+      "gain_to_20": 1.8561,
+      "oracle_len": 178,
+      "simplicity": 1.3118,
+      "rank_score": 2.1258,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "dead_crop"
+      ]
+    },
+    {
+      "task": 349,
+      "points": 15.2894,
+      "mem": 15300,
+      "params": 1191,
+      "cost": 16491,
+      "method": "custom:task349",
+      "gain_to_20": 4.7134,
+      "oracle_len": 1164,
+      "simplicity": 0.2006,
+      "rank_score": 2.111,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 356,
+      "points": 17.8154,
+      "mem": 1300,
+      "params": 19,
+      "cost": 1319,
+      "method": "custom:task356",
+      "gain_to_20": 2.1874,
+      "oracle_len": 251,
+      "simplicity": 0.9303,
+      "rank_score": 2.1098,
+      "classes": [
+        "c:bounded_scan",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 174,
+      "points": 16.13,
+      "mem": 6973,
+      "params": 142,
+      "cost": 7115,
+      "method": "custom:task174",
+      "gain_to_20": 3.8727,
+      "oracle_len": 789,
+      "simplicity": 0.2959,
+      "rank_score": 2.1068,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_onehot_gather",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 364,
+      "points": 15.1151,
+      "mem": 18500,
+      "params": 1131,
+      "cost": 19631,
+      "method": "custom:task364",
+      "gain_to_20": 4.8877,
+      "oracle_len": 1276,
+      "simplicity": 0.183,
+      "rank_score": 2.0908,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 244,
+      "points": 17.9276,
+      "mem": 1076,
+      "params": 103,
+      "cost": 1179,
+      "method": "custom:task244",
+      "gain_to_20": 2.0752,
+      "oracle_len": 231,
+      "simplicity": 1.0108,
+      "rank_score": 2.0864,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:roi_pool_crop",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 106,
+      "points": 18.5606,
+      "mem": 452,
+      "params": 174,
+      "cost": 626,
+      "method": "custom:task106",
+      "gain_to_20": 1.4421,
+      "oracle_len": 112,
+      "simplicity": 2.0848,
+      "rank_score": 2.0823,
+      "classes": [
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather"
+      ],
+      "flags": []
+    },
+    {
+      "task": 254,
+      "points": 17.9988,
+      "mem": 1079,
+      "params": 19,
+      "cost": 1098,
+      "method": "custom:task254",
+      "gain_to_20": 2.004,
+      "oracle_len": 217,
+      "simplicity": 1.076,
+      "rank_score": 2.0788,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 332,
+      "points": 18.6667,
+      "mem": 429,
+      "params": 134,
+      "cost": 563,
+      "method": "custom:task332",
+      "gain_to_20": 1.3361,
+      "oracle_len": 97,
+      "simplicity": 2.4072,
+      "rank_score": 2.0729,
+      "classes": [
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 330,
+      "points": 16.9863,
+      "mem": 2800,
+      "params": 222,
+      "cost": 3022,
+      "method": "custom:task330",
+      "gain_to_20": 3.0165,
+      "oracle_len": 495,
+      "simplicity": 0.4717,
+      "rank_score": 2.0718,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 220,
+      "points": 18.1976,
+      "mem": 0,
+      "params": 900,
+      "cost": 900,
+      "method": "ext:franksunp7166_65",
+      "gain_to_20": 1.8052,
+      "oracle_len": 178,
+      "simplicity": 1.3118,
+      "rank_score": 2.0675,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:mem0_param_game"
+      ],
+      "flags": [
+        "knife_edge"
+      ]
+    },
+    {
+      "task": 20,
+      "points": 17.6696,
+      "mem": 1356,
+      "params": 170,
+      "cost": 1526,
+      "method": "custom:task020",
+      "gain_to_20": 2.3332,
+      "oracle_len": 300,
+      "simplicity": 0.7783,
+      "rank_score": 2.0584,
+      "classes": [
+        "c:bounded_scan",
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 111,
+      "points": 18.7177,
+      "mem": 528,
+      "params": 7,
+      "cost": 535,
+      "method": "custom:task111",
+      "gain_to_20": 1.2851,
+      "oracle_len": 92,
+      "simplicity": 2.538,
+      "rank_score": 2.0473,
+      "classes": [
+        "c:bounded_scan",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 245,
+      "points": 17.0832,
+      "mem": 2604,
+      "params": 139,
+      "cost": 2743,
+      "method": "custom:task245",
+      "gain_to_20": 2.9196,
+      "oracle_len": 477,
+      "simplicity": 0.4895,
+      "rank_score": 2.0427,
+      "classes": [
+        "c:bounded_scan",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 200,
+      "points": 18.372,
+      "mem": 570,
+      "params": 186,
+      "cost": 756,
+      "method": "custom:task200",
+      "gain_to_20": 1.6308,
+      "oracle_len": 149,
+      "simplicity": 1.5671,
+      "rank_score": 2.0415,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 61,
+      "points": 17.5806,
+      "mem": 1633,
+      "params": 35,
+      "cost": 1668,
+      "method": "custom:task061",
+      "gain_to_20": 2.4222,
+      "oracle_len": 329,
+      "simplicity": 0.7097,
+      "rank_score": 2.0406,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 213,
+      "points": 17.4599,
+      "mem": 1833,
+      "params": 49,
+      "cost": 1882,
+      "method": "custom:task213",
+      "gain_to_20": 2.5429,
+      "oracle_len": 363,
+      "simplicity": 0.6433,
+      "rank_score": 2.0395,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 169,
+      "points": 17.5794,
+      "mem": 1500,
+      "params": 170,
+      "cost": 1670,
+      "method": "custom:task169",
+      "gain_to_20": 2.4234,
+      "oracle_len": 331,
+      "simplicity": 0.7054,
+      "rank_score": 2.0354,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 47,
+      "points": 18.2407,
+      "mem": 826,
+      "params": 36,
+      "cost": 862,
+      "method": "custom:task047",
+      "gain_to_20": 1.762,
+      "oracle_len": 177,
+      "simplicity": 1.3192,
+      "rank_score": 2.0238,
+      "classes": [
+        "c:bounded_scan",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 18,
+      "points": 14.6587,
+      "mem": 29807,
+      "params": 1180,
+      "cost": 30987,
+      "method": "custom:task018",
+      "gain_to_20": 5.3441,
+      "oracle_len": 1634,
+      "simplicity": 0.1429,
+      "rank_score": 2.0202,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "wall"
+      ]
+    },
+    {
+      "task": 88,
+      "points": 17.4652,
+      "mem": 1791,
+      "params": 81,
+      "cost": 1872,
+      "method": "custom:task088",
+      "gain_to_20": 2.5376,
+      "oracle_len": 369,
+      "simplicity": 0.6328,
+      "rank_score": 2.0186,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 51,
+      "points": 17.5028,
+      "mem": 1702,
+      "params": 101,
+      "cost": 1803,
+      "method": "custom:task051",
+      "gain_to_20": 2.5,
+      "oracle_len": 361,
+      "simplicity": 0.6468,
+      "rank_score": 2.0106,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 400,
+      "points": 17.4684,
+      "mem": 1800,
+      "params": 66,
+      "cost": 1866,
+      "method": "custom:task400",
+      "gain_to_20": 2.5343,
+      "oracle_len": 371,
+      "simplicity": 0.6294,
+      "rank_score": 2.0106,
+      "classes": [
+        "c:bounded_scan",
+        "c:roi_pool_crop",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 367,
+      "points": 15.1205,
+      "mem": 14800,
+      "params": 4725,
+      "cost": 19525,
+      "method": "custom:task367",
+      "gain_to_20": 4.8822,
+      "oracle_len": 1389,
+      "simplicity": 0.1681,
+      "rank_score": 2.0018,
+      "classes": [
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 15,
+      "points": 18.1976,
+      "mem": 0,
+      "params": 900,
+      "cost": 900,
+      "method": "custom:task015",
+      "gain_to_20": 1.8052,
+      "oracle_len": 191,
+      "simplicity": 1.2225,
+      "rank_score": 1.9959,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 23,
+      "points": 16.2341,
+      "mem": 6163,
+      "params": 249,
+      "cost": 6412,
+      "method": "custom:task023",
+      "gain_to_20": 3.7687,
+      "oracle_len": 834,
+      "simplicity": 0.28,
+      "rank_score": 1.9941,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 279,
+      "points": 16.3792,
+      "mem": 5508,
+      "params": 38,
+      "cost": 5546,
+      "method": "custom:task279",
+      "gain_to_20": 3.6236,
+      "oracle_len": 772,
+      "simplicity": 0.3025,
+      "rank_score": 1.9929,
+      "classes": [
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 361,
+      "points": 16.5472,
+      "mem": 4322,
+      "params": 366,
+      "cost": 4688,
+      "method": "custom:task361",
+      "gain_to_20": 3.4555,
+      "oracle_len": 707,
+      "simplicity": 0.3303,
+      "rank_score": 1.9859,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:roi_pool_crop",
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 387,
+      "points": 16.4711,
+      "mem": 4954,
+      "params": 105,
+      "cost": 5059,
+      "method": "custom:task387",
+      "gain_to_20": 3.5317,
+      "oracle_len": 755,
+      "simplicity": 0.3093,
+      "rank_score": 1.9641,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 255,
+      "points": 15.3871,
+      "mem": 14663,
+      "params": 293,
+      "cost": 14956,
+      "method": "custom:task255",
+      "gain_to_20": 4.6157,
+      "oracle_len": 1303,
+      "simplicity": 0.1792,
+      "rank_score": 1.9539,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_onehot_gather",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 72,
+      "points": 18.9574,
+      "mem": 390,
+      "params": 31,
+      "cost": 421,
+      "method": "custom:task072",
+      "gain_to_20": 1.0454,
+      "oracle_len": 70,
+      "simplicity": 3.3357,
+      "rank_score": 1.9093,
+      "classes": [
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 58,
+      "points": 18.0598,
+      "mem": 252,
+      "params": 781,
+      "cost": 1033,
+      "method": "custom:task058",
+      "gain_to_20": 1.943,
+      "oracle_len": 243,
+      "simplicity": 0.9609,
+      "rank_score": 1.9047,
+      "classes": [
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 54,
+      "points": 15.0777,
+      "mem": 20091,
+      "params": 288,
+      "cost": 20379,
+      "method": "custom:task054",
+      "gain_to_20": 4.925,
+      "oracle_len": 1565,
+      "simplicity": 0.1492,
+      "rank_score": 1.9024,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "dead_scout"
+      ]
+    },
+    {
+      "task": 358,
+      "points": 16.6093,
+      "mem": 4256,
+      "params": 150,
+      "cost": 4406,
+      "method": "custom:task358",
+      "gain_to_20": 3.3935,
+      "oracle_len": 744,
+      "simplicity": 0.3138,
+      "rank_score": 1.9011,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 225,
+      "points": 18.0598,
+      "mem": 926,
+      "params": 107,
+      "cost": 1033,
+      "method": "custom:task225",
+      "gain_to_20": 1.943,
+      "oracle_len": 256,
+      "simplicity": 0.9121,
+      "rank_score": 1.8557,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 175,
+      "points": 17.8556,
+      "mem": 330,
+      "params": 937,
+      "cost": 1267,
+      "method": "custom:task175",
+      "gain_to_20": 2.1472,
+      "oracle_len": 315,
+      "simplicity": 0.7413,
+      "rank_score": 1.8487,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 379,
+      "points": 15.8471,
+      "mem": 9309,
+      "params": 133,
+      "cost": 9442,
+      "method": "custom:task379",
+      "gain_to_20": 4.1557,
+      "oracle_len": 1191,
+      "simplicity": 0.1961,
+      "rank_score": 1.8401,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 230,
+      "points": 18.1976,
+      "mem": 0,
+      "params": 900,
+      "cost": 900,
+      "method": "ext:franksunp7166_65",
+      "gain_to_20": 1.8052,
+      "oracle_len": 225,
+      "simplicity": 1.0378,
+      "rank_score": 1.839,
+      "classes": [
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:mem0_param_game"
+      ],
+      "flags": [
+        "knife_edge"
+      ]
+    },
+    {
+      "task": 35,
+      "points": 17.2764,
+      "mem": 2132,
+      "params": 129,
+      "cost": 2261,
+      "method": "custom:task035",
+      "gain_to_20": 2.7264,
+      "oracle_len": 522,
+      "simplicity": 0.4473,
+      "rank_score": 1.8234,
+      "classes": [
+        "c:sparse_scatter",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 270,
+      "points": 16.9709,
+      "mem": 2742,
+      "params": 327,
+      "cost": 3069,
+      "method": "custom:task270",
+      "gain_to_20": 3.0319,
+      "oracle_len": 647,
+      "simplicity": 0.3609,
+      "rank_score": 1.8214,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:assignment_wall",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 205,
+      "points": 15.5881,
+      "mem": 11598,
+      "params": 635,
+      "cost": 12233,
+      "method": "custom:task205",
+      "gain_to_20": 4.4147,
+      "oracle_len": 1383,
+      "simplicity": 0.1688,
+      "rank_score": 1.814,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:roi_pool_crop",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 125,
+      "points": 16.8501,
+      "mem": 3434,
+      "params": 29,
+      "cost": 3463,
+      "method": "custom:task125",
+      "gain_to_20": 3.1527,
+      "oracle_len": 709,
+      "simplicity": 0.3293,
+      "rank_score": 1.8093,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 77,
+      "points": 16.2468,
+      "mem": 4500,
+      "params": 1831,
+      "cost": 6331,
+      "method": "custom:task077",
+      "gain_to_20": 3.756,
+      "oracle_len": 1017,
+      "simplicity": 0.2296,
+      "rank_score": 1.7997,
+      "classes": [
+        "c:bounded_scan",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 305,
+      "points": 18.5448,
+      "mem": 296,
+      "params": 340,
+      "cost": 636,
+      "method": "custom:task305",
+      "gain_to_20": 1.458,
+      "oracle_len": 154,
+      "simplicity": 1.5162,
+      "rank_score": 1.7953,
+      "classes": [
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 390,
+      "points": 16.9641,
+      "mem": 2623,
+      "params": 467,
+      "cost": 3090,
+      "method": "custom:task390",
+      "gain_to_20": 3.0387,
+      "oracle_len": 670,
+      "simplicity": 0.3485,
+      "rank_score": 1.7939,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 302,
+      "points": 17.519,
+      "mem": 1216,
+      "params": 558,
+      "cost": 1774,
+      "method": "custom:task302",
+      "gain_to_20": 2.4838,
+      "oracle_len": 450,
+      "simplicity": 0.5189,
+      "rank_score": 1.7892,
+      "classes": [
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 328,
+      "points": 16.179,
+      "mem": 4835,
+      "params": 1940,
+      "cost": 6775,
+      "method": "custom:task328",
+      "gain_to_20": 3.8238,
+      "oracle_len": 1083,
+      "simplicity": 0.2156,
+      "rank_score": 1.7755,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 375,
+      "points": 19.1421,
+      "mem": 108,
+      "params": 242,
+      "cost": 350,
+      "method": "custom:task375",
+      "gain_to_20": 0.8607,
+      "oracle_len": 55,
+      "simplicity": 4.2455,
+      "rank_score": 1.7735,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 277,
+      "points": 16.7718,
+      "mem": 3701,
+      "params": 44,
+      "cost": 3745,
+      "method": "custom:task277",
+      "gain_to_20": 3.231,
+      "oracle_len": 777,
+      "simplicity": 0.3005,
+      "rank_score": 1.7712,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 139,
+      "points": 18.1932,
+      "mem": 765,
+      "params": 139,
+      "cost": 904,
+      "method": "custom:task139",
+      "gain_to_20": 1.8096,
+      "oracle_len": 246,
+      "simplicity": 0.9492,
+      "rank_score": 1.763,
+      "classes": [
+        "c:bounded_scan",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 178,
+      "points": 18.3627,
+      "mem": 702,
+      "params": 61,
+      "cost": 763,
+      "method": "custom:task178",
+      "gain_to_20": 1.64,
+      "oracle_len": 203,
+      "simplicity": 1.1502,
+      "rank_score": 1.7589,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 208,
+      "points": 16.5392,
+      "mem": 4612,
+      "params": 114,
+      "cost": 4726,
+      "method": "custom:task208",
+      "gain_to_20": 3.4636,
+      "oracle_len": 924,
+      "simplicity": 0.2527,
+      "rank_score": 1.7412,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 336,
+      "points": 17.429,
+      "mem": 755,
+      "params": 1186,
+      "cost": 1941,
+      "method": "custom:task336",
+      "gain_to_20": 2.5737,
+      "oracle_len": 518,
+      "simplicity": 0.4508,
+      "rank_score": 1.728,
+      "classes": [
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 206,
+      "points": 16.6605,
+      "mem": 4110,
+      "params": 76,
+      "cost": 4186,
+      "method": "custom:task206",
+      "gain_to_20": 3.3423,
+      "oracle_len": 881,
+      "simplicity": 0.265,
+      "rank_score": 1.7207,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 228,
+      "points": 18.131,
+      "mem": 849,
+      "params": 113,
+      "cost": 962,
+      "method": "custom:task228",
+      "gain_to_20": 1.8718,
+      "oracle_len": 278,
+      "simplicity": 0.8399,
+      "rank_score": 1.7155,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 137,
+      "points": 16.8321,
+      "mem": 3433,
+      "params": 93,
+      "cost": 3526,
+      "method": "custom:task137",
+      "gain_to_20": 3.1707,
+      "oracle_len": 804,
+      "simplicity": 0.2904,
+      "rank_score": 1.7087,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 319,
+      "points": 15.1609,
+      "mem": 18645,
+      "params": 108,
+      "cost": 18753,
+      "method": "custom:task319",
+      "gain_to_20": 4.8419,
+      "oracle_len": 1877,
+      "simplicity": 0.1244,
+      "rank_score": 1.7078,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 133,
+      "points": 14.7033,
+      "mem": 27333,
+      "params": 2303,
+      "cost": 29636,
+      "method": "custom:task133",
+      "gain_to_20": 5.2995,
+      "oracle_len": 2272,
+      "simplicity": 0.1028,
+      "rank_score": 1.6989,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:roi_pool_crop",
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "$:assignment_wall",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 250,
+      "points": 16.9213,
+      "mem": 3164,
+      "params": 61,
+      "cost": 3225,
+      "method": "custom:task250",
+      "gain_to_20": 3.0815,
+      "oracle_len": 772,
+      "simplicity": 0.3025,
+      "rank_score": 1.6947,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 202,
+      "points": 16.9023,
+      "mem": 3253,
+      "params": 34,
+      "cost": 3287,
+      "method": "custom:task202",
+      "gain_to_20": 3.1005,
+      "oracle_len": 788,
+      "simplicity": 0.2963,
+      "rank_score": 1.6878,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 79,
+      "points": 16.9471,
+      "mem": 3065,
+      "params": 78,
+      "cost": 3143,
+      "method": "custom:task079",
+      "gain_to_20": 3.0557,
+      "oracle_len": 792,
+      "simplicity": 0.2948,
+      "rank_score": 1.6592,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 71,
+      "points": 17.0997,
+      "mem": 2643,
+      "params": 55,
+      "cost": 2698,
+      "method": "custom:task071",
+      "gain_to_20": 2.9031,
+      "oracle_len": 744,
+      "simplicity": 0.3138,
+      "rank_score": 1.6263,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 126,
+      "points": 18.5948,
+      "mem": 590,
+      "params": 15,
+      "cost": 605,
+      "method": "custom:task126",
+      "gain_to_20": 1.408,
+      "oracle_len": 180,
+      "simplicity": 1.2972,
+      "rank_score": 1.6037,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 281,
+      "points": 17.2226,
+      "mem": 2321,
+      "params": 65,
+      "cost": 2386,
+      "method": "custom:task281",
+      "gain_to_20": 2.7802,
+      "oracle_len": 705,
+      "simplicity": 0.3312,
+      "rank_score": 1.6,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 34,
+      "points": 17.2315,
+      "mem": 2198,
+      "params": 167,
+      "cost": 2365,
+      "method": "custom:task034",
+      "gain_to_20": 2.7713,
+      "oracle_len": 706,
+      "simplicity": 0.3307,
+      "rank_score": 1.5938,
+      "classes": [
+        "c:bounded_scan",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 97,
+      "points": 18.1866,
+      "mem": 0,
+      "params": 910,
+      "cost": 910,
+      "method": "custom:task097",
+      "gain_to_20": 1.8162,
+      "oracle_len": 307,
+      "simplicity": 0.7606,
+      "rank_score": 1.584,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 283,
+      "points": 18.1866,
+      "mem": 0,
+      "params": 910,
+      "cost": 910,
+      "method": "custom:task283",
+      "gain_to_20": 1.8162,
+      "oracle_len": 308,
+      "simplicity": 0.7581,
+      "rank_score": 1.5814,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 263,
+      "points": 18.4779,
+      "mem": 563,
+      "params": 117,
+      "cost": 680,
+      "method": "custom:task263",
+      "gain_to_20": 1.5249,
+      "oracle_len": 224,
+      "simplicity": 1.0424,
+      "rank_score": 1.5569,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 76,
+      "points": 15.1068,
+      "mem": 19456,
+      "params": 340,
+      "cost": 19796,
+      "method": "custom:task076",
+      "gain_to_20": 4.896,
+      "oracle_len": 2325,
+      "simplicity": 0.1004,
+      "rank_score": 1.5516,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "dead_scout"
+      ]
+    },
+    {
+      "task": 122,
+      "points": 18.303,
+      "mem": 0,
+      "params": 810,
+      "cost": 810,
+      "method": "custom:task122",
+      "gain_to_20": 1.6998,
+      "oracle_len": 282,
+      "simplicity": 0.828,
+      "rank_score": 1.5468,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 340,
+      "points": 16.2854,
+      "mem": 5812,
+      "params": 279,
+      "cost": 6091,
+      "method": "custom:task340",
+      "gain_to_20": 3.7174,
+      "oracle_len": 1353,
+      "simplicity": 0.1726,
+      "rank_score": 1.5443,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "dead_crop"
+      ]
+    },
+    {
+      "task": 157,
+      "points": 15.9719,
+      "mem": 7983,
+      "params": 351,
+      "cost": 8334,
+      "method": "custom:task157",
+      "gain_to_20": 4.0309,
+      "oracle_len": 1594,
+      "simplicity": 0.1465,
+      "rank_score": 1.5428,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "dead_scout"
+      ]
+    },
+    {
+      "task": 158,
+      "points": 15.052,
+      "mem": 18263,
+      "params": 2647,
+      "cost": 20910,
+      "method": "custom:task158",
+      "gain_to_20": 4.9508,
+      "oracle_len": 2412,
+      "simplicity": 0.0968,
+      "rank_score": 1.5404,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 146,
+      "points": 18.8117,
+      "mem": 380,
+      "params": 107,
+      "cost": 487,
+      "method": "custom:task146",
+      "gain_to_20": 1.1911,
+      "oracle_len": 140,
+      "simplicity": 1.6679,
+      "rank_score": 1.5382,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear"
+      ],
+      "flags": []
+    },
+    {
+      "task": 351,
+      "points": 18.0774,
+      "mem": 956,
+      "params": 59,
+      "cost": 1015,
+      "method": "custom:task351",
+      "gain_to_20": 1.9254,
+      "oracle_len": 368,
+      "simplicity": 0.6345,
+      "rank_score": 1.5337,
+      "classes": [
+        "c:bounded_scan",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 80,
+      "points": 15.7349,
+      "mem": 10109,
+      "params": 454,
+      "cost": 10563,
+      "method": "custom:task080",
+      "gain_to_20": 4.2679,
+      "oracle_len": 1815,
+      "simplicity": 0.1287,
+      "rank_score": 1.5308,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 48,
+      "points": 17.956,
+      "mem": 1030,
+      "params": 116,
+      "cost": 1146,
+      "method": "custom:task048",
+      "gain_to_20": 2.0468,
+      "oracle_len": 419,
+      "simplicity": 0.5573,
+      "rank_score": 1.528,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 148,
+      "points": 16.3226,
+      "mem": 5759,
+      "params": 110,
+      "cost": 5869,
+      "method": "custom:task148",
+      "gain_to_20": 3.6802,
+      "oracle_len": 1370,
+      "simplicity": 0.1704,
+      "rank_score": 1.5193,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 384,
+      "points": 18.6148,
+      "mem": 540,
+      "params": 53,
+      "cost": 593,
+      "method": "custom:task384",
+      "gain_to_20": 1.388,
+      "oracle_len": 199,
+      "simplicity": 1.1734,
+      "rank_score": 1.5035,
+      "classes": [
+        "c:bounded_scan",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 382,
+      "points": 16.3373,
+      "mem": 5648,
+      "params": 135,
+      "cost": 5783,
+      "method": "custom:task382",
+      "gain_to_20": 3.6655,
+      "oracle_len": 1409,
+      "simplicity": 0.1657,
+      "rank_score": 1.4922,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 191,
+      "points": 15.5204,
+      "mem": 12919,
+      "params": 171,
+      "cost": 13090,
+      "method": "custom:task191",
+      "gain_to_20": 4.4824,
+      "oracle_len": 2146,
+      "simplicity": 0.1088,
+      "rank_score": 1.4786,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_onehot_gather",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 371,
+      "points": 18.8537,
+      "mem": 376,
+      "params": 91,
+      "cost": 467,
+      "method": "custom:task371",
+      "gain_to_20": 1.1491,
+      "oracle_len": 142,
+      "simplicity": 1.6444,
+      "rank_score": 1.4735,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:sparse_scatter",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 170,
+      "points": 17.1581,
+      "mem": 2216,
+      "params": 329,
+      "cost": 2545,
+      "method": "custom:task170",
+      "gain_to_20": 2.8447,
+      "oracle_len": 873,
+      "simplicity": 0.2675,
+      "rank_score": 1.4712,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 316,
+      "points": 18.9456,
+      "mem": 388,
+      "params": 38,
+      "cost": 426,
+      "method": "custom:task316",
+      "gain_to_20": 1.0572,
+      "oracle_len": 121,
+      "simplicity": 1.9298,
+      "rank_score": 1.4687,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 182,
+      "points": 16.2294,
+      "mem": 6345,
+      "params": 97,
+      "cost": 6442,
+      "method": "custom:task182",
+      "gain_to_20": 3.7734,
+      "oracle_len": 1574,
+      "simplicity": 0.1483,
+      "rank_score": 1.4534,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 93,
+      "points": 16.8228,
+      "mem": 3456,
+      "params": 103,
+      "cost": 3559,
+      "method": "custom:task093",
+      "gain_to_20": 3.18,
+      "oracle_len": 1140,
+      "simplicity": 0.2048,
+      "rank_score": 1.4392,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 181,
+      "points": 19.0919,
+      "mem": 201,
+      "params": 167,
+      "cost": 368,
+      "method": "custom:task181",
+      "gain_to_20": 0.9109,
+      "oracle_len": 94,
+      "simplicity": 2.484,
+      "rank_score": 1.4356,
+      "classes": [
+        "c:sparse_scatter",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 282,
+      "points": 18.8997,
+      "mem": 407,
+      "params": 39,
+      "cost": 446,
+      "method": "custom:task282",
+      "gain_to_20": 1.1031,
+      "oracle_len": 138,
+      "simplicity": 1.692,
+      "rank_score": 1.4349,
+      "classes": [
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear"
+      ],
+      "flags": []
+    },
+    {
+      "task": 65,
+      "points": 18.537,
+      "mem": 582,
+      "params": 59,
+      "cost": 641,
+      "method": "custom:task065",
+      "gain_to_20": 1.4658,
+      "oracle_len": 244,
+      "simplicity": 0.957,
+      "rank_score": 1.4339,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 147,
+      "points": 18.7234,
+      "mem": 432,
+      "params": 100,
+      "cost": 532,
+      "method": "custom:task147",
+      "gain_to_20": 1.2794,
+      "oracle_len": 186,
+      "simplicity": 1.2554,
+      "rank_score": 1.4335,
+      "classes": [
+        "c:single_conv_qlinear",
+        "c:sparse_scatter"
+      ],
+      "flags": []
+    },
+    {
+      "task": 3,
+      "points": 19.2896,
+      "mem": 281,
+      "params": 21,
+      "cost": 302,
+      "method": "custom:task003",
+      "gain_to_20": 0.7132,
+      "oracle_len": 58,
+      "simplicity": 4.0259,
+      "rank_score": 1.431,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 109,
+      "points": 17.5162,
+      "mem": 1686,
+      "params": 93,
+      "cost": 1779,
+      "method": "custom:task109",
+      "gain_to_20": 2.4866,
+      "oracle_len": 714,
+      "simplicity": 0.327,
+      "rank_score": 1.422,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 138,
+      "points": 15.5525,
+      "mem": 12215,
+      "params": 462,
+      "cost": 12677,
+      "method": "custom:task138",
+      "gain_to_20": 4.4503,
+      "oracle_len": 2323,
+      "simplicity": 0.1005,
+      "rank_score": 1.4109,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 211,
+      "points": 19.2962,
+      "mem": 0,
+      "params": 300,
+      "cost": 300,
+      "method": "custom:task211",
+      "gain_to_20": 0.7066,
+      "oracle_len": 59,
+      "simplicity": 3.9576,
+      "rank_score": 1.4056,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 264,
+      "points": 16.4044,
+      "mem": 4700,
+      "params": 708,
+      "cost": 5408,
+      "method": "custom:task264",
+      "gain_to_20": 3.5984,
+      "oracle_len": 1544,
+      "simplicity": 0.1512,
+      "rank_score": 1.3994,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 13,
+      "points": 17.4347,
+      "mem": 1869,
+      "params": 61,
+      "cost": 1930,
+      "method": "custom:task013",
+      "gain_to_20": 2.5681,
+      "oracle_len": 793,
+      "simplicity": 0.2945,
+      "rank_score": 1.3935,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 99,
+      "points": 17.4446,
+      "mem": 1633,
+      "params": 278,
+      "cost": 1911,
+      "method": "custom:task099",
+      "gain_to_20": 2.5582,
+      "oracle_len": 788,
+      "simplicity": 0.2963,
+      "rank_score": 1.3925,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 101,
+      "points": 15.4218,
+      "mem": 13573,
+      "params": 874,
+      "cost": 14447,
+      "method": "custom:task101",
+      "gain_to_20": 4.581,
+      "oracle_len": 2551,
+      "simplicity": 0.0915,
+      "rank_score": 1.386,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 234,
+      "points": 16.7551,
+      "mem": 3744,
+      "params": 64,
+      "cost": 3808,
+      "method": "custom:task234",
+      "gain_to_20": 3.2476,
+      "oracle_len": 1318,
+      "simplicity": 0.1772,
+      "rank_score": 1.367,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 203,
+      "points": 18.9863,
+      "mem": 408,
+      "params": 1,
+      "cost": 409,
+      "method": "custom:task203",
+      "gain_to_20": 1.0165,
+      "oracle_len": 131,
+      "simplicity": 1.7824,
+      "rank_score": 1.3571,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 165,
+      "points": 16.2909,
+      "mem": 5828,
+      "params": 230,
+      "cost": 6058,
+      "method": "custom:task165",
+      "gain_to_20": 3.7119,
+      "oracle_len": 1748,
+      "simplicity": 0.1336,
+      "rank_score": 1.3567,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 273,
+      "points": 17.3221,
+      "mem": 2109,
+      "params": 51,
+      "cost": 2160,
+      "method": "custom:task273",
+      "gain_to_20": 2.6807,
+      "oracle_len": 912,
+      "simplicity": 0.256,
+      "rank_score": 1.3564,
+      "classes": [
+        "c:bounded_scan",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "dead_scout"
+      ]
+    },
+    {
+      "task": 27,
+      "points": 17.8222,
+      "mem": 1262,
+      "params": 48,
+      "cost": 1310,
+      "method": "custom:task027",
+      "gain_to_20": 2.1806,
+      "oracle_len": 605,
+      "simplicity": 0.386,
+      "rank_score": 1.3547,
+      "classes": [
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 173,
+      "points": 15.2217,
+      "mem": 17534,
+      "params": 112,
+      "cost": 17646,
+      "method": "custom:task173",
+      "gain_to_20": 4.7811,
+      "oracle_len": 2926,
+      "simplicity": 0.0798,
+      "rank_score": 1.3506,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 195,
+      "points": 18.1745,
+      "mem": 882,
+      "params": 39,
+      "cost": 921,
+      "method": "custom:task195",
+      "gain_to_20": 1.8282,
+      "oracle_len": 428,
+      "simplicity": 0.5456,
+      "rank_score": 1.3504,
+      "classes": [
+        "c:bounded_scan",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 102,
+      "points": 17.1652,
+      "mem": 2414,
+      "params": 113,
+      "cost": 2527,
+      "method": "custom:task102",
+      "gain_to_20": 2.8376,
+      "oracle_len": 1044,
+      "simplicity": 0.2237,
+      "rank_score": 1.342,
+      "classes": [
+        "c:bounded_scan",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 120,
+      "points": 18.1866,
+      "mem": 0,
+      "params": 910,
+      "cost": 910,
+      "method": "custom:task120",
+      "gain_to_20": 1.8162,
+      "oracle_len": 428,
+      "simplicity": 0.5456,
+      "rank_score": 1.3415,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 370,
+      "points": 15.8233,
+      "mem": 8645,
+      "params": 1024,
+      "cost": 9669,
+      "method": "custom:task370",
+      "gain_to_20": 4.1795,
+      "oracle_len": 2301,
+      "simplicity": 0.1015,
+      "rank_score": 1.3314,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 355,
+      "points": 17.096,
+      "mem": 2688,
+      "params": 20,
+      "cost": 2708,
+      "method": "custom:task355",
+      "gain_to_20": 2.9068,
+      "oracle_len": 1115,
+      "simplicity": 0.2094,
+      "rank_score": 1.3302,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 68,
+      "points": 18.5655,
+      "mem": 500,
+      "params": 123,
+      "cost": 623,
+      "method": "custom:task068",
+      "gain_to_20": 1.4373,
+      "oracle_len": 283,
+      "simplicity": 0.8251,
+      "rank_score": 1.3056,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 324,
+      "points": 15.9069,
+      "mem": 7308,
+      "params": 1586,
+      "cost": 8894,
+      "method": "custom:task324",
+      "gain_to_20": 4.0959,
+      "oracle_len": 2342,
+      "simplicity": 0.0997,
+      "rank_score": 1.2933,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 352,
+      "points": 18.8688,
+      "mem": 0,
+      "params": 460,
+      "cost": 460,
+      "method": "custom:task352",
+      "gain_to_20": 1.134,
+      "oracle_len": 180,
+      "simplicity": 1.2972,
+      "rank_score": 1.2916,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 153,
+      "points": 18.3217,
+      "mem": 741,
+      "params": 54,
+      "cost": 795,
+      "method": "custom:task153",
+      "gain_to_20": 1.6811,
+      "oracle_len": 397,
+      "simplicity": 0.5882,
+      "rank_score": 1.2893,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 288,
+      "points": 18.1352,
+      "mem": 769,
+      "params": 189,
+      "cost": 958,
+      "method": "custom:task288",
+      "gain_to_20": 1.8676,
+      "oracle_len": 494,
+      "simplicity": 0.4727,
+      "rank_score": 1.284,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 360,
+      "points": 19.1711,
+      "mem": 0,
+      "params": 340,
+      "cost": 340,
+      "method": "custom:task360",
+      "gain_to_20": 0.8317,
+      "oracle_len": 98,
+      "simplicity": 2.3827,
+      "rank_score": 1.2839,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 127,
+      "points": 19.0186,
+      "mem": 204,
+      "params": 192,
+      "cost": 396,
+      "method": "custom:task127",
+      "gain_to_20": 0.9842,
+      "oracle_len": 139,
+      "simplicity": 1.6799,
+      "rank_score": 1.2756,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 160,
+      "points": 17.8041,
+      "mem": 1164,
+      "params": 170,
+      "cost": 1334,
+      "method": "custom:task160",
+      "gain_to_20": 2.1987,
+      "oracle_len": 695,
+      "simplicity": 0.336,
+      "rank_score": 1.2744,
+      "classes": [
+        "c:bounded_scan",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 44,
+      "points": 15.6836,
+      "mem": 11050,
+      "params": 69,
+      "cost": 11119,
+      "method": "custom:task044",
+      "gain_to_20": 4.3192,
+      "oracle_len": 2715,
+      "simplicity": 0.086,
+      "rank_score": 1.2667,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_onehot_gather",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "wall"
+      ]
+    },
+    {
+      "task": 100,
+      "points": 18.7029,
+      "mem": 454,
+      "params": 89,
+      "cost": 543,
+      "method": "custom:task100",
+      "gain_to_20": 1.2999,
+      "oracle_len": 246,
+      "simplicity": 0.9492,
+      "rank_score": 1.2664,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 308,
+      "points": 17.6948,
+      "mem": 1385,
+      "params": 103,
+      "cost": 1488,
+      "method": "custom:task308",
+      "gain_to_20": 2.308,
+      "oracle_len": 801,
+      "simplicity": 0.2915,
+      "rank_score": 1.2461,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 134,
+      "points": 17.2663,
+      "mem": 2250,
+      "params": 34,
+      "cost": 2284,
+      "method": "custom:task134",
+      "gain_to_20": 2.7365,
+      "oracle_len": 1205,
+      "simplicity": 0.1938,
+      "rank_score": 1.2046,
+      "classes": [
+        "c:bounded_scan",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 124,
+      "points": 17.4229,
+      "mem": 1879,
+      "params": 74,
+      "cost": 1953,
+      "method": "custom:task124",
+      "gain_to_20": 2.5799,
+      "oracle_len": 1103,
+      "simplicity": 0.2117,
+      "rank_score": 1.187,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_onehot_gather",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 272,
+      "points": 19.0035,
+      "mem": 200,
+      "params": 202,
+      "cost": 402,
+      "method": "custom:task272",
+      "gain_to_20": 0.9992,
+      "oracle_len": 166,
+      "simplicity": 1.4066,
+      "rank_score": 1.1851,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 383,
+      "points": 16.2889,
+      "mem": 5974,
+      "params": 96,
+      "cost": 6070,
+      "method": "custom:task383",
+      "gain_to_20": 3.7139,
+      "oracle_len": 2293,
+      "simplicity": 0.1018,
+      "rank_score": 1.1851,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:connectivity_wall",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 253,
+      "points": 18.6165,
+      "mem": 540,
+      "params": 52,
+      "cost": 592,
+      "method": "custom:task253",
+      "gain_to_20": 1.3863,
+      "oracle_len": 324,
+      "simplicity": 0.7207,
+      "rank_score": 1.1769,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:assignment_wall",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 39,
+      "points": 18.8262,
+      "mem": 424,
+      "params": 56,
+      "cost": 480,
+      "method": "custom:task039",
+      "gain_to_20": 1.1766,
+      "oracle_len": 234,
+      "simplicity": 0.9979,
+      "rank_score": 1.1753,
+      "classes": [
+        "c:direct_onehot_gather",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 260,
+      "points": 17.3489,
+      "mem": 1804,
+      "params": 299,
+      "cost": 2103,
+      "method": "custom:task260",
+      "gain_to_20": 2.6539,
+      "oracle_len": 1206,
+      "simplicity": 0.1936,
+      "rank_score": 1.1678,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 42,
+      "points": 16.9576,
+      "mem": 2792,
+      "params": 318,
+      "cost": 3110,
+      "method": "custom:task042",
+      "gain_to_20": 3.0452,
+      "oracle_len": 1613,
+      "simplicity": 0.1448,
+      "rank_score": 1.1586,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 95,
+      "points": 19.1565,
+      "mem": 245,
+      "params": 100,
+      "cost": 345,
+      "method": "custom:task095",
+      "gain_to_20": 0.8463,
+      "oracle_len": 126,
+      "simplicity": 1.8532,
+      "rank_score": 1.1521,
+      "classes": [
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear"
+      ],
+      "flags": []
+    },
+    {
+      "task": 25,
+      "points": 15.6357,
+      "mem": 11520,
+      "params": 144,
+      "cost": 11664,
+      "method": "custom:task025",
+      "gain_to_20": 4.3671,
+      "oracle_len": 3378,
+      "simplicity": 0.0691,
+      "rank_score": 1.1482,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 300,
+      "points": 18.7084,
+      "mem": 474,
+      "params": 66,
+      "cost": 540,
+      "method": "custom:task300",
+      "gain_to_20": 1.2944,
+      "oracle_len": 298,
+      "simplicity": 0.7836,
+      "rank_score": 1.1457,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 156,
+      "points": 17.5361,
+      "mem": 1697,
+      "params": 47,
+      "cost": 1744,
+      "method": "custom:task156",
+      "gain_to_20": 2.4667,
+      "oracle_len": 1088,
+      "simplicity": 0.2146,
+      "rank_score": 1.1427,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 296,
+      "points": 19.2009,
+      "mem": 285,
+      "params": 45,
+      "cost": 330,
+      "method": "custom:task296",
+      "gain_to_20": 0.8019,
+      "oracle_len": 115,
+      "simplicity": 2.0304,
+      "rank_score": 1.1426,
+      "classes": [
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 59,
+      "points": 18.6774,
+      "mem": 265,
+      "params": 292,
+      "cost": 557,
+      "method": "custom:task059",
+      "gain_to_20": 1.3254,
+      "oracle_len": 319,
+      "simplicity": 0.732,
+      "rank_score": 1.1339,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 285,
+      "points": 14.8641,
+      "mem": 24684,
+      "params": 550,
+      "cost": 25234,
+      "method": "custom:task285",
+      "gain_to_20": 5.1387,
+      "oracle_len": 4815,
+      "simplicity": 0.0485,
+      "rank_score": 1.1316,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 219,
+      "points": 16.1168,
+      "mem": 7078,
+      "params": 132,
+      "cost": 7210,
+      "method": "custom:task219",
+      "gain_to_20": 3.886,
+      "oracle_len": 2847,
+      "simplicity": 0.082,
+      "rank_score": 1.1129,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 89,
+      "points": 16.1345,
+      "mem": 6923,
+      "params": 160,
+      "cost": 7083,
+      "method": "custom:task089",
+      "gain_to_20": 3.8682,
+      "oracle_len": 2844,
+      "simplicity": 0.0821,
+      "rank_score": 1.1084,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 218,
+      "points": 18.5108,
+      "mem": 555,
+      "params": 103,
+      "cost": 658,
+      "method": "custom:task218",
+      "gain_to_20": 1.492,
+      "oracle_len": 441,
+      "simplicity": 0.5295,
+      "rank_score": 1.0857,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 266,
+      "points": 19.1421,
+      "mem": 315,
+      "params": 35,
+      "cost": 350,
+      "method": "custom:task266",
+      "gain_to_20": 0.8607,
+      "oracle_len": 151,
+      "simplicity": 1.5464,
+      "rank_score": 1.0703,
+      "classes": [
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 81,
+      "points": 18.8601,
+      "mem": 392,
+      "params": 72,
+      "cost": 464,
+      "method": "custom:task081",
+      "gain_to_20": 1.1427,
+      "oracle_len": 271,
+      "simplicity": 0.8616,
+      "rank_score": 1.0607,
+      "classes": [
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:connectivity_wall"
+      ],
+      "flags": []
+    },
+    {
+      "task": 154,
+      "points": 17.077,
+      "mem": 2661,
+      "params": 99,
+      "cost": 2760,
+      "method": "custom:task154",
+      "gain_to_20": 2.9258,
+      "oracle_len": 1795,
+      "simplicity": 0.1301,
+      "rank_score": 1.0552,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 257,
+      "points": 18.9863,
+      "mem": 0,
+      "params": 409,
+      "cost": 409,
+      "method": "custom:task257",
+      "gain_to_20": 1.0165,
+      "oracle_len": 220,
+      "simplicity": 1.0614,
+      "rank_score": 1.0472,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 353,
+      "points": 19.1889,
+      "mem": 272,
+      "params": 62,
+      "cost": 334,
+      "method": "custom:task353",
+      "gain_to_20": 0.8139,
+      "oracle_len": 142,
+      "simplicity": 1.6444,
+      "rank_score": 1.0437,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:sparse_scatter",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 185,
+      "points": 17.4188,
+      "mem": 1651,
+      "params": 310,
+      "cost": 1961,
+      "method": "custom:task185",
+      "gain_to_20": 2.584,
+      "oracle_len": 1543,
+      "simplicity": 0.1513,
+      "rank_score": 1.0052,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 343,
+      "points": 17.8918,
+      "mem": 1147,
+      "params": 75,
+      "cost": 1222,
+      "method": "custom:task343",
+      "gain_to_20": 2.111,
+      "oracle_len": 1036,
+      "simplicity": 0.2254,
+      "rank_score": 1.0022,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 366,
+      "points": 14.6404,
+      "mem": 30983,
+      "params": 576,
+      "cost": 31559,
+      "method": "custom:task366",
+      "gain_to_20": 5.3624,
+      "oracle_len": 6846,
+      "simplicity": 0.0341,
+      "rank_score": 0.9903,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "frontier_seed"
+      ]
+    },
+    {
+      "task": 168,
+      "points": 17.2862,
+      "mem": 2096,
+      "params": 143,
+      "cost": 2239,
+      "method": "custom:task168",
+      "gain_to_20": 2.7166,
+      "oracle_len": 1760,
+      "simplicity": 0.1327,
+      "rank_score": 0.9895,
+      "classes": [
+        "c:bounded_scan",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 392,
+      "points": 17.4239,
+      "mem": 1602,
+      "params": 349,
+      "cost": 1951,
+      "method": "custom:task392",
+      "gain_to_20": 2.5789,
+      "oracle_len": 1598,
+      "simplicity": 0.1461,
+      "rank_score": 0.9858,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 105,
+      "points": 17.0071,
+      "mem": 2854,
+      "params": 106,
+      "cost": 2960,
+      "method": "custom:task105",
+      "gain_to_20": 2.9957,
+      "oracle_len": 2179,
+      "simplicity": 0.1072,
+      "rank_score": 0.9807,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_onehot_gather",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 209,
+      "points": 14.9692,
+      "mem": 21298,
+      "params": 1418,
+      "cost": 22716,
+      "method": "custom:task209",
+      "gain_to_20": 5.0336,
+      "oracle_len": 6172,
+      "simplicity": 0.0378,
+      "rank_score": 0.9791,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "wall"
+      ]
+    },
+    {
+      "task": 321,
+      "points": 19.2962,
+      "mem": 0,
+      "params": 300,
+      "cost": 300,
+      "method": "custom:task321",
+      "gain_to_20": 0.7066,
+      "oracle_len": 123,
+      "simplicity": 1.8984,
+      "rank_score": 0.9735,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 159,
+      "points": 17.6424,
+      "mem": 1419,
+      "params": 149,
+      "cost": 1568,
+      "method": "custom:task159",
+      "gain_to_20": 2.3603,
+      "oracle_len": 1427,
+      "simplicity": 0.1636,
+      "rank_score": 0.9548,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 62,
+      "points": 17.1617,
+      "mem": 2465,
+      "params": 71,
+      "cost": 2536,
+      "method": "custom:task062",
+      "gain_to_20": 2.8411,
+      "oracle_len": 2098,
+      "simplicity": 0.1113,
+      "rank_score": 0.9478,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 86,
+      "points": 16.9493,
+      "mem": 2946,
+      "params": 190,
+      "cost": 3136,
+      "method": "custom:task086",
+      "gain_to_20": 3.0535,
+      "oracle_len": 2425,
+      "simplicity": 0.0963,
+      "rank_score": 0.9475,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 143,
+      "points": 18.269,
+      "mem": 591,
+      "params": 247,
+      "cost": 838,
+      "method": "custom:task143",
+      "gain_to_20": 1.7338,
+      "oracle_len": 791,
+      "simplicity": 0.2952,
+      "rank_score": 0.942,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:assignment_wall",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 96,
+      "points": 15.9189,
+      "mem": 7987,
+      "params": 801,
+      "cost": 8788,
+      "method": "custom:task096",
+      "gain_to_20": 4.0839,
+      "oracle_len": 4399,
+      "simplicity": 0.0531,
+      "rank_score": 0.9409,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 284,
+      "points": 16.7745,
+      "mem": 3082,
+      "params": 653,
+      "cost": 3735,
+      "method": "custom:task284",
+      "gain_to_20": 3.2283,
+      "oracle_len": 2768,
+      "simplicity": 0.0844,
+      "rank_score": 0.9376,
+      "classes": [
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 117,
+      "points": 16.6655,
+      "mem": 3922,
+      "params": 243,
+      "cost": 4165,
+      "method": "custom:task117",
+      "gain_to_20": 3.3373,
+      "oracle_len": 2966,
+      "simplicity": 0.0787,
+      "rank_score": 0.9364,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 290,
+      "points": 19.1279,
+      "mem": 292,
+      "params": 63,
+      "cost": 355,
+      "method": "custom:task290",
+      "gain_to_20": 0.8749,
+      "oracle_len": 204,
+      "simplicity": 1.1446,
+      "rank_score": 0.936,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 40,
+      "points": 19.0757,
+      "mem": 240,
+      "params": 134,
+      "cost": 374,
+      "method": "custom:task040",
+      "gain_to_20": 0.927,
+      "oracle_len": 230,
+      "simplicity": 1.0152,
+      "rank_score": 0.9341,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 52,
+      "points": 19.575,
+      "mem": 213,
+      "params": 14,
+      "cost": 227,
+      "method": "custom:task052",
+      "gain_to_20": 0.4277,
+      "oracle_len": 49,
+      "simplicity": 4.7653,
+      "rank_score": 0.9337,
+      "classes": [
+        "c:bounded_scan",
+        "c:roi_pool_crop",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 280,
+      "points": 16.6701,
+      "mem": 3363,
+      "params": 783,
+      "cost": 4146,
+      "method": "custom:task280",
+      "gain_to_20": 3.3327,
+      "oracle_len": 2993,
+      "simplicity": 0.078,
+      "rank_score": 0.9309,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 66,
+      "points": 15.7776,
+      "mem": 9955,
+      "params": 166,
+      "cost": 10121,
+      "method": "custom:task066",
+      "gain_to_20": 4.2252,
+      "oracle_len": 4865,
+      "simplicity": 0.048,
+      "rank_score": 0.9256,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 1,
+      "points": 19.5194,
+      "mem": 0,
+      "params": 240,
+      "cost": 240,
+      "method": "custom:task001",
+      "gain_to_20": 0.4834,
+      "oracle_len": 66,
+      "simplicity": 3.5379,
+      "rank_score": 0.9093,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:tiny_lut_gather",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 249,
+      "points": 19.3405,
+      "mem": 248,
+      "params": 39,
+      "cost": 287,
+      "method": "custom:task249",
+      "gain_to_20": 0.6623,
+      "oracle_len": 136,
+      "simplicity": 1.7169,
+      "rank_score": 0.8678,
+      "classes": [
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 242,
+      "points": 18.9316,
+      "mem": 372,
+      "params": 60,
+      "cost": 432,
+      "method": "custom:task242",
+      "gain_to_20": 1.0712,
+      "oracle_len": 368,
+      "simplicity": 0.6345,
+      "rank_score": 0.8533,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 357,
+      "points": 19.3267,
+      "mem": 258,
+      "params": 33,
+      "cost": 291,
+      "method": "custom:task357",
+      "gain_to_20": 0.6761,
+      "oracle_len": 148,
+      "simplicity": 1.5777,
+      "rank_score": 0.8492,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:qlinear_uint8",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 108,
+      "points": 19.2962,
+      "mem": 0,
+      "params": 300,
+      "cost": 300,
+      "method": "custom:task108",
+      "gain_to_20": 0.7066,
+      "oracle_len": 163,
+      "simplicity": 1.4325,
+      "rank_score": 0.8457,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:roi_pool_crop",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 49,
+      "points": 19.0442,
+      "mem": 252,
+      "params": 134,
+      "cost": 386,
+      "method": "custom:task049",
+      "gain_to_20": 0.9586,
+      "oracle_len": 311,
+      "simplicity": 0.7508,
+      "rank_score": 0.8306,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 121,
+      "points": 19.1681,
+      "mem": 275,
+      "params": 66,
+      "cost": 341,
+      "method": "custom:task121",
+      "gain_to_20": 0.8347,
+      "oracle_len": 239,
+      "simplicity": 0.977,
+      "rank_score": 0.825,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 315,
+      "points": 19.5619,
+      "mem": 0,
+      "params": 230,
+      "cost": 230,
+      "method": "custom:task315",
+      "gain_to_20": 0.4409,
+      "oracle_len": 69,
+      "simplicity": 3.3841,
+      "rank_score": 0.811,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 252,
+      "points": 19.4393,
+      "mem": 0,
+      "params": 260,
+      "cost": 260,
+      "method": "custom:task252",
+      "gain_to_20": 0.5635,
+      "oracle_len": 113,
+      "simplicity": 2.0664,
+      "rank_score": 0.81,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 21,
+      "points": 19.2193,
+      "mem": 264,
+      "params": 60,
+      "cost": 324,
+      "method": "custom:task021",
+      "gain_to_20": 0.7835,
+      "oracle_len": 221,
+      "simplicity": 1.0566,
+      "rank_score": 0.8054,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 238,
+      "points": 17.178,
+      "mem": 2051,
+      "params": 444,
+      "cost": 2495,
+      "method": "custom:task238",
+      "gain_to_20": 2.8248,
+      "oracle_len": 3186,
+      "simplicity": 0.0733,
+      "rank_score": 0.7647,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 333,
+      "points": 16.9207,
+      "mem": 2792,
+      "params": 435,
+      "cost": 3227,
+      "method": "custom:task333",
+      "gain_to_20": 3.0821,
+      "oracle_len": 3810,
+      "simplicity": 0.0613,
+      "rank_score": 0.763,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 341,
+      "points": 17.7353,
+      "mem": 1394,
+      "params": 35,
+      "cost": 1429,
+      "method": "custom:task341",
+      "gain_to_20": 2.2675,
+      "oracle_len": 2064,
+      "simplicity": 0.1131,
+      "rank_score": 0.7627,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": [
+        "dead_crop"
+      ]
+    },
+    {
+      "task": 231,
+      "points": 19.6109,
+      "mem": 180,
+      "params": 39,
+      "cost": 219,
+      "method": "custom:task231",
+      "gain_to_20": 0.3919,
+      "oracle_len": 70,
+      "simplicity": 3.3357,
+      "rank_score": 0.7157,
+      "classes": [
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 189,
+      "points": 18.1833,
+      "mem": 866,
+      "params": 47,
+      "cost": 913,
+      "method": "custom:task189",
+      "gain_to_20": 1.8195,
+      "oracle_len": 1598,
+      "simplicity": 0.1461,
+      "rank_score": 0.6955,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:roi_pool_crop",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 176,
+      "points": 19.5194,
+      "mem": 0,
+      "params": 240,
+      "cost": 240,
+      "method": "custom:task176",
+      "gain_to_20": 0.4834,
+      "oracle_len": 113,
+      "simplicity": 2.0664,
+      "rank_score": 0.6949,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 236,
+      "points": 19.5319,
+      "mem": 208,
+      "params": 29,
+      "cost": 237,
+      "method": "custom:task236",
+      "gain_to_20": 0.4708,
+      "oracle_len": 109,
+      "simplicity": 2.1422,
+      "rank_score": 0.6891,
+      "classes": [
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 119,
+      "points": 17.7826,
+      "mem": 1243,
+      "params": 120,
+      "cost": 1363,
+      "method": "custom:task119",
+      "gain_to_20": 2.2202,
+      "oracle_len": 2490,
+      "simplicity": 0.0938,
+      "rank_score": 0.6799,
+      "classes": [
+        "c:bounded_scan",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 240,
+      "points": 17.7036,
+      "mem": 1393,
+      "params": 82,
+      "cost": 1475,
+      "method": "custom:task240",
+      "gain_to_20": 2.2992,
+      "oracle_len": 2678,
+      "simplicity": 0.0872,
+      "rank_score": 0.6789,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:assignment_wall",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 394,
+      "points": 17.0626,
+      "mem": 1871,
+      "params": 929,
+      "cost": 2800,
+      "method": "custom:task394",
+      "gain_to_20": 2.9402,
+      "oracle_len": 4412,
+      "simplicity": 0.0529,
+      "rank_score": 0.6764,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 362,
+      "points": 18.7442,
+      "mem": 408,
+      "params": 113,
+      "cost": 521,
+      "method": "custom:task362",
+      "gain_to_20": 1.2585,
+      "oracle_len": 811,
+      "simplicity": 0.2879,
+      "rank_score": 0.6753,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "c:sparse_scatter",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 229,
+      "points": 19.5194,
+      "mem": 212,
+      "params": 28,
+      "cost": 240,
+      "method": "custom:task229",
+      "gain_to_20": 0.4834,
+      "oracle_len": 124,
+      "simplicity": 1.8831,
+      "rank_score": 0.6634,
+      "classes": [
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 268,
+      "points": 16.8158,
+      "mem": 3328,
+      "params": 256,
+      "cost": 3584,
+      "method": "custom:task268",
+      "gain_to_20": 3.187,
+      "oracle_len": 5438,
+      "simplicity": 0.0429,
+      "rank_score": 0.6604,
+      "classes": [
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 247,
+      "points": 18.8473,
+      "mem": 408,
+      "params": 62,
+      "cost": 470,
+      "method": "custom:task247",
+      "gain_to_20": 1.1555,
+      "oracle_len": 774,
+      "simplicity": 0.3017,
+      "rank_score": 0.6347,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 26,
+      "points": 19.7017,
+      "mem": 0,
+      "params": 200,
+      "cost": 200,
+      "method": "custom:task026",
+      "gain_to_20": 0.3011,
+      "oracle_len": 53,
+      "simplicity": 4.4057,
+      "rank_score": 0.632,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 221,
+      "points": 18.3092,
+      "mem": 451,
+      "params": 354,
+      "cost": 805,
+      "method": "custom:task221",
+      "gain_to_20": 1.6936,
+      "oracle_len": 1685,
+      "simplicity": 0.1386,
+      "rank_score": 0.6305,
+      "classes": [
+        "c:bounded_scan",
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 376,
+      "points": 19.7743,
+      "mem": 144,
+      "params": 42,
+      "cost": 186,
+      "method": "custom:task376",
+      "gain_to_20": 0.2285,
+      "oracle_len": 32,
+      "simplicity": 7.2969,
+      "rank_score": 0.6173,
+      "classes": [
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 180,
+      "points": 19.6529,
+      "mem": 0,
+      "params": 210,
+      "cost": 210,
+      "method": "custom:task180",
+      "gain_to_20": 0.3499,
+      "oracle_len": 81,
+      "simplicity": 2.8827,
+      "rank_score": 0.5941,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 104,
+      "points": 19.4627,
+      "mem": 197,
+      "params": 57,
+      "cost": 254,
+      "method": "custom:task104",
+      "gain_to_20": 0.5401,
+      "oracle_len": 199,
+      "simplicity": 1.1734,
+      "rank_score": 0.5851,
+      "classes": [
+        "c:direct_onehot_gather",
+        "c:qlinear_uint8",
+        "c:roi_pool_crop",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 261,
+      "points": 19.7017,
+      "mem": 0,
+      "params": 200,
+      "cost": 200,
+      "method": "custom:task261",
+      "gain_to_20": 0.3011,
+      "oracle_len": 71,
+      "simplicity": 3.2887,
+      "rank_score": 0.546,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 128,
+      "points": 19.2962,
+      "mem": 0,
+      "params": 300,
+      "cost": 300,
+      "method": "custom:task128",
+      "gain_to_20": 0.7066,
+      "oracle_len": 400,
+      "simplicity": 0.5837,
+      "rank_score": 0.5398,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 274,
+      "points": 19.5795,
+      "mem": 146,
+      "params": 80,
+      "cost": 226,
+      "method": "custom:task274",
+      "gain_to_20": 0.4233,
+      "oracle_len": 152,
+      "simplicity": 1.5362,
+      "rank_score": 0.5247,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 46,
+      "points": 17.2515,
+      "mem": 2221,
+      "params": 97,
+      "cost": 2318,
+      "method": "custom:task046",
+      "gain_to_20": 2.7512,
+      "oracle_len": 6436,
+      "simplicity": 0.0363,
+      "rank_score": 0.524,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "c:tiny_lut_gather",
+        "$:connectivity_wall",
+        "$:full_label_plane_floor"
+      ],
+      "flags": []
+    },
+    {
+      "task": 38,
+      "points": 19.6387,
+      "mem": 163,
+      "params": 50,
+      "cost": 213,
+      "method": "custom:task038",
+      "gain_to_20": 0.3641,
+      "oracle_len": 114,
+      "simplicity": 2.0482,
+      "rank_score": 0.5211,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 386,
+      "points": 19.6481,
+      "mem": 180,
+      "params": 31,
+      "cost": 211,
+      "method": "custom:task386",
+      "gain_to_20": 0.3546,
+      "oracle_len": 111,
+      "simplicity": 2.1036,
+      "rank_score": 0.5144,
+      "classes": [
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 207,
+      "points": 19.5362,
+      "mem": 192,
+      "params": 44,
+      "cost": 236,
+      "method": "custom:task207",
+      "gain_to_20": 0.4666,
+      "oracle_len": 240,
+      "simplicity": 0.9729,
+      "rank_score": 0.4603,
+      "classes": [
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 142,
+      "points": 19.807,
+      "mem": 0,
+      "params": 180,
+      "cost": 180,
+      "method": "custom:task142",
+      "gain_to_20": 0.1957,
+      "oracle_len": 44,
+      "simplicity": 5.3068,
+      "rank_score": 0.4509,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 152,
+      "points": 19.807,
+      "mem": 0,
+      "params": 180,
+      "cost": 180,
+      "method": "custom:task152",
+      "gain_to_20": 0.1957,
+      "oracle_len": 44,
+      "simplicity": 5.3068,
+      "rank_score": 0.4509,
+      "classes": [
+        "c:single_conv_qlinear",
+        "c:sparse_scatter",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 322,
+      "points": 19.7017,
+      "mem": 144,
+      "params": 56,
+      "cost": 200,
+      "method": "custom:task322",
+      "gain_to_20": 0.3011,
+      "oracle_len": 119,
+      "simplicity": 1.9622,
+      "rank_score": 0.4218,
+      "classes": [
+        "c:bounded_scan",
+        "c:final_equal_overlay",
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 135,
+      "points": 19.7017,
+      "mem": 0,
+      "params": 200,
+      "cost": 200,
+      "method": "custom:task135",
+      "gain_to_20": 0.3011,
+      "oracle_len": 134,
+      "simplicity": 1.7425,
+      "rank_score": 0.3975,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 334,
+      "points": 19.7168,
+      "mem": 189,
+      "params": 8,
+      "cost": 197,
+      "method": "custom:task334",
+      "gain_to_20": 0.286,
+      "oracle_len": 131,
+      "simplicity": 1.7824,
+      "rank_score": 0.3818,
+      "classes": [
+        "c:bounded_scan",
+        "$:exact_preserve_rewrite"
+      ],
+      "flags": []
+    },
+    {
+      "task": 306,
+      "points": 19.2962,
+      "mem": 0,
+      "params": 300,
+      "cost": 300,
+      "method": "custom:task306",
+      "gain_to_20": 0.7066,
+      "oracle_len": 1159,
+      "simplicity": 0.2015,
+      "rank_score": 0.3171,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 82,
+      "points": 19.753,
+      "mem": 0,
+      "params": 190,
+      "cost": 190,
+      "method": "custom:task082",
+      "gain_to_20": 0.2498,
+      "oracle_len": 168,
+      "simplicity": 1.3899,
+      "rank_score": 0.2945,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 313,
+      "points": 19.7636,
+      "mem": 0,
+      "params": 188,
+      "cost": 188,
+      "method": "custom:task313",
+      "gain_to_20": 0.2392,
+      "oracle_len": 197,
+      "simplicity": 1.1853,
+      "rank_score": 0.2605,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 235,
+      "points": 19.8642,
+      "mem": 111,
+      "params": 59,
+      "cost": 170,
+      "method": "custom:task235",
+      "gain_to_20": 0.1386,
+      "oracle_len": 74,
+      "simplicity": 3.1554,
+      "rank_score": 0.2462,
+      "classes": [
+        "c:direct_onehot_gather",
+        "c:final_equal_overlay",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 395,
+      "points": 19.8941,
+      "mem": 144,
+      "params": 21,
+      "cost": 165,
+      "method": "custom:task395",
+      "gain_to_20": 0.1087,
+      "oracle_len": 89,
+      "simplicity": 2.6236,
+      "rank_score": 0.1761,
+      "classes": [
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 28,
+      "points": 19.876,
+      "mem": 0,
+      "params": 168,
+      "cost": 168,
+      "method": "custom:task028",
+      "gain_to_20": 0.1268,
+      "oracle_len": 130,
+      "simplicity": 1.7962,
+      "rank_score": 0.1699,
+      "classes": [
+        "c:direct_output_algebra",
+        "c:einsum_symbolic",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 258,
+      "points": 19.9248,
+      "mem": 0,
+      "params": 160,
+      "cost": 160,
+      "method": "custom:task258",
+      "gain_to_20": 0.078,
+      "oracle_len": 67,
+      "simplicity": 3.4851,
+      "rank_score": 0.1455,
+      "classes": [
+        "c:single_conv_qlinear",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 391,
+      "points": 19.9311,
+      "mem": 135,
+      "params": 24,
+      "cost": 159,
+      "method": "custom:task391",
+      "gain_to_20": 0.0717,
+      "oracle_len": 92,
+      "simplicity": 2.538,
+      "rank_score": 0.1142,
+      "classes": [
+        "c:final_equal_overlay",
+        "c:tiny_lut_gather",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 6,
+      "points": 19.9696,
+      "mem": 126,
+      "params": 27,
+      "cost": 153,
+      "method": "custom:task006",
+      "gain_to_20": 0.0332,
+      "oracle_len": 59,
+      "simplicity": 3.9576,
+      "rank_score": 0.0661,
+      "classes": [
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    },
+    {
+      "task": 248,
+      "points": 19.9827,
+      "mem": 122,
+      "params": 29,
+      "cost": 151,
+      "method": "custom:task248",
+      "gain_to_20": 0.0201,
+      "oracle_len": 123,
+      "simplicity": 1.8984,
+      "rank_score": 0.0276,
+      "classes": [
+        "c:sparse_scatter",
+        "$:connectivity_wall",
+        "$:exact_preserve_rewrite",
+        "$:mem0_param_game"
+      ],
+      "flags": []
+    }
+  ]
+}

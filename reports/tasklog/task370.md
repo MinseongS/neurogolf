@@ -57,3 +57,5 @@ unless the generator proves a strict stored+fresh subset.
 mem 8645/15.82; iterative diagonal-stamp; black20 1600B forced by uint8 QLinearConv (can't come from reduction); both levers already applied. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).
 
 ## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-3 opus agent; see agent report in submission_log context). Do not re-attempt without a new mechanism.
+
+## S11 (2026-07-03) — signed-priority overlay (playbook 15) scout: KILL — output = arbitrary sprite stamped along a ray (QLinearConv stamp, non-separable); recolour already free-routed via Where. Cost = fp32 entry crop + 4-dilation candidate bank + mux chain + 900B routing mask. Only conceivable lever = runtime-parameterized stamp (does not exist).

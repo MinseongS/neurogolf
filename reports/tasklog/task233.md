@@ -121,3 +121,5 @@ MEASURED load-bearing: pruned cand fails exactly the 3 rotated bundled examples;
 pub 1387B+165p < 4-rotation matcher blowup (+~9700B) — pub already optimal encoding.
 Crop lens checked by orchestrator: generator width=wide+randint(2,10), wide≤20 → grids
 reach 30×30. NOT croppable. Floor final. DO NOT re-probe.
+
+## S11 (2026-07-03) — signed-priority overlay (playbook 15) scout: KILL — output = content-matched 3x3 sprite stamping (rotation-hash assignment); cost = 3600B detection read + 3136B sprite-window Conv + ~4860B hash-match/TopK planes + 9x ScatterND placement. No label/priority carrier to delete. S9 FLOOR stands under the new lens.

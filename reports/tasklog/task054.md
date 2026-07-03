@@ -70,3 +70,5 @@ Counted 20091 = labf 3600 (per-cell colour read, structural floor, measured 7 wa
 fidx i64 1024 (ScatterND requires int64) + 4× uint8 edit boards 3600 (S8 golf result;
 stages consumed sequentially, reduction='max' union semantics block fusion) + CumSum
 segment planes. Seeds already free-input einsum profiles. Only sub-300B micro-levers left.
+
+## S11 (2026-07-03) — signed-priority overlay (playbook 15) scout: KILL — output preserves the arbitrary input (per-cell read floor 3600B) and the line overlays are data-dependent 2-D interval fills = mechanism-15's own ~3000B band floor; incumbent's 4x900B edit boards land at the same cost. S8 FLOOR stands.

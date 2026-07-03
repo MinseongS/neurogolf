@@ -188,3 +188,5 @@ B_rows_gather 450 (row-first already minimal). Remaining ~21.5KB = flat tail of 
 255B masks/int32 scalars across replicated rect machinery. Not→GEq fusion exhausted;
 free-input einsum inapplicable (masks also Gathered; derive from T_nb0 not input).
 Only ceiling-lifter = exact-cover semantic compiler (un-lowered, research). DO NOT re-probe.
+
+## S11 (2026-07-03) — signed-priority overlay (playbook 15) scout: KILL — stamped template rects with punched dots are 2-D non-separable AND all colours are instance-dependent (no constant signed W exists); ~21.5KB = replicated rectangle-extraction/stencil-match blocks (assignment machinery). Priority already via Where chain, no [30,30] carrier.

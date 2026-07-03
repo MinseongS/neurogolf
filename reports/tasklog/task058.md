@@ -45,6 +45,23 @@ for a per-cell colour map. Not at a hard floor — see open angles.
   carrier (1B vs 2B fp16, ~−900B → ~+0.1).
 - 20×20 crop is the true minimum (gen size hits 20); no tighter crop.
 
+## S12 (2026-07-03) — sparse-initializer bitpack probe REJECTED
+Current live/source is no longer the old fp16 closed-form pipeline; it is a
+5-node uint64 bitpack model:
+`ReduceL2 -> Cast -> Sub -> Gather(row_bits_table) -> BitwiseAnd(column_bits)`,
+scoring 18.060 at mem 252 / params 781.  The remaining cost is mostly dense
+initializers: `row_bits_table[16,1,30,1]` has 200 nonzero / 480 dense elems and
+`column_bits[1,10,1,30]` has 60 nonzero / 300 dense elems.
+
+Tried sparse initializers for both tables.  ORT can execute after fixed-point
+sanitize naming, but scorer shape inference rejects sparse `Gather`:
+`data tensor must have rank >= 1`.  Tried sparse `column_bits` only; scorer
+rejects sparse `BitwiseAnd` input: `B typestr: T, has unsupported type:
+sparse_tensor(uint64)`.  Therefore sparse initializer compression is not
+adoptable for this bitpack family under the current harness.  Generating
+`column_bits` dynamically would materialize a full channel/column mask
+intermediate and is more expensive than the 300 dense params it saves.
+
 ## INSIGHT (transferable)
 ⭐ **The prior verdict here was wrong because of TWO stale dtype claims** — a prior
 agent recorded "fp16 Min crashes under ORT_DISABLE_ALL" and "ORT upcasts Where to

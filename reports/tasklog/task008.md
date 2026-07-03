@@ -50,3 +50,31 @@ Rechecked possible substitutions:
 - Replacing the scalar label carrier with 10-channel construction is much larger.
 
 Conclusion unchanged: no adoptable improvement found.
+
+## 2026-07-03 cyan profile rewrite — ADOPTED
+
+Human review questioned whether the cyan 2x2 marker needs a full `[1,1,16,16]`
+channel slice.  It does not: the marker is always a solid 2x2 block, so row and
+column occupancy profiles are enough to recover both the locator and the cyan
+overlay mask.
+
+Adopted source-owned rewrite:
+
+- remove `c8f [1,1,16,16]` fp32 slice (**-1024B**) and its direct bool cast;
+- compute cyan row/column profiles from the free full input with two `Einsum`
+  contractions against `ch8f [10]`, `ones30 [30]`, and a singleton;
+- crop those profiles back to 16 and rebuild the cyan 2x2 mask as
+  `Cast(rp8) AND Cast(cp8)`;
+- keep the red 16x16 slice and label-carrier output path unchanged.
+
+Stored verification: **266/266 pass**,
+`memory=4809`, `params=104`, `points=16.50035996783135`.
+Fresh generator verification: **3000/3000 pass**.
+
+Net improvement over the previous deployed source:
+`memory 5561 -> 4809`, `params 65 -> 104`, total counted cost
+`5626 -> 4913`, score `16.364846 -> 16.500360` (**+0.1355**).
+
+Border-crop note: dropping a fixed two-cell border is not safe.  Over 20k fresh
+samples, cyan and red input/output bboxes each reached all four borders after
+the generator's flip/xpose transforms.  The persistent 16x16 crop remains needed.

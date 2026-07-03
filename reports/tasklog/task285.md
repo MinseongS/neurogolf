@@ -81,3 +81,5 @@ detection-only lower bound that ignores the irreducible 3-sprite reconstruction 
 File left unmodified (clean).
 
 ## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-4 opus agent). Do not re-attempt without a new mechanism.
+
+## S11 (2026-07-03) — signed-priority overlay (playbook 15) scout: KILL — output = arbitrary connected-blob reflection into 4 quadrants (per-cell 2-D scatter, not separable); cost = 3600B FULL_READ + enumeration TopK + orientation-scan + connectivity MaxPool + 2-D scatter carrier. No deletable carrier.

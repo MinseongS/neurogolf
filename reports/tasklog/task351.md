@@ -32,3 +32,12 @@ Dominant intermediate: **colf [1,1,30,30] fp32 = 3600B** — the single colour-i
 
 ## S8 (2026-07-02) — rect-recipe conversion ADOPTED, div 0
 free-input einsum marker locate (25·(15−row) scalar), green12 plane dropped; 1632→1015, +0.487. Fresh: agent uncached 2500 div0 + my uncached 400 div0.
+
+## S12 (2026-07-03) — current floor rechecked
+Current source/live is the S8 moment-locate model, scoring 18.077 at mem 956 /
+params 59.  Dominant cost is now `answer_patch[1,9,5,5]` fp32 = 900B from the
+reversed `Slice` of the free fp32 input.  Casting after the slice would add a
+second 225B bool/uint8 patch while keeping the 900B entry tensor, so it is
+worse.  Slicing/casting the input before coordinate recovery would materialize a
+large input plane.  No new candidate built; this is a direct input-copy floor
+unless a primitive can sample fp32 input into a smaller dtype.

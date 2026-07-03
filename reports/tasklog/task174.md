@@ -92,3 +92,14 @@ coordinates (≤30, fit int32). Narrowed both `Cast`→int32 (`to=6`) + matching
 - **mem 7013 → 6973** (−40B), params 142 (unchanged), **pts 16.1244 → 16.1300 (+0.0056)**.
 - Gate: bundled fail=0; equivalence vs incumbent = **0 divergences / 1596** random
   in-domain recolorings (layout preserved). Grader-safe (int32 Gather index, not *ND, not TopK).
+
+## S11 (2026-07-03) — ADOPTED: Equal-then-Pad crossover + fp16 subtree recasts (+0.1891)
+16.130 → 16.319 (7115B → 5889B; mem −1230, params +4). Two levers:
+1. Crossover (playbook 7 addendum, −650B): 900B [1,1,30,30]u8 Pad-then-Equal carrier →
+   Equal(Lin[1,1,5,5]u8, chan) → [1,10,5,5] bool (250B) → bool Pad to free output.
+   Needed opset 11→13 (bool Pad illegal at 11; ReduceSum → axes-as-input form).
+2. fp16 recasts (−580B): only clean fp16-capable subtrees (mismatch/nmis, box10 chain,
+   is_box0_f) — integers ≤10. sig-chain skipped: Slice can't emit fp16, a bridging Cast
+   costs +600B > 560B saved (⭐chain-bound variant of the recast trap). sig30 PRODUCER_BOUND.
+Gates: bundled fail=0; fresh 2000 divergence 0 vs real incumbent; re-verified post-rebuild.
+Backup: reports/retired_networks/task174_pre_s11_cross.onnx.

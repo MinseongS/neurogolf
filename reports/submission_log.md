@@ -588,3 +588,20 @@ free-output-axis welded; lever real only for counted entry reads — caveat in s
 🚨 Found: task220/230/294 single-Conv nets are 0.0-threshold knife-edge — batch local eval
 under-counts ~54.6pt (ORT arena flip); grade in isolation. Hardening (epsilon bias) queued.
 DAY: 7208.43 → 7213.63 (+5.20, 28 tasks changed, submission clean).
+
+## 2026-07-03 S11 — submitted, local isolated **7214.32** (expect LB ~7214.4)
+Family-first pivot session (user directive). New mechanism 15 (signed-channel priority
+overlay: `(out>0.0)` per-channel grading ⇒ overlap priority is LINEAR via signed W —
+no [30,30] label carrier) landed 092 +0.241; cohort sweep 6/6 KILL (233/285/370/133/054/366
+— costs are detection/assignment/stamp, boundary recorded in playbook 15).
+Global dtype value-range audit (dtype_overpay_scan, 326 nets, 0 err): recast seam mostly
+harvested — landed 234 +0.172 (einsum-island fp16), 203 +0.061 (cnt16; u8 would overflow
+on fresh). Carrier crossover sweep (Equal-then-Pad iff content<90): exactly 1 hit → 174
++0.189 (crossover −650B + fp16 subtrees, opset 13 bool Pad). User hand-landed 008 +0.136
+(fresh 2000/2000 clean). int8 ranking-only QLinearConv on PRODUCER_BOUND: DRY WELL 0/32
+(input quantization 9000B >> savings; 3 measured refutation builds). Floors confirmed by
+build: 041 (crossover rule + PRODUCER_BOUND trap), 084 (single-free-output-writer
+composition constraint), 162 (bundled train#2 violates generator guarantee — public-fatal).
+294 knife-edge root cause = ORT 1.26 cross-session weight aliasing (task120 weights leak
+into 294 session); initializer hardening impossible, PARKED. Teacher rescan: no new dumps.
+DAY: 7213.63 → local 7214.32 (+0.80: 092/234/203/174 by loop, 008 by user).

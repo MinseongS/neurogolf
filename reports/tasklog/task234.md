@@ -47,3 +47,12 @@ whose output decomposes into <=~4 solid rectangles.
 
 ## S8 (2026-07-02) — rect-recipe conversion ADOPTED, div 0
 per-colour bbox from einsum count profiles + Sign/ArgMax; row/col_any_all planes dropped; signed-einsum routing untouched; 5179→3808, +0.307. Fresh: agent uncached 2500 div0 + my uncached 400 div0.
+
+## S11 (2026-07-03) — ADOPTED: fp16 recast of the input-free einsum island (+0.1715)
+16.755 → 16.927 (3808B → 3208B). dtype_overpay_scan flagged 1387B; realized 600B because
+only the FINAL routing einsum ('tnk,tr,tc->nkrc') has no free-input operand — its three
+operands + upstream weight path (onehot_f/minus_bg/weight310/weight, values {-1,0,1})
+recast jointly to fp16. The g0/g1/rp*/cp* detection planes are dtype-bound (co-operand =
+fp32 free input) and stay fp32. ⭐TRANSFERABLE: recast whole einsum ISLANDS (connected
+subgraphs with no free-input operand), not individual tensors. Gates: bundled fail=0,
+fresh 2000 divergence 0 (bit-identical). Backup: reports/retired_networks/task234_pre_s11_recast.onnx.

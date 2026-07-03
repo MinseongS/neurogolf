@@ -1,0 +1,2087 @@
+[
+ {
+  "task": 18,
+  "tensor": "safe_name_41",
+  "bytes": 3600,
+  "save": 2700,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0912,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -6300,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 54,
+  "tensor": "labf",
+  "bytes": 3600,
+  "save": 2700,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.1421,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -6300,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 74,
+  "tensor": "color_f",
+  "bytes": 3600,
+  "save": 2700,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.3543,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -6300,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 80,
+  "tensor": "colf32",
+  "bytes": 3600,
+  "save": 2700,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.2952,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -6300,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 133,
+  "tensor": "border_grid_f",
+  "bytes": 3600,
+  "save": 2700,
+  "verdict": "VALUE_SENSITIVE",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": false,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0955,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -6300,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 173,
+  "tensor": "task173_label_f",
+  "bytes": 3600,
+  "save": 2700,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.1661,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -6300,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 198,
+  "tensor": "G",
+  "bytes": 3600,
+  "save": 2700,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.2219,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -6300,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 205,
+  "tensor": "cgrid",
+  "bytes": 3600,
+  "save": 2700,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Equal",
+   "GridSample"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.2494,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -6300,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 233,
+  "tensor": "con1",
+  "bytes": 3600,
+  "save": 2700,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0847,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -6300,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 285,
+  "tensor": "color_f",
+  "bytes": 3600,
+  "save": 2700,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.1132,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -6300,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 366,
+  "tensor": "label30",
+  "bytes": 3600,
+  "save": 2700,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0894,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -6300,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 187,
+  "tensor": "t2",
+  "bytes": 5000,
+  "save": 2500,
+  "verdict": "VALUE_SENSITIVE",
+  "producer": "Conv",
+  "integer": true,
+  "binary": true,
+  "immediate": [
+   "Einsum"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": false,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.3573,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -6500,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 233,
+  "tensor": "vspr",
+  "bytes": 3136,
+  "save": 2352,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Greater"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0734,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -6648,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 377,
+  "tensor": "grid_f",
+  "bytes": 2916,
+  "save": 2187,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.3075,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -6813,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 138,
+  "tensor": "cgf32",
+  "bytes": 2600,
+  "save": 1950,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.167,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -7050,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 158,
+  "tensor": "lab_f",
+  "bytes": 2600,
+  "save": 1950,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0979,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -7050,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 286,
+  "tensor": "label_f",
+  "bytes": 2500,
+  "save": 1875,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0814,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -7125,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 85,
+  "tensor": "score",
+  "bytes": 3600,
+  "save": 1800,
+  "verdict": "VALUE_SENSITIVE",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": false,
+   "value": false,
+   "dangling": true
+  },
+  "owned": false,
+  "est_delta": 0.4072,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -7200,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 383,
+  "tensor": "color_f",
+  "bytes": 2304,
+  "save": 1728,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.335,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -7272,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 286,
+  "tensor": "t25",
+  "bytes": 2500,
+  "save": 1250,
+  "verdict": "VALUE_SENSITIVE",
+  "producer": "Conv",
+  "integer": true,
+  "binary": true,
+  "immediate": [
+   "Einsum"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": false,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0536,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -7750,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 182,
+  "tensor": "cidf32",
+  "bytes": 1600,
+  "save": 1200,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "AveragePool",
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.2061,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -7800,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 192,
+  "tensor": "occ_f",
+  "bytes": 1600,
+  "save": 1200,
+  "verdict": "VALUE_SENSITIVE",
+  "producer": "Conv",
+  "integer": true,
+  "binary": true,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": false,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.1882,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -7800,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 209,
+  "tensor": "lab_f32",
+  "bytes": 1600,
+  "save": 1200,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0543,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -7800,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 324,
+  "tensor": "input_color_f32",
+  "bytes": 1600,
+  "save": 1200,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.1449,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -7800,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 396,
+  "tensor": "A18",
+  "bytes": 1296,
+  "save": 972,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.1061,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8028,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 4,
+  "tensor": "code_f",
+  "bytes": 1024,
+  "save": 768,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.1619,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8232,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 5,
+  "tensor": "colors21_f32",
+  "bytes": 900,
+  "save": 675,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.1032,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8325,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 76,
+  "tensor": "color15_f",
+  "bytes": 900,
+  "save": 675,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0347,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8325,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 76,
+  "tensor": "valid15_f",
+  "bytes": 900,
+  "save": 675,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": true,
+  "immediate": [
+   "Greater"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0347,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8325,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 79,
+  "tensor": "color_f",
+  "bytes": 784,
+  "save": 588,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.2071,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8412,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 222,
+  "tensor": "colf",
+  "bytes": 784,
+  "save": 588,
+  "verdict": "VALUE_SENSITIVE",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": false,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0755,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8412,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 89,
+  "tensor": "color13_f",
+  "bytes": 676,
+  "save": 507,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0743,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8493,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 201,
+  "tensor": "labels_f",
+  "bytes": 676,
+  "save": 507,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.1638,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8493,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 205,
+  "tensor": "c6",
+  "bytes": 640,
+  "save": 480,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "ReduceMax"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": false,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.04,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8520,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 132,
+  "tensor": "scalar14x15",
+  "bytes": 840,
+  "save": 420,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "TopK"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": false,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.1084,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8580,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 41,
+  "tensor": "color_f",
+  "bytes": 400,
+  "save": 300,
+  "verdict": "VALUE_SENSITIVE",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": false,
+   "value": true,
+   "dangling": false
+  },
+  "owned": true,
+  "est_delta": 0.1836,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8700,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 46,
+  "tensor": "color_grid_f_full",
+  "bytes": 360,
+  "save": 270,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.1238,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8730,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 185,
+  "tensor": "p3_grid_f32",
+  "bytes": 324,
+  "save": 243,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.1323,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8757,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 397,
+  "tensor": "code_f",
+  "bytes": 320,
+  "save": 240,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0902,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8760,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 11,
+  "tensor": "noise_grid7",
+  "bytes": 196,
+  "save": 147,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": true,
+  "immediate": [
+   "Slice"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0764,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8853,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 185,
+  "tensor": "p4_grid_f32",
+  "bytes": 196,
+  "save": 147,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0779,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8853,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 218,
+  "tensor": "sample_grid",
+  "bytes": 196,
+  "save": 147,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast",
+   "Conv"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.2528,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8853,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 185,
+  "tensor": "p5_grid_f32",
+  "bytes": 144,
+  "save": 108,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0566,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8892,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 63,
+  "tensor": "row_conv",
+  "bytes": 120,
+  "save": 90,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Slice"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": false,
+   "dangling": true
+  },
+  "owned": false,
+  "est_delta": 0.0458,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8910,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 63,
+  "tensor": "col_conv",
+  "bytes": 120,
+  "save": 90,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Slice"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": false,
+   "dangling": true
+  },
+  "owned": false,
+  "est_delta": 0.0458,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8910,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 80,
+  "tensor": "rowsum",
+  "bytes": 120,
+  "save": 90,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Greater",
+   "ReduceMax"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0086,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8910,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 138,
+  "tensor": "rsc",
+  "bytes": 120,
+  "save": 90,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "ArgMax"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": false,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0071,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8910,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 138,
+  "tensor": "csc",
+  "bytes": 120,
+  "save": 90,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "ArgMax"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": false,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0071,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8910,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 170,
+  "tensor": "row_count_4d",
+  "bytes": 120,
+  "save": 90,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Greater"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.036,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8910,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 177,
+  "tensor": "row_score",
+  "bytes": 120,
+  "save": 90,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "ArgMax"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": false,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0252,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8910,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 177,
+  "tensor": "col_score",
+  "bytes": 120,
+  "save": 90,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "ArgMax"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": false,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0252,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8910,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 178,
+  "tensor": "row0_labels_wide",
+  "bytes": 120,
+  "save": 90,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": true,
+   "value": false,
+   "dangling": true
+  },
+  "owned": false,
+  "est_delta": 0.1255,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8910,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 178,
+  "tensor": "col0_labels_wide",
+  "bytes": 120,
+  "save": 90,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.1255,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8910,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 224,
+  "tensor": "row_sum",
+  "bytes": 120,
+  "save": 90,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Sign"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": false,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0323,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8910,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 224,
+  "tensor": "col_sum",
+  "bytes": 120,
+  "save": 90,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Sign"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": false,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0323,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8910,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 284,
+  "tensor": "row_presence_val",
+  "bytes": 120,
+  "save": 90,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "ArgMax"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": false,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0244,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8910,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 284,
+  "tensor": "col_presence_val",
+  "bytes": 120,
+  "save": 90,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "ArgMax"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": false,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0244,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8910,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 91,
+  "tensor": "col_occ",
+  "bytes": 120,
+  "save": 60,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "TopK"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": false,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.02,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8940,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 246,
+  "tensor": "rows30",
+  "bytes": 120,
+  "save": 60,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "TopK"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": false,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.022,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8940,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 246,
+  "tensor": "cols30",
+  "bytes": 120,
+  "save": 60,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "TopK"
+  ],
+  "detail": {
+   "rank": true,
+   "threshold": false,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.022,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8940,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 263,
+  "tensor": "h_raw",
+  "bytes": 40,
+  "save": 30,
+  "verdict": "VALUE_SENSITIVE",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": false,
+   "value": true,
+   "dangling": true
+  },
+  "owned": false,
+  "est_delta": 0.0451,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8970,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 263,
+  "tensor": "v_raw",
+  "bytes": 40,
+  "save": 30,
+  "verdict": "VALUE_SENSITIVE",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": false,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0451,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8970,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 322,
+  "tensor": "color_index",
+  "bytes": 36,
+  "save": 27,
+  "verdict": "RANKING_ONLY",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Cast"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": false,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.145,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8973,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 149,
+  "tensor": "conv1_out",
+  "bytes": 36,
+  "save": 18,
+  "verdict": "VALUE_SENSITIVE",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Conv"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": false,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.142,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8982,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ },
+ {
+  "task": 185,
+  "tensor": "line_code_f32",
+  "bytes": 4,
+  "save": 3,
+  "verdict": "MIXED",
+  "producer": "Conv",
+  "integer": true,
+  "binary": false,
+  "immediate": [
+   "Less",
+   "Mod"
+  ],
+  "detail": {
+   "rank": false,
+   "threshold": true,
+   "value": true,
+   "dangling": false
+  },
+  "owned": false,
+  "est_delta": 0.0015,
+  "inp_name": "input",
+  "inp_shape": [
+   1,
+   10,
+   30,
+   30
+  ],
+  "added_u8_bytes": 9000,
+  "net_bytes": -8997,
+  "inp_is_graphinput": true,
+  "honest_est_delta": 0.0
+ }
+]

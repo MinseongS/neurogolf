@@ -137,3 +137,39 @@ and is not a score improvement.  No adoptable optimization found.  The reusable
 lesson is to trace marker-to-lattice routing separately from marker detection:
 if a task uses fixed block routing, fresh misses may come from slice-window
 coverage rather than semantic detection.
+
+## 2026-07-03 center-crop / 2x2 direction-probe check
+
+User hypothesis: since the source sprite is a 3x3 shape with a few missing
+cells, recover the center from the middle only and detect directions by checking
+the eight 2x2 regions adjacent to the center sprite, instead of building the
+shared 15x15 colour map.
+
+Generator-bound results:
+
+- Center top-left is always 6..12, so the center sprite itself is always within
+  rows/cols 6..14.  A 9x9 center crop is enough for shape recovery.
+- Direction probes need offsets about -3..+5 from the center top-left across
+  all possible center positions, so the absolute envelope is rows/cols 3..17.
+  That is exactly the incumbent `colors21` 15x15 sampled colour map.
+- For every generator-valid missing-cell mask and valid direction, there is a
+  fixed 2x2 probe inside the first directional sprite that intersects the
+  visible hint.  The hypothesis is semantically valid for direction detection.
+
+Cost check:
+
+- Incumbent shared 15x15 colour map: Conv weight [1,10,6,6] = 360 params,
+  `colors21_f32` 900B + `colors21` 225B = 1125B.
+- Center-only 9x9 colour map would reduce memory to 405B, but still costs
+  640 params with the needed dilated sampling and does not include direction
+  hints.
+- Direct 8-direction 2x2 probe maps with dense Conv would need output only
+  8x7x7, but ONNX counts the dense [8,10,24,24] kernel: 46080 params, fatal.
+- Building 2x2 probes from the incumbent 15x15 map adds about 392B and extra
+  Slice/Max nodes unless it deletes later routing; it does not.
+
+Conclusion: the 2x2-probe idea is a good semantic simplification for direction
+recognition, but it is not an adoptable score optimization in ONNX.  The
+incumbent 15x15 dilated colour map is already the cheap way to share all center
+and direction samples; the remaining cost is still direction-to-ray routing, not
+direction detection.

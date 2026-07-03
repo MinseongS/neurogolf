@@ -23,3 +23,19 @@ UNMEASURED). Candidate parked at reports/harden_candidates/task294_cand.onnx.
 DO NOT adopt an unverified "fix" here (this task's history: leak-audit false-positive
 "fix" was pure loss). Next step: dump dirty-vs-clean output deltas to size the divergence.
 Grader currently passes the incumbent (LB clean incl. 7213.63) — risk is private-LB env drift.
+
+## S11 (2026-07-03) — dirty-flip ROOT CAUSE: ORT 1.26.0 cross-session weight aliasing
+The S10 mystery is solved and it is NOT float drift. Minimal repro: evaluate
+`networks/task120.onnx` (structurally identical biased single-Conv (10,10,3,3)+(10,),
+pads [1,1,1,1]) first in a process, then any task294 session in the same process —
+the 294 session silently computes with **task120's weights** (dirty outputs carry
+task120's bias fingerprint: −8 at ch8 instead of 294's −8 at ch2). First-model-wins,
+symmetric, immune to initializer renames/byte edits, `disable_prepacking`, and
+`enable_cpu_mem_arena=False`. task097 does not alias; the 015/220 pair does not alias.
+⇒ NO initializer-only hardening (incl. the parked ±0.5-bias candidate, which is
+numerically perfect in a clean process and 2000/2000 fresh) can pass a dirty gate;
+a fix would need a graph-STRUCTURE change to break the session-signature collision.
+Decision: PARKED. Grader passes the incumbent (all submissions incl. 7213.63);
+local rule = always grade 294 in isolation, never batched after task120.
+Caveat for local tooling: `dirty_gate.py`-style inc-then-cand ordering is vacuous for
+structurally identical pairs (candidate inherits incumbent's packed weights).
