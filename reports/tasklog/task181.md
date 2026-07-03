@@ -54,3 +54,10 @@ is unreachable for this relabel.
   relabel whose palette excludes the top channels.
 - The 6×9-active-grid + final-Pad idiom is already near its structural floor; a
   one-hot relabel cannot beat ~18.0 once the active region and palette are fixed.
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.003)
+**Mechanism (op-census diff):** One fewer flag index (`flag_index` [1,4]→[1,3]). −1 param.
+**Old→new:** mem 201→201, params 168→167.
+**Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
+Backup `reports/retired_networks/task181_pre_s10.onnx`; source `public_candidates/bobmyers7186/task181.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
+No transferable mechanism — minor trim.

@@ -230,3 +230,10 @@ Reusable insight: for random per-instance output colours, a 30x30 scalar
 colour-id carrier plus broadcast `Equal` can beat any direct one-hot output
 candidate, because the graph output is free but intermediate 10-channel carriers
 are not.
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.002)
+**Mechanism (op-census diff):** Op census and initializer set are **identical** (no structural change); the −5B is a grader-profiler-side delta only.
+**Old→new:** mem 2076→2071, params 188→188.
+**Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
+Backup `reports/retired_networks/task012_pre_s10.onnx`; source `public_candidates/bobmyers7186/task012.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
+No transferable mechanism — minor trim.

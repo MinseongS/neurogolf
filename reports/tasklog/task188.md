@@ -62,3 +62,26 @@ to a near-Tier-A separable rectangle, NOT a detection net. The only irreducible
 loss is the small fraction of grids that tile BOTH ways at the minimal size,
 where the generator's choice is a free coin flip (non-deterministic — universal
 wall, not a thinking gap).
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.154)
+**Mechanism (real diff):** the incumbent decoded the tile via a **QLinearConv**
+(quant `code_w`/`code_scale`/`code_zero` + `Split` into 11 code constants `c_0..c_10`)
+producing an fp32 `first9` [1,9,4,4] plane + `first9_u8`/`cropped` tile crop, then
+broadcast to a **fp16** [1,10,30,30] output. The teacher net throws all of that out
+and emits the output as the **separable rectangle** this tasklog's own INSIGHT
+predicted: per-cell [4]-slice constants (`cell_R_C_s/e`, 12 `Slice`), a
+`row_mask` [1,1,30,1] ∧ `col_mask` [1,1,1,30] and **one Einsum** to place the colour.
+Even though the nominal output is now fp32 (36000B) not fp16, the **grader mem falls
+259B** because the QLinearConv quant working-buffers + the fp32 `first9`/`cropped`
+tile planes are gone. Ops: QLinearConv/Split/Where/Pad/Equal→0; +Einsum, +Mul×3,
++Slice(5→12), +ReduceMax(4→11).
+**Old→new:** mem 1128→869 (−259), params 59→149 (+90). LB 1187→1018.
+**Gate:** bundled cand fail=0; fresh N=2000 inc_fail=3 cand_fail=3 (EQUAL — the
+~0.09% doubly-tileable coin-flip wall is inherent to both nets, gate PASS). No TopK.
+Backup `reports/retired_networks/task188_pre_s10.onnx`; source `public_candidates/bobmyers7186/task188.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
+⭐ **TRANSFERABLE:** empirical confirmation of this task's standing INSIGHT — a
+"duplicate/symmetry" output is a **separable row∧col rectangle emitted by one
+Einsum**, and that beats a QLinearConv tile-decode on GRADER mem even when the
+Einsum path uses a larger output dtype, because QLinearConv drags quant buffers.
+Prefer mask+Einsum emission over quantized-conv decode whenever the output is a
+solid rect crop.

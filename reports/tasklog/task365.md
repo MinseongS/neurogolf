@@ -82,3 +82,30 @@ crop idiom. The wall is that a 2-D segmented SUM still needs 4 one-directional s
 fp16 10x10 planes); it lands at ~15.1, a MARGINAL +0.27 over the gen-net. To cross +0.3/reach B≈16.8
 you need a CumSum integral image with a cheap per-cell rectangle read (blocked here by data-dependent
 2-D Gather).
+
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.024, policy-gated)
+
+Clean adoption (candidate ≤ incumbent on every gate). Same BR-corner two-scan box-red
+argmax + variable crop mechanism as the incumbent; only the detection Conv realization changed.
+
+**Mechanism diff (op census, retired vs new):** single `Conv` → `QLinearConv` (int8),
+`Cast` count 7→8. The two forward segmented prefix scans (rH, boxred), the unique-max BR
+selection, the 1-D run-length H/W reads and the `Einsum`/`ArgMax`/`Where` crop assembly are
+all unchanged (85→86 nodes). The int8 detection-conv output flows into the `TopK` rank via an
+fp16 score (`safe_name_37_topk_f16`), so ranking stays exact.
+
+**Cost:** mem 3908→3808, params 120→124, pts 16.6990→16.7231 (**+0.024**, cost 4028→3932 −96).
+
+**Gate evidence:** bundled 266/266 fail=0 (both nets). Fresh 2×2000: candidate 0 fails,
+incumbent 0 fails, 0 divergence. TopK audit: 1 TopK, data-input `safe_name_37_topk_f16`
+= **FLOAT16** (grader-safe; not uint8).
+
+**Backup + provenance:** incumbent → `reports/retired_networks/task365_pre_s10.onnx`;
+candidate source `public_candidates/bobmyers7186/task365.onnx` → `networks/task365.onnx`;
+source regenerated via live_to_exact_source --write-src, src↔live reconciled fail=0.
+
+⭐ TRANSFERABLE: same int8-`QLinearConv`-on-a-fixed-detection-Conv-feeding-fp16-`TopK` lever
+as task264 — a detection/B net with one fixed detection Conv whose output only feeds a TopK
+rank can int8-quantize that Conv bit-safely. Selection: single fixed detection Conv → fp16
+TopK/ArgMax, currently fp16/fp32. Confirmed twice this session (264, 365) on the bobmyers pack.

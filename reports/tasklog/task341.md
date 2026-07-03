@@ -24,3 +24,8 @@ Dominant survivors: **V32 [1,1,30,30] fp32 = 3600 B** (colour-index Conv entry, 
 
 ## INSIGHT (transferable)
 `apply_gravity` in ARC-GEN is NOT physical gravity — it is a transpose/reflection applied IDENTICALLY to input and output, so the input→output rule is orientation-equivariant; handle it by computing BOTH axis branches and selecting via "which axis has the occupancy hole". ⭐ For two-block gap-fill tasks: the gap axis is the one whose 1-D occupancy has an internal empty run ((extent_len) > (#occupied lines)); the perpendicular cyan span is the nested intersection of the two flanking bands' extents (max-of-mins, min-of-maxes), shrunk by 1 — recoverable purely from ReduceMax/ReduceMin/Where on band-masked occupancy, no per-channel block identification needed.
+
+## S10 (2026-07-03) — crop-to-bound priced FLOOR
+Verified generator bound = 10. Flagged `bridge30` bool [30,30] 900B is a Where cond. A signed-einsum re-route WAS built and gates clean (bundled 266/266, fresh 2500 0-div) but prices **1491 vs incumbent 1429 (+62)**: the copy-term mixer [2,10,10]=200 params + Rt/Ct [2,30] 480B exceed the 900B saved. FLOOR — recorded explicitly so nobody rebuilds it. Candidate kept at scratchpad crop_b/cand341_trim.py, NOT adopted.
+
+⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).

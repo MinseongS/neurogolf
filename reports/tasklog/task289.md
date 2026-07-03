@@ -57,3 +57,8 @@ after the two axis-separable Gathers.
 presence → slice ch1..9 → ReduceSum. No per-cell plane.
 ⭐ This is the task195/task011 Kronecker/upscale family generalised to a
 DATA-DEPENDENT scale factor — the const-index Gather becomes a `floor(u/K)` Gather.
+
+## S10 (2026-07-03) — crop-to-bound priced FLOOR
+Verified generator bound = 15 (in 3×3, out ≤15). Flagged `mask_float` [30,3] 360B: its 30 IS the einsum free-output row dim. Cropping → Pad → counted 9000B fp32; the P[15,30] re-embed adds +450 params, which exceeds the 180B saved. FLOOR.
+
+⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).

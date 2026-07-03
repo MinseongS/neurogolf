@@ -131,3 +131,33 @@ against the current 1024 B `label16` carrier and 256 B `color_indices` route.
 
 No reusable mechanism beyond the already-known "fixed recolored glyphs -> recover
 scalars + stamp template" was found in this pass.
+
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.113, policy-gated)
+
+Clean adoption (candidate ≤ incumbent on every gate). Same hash/rank/TopK glyph-chart
+template as the incumbent — the whole 20-node graph is structurally identical.
+
+**Mechanism diff (op census, retired vs new):** only change is `Conv` → `QLinearConv`.
+The fixed 3×3 gray-window hash convolution is int8-quantized; the downstream
+`Einsum` colour-label read, 69-entry `rank_table` gather, `TopK(8)` glyph-window
+ranking, `GatherND` anchor colour reads, 9×9 `slot_map` compare and `Pad`-to-free-output
+are unchanged. Initializer footprint essentially identical (3122 → 3120 B). The
+−646 cost comes from the int8 conv output/working plane replacing the fp16 hash plane;
+the hash values still feed `TopK` through an fp16 rank score, so ranking stays exact.
+
+**Cost:** mem 5348→4700, params 706→708, pts 16.2915→16.4044 (**+0.113**, cost 6054→5408 −646).
+
+**Gate evidence:** bundled 265/265 fail=0 (both nets). Fresh 2×2000 uncached: candidate
+0 fails, incumbent 0 fails, 0 divergence. TopK audit: 1 TopK, data-input `safe_name_23`
+= **FLOAT16** (grader-safe; not uint8).
+
+**Backup + provenance:** incumbent → `reports/retired_networks/task264_pre_s10.onnx`;
+candidate source `public_candidates/bobmyers7186/task264.onnx` → `networks/task264.onnx`;
+source regenerated via live_to_exact_source --write-src, src↔live reconciled fail=0.
+
+⭐ TRANSFERABLE: int8 `QLinearConv` on a **fixed-kernel detection/hash Conv whose output
+only needs to preserve ORDER (feeds TopK/ArgMax through an fp16 score), not exact values**
+is bit-safe here and shaves the conv working plane. Propagate to hash/rank/TopK template
+nets — selection criterion: a fixed-weight Conv whose output flows only into a TopK or
+ArgMax rank (not into arithmetic that must stay float-exact). Sibling hit this session = task365.

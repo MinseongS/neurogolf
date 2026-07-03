@@ -57,3 +57,10 @@ drip) and fill = (rowramp >= startrow) in ONE broadcast — no per-tooth full pl
 coordinate range (from generator bounds) lets you slice colf to the exact conv-relevant
 window first, which simultaneously kills the colf^2 full plane and shrinks every downstream
 S-plane (here 3600->1224 and 2592->672). Slicing the conv OUTPUT only shrinks the latter.
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.001)
+**Mechanism (op-census diff):** Folded a redundant `Flatten` (26→25 nodes). −8B, params flat.
+**Old→new:** mem 5836→5828, params 230→230.
+**Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
+Backup `reports/retired_networks/task165_pre_s10.onnx`; source `public_candidates/bobmyers7186/task165.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
+No transferable mechanism — minor trim.

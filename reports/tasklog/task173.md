@@ -34,3 +34,25 @@ Folded Slice into decode: 1×1 Conv 30×30 fp32 (3600) + fp16 cast 30×30 (1800)
 6×6 valid Conv tap(0,0) → grid_f 25×25 fp32 (2500) + Cast. mem 20717→18717, params
 109→459. Bit-identical 2000+600 uncached 0/0/0. S8 padded-TopK/K=40 untouched (floor).
 Backup task173_pre_s9.onnx.
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.083, relaxed gate)
+**Mechanism (real diff):** the crop/decode is re-plumbed. Our S9 incumbent used a
+**6×6 valid-Conv geometric tap** (`task173_label_conv_w` [1,10,6,6] = 360-param
+kernel) producing `grid_f` [1,1,25,25] fp32 (2500B), plus the S8 padded-841 TopK
+(`grid_score` [841] f16 = 1682B). The teacher reverts to a **1×1 label Conv**
+(`[1,10,1,1]`, 10 params) over the full 30×30 (`task173_label_f` 3600B) and crops
+with a **computed int32-width Slice** (new `shape_flat`/`four_i32`/`width_i32` +
+`Div`/`Mul`/`Reshape`/`Slice`), and drops TopK back to **unpadded 625** (`grid_score`
+1250B, −432B). Net: kernel 360→10 params dominates the −347 param drop; mem −1183.
+**Old→new:** mem 18717→17534 (−1183), params 459→112 (−347). LB 19176→17646.
+**Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 **cand_fail=8/2000 (0.4%)** —
+the teacher's crop rule diverges on ~0.4% of fresh instances. **Adopted under the S10
+relaxed gate** (bundled fail=0 = the LB gate; fresh ≥98% → submit-verify).
+**Private-LB risk = 0.4% fresh fail.** Its 3 TopK inputs (`grid_score`,
+`proto_center_f16`, `point_outer_f16`) verified **FLOAT16** (grader-safe).
+Backup `reports/retired_networks/task173_pre_s10.onnx`; source `public_candidates/bobmyers7186/task173.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
+⭐ **TRANSFERABLE (partially reverses S9):** a data-dependent crop is cheaper as a
+**computed int32-width `Slice` on a 1×1-Conv label plane** than as a 6×6 valid-Conv
+geometric tap — the tap pays a 360-param kernel + a 25×25 fp32 tap plane; the
+Slice-crop pays a 10-param 1×1 conv + a handful of int32 width scalars. When a
+valid-Conv tap only exists to select a sub-window, price it against a width-Slice.

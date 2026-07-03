@@ -65,3 +65,10 @@ distinguishes orientation for free (full edges are horizontal ⇔ row-box).
 
 ## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
 mem 2624/16.96; color_padded 900B min pre-Equal carrier (15x15 Equal=2250B worse), red_core_code_f 400B forced-fp32, gray_indices ScatterND minimal. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.000)
+**Mechanism (op-census diff):** Fused And+Not into one `Xor` (And 17→16, Not 4→3, +Xor; 75→74 nodes). −1B.
+**Old→new:** mem 2624→2623, params 467→467.
+**Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
+Backup `reports/retired_networks/task390_pre_s10.onnx`; source `public_candidates/bobmyers7186/task390.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
+No transferable mechanism — minor trim.

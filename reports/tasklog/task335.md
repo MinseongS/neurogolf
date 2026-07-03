@@ -41,3 +41,8 @@ double-MatMul builder. The L-mask is a rank-2 outer product `rowA⊗colA + rowB�
 30x30 plane). And ONE value-conv per axis (col0->1, col1->2) recovers BOTH dot rows/cols from a single
 collapse-conv (red = clip(v) - (v-clip(v)); cyan = v-clip(v)), halving conv params vs separate red/cyan
 convs. This dropped the shared `_hpwl` builder from 16.29 to 16.599 (mem 5520->4080, params 520->373).
+
+## S10 (2026-07-03) — crop-to-bound priced FLOOR
+Verified generator bound = 20 (bundled max 13×12). Separable-einsum net 2215 total; the final Einsum 'ntc,th,tw->nchw' writes free [1,10,30,30]; factors Rf/Cf [5,30] and all builder planes are welded to 30 (task077 free-operand refutation). Cropping → counted 4000B Pad. FLOOR.
+
+⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).

@@ -106,3 +106,8 @@ reduction found:
   selectors 120, ci_lo/ri_lo masks 60, chramp/chan 20). Swapping a const init for a computed
   plane is mem-for-params neutral (no score change).
 **VERDICT: FLOOR.** 16.278 stands; no strict mem+params reduction lands without re-fit risk.
+
+## S10 (2026-07-03) — crop-to-bound priced FLOOR
+Verified generator bound = 20 (bundled max 17×14). Flagged `colcount`/`rowcount` 1200B each are ReduceSum of the free input (inherently 30-wide); `og` [30,30] 900B feeds a QLinearMatMul → free Equal output. A 20×20 interior needs either an input Slice 12000B or Pad(og20→30) 900B (a wash). Confirms the existing tasklog 2400B floor. FLOOR.
+
+⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).

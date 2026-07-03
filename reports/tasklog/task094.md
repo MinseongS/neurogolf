@@ -53,3 +53,10 @@ peak to the window's TOP-LEFT, not its centre — add `pads=[k,k,k,k]` (SAME) to
 the geometric centre. When the rule paints full independent rows AND full independent cols, the
 2-D crosshair is SEPARABLE: reduce the centre plane to is_row[1,1,H,1] OR is_col[1,1,1,W] and
 let the broadcast happen in the free final ops.
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.001)
+**Mechanism (op-census diff):** Detection conv kernels `row_w`/`col_w` shrunk **5→3 taps** ([1,1,5,1]→[1,1,3,1], [1,1,1,5]→[1,1,1,3]); 3 taps empirically suffice. −4 params, mem flat.
+**Old→new:** mem 2662→2662, params 51→47.
+**Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
+Backup `reports/retired_networks/task094_pre_s10.onnx`; source `public_candidates/bobmyers7186/task094.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
+No transferable mechanism — minor trim.

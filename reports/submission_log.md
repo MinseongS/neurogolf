@@ -569,3 +569,22 @@ all mem=0 single 5-operand einsums. Scan projections were ~8× optimistic (outpu
 must span full 30 → U tables [30,K]); 135/053/164/172/210/311 rejected (incumbent
 Gather/Conv-pads already at/below the mech-14 floor). LSTM/GRU scout: DEAD, priced in
 playbook. S9 CLOSED: 7201.20 → 7208.43 (+7.23, 25 tasks changed, 2/2 submissions clean).
+
+## #NEW-BEST 2026-07-03 S10 — **7213.63** (54288054 COMPLETE, local 7213.52 isolated-corrected)
+Daily public-teacher sweep: kojimar 7185.95 (overrides = real teachers) + NEW author
+bobmyersthesecond 7186 (400-net dump; largely kojimar-lineage, several unique). 28 adopted:
+1. Wave 1 (strict gate): 193 +2.556 (retrained single-Conv REVERSES S9 "inherent floor" —
+   17.5k uncached fresh 0-fail), 021 +0.819 (rank-1 outer-product free output), 106 +0.328
+   (Slice/Conv read → input-contracted einsum + [30,3] selector), 277 +0.047.
+2. Wave 2 (⭐ RELAXED GATE, user policy: bundled=LB gate, fresh ≥98% → submit-verify):
+   191 +0.456 (int8 QLinearConv dihedral template match, 0.95% fresh), 017 +0.294 (NS 13→9,
+   1.10%), 025 +0.187 (slot_projector trim, 0.05%), 090 +0.006 (0.85%) — ALL S9/S8 rejects,
+   all landed clean. Old strict fresh-gate was leaving ~1pt on the table.
+3. Small batch: 188 +0.154 (separable-rect einsum emission), 173 +0.083 (0.4% fresh, relaxed),
+   177 +0.054, 264 +0.113 / 184 +0.048 / 365 +0.024 (fp32 Conv→int8 QLinearConv where output
+   feeds ranking only — ⭐ transferable), + 14 tiny trims ≈ +0.03. 157 skipped (UNGATEABLE).
+Crop-bounds 400-scan: 163 flags, top-11 fan-out = 11/11 FLOOR (flagged planes are
+free-output-axis welded; lever real only for counted entry reads — caveat in scan md).
+🚨 Found: task220/230/294 single-Conv nets are 0.0-threshold knife-edge — batch local eval
+under-counts ~54.6pt (ORT arena flip); grade in isolation. Hardening (epsilon bias) queued.
+DAY: 7208.43 → 7213.63 (+5.20, 28 tasks changed, submission clean).

@@ -23,3 +23,8 @@ In the one-hot embedding an OFF-GRID cell has ALL 10 channels = 0 (harness only 
 
 ## INSIGHT (transferable)
 ⭐ For top-left-anchored grids, OFF-GRID = all-channels-off but IN-GRID bg = ch0-on, so `ReduceMax(input, axes=[1,2])` (per-col) / `axes=[1,3]` (per-row) recover the exact grid SIZE as a 120B vector — robust where coloured-pixel bounding box is ambiguous (edge rows/cols can be all-bg). A "keep one column/row" rule is then a pure spatial copy: `Where(non-mid ∧ in-grid, bg_onehot, input)` routes the whole 10-ch expansion into the FREE output, beating the label-map floor (~15.8→~17.8).
+
+## S10 (2026-07-03) — crop-to-bound priced FLOOR
+Verified generator bound = 9 (static + 5000 fresh + bundled all agree). The flagged `keep_input_b` [30,30] bool = 900B is the **Where cond** for the free 30×30 output; padding it back re-adds 900B. Cropping to B=9 forces a valid-conv k=22 → 4840 params, and 9×9 Where slicing adds +6480B — the crop costs far more than the 900B it saves. FLOOR.
+
+⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).

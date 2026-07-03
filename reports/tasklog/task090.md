@@ -37,3 +37,43 @@ already refuted a local-stencil rewrite); shaving it is <0.2 pt and re-fit-prone
 Incumbent generalises cleanly (fail=0/800 fresh). VERDICT: FLOOR.
 
 ## S9 (2026-07-03) — kojimar teacher REJECTED (fresh 15/2500 fails, delta only +0.006)
+
+
+## S10 (2026-07-03) — kojimar7185_95 teacher ADOPTED (+0.006, policy-gated)
+
+**Gate-policy note:** the fresh gate was relaxed this session — bundled fail=0 stays
+mandatory (public LB grades bundled), but the fresh gate drops from "cand ≤ inc" to
+"~98%+ fresh pass → adopt and verify by real LB submission" (fresh-gate = private-LB
+insurance only; the kojimar pack already survived the public LB at 7185+). **This is the file
+S9 rejected** (recorded there as "fresh 15/2500 fails, delta only +0.006"). Adopted now with
+its fresh-fail rate recorded. A verification LB submission is planned this session.
+
+**Consistency with this log's history:** the 2026-07-01 re-adjudication proved the incumbent a
+clean FLOOR — 55% of its cost is the proven detection + paint-mask floor, and it generalises
+cleanly (fail=0/800 fresh). (No prior leak-audit / manifest-inflation episode is present in
+this log — the incumbent has always fresh-passed; this is a marginal cost trade, not a leak
+fix.) Adopting a teacher that fails 0.85% fresh therefore trades the incumbent's clean 0%-fresh
+floor for a −19 cost sliver; recorded honestly as a policy-driven marginal play.
+
+**Mechanism diff (op census, retired vs new):** structurally the same unrolled
+largest-all-black-rectangle scan (same 154 B initializers: pink_pixel, row_grid, col_grid,
+slice params). The teacher just trims ~19 redundant ops (`Greater` 20→12, `Where` 49→46,
+`And` 11→3; 448→429 nodes). No mechanism change; −19 cost is essentially op-count noise.
+
+**Cost:** mem 3009→2990, params 82→82, pts 16.9638→16.9699 (**+0.006**, cost 3091→3072 −19).
+
+**Gate evidence:** bundled 267/267 fail=0 (both nets). Fresh 2000: candidate **17 fails
+(0.85%)** vs incumbent **0 fails**. TopK audit: no TopK in either net.
+
+**Backup + provenance:** incumbent → `reports/retired_networks/task090_pre_s10.onnx`;
+candidate source `public_candidates/kojimar7185_95/base_submission/task090.onnx` →
+`networks/task090.onnx`; source regenerated via live_to_exact_source --write-src, src↔live
+reconciled fail=0.
+
+Adopted under S10 relaxed gate (bundled=LB gate; fresh ≥98% → submit-verify); private-LB
+risk = 0.85% fresh fail rate.
+
+⭐ TRANSFERABLE: **no transferable mechanism** — the teacher only prunes redundant ops in an
+already-floor unrolled scan for a −19 cost sliver, and it introduces a 0.85% fresh-fail budget
+the incumbent did not have. Not a pattern worth propagating; retained only as a marginal
+policy-gated cost trim pending LB verification.

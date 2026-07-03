@@ -58,3 +58,10 @@ profiles: ReduceSum(input, axes=[1,otherspatial]) -> [1,1,30,1]/[1,1,1,30]
 (120B each) -> Greater -> And, instead of a [1,10,W,W] channel-max plane (5760B).
 A single colour Conv can ALSO encode a sentinel marker channel (gray weight=50)
 so colour label and marker position both come from ONE plane (>9 = marker).
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.003)
+**Mechanism (op-census diff):** Dropped one `Unsqueeze` + its `unsq_col` [1] const (shape-op fusion). −12B, −1 param.
+**Old→new:** mem 4122→4110, params 77→76.
+**Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
+Backup `reports/retired_networks/task206_pre_s10.onnx`; source `public_candidates/bobmyers7186/task206.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
+No transferable mechanism — minor trim.

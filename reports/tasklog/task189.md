@@ -64,3 +64,10 @@ slices — total bytes drop far below the 10-ch read because each role touches o
 its own channel and minimal extent. Combined with reading orientation bits from
 literal single-cell slices (4B) and going fp16 after each fp32 entry, a flip-
 equivariant quadrant-recolor goes 16.15 → 16.97 (B-tier, +0.82).
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.002)
+**Mechanism (op-census diff):** Trimmed `h_idx`/`v_idx` [1,4]→[1,3] (−1 elem each). −2 params.
+**Old→new:** mem 866→866, params 49→47.
+**Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
+Backup `reports/retired_networks/task189_pre_s10.onnx`; source `public_candidates/bobmyers7186/task189.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
+No transferable mechanism — minor trim.

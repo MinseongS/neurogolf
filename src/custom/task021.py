@@ -10,34 +10,24 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('slice_starts', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAA')),
-        tensor('slice_ends', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAEAAAAAAAAA')),
-        tensor('slice_axes', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAAMAAAAAAAAA')),
-        tensor('col0', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
-        tensor('one', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/')),
-        tensor('range_h6', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDcsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAAEAAAEBAAACAQAAAoEAAAMBA')),
-        tensor('range_w7', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEsIDcpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAAEAAAEBAAACAQAAAoEAAAMBA')),
-        tensor('pad6x7_to_30', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXAAAAAAAAABcAAAAAAAAA')),
-        tensor('false_b', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGIxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
+        tensor('e0', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
+        tensor('rm1', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIC/AAAAAAAAgD8AAABAAABAQAAAgEAAAKBAAADAQAAA4EAAAABBAAAQQQAAIEEAADBBAABAQQAAUEEAAGBBAABwQQAAgEEAAIhBAACQQQAAmEEAAKBBAACoQQAAsEEAALhBAADAQQAAyEEAANBBAADYQQAA4EE=')),
     ]
     nodes = [
-        helper.make_node('Slice', ['input', 'slice_starts', 'slice_ends', 'slice_axes', 'slice_ends'], ['main4']),
-        helper.make_node('Squeeze', ['main4', 'slice_axes'], ['main2']),
-        helper.make_node('Einsum', ['input', 'col0'], ['row_occ_count'], equation='bchw,w->b'),
-        helper.make_node('Einsum', ['input', 'main2', 'col0'], ['row_main_count'], equation='bchw,bc,w->b'),
-        helper.make_node('Sub', ['row_occ_count', 'row_main_count'], ['row_line_count']),
-        helper.make_node('Add', ['row_line_count', 'one'], ['out_h']),
-        helper.make_node('Einsum', ['input', 'col0'], ['col_occ_count'], equation='bchw,h->b'),
-        helper.make_node('Einsum', ['input', 'main2', 'col0'], ['col_main_count'], equation='bchw,bc,h->b'),
-        helper.make_node('Sub', ['col_occ_count', 'col_main_count'], ['col_line_count']),
-        helper.make_node('Add', ['col_line_count', 'one'], ['out_w']),
-        helper.make_node('Less', ['range_h6', 'out_h'], ['row_in_out6']),
-        helper.make_node('Less', ['range_w7', 'out_w'], ['col_in_out7']),
-        helper.make_node('And', ['row_in_out6', 'col_in_out7'], ['cell_in_out']),
-        helper.make_node('Cast', ['main4'], ['main4_b'], to=9),
-        helper.make_node('And', ['cell_in_out', 'main4_b'], ['out_small_b']),
-        helper.make_node('Pad', ['out_small_b', 'pad6x7_to_30', 'false_b'], ['output'], mode='constant'),
+        helper.make_node('Einsum', ['input', 'e0', 'e0'], ['bg'], equation='bchw,h,w->bc'),
+        helper.make_node('Einsum', ['input', 'e0'], ['ht'], equation='bchw,w->b'),
+        helper.make_node('Einsum', ['input', 'bg', 'e0'], ['hb'], equation='bchw,bc,w->b'),
+        helper.make_node('Sub', ['ht', 'hb'], ['nh']),
+        helper.make_node('Einsum', ['input', 'e0'], ['wt'], equation='bchw,h->b'),
+        helper.make_node('Einsum', ['input', 'bg', 'e0'], ['wb'], equation='bchw,bc,h->b'),
+        helper.make_node('Sub', ['wt', 'wb'], ['nv']),
+        helper.make_node('Less', ['rm1', 'nh'], ['rl']),
+        helper.make_node('Less', ['rm1', 'nv'], ['cl']),
+        helper.make_node('Cast', ['rl'], ['rf'], to=10),
+        helper.make_node('Cast', ['cl'], ['cf'], to=10),
+        helper.make_node('Cast', ['bg'], ['bh'], to=10),
+        helper.make_node('Einsum', ['bh', 'rf', 'cf'], ['output'], equation='bc,r,s->bcrs'),
     ]
     value_infos = [
     ]
-    return model('task021_live_exact', nodes, inits, output_dtype=9, opset=13, value_infos=value_infos)
+    return model('task021_live_exact', nodes, inits, output_dtype=10, opset=13, value_infos=value_infos)

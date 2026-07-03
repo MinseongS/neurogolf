@@ -93,3 +93,46 @@ on fitted parameters; the uncached final gate is load-bearing.
 Teacher = SAME algorithm, just NS=9 sample cells vs our robust NS=13 (+int64 castfold).
 Reproduces this tasklog's S8 warning exactly (NS<13 overfits; cached gate would
 understate ~3×). Incumbent 2/3000. No new mechanism, no headroom. Floor stands.
+
+
+## S10 (2026-07-03) — kojimar7185_95 teacher ADOPTED (+0.294, policy-gated)
+
+**Gate-policy note:** the fresh gate was relaxed this session — bundled fail=0 stays
+mandatory (public LB grades bundled), but the fresh gate drops from "cand ≤ inc" to
+"~98%+ fresh pass → adopt and verify by real LB submission" (fresh-gate = private-LB
+insurance only; the kojimar pack already survived the public LB at 7185+). **This is the
+same file S9 rejected** (recorded there as "NS=9 overfit, fresh 38/3000 = 1.27%"); adopted
+now with its fresh-fail rate recorded for private-LB risk tracking. A verification LB
+submission is planned this session.
+
+**Mechanism diff (op census, retired vs new):** same algorithm as the incumbent —
+GatherND+ArgMax recover the (mod,length,offset) scalars by majority-vote template-match, then
+a closed-form formula rebuild routed to the free output. The ONLY change is the sample-cell
+count: incumbent uses our robust **NS=13** cells (`candidate_samples[1,106,13]` fp16,
+`sample_nd_idx[1,10,13,2]`), the teacher uses **NS=9** cells → the per-candidate match plane
+shrinks `[1,106,13]`→`[1,106,9]`, driving the mem drop 8448→5997. The teacher also carries
+int64 cast-folded index tables (`matches_b_castfold_const[1,106,9]` i64, `sample_nd_idx[10,9,4]`
+i64) but those are cheap in element count (params 2021→1804). Fewer sample cells = the exact
+S8 CACHE-OVERFIT lesson in this log (NS<13 overfits; cached fail understates true fail ~3×),
+which is why it fails ~1% fresh.
+
+**Cost:** mem 8448→5997, params 2021→1804, pts 15.7438→16.0380 (**+0.294**, cost 10469→7801 −2668).
+
+**Gate evidence:** bundled 266/266 fail=0 (both nets). Fresh 2000: candidate **22 fails
+(1.10%)** vs incumbent **1 fail (0.05%)**. TopK audit: no TopK in either net (recovery via
+GatherND+ArgMax).
+
+**Backup + provenance:** incumbent → `reports/retired_networks/task017_pre_s10.onnx`;
+candidate source `public_candidates/kojimar7185_95/base_submission/task017.onnx` →
+`networks/task017.onnx`; source regenerated via live_to_exact_source --write-src, src↔live
+reconciled fail=0.
+
+Adopted under S10 relaxed gate (bundled=LB gate; fresh ≥98% → submit-verify); private-LB
+risk = 1.10% fresh fail rate.
+
+⭐ TRANSFERABLE: reducing the number of template sample cells (NS) in a "recover K scalars by
+majority-vote then closed-form rebuild" net is a real MEM lever, but it OVERFITS — the cache
+understates true fresh fail ~3× (this log's own S8 warning). Selection: parametric-pattern
+tasks that recover a few global scalars via GatherND+ReduceSum(Equal)+ArgMax; shrink the
+sample-cell count only under the relaxed gate and only with an uncached fresh gate, since
+each dropped cell trades private-LB robustness for a few hundred bytes.

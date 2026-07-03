@@ -75,3 +75,28 @@ cell to its source cell under the rotation orbit, and emit the whole symmetrized
 tables with a size flag. This beats the F_N@Tᵀ MatMul approach by ~1.1 pts because it removes all
 6 rotation intermediates. The MatMul/reverse-transpose idiom (task027/112) is for DATA-DEPENDENT-
 centre rotations on the full canvas; a FIXED top-left small grid collapses to a constant gather.
+
+## S10 (2026-07-03) — kojimar 7185.95 teacher ADOPTED (+0.328)
+**Mechanism swap — fold the Slice+Conv colour-read into ONE input-contracted Einsum.** The rest of the
+pipeline is byte-identical (Cast→Reshape→3×Gather→Where→Cast→Cast→ScatterElements, same idx2/idx3 [6,6]
+int32 C4 perm tables). Only the FRONT changes: OLD did `Slice`(input→[1,10,3,3] fp32, initializers
+patch_starts/ends) then `Conv` with color_w[1,9,1,1] to read the colour index over the 3×3 patch. NEW does
+ONE `Einsum` `bchw,c,hr,wk->brk` contracting the FREE input directly against c_1[10] (colour weights
+0..9) and c_2[30,3] used TWICE (as `hr` row-selector and `wk` col-selector, each picking the 3 top-left
+rows/cols out of 30) → emits the [1,3,3] colour-index patch directly. **The counted [1,10,3,3] fp32 Slice
+intermediate (360B) is eliminated** — the Einsum contracts the free input straight to a [1,3,3] result.
+Cost: c_2[30,3]=90 floats added as a STATIC initializer. **The +81 params trade:** new params 174 vs old 93;
+the front-end initializers {color_w 9, patch_starts 4, patch_ends 4, flat_shape 3, probe_idx 1 = 21 elems}
+are replaced by {c_1 10, c_2 90, c_5 1, c_7 1 = 102 elems}, net +81, essentially the c_2[30,3] projection
+table — i.e. the teacher BOUGHT an 81-param static selector matrix to DELETE a 324B counted working plane
+(mem 776→452 −324, params 93→174 +81, sum −243). pts 18.233→**18.561 (+0.328)**.
+**Gates:** bundled fail=0; fresh arc-gen 2×2000, 2000/2000 valid, inc_fail=0 cand_fail=0; no TopK/uint8
+offenders (Gather/ScatterElements idx already int32); NON-CACHED, orchestrator-reverified. Backup
+reports/retired_networks/task106_pre_s10.onnx. Provenance public_candidates/kojimar7185_95/overrides/task106.onnx.
+⭐ TRANSFERABLE: a `Slice`(fixed sub-window)→`Conv`(colour/index read) front-end materializes a counted
+[1,C,k,k] fp32 plane; replace it with ONE `Einsum bchw,c,hr,wk->brk` that contracts the FREE input against
+a static [C] colour weight + a static [G,k] row/col SELECTOR matrix, so only the tiny result is counted and
+the selector lives in ln-cheap params. Trade a counted working plane for static params whenever mem−cost >
+params−cost (here −324 vs +81). Selection criterion: any net that Slices a fixed grid window then reads it
+with a 1×1/small Conv or MatMul (grep for Slice→Conv or Slice→ArgMax on the input). Direct instance of the
+Einsum-vs-FREE-input lever (neurogolf-einsum-vs-free-input-lever) — feed struct_scan these Slice→Conv fronts.

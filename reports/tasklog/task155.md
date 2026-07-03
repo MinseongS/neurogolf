@@ -35,3 +35,8 @@ teacher passes 266 stored + 2500 fresh bit-identical + 0/600 across every G=1..3
 30-elem int32 row_ids init (30p) → Range (2p); mem 128→140, total 158→142.
 Backup task155_pre_s9.onnx. FOLLOW-UP: task150 (column-permute sibling, 136/31) is a
 candidate for the same swap.
+
+## S10 (2026-07-03) — crop-to-bound priced FLOOR
+Verified generator bound = 8. Same structure as task150 (row flip, axis=2): 120B Gather index is a floor, must match the 30-wide free output. Cropping forces a 9600B counted re-embed. FLOOR.
+
+⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).

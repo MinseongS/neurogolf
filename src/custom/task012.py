@@ -30,7 +30,8 @@ def build(task):
     nodes = [
         helper.make_node('ReduceSum', ['input'], ['counts10'], axes=[2, 3], keepdims=0),
         helper.make_node('TopK', ['counts10', 'k3'], ['top_counts', 'top_colors'], axis=1, largest=1, sorted=1),
-        helper.make_node('Gather', ['top_colors', 'pick_arm'], ['arm_color'], axis=1),
+        helper.make_node('Cast', ['top_colors'], ['top_colors_precast_for_arm_color'], to=2),
+        helper.make_node('Gather', ['top_colors_precast_for_arm_color', 'pick_arm'], ['arm_val'], axis=1),
         helper.make_node('Gather', ['top_colors', 'pick_center'], ['center_color'], axis=1),
         helper.make_node('Cast', ['center_color'], ['center_color_i32'], to=6),
         helper.make_node('Add', ['center_color_i32', 'one_i32'], ['center_color_end_i32']),
@@ -44,7 +45,6 @@ def build(task):
         helper.make_node('Cast', ['idx1'], ['idx1_i32'], to=6),
         helper.make_node('Cast', ['idx2'], ['idx2_i32'], to=6),
         helper.make_node('Concat', ['idx1_i32', 'idx2_i32'], ['top_idx_i32'], axis=0),
-        helper.make_node('Cast', ['arm_color'], ['arm_val'], to=2),
         helper.make_node('Cast', ['center_color'], ['center_val'], to=2),
         helper.make_node('Div', ['top_idx_i32', 'i8_i32'], ['row0']),
         helper.make_node('Mul', ['row0', 'i4_i32'], ['row4']),

@@ -71,3 +71,10 @@ division;** only nmax (farthest) can tie in the symmetric vertex-visible case.
 Build nrm/par/diagonals by BROADCASTING 1-D [1,1,12,1]+[1,1,1,12] ramps so each
 2-D plane materializes exactly once; keep input-channel slices fp32 (Greater/
 ReduceSum accept fp32) to skip an extra cast plane.
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.001)
+**Mechanism (op-census diff):** Dropped one probe index (`side_rev_probe_idx` [1,1,4]→[1,1,3]) and one `Not` node. −1 param, −1B.
+**Old→new:** mem 1244→1243, params 121→120.
+**Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
+Backup `reports/retired_networks/task119_pre_s10.onnx`; source `public_candidates/bobmyers7186/task119.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
+No transferable mechanism — minor trim.

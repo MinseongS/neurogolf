@@ -217,3 +217,10 @@ Conclusion: task004 is a real compact optimum under the current operator family.
 The apparent 15x15/top-left crop opportunity is blocked by the in-grid-background
 vs off-grid-sentinel distinction, the same reason `scalar_valid` and
 `scalar_full` remain load-bearing.
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.001)
+**Mechanism (op-census diff):** Replaced the **QLinearConv** label lookup with a plain `Gather` lookup (Gather 2→4, Greater+Gather replace Min/Equal), dropping the quant constants `scale`/`wend`/`u1`/`u2`. Mem unchanged; −7 params.
+**Old→new:** mem 5044→5044, params 100→93.
+**Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
+Backup `reports/retired_networks/task004_pre_s10.onnx`; source `public_candidates/bobmyers7186/task004.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
+No transferable mechanism — minor trim.

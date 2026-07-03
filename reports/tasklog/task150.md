@@ -73,3 +73,8 @@ edge sizes G=1..30 (600, DISABLE_ALL) 0 mismatch. Known trade: ENABLE_ALL optimi
 collapses dynamic Range to 0-width — same profile as adopted task155, whose teacher
 shipped in kojimar's LIVE 7184.85 LB submission (real-grader-proven). S3 rejection was
 ENABLE_ALL-specific. Backup task150_pre_s9.onnx.
+
+## S10 (2026-07-03) — crop-to-bound priced FLOOR
+Verified generator bound = 9. Flagged `mirror_indices` int32 [30] = 120B is already a floor Gather index; its length must equal the 30-wide free output, so it can't shrink to 9. Cropping forces a counted [1,10,30,9] 10800B re-embed. FLOOR.
+
+⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).

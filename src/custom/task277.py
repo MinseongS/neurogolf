@@ -12,7 +12,7 @@ def build(task):
     inits = [
         tensor('cs', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==')),
         tensor('ce', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAkAAAAAAAAACgAAAAAAAAAKAAAAAAAAAA==')),
-        tensor('ABSEED', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDIsIDEwLCAxMCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAgMEBQYHCAkKAQIDBAUGBwgJCgECAwQFBgcICQoBAgMEBQYHCAkKAQIDBAUGBwgJCgECAwQFBgcICQoBAgMEBQYHCAkKAQIDBAUGBwgJCgECAwQFBgcICQoBAgMEBQYHCAkKCgkIBwYFBAMCAQoJCAcGBQQDAgEKCQgHBgUEAwIBCgkIBwYFBAMCAQoJCAcGBQQDAgEKCQgHBgUEAwIBCgkIBwYFBAMCAQoJCAcGBQQDAgEKCQgHBgUEAwIBCgkIBwYFBAMCAQ==')),
+        tensor('ABSEED', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDIsIDEsIDEwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAgMEBQYHCAkKCgkIBwYFBAMCAQ==')),
         tensor('sa', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAA==')),
         tensor('sb', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAA==')),
         tensor('se', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAA==')),
@@ -47,27 +47,5 @@ def build(task):
         helper.make_node('Pad', ['oh3', 'padout', 'pfalse'], ['output'], mode='constant'),
     ]
     value_infos = [
-        helper.make_tensor_value_info('ch8', 1, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('P', 2, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('AB0', 2, [1, 2, 10, 10]),
-        helper.make_tensor_value_info('mp0', 2, [1, 2, 10, 10]),
-        helper.make_tensor_value_info('AB1', 2, [1, 2, 10, 10]),
-        helper.make_tensor_value_info('mp1', 2, [1, 2, 10, 10]),
-        helper.make_tensor_value_info('AB2', 2, [1, 2, 10, 10]),
-        helper.make_tensor_value_info('mp2', 2, [1, 2, 10, 10]),
-        helper.make_tensor_value_info('AB3', 2, [1, 2, 10, 10]),
-        helper.make_tensor_value_info('mp3', 2, [1, 2, 10, 10]),
-        helper.make_tensor_value_info('AB4', 2, [1, 2, 10, 10]),
-        helper.make_tensor_value_info('mp4', 2, [1, 2, 10, 10]),
-        helper.make_tensor_value_info('AB5', 2, [1, 2, 10, 10]),
-        helper.make_tensor_value_info('A', 2, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('B', 2, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('wsum', 2, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('smax', 2, [1, 1, 1, 1]),
-        helper.make_tensor_value_info('iswide', 9, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('wu', 2, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('twoms', 2, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('lab', 2, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('oh3', 9, [1, 3, 10, 10]),
     ]
     return model('task277_live_exact', nodes, inits, output_dtype=9, opset=17, value_infos=value_infos)

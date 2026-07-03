@@ -51,3 +51,8 @@ DOUBLING scan (ceil(log2 H) rounds) with fixed up-shift MatMuls; fp16 {0,1}
 keeps Max==OR / Mul==AND exact. The jog seed is recoverable WITHOUT a first
 full fill via one lower-triangular suffix-sum MatMul (sclr = no-gray-above) AND
 the gray-directly-above shift AND the start-column indicator.
+
+## S10 (2026-07-03) — crop-to-bound priced FLOOR
+Verified generator bound = 10 (fixed size). Flagged `red_mask` [30,30] bool 900B is a Where cond; a 10→30 broadcast is impossible. A task187-style rebuild prices 1535 vs 1495 (−0.026); a 10×10 one-hot + Pad = 1000B > 900B. FLOOR.
+
+⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).

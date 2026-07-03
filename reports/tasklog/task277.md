@@ -46,3 +46,20 @@ HELD at reports/candidates/task277_k5_refit.py; incumbent (K=6, 4101) kept.
 Lesson: gate K-iteration drops at >=5000 fresh — the tail case is ~1/5000.
 
 ## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-1/2 opus agents; occupancy/max-semiring reductions or sub-400B u8 banks). Do not re-attempt without a new mechanism.
+
+## S10 (2026-07-03) — kojimar 7185.95 teacher ADOPTED (+0.047) — pure params trim
+**Mechanism swap — none.** The op graph is BYTE-IDENTICAL (same 23 nodes: Slice→Cast→5×[Mul,MaxPool]
+diffusion→Slice/Slice/Add→ReduceMax→Equal→Cast→Sub→Mul→Equal→Pad; same 5 MaxPool passes, same mem 3701).
+The ONLY change is the coordinate-seed initializer `ABSEED`: old [1,2,10,10] uint8 = 200 bytes → new
+[1,2,1,10] uint8 = 20 bytes. The two absolute-coordinate seed channels were over-provisioned as a full
+10×10 per-cell grid; only a single 1×10 seed row is needed (the MaxPool diffusion propagates it across the
+component), so 180 redundant seed bytes are dropped. params 224→**44** (−180, exactly 200−20), mem 3701→3701
+(unchanged), pts 16.725→**16.772 (+0.047)**.
+**Gates:** bundled fail=0; fresh arc-gen 2×2000, inc_fail=0 cand_fail=0; no TopK/uint8 offenders (ABSEED
+uint8 is a Mul seed, not a TopK feed); NON-CACHED, orchestrator-reverified. Backup
+reports/retired_networks/task277_pre_s10.onnx. Provenance public_candidates/kojimar7185_95/overrides/task277.onnx.
+⭐ TRANSFERABLE: **none — table trim only, no generalizable mechanism.** Weak reusable heuristic at best:
+a static seed/coordinate table that is subsequently BROADCAST or DIFFUSED (MaxPool/Conv propagation) can
+often be stored at lower rank than its broadcast shape — audit large uint8/float seed initializers whose
+first consumer is a broadcasting Mul/Add or a diffusion pass, and shrink the redundant (later-diffused) axis
+to 1. But this is a per-net inspection, not a fan-out lever; do not build a scanner around it.

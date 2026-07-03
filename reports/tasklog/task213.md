@@ -27,3 +27,10 @@ Three [1,1,30,30] full planes remain: (a) two presence reductions `ReduceMax(inp
 
 ## INSIGHT (transferable)
 ⭐ "distractor box + REGULARLY-SPACED stripes → compacted n×n" (task213) collapses to a **single colour-index carrier** routed into the FREE bool output via `Equal(cidx_int, arange_ch[1,10,1,1])` — the 10-ch expansion never materialises as an intermediate. Orientation (row-solid vs col-solid) is handled WITHOUT two candidate planes by an **orientation `Where(horiz_scalar, colour_by_row[1,1,30,1], colour_by_col[1,1,1,30])`** that broadcasts both per-line vectors into ONE [1,1,30,30] plane. The n×n block cut is a separable `(r<n) ∧ (c<n)` and is applied as a **sentinel gate** (`Where(block, cidx, -1)` then Equal-to-arange[0..9] matches nothing outside) — no separate mask plane reaches the output. ⭐ Replace a full `Σk·input_k` colour Conv ([1,1,30,30], 3600B) with **per-axis `ReduceMax(input,[3])`/`[2]` presence ([1,10,30,1], 1200B) + a 1×1 weight-k channel-collapse Conv** when you only need per-row/per-col line colours (full-width lines ⇒ presence==value). ⚠️ ORT under ORT_DISABLE_ALL: `Equal` accepts int32/int64/bool only — **NOT float16 or uint8** (both InvalidGraph), so any index plane feeding an Equal output op is pinned at int32.
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.003)
+**Mechanism (op-census diff):** Boolean-logic simplification: And 6→4, Or 8→6, Not 2→1 (69→64 nodes). −5B.
+**Old→new:** mem 1838→1833, params 49→49.
+**Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
+Backup `reports/retired_networks/task213_pre_s10.onnx`; source `public_candidates/bobmyers7186/task213.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
+No transferable mechanism — minor trim.

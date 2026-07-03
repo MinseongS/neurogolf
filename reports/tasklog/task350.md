@@ -72,3 +72,10 @@ bbox-as-mask where params matter. ⚠️ Non-separable per-line spans need all 4
 this is a genuine ~16.8KB structural floor (≈15.27 pts), MARGINAL over a near-floor public net.
 
 ## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-1/2 opus agents; occupancy/max-semiring reductions or sub-400B u8 banks). Do not re-attempt without a new mechanism.
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.000)
+**Mechanism (op-census diff):** Slice/pad constant set renamed + one small const trimmed (`slice_*`/`fill*`→`s/e/p/f8`, +`ax`). −2 params, mem flat.
+**Old→new:** mem 9012→9012, params 26→24.
+**Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
+Backup `reports/retired_networks/task350_pre_s10.onnx`; source `public_candidates/bobmyers7186/task350.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
+No transferable mechanism — minor trim.

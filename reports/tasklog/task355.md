@@ -81,3 +81,10 @@ the marker is a distinct colour. Mask the marker channel itself (its own bbox sp
 mem 2688/17.09; CONST-OUTPUT false—output=colour of most-speck block; needs per-block speck count (area-cnt), two occupancy bands ~2400B floor. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).
 
 ## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-1/2 opus agents; occupancy/max-semiring reductions or sub-400B u8 banks). Do not re-attempt without a new mechanism.
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.000)
+**Mechanism (op-census diff):** Scalar/arange const dedup+rename (dropped `thr`/`neg`/`zero`/`ax*`/`arange10_i` for `safe_name_*`). −7 params, mem flat.
+**Old→new:** mem 2688→2688, params 27→20.
+**Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
+Backup `reports/retired_networks/task355_pre_s10.onnx`; source `public_candidates/bobmyers7186/task355.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
+No transferable mechanism — minor trim.

@@ -43,3 +43,8 @@ into the index itself (`base + marker*coef`, marker gathered from the relevant
 channel), pointing masked cells at a guaranteed in-grid background cell — no separate
 mask plane. A 2-D Gather index [H,W] on axis=2 yields [1,10,H,W] in one op, killing
 the flat->2D reshape plane.
+
+## S10 (2026-07-03) — crop-to-bound priced FLOOR
+Verified generator bound = 13 (in/out 9×13). Flagged `scalar30` uint8 [30,30] 900B is the Equal index plane for the free output; Equal is nonlinear so it can't move into the einsum. A 9×13 one-hot + Pad = 1170B > 900B. FLOOR.
+
+⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).

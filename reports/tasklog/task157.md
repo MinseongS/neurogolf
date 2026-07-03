@@ -52,3 +52,9 @@ output cell's value requires identifying WHICH distant object corresponds to THI
 and objects are arbitrary variable shapes, it's an exact-cover/assignment problem with no closed form
 under banned Loop/Scan/NonZero. Heuristic matchers plateau ~95% (38/40), which equals what a huge
 overfit net achieves and still yields real-LB 0 (all-pass requirement).
+
+## S10 (2026-07-03) — bobmyers7186 candidate NOT adopted
+The bobmyers7186 net was **not adopted**: task157's generator is **UNGATEABLE**
+(crash/timeout in fresh gen) and this task carries a known **private-LB-fragile**
+flag (heuristic matcher plateaus ~95%, real-LB 0 on all-pass). Candidate Δ was only
+≈ −5B — not worth the private-LB risk. Do not re-probe this candidate.

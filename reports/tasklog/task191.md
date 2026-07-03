@@ -137,3 +137,44 @@ vs our 6576. But int8 quantization not bit-exact: 23/2500 fresh fails vs our 0.
 Stored +0.44 is illusory. KEEP exact fp32 product-of-sums einsum.
 ⭐ QLinearConv runtime-kernel matching = real param lever ONLY for tasks already
 spending a fresh-fail budget (toolbox #13) — cannot displace an exact 0-fail einsum.
+
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.456, policy-gated)
+
+**Gate-policy note:** the fresh gate was relaxed this session — bundled fail=0 stays
+mandatory (public LB grades bundled), but the fresh gate drops from "cand ≤ inc" to
+"~98%+ fresh pass → adopt and verify by real LB submission" (fresh-gate = private-LB
+insurance only; the bobmyers/kojimar packs already survived the public LB at 7185+). This
+net was **rejected in S8/S9 under the old strict rule** and is adopted now with its
+fresh-fail rate recorded for private-LB risk tracking. A verification LB submission is planned this session.
+
+**Mechanism diff (STRUCTURAL SWAP, retired vs new):** the incumbent was our S8 exact fp32
+**product-of-sums dihedral einsum** (one big `Einsum` fed by orientation tables
+`Q[3,23,23]` + `RS0/RS1/RS2[2,23,30]` ≈ 6576 params). The teacher replaces it with an int8
+**`QLinearConv`×2 template match using RUNTIME-built dihedral kernels** (Slice/Transpose/flip/
+Concat of the gathered motif) + `ArgMax`×4 + a small `Einsum`×2 assembly; orientation tables
+collapse to runtime construction. params 6576→171 drives almost the entire −7556 cost drop.
+This is exactly the S9-rejected kojimar-style int8 approach (bobmyers variant); int8 quant is
+NOT bit-exact → a small fresh-fail budget. Directly reverses the S8/S9 "KEEP exact fp32
+product-of-sums einsum" decision, now justified by the relaxed gate + the large cost win.
+
+**Cost:** mem 14070→12919, params 6576→171, pts 15.0647→15.5204 (**+0.456**, cost 20646→13090 −7556).
+
+**Gate evidence:** bundled 267/267 fail=0 (both nets). Fresh 2000: candidate **19 fails
+(0.95%)** vs incumbent **0 fails**. TopK audit: no TopK in either net (match via QLinearConv+ArgMax).
+Chosen over the kojimar variant (0.70% fresh but only −911 cost); bobmyers is far cheaper.
+
+**Backup + provenance:** incumbent → `reports/retired_networks/task191_pre_s10.onnx`;
+candidate source `public_candidates/bobmyers7186/task191.onnx` → `networks/task191.onnx`;
+source regenerated via live_to_exact_source --write-src, src↔live reconciled fail=0.
+
+Adopted under S10 relaxed gate (bundled=LB gate; fresh ≥98% → submit-verify); private-LB
+risk = 0.95% fresh fail rate.
+
+⭐ TRANSFERABLE: int8 `QLinearConv` with **runtime-built dihedral/oriented kernels** is a
+massive PARAM lever (6576→171) for k-orientation template-match nets — but it is NOT
+bit-exact (per toolbox #13 / the S9 note), so it is only viable now under the relaxed gate.
+Selection: any k-orientation / k-template match net still carrying large fixed `[k,H,W]`
+orientation-kernel initializers feeding a match einsum/conv, where a ~1% fresh-fail budget is
+acceptable. Do NOT use it to displace an already-exact 0-fail einsum unless the relaxed gate
+and a real cost win both hold.

@@ -10,25 +10,26 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('slice_starts', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==')),
-        tensor('slice_ends', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAIAAAAAAAAAGgAAAAAAAAAYAAAAAAAAAA==')),
-        tensor('fill_pads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAYAAAAAAAAA')),
-        tensor('fill8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAA')),
+        tensor('s', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==')),
+        tensor('e', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAIAAAAAAAAAGgAAAAAAAAAYAAAAAAAAAA==')),
+        tensor('f8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAA')),
+        tensor('p', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAGAAAAAAAAAA==')),
+        tensor('ax', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAAMAAAAAAAAA')),
     ]
     nodes = [
-        helper.make_node('Slice', ['input', 'slice_starts', 'slice_ends'], ['ch1']),
-        helper.make_node('Cast', ['ch1'], ['ch1_u8'], to=2),
-        helper.make_node('MaxPool', ['ch1_u8'], ['h_left'], kernel_shape=[1, 24], pads=[0, 23, 0, 0], strides=[1, 1]),
-        helper.make_node('MaxPool', ['ch1_u8'], ['h_right'], kernel_shape=[1, 24], pads=[0, 0, 0, 23], strides=[1, 1]),
-        helper.make_node('Min', ['h_left', 'h_right'], ['h_span']),
-        helper.make_node('MaxPool', ['ch1_u8'], ['v_up'], kernel_shape=[26, 1], pads=[25, 0, 0, 0], strides=[1, 1]),
-        helper.make_node('MaxPool', ['ch1_u8'], ['v_down'], kernel_shape=[26, 1], pads=[0, 0, 25, 0], strides=[1, 1]),
-        helper.make_node('Min', ['v_up', 'v_down'], ['v_span']),
-        helper.make_node('Max', ['h_span', 'v_span'], ['span']),
-        helper.make_node('Greater', ['span', 'ch1_u8'], ['fill_crop_b']),
-        helper.make_node('Pad', ['fill_crop_b', 'fill_pads'], ['fill_b'], mode='constant'),
-        helper.make_node('Where', ['fill_b', 'fill8', 'input'], ['output']),
+        helper.make_node('Slice', ['input', 's', 'e'], ['c']),
+        helper.make_node('Cast', ['c'], ['m'], to=2),
+        helper.make_node('MaxPool', ['m'], ['fL'], kernel_shape=[1, 24], pads=[0, 23, 0, 0], strides=[1, 1]),
+        helper.make_node('MaxPool', ['m'], ['fR'], kernel_shape=[1, 24], pads=[0, 0, 0, 23], strides=[1, 1]),
+        helper.make_node('Min', ['fL', 'fR'], ['sH']),
+        helper.make_node('MaxPool', ['m'], ['fU'], kernel_shape=[26, 1], pads=[25, 0, 0, 0], strides=[1, 1]),
+        helper.make_node('MaxPool', ['m'], ['fD'], kernel_shape=[26, 1], pads=[0, 0, 25, 0], strides=[1, 1]),
+        helper.make_node('Min', ['fU', 'fD'], ['sV']),
+        helper.make_node('Max', ['sH', 'sV'], ['sp']),
+        helper.make_node('Greater', ['sp', 'm'], ['g']),
+        helper.make_node('Pad', ['g', 'p', '', 'ax'], ['gp']),
+        helper.make_node('Where', ['gp', 'f8', 'input'], ['output']),
     ]
     value_infos = [
     ]
-    return model('task350_live_exact', nodes, inits, output_dtype=1, opset=13, value_infos=value_infos)
+    return model('task350_live_exact', nodes, inits, output_dtype=1, opset=18, value_infos=value_infos)

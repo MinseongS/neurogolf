@@ -48,3 +48,21 @@ Use the colour-index plane `colf = sum_k k·input_k` (>0 ⇔ non-background) as 
 it doubles as the value plane you already need, for free. A horizontal mirror of a cropped window
 is just a flipped column-index ramp `min_col + (W-1) - arange(WORK)` fed to the col Gather — no
 reflection matrix needed when you're already gathering a fixed window (task036 crop idiom + flip).
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.054)
+**Mechanism (real diff):** the incumbent ran **3 Convs**: after cropping the
+one-hot window it collapsed 10-ch → a colour-index plane `crop_f` [1,1,8,8] (via
+`label_weights` [1,10,1,1]) and then re-expanded through `class_ids` [1,9,1,1] before
+padding (`output_pad`). The teacher drops that collapse↔re-expand round-trip: it
+keeps the cropped window as a **bool one-hot** `crop_bool` [1,10,8,8] (640B) masked
+by a single `onehot_keep_mask` [1,10,1,1] **1×1 keep-conv** (2 Convs total), removing
+`crop_f` (256B) + `one_hot_crop` (576B) + the `label_weights`/`class_ids` tables.
+Ops: Conv 3→2; init `output_pad`→`spatial_pad`.
+**Old→new:** mem 3692→3500 (−192), params 130→121 (−9). LB 3822→3621.
+**Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK.
+Backup `reports/retired_networks/task177_pre_s10.onnx`; source `public_candidates/bobmyers7186/task177.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
+⭐ **TRANSFERABLE:** to route a cropped/flipped one-hot window to output, carry it as
+a **bool one-hot masked by a 1×1 keep-conv** rather than collapsing to a colour-index
+plane and re-expanding — that kills one Conv plus the label/class const tables. This
+is the cheap realization of this tasklog's "carry input as bool" open angle (no
+9600B per-channel gather needed).

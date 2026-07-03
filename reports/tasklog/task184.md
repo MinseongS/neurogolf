@@ -60,3 +60,33 @@ so a fixed KxK→Pad(99)→Equal(arange) emits the correctly-sized top-left bloc
 NonZero/Compress. ⭐ Split a double-MatMul into a fp32 colour chain (reusing the Conv's existing fp32 plane,
 killing the fp16 colour cast) and a fp16 count chain — selectors are tiny so keeping two dtype copies is
 far cheaper than one extra full [1,1,30,30] plane.
+
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.048, policy-gated)
+
+Clean adoption (candidate ≤ incumbent on every gate). Same separable grid-partition
+downsample mechanism as the incumbent (CumSum-selector + double contraction), only the
+Conv realization changed.
+
+**Mechanism diff (op census, retired vs new):** the two colour/occupancy `Conv` nodes →
+`QLinearConv` (int8), the two `Relu` nodes are dropped, and `Cast` count rises 2→6 (the
+int8 quant/dequant plumbing). The 3× `Einsum`, 2× `Sign`, 2× `CumSum`, 2× `Equal` and final
+`Pad` — i.e. the exclusive-CumSum block-index selectors and the Snum/Sden separable
+contraction downsample — are unchanged (16→18 nodes). Colour/occupancy Conv outputs are
+integer-valued and only get compared/reduced, so int8 quant is exact here.
+
+**Cost:** mem 2460→2340, params 60→63, pts 17.1680→17.2155 (**+0.048**, cost 2520→2403 −117).
+
+**Gate evidence:** bundled 169/169 fail=0 (both nets). Fresh 2×2000: candidate 0 fails,
+incumbent 0 fails, 0 divergence. TopK audit: no TopK in either net.
+
+**Backup + provenance:** incumbent → `reports/retired_networks/task184_pre_s10.onnx`;
+candidate source `public_candidates/bobmyers7186/task184.onnx` → `networks/task184.onnx`;
+source regenerated via live_to_exact_source --write-src, src↔live reconciled fail=0.
+
+⭐ TRANSFERABLE: on an A-tier separable-partition downsample, the colour/occupancy Conv
+output is an **integer** that is only ever compared or reduced → int8 `QLinearConv` (and
+dropping the now-redundant `Relu`) is bit-exact and cheaper. Selection: separable
+grid/patch-partition nets (task184-family) with a fixed-kernel colour-sum or occupancy Conv
+feeding only `Greater`/`Equal`/`ReduceMax`. Gain is small (−117 here); low priority unless
+the plane is large.

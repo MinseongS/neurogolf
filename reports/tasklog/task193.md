@@ -55,3 +55,29 @@ kernel −12 dead inits + removed idx30). Bit-identical: 2500+600 uncached 0/0/0
 FLOORS: sparse initializer REJECTED by shape_inference/check_model (harness runs both);
 two-conv 11×1/1×11 split worse (re-adds 2400B intermediate); keep/keep_w 30×30 bool
 mandatory for free output routing. Backup task193_pre_s9.onnx.
+
+## S10 (2026-07-03) — kojimar 7185.95 teacher ADOPTED (+2.556) — SUPERSEDES the S9 "single-Conv is a floor" claim
+**Mechanism swap:** the entire 21-node neighbour-count stencil (Conv+Cast+Pad+4 Slice+4 Equal
++7 boolean And/Or planes+2 Concat+Where; initializers arange_w[1,10,11,11]=4840B, t_right/t_bot
+bool masks, 8 int64 slice specs) is replaced by ONE node: `Conv` W[10,10,3,3]=3600B + bias Bc[10]=40B,
+whose output IS the graph output. Op set {Conv:1}. mem 9984→**0**, params 1746→**910**, pts 15.630→**18.187 (+2.556)**.
+**This is the SAME structure the S9 entry REJECTED** (a mem=0 single Conv(10,10,3,3)+bias, params 910).
+The S9 rejection (immediately above) declared it an "inherent mechanism floor, not tunable" because
+that earlier kojimar 7184.85 net's trained weights failed fresh 2.36% (59/2500) and argued channel-0
+(unknown-centre aggregate) is "NOT linearly separable in one conv." **That argument was wrong / over-general:**
+the 7185.95 dataset's weights evidently capture the rule exactly (or with fail rate <1/7500) — a 3×3
+receptive field with 10→10 channels + bias has enough capacity to realise "keep v iff ≥2 ortho neighbours==v",
+kojimar just found the weights. The S9 text is kept intact above as history; treat it as CORRECTED here.
+**Gates:** bundled fail=0; NON-CACHED fresh arc-gen = 3 independent uncached runs of 2500 (agent×2 +
+orchestrator×1) = **7500 instances, inc_fail=0, cand_fail=0**, orchestrator-reverified; no TopK/uint8
+offenders (pure fp32 Conv); mem+params both strictly down. Backup reports/retired_networks/task193_pre_s10.onnx.
+Provenance public_candidates/kojimar7185_95/overrides/task193.onnx.
+**Residual private-LB risk** is bounded by the 7500-sample uncached evidence (upper 95% CI on fail rate
+≈ 0.04%); if a private instance falls in that tail the -16 penalty applies, but at 0/7500 the fresh moat holds.
+⭐ TRANSFERABLE: a nonlinear-LOOKING local-stencil rule can still be captured EXACTLY (or below your
+fresh-gate resolution) by a single trained `Conv(C,C,k,k)+bias` whose output IS the graph output (mem=0) —
+do NOT declare such a net a floor from a hand "not linearly separable" argument (S9's mistake). Selection
+criterion: any rule that is a function of only a fixed k×k neighbourhood of one-hot input (local stencils,
+neighbour-majority, k×k morphology). Re-test the kojimar-style mem=0 single Conv against a LARGE uncached
+fresh gate (≥7500) before pricing it a floor; the moat is the gate size, not a separability proof. This is
+the highest-value adopt of S10 (+2.556) precisely because we had previously mis-priced it as unbeatable.

@@ -68,3 +68,10 @@ because rline alone is true there. A correct in-grid line gate needs the full cr
 ⭐ Memory's "task198 = flood wall (infeasible)" was a FALSE label tied to our old flood net —
 the real ARC task is closed-form depth-1 wall-gap marking, fully separable. Re-triage
 "flood/connectivity wall" labels against the GENERATOR, not the deployed net's op signature.
+
+## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.000)
+**Mechanism (op-census diff):** Zero-masking recast from **uint8-`Mul`** (`zero_u8`) to **fp16-`Where`** (`where_mask_zero_f16`): Cast 11→9, Mul 6→3, Where 1→4. −6B.
+**Old→new:** mem 13434→13428, params 138→138.
+**Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
+Backup `reports/retired_networks/task198_pre_s10.onnx`; source `public_candidates/bobmyers7186/task198.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
+No transferable mechanism — minor trim.
