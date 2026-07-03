@@ -6,8 +6,8 @@ Use this as the next-session prompt:
 /Users/minseong/project/neurogolf 에서 NeuroGolf 점수 개선을 이어가자.
 
 현재 상태 (S11 종료, 2026-07-03):
-- 로컬 격리 합계 **7214.32** (S11 제출 완료, LB 확인 대기 — reports/submission_log.md 참조.
-  S10 오프셋 기준 기대 LB ~7214.4). 마감 07-15 (최종 = private LB).
+- 확정 LB 최고점 = **7214.42** (54295163, S11 최종. 로컬 격리 7214.32와 정합, 오프셋 +0.10).
+  마감 07-15 (최종 = private LB). 궤적은 reports/submission_log.md.
 - ★ 필독: reports/REBUILD_PLAYBOOK.md (메커니즘 15 + S11 제약들 추가됨) → 메모리
   neurogolf-signed-einsum-routing, neurogolf-gate-policy-lb-is-arbiter, adoption-protocol.
 - 세션 운영 모드 = FAMILY-FIRST (사용자 지시): 태스크 단위 골프가 아니라

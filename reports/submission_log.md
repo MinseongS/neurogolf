@@ -589,7 +589,7 @@ free-output-axis welded; lever real only for counted entry reads — caveat in s
 under-counts ~54.6pt (ORT arena flip); grade in isolation. Hardening (epsilon bias) queued.
 DAY: 7208.43 → 7213.63 (+5.20, 28 tasks changed, submission clean).
 
-## 2026-07-03 S11 — submitted, local isolated **7214.32** (expect LB ~7214.4)
+## #NEW-BEST 2026-07-03 S11 — **7214.42** (54295163 COMPLETE, local isolated 7214.32)
 Family-first pivot session (user directive). New mechanism 15 (signed-channel priority
 overlay: `(out>0.0)` per-channel grading ⇒ overlap priority is LINEAR via signed W —
 no [30,30] label carrier) landed 092 +0.241; cohort sweep 6/6 KILL (233/285/370/133/054/366
