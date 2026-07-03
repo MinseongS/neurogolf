@@ -113,3 +113,5 @@ einsums 'bchw,ck->bkh/bkw'; cyan family (5 planes) → einsums over stacked data
 selector v_f[1,4,30] (Equal-built one-hots, task110 style; also removes GatherElements OOB
 risk); epilogue 9 bool planes → ONE fp16 einsum 'bkh,bkw->bhw' (orientation = operand swap).
 9955+166 vs 16803+256 → +0.522. Fresh 2500×2+1500 div 0. fp16 einsum OK in ORT CPU.
+
+## S11 (2026-07-03) — mech-15 finder scout: KILL — cost = 220-node S/U family legality SELECTION; output is a routed bent path, not separable rects. Carrier planes already einsum-folded S8. mech-15 cannot do family selection.

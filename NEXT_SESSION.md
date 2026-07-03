@@ -31,6 +31,10 @@ S11에서 증명/확정된 것:
    피연산자 없는 einsum 섬" 단위로만. dtype 상한은 번들 관측이 아니라 generator 최대치.
 4. ⭐ 출력 라우팅 크로스오버: Equal-then-Pad(10·h·w) vs Pad-then-Equal(900B), 콘텐츠
    <90셀이면 전자 승. 전수 스윕 → 유일 후보 174 착지 +0.189. 이 레버 종결.
+   부산물 bool-Pad(opset13) 레버도 전수 반증 종결 (32히트 0채택; opset≤10 넷은
+   attr→init 변환 +params가 절감 압도 — task056 측정 −0.28. reports/boolpad_scan.md).
+   메커니즘 15도 전파 종결: 파인더(mech15_output_scan.py) 67 적격 → 상위 전부 kill,
+   출력 술어만으론 부족 (비용이 캐리어에 있어야) — 신규 넷 스크린으로 전환.
 5. 💀 마른 우물 확정 (재탐사 금지): int8 QLinearConv on PRODUCER_BOUND 색번호 Conv
    (0/32, 입력 양자화 9000B가 압도 — 측정 3건), dtype recast 잔존분 (2건 착지로 수확
    완료, 나머지 dtype-bound/FLOOR), per-cell 색 읽기 플로어 8번째 확인.
@@ -46,12 +50,17 @@ S11에서 증명/확정된 것:
 2. 리뷰 루프 계속: reports/frontier_queue.md (S10-보정 완료)에서 다음 배치.
    ⚠️ 큐 휴리스틱은 출력-캐리어 플로어에 눈멀어 headroom 과대평가 (041 사례) —
    재생성 시 캐리어-플로어 추정 컬럼 추가 권장 (build_frontier_queue.py).
-3. 다음 메커니즘 사냥 표적 (S11 kill들의 공통 요구, 아직 존재하지 않는 프리미티브):
-   a. "runtime-parameterized stamp" — 임의 스프라이트를 데이터-의존 위치/배율로 싸게
-      찍기 (370의 4-dilation 뱅크, 133의 4-배율 커널, 285/366이 공통 요구).
-   b. assignment/해시매치 압축 — 233의 324-포지션 매치, 366의 복제 추출 블록 21.5KB.
-   c. 177 사촌 task361 (4322B, crop+reflect) 정찰.
-4. task008 사용자 수작업 채택분 (+0.136, fresh 2000/2000 확인됨) — tasklog 메커니즘
+3. ⭐ 블로커 센서스 완료 (reports/blocker_census.md — 400 tasklog의 수요 랭킹):
+   - 실행 가능 최대 수요 = "후보/템플릿 뱅크를 전부 구체화 후 선택" 뿌리 (#3 스프라이트-
+     스탬프 51태스크/65pt + #4 flood 반복 28/45 + #8 구간fill 10/19).
+   - ⚠️ If/Loop/Scan/서브그래프는 grader 금지 op (확인함) — "선택 분기만 계산"은 불가.
+     설계 방향 = 허용 op로 runtime-parameterization: Conv weight는 런타임 텐서 가능
+     (182가 선례), Resize 런타임 scales, GridSample 런타임 grid (361 선례). 뱅크 대신
+     "선택값을 커널/그리드에 임베드해서 1회 실행" — 다음 세션 Fable 설계 1순위.
+   - #1+#2 (캐리어 900B + 검출 G²×4, 합 ~300pt) = 증명된 벽. UNKNOWN 버킷 58태스크
+     (tasklog 부재/빈약)도 발견 — 도시에 루프의 후보군.
+4. task361/387/101/216/368/367/066/064/182 = S11 정찰 kill (각 tasklog 기록) — 재탐사 금지.
+5. task008 사용자 수작업 채택분 (+0.136, fresh 2000/2000 확인됨) — tasklog 메커니즘
    기록이 비어 있으면 보완.
 
 하지 말 것 (유지):

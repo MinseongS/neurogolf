@@ -60,3 +60,29 @@ bbox-top-left comes from per-row/col presence + a ramp ReduceMin; place the patt
 colour, locate the TRUE reference by a structural feature (here: the COMPLETE on-grid box —
 perimeter Conv peak == perimeter count; partial/off-grid fakeouts never reach it) and gate the
 reference plane to that region, rather than keying on colour.
+
+## S11 (2026-07-03) — mech-15 finder scout: KILL — recolour targets are arbitrary sprite SHAPES matched by runtime cross-correlation vs a reference extracted into a Conv kernel; cost = conv-response planes + 1600B entry. Non-local congruence ∉ mech-15.
+
+## 2026-07-03 solid-marker profile transfer probe — KILL
+
+Follow-up from task008's `solid_marker_profile_reconstruction` win.  Hypothesis:
+the complete gray 7x7 box locator might not need the shared 20x20 colour-index
+plane.
+
+Current graph already uses a single `cidf32 [1,1,20,20]` Conv output for three
+load-bearing roles:
+
+- locate the boxed reference via `AveragePool` row/column scores;
+- provide the compact `cid uint8 [1,1,20,20]` label plane used to gather the
+  5x5 reference template and center colour;
+- produce the blue occupancy mask (`cid == 1`) for runtime template matching.
+
+Therefore replacing only the gray-box locator with row/column profile
+contractions does not delete `cidf32`; template extraction and blue-mask
+construction still need the same 20x20 label carrier.  Also checked the obvious
+`cid` cast-delay idea: removing the 400B uint8 `cid` forces `cflat/tv` through
+fp32 and loses more than it saves.  No source candidate adopted.
+
+Conclusion: task182 is not a task008-style solid-marker-profile transfer.  Its
+floor is the shared colour-index entry plus runtime cross-correlation planes,
+not marker localization.

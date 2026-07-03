@@ -145,3 +145,5 @@ Reusable insight: for "copy one coloured solid rectangle pattern to gray copies,
 first check whether generator bounds reduce the problem to a small fixed list of
 source offsets and rectangle anchors. If yes, sparse anchor-scatter can dominate
 the more general run-length/histogram formulation.
+
+## S11 (2026-07-03) — mech-15/pointer scout: KILL — copied source is an arbitrary 2-colour 2-D footprint stamped at N gray anchors (sprite-stamp class); row/col separability not guaranteed (per own tasklog). No monochrome separable fills.

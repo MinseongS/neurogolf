@@ -156,3 +156,5 @@ v9 anchor rows 20→18 (generator proof: boxes never vertically clipped ⇒ rows
 live onnx: all div 0. Epilogue-fold REJECTED here (u8 QLC domain; einsum entry ≥3600B vs
 1800B Where). Floors: v9 9000B (25 non-separable templates), Slice+Cast 4000B, epilogue 1800B
 (opset-11 checker rejects bool Pad).
+
+## S11 (2026-07-03) — mech-15 finder scout: KILL — 4725 params = int8 25-template box-outline discriminator bank (rect_w+fill_w), not a LUT; yellow rect EXTENTS come from non-separable outline verification (naive enclosure 46/150). Carrier already folded (S8 Where-onto-input).

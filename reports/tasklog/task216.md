@@ -82,3 +82,5 @@ Einsum 'nkrc,k,br,bc->b' reusing counted c12_f32 as free operand → per-box red
 (4,) direct. mem 9048→8584, params 87→76. Bit-identical: 2500+600 uncached fresh 0/0/0.
 FLOORS: c12_f32 3200 = entry floor (both channels needed at 20×20; alternatives ≥cost),
 corner-finding 1200 + run-scan 1120 near-minimal u8. Backup task216_pre_s9.onnx.
+
+## S11 (2026-07-03) — mech-15/pointer scout: KILL — output = variable-size crop of globally-ArgMax-selected most-red box; cost = winner-selection (3200B entry + corner/run-scan). No separable fills, no carrier. Floor stands.

@@ -82,6 +82,12 @@ Score = 25 − ln(mem+params). This file is the single onboarding doc for per-ta
     reads / assignment / sprite-stamp machinery, which signed-W cannot touch; sparse_scatter
     class label ≠ separable fills). Hits so far: 092/234/335. Screen candidates by RENDERING
     the output and checking separability + constant colour roster, not by class labels.
+    S11 PROPAGATION CLOSED: systematic finder reports/scripts/mech15_output_scan.py
+    (retro-catches all 3 hits; 67 structural qualifiers) + scouts on every fresh top
+    qualifier (367/066/064/182 + 101/216/368) = ALL KILL — output predicate alone is
+    insufficient; must ALSO gate on "counted mass sits in a deletable carrier" (it never
+    did: detection/selection/correlation machinery everywhere, carriers already folded in
+    S8-S11). Mechanism 15 is now a SCREEN FOR NEW NETS (teacher imports), not a mine.
     S11 COMPOSITION CONSTRAINT (task084 pricing): only ONE op writes the free output —
     free-einsum + residual-scatter hybrids cannot compose (counted [1,10,30,30] bridge
     = 18-36KB); the fold is ALL-OR-NOTHING. If any output component is non-separable and

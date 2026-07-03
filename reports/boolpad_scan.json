@@ -1,0 +1,722 @@
+[
+ {
+  "task": 126,
+  "cast": "updates",
+  "src": "updates_bool",
+  "dst": "updates",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "ScatterND"
+  ],
+  "shape": [
+   2,
+   30
+  ],
+  "plane_bytes": 240,
+  "opset": 16,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 605,
+  "est_delta_pts": 0.5053,
+  "verdict": "FALSE+ : ScatterND updates onto FLOAT graph-input canvas; updates dtype locked to input (float). Narrowing would force casting the 9000B canvas to bool = net loss."
+ },
+ {
+  "task": 56,
+  "cast": "active_channels",
+  "src": "active_bool",
+  "dst": "active_channels",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT16",
+  "consumers": [
+   "Pad"
+  ],
+  "shape": [
+   1,
+   6,
+   1,
+   1
+  ],
+  "plane_bytes": 12,
+  "opset": 9,
+  "needs_bump": true,
+  "to_output": false,
+  "cur_M": 34,
+  "est_delta_pts": 0.3075,
+  "verdict": "REFUTED (built+measured): true bool->Pad, but opset9->13 bump converts free Slice/Pad node-attrs into COUNTED int64 inits (+23 params) >> 12B fp16 plane saved. 21.474 -> 21.193 (-0.28 LOSS)."
+ },
+ {
+  "task": 106,
+  "cast": "cast_14",
+  "src": "where_12",
+  "dst": "cast_14",
+  "src_dt": "UINT8",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "ScatterElements"
+  ],
+  "shape": [
+   1,
+   1,
+   6,
+   6
+  ],
+  "plane_bytes": 144,
+  "opset": 16,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 626,
+  "est_delta_pts": 0.2614,
+  "verdict": "FALSE+ : ScatterElements updates onto FLOAT graph-input canvas; updates dtype locked to input."
+ },
+ {
+  "task": 293,
+  "cast": "updates",
+  "src": "updates_b",
+  "dst": "updates",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "ScatterND"
+  ],
+  "shape": [
+   2,
+   3,
+   2
+  ],
+  "plane_bytes": 48,
+  "opset": 11,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 1288,
+  "est_delta_pts": 0.038,
+  "verdict": "FALSE+ : ScatterND updates onto FLOAT graph-input canvas; updates dtype locked to input."
+ },
+ {
+  "task": 206,
+  "cast": "color_update",
+  "src": "color_update_b",
+  "dst": "color_update",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "Concat"
+  ],
+  "shape": [
+   9
+  ],
+  "plane_bytes": 36,
+  "opset": 13,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 4186,
+  "est_delta_pts": 0.0086,
+  "verdict": "FALSE+ : bool->float16 feeds AveragePool (float required), or int8 feeds ReduceMax->ArgMax (already narrow)."
+ },
+ {
+  "task": 206,
+  "cast": "background_update",
+  "src": "is_hole",
+  "dst": "background_update",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "Concat"
+  ],
+  "shape": [
+   9
+  ],
+  "plane_bytes": 36,
+  "opset": 13,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 4186,
+  "est_delta_pts": 0.0086,
+  "verdict": "FALSE+ : bool->float16 feeds AveragePool (float required), or int8 feeds ReduceMax->ArgMax (already narrow)."
+ },
+ {
+  "task": 255,
+  "cast": "left_cols_f",
+  "src": "left_cols",
+  "dst": "left_cols_f",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "Reshape"
+  ],
+  "shape": [
+   1,
+   1,
+   1,
+   30
+  ],
+  "plane_bytes": 120,
+  "opset": 12,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 14956,
+  "est_delta_pts": 0.0081,
+  "verdict": "FALSE+ : bool->float feeds Reshape whose output goes into MatMul (float required); cast pays for MatMul, not the shape-op. Also matured net."
+ },
+ {
+  "task": 255,
+  "cast": "right_rect_cols_f",
+  "src": "right_rect_cols",
+  "dst": "right_rect_cols_f",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "Reshape"
+  ],
+  "shape": [
+   1,
+   1,
+   1,
+   30
+  ],
+  "plane_bytes": 120,
+  "opset": 12,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 14956,
+  "est_delta_pts": 0.0081,
+  "verdict": "FALSE+ : bool->float feeds Reshape whose output goes into MatMul (float required); cast pays for MatMul, not the shape-op. Also matured net."
+ },
+ {
+  "task": 255,
+  "cast": "top_rows_f",
+  "src": "top_rows",
+  "dst": "top_rows_f",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "Reshape"
+  ],
+  "shape": [
+   1,
+   1,
+   30,
+   1
+  ],
+  "plane_bytes": 120,
+  "opset": 12,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 14956,
+  "est_delta_pts": 0.0081,
+  "verdict": "FALSE+ : bool->float feeds Reshape whose output goes into MatMul (float required); cast pays for MatMul, not the shape-op. Also matured net."
+ },
+ {
+  "task": 255,
+  "cast": "bottom_rect_rows_f",
+  "src": "bottom_rect_rows",
+  "dst": "bottom_rect_rows_f",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "Reshape"
+  ],
+  "shape": [
+   1,
+   1,
+   30,
+   1
+  ],
+  "plane_bytes": 120,
+  "opset": 12,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 14956,
+  "est_delta_pts": 0.0081,
+  "verdict": "FALSE+ : bool->float feeds Reshape whose output goes into MatMul (float required); cast pays for MatMul, not the shape-op. Also matured net."
+ },
+ {
+  "task": 188,
+  "cast": "oh_ge3_f",
+  "src": "oh_ge3",
+  "dst": "oh_ge3_f",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "Concat"
+  ],
+  "shape": [
+   1,
+   1,
+   1,
+   1
+  ],
+  "plane_bytes": 4,
+  "opset": 13,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 1018,
+  "est_delta_pts": 0.0039,
+  "verdict": "NEGLIGIBLE : 4B float<->bool micro-casts on [1,1,1,1] scalars."
+ },
+ {
+  "task": 188,
+  "cast": "oh_ge4_f",
+  "src": "oh_ge4",
+  "dst": "oh_ge4_f",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "Concat"
+  ],
+  "shape": [
+   1,
+   1,
+   1,
+   1
+  ],
+  "plane_bytes": 4,
+  "opset": 13,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 1018,
+  "est_delta_pts": 0.0039,
+  "verdict": "NEGLIGIBLE : 4B float<->bool micro-casts on [1,1,1,1] scalars."
+ },
+ {
+  "task": 188,
+  "cast": "ow_ge3_f",
+  "src": "ow_ge3",
+  "dst": "ow_ge3_f",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "Concat"
+  ],
+  "shape": [
+   1,
+   1,
+   1,
+   1
+  ],
+  "plane_bytes": 4,
+  "opset": 13,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 1018,
+  "est_delta_pts": 0.0039,
+  "verdict": "NEGLIGIBLE : 4B float<->bool micro-casts on [1,1,1,1] scalars."
+ },
+ {
+  "task": 188,
+  "cast": "ow_ge4_f",
+  "src": "ow_ge4",
+  "dst": "ow_ge4_f",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "Concat"
+  ],
+  "shape": [
+   1,
+   1,
+   1,
+   1
+  ],
+  "plane_bytes": 4,
+  "opset": 13,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 1018,
+  "est_delta_pts": 0.0039,
+  "verdict": "NEGLIGIBLE : 4B float<->bool micro-casts on [1,1,1,1] scalars."
+ },
+ {
+  "task": 92,
+  "cast": "isH",
+  "src": "isHb",
+  "dst": "isH",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT16",
+  "consumers": [
+   "Reshape"
+  ],
+  "shape": [
+   1,
+   10
+  ],
+  "plane_bytes": 20,
+  "opset": 16,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 5399,
+  "est_delta_pts": 0.0037,
+  "verdict": "FALSE+ : bool->float feeds ReduceSum (float required); recently matured (S11)."
+ },
+ {
+  "task": 92,
+  "cast": "isV",
+  "src": "isVb",
+  "dst": "isV",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT16",
+  "consumers": [
+   "Reshape"
+  ],
+  "shape": [
+   1,
+   10
+  ],
+  "plane_bytes": 20,
+  "opset": 16,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 5399,
+  "est_delta_pts": 0.0037,
+  "verdict": "FALSE+ : bool->float feeds ReduceSum (float required); recently matured (S11)."
+ },
+ {
+  "task": 158,
+  "cast": "nb44",
+  "src": "nb44v",
+  "dst": "nb44",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "Slice"
+  ],
+  "shape": [
+   1,
+   1,
+   4,
+   4
+  ],
+  "plane_bytes": 64,
+  "opset": 17,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 20910,
+  "est_delta_pts": 0.0031,
+  "verdict": "FALSE+ : bool->float feeds Slice whose output goes into Mul (float required)."
+ },
+ {
+  "task": 54,
+  "cast": "s0f",
+  "src": "s0b",
+  "dst": "s0f",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "Reshape"
+  ],
+  "shape": [
+   1,
+   10,
+   1,
+   1
+  ],
+  "plane_bytes": 40,
+  "opset": 18,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 20379,
+  "est_delta_pts": 0.002,
+  "verdict": "NEGLIGIBLE : already uint8/int8 narrow chains; flagged plane 40B, dpts 0.002."
+ },
+ {
+  "task": 328,
+  "cast": "subset_idx",
+  "src": "subset_idx_u8",
+  "dst": "subset_idx",
+  "src_dt": "UINT8",
+  "dst_dt": "INT64",
+  "consumers": [
+   "Reshape"
+  ],
+  "shape": [
+   1,
+   1,
+   1
+  ],
+  "plane_bytes": 8,
+  "opset": 16,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 6775,
+  "est_delta_pts": 0.0012,
+  "verdict": "low-value (<0.05 dpts) or shape-op cast paying for a downstream float op; not harvestable"
+ },
+ {
+  "task": 131,
+  "cast": "public_tenth_f",
+  "src": "has_public_tenth",
+  "dst": "public_tenth_f",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "Concat"
+  ],
+  "shape": [
+   1,
+   1
+  ],
+  "plane_bytes": 4,
+  "opset": 16,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 3987,
+  "est_delta_pts": 0.001,
+  "verdict": "low-value (<0.05 dpts) or shape-op cast paying for a downstream float op; not harvestable"
+ },
+ {
+  "task": 366,
+  "cast": "comp0_valid_i",
+  "src": "k0_valid",
+  "dst": "comp0_valid_i",
+  "src_dt": "BOOL",
+  "dst_dt": "INT32",
+  "consumers": [
+   "Concat"
+  ],
+  "shape": [
+   1,
+   6
+  ],
+  "plane_bytes": 24,
+  "opset": 13,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 31559,
+  "est_delta_pts": 0.0008,
+  "verdict": "low-value (<0.05 dpts) or shape-op cast paying for a downstream float op; not harvestable"
+ },
+ {
+  "task": 366,
+  "cast": "comp1_valid_i",
+  "src": "k1_valid",
+  "dst": "comp1_valid_i",
+  "src_dt": "BOOL",
+  "dst_dt": "INT32",
+  "consumers": [
+   "Concat"
+  ],
+  "shape": [
+   1,
+   6
+  ],
+  "plane_bytes": 24,
+  "opset": 13,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 31559,
+  "est_delta_pts": 0.0008,
+  "verdict": "low-value (<0.05 dpts) or shape-op cast paying for a downstream float op; not harvestable"
+ },
+ {
+  "task": 366,
+  "cast": "comp2_valid_i",
+  "src": "k2_valid",
+  "dst": "comp2_valid_i",
+  "src_dt": "BOOL",
+  "dst_dt": "INT32",
+  "consumers": [
+   "Concat"
+  ],
+  "shape": [
+   1,
+   6
+  ],
+  "plane_bytes": 24,
+  "opset": 13,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 31559,
+  "est_delta_pts": 0.0008,
+  "verdict": "low-value (<0.05 dpts) or shape-op cast paying for a downstream float op; not harvestable"
+ },
+ {
+  "task": 366,
+  "cast": "T_color_present_f",
+  "src": "T_color_present",
+  "dst": "T_color_present_f",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT16",
+  "consumers": [
+   "GatherElements"
+  ],
+  "shape": [
+   1,
+   10
+  ],
+  "plane_bytes": 20,
+  "opset": 13,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 31559,
+  "est_delta_pts": 0.0006,
+  "verdict": "low-value (<0.05 dpts) or shape-op cast paying for a downstream float op; not harvestable"
+ },
+ {
+  "task": 366,
+  "cast": "comp0_av_i",
+  "src": "k0_anchor_valid",
+  "dst": "comp0_av_i",
+  "src_dt": "BOOL",
+  "dst_dt": "INT32",
+  "consumers": [
+   "Concat"
+  ],
+  "shape": [
+   1,
+   4
+  ],
+  "plane_bytes": 16,
+  "opset": 13,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 31559,
+  "est_delta_pts": 0.0005,
+  "verdict": "low-value (<0.05 dpts) or shape-op cast paying for a downstream float op; not harvestable"
+ },
+ {
+  "task": 366,
+  "cast": "comp1_av_i",
+  "src": "k1_anchor_valid",
+  "dst": "comp1_av_i",
+  "src_dt": "BOOL",
+  "dst_dt": "INT32",
+  "consumers": [
+   "Concat"
+  ],
+  "shape": [
+   1,
+   4
+  ],
+  "plane_bytes": 16,
+  "opset": 13,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 31559,
+  "est_delta_pts": 0.0005,
+  "verdict": "low-value (<0.05 dpts) or shape-op cast paying for a downstream float op; not harvestable"
+ },
+ {
+  "task": 366,
+  "cast": "comp2_av_i",
+  "src": "k2_anchor_valid",
+  "dst": "comp2_av_i",
+  "src_dt": "BOOL",
+  "dst_dt": "INT32",
+  "consumers": [
+   "Concat"
+  ],
+  "shape": [
+   1,
+   4
+  ],
+  "plane_bytes": 16,
+  "opset": 13,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 31559,
+  "est_delta_pts": 0.0005,
+  "verdict": "low-value (<0.05 dpts) or shape-op cast paying for a downstream float op; not harvestable"
+ },
+ {
+  "task": 366,
+  "cast": "r0_has_i",
+  "src": "r0_has",
+  "dst": "r0_has_i",
+  "src_dt": "BOOL",
+  "dst_dt": "INT64",
+  "consumers": [
+   "Concat"
+  ],
+  "shape": [
+   1,
+   1
+  ],
+  "plane_bytes": 8,
+  "opset": 13,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 31559,
+  "est_delta_pts": 0.0003,
+  "verdict": "low-value (<0.05 dpts) or shape-op cast paying for a downstream float op; not harvestable"
+ },
+ {
+  "task": 366,
+  "cast": "r1_has_i",
+  "src": "r1_has",
+  "dst": "r1_has_i",
+  "src_dt": "BOOL",
+  "dst_dt": "INT64",
+  "consumers": [
+   "Concat"
+  ],
+  "shape": [
+   1,
+   1
+  ],
+  "plane_bytes": 8,
+  "opset": 13,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 31559,
+  "est_delta_pts": 0.0003,
+  "verdict": "low-value (<0.05 dpts) or shape-op cast paying for a downstream float op; not harvestable"
+ },
+ {
+  "task": 366,
+  "cast": "r2_has_i",
+  "src": "r2_has",
+  "dst": "r2_has_i",
+  "src_dt": "BOOL",
+  "dst_dt": "INT64",
+  "consumers": [
+   "Concat"
+  ],
+  "shape": [
+   1,
+   1
+  ],
+  "plane_bytes": 8,
+  "opset": 13,
+  "needs_bump": false,
+  "to_output": false,
+  "cur_M": 31559,
+  "est_delta_pts": 0.0003,
+  "verdict": "low-value (<0.05 dpts) or shape-op cast paying for a downstream float op; not harvestable"
+ },
+ {
+  "task": 319,
+  "cast": "src1_possible_f",
+  "src": "p10_pair_match",
+  "dst": "src1_possible_f",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "Unsqueeze"
+  ],
+  "shape": [],
+  "plane_bytes": null,
+  "opset": 12,
+  "needs_bump": false,
+  "to_output": false,
+  "est_delta_pts": null,
+  "verdict": "low-value (<0.05 dpts) or shape-op cast paying for a downstream float op; not harvestable"
+ },
+ {
+  "task": 319,
+  "cast": "src2_possible_f",
+  "src": "src2_possible",
+  "dst": "src2_possible_f",
+  "src_dt": "BOOL",
+  "dst_dt": "FLOAT",
+  "consumers": [
+   "Unsqueeze"
+  ],
+  "shape": [],
+  "plane_bytes": null,
+  "opset": 12,
+  "needs_bump": false,
+  "to_output": false,
+  "est_delta_pts": null,
+  "verdict": "low-value (<0.05 dpts) or shape-op cast paying for a downstream float op; not harvestable"
+ }
+]

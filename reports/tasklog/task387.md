@@ -57,3 +57,5 @@ cannot avoid one 30×30 expansion (Pad to canvas). Not at a hard wall but near t
   original input pixels (occ = colf>0.75, colf = their colour). Avoids 4 separate centre masks.
 - uint8 Cast+Pad of a small index plane beats an fp32 Pad even though ORT upcasts the Pad output
   in the trace, because the pre-Pad working tensors stay 1-byte.
+
+## S11 (2026-07-03) — mech-15/pointer scout: KILL — already 084-shaped (ScatterElements-into-free-input); the +3.1KB over 084 is real added semantics (2 data-dependent corner colours + 6 geometry scalars + even-distance gray-edge indices), not bloat. Composition constraint blocks hybrids.

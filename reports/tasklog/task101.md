@@ -154,3 +154,5 @@ Fresh (crash-tolerant gate): cached 2500 inc 2, cand 0; uncached 10000 inc 11, c
 all divergences = incumbent crash instances. TRAPS: ORT OneHot needs i32 depth (i64 depth
 kernel unregistered); stock fresh_verify aborts on incumbent inference errors — scratchpad
 fresh_gate.py counts them as fails (consider upstreaming).
+
+## S11 (2026-07-03) — mech-15/pointer scout: KILL — output = data-dependent blue sprite-template scatter at searched anchors (scale 1-3, per-instance shape); cost = detection slices + TopK anchor search, no carrier. Same bucket as 233/285 (assignment/detection).
