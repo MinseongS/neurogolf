@@ -140,3 +140,10 @@ Lout16 (the 4-fold reflection), P + the u8 Lout/Lmask/Lpad masking. mem 13408 + 
   reflection could run on 14×14, but the in-grid-background restore needed for size-15 grids
   (which still have bg at row/col 14) costs a Where-chain that exceeds the 14² savings. Lesson:
   shrinking the work canvas only wins when you don't have to reconstruct the dropped border.
+
+## S11 (2026-07-03) — recast candidate REFUTED at re-measurement; incumbent restored
+Long-tail agent reported +14B win (its baseline read params=174 — wrong; real incumbent
+= 3922/243 = 16.6655). Rebuilt candidate measured 3948/243 = 16.6593 stably (3 isolated
+runs) = −0.0062 LOSS. Adopted briefly, reverted to incumbent (verified 3922/243 restored).
+⭐LESSON: re-measure the INCUMBENT yourself before trusting an agent's baseline numbers —
+this was the adoption-protocol 정합검증 step catching a bad delta.

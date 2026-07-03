@@ -96,6 +96,12 @@ Score = 25 − ln(mem+params). This file is the single onboarding doc for per-ta
     ScatterElements updates are dtype-bound to data (fp32 input ⇒ fp32 updates, no recast).
 
 ## Reject-checks (priced floors — don't re-attempt without a new idea)
+- S11 dtype long-tail: EXHAUSTED (64-task systematic pass, 1 false-win refuted at
+  re-measurement, 24 refuted by island/binding traps, 39 net-negative). Root cause the
+  headline scan missed: boundary Casts to ENTER/EXIT an fp16 region cost ≥ the halving
+  for small scattered planes — always charge cast overhead in the estimate. Recast lever
+  is now fully closed alongside int8-ranking; reports/dtype_overpay_scan.json remains as
+  the value-range fact base for other levers.
 - S11 Conv→int8 QLinearConv on PRODUCER_BOUND colour-index Convs: DRY WELL (0/32 net wins,
   3 measured refutation builds at reports/candidates/task{074,080,383}_qconv.py). QLinearConv
   needs a QUANTIZED input → free 10-ch fp32 input forces a counted 9000B uint8 copy >> any
