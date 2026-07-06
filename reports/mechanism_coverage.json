@@ -1,0 +1,84 @@
+{
+ "walk_einsum": {
+  "query": "",
+  "tasks": {
+   "187": {
+    "outcome": "applied",
+    "session": "seed"
+   },
+   "110": {
+    "outcome": "applied",
+    "session": "seed"
+   },
+   "243": {
+    "outcome": "applied",
+    "session": "seed"
+   },
+   "077": {
+    "outcome": "applied",
+    "session": "seed"
+   }
+  }
+ },
+ "einsum_vs_free_input": {
+  "query": "",
+  "tasks": {
+   "255": {
+    "outcome": "applied",
+    "session": "seed"
+   },
+   "208": {
+    "outcome": "applied",
+    "session": "seed"
+   },
+   "370": {
+    "outcome": "applied",
+    "session": "seed"
+   }
+  }
+ },
+ "signed_rect": {
+  "query": "",
+  "tasks": {
+   "234": {
+    "outcome": "applied",
+    "session": "seed"
+   },
+   "335": {
+    "outcome": "applied",
+    "session": "seed"
+   },
+   "092": {
+    "outcome": "applied",
+    "session": "seed"
+   }
+  }
+ },
+ "gridsample_warp": {
+  "query": "",
+  "tasks": {
+   "209": {
+    "outcome": "applied",
+    "session": "seed"
+   }
+  }
+ },
+ "qlinearconv_render": {
+  "query": "",
+  "tasks": {
+   "133": {
+    "outcome": "applied",
+    "session": "seed"
+   }
+  }
+ },
+ "topk_width": {
+  "query": "",
+  "tasks": {
+   "173": {
+    "outcome": "applied",
+    "session": "seed"
+   }
+  }
+ }
+}
