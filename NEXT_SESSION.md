@@ -39,7 +39,15 @@ S17에서 mechanical 오버핏 레버는 전부 소진 확인:
 (c) 8000은 262 arc-gen을 알고리즘보다 훨씬 싸게 통과하는 per-task leaky 숏컷 필요 — 공개 커뮤니티도 대부분
 실패, cristianoc oracle이 알고리즘 floor 검증. **현실 상한 ≈7248-7249.** [[neurogolf-overfit-mode]] 참조.
 
-**남은 유일한 상승로 = DEEP per-task leaky 재구성** (사용자 승인, 고노력·초저확률, 위 상한 인지하고 진행):
+**⚠️⚠️ S17 CALIBRATION: free-tensor 재구성 레버 = DRY (0/9).** 3개 deep opus 에이전트가 최고bloat 9태스크
+(366/018/133/158/054/367/349/173/138)에 CSE·DCE·dtype·채널drop·커널crop·TopK-K·뱅크prune 전부 시도 →
+**0승.** 전부 byte floor: 지배 plane = free fp32 `input`의 Conv/Gather/Einsum/Slice (forced fp32 ~2600-3600B)
++ multi-step 알고리즘의 minimal-width(1B) grid state 다수. detector 뱅크는 266 인스턴스에서 empirically all-live.
+⇒ **8000 갭 = per-task 알고리즘의 grid-state COUNT를 줄이는 재작성** (구현/routing 갭 아님). 이건 mechanical golf가
+아니라 태스크별 알고리즘 재설계 = 공개 커뮤니티(7237)도 못한 것, 8min/task deep agent도 0/9. **수백점은 비현실적.**
+현실: 7248.94가 실질 상한 근처. 계속 판다면 태스크별 deep 재작성으로 단건 +1~2씩 (수백 아님).
+
+**(구) 남은 상승로 = DEEP per-task leaky 재구성** (위 calibration으로 초저확률 확인됨):
 1. ⭐ **bit-pack 인코딩 레버** (공개 task319 5852 넷에서 발견): BitShift/BitwiseAnd로 객체를 27×27 full plane
    대신 [1,10,5,5] 작은 코드로 압축 (11664B→~250B, 3× 절감). 우리 고비용 넷 중 full 30×30/27×27 객체
    plane을 materialize하는 것들에 이식 시도. 공개넷을 teacher로 op-census 비교해 mechanism 추출.

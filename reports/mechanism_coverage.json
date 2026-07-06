@@ -341,5 +341,55 @@
     "bit_identical": true
    }
   }
+ },
+ "freetensor_reformulation_floor": {
+  "query": "",
+  "tasks": {
+   "366": {
+    "outcome": "floor",
+    "session": "S17",
+    "note": "0/9 deep-agent reformulation wins; dominant plane = Conv/Gather/Einsum/Slice of free fp32 input (forced fp32); bulk = minimal-width grid states from multi-step algo; detector banks empirically all-live"
+   },
+   "18": {
+    "outcome": "floor",
+    "session": "S17",
+    "note": "0/9 deep-agent reformulation wins; dominant plane = Conv/Gather/Einsum/Slice of free fp32 input (forced fp32); bulk = minimal-width grid states from multi-step algo; detector banks empirically all-live"
+   },
+   "133": {
+    "outcome": "floor",
+    "session": "S17",
+    "note": "0/9 deep-agent reformulation wins; dominant plane = Conv/Gather/Einsum/Slice of free fp32 input (forced fp32); bulk = minimal-width grid states from multi-step algo; detector banks empirically all-live"
+   },
+   "158": {
+    "outcome": "floor",
+    "session": "S17",
+    "note": "0/9 deep-agent reformulation wins; dominant plane = Conv/Gather/Einsum/Slice of free fp32 input (forced fp32); bulk = minimal-width grid states from multi-step algo; detector banks empirically all-live"
+   },
+   "54": {
+    "outcome": "floor",
+    "session": "S17",
+    "note": "0/9 deep-agent reformulation wins; dominant plane = Conv/Gather/Einsum/Slice of free fp32 input (forced fp32); bulk = minimal-width grid states from multi-step algo; detector banks empirically all-live"
+   },
+   "367": {
+    "outcome": "floor",
+    "session": "S17",
+    "note": "0/9 deep-agent reformulation wins; dominant plane = Conv/Gather/Einsum/Slice of free fp32 input (forced fp32); bulk = minimal-width grid states from multi-step algo; detector banks empirically all-live"
+   },
+   "349": {
+    "outcome": "floor",
+    "session": "S17",
+    "note": "0/9 deep-agent reformulation wins; dominant plane = Conv/Gather/Einsum/Slice of free fp32 input (forced fp32); bulk = minimal-width grid states from multi-step algo; detector banks empirically all-live"
+   },
+   "173": {
+    "outcome": "floor",
+    "session": "S17",
+    "note": "0/9 deep-agent reformulation wins; dominant plane = Conv/Gather/Einsum/Slice of free fp32 input (forced fp32); bulk = minimal-width grid states from multi-step algo; detector banks empirically all-live"
+   },
+   "138": {
+    "outcome": "floor",
+    "session": "S17",
+    "note": "0/9 deep-agent reformulation wins; dominant plane = Conv/Gather/Einsum/Slice of free fp32 input (forced fp32); bulk = minimal-width grid states from multi-step algo; detector banks empirically all-live"
+   }
+  }
  }
 }
