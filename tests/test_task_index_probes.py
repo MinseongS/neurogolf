@@ -80,3 +80,57 @@ def test_n_objects_counts_components_not_colors():
     samples = [(g.copy(), g.copy())]
     val, conf = m.probe_n_objects_est(samples)
     assert val == 3
+
+
+def test_flood_ccl_true_on_contiguous_recolor():
+    m = _load()
+    # background (colour 0) forms ONE large contiguous blob that gets filled with a single new
+    # colour -- the classic background-fill flood, which the PROBE_VERSION-2 "bg_flood" branch
+    # flags True unconditionally (untouched by the v3 connectivity tightening on the dominant-
+    # source-colour branch).
+    samples = []
+    for _ in range(10):
+        g = np.ones((8, 8), dtype=int) * 3
+        g[1:7, 1:7] = 0  # one large contiguous background blob
+        o = g.copy()
+        o[g == 0] = 5
+        samples.append((g, o))
+    val, conf = m.probe_flood_ccl(samples)
+    assert val is True
+
+
+def test_flood_ccl_false_on_scattered_recolor():
+    m = _load()
+    # a handful of mutually-isolated single cells (same source colour 3, non-background) each
+    # flipped to colour 5: dominant-source-colour concentration is high (all changed cells came
+    # from colour 3), but there is no multi-region connectivity structure -- every diff-component
+    # is a lone pixel (mean component size == 1, well below the count task077 needs). This is the
+    # "common single-object/scattered recolor" false-positive class the v3 tightening excludes.
+    samples = []
+    for _ in range(10):
+        g = np.zeros((8, 8), dtype=int)
+        for r, c in [(0, 0), (0, 4), (4, 0), (7, 7)]:
+            g[r, c] = 3
+        o = g.copy()
+        o[g == 3] = 5
+        samples.append((g, o))
+    val, conf = m.probe_flood_ccl(samples)
+    assert val is False
+
+
+def test_separable_rect_boundary():
+    m = _load()
+    i = np.zeros((10, 10), dtype=int)
+    o5 = i.copy()
+    # 5 disjoint solid rectangles, well separated so none merge into one run.
+    rects = [(0, 0, 1, 1), (0, 3, 1, 1), (0, 6, 1, 1), (3, 0, 1, 1), (3, 3, 1, 1)]
+    for r, c, h, w in rects:
+        o5[r:r + h, c:c + w] = 1
+    val5, conf5 = m.probe_separable_rect_output([(i.copy(), o5.copy())])
+    assert val5 == {"is": True, "n_rects": 5}
+
+    o6 = o5.copy()
+    o6[6, 6] = 1  # a 6th disjoint rectangle
+    val6, conf6 = m.probe_separable_rect_output([(i.copy(), o6.copy())])
+    assert val6["is"] is False
+    assert val6["n_rects"] == 6

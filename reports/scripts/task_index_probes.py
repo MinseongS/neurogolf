@@ -6,7 +6,7 @@ from __future__ import annotations
 import logging
 import numpy as np
 
-PROBE_VERSION = 2
+PROBE_VERSION = 3
 
 
 def _agree(flags: list[bool]) -> float:
@@ -152,7 +152,19 @@ def probe_flood_ccl(samples):
     # cells overwhelmingly share ONE dominant *source* colour (background-fill is the special
     # case where that shared source colour happens to be 0); a scattered per-cell recolor with no
     # underlying component structure would not show this concentration.
-    bg_fracs, dom_fracs = [], []
+    # PROBE_VERSION 3 (task-6 review fix): the v2 "dominant source colour" branch above was TOO
+    # WIDE on its own -- it fires on ordinary single-object recolor tasks too (a task that detects
+    # one object and recolors it also has one dominant source colour on its changed cells), which
+    # flipped the global True-rate from ~36.5% to ~52% and diluted walk_einsum leads with known
+    # per-cell-Conv/detection FLOOR tasks that have nothing to do with CCL propagation. Tighten it
+    # by ALSO requiring genuine multi-region connectivity structure on the changed-cell mask (via
+    # _count_components_4conn, reused from probe_n_objects_est): a single-object recolor produces
+    # ~1 connected diff-component (trivial, no propagation); real flood/CCL-style tasks process
+    # MULTIPLE distinct clusters (task077's Chebyshev-grouped boxes average ~7 diff-components
+    # over 40 samples). Requiring mean component count > 4 keeps task077 True (measured ~6.5-7.2,
+    # comfortable margin) while pulling the global rate back down to ~42% (measured 168/400).
+    # Background-fill flood (bg_flood below) is unaffected -- it stays True unconditionally.
+    bg_fracs, dom_fracs, n_comps = [], [], []
     for i, o in samples:
         i = np.asarray(i); o = np.asarray(o)
         if i.shape != o.shape:
@@ -165,8 +177,11 @@ def probe_flood_ccl(samples):
         bg_fracs.append(filled_bg / n_changed)
         _, counts = np.unique(i[changed], return_counts=True)
         dom_fracs.append(int(counts.max()) / n_changed)
+        n_comps.append(_count_components_4conn(changed.astype(int)))
     bg_flood = float(np.mean(bg_fracs)) > 0.6
-    dominant_source_recolor = float(np.mean(dom_fracs)) > 0.6
+    dom_colour_concentrated = float(np.mean(dom_fracs)) > 0.6
+    multi_region_structure = (float(np.mean(n_comps)) if n_comps else 0.0) > 4
+    dominant_source_recolor = dom_colour_concentrated and multi_region_structure
     return bool(bg_flood or dominant_source_recolor), 1.0
 
 
