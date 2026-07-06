@@ -26,7 +26,14 @@ S17에서 mechanical 오버핏 레버는 전부 소진 확인:
 - 공개 leaky 넷: min-merge로 전부 포섭됨 (udit=poby=waterxiao 동일 pool). 신규 없음.
 - walk-chain step-cut: task286만 유효(완료). task243=mega-Einsum(operand cut해도 counted plane 안 줄음, no pay).
 - task066: 독립 contraction 5개, walk chain 아님 → floor.
-**남은 유일한 상승로 = DEEP per-task leaky 재구성** (사용자 승인, 고노력·불확실):
+**⚠️ S17 엄밀 판정 — 오버핏 상한 ~7248은 near-fundamental:** 각 태스크는 arc-gen 262개 인스턴스를 번들로
+가짐 (train3+test1+arcgen262≈266, evaluate가 전부 채점). "bundled fail=0"=266개 전부 통과 필수.
+⇒ (a) **메모리제이션 死** (4개 output Gather는 나머지 262개서 실패; 262개 저장은 알고리즘보다 비쌈),
+(b) 공개 오버핏 커뮤니티가 7237서 막힌 이유=262 arc-gen이 near-algorithmic 정확도 강제, 싼 leaky 숏컷 희소,
+(c) 8000은 262 arc-gen을 알고리즘보다 훨씬 싸게 통과하는 per-task leaky 숏컷 필요 — 공개 커뮤니티도 대부분
+실패, cristianoc oracle이 알고리즘 floor 검증. **현실 상한 ≈7248-7249.** [[neurogolf-overfit-mode]] 참조.
+
+**남은 유일한 상승로 = DEEP per-task leaky 재구성** (사용자 승인, 고노력·초저확률, 위 상한 인지하고 진행):
 1. ⭐ **bit-pack 인코딩 레버** (공개 task319 5852 넷에서 발견): BitShift/BitwiseAnd로 객체를 27×27 full plane
    대신 [1,10,5,5] 작은 코드로 압축 (11664B→~250B, 3× 절감). 우리 고비용 넷 중 full 30×30/27×27 객체
    plane을 materialize하는 것들에 이식 시도. 공개넷을 teacher로 op-census 비교해 mechanism 추출.
