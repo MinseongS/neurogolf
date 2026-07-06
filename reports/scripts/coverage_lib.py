@@ -10,9 +10,13 @@ REPORTS = Path(__file__).resolve().parents[1]
 PATH = REPORTS / "mechanism_coverage.json"
 
 SEED = {
-    "walk_einsum": ["187", "110", "243", "077"],
+    # NOTE: task numbers are UNPADDED strings ("77" not "077") to match the key format used by
+    # reports/task_index.json (built from manifest.json's unpadded keys) and insight_registry.yaml
+    # source_tasks. task-6 backfill validation caught "077"/"092" here as stale zero-padded typos
+    # that could never match task_index.json rows -> fixed (same tasks, corrected representation).
+    "walk_einsum": ["187", "110", "243", "77"],
     "einsum_vs_free_input": ["255", "208", "370"],
-    "signed_rect": ["234", "335", "092"],
+    "signed_rect": ["234", "335", "92"],
     "gridsample_warp": ["209"],
     "qlinearconv_render": ["133"],
     "topk_width": ["173"],

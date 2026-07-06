@@ -1,6 +1,6 @@
 {
  "walk_einsum": {
-  "query": "",
+  "query": "flood_ccl and bloat > 5800",
   "tasks": {
    "187": {
     "outcome": "applied",
@@ -14,14 +14,14 @@
     "outcome": "applied",
     "session": "seed"
    },
-   "077": {
+   "77": {
     "outcome": "applied",
     "session": "seed"
    }
   }
  },
  "einsum_vs_free_input": {
-  "query": "",
+  "query": "copy_frac is not None and copy_frac > 0.9 and bloat > 1500",
   "tasks": {
    "255": {
     "outcome": "applied",
@@ -38,7 +38,7 @@
   }
  },
  "signed_rect": {
-  "query": "",
+  "query": "separable_rect_is and bloat > 800",
   "tasks": {
    "234": {
     "outcome": "applied",
@@ -48,14 +48,14 @@
     "outcome": "applied",
     "session": "seed"
    },
-   "092": {
+   "92": {
     "outcome": "applied",
     "session": "seed"
    }
   }
  },
  "gridsample_warp": {
-  "query": "",
+  "query": "d4_transform_of_input and bloat > 2000",
   "tasks": {
    "209": {
     "outcome": "applied",
@@ -64,7 +64,7 @@
   }
  },
  "qlinearconv_render": {
-  "query": "",
+  "query": "color_source == 'COPY' and bloat > 3000",
   "tasks": {
    "133": {
     "outcome": "applied",
@@ -73,7 +73,7 @@
   }
  },
  "topk_width": {
-  "query": "",
+  "query": "has_topk and bloat > 1000",
   "tasks": {
    "173": {
     "outcome": "applied",

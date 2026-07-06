@@ -624,6 +624,8 @@
     "id": "generator_extrema_before_topk_shrink",
     "title": "Prove generator extrema before shrinking sparse TopK candidate lists",
     "status": "negative_filter",
+    "coverage_ref": "topk_width",
+    "match_query": "has_topk and bloat > 1000",
     "source_tasks": [
       173,
       285
@@ -940,6 +942,8 @@
     "id": "walk_einsum_iteration_collapse",
     "title": "Collapse iterative flood/scan/propagation into ONE multi-operand Einsum via scaled walk counting (internal computation uncounted)",
     "status": "active",
+    "coverage_ref": "walk_einsum",
+    "match_query": "flood_ccl and bloat > 5800",
     "source_tasks": [
       187,
       313,
@@ -1078,6 +1082,145 @@
       "gain_type": "memory_by_halving_presence_profile_dtype",
       "risk": "low-medium: exact only when downstream ordering needs binary nonzero presence, not counts or signed magnitude; bool must be cast to uint8 because ORT ArgMax rejects bool",
       "verification": "stored eval and fresh verify for the single task; inspect each Sign consumer before replacing"
+    },
+    "transformer": null
+  },
+  {
+    "id": "signed_rect_priority_overlay",
+    "title": "Route separable axis-aligned rect fills / overlap priority through a signed-weight Einsum instead of a materialized label/priority carrier",
+    "status": "active",
+    "coverage_ref": "signed_rect",
+    "match_query": "separable_rect_is and bloat > 800",
+    "source_tasks": [
+      92,
+      234,
+      335
+    ],
+    "rationale": "REBUILD_PLAYBOOK.md mechanism 15 (S11): the grader decodes output with (out > 0.0) per channel (src/harness.py:218), so overlap/paint-order priority among separable axis-aligned fills is LINEAR -- no [30,30] label/priority carrier plane is needed. Each fill class contributes fill_q(r,c)*W[q,v] with a SIGNED per-class channel vector (loser classes suppressed negative at overlaps), riding one free final Einsum. task092 (tasklog S11): killed the 3-plane scatter epilogue for the stick-fill task, 6872->5399 (+0.241, fresh 7000/7000 bit-identical). task234 (2026-06-30): signed ch0 coefficient (+1 whole-grid, -1 per background rect) replaced an explicit background-mask plane, +0.28. task335: same family via a rank-decomposed separable Einsum 'ntc,th,tw->nchw' writing the free output directly (S10, at floor 2215).",
+    "applies_when": {
+      "any_ops": [
+        "Einsum",
+        "Where",
+        "MatMul"
+      ],
+      "any_tags": [
+        "separable_rect",
+        "priority_overlay",
+        "label_map"
+      ],
+      "min_memory": 800
+    },
+    "reject_when": {
+      "any_tags": [
+        "assignment_or_detection_cost_dominant"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_by_deleting_priority_label_carrier",
+      "risk": "medium: only applies to LABEL/priority carrier cost, not assignment/detection cost (task233 kill); verify the grader's (out>0.0) decode still holds and overlap suppression signs are correct at every crossing",
+      "verification": "stored eval, fresh_verify bit-identical vs incumbent, hand-built crossing/overlap-heavy grids"
+    },
+    "transformer": null
+  },
+  {
+    "id": "gridsample_warp_render",
+    "title": "Replace explicit gather+mask+zero-pad addressing with a terminal GridSample against the raw input",
+    "status": "active",
+    "coverage_ref": "gridsample_warp",
+    "match_query": "d4_transform_of_input and bloat > 2000",
+    "source_tasks": [
+      209
+    ],
+    "rationale": "S15 public-bundle min-merge vein: a terminal GridSample (fp16 [1,30,30,2] sample grid against the fp32 input) performs gather+bounds-mask+zero-pad in ONE free node, replacing an explicit index-gather + boundary-Where chain built from D4/affine transforms of the input. Landed on task209 (tasklog: 'Mechanism: Terminal GridSample = gather+mask+zero-pad in one free node').",
+    "applies_when": {
+      "any_ops": [
+        "GridSample",
+        "Gather",
+        "Where"
+      ],
+      "any_tags": [
+        "d4_transform",
+        "warp",
+        "boundary_mask"
+      ],
+      "min_memory": 2000
+    },
+    "reject_when": {
+      "any_tags": []
+    },
+    "expected": {
+      "gain_type": "memory_by_deleting_explicit_gather_and_mask_planes",
+      "risk": "medium: verify ORT GridSample padding_mode/align_corners semantics match the incumbent's boundary behaviour exactly",
+      "verification": "stored eval, fresh_verify bit-identical vs incumbent"
+    },
+    "transformer": null
+  },
+  {
+    "id": "einsum_vs_free_input_reduction",
+    "title": "Replace a materialized mask/profile plane that only gets REDUCED with an Einsum/ReduceSum contracted directly against the FREE input",
+    "status": "active",
+    "coverage_ref": "einsum_vs_free_input",
+    "match_query": "copy_frac is not None and copy_frac > 0.9 and bloat > 1500",
+    "source_tasks": [
+      255,
+      208,
+      370
+    ],
+    "rationale": "Most repeatable mem lever in the project: when a full-canvas mask/profile plane exists only to be summed/reduced afterward, contract it against the FREE graph input inside one Einsum/ReduceSum instead of materializing it as a counted intermediate -- only the tiny reduced result is counted. Landed task255 +0.278 (tasklog: 'Mechanism: QLinearConv + Einsum vs FREE input'), task208 +0.252, task370 +0.024.",
+    "applies_when": {
+      "any_ops": [
+        "Einsum",
+        "ReduceSum",
+        "MatMul"
+      ],
+      "any_tags": [
+        "mask_plane_only_reduced",
+        "high_copy_frac"
+      ],
+      "min_memory": 1500
+    },
+    "reject_when": {
+      "any_tags": [
+        "mask_plane_feeds_downstream_nonreduction_op"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_by_deleting_materialized_reduced_mask_plane",
+      "risk": "low-medium: only safe when the plane's sole consumer is a reduction; verify no other op reads it before deleting",
+      "verification": "stored eval, fresh_verify bit-identical vs incumbent"
+    },
+    "transformer": null
+  },
+  {
+    "id": "qlinearconv_signed_renderer",
+    "title": "Replace fp32/fp16 stamp-and-compare towers with a QLinearConv/ConvInteger signed uint8 renderer",
+    "status": "active",
+    "coverage_ref": "qlinearconv_render",
+    "match_query": "color_source == 'COPY' and bloat > 3000",
+    "source_tasks": [
+      133
+    ],
+    "rationale": "S15 public-bundle min-merge vein: a QLinearConv/ConvInteger signed renderer (uint8 codes, x_zero_point=1, i32 graded >0) replaces a multi-branch fp32 seed-stamp-per-scale tower (tasklog task133: 'Mechanism: QLinearConv/ConvInteger signed renderer'). Also falsified task133's prior 'DEFINITIVE FLOOR' verdict from an earlier session -- keep re-checking COPY-color-source high-bloat tasks against this render style before accepting a floor claim.",
+    "applies_when": {
+      "any_ops": [
+        "QLinearConv",
+        "ConvInteger",
+        "MaxPool",
+        "Resize"
+      ],
+      "any_tags": [
+        "copy_color_source",
+        "per_scale_stamp_tower"
+      ],
+      "min_memory": 3000
+    },
+    "reject_when": {
+      "any_tags": []
+    },
+    "expected": {
+      "gain_type": "memory_by_replacing_fp_stamp_tower_with_uint8_render",
+      "risk": "medium: quantized zero-point/scale must be verified exact (x_zero_point=1) so integer rendering matches fp semantics bit-for-bit",
+      "verification": "stored eval, fresh_verify bit-identical vs incumbent"
     },
     "transformer": null
   }

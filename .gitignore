@@ -57,3 +57,6 @@ reports/semantic_archetypes.*
 docs/superpowers/plans/
 docs/superpowers/specs/
 reports/fresh_cache/
+
+# Generated task-matching index (regenerate via reports/scripts/build_task_index.py)
+reports/task_index.json

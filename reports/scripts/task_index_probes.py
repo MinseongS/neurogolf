@@ -6,7 +6,7 @@ from __future__ import annotations
 import logging
 import numpy as np
 
-PROBE_VERSION = 1
+PROBE_VERSION = 2
 
 
 def _agree(flags: list[bool]) -> float:
@@ -109,7 +109,10 @@ def probe_separable_rect_output(samples):
             counts.append(99); continue
         counts.append(_solid_rects_count(i != o))
     med = int(np.median(counts))
-    return {"is": med <= 4, "n_rects": med}, 1.0
+    # PROBE_VERSION 2 (task-6 backfill): cap was <=4, misclassifying task092 (median 5 solid
+    # segments -- generator draws "up to 5 sticks", a genuine separable-rect signed_rect
+    # mechanism win per tasklog/task092.md S11) as not separable. Loosened to <=5.
+    return {"is": med <= 5, "n_rects": med}, 1.0
 
 
 def probe_locality_radius(samples):
@@ -140,16 +143,31 @@ def probe_locality_radius(samples):
 
 
 def probe_flood_ccl(samples):
-    # heuristic: output changes cluster into few large connected components AND fill background
-    fracs = []
+    # heuristic: output changes cluster into few large connected components AND fill background.
+    # PROBE_VERSION 2 (task-6 backfill): the original definition only fired when the FILLED
+    # colour source was background (i==0), which misclassified task077 (walk_einsum: Chebyshev-2
+    # clustering of red cells, then RECOLORS the existing non-background "static" cells inside
+    # each cluster bbox -- a connected-component/flood-style detection, but the thing being
+    # overwritten is a foreground colour, not background). Generalized: also flag when changed
+    # cells overwhelmingly share ONE dominant *source* colour (background-fill is the special
+    # case where that shared source colour happens to be 0); a scattered per-cell recolor with no
+    # underlying component structure would not show this concentration.
+    bg_fracs, dom_fracs = [], []
     for i, o in samples:
         i = np.asarray(i); o = np.asarray(o)
         if i.shape != o.shape:
-            fracs.append(0.0); continue
+            bg_fracs.append(0.0); dom_fracs.append(0.0); continue
         changed = (i != o)
-        filled_bg = ((i == 0) & changed).sum()
-        fracs.append(filled_bg / max(changed.sum(), 1))
-    return float(np.mean(fracs)) > 0.6, 1.0
+        n_changed = int(changed.sum())
+        if n_changed == 0:
+            bg_fracs.append(0.0); dom_fracs.append(0.0); continue
+        filled_bg = int(((i == 0) & changed).sum())
+        bg_fracs.append(filled_bg / n_changed)
+        _, counts = np.unique(i[changed], return_counts=True)
+        dom_fracs.append(int(counts.max()) / n_changed)
+    bg_flood = float(np.mean(bg_fracs)) > 0.6
+    dominant_source_recolor = float(np.mean(dom_fracs)) > 0.6
+    return bool(bg_flood or dominant_source_recolor), 1.0
 
 
 def probe_periodicity(samples):
