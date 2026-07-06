@@ -1,11 +1,12 @@
-# NEXT SESSION — NeuroGolf handoff (2026-07-06, S15 종료)
+# NEXT SESSION — NeuroGolf handoff (2026-07-06, S15 + setup 세션 종료)
 
 다음 세션 시작 프롬프트로 이걸 그대로 쓰면 됨:
 
 ```text
 /Users/minseong/project/neurogolf 에서 NeuroGolf 점수 개선을 이어가자.
 먼저 이 파일(NEXT_SESSION.md) + 메모리 [[neurogolf-strategy-directive]] +
-[[neurogolf-urad-7225-bundle-vein]] + reports/REBUILD_PLAYBOOK.md 를 읽고 시작해.
+[[neurogolf-runtime-timeout-dimension]] + [[neurogolf-urad-7225-bundle-vein]] +
+reports/REBUILD_PLAYBOOK.md 를 읽고 시작해.
 
 === 북극성 (사용자 지침, 항상) ===
 - **8000점을 향해 공격적으로.** 상위권 ~7982-8013. "바닥/소진" 판정은 공격 대상이지 정지신호가
@@ -21,12 +22,29 @@
   insight_registry에 기록 → 같은 패턴을 가진 우리 태스크 전수를 스캔해 적용. 넷 1개 = +1태스크,
   일반화된 메커니즘 = +N태스크 (진짜 상금은 여기). [[neurogolf-adoption-protocol]] ⭐TRANSFERABLE 필수.
 
-=== 0순위: 직전 정리 세션 커밋 ===
-- 직전 세션 = 대규모 하우스키핑(점수 변동 없음): 디스크 정크 ~150M, reports/ 12M→5.7M(일회성
-  스캔·legacy 연구문서·classlog 삭제), arc-gen 미사용 생성기 500개 삭제(400만 유지), 메모리
-  40→26(바닥/천장 census 쳐냄, strategy-directive 신설), AGENTS/README/NEXT_SESSION 정리 + 북극성
-  주입. **전부 워킹트리에만 있음(미커밋).** → git status 확인 후 의미단위 커밋(사용자 확인 후).
-  networks/*는 gitignore, 소스진실 = src/custom/*.py.
+=== 직전 세션 = 전략·구조 세팅 (완료·커밋·병합됨, 점수 변동 0) ===
+이 세션은 점수 작업이 아니라 8000을 향한 세팅만 했음. 전부 main에 반영됨:
+- **정리**(커밋 c0836f6, 3341038): 디스크 정크 ~150M, reports/ 12M→5.7M, arc-gen 미사용 생성기
+  500개 삭제(400 유지), 메모리 40→27(바닥/천장 census 쳐냄), AGENTS/README/NEXT_SESSION+북극성.
+- **🆕 인사이트→태스크 매칭 엔진 구축 + main 병합 (05ab432).** "인사이트가 400개 중 어디에
+  적용되나"를 기억이 아닌 **쿼리+자동 floor제외**로 전환:
+  · `reports/scripts/build_task_index.py` → `reports/task_index.json`(400행, 온디스크·gitignore,
+    PROBE_VERSION 4). 태스크당 구조(op/dtype/평면/K)+의미(프로브)+경제(cost/bloat).
+  · `reports/scripts/task_index_probes.py` — 확장형 의미 프로브(새 인사이트 = 함수 1개 추가).
+  · `reports/scripts/coverage_lib.py` + `reports/mechanism_coverage.json` — (메커니즘×태스크) 결과
+    원장 → known-floor 자동 제외.
+  · `reports/scripts/match_insight.py --where "<술어>" | --mechanism X` → bloat 랭킹 후보 +
+    `--emit-queue`. **엔진은 리드만 생성 — fresh-gate가 최종 심판.**
+  · 백필 게이트 `tests/test_backfill_validation.py`(6개 메커니즘, gridsample_warp는 xfail).
+- ⚠️ **엔진은 아직 0점 — 미검증.** 실점 루프(match→verify→adopt)를 아직 안 돌림.
+
+=== 0순위(실점 시작): 엔진을 저비용으로 증명 + 런타임 계기판 ===
+1. **엔진 실점 루프 1회** — `match_insight.py --mechanism signed_rect`(또는 urad value_info-크롭)로
+   후보 상위 2~3개 → fresh_verify → 채택 → `mechanism_coverage.json`에 결과 기록. 첫 점수 뽑아 엔진 증명.
+2. **400넷 런타임 프로파일링**(일회성·쌈) → timeout 헤드룸 측정 → 미탐색 **time-for-cost 레버** 개방
+   ([[neurogolf-runtime-timeout-dimension]]). `runtime_ms`를 인덱스 축으로 추가.
+- 🚨 토큰: leads-only 작업엔 싼 모델, SDD-건틀릿 금지. 깊은 지출은 신규 메커니즘/770 리서치에만.
+  ([[neurogolf-strategy-directive]] 6번, [[model-allocation-preference]].)
 
 === 현재 상황 (S15 종료, 2026-07-06) ===
 - 확정 LB 최고점 = **7242.29** (submission 54381272). 로컬 manifest 7242.18, 오프셋
