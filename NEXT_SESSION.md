@@ -1,12 +1,29 @@
 # NEXT SESSION — NeuroGolf handoff (2026-07-06, S17 종료)
 
-다음 세션 시작 프롬프트:
+## ▶▶ 다음 세션 시작 프롬프트 (이거 그대로 붙여넣기):
 
 ```text
-/Users/minseong/project/neurogolf 에서 NeuroGolf 점수 개선을 이어가자.
-먼저 이 파일(NEXT_SESSION.md) + 메모리 [[neurogolf-urad-7225-bundle-vein]](S17 safe best) +
-[[neurogolf-overfit-mode]] + [[neurogolf-strategy-directive]] +
-[[neurogolf-cristianoc-reference]] 를 읽고 시작해.
+/Users/minseong/project/neurogolf 에서 NeuroGolf 점수 개선 이어가자.
+먼저 NEXT_SESSION.md + 메모리 [[neurogolf-overfit-mode]](맨 위 constant-dataset·상한 판정) +
+[[neurogolf-urad-7225-bundle-vein]](S17 best) + [[neurogolf-strategy-directive]] 읽고 시작.
+
+현재 확정 상태 (2026-07-06 S17 종료, 전부 LB 확인):
+- 최고 = overfit 7248.94 (sub 54398145). constant-dataset라 영구 안전(rescore 없음). 이게 우리 제출본.
+- 안전본 헤지 = 7245.50(sub 54398148)도 보존됨. 마감 07-15 = private LB(=동일 고정 데이터셋).
+
+불변 사실 (재확인 금지, 이미 엄밀 검증됨):
+- 제출한도 100/일. 제출파일 반드시 `submission.zip` 이름 (아니면 400 에러). scan_unsigned_topk 전수 후 제출.
+- 채점 데이터셋 고정(train3+test1+arcgen262≈266/태스크) = 한번 bundled fail=0이면 영구 통과. overfit=영구안전.
+  fresh_verify 불필요. 그냥 단일 bundled-fail=0 점수 최대화 (안전/overfit 구분 무의미).
+- 소진된 레버(재탐사 금지): 공개덤프(udit=poby=waterxiao 수렴), dtype recast(+0.18 완료 나머지 floor),
+  worst-case상수/TopK-K cut(load-bearing), free-tensor 재구성(deep agent 0/9 = byte floor 확정),
+  메모리제이션(262 arcgen이 죽임).
+
+남은 유일한 상승로 = per-task 알고리즘 재작성으로 grid-state COUNT 축소. mechanical golf 아님.
+공개(7237)도 못했고 deep agent도 0/9. 수백점 비현실적, 단건 +1~2가 현실. 아래 §다음 세션 우선순위 참조.
+
+오늘 뭘 할지: 사용자한테 (a) 7248.94에서 홀드, (b) 특정 bloat 태스크 1개 deep 알고리즘 재작성 PoC,
+(c) 신규 공개덤프 있는지만 빠르게 체크 — 중 뭘 원하는지 먼저 물어봐.
 ```
 
 ## 🟢 S17 확정 결과 (2026-07-06, 모두 LB 확인됨)
