@@ -73,3 +73,7 @@ once on a scalar flag (#nonzero horizontal stamps >= 2) — but the column-inter
 layout costs one unavoidable Transpose. The whole select+corner-move is blocked from tier-A only
 by the irreducible 3600B colour-index plane + 900B 30x30 output carrier (sum 4500); the residual
 dual-orientation working set (~1260B) keeps it at 16.33 (+0.22, MARGINAL).
+
+## S16 (2026-07-06) — public bit-identical golf (llccqq624) ADOPTED
+Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent). Minor cost drop
+(dead-initializer / redundant-node removal), private-LB safe. Manifest updated. Backup in scratchpad.

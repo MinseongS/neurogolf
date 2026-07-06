@@ -54,3 +54,7 @@ images need no separate `valT` plane: gather `val` with swapped (col,row) index
 vectors and transpose the resulting K×K block. ⭐ Locate a sentinel-marked
 region with ZERO extra plane via ReduceMin of the already-materialized value
 plane + Less(<0)+ArgMax, instead of casting a fresh mask plane.
+
+## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
+Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
+Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.

@@ -31,3 +31,7 @@ presence), no per-cell colour plane. fp16 Mod is integer-exact at these magnitud
 per-column presence vector (one mark per in-grid column ⇒ count == width), then the parity
 predicate is a single fp16 Mod-2 on a (colramp + W) ramp — no per-cell colour plane, no argmax.
 The whole recolour collapses to Where(gray_mask ∧ parity_col, color_onehot, input).
+
+## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
+Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
+Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.

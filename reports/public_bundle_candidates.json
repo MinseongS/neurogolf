@@ -1,1 +1,198 @@
-[]
+[
+ {
+  "task": 319,
+  "mine": 17143,
+  "cost": 5852,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 1.075
+ },
+ {
+  "task": 48,
+  "mine": 1146,
+  "cost": 804,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.354
+ },
+ {
+  "task": 285,
+  "mine": 25234,
+  "cost": 19767,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.244
+ },
+ {
+  "task": 222,
+  "mine": 6203,
+  "cost": 5298,
+  "source": "llccqq624_neurogolf-7235-83-verified-circuit-union",
+  "dpts": 0.158
+ },
+ {
+  "task": 263,
+  "mine": 680,
+  "cost": 670,
+  "source": "llccqq624_neurogolf-7235-83-verified-circuit-union",
+  "dpts": 0.015
+ },
+ {
+  "task": 8,
+  "mine": 3241,
+  "cost": 3222,
+  "source": "llccqq624_neurogolf-7235-83-verified-circuit-union",
+  "dpts": 0.006
+ },
+ {
+  "task": 18,
+  "mine": 25445,
+  "cost": 25286,
+  "source": "llccqq624_neurogolf-7235-83-verified-circuit-union",
+  "dpts": 0.006
+ },
+ {
+  "task": 35,
+  "mine": 2261,
+  "cost": 2249,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.005
+ },
+ {
+  "task": 90,
+  "mine": 3072,
+  "cost": 3058,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.005
+ },
+ {
+  "task": 89,
+  "mine": 6772,
+  "cost": 6745,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.004
+ },
+ {
+  "task": 199,
+  "mine": 1837,
+  "cost": 1829,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.004
+ },
+ {
+  "task": 213,
+  "mine": 1858,
+  "cost": 1851,
+  "source": "llccqq624_neurogolf-7235-83-verified-circuit-union",
+  "dpts": 0.004
+ },
+ {
+  "task": 79,
+  "mine": 3143,
+  "cost": 3133,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.003
+ },
+ {
+  "task": 218,
+  "mine": 651,
+  "cost": 649,
+  "source": "llccqq624_neurogolf-7235-83-verified-circuit-union",
+  "dpts": 0.003
+ },
+ {
+  "task": 44,
+  "mine": 4984,
+  "cost": 4974,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.002
+ },
+ {
+  "task": 396,
+  "mine": 4944,
+  "cost": 4934,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.002
+ },
+ {
+  "task": 107,
+  "mine": 3694,
+  "cost": 3690,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.001
+ },
+ {
+  "task": 133,
+  "mine": 21526,
+  "cost": 21506,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.001
+ },
+ {
+  "task": 215,
+  "mine": 750,
+  "cost": 749,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.001
+ },
+ {
+  "task": 325,
+  "mine": 1484,
+  "cost": 1483,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.001
+ },
+ {
+  "task": 340,
+  "mine": 3709,
+  "cost": 3707,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.001
+ },
+ {
+  "task": 398,
+  "mine": 2859,
+  "cost": 2855,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.001
+ },
+ {
+  "task": 80,
+  "mine": 9834,
+  "cost": 9833,
+  "source": "llccqq624_neurogolf-7235-83-verified-circuit-union",
+  "dpts": 0.0
+ },
+ {
+  "task": 148,
+  "mine": 4889,
+  "cost": 4888,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.0
+ },
+ {
+  "task": 165,
+  "mine": 4840,
+  "cost": 4838,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.0
+ },
+ {
+  "task": 182,
+  "mine": 6100,
+  "cost": 6099,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.0
+ },
+ {
+  "task": 208,
+  "mine": 4209,
+  "cost": 4207,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.0
+ },
+ {
+  "task": 368,
+  "mine": 5147,
+  "cost": 5145,
+  "source": "franksunp_7235-49-lb-neurogolf-variant-b-mark-a",
+  "dpts": 0.0
+ }
+]

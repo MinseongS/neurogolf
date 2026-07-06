@@ -42,3 +42,7 @@ row-ramp (w=(k≥1)·r) into two output channels → [1,2,1,30] (240B). col=Redu
 row=ReduceSum(rowvec). The Conv contracts the channel axis (excluding bg) AND the row axis in one op —
 something Reduce* can't do because every in-grid row carries a background pixel, so no full-one-hot
 reduction can locate the colour pixel. Cost ~600 params but saves ~2160B memory (net +0.4 pts here).
+
+## S16 (2026-07-06) — public bit-identical golf (franksunp) ADOPTED
+Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent). Minor cost drop
+(dead-initializer / redundant-node removal), private-LB safe. Manifest updated. Backup in scratchpad.

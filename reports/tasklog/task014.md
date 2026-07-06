@@ -138,3 +138,7 @@ mem 7698→4088, params 106→83. Generator bound proven: max quadrant 18×18
 (height-5-rowthick). Fresh 6000 uncached: teacher 0 / incumbent 6 (incumbent had the
 known 17-row-window bug — teacher strictly MORE correct). No TopK. Latency 0.055ms.
 Floors of new net: win 1296 + pp 900. Backup reports/retired_networks/task014_pre_s9.onnx.
+
+## S16 (2026-07-06) — public bit-identical golf (llccqq624, unfiltered re-mine) ADOPTED
+Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
+Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.

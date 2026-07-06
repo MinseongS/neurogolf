@@ -70,3 +70,7 @@ task to a clean Tier-B label map.
 r1/c0 by `Where(present, arange10, ±sentinel)` + Reduce on the 10×10 canvas.
 ⭐ ORT `Greater` rejects uint8 (use `Not(Equal(x,0))` for a nonzero gate); cyan
 bounds need a float plane because ReduceMax/Min reject uint8/bool.
+
+## S16 (2026-07-06) — public bit-identical golf (franksunp) ADOPTED
+Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent). Minor cost drop
+(dead-initializer / redundant-node removal), private-LB safe. Manifest updated. Backup in scratchpad.

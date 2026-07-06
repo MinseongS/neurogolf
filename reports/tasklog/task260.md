@@ -44,3 +44,7 @@ out-of-[-9,9] floor that AUTO-GATES an absent side — no branch). ⭐ Recover t
 COLOUR from `ReduceSum(input,[2,3])` per-channel COUNTS (40B) + an `okidx` channel mask,
 never a 3600B Σk·input colour plane — works whenever the output colour is a single
 input colour identified by "not bg, not the marker colour".
+
+## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
+Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
+Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.

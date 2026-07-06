@@ -115,3 +115,6 @@ with the single-axis-Gather class (150/155). No change adopted. New reusable art
 
 ## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 4913 -> 3241 (+0.416)
 Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
+## S16 (2026-07-06) — public bit-identical golf (llccqq624) ADOPTED
+Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent). Minor cost drop
+(dead-initializer / redundant-node removal), private-LB safe. Manifest updated. Backup in scratchpad.

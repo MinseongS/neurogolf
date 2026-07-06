@@ -90,3 +90,7 @@ dropping the now-redundant `Relu`) is bit-exact and cheaper. Selection: separabl
 grid/patch-partition nets (task184-family) with a fixed-kernel colour-sum or occupancy Conv
 feeding only `Greater`/`Equal`/`ReduceMax`. Gain is small (−117 here); low priority unless
 the plane is large.
+
+## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
+Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
+Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.

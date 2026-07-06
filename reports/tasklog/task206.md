@@ -69,3 +69,15 @@ No transferable mechanism — minor trim.
 
 ## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 4186 -> 3766 (+0.106)
 Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
+
+## S17 (2026-07-06) — ADOPTED from udit 7237.17 dump (NEW uploader re-mine): 3766 -> 1795 (+0.741, points 16.766->17.507)
+Gate fresh_verify 1500: **inc=0, cand=0, divergence=0** (clean pass, safe for private LB). Source-owned via `live_to_exact_source 206 --write-src`, re-measured fail=0 (mem 1660 + params 135).
+⭐ TRANSFERABLE MECHANISM: udit dropped the whole double-boolean-MatMul-translate + 6-ch colour Conv slice +
+30x30 label approach (OLD 57 nodes: Conv + ScatterND + 4×ArgMax + 6×ReduceMax multi-branch detector) and rebuilt
+the data-dependent sprite TRANSLATION as **RoiAlign crop off the FREE input + 5 Einsum contractions** (NEW 31 nodes:
+RoiAlign×1, Einsum×5, Round×2, Div×2). The sprite is cropped once via RoiAlign (value_info-legalized bbox off the
+free fp32 input, urad mech 1/2 family) and the shifted stamp is realized by Einsum contraction rather than
+materializing a 30×30 boolean shift-matrix + label plane. This BEATS the "no reformulation removes both the 30x30
+colour plane and the 30x30 label" irreducible-floor claim above (§Irreducible-floor) — RoiAlign+Einsum removes BOTH.
+Generalizes to other data-dependent-translation / sprite-stamp tasks currently paying for a full 30×30 label + shift
+matrix. See [[neurogolf-urad-7225-bundle-vein]] (mechs 1-3), [[neurogolf-bilinear-einsum-lever]].

@@ -26,9 +26,8 @@ def build(task):
         helper.make_node('Where', ['valid', 'code', 'u0'], ['vals']),
         helper.make_node('Gather', ['vals', 'bidx'], ['below_any'], axis=2),
         helper.make_node('Gather', ['vals', 'bidx'], ['right_any'], axis=3),
-        helper.make_node('ReduceMax', ['vals'], ['row_has_u8'], axes=[3], keepdims=1),
-        helper.make_node('Cast', ['row_has_u8'], ['row_has'], to=9),
-        helper.make_node('Gather', ['row_has', 'bidx'], ['row_next'], axis=2),
+        helper.make_node('ReduceMax', ['below_any'], ['row_next_u8'], axes=[3], keepdims=1),
+        helper.make_node('Cast', ['row_next_u8'], ['row_next'], to=9),
         helper.make_node('Greater', ['below_any', 'right_any'], ['endpoint']),
         helper.make_node('Xor', ['row_next', 'endpoint'], ['move_cond']),
         helper.make_node('Where', ['move_cond', 'vals', 'u0'], ['move_vals']),
@@ -40,5 +39,21 @@ def build(task):
         helper.make_node('Equal', ['scalar_full', 'palette'], ['output']),
     ]
     value_infos = [
+        helper.make_tensor_value_info('code_f', 1, [1, 1, 16, 16]),
+        helper.make_tensor_value_info('code', 2, [1, 1, 16, 16]),
+        helper.make_tensor_value_info('valid', 9, [1, 1, 16, 16]),
+        helper.make_tensor_value_info('vals', 2, [1, 1, 16, 16]),
+        helper.make_tensor_value_info('below_any', 2, [1, 1, 16, 16]),
+        helper.make_tensor_value_info('right_any', 2, [1, 1, 16, 16]),
+        helper.make_tensor_value_info('row_next_u8', 2, [1, 1, 16, 1]),
+        helper.make_tensor_value_info('row_next', 9, [1, 1, 16, 1]),
+        helper.make_tensor_value_info('endpoint', 9, [1, 1, 16, 16]),
+        helper.make_tensor_value_info('move_cond', 9, [1, 1, 16, 16]),
+        helper.make_tensor_value_info('move_vals', 2, [1, 1, 16, 16]),
+        helper.make_tensor_value_info('stay_vals', 2, [1, 1, 16, 16]),
+        helper.make_tensor_value_info('shifted', 2, [1, 1, 16, 16]),
+        helper.make_tensor_value_info('scalar_out', 2, [1, 1, 16, 16]),
+        helper.make_tensor_value_info('scalar_valid', 2, [1, 1, 16, 16]),
+        helper.make_tensor_value_info('scalar_full', 2, [1, 1, 30, 30]),
     ]
     return model('task004_live_exact', nodes, inits, output_dtype=9, opset=17, value_infos=value_infos)

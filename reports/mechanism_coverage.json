@@ -69,6 +69,11 @@
    "133": {
     "outcome": "applied",
     "session": "seed"
+   },
+   "_pool": {
+    "outcome": "floor",
+    "session": "S16",
+    "note": "signed-renderer vein exhausted on frontier-collapsed nets; remaining planes are load-bearing detection/scatter-union, not replaceable render epilogue. Future wins only from newly-imported teacher nets with un-collapsed one-hot/scatter (screen mech15_output_scan.py). Examined 054/367/364/338/379/009/005/023 all floor."
    }
   }
  },
@@ -78,6 +83,237 @@
    "173": {
     "outcome": "applied",
     "session": "seed"
+   }
+  }
+ },
+ "public_mine_slice_drop": {
+  "query": "",
+  "tasks": {
+   "222": {
+    "outcome": "applied",
+    "session": "S16",
+    "source": "llccqq624",
+    "dpts": 0.158,
+    "note": "dropped redundant Slice, bit-identical 1500"
+   }
+  }
+ },
+ "public_overfit_trap": {
+  "query": "",
+  "tasks": {
+   "319": {
+    "outcome": "floor",
+    "session": "S16",
+    "inc_fresh_fail": 13,
+    "cand_fresh_fail": 98,
+    "note": "public cheap net fresh-fails > incumbent; keep ours"
+   },
+   "48": {
+    "outcome": "floor",
+    "session": "S16",
+    "inc_fresh_fail": 0,
+    "cand_fresh_fail": 14,
+    "note": "public cheap net fresh-fails > incumbent; keep ours"
+   },
+   "285": {
+    "outcome": "floor",
+    "session": "S16",
+    "inc_fresh_fail": 1,
+    "cand_fresh_fail": 5,
+    "note": "public cheap net fresh-fails > incumbent; keep ours"
+   },
+   "90": {
+    "outcome": "floor",
+    "session": "S16",
+    "inc_fresh_fail": 12,
+    "cand_fresh_fail": 15,
+    "note": "keep ours"
+   },
+   "117": {
+    "outcome": "floor",
+    "session": "S16",
+    "inc_fresh_fail": 0,
+    "cand_fresh_fail": 1,
+    "note": "keep ours"
+   },
+   "188": {
+    "outcome": "floor",
+    "session": "S16",
+    "inc_fresh_fail": 1,
+    "cand_fresh_fail": 16,
+    "note": "keep ours"
+   },
+   "101": {
+    "outcome": "floor",
+    "session": "S16",
+    "inc_fresh_fail": 0,
+    "cand_fresh_fail": 17,
+    "note": "keep ours"
+   }
+  }
+ },
+ "public_mine_bitident": {
+  "query": "",
+  "tasks": {
+   "263": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical public golf, fresh 0/0/0"
+   },
+   "8": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical public golf, fresh 0/0/0"
+   },
+   "35": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical public golf, fresh 0/0/0"
+   },
+   "89": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical public golf, fresh 0/0/0"
+   },
+   "199": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical public golf, fresh 0/0/0"
+   },
+   "213": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical public golf, fresh 0/0/0"
+   },
+   "79": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical public golf, fresh 0/0/0"
+   },
+   "278": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical, unfiltered re-mine"
+   },
+   "184": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical, unfiltered re-mine"
+   },
+   "308": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical, unfiltered re-mine"
+   },
+   "256": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical, unfiltered re-mine"
+   },
+   "383": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical, unfiltered re-mine"
+   },
+   "99": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical, unfiltered re-mine"
+   },
+   "14": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical, unfiltered re-mine"
+   },
+   "332": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical, unfiltered re-mine"
+   },
+   "400": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical, unfiltered re-mine"
+   },
+   "4": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical, unfiltered re-mine"
+   },
+   "131": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical, unfiltered re-mine"
+   },
+   "218": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical, unfiltered re-mine"
+   },
+   "260": {
+    "outcome": "applied",
+    "session": "S16",
+    "note": "bit-identical, unfiltered re-mine"
+   }
+  }
+ },
+ "value_info_crop": {
+  "query": "",
+  "tasks": {
+   "_pool": {
+    "outcome": "floor",
+    "session": "S16",
+    "note": "exhausted on crop pool. Every verbatim sub-rect crop at single-window fp32 floor (10-ch window irreducible: colors random per-instance; incumbents already crop off free input via RoiAlign/Slice). Only 366/233/205 keep full-size planes but are compose/recolor not crops (full read necessary). task177/216/310 examined + all 90 scanned."
+   }
+  }
+ },
+ "timeforcost_fold": {
+  "query": "",
+  "tasks": {
+   "387": {
+    "outcome": "applied",
+    "session": "S16",
+    "dpts": 0.239,
+    "note": "ReduceSum crop -> free-input einsum + mask-from-scalars; bit-identical 5000"
+   },
+   "64": {
+    "outcome": "floor",
+    "session": "S16",
+    "note": "ReduceMax presence plane (nonlinear, not sum-foldable) + consumed by 2 data-dependent channel Gathers; Gather-first materializes larger plane. NET-NEGATIVE."
+   },
+   "134": {
+    "outcome": "floor",
+    "session": "S16",
+    "note": "ReduceMax row-presence; row_count=\u03a3min(rowsum,1)\u2260\u03a3rowsum (multi-pixel rows); pow2 place-value overflows fp32 2^24. all-channel discriminator."
+   },
+   "25": {
+    "outcome": "floor",
+    "session": "S16",
+    "note": "non-separable shared-p free-output Einsum; Concat operands = minimal entry ticket (S8-priced 3120); operands are computed intermediates not free input."
+   },
+   "105": {
+    "outcome": "floor",
+    "session": "S16",
+    "note": "fg Slice dual-use: dominant role carries cropped u8 pixels to output; MatMul fold yields only 56B and does not delete fg; fp32 forced by hash range 8191>2048."
+   },
+   "_pool": {
+    "outcome": "partial",
+    "session": "S16",
+    "note": "ONE win task387 (+0.239). 7/8 candidates floored (064/134/025/105/216/009/364 + 022 GridSample). Remaining ONLY <=620B tails (131 GatherND-ReduceSum, 174 Cast-MatMul), low EV. Finder rule: foldable = LINEAR producer (not ReduceMax/compare) feeding SUM-contraction (ReduceSum/Einsum/MatMul), AND the plane must be SINGLE-USE reduce (dual-use pixel/index carriers do not fold)."
+   }
+  }
+ },
+ "roialign_einsum_translate": {
+  "query": "",
+  "tasks": {
+   "206": {
+    "outcome": "applied",
+    "session": "S17",
+    "src": "udit_7237.17",
+    "delta_pts": 0.741,
+    "old": 3766,
+    "new": 1795,
+    "fresh": "inc0_cand0_div0_1500"
    }
   }
  }

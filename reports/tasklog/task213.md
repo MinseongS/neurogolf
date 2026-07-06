@@ -34,3 +34,7 @@ Three [1,1,30,30] full planes remain: (a) two presence reductions `ReduceMax(inp
 **Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
 Backup `reports/retired_networks/task213_pre_s10.onnx`; source `public_candidates/bobmyers7186/task213.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
 No transferable mechanism — minor trim.
+
+## S16 (2026-07-06) — public bit-identical golf (llccqq624) ADOPTED
+Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent). Minor cost drop
+(dead-initializer / redundant-node removal), private-LB safe. Manifest updated. Backup in scratchpad.

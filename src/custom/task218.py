@@ -20,6 +20,7 @@ def build(task):
         tensor('palette', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDksIDEsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAgMEBQYHCAk=')),
         tensor('pad_pads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbAAAAAAAAABsAAAAAAAAA')),
         tensor('row_valid_col_18_axes13', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAA==')),
+        tensor('_mf_masked_colors_c', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAr/')),
     ]
     nodes = [
         helper.make_node('Conv', ['input', 'channel_weights'], ['sample_grid'], dilations=[9, 9], strides=[3, 3]),
@@ -39,8 +40,9 @@ def build(task):
         helper.make_node('Gather', ['sample_grid_u8', 'row_idx'], ['sample_rows'], axis=2),
         helper.make_node('Gather', ['sample_rows', 'col_idx'], ['sample_colors'], axis=3),
         helper.make_node('Unsqueeze', ['row_valid', 'row_valid_col_18_axes13'], ['row_valid_col']),
-        helper.make_node('And', ['row_valid_col', 'col_valid'], ['valid_cells']),
-        helper.make_node('Where', ['valid_cells', 'sample_colors', 'zero_u8'], ['masked_colors']),
+        helper.make_node('Where', ['row_valid_col', '_mf_masked_colors_c', 'zero_u8'], ['_mf_masked_colors_w1']),
+        helper.make_node('Where', ['col_valid', '_mf_masked_colors_c', 'zero_u8'], ['_mf_masked_colors_w2']),
+        helper.make_node('Min', ['sample_colors', '_mf_masked_colors_w1', '_mf_masked_colors_w2'], ['masked_colors']),
         helper.make_node('Equal', ['masked_colors', 'palette'], ['onehot_bool']),
         helper.make_node('Pad', ['onehot_bool', 'pad_pads'], ['output'], mode='constant'),
     ]
@@ -64,7 +66,8 @@ def build(task):
         helper.make_tensor_value_info('sample_rows', 2, [1, 1, 3, 7]),
         helper.make_tensor_value_info('sample_colors', 2, [1, 1, 3, 3]),
         helper.make_tensor_value_info('row_valid_col', 9, [3, 1]),
-        helper.make_tensor_value_info('valid_cells', 9, [3, 3]),
+        helper.make_tensor_value_info('_mf_masked_colors_w1', 2, [3, 1]),
+        helper.make_tensor_value_info('_mf_masked_colors_w2', 2, [3]),
         helper.make_tensor_value_info('masked_colors', 2, [1, 1, 3, 3]),
         helper.make_tensor_value_info('onehot_bool', 9, [1, 9, 3, 3]),
     ]

@@ -26,3 +26,7 @@ Dominant intermediate is the fp16 13x13 working planes (~338B each) of the two d
 
 ## S8 (2026-07-02) — chained-scatter fold (+0.024) ADOPTED, div 0
 Two chained ScatterElements (reduction=max, disjoint writes) → ONE scatter over concatenated [96] idx/update tensors; drops the 169B intermediate. LESSON (cross-task): K-batching repeated planes is BYTE-NEUTRAL (grader sums elements) — wins only come from ELIMINATING intermediates.
+
+## S16 (2026-07-06) — public bit-identical golf (franksunp) ADOPTED
+Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent). Minor cost drop
+(dead-initializer / redundant-node removal), private-LB safe. Manifest updated. Backup in scratchpad.

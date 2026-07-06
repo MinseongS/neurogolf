@@ -10,14 +10,18 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('ch5_starts', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==')),
-        tensor('ch5_ends', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAYAAAAAAAAAAwAAAAAAAAAUAAAAAAAAAA==')),
+        tensor('e5', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAA')),
+        tensor('h123', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMwLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAQAAAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
+        tensor('rowv', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDMsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAQAAAQEA=')),
+        tensor('sl_s', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAA==')),
+        tensor('sl_e', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoUAAAAAAAAAA==')),
+        tensor('sl_a', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoDAAAAAAAAAA==')),
         tensor('two_f', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAABA')),
         tensor('zero_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
         tensor('no_color_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoG')),
         tensor('col_index', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAAEAAAEBAAACAQAAAoEAAAMBAAADgQAAAAEEAABBBAAAgQQAAMEEAAEBBAABQQQAAYEEAAHBBAACAQQAAiEEAAJBBAACYQQ==')),
-        tensor('dot_colors_even_width', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoFAwUDBQMFAwUDBQMFAwUDBQMFAw==')),
         tensor('dot_colors_odd_width', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoDBQMFAwUDBQMFAwUDBQMFAwUDBQ==')),
+        tensor('dot_colors_even_width', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoFAwUDBQMFAwUDBQMFAwUDBQMFAw==')),
         tensor('q_w', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAxLCA1LCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAP8AAAAAAAAAAAAAAAD4+Pr4+AAAAAAA/wAC/wAAAAAAAAAAAAAAAAAAAAAAAAAAAA==')),
         tensor('q_b', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAr/////AAAAAAAAAAC9////AAAAAPz///8AAAAAAAAAAAAAAAAAAAAA')),
         tensor('q_x_scale', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/')),
@@ -25,26 +29,28 @@ def build(task):
         tensor('q_w_zero', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
     ]
     nodes = [
-        helper.make_node('Slice', ['input', 'ch5_starts', 'ch5_ends'], ['ch5']),
-        helper.make_node('Cast', ['ch5'], ['ch5b'], to=9),
-        helper.make_node('ReduceSum', ['ch5'], ['width'], keepdims=0),
+        helper.make_node('Einsum', ['input', 'e5', 'h123'], ['cr30'], equation='bkhw,kx,hy->bxyw'),
+        helper.make_node('Slice', ['cr30', 'sl_s', 'sl_e', 'sl_a'], ['crop']),
+        helper.make_node('Einsum', ['input', 'e5'], ['width'], equation='bkhw,kx->bx'),
         helper.make_node('Mod', ['width', 'two_f'], ['width_parity'], fmod=1),
         helper.make_node('Cast', ['width_parity'], ['width_is_odd'], to=9),
         helper.make_node('Greater', ['width', 'col_index'], ['col_active']),
         helper.make_node('Where', ['width_is_odd', 'dot_colors_odd_width', 'dot_colors_even_width'], ['dot_color']),
         helper.make_node('Where', ['col_active', 'zero_u8', 'no_color_u8'], ['background']),
-        helper.make_node('Where', ['ch5b', 'dot_color', 'background'], ['labels']),
+        helper.make_node('Equal', ['crop', 'rowv'], ['eq']),
+        helper.make_node('Where', ['eq', 'dot_color', 'background'], ['labels']),
         helper.make_node('QLinearConv', ['labels', 'q_x_scale', 'q_x_zero', 'q_w', 'q_x_scale', 'q_w_zero', 'q_x_scale', 'zero_u8', 'q_b'], ['output'], kernel_shape=[5, 1], pads=[2, 0, 29, 10]),
     ]
     value_infos = [
-        helper.make_tensor_value_info('ch5', 1, [1, 1, 3, 20]),
-        helper.make_tensor_value_info('ch5b', 9, [1, 1, 3, 20]),
-        helper.make_tensor_value_info('width', 1, []),
-        helper.make_tensor_value_info('width_parity', 1, []),
-        helper.make_tensor_value_info('width_is_odd', 9, []),
-        helper.make_tensor_value_info('col_active', 9, [20]),
-        helper.make_tensor_value_info('dot_color', 2, [20]),
-        helper.make_tensor_value_info('background', 2, [20]),
+        helper.make_tensor_value_info('cr30', 1, [1, 1, 1, 30]),
+        helper.make_tensor_value_info('crop', 1, [1, 1, 1, 20]),
+        helper.make_tensor_value_info('width', 1, [1, 1]),
+        helper.make_tensor_value_info('width_parity', 1, [1, 1]),
+        helper.make_tensor_value_info('width_is_odd', 9, [1, 1]),
+        helper.make_tensor_value_info('col_active', 9, [1, 20]),
+        helper.make_tensor_value_info('dot_color', 2, [1, 20]),
+        helper.make_tensor_value_info('background', 2, [1, 20]),
+        helper.make_tensor_value_info('eq', 9, [1, 1, 3, 20]),
         helper.make_tensor_value_info('labels', 2, [1, 1, 3, 20]),
     ]
-    return model('task332_live_exact', nodes, inits, output_dtype=2, opset=13, value_infos=value_infos)
+    return model('task332_live_exact', nodes, inits, output_dtype=2, opset=17, value_infos=value_infos)

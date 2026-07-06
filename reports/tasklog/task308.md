@@ -73,3 +73,7 @@ Equal output. The 7×7 ring lives entirely in fp16/bool [1,10,7,7] planes (~490�
   only 7x7: one-hot-before-pad costs `9*49=441B`, cheaper than padding a label
   plane to 30x30 (`900B`).  This is the useful small-board side of the
   label-pad ordering rule.
+
+## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
+Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
+Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.

@@ -1,136 +1,117 @@
-# NEXT SESSION — NeuroGolf handoff (2026-07-06, S15 + setup 세션 종료)
+# NEXT SESSION — NeuroGolf handoff (2026-07-06, S17 종료)
 
-다음 세션 시작 프롬프트로 이걸 그대로 쓰면 됨:
+다음 세션 시작 프롬프트:
 
 ```text
 /Users/minseong/project/neurogolf 에서 NeuroGolf 점수 개선을 이어가자.
-먼저 이 파일(NEXT_SESSION.md) + 메모리 [[neurogolf-strategy-directive]] +
-[[neurogolf-runtime-timeout-dimension]] + [[neurogolf-urad-7225-bundle-vein]] +
-reports/REBUILD_PLAYBOOK.md 를 읽고 시작해.
+먼저 이 파일(NEXT_SESSION.md) + 메모리 [[neurogolf-urad-7225-bundle-vein]](S17 safe best) +
+[[neurogolf-overfit-mode]] + [[neurogolf-strategy-directive]] +
+[[neurogolf-cristianoc-reference]] 를 읽고 시작해.
+```
 
-=== 북극성 (사용자 지침, 항상) ===
-- **8000점을 향해 공격적으로.** 상위권 ~7982-8013. "바닥/소진" 판정은 공격 대상이지 정지신호가
-  아님 (task133 "definitive floor"도 외부 넷이 깼음). 레버가 마르면 새 레버를 찾는다.
-- **free `input`/`output` 텐서를 적극 활용해 비용을 없애라.** 둘은 0비용이고 op 내부는 미채점 —
-  모든 작업을 free input에 대한 contraction / free output으로의 직접 기록 / 스팬 op의 단일 Einsum
-  붕괴로 라우팅해서 counted 중간평면이 하나도 안 남게 설계.
-- **딱 LB 통과 수준으로만 설계.** 게이트 = bundled fail=0 + mem 감소 + fresh ~98%+. 과최적화 금지.
-- **제출은 아주 자유롭게.** 100/day, Kaggle은 최고점 보존 — 나쁜 제출은 손해 없음. 확정하려면 그냥 제출.
-- **공개 인사이트를 캐내라, 넷만 복사하지 말고 — 그리고 400개 전체에 일반화하라.** 캐글
-  discussion·code 노트북·넷 덤프를 적극 활용. 공개 해법이 특정 태스크에서 나보다 싸면, 그 넷 하나
-  블라인드 이식으로 끝내지 말고 **왜 싼지(구조적 메커니즘/op-트릭)를 역설계** → REBUILD_PLAYBOOK +
-  insight_registry에 기록 → 같은 패턴을 가진 우리 태스크 전수를 스캔해 적용. 넷 1개 = +1태스크,
-  일반화된 메커니즘 = +N태스크 (진짜 상금은 여기). [[neurogolf-adoption-protocol]] ⭐TRANSFERABLE 필수.
+## 🟢 S17 확정 결과 (2026-07-06, 모두 LB 확인됨)
+- **안전 최고 = LB 7245.33** (sub 54396297, private-robust). udit 7237.17 덤프에서 task206 안전채택
+  (3766→1795, +0.741; RoiAlign+5Einsum, fresh inc0/cand0/div0). ← 마감 택1 헤지.
+- **overfit 최고 = LB 7248.76** (sub 54396589, public-only). v1(7246.88) + udit/poby min-merge
+  (377/205/076 overlay) = +1.886. 재빌드 `scratchpad/mine07/minmerge.py`, 넷=`submission/overfit_nets/`.
+- 🚨 **제출한도 = 100/일 (5 아님! 미신 반증됨).** 진짜 400 에러 원인 = 파일명이 `submission.zip` 이어야 함
+  (`overfit_submission.zip` → 400 "must be named submission.zip"). 제출 전 반드시 `submission.zip`으로 복사/rename.
+  Kaggle API `max_daily_submissions=100` 확인. → 자유롭게 제출.
 
-=== 직전 세션 = 전략·구조 세팅 (완료·커밋·병합됨, 점수 변동 0) ===
-이 세션은 점수 작업이 아니라 8000을 향한 세팅만 했음. 전부 main에 반영됨:
-- **정리**(커밋 c0836f6, 3341038): 디스크 정크 ~150M, reports/ 12M→5.7M, arc-gen 미사용 생성기
-  500개 삭제(400 유지), 메모리 40→27(바닥/천장 census 쳐냄), AGENTS/README/NEXT_SESSION+북극성.
-- **🆕 인사이트→태스크 매칭 엔진 구축 + main 병합 (05ab432).** "인사이트가 400개 중 어디에
-  적용되나"를 기억이 아닌 **쿼리+자동 floor제외**로 전환:
-  · `reports/scripts/build_task_index.py` → `reports/task_index.json`(400행, 온디스크·gitignore,
-    PROBE_VERSION 4). 태스크당 구조(op/dtype/평면/K)+의미(프로브)+경제(cost/bloat).
-  · `reports/scripts/task_index_probes.py` — 확장형 의미 프로브(새 인사이트 = 함수 1개 추가).
-  · `reports/scripts/coverage_lib.py` + `reports/mechanism_coverage.json` — (메커니즘×태스크) 결과
-    원장 → known-floor 자동 제외.
-  · `reports/scripts/match_insight.py --where "<술어>" | --mechanism X` → bloat 랭킹 후보 +
-    `--emit-queue`. **엔진은 리드만 생성 — fresh-gate가 최종 심판.**
-  · 백필 게이트 `tests/test_backfill_validation.py`(6개 메커니즘, gridsample_warp는 xfail).
-- ⚠️ **엔진은 아직 0점 — 미검증.** 실점 루프(match→verify→adopt)를 아직 안 돌림.
+## 🎯 사용자 방향 (S17 확정): "리더보드 통과되면 오버핏이든 뭐든 상관없어. 7248.76 완전히 가져가고 더 올려."
+private-LB 위험 명시적으로 수용. **public LB 최대화가 목표.** 안전/오버핏 구분 없이 점수↑면 채택.
 
-=== 0순위(실점 시작): 엔진을 저비용으로 증명 + 런타임 계기판 ===
-1. **엔진 실점 루프 1회** — `match_insight.py --mechanism signed_rect`(또는 urad value_info-크롭)로
-   후보 상위 2~3개 → fresh_verify → 채택 → `mechanism_coverage.json`에 결과 기록. 첫 점수 뽑아 엔진 증명.
-2. **400넷 런타임 프로파일링**(일회성·쌈) → timeout 헤드룸 측정 → 미탐색 **time-for-cost 레버** 개방
-   ([[neurogolf-runtime-timeout-dimension]]). `runtime_ms`를 인덱스 축으로 추가.
-- 🚨 토큰: leads-only 작업엔 싼 모델, SDD-건틀릿 금지. 깊은 지출은 신규 메커니즘/770 리서치에만.
-  ([[neurogolf-strategy-directive]] 6번, [[model-allocation-preference]].)
+## 🔴 다음 세션 = 오버핏 극대화 (available 레버는 소진, 남은 건 DEEP per-task 재구성)
+S17에서 mechanical 오버핏 레버는 전부 소진 확인:
+- 공개 leaky 넷: min-merge로 전부 포섭됨 (udit=poby=waterxiao 동일 pool). 신규 없음.
+- walk-chain step-cut: task286만 유효(완료). task243=mega-Einsum(operand cut해도 counted plane 안 줄음, no pay).
+- task066: 독립 contraction 5개, walk chain 아님 → floor.
+**남은 유일한 상승로 = DEEP per-task leaky 재구성** (사용자 승인, 고노력·불확실):
+1. ⭐ **bit-pack 인코딩 레버** (공개 task319 5852 넷에서 발견): BitShift/BitwiseAnd로 객체를 27×27 full plane
+   대신 [1,10,5,5] 작은 코드로 압축 (11664B→~250B, 3× 절감). 우리 고비용 넷 중 full 30×30/27×27 객체
+   plane을 materialize하는 것들에 이식 시도. 공개넷을 teacher로 op-census 비교해 mechanism 추출.
+   대상 = 우리 최고비용 넷들 (285=25234, 286=23971, 233=33242, 133=21526, 018=25445...).
+2. **canvas-crop 레버** (task018식, memory "narrow"): bundled 그리드가 30×30보다 작으면 캔버스 축소.
+   bundled 데이터 max extent 측정 → N<30이면 넷을 N×N로.
+3. **worst-case 상수 cut**: unrolled 루프 step수/TopK-K/detector bank가 이론상 max로 sized된 넷 →
+   bundled-min으로 축소 (gate=bundled fail=0만). 단 S16 측정상 우리 넷은 이미 tight (5프로브 중 1승).
+방법: 고비용 넷마다 (a) 공개 오버핏 넷 있으면 teacher diff, (b) 없으면 bundled-only 재구성 직접 설계.
+게이트 = bundled fail=0만. 제출 파일명 반드시 `submission.zip`, 한도 100/일.
 
-=== 현재 상황 (S15 종료, 2026-07-06) ===
-- 확정 LB 최고점 = **7242.29** (submission 54381272). 로컬 manifest 7242.18, 오프셋
-  +0.11 일관. 마감 07-15 (최종 = private LB).
-- 이번 세션 궤적: 7236.19 → 7240.17 → **7242.29** (+6.10). 방법 = 공개 노트북 번들 채굴.
-- 🚨 우리는 **크게 뒤쳐져 있음**: 리더보드 top = **8013**, 우리 7242 → 갭 ~770pt.
-  공개 덤프는 전부 ≤7235 (prvsiyan 7235.05가 공개 최고). 우리 7242는 공개 덤프
-  여러 개를 min-merge + 우리 우위 넷 유지로 만든 것이라 사실상 "공개 파생 최고점".
-  → 공개 순수-채굴은 성숙 단계(신규 덤프 재스캔은 계속). 남은 ~770pt는 상위권만 아는
-  UNKNOWN 압축 메커니즘 — **이게 진짜 목표(8000)**. 독자 상승로 = 3-메커니즘 자가 역적용
-  (아래 2번) + free-텐서 라우팅으로 우리 floored 태스크 재설계. S11 SGD-compile·S12
-  train-to-golf는 반증됐지만, 그건 특정 접근의 실패일 뿐 "천장"이 아님(floor 증명은 틀릴 수 있음, 39번).
+## 📌 참고
+- overfit README = `submission/OVERFIT_README.md`. 넷 = `submission/overfit_nets/`. min-merge = `scratchpad/mine07/minmerge.py`(세션소멸, 재작성 필요).
+- 안전본 206만 clean adopt. 377/205는 private 위험으로 safe 거부(overfit엔 포함).
 
-=== S15에서 새로 알아낸 것 (중요, 재사용) ===
-1. **공개 번들 채굴 루틴이 실질 상금원이었다.** 많은 업로더가 400-net 번들을 노트북에
-   base64로 임베드함. 총점이 우리보다 낮아도 개별 태스크는 더 쌀 수 있음(점수=합).
-   재사용 스크립트 = `reports/scripts/mine_public_bundles.py` (추출+측정+diff 자동).
-2. **prvsiyan/neurogolf-<score>-w-visualizations = 모든 공개 소스의 MIN-MERGE 노트북.**
-   단일로 가장 가치 높은 덤프. 우리가 방금 채택한 넷의 더-골프된 버전까지 있었음.
-3. **안전 채택 규칙 (private-LB 최종 대비, 절대 지켜):**
-   태스크T의 소스넷 채택 조건 = bundled fail=0 AND grader cost < 우리 것
-   AND `fresh_verify T <shim> 1500` 에서 **cand_fail ≤ 우리 incumbent_fail**.
-   cand가 더 fresh-fail하면 기각(공개점수는 오르지만 private에서 0 위험).
-4. **영구 overfit 함정: task 319, 48, 285.** 모든 공개 소스의 싼 넷이 fresh-fail
-   (319는 85~133/1500 vs 우리 4~10). 절대 채택 금지, 우리 것 유지.
-5. **우리 walk-einsum 플레이북에 없던 3개 메커니즘** (공개 넷 분석으로 확보):
-   (a) value_info-legalized Slice/Pad 크롭 — free input에서 bbox 크롭 직접.
-   (b) terminal GridSample — fp16 [1,30,30,2] grid = gather+mask+zero-pad 1 free node.
-   (c) QLinearConv/ConvInteger signed 렌더러 — u8 codes+x_zero_point=1, i32 출력 >0 채점.
-   (+ canvas-crop: 30×30→NxN 축소, 좁음.)
-   → **이게 다음 진짜 상금 경로**: 남들이 안 판 우리 floored 태스크에 (a)(b)(c) 직접 역적용.
-6. **task133 "DEFINITIVE FLOOR" 반증됨.** S13에서 내가 29636이 절대바닥이라 정교하게
-   증명했는데 외부 넷이 21526 fail=0으로 깼음. 내 floor-증명은 틀릴 수 있다 = 외부
-   프론티어 넷이 진짜 심판. 앞으로 "floor 증명했으니 재탐색 금지" 류를 과신하지 말 것.
+## === 현재 상황 (S17 종료, 2026-07-06) ===
+- **확정 LB 최고: 안전 7245.33 (sub 54396297) / overfit 7248.76 (sub 54396589).** local manifest 7245.22,
+  오프셋 +0.11 일관. 마감 07-15 = private LB. S16 안전본 54394428(7244.59)도 헤지로 보존.
+- S17 방법 = 신규 업로더(udit 7237.17 / poby 7235.83) 재채굴 + task206 안전채택 + overfit min-merge.
+  주요 발견: 제출한도 100/일(5 미신 반증), 파일명 반드시 submission.zip.
 
-=== 이번 세션 할 일 (우선순위) ===
-1. ⭐ **공개 인사이트 채굴 = 넷 덤프 + discussion/code 둘 다** (저비용·반복, 마감 D-9라 유출↑):
-   (i) 넷 덤프: `kaggle kernels list -s neurogolf --sort-by dateRun | head -30` → 신규/고점 pull
-   → `.venv/bin/python -m reports.scripts.mine_public_bundles <부모dir>`
-   → `reports/public_bundle_candidates.json` → 각 후보 fresh-gate → 안전규칙 채택.
-   특히 prvsiyan `-w-visualizations` 최신본, uditjain(데이터셋 첨부형), yuu111111111, biohack44, franksunp.
-   (ii) **discussion/code 읽기**: `kaggle kernels list -s neurogolf` + 대회 discussion 탭에서
-   설명·트릭 공개글 확인. 공개 해법이 특정 태스크에서 나보다 싸면 **넷 이식으로 끝내지 말고 왜 싼지
-   메커니즘을 역설계** → REBUILD_PLAYBOOK + insight_registry 기록 → **같은 패턴 우리 태스크 전수 스캔·적용**
-   (넷 1개=+1, 일반화=+N). 이게 아래 2번(자가 역적용)의 상시 입력원.
-2. ⭐⭐ **3개 메커니즘 자가 역적용** (남들 안 판 우리 태스크 = 유일한 독자 상승):
-   우리 floored 태스크 중 (a) bbox/윈도우 크롭 여지(value_info), (b) 게더/워프 출력
-   (GridSample), (c) 색 렌더링/부호가중(QLinearConv)에 맞는 걸 찾아 적용. 후보 발굴부터 —
-   `reports/manifest.json`을 grader-cost 내림차순 정렬해 고비용 태스크부터 (a)(b)(c) 적합성
-   판정. (구 min_stat/struct_scan 스캐너·json은 repo 정리로 제거됨; 필요하면 새 finder 작성.)
-3. (연구, 고위험) ~770pt UNKNOWN 메커니즘 브레인스토밍. 상위권(8000+)의 압축을 특정
-   룰클래스에서 역설계. 구체 가설 먼저, 그다음 팬아웃 (아이디어 없이 돌리면 floor만 재확인).
+## === (이하 S16 기록, 참고용) ===
+- **S16 확정 LB 최고 = 7244.35** (sub 54393583). 재제출 7244.48 local (task387 fold 포함, pending → ~7244.59).
+  로컬 manifest 7244.48, 오프셋 +0.11 일관. 마감 07-15 = private LB.
+- S16 궤적: 7242.29 → 7244.14 → 7244.35 → 7244.48(local). 방법 = **매칭 엔진 실증** + 공개 unfiltered
+  재채굴 + **time-for-cost einsum fold**(task387 +0.239, bit-identical).
+- **🆕 time-for-cost fold 레버 부활**: `reports/scripts/fold_finder.py` → counted 평면이 SUM-축약되면
+  free-input einsum으로 접음. **task387 +0.239** 성공(ReduceSum crop→Einsum('bchw,c->bh') + mask-from-scalars).
+  정밀 규칙: LINEAR producer(ReduceMax/compare 아님) + SUM-contraction consumer + SINGLE-USE 평면만 접힘.
+  벤 상태 = 1승 후 620B 위로 소진(064/134/025/105/216/009/364 전부 floor). 잔여 ≤620B tail(131/174) 저EV.
+- **엔진 증명 완료(0순위 달성).** match_insight 랭킹 → mine_public_bundles/mine_unfiltered grader측정 →
+  fresh_verify cand≤inc → 5단계 채택 → mechanism_coverage.json 기록. 대표 = task222(dropped-Slice,
+  bit-identical, +0.158). 총 21태스크 채택 ~+0.41, 전부 bit-identical/cand≤inc(private-LB 안전).
+- **런타임 프로파일 완료(0순위 달성).** 전체 400넷 = 229ms/pass, 최고 82ms(task001). 경쟁자 slow-태스크가
+  우리는 sub-ms. `runtime_ms` 인덱스에 추가됨. **timeout 헤드룸 막대 → time-for-cost 레버 개방(단, 아래 참조).**
 
-=== 미완료/느슨한 끝 (이어서 처리) ===
-- **미완 fresh-gate 2건 (marginal, 재실행하면 됨):**
-  · task157 (franksunp, 48111→46553B, +0.031) — 거대넷이라 1500 fresh 게이트가 매우 느려
-    S15에서 미완. shim: urad류 로더. cand≤inc면 채택.
-  · task76 (urad, 16557→15042, +0.096) — 마찬가지로 거대넷 게이트 미완.
-- **uditjain13 번들 추출 실패** (base64 임베드 아님 = 데이터셋 첨부형). 원하면
-  `kaggle kernels pull` 후 첨부 데이터셋 별도 다운로드. 7232.14라 신규 넷 있을 수 있음.
-- **prefilter가 byte-size<0.97×ours 프록시였음.** grader-mem이 파일크기와 안 맞는
-  태스크(작은 파일·높은 mem)는 놓쳤을 수 있음. 완전탐색 원하면 mine_public_bundles의
-  prefilter 완화 후 전수 grader 측정(1600넷, ~10-20분).
-- **소소한 tail 후보** 다수 미채택 (Δpts<0.02, 합계 ~0.1). public_bundle_candidates.json
-  재생성 후 남은 것 게이트.
+## === S16 핵심 판정 (재사용, 중요) ===
+1. **urad 3메커니즘 자가역적용 = 둘 다 FLOOR로 판명** (엄밀한 파일럿 에이전트):
+   · **value_info_crop**: 90개 crop 풀 소진. 모든 verbatim crop은 single-window fp32 floor(10ch 윈도
+     불가축소, 색 랜덤). 366/233/205만 full-plane이나 compose/recolor(crop 아님). coverage `_pool` floor.
+   · **qlinearconv_render**: 풀 이미 붕괴(오늘 공개프론티어 이식분). 남은 평면은 load-bearing 탐지/scatter,
+     교체가능 render epilogue 아님. 신규-이식 넷의 un-collapsed one-hot만 미래 대상(mech15_output_scan.py).
+   · **gridsample_warp**: 풀 전부 저비용 업스케일(≤2798), EV 낮음, 미검토. (유일하게 안 판 벤)
+2. **공개 벤 수렴.** franksunp 7235.49 + llccqq624 7235.83 = per-task 우리보다 싼 min-merge. ryosuke 7230 =
+   동일 계보(동일 후보셋). 모든 공개덤프 ≤7235.83. **신규 업로더 나타날 때만 재채굴** (koushik/biohack/
+   yuu/poby = dataset-attached, 추출 0 — 첨부데이터셋 별도 다운로드 필요).
+3. **⚠️ 8000은 압축 갭이 아니라 OVERFIT 갭일 가능성 매우 높음.** cristianoc oracle이 우리 고비용넷=알고리즘
+   floor임을 독립검증; 공개프론티어 7235 상한; log-math상 7244→8000은 **400태스크 전부 ~6.7× 더 싸야** 함.
+   → top~8000은 visible-case 튜닝(leaky const)일 개연성. 추격 = fresh-gate 규율(우리 private-LB 해자) 포기.
+   **우리 fresh-gated 7244가 overfit 8000보다 private-LB에서 더 강할 수 있음.** overfit 전환 전 사용자 확인 필수.
 
-=== 워크플로/게이트 (불변) ===
-- 🚨 모델 배분: Fable = 오케스트레이션·새 메커니즘 설계·채택판단·제출. 나머지 Agent는 model:"opus".
-- 🚨 채택 프로토콜 (메모리 [[neurogolf-adoption-protocol]]): 백업 → networks/taskNNN.onnx 교체
-  → `.venv/bin/python -m reports.scripts.live_to_exact_source NNN --write-src` (소스재생성)
-  → `.venv/bin/python -m reports.scripts.measure_task NNN` (grader 재측정, fail=0 확인)
-  → manifest 갱신 → tasklog 메커니즘 기록. **에이전트 raw-byte 추정 불신, 반드시 grader 재측정.**
-- fresh-gate: `.venv/bin/python reports/scripts/fresh_verify.py TASK <shim.py> 1500`
-  shim = `import onnx\ndef build(task): return onnx.load('<abs path>')`.
-  (fresh_verify는 candidate가 module builder여야 함. urad류 raw onnx는 이 shim으로 감쌈.)
-- 제출: 400 networks/*.onnx zip → `reports/scripts/scan_unsigned_topk.py` 전수(uint8-TopK
-  grader-killer 체크, 반드시) → `kaggle competitions submit -c neurogolf-2026 -f
-  submission/submission.zip -m "<msg>"` → `--csv`로 publicScore 폴링(descrip에 숫자 있으면
-  grep 오탐, CSV 파싱으로 읽을 것).
-- 죽은 길 재탐사 금지: train-to-golf 전체, SGD-compile, int64→int32 on initializer(Δ0),
-  task 319/48/285 싼-넷(overfit), mech-16 per-object.
+## === 미완/느슨한 끝 ===
+- **task076 fresh-gate 포기**(franksunp 15932→13235, +0.185): 우리 incumbent가 병적으로 느린 거대넷 →
+  fresh_verify가 N=250에서도 15분+ 무출력(제너레이터+빌드 병목). 다음 세션에 다른 검증법 필요(예: bundled
+  동등성 + 소량 fresh, 또는 incumbent를 먼저 골프해 빠르게). shim 재생성: mine 후 franksunp task076.onnx.
+- **fold tail ≤620B**: task131(GatherND→ReduceSum 620B), task174(Cast→MatMul 600B) 미검토, 저EV(~+0.1).
+- **소소 public tail** ~15태스크 Δ≤0.002 합계 ~0.02 미채택 (public/unfiltered_candidates.json). marginal.
+- **GridSample 자가역적용** 미검토(유일한 미개봉 urad 벤, 단 pool 전부 저비용 업스케일 ≤2798, EV 낮음).
 
-=== 커밋 상태 ===
-- 미커밋 대량 (S12~S15 전체). networks/*는 gitignore, 소스진실 = src/custom/*.py (재생성됨).
-  S15에서 ~35개 태스크의 src/custom + tasklog + manifest + 메모리 + mine_public_bundles.py
-  변경/추가. 세션 시작 시 커밋 정리 권장 (사용자 지시 없으면 커밋은 물어보고).
-- 백업: S15 교체 전 넷들은 scratchpad(세션소멸)에 있었음. git에 networks/ 없으니 롤백은
-  이전 submission zip(54381016=7240.17, 54364720=7236.19) 또는 src/custom git 히스토리로.
+## === 다음 세션 우선순위 (S16 판정 반영) ===
+1. **[사용자 결정 대기] 전략 방향**: (a) private-LB 안전 유지 = 신규 공개덤프 재채굴 + tail 정리(현재 거의 소진,
+   ~+0.02/pass), 또는 (b) overfit 추격 = leaky-constant 튜닝으로 public 8000 시도(private 위험, 현 전략에 반).
+   → 안전 grind은 마름. 큰 상승엔 (b) 승인 또는 미지-메커니즘 리서치 필요.
+2. **미지-메커니즘 리서치(고위험, 구체 가설 먼저)**: 유일한 안전-상승로. 단 cristianoc가 알고리즘 floor를
+   독립검증했으므로 "더 싼 알고리즘" 사냥은 금지 — 남은 건 IMPLEMENTATION golf뿐이고 그것도 대부분 소진.
+   time-for-cost fold(런타임 헤드룸 막대)로 우리가 materialize하는 평면을 더 깊은 einsum으로 접는 각도가
+   미탐색 후보이나, 구체 태스크·가설 없이 팬아웃 금지(floor 재확인만 됨).
+3. task076 마무리 + tail 정리 (즉시 실행 가능한 잔여 안전점수).
+
+## === 워크플로/게이트 (불변) ===
+- 채택 = 백업 → networks/ 교체 → `live_to_exact_source NNN --write-src` → `measure_task NNN`(fail=0) →
+  manifest → tasklog +⭐TRANSFERABLE + coverage_lib.record. 에이전트 byte추정 불신, 반드시 grader재측정.
+- fresh-gate: `.venv/bin/python reports/scripts/fresh_verify.py NNN <shim.py> 1500`, cand_fail ≤ inc_fail.
+  거대넷은 N=800으로 시작(느림). shim = `import onnx; def build(task): return onnx.load('<abs>')`.
+- 제출: networks/*.onnx → `scan_unsigned_topk.py networks`(전수, uint8-TopK grader-killer) → zip → submit
+  → `--csv`로 publicScore 폴링(CSV 파싱, descrip grep 오탐 주의).
+- 도구: mine_public_bundles.py(byte-prefilter), mine_unfiltered.py(전수, 프리필터 놓친 것 잡음),
+  profile_runtime.py, match_insight.py, coverage_lib.py. 덤프 추출 = extract_bundle.
+- 🚨 죽은 길 재탐사 금지: value_info_crop/qlinearconv_render 자가역적용(S16 floor), train-to-golf, SGD-compile,
+  task 319/48/285/188/101/090/117 공개-싼넷(overfit), int64→int32 on initializer.
+- 모델: 기계적/레시피 → opus. 신규 메커니즘 설계·770 리서치만 fable. leads-only엔 SDD-건틀릿 금지.
+
+## === 커밋 상태 ===
+- 미커밋 대량(S12~S16). networks/*는 gitignore, 소스진실 = src/custom/*.py(재생성됨). S16에서 21태스크
+  src/custom+tasklog+manifest, coverage, profile_runtime.py/mine_unfiltered.py 추가, 메모리 갱신.
+  세션시작 시 커밋 정리 권장(사용자 지시 없으면 커밋은 물어보고). 백업 넷 = scratchpad(세션소멸) → 롤백은
+  submission zip(54393046=7244.14) 또는 src/custom git 히스토리.
 ```

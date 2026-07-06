@@ -52,3 +52,7 @@ dominant colour's flattened block-count plane (ties between identical copies are
 fine — flat-argmax picks the first, all copies share the shape). Dropping bg ch0
 from the slice+conv (9 not 10 channels) is a free ~10% mem cut. Re-confirmed:
 fp16 Conv is NOT cheaper — ORT always emits an fp32 PrecisionFreeCast conv plane.
+
+## S16 (2026-07-06) — public bit-identical golf (franksunp) ADOPTED
+Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent). Minor cost drop
+(dead-initializer / redundant-node removal), private-LB safe. Manifest updated. Backup in scratchpad.

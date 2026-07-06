@@ -65,3 +65,7 @@ separable Where ONLY if you (1) reuse the box-occupancy ArgMax vectors AS the in
 and (2) fold the in-grid gate into the tiny per-axis colour VECTOR so the stripe condition stays a
 1-D broadcast (zero full And planes). But two AXES still force 3 sequential colour planes; with a
 forced fp32 entry + 30x30 output the floor sits ~16.3 — re-golf buys +0.19, not +0.3.
+
+## S16 (2026-07-06) — public bit-identical golf (llccqq624, unfiltered re-mine) ADOPTED
+Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
+Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.

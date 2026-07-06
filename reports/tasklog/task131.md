@@ -51,3 +51,7 @@ by the LONG axis (18), not the creature size, and FLIP defeats any attempt to cr
 its own small bbox (it can be relocated anywhere across the long axis). Also: per-line aggregates that
 sum a colour channel are cheaper as ONE multi-output-channel Conv per axis than N single-channel Convs,
 and in-grid (sum over ALL channels) is a zero-param ReduceSum over the free input, never a Conv.
+
+## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
+Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
+Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.

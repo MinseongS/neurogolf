@@ -227,3 +227,7 @@ No transferable mechanism — minor trim.
 
 ## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
 k3(cost 5137): 0 contradictions이지만 18 stubborn hinge viols, LP로 infeasible 증명(ch0/ch2) — 그 18 viol 패치가 ~모든 인스턴스에 등장(val 97% fail). k5: 75k 패치 ~2.4k viols 고착. SGD로도 wall 유지. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).
+
+## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
+Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
+Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.

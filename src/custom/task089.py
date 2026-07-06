@@ -67,8 +67,6 @@ def build(task):
         helper.make_node('Add', ['c2_target_first_i32', 'c2_safe_offsets'], ['c2_scatter_first']),
         helper.make_node('Add', ['c2_target_last_i32', 'c2_safe_offsets'], ['c2_scatter_last']),
         helper.make_node('Where', ['c2_valid', 'c2_payload_color', 'zero_u8'], ['c2_updates25']),
-        helper.make_node('ScatterElements', ['color_flat', 'c2_scatter_first', 'c2_updates25'], ['c2_scattered_a'], axis=0, reduction='max'),
-        helper.make_node('ScatterElements', ['c2_scattered_a', 'c2_scatter_last', 'c2_updates25'], ['c2_scattered'], axis=0, reduction='max'),
         helper.make_node('Where', ['green_anchor_flat', 'payload_neighbor4_flat', 'zero_u8'], ['c3_source_flat']),
         helper.make_node('Cast', ['green_anchor_flat'], ['c3_anchor_flat'], to=2),
         helper.make_node('ArgMax', ['c3_source_flat'], ['c3_source_idx'], axis=0, keepdims=1),
@@ -93,12 +91,15 @@ def build(task):
         helper.make_node('Add', ['c3_target_first_i32', 'c3_safe_offsets'], ['c3_scatter_first']),
         helper.make_node('Add', ['c3_target_last_i32', 'c3_safe_offsets'], ['c3_scatter_last']),
         helper.make_node('Where', ['c3_valid', 'c3_payload_color', 'zero_u8'], ['c3_updates25']),
-        helper.make_node('ScatterElements', ['c2_scattered', 'c3_scatter_first', 'c3_updates25'], ['c3_scattered_a'], axis=0, reduction='max'),
-        helper.make_node('ScatterElements', ['c3_scattered_a', 'c3_scatter_last', 'c3_updates25'], ['c3_scattered'], axis=0, reduction='max'),
+        helper.make_node('Concat', ['c2_scatter_first', 'c2_scatter_last', 'c3_scatter_first', 'c3_scatter_last'], ['all_scatter_idx'], axis=0),
+        helper.make_node('Concat', ['c2_updates25', 'c2_updates25', 'c3_updates25', 'c3_updates25'], ['all_scatter_upd'], axis=0),
+        helper.make_node('ScatterElements', ['color_flat', 'all_scatter_idx', 'all_scatter_upd'], ['c3_scattered'], axis=0, reduction='max'),
         helper.make_node('Reshape', ['c3_scattered', 'shape_1_1_13_13'], ['color13_out']),
         helper.make_node('Pad', ['color13_out', 'pad_output', 'sentinel10_u8'], ['color30_out']),
         helper.make_node('Equal', ['color30_out', 'color_bank'], ['output']),
     ]
     value_infos = [
+        helper.make_tensor_value_info('all_scatter_idx', 6, [96]),
+        helper.make_tensor_value_info('all_scatter_upd', 2, [96]),
     ]
     return model('task089_live_exact', nodes, inits, output_dtype=9, opset=16, value_infos=value_infos)

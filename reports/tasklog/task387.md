@@ -59,3 +59,16 @@ cannot avoid one 30×30 expansion (Pad to canvas). Not at a hard wall but near t
   in the trace, because the pre-Pad working tensors stay 1-byte.
 
 ## S11 (2026-07-03) — mech-15/pointer scout: KILL — already 084-shaped (ScatterElements-into-free-input); the +3.1KB over 084 is real added semantics (2 data-dependent corner colours + 6 geometry scalars + even-distance gray-edge indices), not bloat. Composition constraint blocks hybrids.
+
+## S16 (2026-07-06) — time-for-cost einsum fold: eliminated fp32 crop plane (+0.239) ADOPTED
+Independent-lever (einsum-vs-free-input, runtime headroom). Incumbent Sliced input[:,0:1,0:18,0:18]→bg0_f
+fp32 [1,1,18,18] 1296B (largest counted plane), feeding Cast→ScatterElements base + 2 ReduceSum (row/col
+bg-cell counts). FOLD: row_sum/col_sum = Einsum('bchw,c->bh'/'->bw', input, e0=[1,0..]) off FREE input
+(off-grid one-hot = 0 so full-sum == 18-crop sum); base rebuilt as in-grid mask (r<H)&(c<W) via
+Less(arange, H/W scalars)+Mul — the 4 pixel cells differ but are overwritten by corner 3x3 blocks →
+identical. mem 4954→3842, params 105→142, cost 5059→3984, pts 16.471→16.710. fresh_verify 5000/5000 =
+0/0/0 bit-identical. private-LB safe.
+⭐ TRANSFERABLE: (1) any ReduceSum/ReduceMax of a Slice/crop of a single channel folds into a free-input
+Einsum 'bchw,c->b{h|w}' (off-grid one-hot zero-pads for free — no crop plane). (2) a ScatterElements/base
+that is just an in-grid rectangle mask is reconstructible from W/H scalars via arange-compare, never a
+spatial fp32 plane. Finder = reports/scripts/fold_finder.py.

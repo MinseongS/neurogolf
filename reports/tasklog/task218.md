@@ -100,3 +100,7 @@ occupancy plane — per-block AREA = ReduceSum(Rsel)*ReduceSum(Csel) replaces Rs
 two channel-slices beats the fp16-ReduceMin "any-hash-differs" bridge; fold cumsum's -1 into
 the selector ramp (Equal(cumsum,R+1)) to delete the bri/bci index planes. Grouped-Conv
 finite-diff "shortcut" backfired (ORT 1.26 grouped-Conv bug) — verify grouped-Conv before use.
+
+## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
+Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
+Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.

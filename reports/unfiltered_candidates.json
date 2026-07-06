@@ -1,0 +1,254 @@
+[
+ {
+  "task": 319,
+  "mine": 17143,
+  "cost": 5857,
+  "source": "waterxiao_723563",
+  "dpts": 1.074
+ },
+ {
+  "task": 377,
+  "mine": 8209,
+  "cost": 5019,
+  "source": "waterxiao_723563",
+  "dpts": 0.492
+ },
+ {
+  "task": 205,
+  "mine": 9982,
+  "cost": 6467,
+  "source": "waterxiao_723563",
+  "dpts": 0.434
+ },
+ {
+  "task": 48,
+  "mine": 1146,
+  "cost": 804,
+  "source": "waterxiao_723563",
+  "dpts": 0.354
+ },
+ {
+  "task": 188,
+  "mine": 1018,
+  "cost": 764,
+  "source": "waterxiao_723563",
+  "dpts": 0.287
+ },
+ {
+  "task": 285,
+  "mine": 25234,
+  "cost": 19767,
+  "source": "waterxiao_723563",
+  "dpts": 0.244
+ },
+ {
+  "task": 76,
+  "mine": 15932,
+  "cost": 13235,
+  "source": "waterxiao_723563",
+  "dpts": 0.185
+ },
+ {
+  "task": 101,
+  "mine": 14447,
+  "cost": 13773,
+  "source": "waterxiao_723563",
+  "dpts": 0.048
+ },
+ {
+  "task": 155,
+  "mine": 142,
+  "cost": 138,
+  "source": "waterxiao_723563",
+  "dpts": 0.029
+ },
+ {
+  "task": 117,
+  "mine": 4165,
+  "cost": 4089,
+  "source": "waterxiao_723563",
+  "dpts": 0.018
+ },
+ {
+  "task": 215,
+  "mine": 750,
+  "cost": 741,
+  "source": "waterxiao_723563",
+  "dpts": 0.012
+ },
+ {
+  "task": 18,
+  "mine": 25445,
+  "cost": 25286,
+  "source": "waterxiao_723563",
+  "dpts": 0.006
+ },
+ {
+  "task": 90,
+  "mine": 3072,
+  "cost": 3058,
+  "source": "waterxiao_723563",
+  "dpts": 0.005
+ },
+ {
+  "task": 396,
+  "mine": 4944,
+  "cost": 4930,
+  "source": "waterxiao_723563",
+  "dpts": 0.003
+ },
+ {
+  "task": 19,
+  "mine": 2798,
+  "cost": 2793,
+  "source": "waterxiao_723563",
+  "dpts": 0.002
+ },
+ {
+  "task": 44,
+  "mine": 4984,
+  "cost": 4974,
+  "source": "waterxiao_723563",
+  "dpts": 0.002
+ },
+ {
+  "task": 63,
+  "mine": 1873,
+  "cost": 1869,
+  "source": "waterxiao_723563",
+  "dpts": 0.002
+ },
+ {
+  "task": 247,
+  "mine": 470,
+  "cost": 469,
+  "source": "waterxiao_723563",
+  "dpts": 0.002
+ },
+ {
+  "task": 250,
+  "mine": 2542,
+  "cost": 2538,
+  "source": "waterxiao_723563",
+  "dpts": 0.002
+ },
+ {
+  "task": 379,
+  "mine": 9133,
+  "cost": 9113,
+  "source": "waterxiao_723563",
+  "dpts": 0.002
+ },
+ {
+  "task": 43,
+  "mine": 794,
+  "cost": 793,
+  "source": "waterxiao_723563",
+  "dpts": 0.001
+ },
+ {
+  "task": 107,
+  "mine": 3694,
+  "cost": 3690,
+  "source": "waterxiao_723563",
+  "dpts": 0.001
+ },
+ {
+  "task": 123,
+  "mine": 1343,
+  "cost": 1342,
+  "source": "waterxiao_723563",
+  "dpts": 0.001
+ },
+ {
+  "task": 133,
+  "mine": 21526,
+  "cost": 21506,
+  "source": "waterxiao_723563",
+  "dpts": 0.001
+ },
+ {
+  "task": 265,
+  "mine": 4362,
+  "cost": 4357,
+  "source": "waterxiao_723563",
+  "dpts": 0.001
+ },
+ {
+  "task": 325,
+  "mine": 1484,
+  "cost": 1483,
+  "source": "waterxiao_723563",
+  "dpts": 0.001
+ },
+ {
+  "task": 340,
+  "mine": 3709,
+  "cost": 3707,
+  "source": "waterxiao_723563",
+  "dpts": 0.001
+ },
+ {
+  "task": 398,
+  "mine": 2859,
+  "cost": 2855,
+  "source": "waterxiao_723563",
+  "dpts": 0.001
+ },
+ {
+  "task": 80,
+  "mine": 9834,
+  "cost": 9833,
+  "source": "waterxiao_723563",
+  "dpts": 0.0
+ },
+ {
+  "task": 148,
+  "mine": 4889,
+  "cost": 4888,
+  "source": "waterxiao_723563",
+  "dpts": 0.0
+ },
+ {
+  "task": 154,
+  "mine": 2760,
+  "cost": 2759,
+  "source": "waterxiao_723563",
+  "dpts": 0.0
+ },
+ {
+  "task": 165,
+  "mine": 4840,
+  "cost": 4838,
+  "source": "waterxiao_723563",
+  "dpts": 0.0
+ },
+ {
+  "task": 182,
+  "mine": 6100,
+  "cost": 6099,
+  "source": "waterxiao_723563",
+  "dpts": 0.0
+ },
+ {
+  "task": 208,
+  "mine": 4209,
+  "cost": 4207,
+  "source": "waterxiao_723563",
+  "dpts": 0.0
+ },
+ {
+  "task": 277,
+  "mine": 3745,
+  "cost": 3744,
+  "source": "waterxiao_723563",
+  "dpts": 0.0
+ },
+ {
+  "task": 368,
+  "mine": 5147,
+  "cost": 5145,
+  "source": "waterxiao_723563",
+  "dpts": 0.0
+ }
+]

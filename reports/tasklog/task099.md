@@ -52,3 +52,7 @@ one-hot representation, NOT the cropped active grid: convert_to_numpy leaves
 out-of-grid cells ALL-ZERO (channel 0 = 0, not 1), so a net trained only on the
 10x10 region mis-handles the grid->zero boundary and fails fresh verification
 even at "gridok 1.0" on the cropped eval.
+
+## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
+Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
+Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.

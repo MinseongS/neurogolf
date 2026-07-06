@@ -72,3 +72,14 @@ scales s²). Floors: keep_b 900 bool (off-grid OR), colf 784. Backup task222_pre
 
 ## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
 k5(cost 8088): hinge unsolved, val 100% fail. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).
+
+## S16 (2026-07-06) — llccqq624 public net: dropped redundant Slice + its counted plane (+0.158) ADOPTED
+Engine-proof loop (match→mine→fresh-gate→adopt). Source = llccqq624 "verified circuit union"
+(7235.83 dump). Grader: mem 5992→5096, params 211→202 → cost 6203→5298, points 16.267→16.425.
+Fresh gate: fresh_verify 222 1500 = incumbent fail 0, candidate fail 0, **candidate != incumbent = 0**
+(bit-identical on all 1500). Structural diff vs old S9 net: dropped 1 `Slice` node (21→20 nodes) →
+eliminates its ~900B counted output plane; everything else identical (1 Conv, 6 MaxPool, Pad×2…).
+⭐ TRANSFERABLE: safe-golf "redundant post-crop Slice whose window is already produced by the valid-Conv
+tap can be dropped — the Conv already emits the interior; the Slice was re-cropping an already-cropped
+plane." Same pattern to scan: any of our valid-Conv-crop nets (196/193/396) carrying a trailing Slice.
+Backup: scratchpad/backup/task222.onnx.bak. Bit-identical ⇒ private-LB safe.
