@@ -45,3 +45,15 @@ def test_build_structural_economic_shape():
     else:
         # all 400 networks present locally -> can't exercise the missing-net branch here
         pass
+
+def test_sample_pairs_and_semantic_row_on_a_real_task():
+    m = _load()
+    import json
+    mapping = json.loads((ROOT / "reports/arc_mapping.json").read_text())
+    arc = mapping["1"]["arc_id"]
+    pairs = m.sample_pairs(arc, 5)
+    if not pairs:
+        import pytest; pytest.skip("generator unavailable")
+    assert len(pairs) == 5
+    sem = m.semantic_row(arc, 5)
+    assert "shape_relation" in sem and sem["probe_version"] == m.__dict__["_PV"]()

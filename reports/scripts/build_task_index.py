@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
 """Build reports/task_index.json — per-task structural + economic + semantic features."""
 from __future__ import annotations
+import importlib
 import json
+import sys
 from pathlib import Path
+import numpy as np
 import onnx
 
 ROOT = Path(__file__).resolve().parents[2]
 REPORTS = ROOT / "reports"
 NETWORKS = ROOT / "networks"
+
+sys.path.append(str(Path(__file__).resolve().parent))
+import task_index_probes as _P  # noqa: E402
+
+sys.path.append(str(ROOT / "arc-gen"))
 
 _DTYPE_NAME = {1: "fp32", 2: "uint8", 3: "int8", 6: "int32", 7: "int64",
                9: "bool", 10: "fp16", 11: "fp64", 12: "uint32"}
@@ -108,10 +116,62 @@ def build_structural_economic() -> dict:
     return out
 
 
+def _PV():
+    return _P.PROBE_VERSION
+
+
+def _to_grid(x):
+    return np.asarray(x, dtype=np.int64)
+
+
+def sample_pairs(arc_id: str, n: int):
+    try:
+        gen = importlib.import_module(f"tasks.task_{arc_id}")
+    except Exception:
+        return []
+    pairs = []
+    for _ in range(n):
+        try:
+            ex = gen.generate()
+            pairs.append((_to_grid(ex["input"]), _to_grid(ex["output"])))
+        except Exception:
+            continue
+    return pairs
+
+
+def semantic_row(arc_id: str, n: int) -> dict:
+    pairs = sample_pairs(arc_id, n)
+    row = _P.run_probes(pairs) if pairs else {}
+    row["probe_version"] = _P.PROBE_VERSION
+    row["n_samples"] = len(pairs)
+    return row
+
+
+def build_index(n_samples: int = 40, only=None) -> dict:
+    base = build_structural_economic()
+    cache = {}
+    cache_path = REPORTS / "task_index.json"
+    if cache_path.exists():
+        cache = json.loads(cache_path.read_text())
+    for num, row in base.items():
+        if only is not None and num not in only:
+            cached = cache.get(num, {}).get("semantic")
+            if cached and cached.get("probe_version") == _P.PROBE_VERSION:
+                row["semantic"] = cached
+                continue
+        row["semantic"] = semantic_row(row["arc_id"], n_samples)
+    return base
+
+
 def main() -> None:
-    idx = build_structural_economic()
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--n", type=int, default=40)
+    ap.add_argument("--only", nargs="*", default=None)
+    a = ap.parse_args()
+    idx = build_index(a.n, set(a.only) if a.only else None)
     (REPORTS / "task_index.json").write_text(json.dumps(idx, indent=1))
-    print(f"wrote {len(idx)} rows -> reports/task_index.json")
+    print(f"wrote {len(idx)} rows (probe_version {_P.PROBE_VERSION}) -> reports/task_index.json")
 
 
 if __name__ == "__main__":
