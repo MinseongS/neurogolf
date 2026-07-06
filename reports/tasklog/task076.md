@@ -63,3 +63,14 @@ Full seam analysis vs playbook 14: flood already minimal uint8 MaxPool×3; detec
 minimal dilated-Conv read; bulk cost = distributed scalar TopK-position arithmetic (588B
 candidate planes ×~12) — nothing to contract against free input; rule provably non-local
 (~48% radius-2-4 ambiguous). No single ≥300B seam. Do not re-scout without new mechanism.
+
+## S17 (2026-07-06) — WIN +0.0384: board_code chain fp16→uint8 recast
+- Mechanism: board_code_f (Conv output) proven exact integers 0..5 on bundled+arc-gen. Recast
+  the color-code carrier chain from fp16 to uint8 (1 byte): board_code Cast to=2; Equal consts
+  → uint8 (added one/two/three/four/five_u8, pruned now-dead one/two/three/five_f + color4_f16);
+  source_hidden_colors / hidden_update_code Where sentinels → zero_u8; source_red_i32 Cast to=2.
+  ORT has no int8 Where kernel → used uint8 (values ≥0). Halved board_code(450→225) +
+  board_code_flat(450→225) + candidate_board_code(252→126) planes.
+- Before: mem 16254 / params 303 / pts 15.28544. After: mem 15629 / params 303 / pts 15.32392.
+- Gate: bundled fail=0; fresh-gate 2700 instances (rebuilt vs incumbent) div=0 (exact recast).
+  candidate_safe_indices (int32 Gather idx 0..224) stays int32 = FLOOR; board_code_f Conv f32 = FLOOR (input-tied).

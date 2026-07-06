@@ -145,3 +145,32 @@ returns code×count (out-of-table); ReduceMax superset-select is load-bearing.
 border_grid_f 3600 fp32 = detection floor. NOT an unrolled loop. DO NOT re-probe.
 
 ## S11 (2026-07-03) — signed-priority overlay (playbook 15) scout: KILL — output = variable-magnify (m=1..4) stamp of a data-dependent 3x3 bitmap; 4 distinct kernel_shapes cannot fold. Cost = 3600B detection + stamp working planes + 7.4KB OOD ScatterND overlay params. The one label plane was already collapsed in S8.
+
+## S13 (2026-07-03) — mech-16 per-object extension: REFUTED (definitive, +0.41 scout est was a mirage)
+The mech16_scout.md +0.41 estimate is a naive byte-subtraction. Measured per-node output
+bytes (grader counts node outputs): the net is ALREADY all-uint8 900B working planes (24 of
+them) + fixed floors output 9000B(bool) + border_grid_f 3600B(fp32 detection floor). To realize
++0.41 you must cut mem+params 29636→~19670 = **~10KB = a full third of the net** = remove the
+entire stamp+decode pipeline (seed_1..4 + marker_1..4 = 8×900B plus shape decode).
+**Mechanism-level proof it can't be unified:** generator `bmags=[randint(1,4) per sprite]`,
+example bmags=[1,3,4,2] → up to 4 DISTINCT magnifiers coexist in one image. mech-16 (task370)
+assembles ONE runtime kernel because task370 had ONE global scalar d. Here the scale is a
+per-sprite VECTOR. Any formulation needs a per-scale spatial op with a STATIC kernel_shape
+(QLinearConv/MaxPool/Resize all static-attr) → one branch per m∈{1,2,3,4}; all four occur, none
+droppable. The magnify-Gather alternative (tasklog "efficient form") just relocates the 4-way
+fan-out from kernel-scaling to territory-PAINTING: painting each anchor's disjoint 3m×3m block
+is itself a per-m variable dilation = same 4 branches (and at max-12×12 uniform paint, the
+true-disjoint blocks can collide → needs conflict resolution → net worse). The "mux/assignment"
+the scout counted as free costs as much as the stamps it removes. **DEFINITIVE FLOOR within our
+op vocabulary. DO NOT re-probe. The clean-global-scalar mech-16 vein AND its per-object extension
+are both now closed (see playbook 16 BOUNDARY 3).**
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (submission 54367833): 29636 -> 23294 (+0.241)
+Mechanism: QLinearConv/ConvInteger signed renderer (u8 codes, x_zero_point=1, i32 graded >0).
+Gate (fresh_verify, inc/cand fail on 1500-2000): 0/0 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
+Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
+See memory [[neurogolf-urad-7225-bundle-vein]]. **FALSIFIES the S13 'DEFINITIVE FLOOR at 29636' proof above.** The 4-branch necessity was real but the surrounding stamp/decode planes I called necessary were compressible. External frontier net = the real arbiter, not my floor-proof.
+
+## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 23294 -> 21526 (+0.079)
+Gate fresh_verify 1500: inc=1/1 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

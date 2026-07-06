@@ -190,3 +190,36 @@ free-input einsum inapplicable (masks also Gathered; derive from T_nb0 not input
 Only ceiling-lifter = exact-cover semantic compiler (un-lowered, research). DO NOT re-probe.
 
 ## S11 (2026-07-03) — signed-priority overlay (playbook 15) scout: KILL — stamped template rects with punched dots are 2-D non-separable AND all colours are instance-dependent (no constant signed W exists); ~21.5KB = replicated rectangle-extraction/stencil-match blocks (assignment machinery). Priority already via Where chain, no [30,30] carrier.
+
+## 2026-07-06 golf re-attack — NEGATIVE (batching is byte-neutral)
+
+Confirmed incumbent = cheapest known: measured ALL public dumps (kojimar/urad7225/bobmyers/
+lucifer, incl. 7220-7225 tier) — every one is 33.8K-35.9K mem. Our `networks/task366.onnx`
+(30983) is the global minimum. No borrow available.
+
+**Key correction (was the whole premise, and it was WRONG):** grader memory =
+`sum over EVERY intermediate tensor of (num_elements * dtype_itemsize)` (harness
+`calculate_memory`). Collapsing the 3x unrolled `c0/c1/c2`, `k0/k1/k2`, `r0/r1/r2` blocks
+into one batched block over a size-3 axis turns three `[1,255]` planes into one `[3,255]`
+plane = **identical bytes**. Batching cuts tensor COUNT, not total element-bytes. So
+"vectorize the unrolled blocks" gives ZERO memory reduction. Do not re-attempt.
+
+**What actually costs (measured):** 3600B `label30` detection Conv (FLOOR, static 30x30
+colour read) + ~10.5KB of ~41 full-panel `(1,1,15,17)`=255B uint8/bool mask planes + a
+~16KB tail of ~200 small int32/bool coordinate tensors. Memory is a function of the NUMBER
+of distinct plane/coord tensors the algorithm materializes, i.e. algorithm structure.
+
+**dtype golf ≈ 0:** the only >255B downcastable planes (`k*_anchor_flat_f`, `presF_flat`,
+510B f16 each) all FEED TopK — uint8 TopK crashes the grader. `label30_u8` already minimal.
+
+**Leaner rewrite: high-risk, not smaller.** From-scratch correlation solver prototype
+(match template dot-pattern vs stencil, stamp rect) scored 220/2855 = 7.7% error, 38x the
+0.2% bar. Failures = dual-background + large-forecolor cases that defeat most-common-colour
+bg detection — exactly what the incumbent's corner-voting `A_tl_eq_tr`/`A_bg` machinery
+(~40 nodes) exists to handle. A *correct* correlation solver still needs several full-size
+planes per box (color mask + correlation response + rect mask) => memory floor near the
+incumbent.
+
+**16.0 (mem+params <= 8103) is INFEASIBLE.** Hard floor of the current structure alone =
+3600 (Conv) + 15503 (1-byte masks) = ~19.1K => ceiling ~15.15 even with perfect dtype golf.
+The whole public field at 30K+ corroborates. VERDICT: keep incumbent, de-prioritize task366.

@@ -10,18 +10,18 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('red_idx', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAA==')),
-        tensor('thresholds', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDMsIDMpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAq73H47AACAP4mICDwAAIA/4llRPAAAgD+eFY08AACAP0t+sTw=')),
+        tensor('red_sel', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')),
+        tensor('thresholds', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDMsIDMpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAGBAAABhRAAA8EAAAGFEAAA4QQAAYUQAAHhBAABhRAAAnEE=')),
         tensor('channel_truth', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGIxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDIsIDEsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAQ==')),
         tensor('pads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAbAAAAAAAAABsAAAAAAAAA')),
     ]
     nodes = [
-        helper.make_node('GlobalAveragePool', ['input'], ['color_avgs']),
-        helper.make_node('Gather', ['color_avgs', 'red_idx'], ['red_avg'], axis=1),
-        helper.make_node('Greater', ['red_avg', 'thresholds'], ['blue']),
+        helper.make_node('Einsum', ['input', 'red_sel'], ['red_count'], equation='bchw,c->b'),
+        helper.make_node('Greater', ['red_count', 'thresholds'], ['blue']),
         helper.make_node('Equal', ['channel_truth', 'blue'], ['board']),
         helper.make_node('Pad', ['board', 'pads'], ['output'], mode='constant'),
     ]
     value_infos = [
+        helper.make_tensor_value_info('red_count', 1, [1]),
     ]
     return model('task399_live_exact', nodes, inits, output_dtype=9, opset=13, value_infos=value_infos)

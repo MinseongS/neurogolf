@@ -64,3 +64,13 @@ Adopted via ONNX materialization + live_to_exact_source (backup reports/retired_
 task018_pre_s9.onnx). Remaining floors priced: 3600 fp32 Conv read, 2×1800 fp16 TopK
 ramps (values>255 so fp16 minimal legal), 14×900B+20×169B 1-byte planes, 0 CSE dups,
 13a N/A (rotated-body ScatterND output). This was the last clean lever on this net.
+
+## 2026-07-03 S12 — train-to-golf phase-2(Conv→ReLU→Conv, hidden-C) KILL
+phase-1 단일 Conv에서는 k7-rate small로 최상위 EV 후보(+2.2)였으나, hidden-C 프로브 실패 — k7 C=4 NOT SOLVED, best_total_viol 213,990/1.50M 패치(60k steps, viol-boost oscillation, ~200k 아래로 못 내려감); C=1은 dead-ReLU collapse. C=4는 이미 economical capacity(C∈{1,2}) 초과라 경제적 경로 자체가 불가. 상세: reports/train_to_golf_report.md. 재탐사 금지 (단일노드/저-C 경로 모두 이 태스크 패치셋에서 선형분리 불가).
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (submission 54367833): 27616 -> 25445 (+0.082)
+Mechanism: canvas-crop surgery (30x30 shrunk to provable NxN, re-inflate at terminal).
+Gate (fresh_verify, inc/cand fail on 1500-2000): 31/31 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
+Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
+See memory [[neurogolf-urad-7225-bundle-vein]]. 

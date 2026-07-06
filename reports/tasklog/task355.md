@@ -88,3 +88,6 @@ mem 2688/17.09; CONST-OUTPUT false—output=colour of most-speck block; needs pe
 **Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
 Backup `reports/retired_networks/task355_pre_s10.onnx`; source `public_candidates/bobmyers7186/task355.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
 No transferable mechanism — minor trim.
+
+
+## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 2708 -> 2704 (+0.001); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].

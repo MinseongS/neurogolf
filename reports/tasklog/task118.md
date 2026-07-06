@@ -112,3 +112,13 @@ the BIG table false-fired once/5000 — candidate strictly better) + 2 ScatterND
 24722+723 vs 30849+3387 → 14.563→14.856. Fresh 2500: 48≤49 (cached 2500: 38=38 div0).
 V1 (maxpool over masked) REJECTED: raw-rp maxpool suppression is load-bearing (103 vs 76).
 ~1.9% inherent info-loss wall unchanged. Floors: 5600B dual Slice, 4032B fp16 support-einsum pair.
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일 + phase-2 hidden-C) KILL
+k7 linear(cost 25445): 126k+126k viols 고착. phase-2 hidden-C 프로브도 실패 — k5 C=4 NOT SOLVED, best_total_viol 203,997/3.26M 패치(C=1은 dead-ReLU collapse). C=4는 이미 mem 28800 ≈ incumbent 전체 cost라 economical C∈{1,2}는 더더욱 불가. 상세: reports/train_to_golf_report.md. 재탐사 금지 (단일노드/저-C 경로 모두 이 태스크 패치셋에서 선형분리 불가).
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (submission 54367833): 19492 -> 12283 (+0.462)
+Mechanism: QLinearConv signed renderer + value_info-legalized crop.
+Gate (fresh_verify, inc/cand fail on 1500-2000): 162/162 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
+Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
+See memory [[neurogolf-urad-7225-bundle-vein]]. both fail 162/2000 equally (task-inherent); urad cheaper at equal robustness.

@@ -42,3 +42,6 @@ tril.T==triu, so the column side (right-multiply) reuses them with swapped roles
 LowTri for suffix). This turns an apparent "find the rectangle component" task into a pure
 closed-form bbox-fill, beating the public CumSum-scan floor — distinct from the variable-component
 global-argmax wall that genuinely floors near ~13.4.
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k5(cost 3008): 1.39M 패치, 19k viols 고착. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).

@@ -62,3 +62,6 @@ inc-failing instances). TRAPS: bundled has row-0 shapes (window can't shrink; F=
 one bundled example); sanitize_model needs globally-unique node output names.
 TRANSFERABLE: "spend the incumbent's fresh-failure budget on a cheaper-but-more-accurate
 residual rule" for unrolled disambiguation nets.
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k7(cost 6412): 514k 패치, 145k viols. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).

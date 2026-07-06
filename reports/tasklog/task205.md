@@ -86,3 +86,6 @@ purely by (a) separable 1-D in-grid mask off the free input, (b) Gather-shift vs
 
 ## S8 (2026-07-02) — reverse-ArgMax → select_last_index (+0.012) ADOPTED, div 0
 Same idiom as task319 (Slice-reverse variant).
+
+
+## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 11209 -> 9982 (+0.116); gate inc/cand=4/4 (safe). See [[neurogolf-urad-7225-bundle-vein]].

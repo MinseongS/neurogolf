@@ -49,3 +49,10 @@ row/col from 1-D occupancy profiles), then each ray is a single Equal on
 `row<=R0` / `row>=R1` (built from a 1-D ramp Sub + Greater, no 2-D gate plane).
 Box OR diag -> disjoint uint8 label -> Pad-sentinel -> Equal into the free bool
 output. The only 2-D plane materialized is the shared RmC diagonal field.
+
+
+## S16 adoption (2026-07-06) — yuu111111111 public-bundle net (+0.016)
+- Source: yuu111111111/neurogolf-6-failure-modes notebook (total 7235.05, embedded 400-net archive; MINED per-task despite lower total).
+- New grader cost = 1194 (mem 1159 + params 35), fail=0 bundled.
+- Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
+- Mechanism: structural golf: fewer counted node-output intermediates (graph rewrite, functionally equal on fresh).

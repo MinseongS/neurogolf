@@ -65,3 +65,6 @@ parallel approximation just because fresh-N agrees.
   to the incumbent on 2000 fresh (0 div) and 136B cheaper, but fails original-ARC bundled
   train#2 (real H+V hole overlap — violates the generator's unambiguity filter). Public-LB
   fatal (bundled=LB), private-safe. Do NOT adopt under current rules.
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k5(cost 4068): val gate fail (bundled train#2가 generator guarantee 위반 — S11, public-fatal anyway). 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).

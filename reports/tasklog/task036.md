@@ -77,3 +77,10 @@ must be a length-1 (`[1]`) initializer, NOT an empty `[]` array — an init with
 `calculate_params` return None ("performance could not be measured").
 
 ## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-1/2 opus agents; occupancy/max-semiring reductions or sub-400B u8 banks). Do not re-attempt without a new mechanism.
+
+
+## S16 adoption (2026-07-06) — yuu111111111 public-bundle net (+0.036)
+- Source: yuu111111111/neurogolf-6-failure-modes notebook (total 7235.05, embedded 400-net archive; MINED per-task despite lower total).
+- New grader cost = 2100 (mem 2061 + params 39), fail=0 bundled.
+- Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
+- Mechanism: structural golf: fewer counted node-output intermediates (graph rewrite, functionally equal on fresh).

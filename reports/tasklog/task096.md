@@ -112,3 +112,10 @@ FLOORS re-priced: row/col_sum_full 2400 (fp16 reduce type-rejected by ORT), padd
 900 optimal (index-first < one-hot-first 1210), radius_i32 484 (Gather needs int32+),
 int16 arithmetic dead (Add/Sub/Mul/Div reject int16; Where/Min/Max NOT_IMPLEMENTED).
 Backup reports/retired_networks/task096_pre_s9.onnx.
+
+
+## S16 adoption (2026-07-06) — yuu111111111 public-bundle net (+0.086)
+- Source: yuu111111111/neurogolf-6-failure-modes notebook (total 7235.05, embedded 400-net archive; MINED per-task despite lower total).
+- New grader cost = 7682 (mem 7261 + params 421), fail=0 bundled.
+- Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
+- Mechanism: structural golf: fewer counted node-output intermediates (graph rewrite, functionally equal on fresh).

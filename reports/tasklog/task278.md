@@ -37,3 +37,6 @@ out-of-domain grid-size artifact, confirmed by capping to the real ≤18×18 dom
 - Verified vs the REAL incumbent (networks/task278.onnx): **0 divergence on 3000 fresh
   + 265 bundled, both fail=0.** Safe equivalence-preserving golf.
 - **mem+params 6131→5483, pts 16.279→16.391 (+0.112). ADOPTED (custom:task278).**
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k5(cost 5483): 19.7k viols 고착. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).

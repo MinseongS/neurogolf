@@ -97,3 +97,7 @@ the whole upscale costs only the final 900B label plane.
 cropped to the true active extent**: replaced an 8640-param [15,24,24] lookup
 table; opposite corner-rays share one diagonal constant ((row-col)*f and
 (row+col+2)*f-1), so only TWO diagonal planes (not 4) are needed.
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (sub 54367833): 3813 -> 3694 (+0.032)
+Mechanism: Einsum vs FREE input. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). Source-owned via live_to_exact_source --write-src, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

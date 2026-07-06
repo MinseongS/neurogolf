@@ -78,3 +78,10 @@ L30 900 one-hot carrier, 10×625 u8/bool chain, extent 1D 350, params 666 (Tl cu
 Measured rejections: u8-cond Where INVALID_GRAPH; CumSum no u8/fp16 (int32=2500B worse);
 arithmetic mux ≥11 planes; free-input einsum loses (fp32 25×25 + red mask still needed);
 signed-einsum N/A (variable #rects). DO NOT re-probe without new mechanism.
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (submission 54367833): 10666 -> 9250 (+0.142)
+Mechanism: value_info Slice crop + CumSum/Mod.
+Gate (fresh_verify, inc/cand fail on 1500-2000): 0/0 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
+Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
+See memory [[neurogolf-urad-7225-bundle-vein]]. 

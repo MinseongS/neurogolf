@@ -81,3 +81,6 @@ This task is at floor (+0.18) — confirms the ~3600+N·1800 fp16 reconstruction
 ceiling: a 6-downstream-plane D4 fill simply lands ~15.2, just under a 15.0 floor.
 
 ## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-3 opus agent; see agent report in submission_log context). Do not re-attempt without a new mechanism.
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k7(cost 9050): 10.4M 패치, 931k pos viols. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).

@@ -53,3 +53,7 @@ fp16 and run ALL downstream vector ops (Clip/MaxPool/Mul) in fp16 — ORT_DISABL
 runs fp16 Clip/MaxPool/Mul/Sub fine (only the 10→input cast is forbidden, 18000B).
 Off-grid masking for a single-plane Equal route needs a +K·(ones·ones − in·in)
 sentinel (value ∉ {0..9}) so off-grid matches no channel.
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (sub 54367833): 2753 -> 2637 (+0.043)
+Mechanism: Einsum/value_info crop. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). Source-owned via live_to_exact_source --write-src, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

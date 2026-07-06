@@ -19,6 +19,7 @@ def build(task):
         tensor('row_positions_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEwLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAQIDBAUGBwgJ')),
         tensor('col_positions_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEsIDEwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAQIDBAUGBwgJ')),
         tensor('pad_config', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwAAAAAAAAAUAAAAAAAAABQAAAAAAAAA')),
+        tensor('row1_invalid_off__zero', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
     ]
     nodes = [
         helper.make_node('MaxPool', ['input'], ['channel_max', 'channel_idx_i64'], kernel_shape=[30, 30], storage_order=0),
@@ -43,8 +44,7 @@ def build(task):
         helper.make_node('Less', ['row_positions_u8', 'row1'], ['row1_lt']),
         helper.make_node('Equal', ['row1_lt', 'row1_gt_next'], ['row1_block']),
         helper.make_node('Sub', ['row_positions_u8', 'diag1_id'], ['diag1_cols']),
-        helper.make_node('Cast', ['row1_gt_next'], ['row1_invalid_u8'], to=2),
-        helper.make_node('Mul', ['row1_invalid_u8', 'off_u8'], ['row1_invalid_off']),
+        helper.make_node('Where', ['row1_gt_next', 'off_u8', 'row1_invalid_off__zero'], ['row1_invalid_off']),
         helper.make_node('Add', ['diag1_cols', 'row1_invalid_off'], ['diag1_masked_cols']),
         helper.make_node('Cast', ['row1_block'], ['row1_block_u8'], to=2),
         helper.make_node('Sub', ['col1', 'diag1_masked_cols'], ['left1_delta']),
@@ -58,8 +58,7 @@ def build(task):
         helper.make_node('Less', ['row_positions_u8', 'row2'], ['row2_lt']),
         helper.make_node('Equal', ['row2_lt', 'row2_gt_next'], ['row2_block']),
         helper.make_node('Sub', ['row_positions_u8', 'diag2_id'], ['diag2_cols']),
-        helper.make_node('Cast', ['row2_lt'], ['row2_invalid_u8'], to=2),
-        helper.make_node('Mul', ['row2_invalid_u8', 'off_u8'], ['row2_invalid_off']),
+        helper.make_node('Where', ['row2_lt', 'off_u8', 'row1_invalid_off__zero'], ['row2_invalid_off']),
         helper.make_node('Add', ['diag2_cols', 'row2_invalid_off'], ['diag2_masked_cols']),
         helper.make_node('Cast', ['row2_block'], ['row2_block_u8'], to=2),
         helper.make_node('Sub', ['col2', 'diag2_masked_cols'], ['left2_delta']),

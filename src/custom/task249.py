@@ -10,21 +10,23 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('flag_starts', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAMAAAAAAAAA')),
-        tensor('flag_ends', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAUAAAAAAAAA')),
-        tensor('flag_axes', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAAMAAAAAAAAA')),
-        tensor('active_table_i32', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsIDEwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAQAAAAIAAAAAAAAAAQAAAAIAAAAFAAAABQAAAAUAAAAFAAAAAAAAAAEAAAACAAAAAwAAAAAAAAABAAAAAgAAAAMAAAAFAAAABQAAAAAAAAABAAAAAgAAAAMAAAAEAAAAAAAAAAEAAAACAAAAAwAAAAQAAAA=')),
-        tensor('idx_pads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAABQAAAAAAAAA')),
-        tensor('five_i32', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoFAAAA')),
+        tensor('e0', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
+        tensor('m34', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAIA/AACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
+        tensor('table', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsIDEwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAQAAAAIAAAAAAAAAAQAAAAIAAAAGAAAABwAAAAgAAAAJAAAAAAAAAAEAAAACAAAAAwAAAAAAAAABAAAAAgAAAAMAAAAIAAAACQAAAAAAAAABAAAAAgAAAAMAAAAEAAAAAAAAAAEAAAACAAAAAwAAAAQAAAA=')),
+        tensor('pads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAABQAAAAAAAAA')),
+        tensor('five', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoFAAAA')),
     ]
     nodes = [
-        helper.make_node('Slice', ['input', 'flag_starts', 'flag_ends', 'flag_axes'], ['flag_cells_f']),
-        helper.make_node('ReduceSum', ['flag_cells_f'], ['row_f'], axes=[0, 1, 2, 3], keepdims=0),
+        helper.make_node('Einsum', ['input', 'e0', 'm34'], ['row_f'], equation='zkij,i,j->'),
         helper.make_node('Cast', ['row_f'], ['row_i32'], to=6),
-        helper.make_node('Gather', ['active_table_i32', 'row_i32'], ['active_idx_i32'], axis=0),
-        helper.make_node('Pad', ['active_idx_i32', 'idx_pads', 'five_i32'], ['dup_idx_i32'], mode='constant'),
-        helper.make_node('Gather', ['input', 'dup_idx_i32'], ['output'], axis=3),
+        helper.make_node('Gather', ['table', 'row_i32'], ['aidx']),
+        helper.make_node('Pad', ['aidx', 'pads', 'five'], ['didx']),
+        helper.make_node('Gather', ['input', 'didx'], ['output'], axis=3),
     ]
     value_infos = [
+        helper.make_tensor_value_info('row_f', 1, []),
+        helper.make_tensor_value_info('row_i32', 6, []),
+        helper.make_tensor_value_info('aidx', 6, [10]),
+        helper.make_tensor_value_info('didx', 6, [30]),
     ]
-    return model('task249_live_exact', nodes, inits, output_dtype=1, opset=11, value_infos=value_infos)
+    return model('task249_live_exact', nodes, inits, output_dtype=1, opset=17, value_infos=value_infos)

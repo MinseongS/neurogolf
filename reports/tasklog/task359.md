@@ -53,3 +53,6 @@ with ALL channels = 0 (NOT channel-0 = background), so the in-grid mask must be 
 never "channel 0 == 0".
 
 ## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-1/2 opus agents; occupancy/max-semiring reductions or sub-400B u8 banks). Do not re-attempt without a new mechanism.
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k5(cost 3867): 6.6k+17.8k viols 고착, killed. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).

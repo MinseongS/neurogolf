@@ -14,6 +14,7 @@ from src.harness import load_task, evaluate, convert_to_numpy
 from src.genverify import fresh_pass, load_gen
 
 NF = 120
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def fresh_ok_path(path, num, gen, n=NF):
@@ -45,8 +46,9 @@ def main():
     task = load_task(num)
     path = f"networks/task{num:03d}.onnx"
     manifest = json.load(open("reports/manifest.json"))["tasks"]
-    if "/tmp/arc-gen" not in sys.path:
-        sys.path.append("/tmp/arc-gen")
+    arcgen = os.path.join(ROOT, "arc-gen")
+    if os.path.isdir(arcgen) and arcgen not in sys.path:
+        sys.path.append(arcgen)
     try:
         gen = load_gen(num)
     except Exception:
@@ -70,8 +72,10 @@ def main():
     if not ev["ok"]:
         print(f"REJECT: custom fails stored eval ({ev['fail']} fail, err={ev['error']})")
         return
-    onnx.save(model, "/tmp/_cand.onnx")
-    cand_gen = fresh_ok_path("/tmp/_cand.onnx", num, gen)
+    cand_path = f"reports/candidates/_adopt_task{num:03d}.onnx"
+    os.makedirs(os.path.dirname(cand_path), exist_ok=True)
+    onnx.save(model, cand_path)
+    cand_gen = fresh_ok_path(cand_path, num, gen)
     print(f"candidate: stored {ev['points']:.2f}, generalizes={cand_gen}")
     if not cand_gen:
         print("REJECT: custom does not generalize to fresh instances")

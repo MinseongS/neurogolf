@@ -45,3 +45,10 @@ index [H,W] on rank-3 data [1,C,K] yields rank-4 [1,C,H,W] directly (out_rank =
 data_rank-1 + idx_rank) — NO second reshape. And CONSTANT output cells (here gray
 separators) can be a single appended synthetic source cell via Concat, so the fp32
 slice only covers the data-dependent colours, not the constants.
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (submission 54367833): 767 -> 525 (+0.379)
+Mechanism: single-node Einsum + Gather/Pad.
+Gate (fresh_verify, inc/cand fail on 1500-2000): 0/0 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
+Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
+See memory [[neurogolf-urad-7225-bundle-vein]]. 

@@ -95,6 +95,43 @@ Score = 25 − ln(mem+params). This file is the single onboarding doc for per-ta
     [K,30,30] fp32 operand → ScatterElements-into-FREE-input beats it. Also:
     ScatterElements updates are dtype-bound to data (fp32 input ⇒ fp32 updates, no recast).
 
+16. **Runtime-parameterized stamp kernel** (S12, task370 +0.121, bit-identical): when a
+    stamp/repeat net materializes a BANK of candidate kernels/planes for a discrete
+    parameter d (dilation/spacing/scale) and muxes, invert the order — DETECT d first
+    (cheap probe reads: clamped GatherND at hint−d·dir into the entry crop → ReduceMax
+    of valid·[d values]; scalars, no candidate planes), then ASSEMBLE one kernel at
+    runtime: ScatterND(zeros[S,S], base_idx·d (Mul int64), ones) → ONE QLinearConv.
+    Conv weights may be computed tensors (not initializers) — ORT 1.26 fine. Key
+    pricing facts: dilation is a static attr (can't be runtime-selected) so the kernel
+    is physical → use a CENTERED kernel with half-size C = max stamp offset (bake
+    direction into tap positions, NOT input flips — 8 flip planes cost 3200B); clamp
+    OOB taps to an off-diagonal trash cell with update 0. Naive variants LOSE (one-sided
+    +flips 10796, full 41×41 10358); centered C=15 wins (9669→8571). Boundary: C from
+    generator max offset, verified C−1 fails fresh. Candidates: any net in the
+    blocker-census sprite-stamp bucket with a visible per-d bank (Resize-runtime-scales
+    /GridSample-runtime-grid are sibling primitives for scale/warp variants).
+    S12 BOUNDARY (task185 kill, −1.19 measured): mech 16 needs the bank to be
+    same-shape kernels over an EXISTING counted plane. If the "bank" is N static-stride
+    single-tap reads of the FREE input (sample+reduce fused convs), unification forces
+    materializing the full-res source plane (3600B) the branches were built to avoid.
+    Also (scout, mech16_scout.md): per-OBJECT parameters (133/349/158/76) defeat the
+    single-global-kernel assembly — that needs a per-object extension (new mechanism).
+    S12 BOUNDARY 2 (task042 kill): the bank must be a GEOMETRIC scale/spacing family;
+    if the "templates" are independently FITTED matched filters (m=1 kernel upscaled
+    ×m fails 1500/1500 fresh), no K(m) exists and mech 16 cannot apply. S12 cohort
+    final: 370 landed (+0.12), 185/42 killed with boundaries — the clean global-scalar
+    vein is mined out; only the per-object extension (133 +0.41 top prize) remains.
+    S13 BOUNDARY 3 (task133 kill, per-object extension REFUTED): mech-16 assembles ONE
+    runtime kernel ONLY when the parameter d is a GLOBAL scalar (task370). When each
+    object carries its OWN scale (task133 bmags=[1,3,4,2], up to 4 distinct m in one
+    image), the parameter is a VECTOR and NO single kernel exists. Any formulation needs
+    a per-scale spatial op with a STATIC kernel_shape (QLinearConv/MaxPool/Resize) → one
+    branch per m-value; all values occur, none droppable. The magnify-Gather alternative
+    only relocates the fan-out to per-m territory-painting (same cost; max-size uniform
+    paint collides true-disjoint blocks). The scout's "free mux" costs as much as the
+    stamps. **Mechanism 16 is now fully closed — global scalar (mined out) AND per-object
+    (refuted). No 133/349/158/76 re-probe.**
+
 ## Reject-checks (priced floors — don't re-attempt without a new idea)
 - S11 dtype long-tail: EXHAUSTED (64-task systematic pass, 1 false-win refuted at
   re-measurement, 24 refuted by island/binding traps, 39 net-negative). Root cause the

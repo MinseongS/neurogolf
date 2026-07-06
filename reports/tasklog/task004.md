@@ -224,3 +224,6 @@ vs off-grid-sentinel distinction, the same reason `scalar_valid` and
 **Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
 Backup `reports/retired_networks/task004_pre_s10.onnx`; source `public_candidates/bobmyers7186/task004.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
 No transferable mechanism — minor trim.
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k3(cost 5137): 0 contradictions이지만 18 stubborn hinge viols, LP로 infeasible 증명(ch0/ch2) — 그 18 viol 패치가 ~모든 인스턴스에 등장(val 97% fail). k5: 75k 패치 ~2.4k viols 고착. SGD로도 wall 유지. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).

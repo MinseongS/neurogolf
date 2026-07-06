@@ -42,6 +42,19 @@ lands 14216 and even maximal fusion only ties kojimar, never −2300B below it.
   full-diagonal mechanism — none exists in the banned-Loop op set.
 - chrow/chcol consolidation could shave ~400-800B — far short of the ~7600B needed.
 
+## 2026-07-05 — transfer probe follow-up
+
+- Tried the task025-style capacity-shrink angle on the colour TopK (`k_four=4 ->
+  3`).  The graph is structurally tied to four slots (`Split` into bg0/bg1/rare0/
+  rare1), so the naive shrink is invalid and fails at runtime.  A real K=3
+  variant would need a new colour-assignment mechanism, not just a narrower
+  TopK initializer.
+- Cost recheck still matches the old floor: counted bulk is `input_color_f32`
+  1600B, `color_map` 900B, and eleven 20x20 bool/uint8 planes.  The 067/066
+  axis-activity gate does not remove these because the expensive planes encode
+  dynamic colour identities and diagonal spread, not a pure row/column activity
+  predicate.
+
 ## INSIGHT (transferable)
 ⭐ A full-grid 45° diagonal SPREAD (dot → its whole X) is forced to a (2·side−1)²
 Conv kernel = O(side²) PARAMS regardless of sparsity (params count zeros) + two

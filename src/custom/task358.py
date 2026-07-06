@@ -65,8 +65,9 @@ def build(task):
         helper.make_node('Equal', ['col_coords', 'col_idx'], ['is_col']),
         helper.make_node('Where', ['is_row', 'row_colors', 'zero_u8'], ['row_line']),
         helper.make_node('Where', ['is_col', 'col_colors_grid', 'row_line'], ['inside_ids']),
-        helper.make_node('And', ['row_valid', 'col_valid'], ['valid']),
-        helper.make_node('Where', ['valid', 'inside_ids', 'ten_u8'], ['grid_ids']),
+        helper.make_node('Where', ['row_valid', 'zero_u8', 'ten_u8'], ['_mf_grid_ids_w1']),
+        helper.make_node('Where', ['col_valid', 'zero_u8', 'ten_u8'], ['_mf_grid_ids_w2']),
+        helper.make_node('Max', ['inside_ids', '_mf_grid_ids_w1', '_mf_grid_ids_w2'], ['grid_ids']),
         helper.make_node('Pad', ['grid_ids', 'pads_to_full', 'ten_u8'], ['padded_ids'], mode='constant'),
         helper.make_node('Equal', ['padded_ids', 'color_coords'], ['output']),
     ]
@@ -113,7 +114,8 @@ def build(task):
         helper.make_tensor_value_info('is_col', 9, [1, 1, 20]),
         helper.make_tensor_value_info('row_line', 2, [1, 21, 20]),
         helper.make_tensor_value_info('inside_ids', 2, [1, 21, 20]),
-        helper.make_tensor_value_info('valid', 9, [1, 21, 20]),
+        helper.make_tensor_value_info('_mf_grid_ids_w1', 2, [1, 21, 1]),
+        helper.make_tensor_value_info('_mf_grid_ids_w2', 2, [1, 1, 20]),
         helper.make_tensor_value_info('grid_ids', 2, [1, 21, 20]),
         helper.make_tensor_value_info('padded_ids', 2, [1, 30, 30]),
     ]

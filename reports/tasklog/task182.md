@@ -86,3 +86,7 @@ fp32 and loses more than it saves.  No source candidate adopted.
 Conclusion: task182 is not a task008-style solid-marker-profile transfer.  Its
 floor is the shared colour-index entry plus runtime cross-correlation planes,
 not marker localization.
+
+
+## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 6442 -> 6100 (+0.055)
+Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

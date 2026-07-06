@@ -64,3 +64,10 @@ S-plane (here 3600->1224 and 2592->672). Slicing the conv OUTPUT only shrinks th
 **Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
 Backup `reports/retired_networks/task165_pre_s10.onnx`; source `public_candidates/bobmyers7186/task165.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
 No transferable mechanism — minor trim.
+
+
+## S16 adoption (2026-07-06) — yuu111111111 public-bundle net (+0.224)
+- Source: yuu111111111/neurogolf-6-failure-modes notebook (total 7235.05, embedded 400-net archive; MINED per-task despite lower total).
+- New grader cost = 4840 (mem 4635 + params 205), fail=0 bundled.
+- Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
+- Mechanism: QLinearConv u8 signed-renderer replaces ConvTranspose+GatherND scatter (fp16 kernel->u8); mech (c) self-applied.

@@ -77,3 +77,9 @@ unsigned dtype. All safe alternatives measured WORSE:
 - Cast u8→int64 feed: 256×8 = 2048.
 - Cast-before-Reshape: 512+512 vs 256+512.
 Verdict: task208 stays at 4612+114 (16.539). Do NOT re-attempt without a new mechanism.
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k5(cost 4726): val gate fail; k7 gain negative. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).
+
+
+## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 4726 -> 4209 (+0.116); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].

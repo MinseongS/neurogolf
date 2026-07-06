@@ -103,3 +103,10 @@ coordinates (≤30, fit int32). Narrowed both `Cast`→int32 (`to=6`) + matching
    costs +600B > 560B saved (⭐chain-bound variant of the recast trap). sig30 PRODUCER_BOUND.
 Gates: bundled fail=0; fresh 2000 divergence 0 vs real incumbent; re-verified post-rebuild.
 Backup: reports/retired_networks/task174_pre_s11_cross.onnx.
+
+
+## S16 adoption (2026-07-06) — yuu111111111 public-bundle net (+0.041)
+- Source: yuu111111111/neurogolf-6-failure-modes notebook (total 7235.05, embedded 400-net archive; MINED per-task despite lower total).
+- New grader cost = 4378 (mem 3982 + params 396), fail=0 bundled.
+- Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
+- Mechanism: structural golf: fewer counted node-output intermediates (graph rewrite, functionally equal on fresh).

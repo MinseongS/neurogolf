@@ -65,3 +65,7 @@ so colour label and marker position both come from ONE plane (>9 = marker).
 **Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
 Backup `reports/retired_networks/task206_pre_s10.onnx`; source `public_candidates/bobmyers7186/task206.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
 No transferable mechanism — minor trim.
+
+
+## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 4186 -> 3766 (+0.106)
+Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

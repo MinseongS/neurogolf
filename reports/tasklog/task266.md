@@ -22,3 +22,10 @@ The dense [10,10,3,3]=910-param public Conv had mem 0 but its 910 params capped 
 
 ## INSIGHT (transferable)
 ⭐ A "fixed local motif stamped around a marker" task whose generator grid is a FIXED SMALL size (here always 3x5) is NOT a 3x3-neighbourhood at-floor task — slice to the tiny active canvas, encode the motif as a single COLOUR-INDEX conv whose kernel taps carry the colour VALUES directly (out[R,C]=Σ colour_k·red[opposite-diagonal]), then Equal->one-hot->Pad into the free output. The 4 stamp positions being distinct guarantees no tap collision so the index plane is unambiguous, and the colour-index conv ([1,1,3,3], 9 params) replaces the dense [10,10,3,3] public Conv (910 params): 18.19 -> 18.875 (+0.69). Confirmed again: ORT opset-11 Pad rejects BOOL, so an Equal->one-hot must Cast to uint8 before Pad (costs one extra small plane).
+
+
+## S16 adoption (2026-07-06) — yuu111111111 public-bundle net (+0.118)
+- Source: yuu111111111/neurogolf-6-failure-modes notebook (total 7235.05, embedded 400-net archive; MINED per-task despite lower total).
+- New grader cost = 311 (mem 120 + params 191), fail=0 bundled.
+- Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
+- Mechanism: op-chain (Pad x5/BitwiseXor/Max, 11 nodes) -> 2-layer Conv+Relu MLP (3 nodes); algorithm redesign.

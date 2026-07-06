@@ -20,3 +20,13 @@ Dominant intermediate is the `[1,10,3,3]` uint8 Where block (90B) plus the `[1,1
 
 ## INSIGHT (transferable)
 ⭐ "solid-fill with the most-frequent colour of a small fixed grid" = COUNT→FIXED-PATTERN: per-channel ReduceSum counts → ONE threshold (`Greater(counts, k-0.5)`) when the winning multiplicity is generator-fixed (no ArgMax/ReduceMax/OneHot), then a `Where(modehot[1,10,1,1], one[1,1,K,K], zero[1,1,K,K])` broadcasts the channel selector across the KxK active block in ONE op and Pad routes it into the FREE output. Beats the public ArgMax+OneHot+Expand chain. Key enabler: off-grid cells are all-zero one-hots (not channel-0), so spatial ReduceSum is clean.
+
+## 2026-07-03 S12 — UNKNOWN-bucket dossier
+
+**Rule:** 3×3 grid filled with 6 sampled colours on a fixed multiplicity schedule; the mode colour appears exactly 3× → output = solid 3×3 block of the mode colour (off-grid all-zero).
+
+**Cost (grader mem 80, params 0):** graph is GlobalAveragePool → Hardmax → Einsum, ZERO initializers. Counted intermediates: `counts` [1,10,1,1] fp32 40B, `winner` [1,10,1,1] fp32 40B. The [1,10,30,30] output is the FREE Pad target. Total counted ≈ 80B = two channel-vector planes.
+
+**Blocker class:** already-at-floor. Two [1,10,1,1] reductions (80B) is the irreducible per-channel count+select for a mode→solid-fill; no 30×30 or 3×3 working plane is materialised, no params. NB the pre-existing rich log documents a stale mem=140 attempt — the LANDED net (this onnx) is already the cheaper GAP→Hardmax→Einsum at 80B, so the census UNKNOWN + 4.382 unlock is a mem*0.6 fallback artifact (physically 0).
+
+**Lever:** no lever visible. Could recast `counts`/`winner` fp32→fp16 (mode-count ≤9, exact) for ~40B, but Hardmax/Einsum operands at [1,10,1,1] are already trivial — diminishing.

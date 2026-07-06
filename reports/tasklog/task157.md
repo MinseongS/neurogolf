@@ -58,3 +58,6 @@ The bobmyers7186 net was **not adopted**: task157's generator is **UNGATEABLE**
 (crash/timeout in fresh gen) and this task carries a known **private-LB-fragile**
 flag (heuristic matcher plateaus ~95%, real-LB 0 on all-pass). Candidate Δ was only
 ≈ −5B — not worth the private-LB risk. Do not re-probe this candidate.
+
+
+## S15b (2026-07-06) — ADOPTED from franksunp 7233.12: 7243 -> 7024 (+0.031); gate inc/cand=61/61 (equal, safe). See [[neurogolf-urad-7225-bundle-vein]].

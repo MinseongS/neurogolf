@@ -44,3 +44,6 @@ outer product rEQ[1,1,W,1] ⊗ rowvec[1,1,1,W] (color-per-column) instead of 4 s
 
 ## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
 mem 1510/17.63; ScatterND int64 idx machinery, all 16 scatter points semantically required; channels-first avoids 36kB transpose. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).
+
+
+## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 1093 -> 1084 (+0.008); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].

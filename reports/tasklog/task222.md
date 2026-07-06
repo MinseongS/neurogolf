@@ -69,3 +69,6 @@ Entry Conv1x1→colf30 3600B + Slice → ONE [1,10,17,17] valid Conv, pack weigh
 params count zeros, sparse banned; caps the win at +0.086 not +0.3). Bit-identical
 2500+600 uncached 0/0/0, no TopK. Trade curve checked: s=14 optimal (u8 downstream
 scales s²). Floors: keep_b 900 bool (off-grid OR), colf 784. Backup task222_pre_s9.onnx.
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k5(cost 8088): hinge unsolved, val 100% fail. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).

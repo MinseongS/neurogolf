@@ -10,24 +10,24 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('q_scale', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/')),
-        tensor('u8_zero', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
-        tensor('i8_zero', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
-        tensor('slice_starts', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==')),
-        tensor('slice_ends', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAEAAAAAAAAACgAAAAAAAAAKAAAAAAAAAA==')),
-        tensor('w1', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsIDEsIDUsIDUpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/gAAAAAAAAAAAAAAAAAAAAAAAAD+AAAA/gX+AAAA/gAAAAAAAAAAAAAAAAAAAgAAAAIFAgAAAAIAAAAAAAAAAAACAAAAAgYCAAD4BPgAAAD4AAAAAAAAAAAAAAAAAAD4AgAA+AQGAgAA+AIAAAAAAAAAAAAAAAAA+AAAAPgE+AAAAgYCAAAAAgAAAAAAAAAAAvgAAAIGBPgAAAL4AAAAAAAAAA==')),
-        tensor('b1', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAQAAAPz////4////9f////X////1////9f///w==')),
-        tensor('w2', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCA4LCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAEBAQEBAQD+/v7+/v4AAAEAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==')),
+        tensor('qs', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/')),
+        tensor('u8z', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
+        tensor('i8z', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
+        tensor('ss', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==')),
+        tensor('se', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAEAAAAAAAAACgAAAAAAAAAKAAAAAAAAAA==')),
+        tensor('W1', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsIDEsIDMsIDMpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAQABAAEAAQAAAQABBQEAAQAAAAAAAQAAAAA=')),
+        tensor('B1', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAA+v///wAAAAA=')),
+        tensor('W2', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsIDMsIDMsIDMpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAQABAQEAAQAAAAAAZAAAAAAAAAAAnAAAAAAAAAAAAAAAAAAAAAAAZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAA=')),
+        tensor('B2', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqc////AAAAAGQAAAAAAAAA')),
+        tensor('W3', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCA0LCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAQAAAJycAGQAAQAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAA')),
     ]
     nodes = [
-        helper.make_node('Slice', ['input', 'slice_starts', 'slice_ends'], ['x_f']),
-        helper.make_node('Cast', ['x_f'], ['x_u8'], to=2),
-        helper.make_node('QLinearConv', ['x_u8', 'q_scale', 'u8_zero', 'w1', 'q_scale', 'i8_zero', 'q_scale', 'u8_zero', 'b1'], ['h'], pads=[2, 2, 2, 2]),
-        helper.make_node('QLinearConv', ['h', 'q_scale', 'u8_zero', 'w2', 'q_scale', 'i8_zero', 'q_scale', 'u8_zero'], ['output'], pads=[0, 0, 20, 20]),
+        helper.make_node('Slice', ['input', 'ss', 'se'], ['xf']),
+        helper.make_node('Cast', ['xf'], ['xu'], to=2),
+        helper.make_node('QLinearConv', ['xu', 'qs', 'u8z', 'W1', 'qs', 'i8z', 'qs', 'u8z', 'B1'], ['f1'], pads=[1, 1, 1, 1]),
+        helper.make_node('QLinearConv', ['f1', 'qs', 'u8z', 'W2', 'qs', 'i8z', 'qs', 'u8z', 'B2'], ['f2'], pads=[1, 1, 1, 1]),
+        helper.make_node('QLinearConv', ['f2', 'qs', 'u8z', 'W3', 'qs', 'i8z', 'qs', 'u8z'], ['output'], pads=[0, 0, 20, 20]),
     ]
     value_infos = [
-        helper.make_tensor_value_info('x_f', 1, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('x_u8', 2, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('h', 2, [1, 8, 10, 10]),
     ]
-    return model('task369_live_exact', nodes, inits, output_dtype=2, opset=18, value_infos=value_infos)
+    return model('task369_live_exact', nodes, inits, output_dtype=2, opset=17, value_infos=value_infos)

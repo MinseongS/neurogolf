@@ -56,3 +56,23 @@ recast jointly to fp16. The g0/g1/rp*/cp* detection planes are dtype-bound (co-o
 fp32 free input) and stay fp32. ⭐TRANSFERABLE: recast whole einsum ISLANDS (connected
 subgraphs with no free-input operand), not individual tensors. Gates: bundled fail=0,
 fresh 2000 divergence 0 (bit-identical). Backup: reports/retired_networks/task234_pre_s11_recast.onnx.
+
+## S12 (2026-07-05) — ADOPTED: uint8 presence profiles for ArgMax (+0.0838)
+
+The S11 scan left five fp32 `Sign(profile)` vectors feeding only `ArgMax`:
+`present9s`, `rp0s`, `cp0s`, `rp1s`, `cp1s`.  Their numeric magnitude is
+irrelevant; they only encode zero/nonzero presence before first/last ArgMax.
+
+Tested two variants:
+
+- `Greater(profile,0)` directly into `ArgMax`: rejected by ORT, bool input is
+  invalid for ArgMax.
+- `Greater(profile,0) -> Cast(uint8) -> ArgMax`: accepted and exact.
+
+This changes each 30-vector presence carrier from 120B fp32 to 30B bool + 30B
+uint8.  Stored score: 266/266, mem 3144→2886, params 64, points
+16.9266→17.0104.  Fresh: `fresh_verify.py 234` 1500/1500, incumbent fail 0.
+
+⭐ TRANSFERABLE: when a nonnegative fp32 profile is reduced to presence solely for
+`ArgMax`/`TopK` ordering over {0,1}, prefer `Greater(profile,0)->Cast(uint8)`
+over `Sign(profile)`.  Do not feed bool directly to ArgMax; ORT rejects it.

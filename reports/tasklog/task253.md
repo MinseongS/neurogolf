@@ -48,3 +48,7 @@ per-orientation channel stack. Pair it with a ones-kernel box-sum on the colour-
 (= N·colour at an N-cell shape, missing cell contributes 0) and read colour by comparing the
 box-sum to **N·ramp** (no fp division — keeps the readout integer-exact). This turns an
 apparent shape-correspondence task into closed-form tier-B.
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (sub 54367833): 511 -> 500 (+0.022)
+Mechanism: single Einsum + Gather. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). Source-owned via live_to_exact_source --write-src, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

@@ -60,3 +60,10 @@ has an all-False `zero_rows_b` `(1,1,23,1)`. Dropped `false_mid` and reference `
 - Before: mem 5759 / params 248 / 16.299 pts.  After: mem 5759 / params **110** / **16.323 pts (+0.023)**.
 - Gates: evaluate fail=0 (266/266); fresh_verify 148 = **0 fail / 1500 fresh instances, 0 divergence**
   from incumbent; correct under ORT_ENABLE_ALL. Clean structural dedup, not a re-fit. LANDED.
+
+
+## S16 adoption (2026-07-06) — yuu111111111 public-bundle net (+0.183)
+- Source: yuu111111111/neurogolf-6-failure-modes notebook (total 7235.05, embedded 400-net archive; MINED per-task despite lower total).
+- New grader cost = 4889 (mem 4635 + params 254), fail=0 bundled.
+- Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
+- Mechanism: And x5/Or/Expand boolean chain -> Where/Concat fusion; fewer counted intermediates.

@@ -86,3 +86,32 @@ Fixing needs an occupancy plane = another 2500B fp32 Conv = exact 1:1 wash (task
 Other floors re-priced: walk chain 4×2500 hard (189 slots, 52-letter cap ~48/einsum),
 fp16 W overflow (~3e19), free-input t25 = 330ms latency fail, label_f fp32 locked.
 Max theoretical epilogue win ~+0.13 and blocked. DO NOT re-probe.
+
+# (appended) 2026-07-06 — FLOOR RE-CONFIRMED on the walk-einsum family (4 levers killed)
+Deployed = walk-einsum (mem 21090, params 2881, 14.92). Measured mem split:
+4 walk einsums 10000 + Sign(B2) 2500 + t25 Conv 2500 + label Conv 2500 = 17500 fp32
+(seven 25×25×fp32 planes @2500B); epilogue already u8/lean (Where 1250, Pad 900,
+Cast 707, Greater 645). Every fp32 plane is structurally required. Levers tried:
+- **einsum merge (W1+W2, W3+W4 into single planes)**: BLOCKED by the 52-letter einsum
+  alphabet. Each walk step needs a distinct contraction letter; link1=7 fixed+45 steps=52,
+  link2/3/4=4 fixed+48 steps=52 — already maxed. 4-way split is FORCED, not arbitrary.
+- **fp16 recast of walk planes**: BLOCKED. Path weights span 1e-28..3e19 (0.5^93 min);
+  fp16 min subnormal ~6e-8, so 0.5^26→0 (empirically 0 by 96 halvings). A reached cell
+  deep in a corridor underflows to 0 → Greater(W4,0) false → missed. fp32 is mandatory.
+- **drop the mid Sign** (re-normalize via a non-0.5 step weight): BLOCKED. Over 189 steps
+  no single per-step factor f avoids BOTH fp32 overflow (need 3f<1.6 → f<0.53) and
+  underflow (need f^189>1.2e-38 → f>0.63). The Sign at step 93 is the only fix.
+- **tighter crop than 25×25**: BLOCKED. 6000 fresh grids → H,W ∈ [10,25], max 25. The
+  25×25 static plane must cover the largest grid; no room.
+- **sparse_initializer for S(625→73)/P(750→25)/PARb(625→312)** to cut params −1590:
+  BLOCKED. src/harness sanitize_model renames graph.initializer but NOT sparse_initializer,
+  so node inputs → safe_name_N while sparse stays "S" → ORT load fails ("not a graph input,
+  initializer, or output"). Local-breaking; won't gamble a submission (uint8-TopK lesson).
+No cheaper task286 in reports/public_bundle_candidates.json. Only remaining external lever =
+fresh public 400-net dump pull (Kaggle, user action) then min-merge/gate. LB stays 14.92.
+
+## public-dump cross-check (2026-07-06) — ours WINS
+Pulled the best public min-merge (prvsiyan/neurogolf-7235-49-w-visualizations, the
+min-merge of ALL public sources). Its task286 = 26136 mem / 1170 params = **14.785**
+(different mechanism: lower params, +5000 mem). OURS = 21090/2881 = **14.915** — we beat
+it by +0.13. No public source has a cheaper 286. Confirmed global-best for this task.

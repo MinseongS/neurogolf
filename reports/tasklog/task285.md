@@ -83,3 +83,13 @@ File left unmodified (clean).
 ## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-4 opus agent). Do not re-attempt without a new mechanism.
 
 ## S11 (2026-07-03) — signed-priority overlay (playbook 15) scout: KILL — output = arbitrary connected-blob reflection into 4 quadrants (per-cell 2-D scatter, not separable); cost = 3600B FULL_READ + enumeration TopK + orientation-scan + connectivity MaxPool + 2-D scatter carrier. No deletable carrier.
+
+## 2026-07-06 — 3-way parallel mechanism assault → FLOOR re-confirmed (empirical)
+
+User pushed hard ("무조건 가능"). Ran THREE genuinely-distinct attacks in parallel, grader as arbiter. All three independently confirm 24684 is a real floor — not incompetence, but ONNX scoring counting every intermediate with no buffer reuse.
+
+- **A · lean-enumeration** (attack fp16 dup + [4,33,3] indices + dup 900-planes): NO WIN. `33` cell budget empirically tight (max nonzero input cells = **exactly 33** over 40k fresh samples, hit 17×). Merging the two [4,33,3] index planes is byte-conserving (3168 either way). bool "≥2-of-3" algebra already optimal — ReduceSum rejects uint8; int32/fp16 reduction ([4,33,3]=1584/792B) costs MORE than the 1-byte bool planes (132B). Every tensor at minimal legal dtype.
+- **B · dense flip-shift reflection** (eliminate enumeration entirely): built a CORRECT, fresh-gated alternative (bundled 265/265, 2000/2000 fresh bit-identical) — lands at **99952 bytes = 4.0× incumbent** (13.48 pts). Decisive finding: the dense multi-pivot detector = ~95 full-grid 900B planes = **86566B**, vs the enumeration's [4,33,3] machinery = **~6300B** (~13× cheaper). **The 33-cell enumeration IS the memory optimization, not the bloat.** Also: the reflect/scatter back-end is only ~6906B — it was never the bottleneck.
+- **C · read attack** (halve the 3600 fp32 read via fp16/MatMul): NO WIN. **Reshape of the fp32 free input is never free** — value_info counts full declared bytes (measured: `Reshape(input)->[10,900] fp32` = exactly 36000B; no view escape hatch in calculate_memory's max(declared,trace)). Kills flatten-then-MatMul. Read-chain floor = **7200B fixed**: fp16-unification is an exact wash (TopK feed saves 1800 but plane+flat each double 900→1800).
+
+**Verdict: 24684 FLOOR, now proven by 3 independent mechanisms (one a fully-working correct alternative).** Root cause = grader counts every intermediate, no in-place reuse → sparse 33-cell enumeration beats any dense full-grid path. The "clever math trick" the user wanted already lives in the incumbent (sparse enumeration = 13× cheaper than dense). Do not re-grind. Same class: 286 (sibling), 233, 366.

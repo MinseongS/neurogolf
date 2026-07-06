@@ -74,3 +74,6 @@ read was FREE inside the einsum, cropped needs a counted 1680B+1100p conv plane;
 (3) shared 30×30 T triangular splits into rectangular pairs (900→2460p). Best theoretical
 config 10261 > 6331. ⭐ RULE: single-tap crop only wins when the 30×30 plane is a
 COUNTED entry read; nets whose einsums read the free input in-op get WORSE. DO NOT re-probe.
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k5(cost 6331): val gate fail. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).

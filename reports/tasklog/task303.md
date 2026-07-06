@@ -44,3 +44,6 @@ the red mask arithmetically — no separate bool line planes. mem 1598→1430. B
 2500 uncached (0/0/0). ArgMax-on-u8 safe (not TopK). Backup task303_pre_s9.onnx.
 ⭐ TRANSFERABLE: fractional/ArgMax arithmetic encoding collapses bool line-detection
 cascades on all-black row/col recolour tasks.
+
+
+## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 1452 -> 1450 (+0.001); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].

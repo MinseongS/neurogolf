@@ -71,3 +71,6 @@ planes and the net gain shrinks.
   fit needs a hidden 3600B fp32 plane → no win. **Input-side = measured dry well.**
 - Output is per-cell red painting over the full 18×18 active grid (not ≤K separable
   rects) → signed-Einsum output routing does not apply. **FLOOR.**
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k3(cost 4362): LP-proven infeasible(838 패치); k5: LP-proven infeasible(20k subset). 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).

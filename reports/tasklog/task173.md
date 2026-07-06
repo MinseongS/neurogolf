@@ -56,3 +56,13 @@ Backup `reports/retired_networks/task173_pre_s10.onnx`; source `public_candidate
 geometric tap — the tap pays a 360-param kernel + a 25×25 fp32 tap plane; the
 Slice-crop pays a 10-param 1×1 conv + a handful of int32 width scalars. When a
 valid-Conv tap only exists to select a sub-window, price it against a width-Slice.
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (submission 54367833): 17646 -> 13633 (+0.258)
+Mechanism: TopK routing + Gather/ScatterElements.
+Gate (fresh_verify, inc/cand fail on 1500-2000): 6/6 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
+Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
+See memory [[neurogolf-urad-7225-bundle-vein]]. 
+
+## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 13633 -> 13384 (+0.018)
+Gate fresh_verify 1500: inc=9/9 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

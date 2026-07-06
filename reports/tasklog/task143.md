@@ -49,3 +49,6 @@ generator-fixed corner region (here the bcolor ref is ALWAYS in the top-left 3×
 Kill a self-match at a known fixed window via `corr − BIG·cornermask` then
 ReduceMax==K — cheaper than building separate Equal/And bool match planes.
 This re-triages a "confirmed-infeasible (blank note)" task to +0.50.
+
+
+## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 838 -> 837 (+0.001); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].

@@ -29,3 +29,10 @@ Lp (uint8 [1,1,30,30] = 900B) — must be 30x30 to broadcast against the 10 colo
 
 ## INSIGHT (transferable)
 "Partition by all-bg/all-line separators + label diagonal blocks" is fully SEPARABLE: per-axis block index = exclusive prefix-count of the separator indicator (lower-tri MatMul), middle-block index = nsep/2 when nsep is provably even — exact, no argmax. Build the colour-index plane with a uint8 Where chain (scalar fills broadcast) on disjoint regions, NOT a fp32 weighted sum (the float casts cost 7×400B of full planes). ⭐ scalar [1,1,1,1] Where fills broadcast over a [1,1,10,10] mask at ~0 params — never materialise full-plane colour constants.
+
+
+## S16 adoption (2026-07-06) — yuu111111111 public-bundle net (+0.063)
+- Source: yuu111111111/neurogolf-6-failure-modes notebook (total 7235.05, embedded 400-net archive; MINED per-task despite lower total).
+- New grader cost = 1534 (mem 1513 + params 21), fail=0 bundled.
+- Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
+- Mechanism: structural golf: fewer counted node-output intermediates (graph rewrite, functionally equal on fresh).

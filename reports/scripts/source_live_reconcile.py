@@ -17,6 +17,28 @@ REPORTS = ROOT / "reports"
 NETWORKS = ROOT / "networks"
 
 
+def parse_task_list(text: str) -> list[int]:
+    tasks: set[int] = set()
+    for part in text.split(","):
+        part = part.strip()
+        if not part:
+            continue
+        if "-" in part:
+            start_s, end_s = part.split("-", 1)
+            start, end = int(start_s), int(end_s)
+            if start > end:
+                raise argparse.ArgumentTypeError(f"invalid descending range: {part}")
+            tasks.update(range(start, end + 1))
+        else:
+            tasks.add(int(part))
+    bad = [task for task in tasks if task < 1 or task > 400]
+    if bad:
+        raise argparse.ArgumentTypeError(f"task out of range 1..400: {bad[0]}")
+    if not tasks:
+        raise argparse.ArgumentTypeError("task list is empty")
+    return sorted(tasks)
+
+
 def safe_eval_model(model_or_path: Any, task_num: int) -> dict[str, Any]:
     try:
         return evaluate(model_or_path, load_task(task_num), keep_failures=False)
@@ -60,9 +82,9 @@ def differs(live: dict[str, Any], source: dict[str, Any]) -> bool:
     return False
 
 
-def reconcile() -> list[dict[str, Any]]:
+def reconcile(task_nums: list[int]) -> list[dict[str, Any]]:
     rows = []
-    for task_num in range(1, 401):
+    for task_num in task_nums:
         live_path = NETWORKS / f"task{task_num:03d}.onnx"
         live = safe_eval_model(str(live_path), task_num)
         source = eval_source(task_num)
@@ -81,14 +103,19 @@ def reconcile() -> list[dict[str, Any]]:
     return rows
 
 
-def write_markdown(rows: list[dict[str, Any]], path: Path) -> None:
+def write_markdown(rows: list[dict[str, Any]], path: Path, task_nums: list[int]) -> None:
     source_lags = [row for row in rows if row["delta_points"] < -1e-9]
     source_ahead = [row for row in rows if row["delta_points"] > 1e-9]
+    if len(task_nums) == 400 and task_nums[0] == 1 and task_nums[-1] == 400:
+        task_scope = "001-400"
+    else:
+        task_scope = ",".join(f"{task:03d}" for task in task_nums)
     lines = [
         "# Source/live reconcile",
         "",
         "This report distinguishes `build()` coverage from live-model parity.",
         "",
+        f"- task scope: {task_scope}",
         f"- mismatches: {len(rows)}",
         f"- source lags live: {len(source_lags)}",
         f"- source ahead of live: {len(source_ahead)}",
@@ -116,14 +143,33 @@ def write_markdown(rows: list[dict[str, Any]], path: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--tasks",
+        type=parse_task_list,
+        help="Comma-separated task numbers and ranges, e.g. 1,7,20-25.",
+    )
+    parser.add_argument("--task", type=int, help="Single task number shortcut.")
+    parser.add_argument("--start", type=int, default=1, help="First task number when --tasks/--task is omitted.")
+    parser.add_argument("--end", type=int, default=400, help="Last task number when --tasks/--task is omitted.")
     parser.add_argument("--out-json", default=str(REPORTS / "source_live_reconcile.json"))
     parser.add_argument("--out-md", default=str(REPORTS / "source_live_reconcile.md"))
     args = parser.parse_args()
-    rows = reconcile()
+    if args.task is not None and args.tasks is not None:
+        parser.error("--task and --tasks are mutually exclusive")
+    if args.task is not None:
+        task_nums = parse_task_list(str(args.task))
+    elif args.tasks is not None:
+        task_nums = args.tasks
+    else:
+        if args.start < 1 or args.end > 400 or args.start > args.end:
+            parser.error("--start/--end must define an ascending range within 1..400")
+        task_nums = list(range(args.start, args.end + 1))
+    rows = reconcile(task_nums)
     Path(args.out_json).write_text(json.dumps(rows, indent=2, sort_keys=True, default=str))
-    write_markdown(rows, Path(args.out_md))
+    write_markdown(rows, Path(args.out_md), task_nums)
     print(f"wrote {args.out_json}")
     print(f"wrote {args.out_md}")
+    print(f"tasks checked: {len(task_nums)}")
     print(f"mismatches: {len(rows)}")
 
 

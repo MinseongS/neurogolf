@@ -147,3 +147,26 @@ source offsets and rectangle anchors. If yes, sparse anchor-scatter can dominate
 the more general run-length/histogram formulation.
 
 ## S11 (2026-07-03) — mech-15/pointer scout: KILL — copied source is an arbitrary 2-colour 2-D footprint stamped at N gray anchors (sprite-stamp class); row/col separability not guaranteed (per own tasklog). No monochrome separable fills.
+
+## 2026-07-05 sparse final-output scatter probe — REJECTED
+
+Tested the proposed outer-loop/final-output-only direction on this task with
+`reports/candidates/task368/sparse_output_scatter.py`.  The candidate removes
+the incumbent `placed_color_30_u8` label plane and final `Equal`, then writes
+directly into the free input tensor with `ScatterND`: for each gray target cell,
+set channel 5 to 0 and the dynamic target colour channel to 1.
+
+Stored result: 265/265 correct, but cost regressed from `memory=5990,
+params=203, points=16.268825` to `memory=12894, params=281,
+points=15.513924`.
+
+Kill reason: deleting one 900B final label plane is not enough when the direct
+output form needs dynamic int64 `[72,4]` ScatterND indices plus row/column/channel
+preparation tensors.  Sparse direct-output scatter is only promising when the
+dynamic index count is much smaller, the index rank is lower, or an existing
+index tensor can be reused.  For this task the current 10x10 label carrier is
+cheaper than direct one-hot sparse updates.
+
+
+## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 6193 -> 5147 (+0.185)
+Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

@@ -10,37 +10,12 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('reduce_axes', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAAMAAAAAAAAA')),
-        tensor('slice_axes', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAgAAAAMAAAA=')),
-        tensor('zero2_i32', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAA==')),
-        tensor('slice_delta_i32', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAwAAAAMAAAA=')),
-        tensor('pad_ch_hw', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbAAAAAAAAABsAAAAAAAAA')),
-        tensor('five_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoF')),
-        tensor('channel_ids', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDksIDEsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAgMEBQYHCAk=')),
+        tensor('G', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAxMCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AACAvwAAgL8AAIC/AACAvwAAgL8AAIC/AACAvwAAgL8AAIC/AACAvwAAgD8AAIC/AACAvwAAgL8AAIC/AACAvwAAgL8AAIC/AACAvwAAgL8AAIC/AACAPwAAgL8AAIC/AACAvwAAgL8AAIC/AACAvwAAgL8AAIC/AACAvwAAgL8AAIA/AACAvwAAgL8AAIC/AACAvwAAgL8AAIC/AACAvwAAgL8AAIC/AACAvwAAgD8AAIC/AACAvwAAgL8AAIC/AACAvwAAgL8AAIC/AACAvwAAgL8AAIC/AACAPwAAgL8AAIC/AACAvwAAgL8AAIC/AACAvwAAgL8AAIC/AACAvwAAgL8AAIA/AACAvwAAgL8AAIC/AACAvwAAgL8AAIC/AACAvwAAgL8AAIC/AACAvwAAgD8AAIC/AACAvwAAgL8AAIC/AACAvwAAgL8AAIC/AACAvwAAgL8AAIC/AACAPwAAgL8AAIC/AACAvwAAgL8AAIC/AACAvwAAgL8AAIC/AACAvwAAgL8AAIA/')),
+        tensor('T', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAxMCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgL8AAIC/AACAvwAAgL8AAIC/AAAAAAAAgL8AAIC/AACAvwAAgL8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA/')),
     ]
     nodes = [
-        helper.make_node('ReduceSum', ['input', 'reduce_axes'], ['counts'], keepdims=0),
-        helper.make_node('ArgMax', ['counts'], ['mode'], axis=1, keepdims=0),
-        helper.make_node('Cast', ['mode'], ['mode_i32'], to=6),
-        helper.make_node('Concat', ['mode_i32', 'zero2_i32'], ['slice_starts'], axis=0),
-        helper.make_node('Add', ['slice_starts', 'slice_delta_i32'], ['slice_ends']),
-        helper.make_node('Slice', ['input', 'slice_starts', 'slice_ends', 'slice_axes'], ['mode_channel']),
-        helper.make_node('Cast', ['mode_channel'], ['mode_mask'], to=9),
-        helper.make_node('Cast', ['mode_i32'], ['mode_u8'], to=2),
-        helper.make_node('Where', ['mode_mask', 'mode_u8', 'five_u8'], ['output_map']),
-        helper.make_node('Equal', ['channel_ids', 'output_map'], ['output_small']),
-        helper.make_node('Pad', ['output_small', 'pad_ch_hw'], ['output'], mode='constant'),
+        helper.make_node('Einsum', ['input', 'input', 'input', 'input', 'G', 'T'], ['output'], equation='bqhw,bpxy,bpuv,bpst,qp,oq->bohw'),
     ]
     value_infos = [
-        helper.make_tensor_value_info('counts', 1, [1, 10]),
-        helper.make_tensor_value_info('mode', 7, [1]),
-        helper.make_tensor_value_info('mode_i32', 6, [1]),
-        helper.make_tensor_value_info('slice_starts', 6, [3]),
-        helper.make_tensor_value_info('slice_ends', 6, [3]),
-        helper.make_tensor_value_info('mode_channel', 1, [1, 1, 3, 3]),
-        helper.make_tensor_value_info('mode_mask', 9, [1, 1, 3, 3]),
-        helper.make_tensor_value_info('mode_u8', 2, [1]),
-        helper.make_tensor_value_info('output_map', 2, [1, 1, 3, 3]),
-        helper.make_tensor_value_info('output_small', 9, [1, 9, 3, 3]),
     ]
-    return model('task229_live_exact', nodes, inits, output_dtype=9, opset=13, value_infos=value_infos)
+    return model('task229_live_exact', nodes, inits, output_dtype=1, opset=17, value_infos=value_infos)

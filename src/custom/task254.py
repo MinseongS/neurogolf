@@ -10,30 +10,34 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('slice_starts', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==')),
-        tensor('slice_ends', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAYAAAAAAAAACQAAAAAAAAAJAAAAAAAAAA==')),
-        tensor('ten', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAACBB')),
-        tensor('output_pads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwAAAAAAAAAVAAAAAAAAABUAAAAAAAAA')),
-        tensor('false_b', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGIxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
-        tensor('ax2', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAA==')),
+        tensor('c_1', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAA')),
+        tensor('c_3', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAA==')),
+        tensor('c_4', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoJAAAAAAAAAA==')),
+        tensor('c_5', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAA==')),
+        tensor('c_10', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAACBB')),
+        tensor('c_14', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDksIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAABBAADgQAAAwEAAAKBAAACAQAAAQEAAAABAAACAPwAAAAA=')),
+        tensor('c_16', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoB')),
+        tensor('c_17', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoC')),
+        tensor('c_18', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
+        tensor('c_22', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsIDEsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAQI=')),
+        tensor('c_24', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwAAAAAAAAAVAAAAAAAAABUAAAAAAAAA')),
     ]
     nodes = [
-        helper.make_node('Slice', ['input', 'slice_starts', 'slice_ends'], ['gray_raw']),
-        helper.make_node('ReduceSum', ['gray_raw', 'ax2'], ['heights'], keepdims=1),
-        helper.make_node('ReduceMax', ['heights'], ['max_height'], axes=[3], keepdims=1),
-        helper.make_node('Equal', ['heights', 'max_height'], ['max_cols']),
-        helper.make_node('Cast', ['heights'], ['active_cols'], to=9),
-        helper.make_node('Where', ['active_cols', 'heights', 'ten'], ['min_candidates']),
-        helper.make_node('ReduceMin', ['min_candidates'], ['min_height'], axes=[3], keepdims=1),
-        helper.make_node('Equal', ['heights', 'min_height'], ['min_cols']),
-        helper.make_node('Cast', ['gray_raw'], ['gray_bool'], to=9),
-        helper.make_node('And', ['max_cols', 'gray_bool'], ['blue']),
-        helper.make_node('And', ['min_cols', 'gray_bool'], ['red']),
-        helper.make_node('Or', ['blue', 'red'], ['colored_cells']),
-        helper.make_node('Not', ['colored_cells'], ['black']),
-        helper.make_node('Concat', ['black', 'blue', 'red'], ['core'], axis=1),
-        helper.make_node('Pad', ['core', 'output_pads', 'false_b'], ['output'], mode='constant'),
+        helper.make_node('Einsum', ['input', 'c_1'], ['einsum_2'], equation='bchw,c->bw'),
+        helper.make_node('Slice', ['einsum_2', 'c_3', 'c_4', 'c_5'], ['slice_6']),
+        helper.make_node('ReduceMax', ['slice_6'], ['reducemax_7'], axes=[1], keepdims=1),
+        helper.make_node('Equal', ['slice_6', 'reducemax_7'], ['equal_8']),
+        helper.make_node('Cast', ['slice_6'], ['cast_9'], to=9),
+        helper.make_node('Where', ['cast_9', 'slice_6', 'c_10'], ['where_11']),
+        helper.make_node('ReduceMin', ['where_11'], ['reducemin_12'], axes=[1], keepdims=1),
+        helper.make_node('Equal', ['slice_6', 'reducemin_12'], ['equal_13']),
+        helper.make_node('Greater', ['slice_6', 'c_14'], ['greater_15']),
+        helper.make_node('Where', ['equal_13', 'c_17', 'c_18'], ['where_19']),
+        helper.make_node('Where', ['equal_8', 'c_16', 'where_19'], ['where_20']),
+        helper.make_node('Where', ['greater_15', 'where_20', 'c_18'], ['where_21']),
+        helper.make_node('Equal', ['where_21', 'c_22'], ['equal_23']),
+        helper.make_node('Pad', ['equal_23', 'c_24'], ['output'], mode='constant'),
     ]
     value_infos = [
     ]
-    return model('task254_live_exact', nodes, inits, output_dtype=9, opset=13, value_infos=value_infos)
+    return model('task254_live_exact', nodes, inits, output_dtype=9, opset=16, value_infos=value_infos)

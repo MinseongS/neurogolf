@@ -47,3 +47,16 @@ copy already net-optimal). EPILOGUE FOLD MEASURED NEUTRAL here: 30×30 u8 index-
 == 10×10 one-hot bool (1000) exactly, +11 params → strictly worse. LESSON: the fold only wins
 when it ELIMINATES a separate pre-output plane (task187's label+flood planes), not when the
 index-pad swaps 1:1 with a small-grid one-hot.
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k7(cost 11119): 1.26M 패치, 196k viols. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (submission 54367833): 9126 -> 5647 (+0.480)
+Mechanism: rank-factored Einsum sandwich (initializer reuse counted once).
+Gate (fresh_verify, inc/cand fail on 1500-2000): 2/2 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
+Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
+See memory [[neurogolf-urad-7225-bundle-vein]]. 
+
+## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 5647 -> 4984 (+0.125)
+Gate fresh_verify 1500: inc=1/1 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

@@ -136,3 +136,7 @@ understates true fresh fail ~3× (this log's own S8 warning). Selection: paramet
 tasks that recover a few global scalars via GatherND+ReduceSum(Equal)+ArgMax; shrink the
 sample-cell count only under the relaxed gate and only with an uncached fresh gate, since
 each dropped cell trades private-LB robustness for a few hundred bytes.
+
+
+## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 7004 -> 6455 (+0.082)
+Gate fresh_verify 1500: inc=25/25 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

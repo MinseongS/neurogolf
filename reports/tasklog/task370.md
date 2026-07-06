@@ -59,3 +59,25 @@ mem 8645/15.82; iterative diagonal-stamp; black20 1600B forced by uint8 QLinearC
 ## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-3 opus agent; see agent report in submission_log context). Do not re-attempt without a new mechanism.
 
 ## S11 (2026-07-03) — signed-priority overlay (playbook 15) scout: KILL — output = arbitrary sprite stamped along a ray (QLinearConv stamp, non-separable); recolour already free-routed via Where. Cost = fp32 entry crop + 4-dilation candidate bank + mux chain + 900B routing mask. Only conceivable lever = runtime-parameterized stamp (does not exist).
+
+## 2026-07-03 S12 — ⭐ ADOPTED: runtime-parameterized stamp (playbook mechanism 16)
+S11 "runtime-parameterized stamp (does not exist)" 반증. 4-후보 dilated-conv 뱅크
+(repeat_d2..d5 4×400B + mux 1200B + w/idx 뱅크) → d 선-검출(clamped GatherND 프로브
+4회 → ReduceMax(valid·[2,3,4,5]), 스칼라만) + 파라메트릭 ScatterND 커널 조립
+(base_idx·d → zeros[31,31], 방향은 탭 좌표에 베이크, OOB 탭은 off-diagonal trash셀에
+update 0으로 클램프) + QLinearConv 1회. dilation은 static attr라 물리 커널 필요 →
+centered half-size C=15 (= generator 최대 스탬프 오프셋; C=14는 fresh 2/2500 실패로
+경계 확인). 기각 변형: one-sided+8flip평면 10796, 41×41 10358.
+- mem 8645→7477, params 1024→1094, 비용 9669→8571, pts 15.823→15.944 (+0.1205)
+- 게이트(오케스트레이터 직접 재측정): bundled 266/266 fail=0; fresh 2000
+  vs networks 인컴번트 bit-identical 발산 0 + truth 실패 0; 채택 후 src↔networks
+  raw 발산 0/800. 백업: reports/candidates/task370_incumbent_s11.onnx + git.
+- ⭐TRANSFERABLE: 뱅크-구체화 스탬프 넷 전반 (센서스 #3 버킷). 잔여 비용: black20
+  1600B(fp32 entry crop, 구조적), w_runtime 961B, rvb30 900B(라우팅 마스크).
+
+
+## S16 adoption (2026-07-06) — yuu111111111 public-bundle net (+0.056)
+- Source: yuu111111111/neurogolf-6-failure-modes notebook (total 7235.05, embedded 400-net archive; MINED per-task despite lower total).
+- New grader cost = 8104 (mem 7331 + params 773), fail=0 bundled.
+- Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
+- Mechanism: structural golf: fewer counted node-output intermediates (graph rewrite, functionally equal on fresh).

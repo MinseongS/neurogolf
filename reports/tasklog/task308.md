@@ -62,3 +62,14 @@ Equal output. The 7×7 ring lives entirely in fp16/bool [1,10,7,7] planes (~490�
   full-canvas op in fp16 (ORT ReduceMin/Max accept fp16); uint8 for the Pad
   gateway (Pad rejects bool but takes uint8 = half of fp16). ORT Where is NOT
   implemented for BOOL data branches under ORT_DISABLE_ALL — keep And/Or selects.
+
+## 2026-07-05 — transfer probe follow-up
+
+- `topk_k=4 -> 3` capacity shrink was tested as a task025-style relaxed-gate
+  lever.  It is not a rare-case trade here: stored eval fails 129/266, so the
+  fourth active colour/element slot is structurally required.
+- Rechecked the final label expansion pattern.  This task correctly uses
+  `Equal(labels_grid, channel_ids) -> Pad(output)` because the compact board is
+  only 7x7: one-hot-before-pad costs `9*49=441B`, cheaper than padding a label
+  plane to 30x30 (`900B`).  This is the useful small-board side of the
+  label-pad ordering rule.

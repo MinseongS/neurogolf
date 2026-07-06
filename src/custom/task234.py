@@ -1,4 +1,4 @@
-"""Task 234 recast candidate — fp16 the final free-output einsum trio.
+"""Task 234 recast candidate — fp16 final routing + uint8 presence profiles.
 
 The final `Einsum(['weight','rsel','csel'], 'tnk,tr,tc->nkrc')` has NO fp32 `input`
 operand, so all three operands + their fp16 upstream (onehot_f, minus_bg, weight310,
@@ -9,6 +9,11 @@ thresholds output>0.0 so bit-identical.
 Recast tensors: submask/onehot0row (inits->fp16), onehot_f, minus_bg, weight310,
 weight, rsel, csel -> fp16. Save 600B (rsel 180 + csel 180 + weight/weight310/
 onehot_f/minus_bg 60 each).
+
+S12 follow-up: the `Sign(profile)` planes feeding `ArgMax` only encode nonzero
+presence.  `Greater(profile,0) -> Cast(uint8)` is exact and accepted by ArgMax,
+so each 30-vector costs 60B instead of a 120B fp32 Sign plane.  Applied to
+present9/rp0/cp0/rp1/cp1.
 
 NOT recast (dtype-bound): g0/g1/rp*/cp*/present* -> einsum co-operand is the fp32
 free input (rp0=Einsum(input,g0)); scalar Where/Concat chain stays fp32.
@@ -40,7 +45,8 @@ def build(task):
         # ---- presence / object colours from pixel counts ----
         helper.make_node('ReduceSum', ['input'], ['pixel_all'], axes=[0, 2, 3], keepdims=0),
         helper.make_node('Slice', ['pixel_all', 'slice1_start', 'slice10_end'], ['present9']),
-        helper.make_node('Sign', ['present9'], ['present9s']),
+        helper.make_node('Greater', ['present9', 'zerof1'], ['present9s_b']),
+        helper.make_node('Cast', ['present9s_b'], ['present9s'], to=2),
         helper.make_node('ArgMax', ['present9s'], ['color0_idx'], axis=0, keepdims=0),
         helper.make_node('ArgMax', ['present9s'], ['color1_idx'], axis=0, keepdims=0, select_last_index=1),
         helper.make_node('Add', ['color0_idx', 'one_i64'], ['color0']),
@@ -57,10 +63,14 @@ def build(task):
         helper.make_node('Einsum', ['input', 'g0'], ['cp0'], equation='bchw,xc->w'),
         helper.make_node('Einsum', ['input', 'g1'], ['rp1'], equation='bchw,xc->h'),
         helper.make_node('Einsum', ['input', 'g1'], ['cp1'], equation='bchw,xc->w'),
-        helper.make_node('Sign', ['rp0'], ['rp0s']),
-        helper.make_node('Sign', ['cp0'], ['cp0s']),
-        helper.make_node('Sign', ['rp1'], ['rp1s']),
-        helper.make_node('Sign', ['cp1'], ['cp1s']),
+        helper.make_node('Greater', ['rp0', 'zerof1'], ['rp0s_b']),
+        helper.make_node('Cast', ['rp0s_b'], ['rp0s'], to=2),
+        helper.make_node('Greater', ['cp0', 'zerof1'], ['cp0s_b']),
+        helper.make_node('Cast', ['cp0s_b'], ['cp0s'], to=2),
+        helper.make_node('Greater', ['rp1', 'zerof1'], ['rp1s_b']),
+        helper.make_node('Cast', ['rp1s_b'], ['rp1s'], to=2),
+        helper.make_node('Greater', ['cp1', 'zerof1'], ['cp1s_b']),
+        helper.make_node('Cast', ['cp1s_b'], ['cp1s'], to=2),
         helper.make_node('ArgMax', ['rp0s'], ['obj0_r0'], axis=0, keepdims=0),
         helper.make_node('ArgMax', ['rp0s'], ['obj0_r1'], axis=0, keepdims=0, select_last_index=1),
         helper.make_node('ArgMax', ['cp0s'], ['obj0_c0'], axis=0, keepdims=0),

@@ -11,7 +11,9 @@ from src.harness import convert_to_numpy, load_task, evaluate
 
 MAPPING = json.load(open("reports/arc_mapping.json"))
 ROOT = Path(__file__).resolve().parent.parent
-ARCGEN = ROOT / "arc-gen" if (ROOT / "arc-gen").is_dir() else Path("/tmp/arc-gen")
+ARCGEN = ROOT / "arc-gen"
+if not ARCGEN.is_dir():
+    raise FileNotFoundError(f"repo-local arc-gen not found: {ARCGEN}")
 if str(ARCGEN) not in sys.path:
     sys.path.append(str(ARCGEN))
 
@@ -21,7 +23,7 @@ def generator_path(num):
     local = ROOT / "arc-gen" / "tasks" / mapped.name
     if local.exists():
         return local
-    return mapped
+    raise FileNotFoundError(f"repo-local generator not found for task {num}: {local}")
 
 def load_gen(num):
     path = generator_path(num)

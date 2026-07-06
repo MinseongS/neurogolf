@@ -16,20 +16,23 @@ def build(task):
         tensor('axis_map', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMwLCA0KSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAPAAAAAAAAAA8AAAAAAAAADwAAAAAAAAAAAAAAAAAPAAAADwAAAAAAAAAPAAAAAAAAAA8AAAAAAAAAAAAAAA8AAAAAAA8AAAAAAAAADwAAAAAAAAAPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
         tensor('black_channel', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')),
         tensor('count_axis', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsIDMwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AACAPwAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
-        tensor('select_features', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAzKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAA8ADwdLrQ4tLiHNZw7nLs8OZw7nLs8O7Q4tLgAAAAAAAA8O7S4tDg8OZy7nDuHNZy7nDsdLrS4tDg=')),
         tensor('black_feature', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDMsIDEsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAA8ADw=')),
         tensor('gray_feature_scalar', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAPA==')),
         tensor('class_coeff', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAzKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAwGYqZip5vvMzbrXyuMMxK7ryOCGwUrx5Pny4mLwAQJq7mrt5Ppi8fLjyOFK8IbDyuCu6wzF5vm618zM=')),
+        tensor('select_features', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAzKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAgD8AoMM9AIAWPwCAFr8A4LA+AIBzPwCAc78AgCc/AIBzPwCAc78AgGc/AIAWPwCAFr8AAAAAAAAAAAAAAAAAgGc/AIAWvwCAFj8AgCc/AIBzvwCAcz8A4LA+AIBzvwCAcz8AoMM9AIAWvwCAFj8=')),
     ]
     nodes = [
         helper.make_node('Einsum', ['input', 'black_channel', 'count_axis', 'count_axis'], ['black_sums'], equation='nkrc,k,ir,jc->nij'),
         helper.make_node('ReduceMin', ['black_sums', 'axes_count'], ['min_black'], keepdims=1),
         helper.make_node('Equal', ['black_sums', 'min_black'], ['block_flags_b']),
         helper.make_node('ReduceMax', ['input', 'axes_hw'], ['channel_presence_f'], keepdims=1),
-        helper.make_node('Cast', ['channel_presence_f'], ['channel_presence_f16'], to=10),
-        helper.make_node('Einsum', ['channel_presence_f16', 'select_features'], ['selected_feature'], equation='nkhw,kf->nfhw'),
+        helper.make_node('Einsum', ['channel_presence_f', 'select_features'], ['sel_f32'], equation='nkhw,kf->nfhw'),
+        helper.make_node('Cast', ['sel_f32'], ['selected_feature'], to=10),
         helper.make_node('Where', ['block_flags_b', 'selected_feature', 'black_feature'], ['block_features']),
         helper.make_node('Pad', ['block_features', 'pads_gray_hw', 'gray_feature_scalar', 'axes_hw'], ['coarse_features'], mode='constant'),
         helper.make_node('Einsum', ['coarse_features', 'class_coeff', 'axis_map', 'axis_map'], ['output'], equation='nfhw,kf,rh,cw->nkrc'),
     ]
-    return model('task059_live_exact', nodes, inits, output_dtype=10, opset=18)
+    value_infos = [
+        helper.make_tensor_value_info('sel_f32', 1, [1, 3, 1, 1]),
+    ]
+    return model('task059_live_exact', nodes, inits, output_dtype=10, opset=18, value_infos=value_infos)

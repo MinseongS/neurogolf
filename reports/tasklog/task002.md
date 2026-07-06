@@ -225,3 +225,6 @@ slots-to-fixpoint 36 → 47 = margin 11; coverage is a structural SUPERSET of th
 20 BFS steps → fail ≤ incumbent guaranteed. Fresh 2500: cand 126 ≤ inc 128 (5000: 252 ≤ 256;
 every divergence favors candidate — fixes incumbent distance>20 under-reach). Residual ~5%
 shared fail = known non-input-deterministic thin-pot ambiguity (unfixable).
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k7(cost 6689): 588k viols, early kill. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).

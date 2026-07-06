@@ -78,3 +78,40 @@ Net improvement over the previous deployed source:
 Border-crop note: dropping a fixed two-cell border is not safe.  Over 20k fresh
 samples, cyan and red input/output bboxes each reached all four borders after
 the generator's flip/xpose transforms.  The persistent 16x16 crop remains needed.
+
+## 2026-07-05 S15 — mixed-axis floor CONFIRMED; "cost 148" is the single-axis-Gather class (NOT 008)
+
+User relayed a high-scorer's claim that task008 is doable at cost 148 (=20 pts).
+Investigated exhaustively.
+
+**Rule re-locked (265/265):** red(2) rigid-translates along ONE axis until edge-adjacent
+to the fixed cyan(8) 2×2; colours always {0,2,8}. Move axis is per-example V (137) or
+H (128) — MIXED. Output IS a pure single-axis permutation of the input rows (vertical)
+OR cols (horizontal): `output = input[rowperm][:, colperm]`, one perm identity (verified).
+
+**The "148 mechanism" is REAL but single-axis-only.** For ONE axis,
+`output = Gather(input, perm[30], axis)` is one node; input/output are FREE; only the
+int32 index (120B) + scalars materialise → cost ~136-140 = 20 pts. This is exactly
+what task150 (mem 136, 20.07) and task155 (mem 140, 20.04) already do. Gather applies a
+permutation with a [30] INDEX, not a [30,30] matrix — that is the whole trick.
+
+**task008 is the mixed-axis blind spot — measured every route, all worse than 4809:**
+| approach | cost | pts |
+| single Gather (one axis, static perm) | 30 | 21.6 (but can't: needs both axes) |
+| einsum 2 perm-matrices, STATIC param | 1800 | 17.5 (can't: perms are data-dependent) |
+| einsum 2 perm-matrices, COMPUTED (fp32) | 9480 | 15.8 |
+| two-Gather chain (row then col) | 36060 | 14.5 (intermediate [1,10,30,30]=36000) |
+| colour-plane collapse + 2 Gathers + Equal | ~6300 | ~16.0 (einsum collapse alone = fp32 3600) |
+| **current crop-based net** | **4913** | **16.50** |
+Root cause: a data-dependent 2-axis separable reindex has NO cheap ONNX primitive.
+Gather (cheap [30] index) is single-axis; einsum needs [30,30] matrices that can't be
+static (data-dependent) so they count as fp32 intermediates; any 2-Gather chain or
+channel-collapse materialises a ≥3600B plane. 148 params cannot encode a rank-30 perm.
+
+**Verdict:** task008 stays FLOOR at 4809. The 148/20 figure is a task-number confusion
+with the single-axis-Gather class (150/155). No change adopted. New reusable artifact:
+`reports/scripts/perm_axis_scan.py` (finds single-axis Gather-feasible tasks).
+
+
+## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 4913 -> 3241 (+0.416)
+Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

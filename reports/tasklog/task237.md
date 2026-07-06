@@ -51,3 +51,7 @@ suffix fill when there is exactly one nonzero per row) — dodges the missing cu
 `grp = CumSum(nonzero)` then `ff = Equal(grp_i, grp_j) @ values` — the segment-id equality matrix groups
 each plateau and `values` (nonzero only at each segment's seed) selects it. Exact on length-≤K axes.
 ⭐ Another blank-note "skip-marginal" label that was wrong (6/7 wins this wave).
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (sub 54367833): 1901 -> 1838 (+0.034)
+Mechanism: Einsum. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). Source-owned via live_to_exact_source --write-src, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

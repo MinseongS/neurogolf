@@ -49,3 +49,6 @@ NO Mod and NO Kronecker index plane. ⭐ When the only foreground is "non-backgr
 (144 B) — this dodges the 3600 B colour-collapse plane entirely; recover the colour value
 separately as a scalar from cnt=ReduceSum(input,[2,3]). Split the input vs output active
 canvases (IW=6 vs W=12) so the MatMul matrices stay rectangular-small.
+
+
+## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 2215 -> 2191 (+0.011); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].

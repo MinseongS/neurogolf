@@ -173,3 +173,6 @@ recognition, but it is not an adoptable score optimization in ONNX.  The
 incumbent 15x15 dilated colour map is already the cheap way to share all center
 and direction samples; the remaining cost is still direction-to-ray routing, not
 direction detection.
+
+
+## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 6801 -> 6763 (+0.006); gate inc/cand=48/48 (safe). See [[neurogolf-urad-7225-bundle-vein]].

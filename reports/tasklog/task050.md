@@ -46,3 +46,6 @@ must map to a SENTINEL value (≠ any channel index), because the harness scores
 cells as ALL-channels-zero — emitting bg (index 0) there fails every example; derive the
 in-grid rectangle for free from `ReduceMax(input, axes=[1,3])`/`[1,2]` occupancy profiles
 (no fp32 channel slice for bg).
+
+
+## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 3911 -> 3852 (+0.015); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].

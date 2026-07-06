@@ -158,3 +158,8 @@ live onnx: all div 0. Epilogue-fold REJECTED here (u8 QLC domain; einsum entry �
 (opset-11 checker rejects bool Pad).
 
 ## S11 (2026-07-03) — mech-15 finder scout: KILL — 4725 params = int8 25-template box-outline discriminator bank (rect_w+fill_w), not a LUT; yellow rect EXTENTS come from non-separable outline verification (naive enclosure 46/150). Carrier already folded (S8 Where-onto-input).
+
+
+## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 19525 -> 16690 (+0.157)
+Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
+- Less-fusion: replaced Equal(r5c,0)+Cast(v_z→bool)+And with single Less(r5c,v_z) (valid since v_z∈{0,1}: r5c<v_z ≡ r5c==0 & v_z==1); dropped v_eq/v_zb planes. -800B mem (16100→15300), +0.049 pts (15.2774→15.3266). Fresh-gate 2500: 0 divergence vs incumbent.

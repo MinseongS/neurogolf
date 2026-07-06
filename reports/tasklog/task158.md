@@ -137,3 +137,18 @@ ab 1300×2, painted 900+650, fills 650×5. Params 2647 = per-mag kernels 5/8/11
 (200/512/968) → task204 reject-check (per-size convs non-collapsible). Both Cast pairs
 load-bearing (QLinearConv needs u8; bool Where mux). Front-end already O(1) (S8 moment-stat).
 Slack ≈ 0 clean bytes; +0.1 needs −1990B. DO NOT re-probe without a new mechanism.
+
+## S16 (2026-07-06) — int8 mask-subgraph downcast (+0.0084) ADOPTED, bit-identical
+S9 "slack ≈ 0" refined, not overturned: the fp32 mask subgraphs (NOT input-derived) were
+downcastable. Two `Cast to=1`(float)→`to=3`(int8) on provably-{0,1,2} boolean masks:
+(1) `nb44` (corner-validity mask [1,1,4,4]) — int8 propagated through Slice/Mul/Add/Reshape/
+ArgMax corner-grid subgraph → −144B; (2) `okf` (candidate-colour mask [10], feeds only
+ArgMax) → −30B. Plus dedup: `idx4`→`SH4` (byte-identical [1] int64 =4) → −1 param.
+18089+2646 vs 18263+2647 → +0.0084 (15.0520→15.0604). evaluate fail=0; fresh-gate 2000 fresh
+vs live onnx: 0 divergence (both 99.85%, same 3 inherent fails). Rebuilt from source, deployed
+net bit-identical to candidate. Old net backed up reports/candidates/task158_v1_backup.onnx.
+KILLED (measured): fp16 lab_f = NET LOSS (needs [1,10,30,30] input→fp16 +1800B to save 1300B;
+Conv fuses label+30→26×25 crop, crop is load-bearing for ab/pair sizes). pair-conv pad
+[1,1,1,1]→[0,0,0,0]+compensating stamp pad = 43 fails (correlation alignment shift).
+TRANSFERABLE: input-derived fp32 planes are dtype-locked (Einsum needs input's f32), but
+DOWNSTREAM bool/mask fp32 planes that never touch input are free int8 downcasts.

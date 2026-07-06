@@ -14,3 +14,7 @@ are meaningful. A smaller Conv after slicing channel 0 would immediately materia
 a counted full-canvas slice (3600B), worse than the current `memory + params = 910`.
 
 No adoption candidate.
+
+
+## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 910 -> 759 (+0.181)
+Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

@@ -46,3 +46,13 @@ is strictly the max), dodging any H/W nonzero-count chain. ⭐ Reading a per-cha
 data-dependent (row,col) costs ONE 1200B [1,10,30,1] strip whether via 2-MatMul (contract one axis
 then the other) or chained Gather — that is the irreducible price of a data-dependent per-channel pixel
 read; raw per-channel counts do NOT identify which crossing line was drawn on top.
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k3(cost 1288): 3.6k pos viols; k5 gain negative. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).
+
+
+## S16 adoption (2026-07-06) — yuu111111111 public-bundle net (+0.197)
+- Source: yuu111111111/neurogolf-6-failure-modes notebook (total 7235.05, embedded 400-net archive; MINED per-task despite lower total).
+- New grader cost = 1043 (mem 994 + params 49), fail=0 bundled.
+- Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
+- Mechanism: Add/Expand x3 -> Concat fusion; fewer counted planes.

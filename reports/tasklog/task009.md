@@ -96,3 +96,7 @@ Rechecked remaining levers:
 Conclusion: no adoptable improvement found beyond the landed 100B fold.
 
 ## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-3 opus agent; see agent report in submission_log context). Do not re-attempt without a new mechanism.
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (sub 54367833): 7024 -> 6699 (+0.047)
+Mechanism: value_info Slice crop. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). Source-owned via live_to_exact_source --write-src, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

@@ -36,3 +36,13 @@ template stack. Run the Conv on the bg (channel-0) slice directly and fold the w
 (Sw − fp) into the bank constants to delete the 1−bg binary plane entirely (drops a Cast + Sub +
 fp16 plane). Output is the value of idx at one cell, but the encoding never depends on idx being
 small/contiguous.
+
+## 2026-07-03 S12 — UNKNOWN-bucket dossier
+
+**Rule:** 3×3 grid contains one shape drawn as one of 4 fixed pixel patterns idx∈{1,2,3,6}; output = 1×1 grid whose single value == idx. Colour-agnostic 4-way shape classification → scalar.
+
+**Cost (grader mem 34, params 0):** ops And×3/Slice×2/Greater×2/Cast×2/Equal/Not/Concat/Pad, ZERO initializers. Counted intermediates: `active_channels` [1,6,1,1] fp16 12B, `active_bool` [1,6,1,1] bool 6B, two scalar `b0_f`/`b2_f` [1,1,1,1] fp32 4B each, plus handful of [1,1,1,1] bool bits. Output [1,10,30,30] fp16 18000B is FREE.
+
+**Blocker class:** already-at-floor. Everything counted is a channel-vector or scalar (≤12B); a 4-way fingerprint classifier has no spatial working plane. The rich log's build-agent reached mem 60; the LANDED net is even leaner at 34B.
+
+**Lever:** no lever visible. Near the mem-0/scalar floor; no plane to narrow.

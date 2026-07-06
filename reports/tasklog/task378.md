@@ -62,3 +62,6 @@ selector for the inner bbox edges (Σ_k edge_k·is_inner_k).
 anti-diagonals (r+c==b) through bbox corners, each gated by a 1-D half-plane**;
 keep RmC/RpC fp16 (values in [-29,58] exact) and build everything on the W=12
 active canvas (size≤12 lives top-left), then Pad the W×W mask to 30×30 once.
+
+
+## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 4449 -> 4432 (+0.004); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].

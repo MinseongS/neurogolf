@@ -605,3 +605,40 @@ composition constraint), 162 (bundled train#2 violates generator guarantee — p
 294 knife-edge root cause = ORT 1.26 cross-session weight aliasing (task120 weights leak
 into 294 session); initializer hardening impossible, PARKED. Teacher rescan: no new dumps.
 DAY: 7213.63 → local 7214.32 (+0.80: 092/234/203/174 by loop, 008 by user).
+
+## #NEW-BEST 2026-07-03 S12 — **7214.54** (54300052 COMPLETE, local 7214.44)
+Single adoption: task370 runtime-parameterized stamp (NEW playbook mechanism 16,
+S11 "does not exist" refuted): d pre-detection via 4 clamped GatherND probes →
+parametric ScatterND kernel assembly (centered 31×31, direction baked into taps,
+OOB clamped to trash cell) → ONE QLinearConv, replacing the 4-candidate dilated
+bank + mux. 9669→8571 (+0.1205), bit-identical (fresh 5000 + orchestrator re-check
+2000 vs networks incumbent), bundled 266/266.
+Session S12 negative results (measured, logged): train-to-golf factory COMPREHENSIVELY
+refuted (0/19 single-Conv + 0/2 hidden-C probes; k-locality ≠ linear separability;
+LP infeasibility proofs 004/265/192 — reports/train_to_golf_report.md). Teacher
+rescan kojimar 7186.82: max +0.006, skip. UNKNOWN-bucket dossiers ×12 (mostly real
+floors; 3 fp16 lever suggestions all measured-refuted, Cast-boundary). fp16/dtype
+S11 verdict re-confirmed.
+DAY: 7214.42 → 7214.54 (+0.12, 1 task changed, submission clean).
+
+## S14 (2026-07-05) — public-frontier merge: 7214.54 → 7232.24 (+17.70), NEW BEST
+Submission 54360209, public 7232.24 (local isolated 7232.14, offset +0.10).
+Source: lucifer19/tinyonnx-golf-forge notebook = base64 dump of a public 7221.43
+submission (400 ONNX). Analysis: on OUR isolated grader their artifact = 7196.45
+(BELOW our 7214.44); their public-LB edge was partly LB-leniency vs our strict
+arc-gen gate (only task352 differs) + 89 genuinely-cheaper nets. Best-of-both:
+keep our 311 better nets, adopt their 89 cheaper nets (ALL pass strict gate,
+arc-gen 262 + train+test fail=0). Dominant technique = bilinear/shared-operand
+Einsum vs FREE input: (1) reuse one low-rank factor N× in the equation (P×2,
+R×2·C×2, m×4 — halves params vs distinct-but-equal matrices, exploits row=col /
+encode=decode symmetry); (2) input appears TWICE (`input,input,...`) → pairwise/
+auto-correlation features with ZERO counted intermediates; (3) collapse Conv/
+QLinearConv/ConvTranspose/ScatterND/RoiAlign/GridSample → Einsum, killing big
+activation planes (grader MEMORY term drops even when params rise, e.g. task325
+mem 2010→518). Top gains: 292(+1.69),128(+0.79),142/152/83(+0.69),40(+0.68),
+396(+0.67),146(+0.60),111(+0.54),254(+0.47),400/399(+0.42). Full list
+reports/lucifer7221_adopt_targets.md. MEASUREMENT GOTCHA (logged): evaluating 400
+nets in ONE process under-scores scattered nets (ORT profiler state leak) — batch
+said 7141/7196; per-process isolated eval (matches Kaggle per-task scoring) = truth.
+networks/ NOT yet formalized (89 source regens + tasklogs pending); live submission
+built from submission/merged_nets/.

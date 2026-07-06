@@ -48,3 +48,14 @@ scale/flip `QLinearConv` positive-count and border-count detectors plus fp16
 `16.957622` at `memory=2792`, `params=318`. The exact integer semantics are real,
 but the expanded detector bank is more expensive than the current compact fp16
 template graph.
+
+## 2026-07-03 S12 — mech-16 (runtime-parameterized stamp) KILL (이중 반증)
+m∈{1,2,3} 전역 스칼라 검출은 성립 (green-cell count ReduceSum 스칼라 프로브, 범위
+{2,4}/{8,16}/{18,36} 분리). 그러나: ① 파라메트릭 패밀리 부재 — 인컴번트 3필터는
+개별 피팅된 matched filter지 스케일 패밀리가 아님 (m=1 커널의 Kronecker×m 업스케일
+= fresh 1500/1500 전패; +1 8-offset 클린 conv = 1399/2000 실패 — 페어링 강제 불가).
+② 비용 플로어 — 올바른 빌드는 2-스테이지(anchor+stamp) 필요, 신규 중간텐서 ≈ 뱅크
+절감분(~992B). 최소 mech-16 구조는 2927<3110로 싸지만 bundled 24/266 실패로 사망.
+지배 비용(green_f 400B + cyan30 900B)은 구조적. 산물: reports/candidates/task042_rts.py.
+⭐경계: tasklog의 "template bank"가 피팅된 필터 집합이면 mech-16 부적용 — 룰이
+기하학적 스케일 복제일 때만 성립. 재탐사 금지.

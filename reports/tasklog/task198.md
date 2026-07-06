@@ -75,3 +75,13 @@ the real ARC task is closed-form depth-1 wall-gap marking, fully separable. Re-t
 **Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
 Backup `reports/retired_networks/task198_pre_s10.onnx`; source `public_candidates/bobmyers7186/task198.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
 No transferable mechanism — minor trim.
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (submission 54367833): 12806 -> 12298 (+0.040)
+Mechanism: value_info Slice crop + CumSum.
+Gate (fresh_verify, inc/cand fail on 1500-2000): 0/0 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
+Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
+See memory [[neurogolf-urad-7225-bundle-vein]]. 
+
+## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 12298 -> 11412 (+0.075)
+Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

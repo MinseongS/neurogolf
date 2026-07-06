@@ -45,3 +45,6 @@ the scalars from the per-channel pixel-COUNT vector `cnt=ReduceSum(input,[2,3])`
 basegrid-Gather machinery of the prior net collapses to one ReduceSum + one ArgMax. Also: fold
 the `+1` of `value=...%mod+1` into the channel constant (chan[k]=k-1, chan[0]=255 unreachable)
 to drop a full-canvas Add plane.
+
+
+## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 1267 -> 1255 (+0.010); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].

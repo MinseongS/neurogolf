@@ -1,8 +1,8 @@
 # NeuroGolf 2026 — Scoreboard
 
-_Updated: 2026-07-03 19:37_
+_Updated: 2026-07-03 22:54_
 
-**Total: 7214.32 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
+**Total: 7214.44 pts** — 400/400 tasks solved (max 10,000; unsolved tasks score 0)
 
 | method | tasks | points |
 |---|---:|---:|
@@ -367,6 +367,7 @@ _Updated: 2026-07-03 19:37_
 | custom:task377 | 1 | 15.98 |
 | custom:task187 | 1 | 15.97 |
 | custom:task157 | 1 | 15.97 |
+| custom:task370 | 1 | 15.94 |
 | custom:task216 | 1 | 15.93 |
 | custom:task096 | 1 | 15.92 |
 | custom:task324 | 1 | 15.91 |
@@ -374,7 +375,6 @@ _Updated: 2026-07-03 19:37_
 | custom:task074 | 1 | 15.89 |
 | custom:task379 | 1 | 15.85 |
 | custom:task396 | 1 | 15.82 |
-| custom:task370 | 1 | 15.82 |
 | custom:task064 | 1 | 15.79 |
 | custom:task066 | 1 | 15.78 |
 | custom:task204 | 1 | 15.77 |
@@ -385,18 +385,18 @@ _Updated: 2026-07-03 19:37_
 | custom:task025 | 1 | 15.64 |
 | custom:task205 | 1 | 15.59 |
 | custom:task138 | 1 | 15.55 |
-| custom:task191 | 1 | 15.52 |
+| custom:task191 | 1 | 15.67 |
 | custom:task198 | 1 | 15.48 |
 | custom:task101 | 1 | 15.42 |
 | custom:task255 | 1 | 15.39 |
 | custom:task349 | 1 | 15.29 |
 | custom:task173 | 1 | 15.22 |
 | custom:task319 | 1 | 15.16 |
-| custom:task367 | 1 | 15.12 |
-| custom:task364 | 1 | 15.12 |
-| custom:task076 | 1 | 15.11 |
+| custom:task367 | 1 | 15.33 |
+| custom:task364 | 1 | 15.26 |
+| custom:task076 | 1 | 15.32 |
 | custom:task054 | 1 | 15.08 |
-| custom:task158 | 1 | 15.05 |
+| custom:task158 | 1 | 15.06 |
 | custom:task209 | 1 | 14.97 |
 | custom:task286 | 1 | 14.92 |
 | custom:task285 | 1 | 14.86 |
@@ -485,7 +485,7 @@ _Updated: 2026-07-03 19:37_
 | 073 | custom:task073 | 0 | 40 | 21.31 |
 | 074 | custom:task074 | 9000 | 50 | 15.89 |
 | 075 | custom:task075 | 1326 | 161 | 17.70 |
-| 076 | custom:task076 | 19456 | 340 | 15.11 |
+| 076 | custom:task076 | 15629 | 303 | 15.32 |
 | 077 | custom:task077 | 4500 | 1831 | 16.25 |
 | 078 | custom:task078 | 1260 | 33 | 17.84 |
 | 079 | custom:task079 | 3065 | 78 | 16.95 |
@@ -567,7 +567,7 @@ _Updated: 2026-07-03 19:37_
 | 155 | custom:task155 | 140 | 2 | 20.04 |
 | 156 | custom:task156 | 1697 | 47 | 17.54 |
 | 157 | custom:task157 | 7983 | 351 | 15.97 |
-| 158 | custom:task158 | 18263 | 2647 | 15.05 |
+| 158 | custom:task158 | 18089 | 2646 | 15.06 |
 | 159 | custom:task159 | 1419 | 149 | 17.64 |
 | 160 | custom:task160 | 1164 | 170 | 17.80 |
 | 161 | custom:task161 | 2471 | 99 | 17.15 |
@@ -600,7 +600,7 @@ _Updated: 2026-07-03 19:37_
 | 188 | custom:task188 | 869 | 149 | 18.07 |
 | 189 | custom:task189 | 866 | 47 | 18.18 |
 | 190 | custom:task190 | 2280 | 247 | 17.17 |
-| 191 | custom:task191 | 12919 | 171 | 15.52 |
+| 191 | custom:task191 | 11130 | 142 | 15.67 |
 | 192 | custom:task192 | 5745 | 1251 | 16.15 |
 | 193 | custom:task193 | 0 | 910 | 18.19 |
 | 194 | custom:task194 | 900 | 49 | 18.14 |
@@ -773,13 +773,13 @@ _Updated: 2026-07-03 19:37_
 | 361 | custom:task361 | 4322 | 366 | 16.55 |
 | 362 | custom:task362 | 408 | 113 | 18.74 |
 | 363 | custom:task363 | 3839 | 296 | 16.67 |
-| 364 | custom:task364 | 18500 | 1131 | 15.12 |
+| 364 | custom:task364 | 15860 | 1131 | 15.26 |
 | 365 | custom:task365 | 3808 | 124 | 16.72 |
 | 366 | custom:task366 | 30983 | 576 | 14.64 |
-| 367 | custom:task367 | 14800 | 4725 | 15.12 |
+| 367 | custom:task367 | 15300 | 590 | 15.33 |
 | 368 | custom:task368 | 6022 | 203 | 16.26 |
 | 369 | custom:task369 | 1300 | 299 | 17.62 |
-| 370 | custom:task370 | 8645 | 1024 | 15.82 |
+| 370 | custom:task370 | 7477 | 1094 | 15.94 |
 | 371 | custom:task371 | 376 | 91 | 18.85 |
 | 372 | custom:task372 | 0 | 710 | 18.43 |
 | 373 | custom:task373 | 0 | 60 | 20.91 |

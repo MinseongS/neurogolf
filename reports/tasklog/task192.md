@@ -73,3 +73,10 @@ free Equal output. mem 8515→5745, params 106→1251 (w_occ 1210 irreducible).
 Bit-identical 2500+600 uncached 0/0/0. Latency 0.095ms. Floors: occ_f 1600, target30 900.
 Fallback pure-f32 variant (no QLinearConv) exists in scratch at 6545+1248 (+0.101).
 Backup task192_pre_s9.onnx.
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k3(cost 6996): SGD fail; k5: LP numerically infeasible(HiGHS primal infeasible). cost<7700이라 phase-2도 uneconomical. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).
+
+
+## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 6996 -> 6837 (+0.023)
+Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

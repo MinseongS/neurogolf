@@ -10,21 +10,21 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('base_map', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')),
-        tensor('zero_idx', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAA')),
+        tensor('weight', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAAEAAAEBAAACAQAAAoEAAAMBAAADgQAAAAEEAABBB')),
         tensor('five_vec', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoFAAAA')),
+        tensor('zero_idx', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAA')),
+        tensor('base_map', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')),
     ]
     nodes = [
         helper.make_node('ReduceMax', ['input'], ['present_f'], axes=[0, 2, 3], keepdims=0),
-        helper.make_node('ArgMax', ['present_f'], ['first_i64'], axis=0, keepdims=1, select_last_index=0),
-        helper.make_node('ArgMax', ['present_f'], ['last_i64'], axis=0, keepdims=1, select_last_index=1),
-        helper.make_node('Cast', ['first_i64'], ['first_i32'], to=6),
-        helper.make_node('Cast', ['last_i64'], ['last_i32'], to=6),
-        helper.make_node('Add', ['first_i32', 'last_i32'], ['sum_i32']),
-        helper.make_node('Sub', ['sum_i32', 'five_vec'], ['color_vec']),
+        helper.make_node('Einsum', ['present_f', 'weight'], ['dot'], equation='k,kj->j'),
+        helper.make_node('Cast', ['dot'], ['dot_i32'], to=6),
+        helper.make_node('Sub', ['dot_i32', 'five_vec'], ['color_vec']),
         helper.make_node('Concat', ['zero_idx', 'color_vec'], ['scatter_indices'], axis=0),
         helper.make_node('Concat', ['color_vec', 'five_vec'], ['scatter_updates'], axis=0),
         helper.make_node('ScatterElements', ['base_map', 'scatter_indices', 'scatter_updates'], ['channel_map'], axis=0),
         helper.make_node('Gather', ['input', 'channel_map'], ['output'], axis=1),
     ]
-    return model('task389_live_exact', nodes, inits, output_dtype=1, opset=13)
+    value_infos = [
+    ]
+    return model('task389_live_exact', nodes, inits, output_dtype=1, opset=17, value_infos=value_infos)

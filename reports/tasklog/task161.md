@@ -101,3 +101,10 @@ sentinel Wheres (c_in, r_in) add the off-grid sentinel without an ingrid-And pla
 ⭐ NEW transferable lever: **fold a row⊗col Or into nested Where to delete the union
 carrier plane** — `Where(rowmask, v, bg)` (small) → `Where(colmask, v, that)` (full) =
 `(rowmask|colmask)?v:bg` in one plane. Generalises to any rect/cross paint task.
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (submission 54367833): 2551 -> 2306 (+0.101)
+Mechanism: Einsum + GatherElements.
+Gate (fresh_verify, inc/cand fail on 1500-2000): 0/0 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
+Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
+See memory [[neurogolf-urad-7225-bundle-vein]]. 

@@ -10,8 +10,9 @@ import numpy as np, onnx, onnxruntime as ort
 _ROOT = os.environ.get("NEUROGOLF_ROOT") or os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.insert(0, _ROOT)
 # appended (NOT insert-0): arc-gen has its own src/ that would shadow ours.
-# Prefer the project-local arc-gen/ (persistent) over the ephemeral /tmp copy.
-_ARCGEN = os.path.join(_ROOT, "arc-gen") if os.path.isdir(os.path.join(_ROOT, "arc-gen")) else "/tmp/arc-gen"
+_ARCGEN = os.path.join(_ROOT, "arc-gen")
+if not os.path.isdir(_ARCGEN):
+    raise FileNotFoundError(f"repo-local arc-gen not found: {_ARCGEN}")
 sys.path.append(_ARCGEN)
 from src.harness import load_task, sanitize_model
 

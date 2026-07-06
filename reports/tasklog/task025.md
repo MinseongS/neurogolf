@@ -134,3 +134,20 @@ the empirical max) is a mem lever, but it leaks on rare high-multiplicity instan
 0.14% five-line grids). Cross-ref the topk-width-refit memory: shrink K to empirical+small
 margin under the relaxed gate; note that even empirical-max sizing left a 0.05% residual here,
 so this is strictly a private-LB-risk trade, not a free win.
+
+
+## S16 adoption (2026-07-06) — yuu111111111 public-bundle net (+0.018)
+- Source: yuu111111111/neurogolf-6-failure-modes notebook (total 7235.05, embedded 400-net archive; MINED per-task despite lower total).
+- New grader cost = 10236 (mem 10132 + params 104), fail=0 bundled.
+- Fresh-gate 1500: incumbent fail = 2 | candidate fail = 2 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
+- Mechanism: structural golf: fewer counted node-output intermediates (graph rewrite, functionally equal on fresh).
+
+## S17 (2026-07-06) — FLOOR (fp16/int8 lever exhausted)
+- Measured on current S16 yuu net: mem 10132 / params 104 / pts 15.76633 (was 10320 at session
+  start; coordinator swapped in the yuu net mid-session — same structure, FLOOR verdict unchanged).
+  All 8 remaining f32 planes are entangled with the free f32 `input` via Einsum/ReduceSum
+  (col_bg_count, row_bg_count, v/h_color_counts, signed_v/h_desc, valid_col/row_count).
+  Converting any needs an 18000B fp16 input cast (DEAD) or a recast-back that washes.
+- pos_onehot→left/right/signed_mask fp16 chain: ORT has NO fp16 CumSum kernel (measured INVALID_GRAPH).
+  Color-count downstream (v_line_color_counts etc.) feeds input-Einsum51/53 → f32 required (wash).
+- No dead initializers. Design already casts every fp16-eligible leaf. No surviving lever.

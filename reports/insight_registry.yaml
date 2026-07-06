@@ -974,5 +974,111 @@
       "verification": "numpy walk-vs-BFS on 20000 fresh, stored eval, fresh_verify candidate<=incumbent, A/B submission for grader safety on first use"
     },
     "transformer": null
+  },
+  {
+    "id": "self_einsum_axis_activity_gate",
+    "title": "Use the input twice in one Einsum to gate final output by axis activity",
+    "status": "active",
+    "source_tasks": [
+      67
+    ],
+    "rationale": "Task067 reached 25.0 by replacing scalar size recovery plus an explicit column mask with one self-Einsum: `bkrc,blcd->bkrc`, with both operands wired to `input`. The second operand sums row `c` over channels and columns, which is positive exactly when output column `c` is inside the active size. Because the only node output is graph output, the data-dependent gate is computed inside a free final op: mem 39->0, params 8->0, points 21.15->25.0; stored 266/266 and fresh 1500/1500.",
+    "applies_when": {
+      "any_ops": [
+        "ReduceSum",
+        "Greater",
+        "Where",
+        "Pad",
+        "Einsum"
+      ],
+      "any_tags": [
+        "crop",
+        "repeated_block",
+        "onehot_final_equal",
+        "open_angle"
+      ],
+      "min_memory": 1
+    },
+    "reject_when": {
+      "any_tags": [
+        "requires_fixed_axis_constant",
+        "axis_activity_not_generator_invariant",
+        "same_colour_absence_can_make_active_axis_zero"
+      ]
+    },
+    "expected": {
+      "gain_type": "frontier_by_deleting_explicit_mask_and_constants",
+      "risk": "medium: repeated-input Einsum is exact only when the axis activity predicate is positive for every kept coordinate and zero for every rejected coordinate; verify colour-0 cells still produce one-hot occupancy",
+      "verification": "stored eval plus uncached fresh generation; inspect equation letters carefully because a wrong reused index silently gates the wrong axis"
+    },
+    "transformer": null
+  },
+  {
+    "id": "label_pad_vs_onehot_pad_ordering",
+    "title": "Choose label-pad vs onehot-pad order by compact spatial area",
+    "status": "active",
+    "source_tasks": [
+      308,
+      382
+    ],
+    "rationale": "For small compact outputs it is cheaper to expand labels to one-hot first and make the Pad node the free graph output: task308 uses `Equal(labels_grid, channel_ids)->Pad(output)` on a 7x7 board, costing 9*49=441B instead of a 900B padded label plane. For larger compact outputs the reverse is cheaper: task382 uses `Pad(color_index)->Equal(output)` on a 20x20 board, because one-hot-before-pad would cost about 10*400=4000B. A 2026-07-05 scan found no current `Pad(label)->Equal(output)` candidate below the break-even area, and no current `Equal(label)->Pad(output)` candidate above it.",
+    "applies_when": {
+      "any_ops": [
+        "Pad",
+        "Equal"
+      ],
+      "any_tags": [
+        "onehot_final_equal",
+        "label_map",
+        "crop"
+      ],
+      "min_memory": 1
+    },
+    "reject_when": {
+      "any_tags": []
+    },
+    "expected": {
+      "gain_type": "memory_by_swapping_final_label_expansion_order",
+      "risk": "low: purely algebraic if pad value is outside channel ids and Equal broadcasts identically; verify ORT Pad supports the bool output dtype/opset when using onehot-before-pad",
+      "verification": "stored eval and memory measurement for the single task; static break-even is compact_area * channel_count versus padded_label_area"
+    },
+    "transformer": null
+  },
+  {
+    "id": "uint8_presence_for_argmax",
+    "title": "Replace fp32 Sign presence vectors feeding ArgMax with Greater+Cast(uint8)",
+    "status": "active",
+    "source_tasks": [
+      234
+    ],
+    "rationale": "Task234 S12 improved 16.9266->17.0104 by replacing five fp32 `Sign(profile)` vectors that only fed ArgMax with `Greater(profile,0)->Cast(uint8)`. Bool ArgMax is rejected by ORT, but uint8 ArgMax is accepted. Each 30-vector changed from 120B fp32 to 30B bool + 30B uint8; stored 266/266 and fresh 1500/1500.",
+    "applies_when": {
+      "any_ops": [
+        "Sign",
+        "ArgMax",
+        "TopK",
+        "Greater",
+        "Cast"
+      ],
+      "any_tags": [
+        "scan",
+        "bbox",
+        "profile",
+        "open_angle"
+      ],
+      "min_memory": 60
+    },
+    "reject_when": {
+      "any_tags": [
+        "profile_magnitude_used_for_ordering",
+        "negative_profile_values_possible"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_by_halving_presence_profile_dtype",
+      "risk": "low-medium: exact only when downstream ordering needs binary nonzero presence, not counts or signed magnitude; bool must be cast to uint8 because ORT ArgMax rejects bool",
+      "verification": "stored eval and fresh verify for the single task; inspect each Sign consumer before replacing"
+    },
+    "transformer": null
   }
 ]

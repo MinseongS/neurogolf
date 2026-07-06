@@ -67,3 +67,10 @@ planes — predicates then build directly in the observed frame, no 4-way select
 ⭐ When the output's solid/frame region is a subset of the INPUT's marked cells
 minus an overlay, compute frame = input-occupancy AND NOT overlay instead of
 reconstructing the frame geometry from scalars.
+
+
+## S16 adoption (2026-07-06) — yuu111111111 public-bundle net (+0.032)
+- Source: yuu111111111/neurogolf-6-failure-modes notebook (total 7235.05, embedded 400-net archive; MINED per-task despite lower total).
+- New grader cost = 3356 (mem 3300 + params 56), fail=0 bundled.
+- Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
+- Mechanism: structural golf: fewer counted node-output intermediates (graph rewrite, functionally equal on fresh).

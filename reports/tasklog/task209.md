@@ -82,3 +82,12 @@ All candidate plane-merges measured byte-NEUTRAL with only 2 magnification sizes
 plane. Existence-based mag detector: 1/20000 fresh errors + saves only ~800-1200B
 (+0.04-0.05) on a net at 10.1% ambiguity wall — rejected under cand≤inc gate.
 Clean-corner+universality detector numpy 0/20000. DO NOT re-probe.
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (submission 54367833): 22716 -> 7927 (+1.053)
+Mechanism: Terminal GridSample (fp16 [1,30,30,2] grid vs fp32 input) = gather+mask+zero-pad in one free node.
+Gate (fresh_verify, inc/cand fail on 1500-2000): 216/55 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
+Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
+See memory [[neurogolf-urad-7225-bundle-vein]]. our incumbent fresh-failed 216/2000 (already ~0 on private LB); urad both cheaper AND more robust — strict win.
+
+## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 7927 -> 7862 (+0.008); gate inc/cand=34/34 (safe). See [[neurogolf-urad-7225-bundle-vein]].

@@ -26,3 +26,10 @@ lower memory is possible, but pays ~1940 params.  A real frontier breakthrough
 would need a hybrid: keep the live packed-output route while replacing the
 template bank with scalar/vector distance logic that does not materialize the
 four 18x18 corner fields.  No safe rewrite has been identified yet.
+
+
+## S16 adoption (2026-07-06) — yuu111111111 public-bundle net (+0.021)
+- Source: yuu111111111/neurogolf-6-failure-modes notebook (total 7235.05, embedded 400-net archive; MINED per-task despite lower total).
+- New grader cost = 6634 (mem 4691 + params 1943), fail=0 bundled.
+- Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
+- Mechanism: structural golf: fewer counted node-output intermediates (graph rewrite, functionally equal on fresh).

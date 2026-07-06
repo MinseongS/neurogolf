@@ -123,3 +123,68 @@ Crop lens checked by orchestrator: generator width=wide+randint(2,10), wide≤20
 reach 30×30. NOT croppable. Floor final. DO NOT re-probe.
 
 ## S11 (2026-07-03) — signed-priority overlay (playbook 15) scout: KILL — output = content-matched 3x3 sprite stamping (rotation-hash assignment); cost = 3600B detection read + 3136B sprite-window Conv + ~4860B hash-match/TopK planes + 9x ScatterND placement. No label/priority carrier to delete. S9 FLOOR stands under the new lens.
+
+## S16 (2026-07-06) — FLOOR verdict CORRECTED (user challenge + empirical audit)
+User: "top scorers have NO task below 16 → task233 must reach 16+." Audited.
+- **Public dumps DON'T help**: measured 9 distinct task233 nets across bobmyers/kojimar
+  (LB 7180-7220)/lucifer/urad7225 → ALL 14.3-14.5 pts. OURS 32796/1661=14.55 is the BEST
+  known. No public source ≤LB7225 reaches 16. So the 16+ nets (if real) come from the
+  true top (~7982), mechanism NOT in our dumps.
+- **3600 "detection floor" is SOFT, not absolute**: input is FREE [1,10,30,30] one-hot;
+  colour masks are channels. con1=Conv(input,wcol) 3600 fp32 index plane is an artifact of
+  collapsing one-hot→index, not mandatory. Prior "measured 7 ways" floor was about the index
+  VALUE, blind to per-channel masks.
+- **BUT fp32 input caps the true floor at ~16.1**: con1 3600 + vspr 3136 are fp32 Convs on
+  the fp32 input; casting input to fp16 = [1,10,30,30]=18000 counted (net-negative). So the
+  two detection Convs = 6736 hard fp32 → ceiling ~25-ln(7200)≈16.1. **18 pts IMPOSSIBLE**
+  (needs ≤1097; one Conv is 3600). User's "16점대" is right; "18" is not reachable.
+- **Popcount matching insufficient (re-confirmed)**: counts=sample(4..9) distinct → colour
+  trivial, BUT the 324-position hash (mul103 3240 + equ97 1620) is load-bearing for exact
+  PLACEMENT under adjacency (margin-0 touching patches break window-popcount). Incumbent's
+  5× unrolled 2-pass consume-once matcher = the correctness machinery.
+- **Safe-golf ceiling ~15.5-15.7**: core con1+vspr+hash ≈ 11.6KB is hard; collapsing the
+  5×[30,30] patches (4500) + parade + index → ~13KB → ~15.6. Real +1.0, not +1.5.
+- **The one lever that could reach true 16+: DYNAMIC SHAPES.** Incumbent hardcodes [30,30]/
+  [5,324]; grader = ORT profiler traces ACTUAL example sizes (task233 grids 8×8..17×9, small).
+  A dynamic crop (actual wide×tall) shrinks hash to ~[5,36] and patches to ≤400 → plausibly
+  3-9× on typical grids. HYPOTHESIS — needs (a) confirm grader profiles per-example actual
+  bytes not static shapes, (b) risky full restructure removing hardcoded reshapes/pads.
+- **Verdict: NOT floor. Two paths — safe surgical collapse (~+1.0, low risk) vs dynamic-shape
+  rebuild (~+1.5 to 16+, high risk/effort, grader-profiling assumption unverified).**
+
+## S16 cont. — MECHANISM VALIDATED (99.5% fresh) — FLOOR BROKEN, rebuild justified
+Numpy reference (scratchpad/t233_solve.py) proves the cheap rebuild is CORRECT:
+- **Detection collapses to ReduceSum on FREE input** (no con1/vspr fp32 planes):
+  colour counts = ReduceSum(input, axes=[0,2,3]) → [10] (40B). Each non-red/black colour
+  appears exactly (9 − popcount) times (it only fills its own 3×3 sprite bg), so
+  **popcount_c = 9 − count_c**, distinct per sprite. Red box via red row/col profiles
+  (Einsum → [30]). Detection ~500B vs incumbent 6736.
+- **Placement = shape matched-filter (EXACT)**: extract each outside sprite's 3×3 red-shape,
+  try 4 rotations, find the exact-match 3×3 window in the inside black plane, stamp colour +
+  keep shape red. Handles disconnection/sub-3×3 (generator's own while-loop bans ambiguous
+  rotations). **acc = 199/200 = 99.5% fresh**; the 1 fail = popcount-8 shape-extraction edge
+  in the numpy heuristic, NOT fundamental.
+- **Realistic target ~16.2** (crop ~900 + matched-filter ~3KB + output plane 900 + machinery
+  ≈ 6-8KB → 25−ln(~6.5K)≈16.2, from 14.55 = **+1.6**). 18 NOT reachable (matched-filter ~3KB).
+- **NEXT = build minimal ONNX** (opset 13, Einsum OK; ReduceSum detection + matched-filter
+  placement + stamp to FREE output). Gate: bundled 4/4 + fresh ≥98% + mem < 32796.
+
+## S16 fresh reconfirm: numpy ref 98.5% on 600 (9 fails = popcount-8/sub-3×3 shape-extraction
+edges in the numpy heuristic, not the mechanism). ONNX build must use EXACT 4-rotation
+matched-filter (pins sub-3×3 top-left) to safely clear the ≥98% fresh gate — target ≥99%.
+Build in progress: reports/candidates/task233_cheap.onnx (standalone; incumbent untouched).
+
+## S16 FINAL — over-optimism RETRACTED, incumbent CONFIRMED near-floor
+The "FLOOR BROKEN / ~16.2pts" claim above was WRONG. A fully-correct from-scratch cheap
+rebuild was actually built and measured:
+- reports/candidates/task233_cheap.onnx: ok=True, **mem 87035, params 862, points 13.616**,
+  bundled fail=0, fresh 800/800 = 100%. i.e. 100% CORRECT but **WORSE than incumbent by 0.934**.
+- Why the ReduceSum-detection optimism failed: a correct full net still needs ~15 full-grid
+  [30,30] planes (box detect + masks + crop + hole + hash) ≈ 30KB floor; ReduceSum popcount
+  only replaces colour-matching, not the bulk. Consume-once placement (required — vectorized
+  isolation-only = 96.67% fresh, below gate) adds more.
+- The incumbent ALREADY uses every lever: shared [5,324]+TopK-priority (S8), rot0-only
+  (wrot [9,4]->[9,1]), pub0/1/2 guards. Beating 32796 would require re-deriving the incumbent.
+- **VERDICT RESTORED: task233 is at/near floor at 32796 / 14.55. Do NOT re-attempt the cheap
+  rebuild.** Validated assets kept: scratchpad/proto.py (100% numpy mechanism), build_t233.py.
+  Net negative result: the mechanism is correct but NOT cheaper — incumbent encoding is optimal.

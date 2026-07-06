@@ -69,3 +69,6 @@ remaining lever is <0.1 pt and risks the 600s watchdog.
 ⭐ 2026-06-28 dtype update: small bitmap count Convs that only feed `Equal(count,k)` or
 `Greater(count,0)` should use uint8 `QLinearConv` with scale=1/zp=0, not fp16 Conv. Here it
 halved `occ_cnt`, `edge_cnt`, `corner_cnt`, and the seed/occupancy cast planes.
+
+
+## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 10563 -> 9834 (+0.072); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].

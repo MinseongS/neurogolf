@@ -178,3 +178,19 @@ Selection: any k-orientation / k-template match net still carrying large fixed `
 orientation-kernel initializers feeding a match einsum/conv, where a ~1% fresh-fail budget is
 acceptable. Do NOT use it to displace an already-exact 0-fail einsum unless the relaxed gate
 and a real cost win both hold.
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (submission 54367833): 11882 -> 11320 (+0.048)
+Mechanism: value_info Slice crop + QLinearConv.
+Gate (fresh_verify, inc/cand fail on 1500-2000): 17/17 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
+Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
+See memory [[neurogolf-urad-7225-bundle-vein]]. 
+## S16 (2026-07-06) — fp16-recast reduce plane: 11320 -> 11282 (+0.0042)
+Mechanism: motif_i32_sum was [1,1,5,5] int32 (100B) only to feed ReduceSum. motif in {0,1}, sum<=25 -> fp16 exact. Cast to=6 -> to=10 (fp16, 50B) + scalar Cast(fp16->int32) after ReduceSum. mem 11178->11130. Source-owned (src/custom/task191.py), rebuilt via rebuild_networks_from_source. Fresh-gate 2000/2000 cand!=inc=0 (bit-identical), fail=0. fp16 of the input-derived f32 planes (yellow_f32/scores) = FLOOR (needs 18000B input cast, measured mem 27880 LOSS); valid_u8_q 6ch = orientation floor.
+
+
+## S16 adoption (2026-07-06) — yuu111111111 public-bundle net (+0.016)
+- Source: yuu111111111/neurogolf-6-failure-modes notebook (total 7235.05, embedded 400-net archive; MINED per-task despite lower total).
+- New grader cost = 11092 (mem 11009 + params 83), fail=0 bundled.
+- Fresh-gate 1500: incumbent fail = 13 | candidate fail = 13 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
+- Mechanism: structural golf: fewer counted node-output intermediates (graph rewrite, functionally equal on fresh).

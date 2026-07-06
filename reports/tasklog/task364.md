@@ -109,3 +109,13 @@ Gather emits base value plane; green channel selected in-einsum via shared-lette
 Rows≠cols ⇒ two S matrices (20×20, 22×22; 884 params — params = ELEMENTS not bytes).
 fp16 einsum REJECTED (0·inf NaN risk under masking). Conservative fallback cand.py (+0.142,
 LB-proven ops only) kept in S8 scratchpad if candE ever hits a grader issue.
+
+# (appended) S16 2026-07-06 — fp16 EINSUM-SUBGRAPH RECAST (+0.144) ADOPTED
+Surgical mem golf on the live QLinearConv+walk-einsum net (18500/1131). Recast the whole
+Einsum float subgraph to fp16: initializers sel/Sr/Sc/zf/tabV/tabH/tabT -> fp16 + inserted
+GBh=Cast(GB->fp16) feeding both Einsums (GB stays f32 for the uint8/QLinearConv path).
+seedV/H/T (1760->880 ea) and WLU/WT (1760->880 ea) halve; net -2640 after +1760 GBh.
+mem 18500->15860, pts 15.115->15.2596. GB is a 0/1 one-hot mask; WLU/WT are bounded
+fractional path-products (max 4.5e-4 / 0.28) -> no overflow, no decisive underflow.
+Verified bit-identical: 266 bundled fail=0 + 2000 fresh (0 divergence) + rebuilt-source
+fresh 1200/1200 fail=0. Source edit in src/custom/task364.py; params unchanged (elements).

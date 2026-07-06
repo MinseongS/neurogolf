@@ -10,29 +10,18 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('red_starts', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==')),
-        tensor('red_ends', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAMAAAAAAAAAAwAAAAAAAAAFAAAAAAAAAA==')),
-        tensor('axes_hw', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAAMAAAAAAAAA')),
-        tensor('pads3', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAr/////////////////////AQAAAAAAAAABAAAAAAAAAA==')),
-        tensor('pads6', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAr//////////wEAAAAAAAAAAQAAAAAAAAD//////////w==')),
-        tensor('pads8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAP////////////////////8BAAAAAAAAAA==')),
-        tensor('pads7', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAEAAAAAAAAA/////////////////////w==')),
-        tensor('out_pads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAbAAAAAAAAABkAAAAAAAAA')),
-        tensor('one', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoB')),
+        tensor('w1', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAzLCAzKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIArn2ke9mBvMPv1OsL18R749LLQpP4RwBr6/+Ui9HRGaPYgE3b5fGii+Ek56PkcWnz7PUi6+4GmgvkOj9j0LWXK+GlPmvHOCC76vb8k+hyaMvyTE/L+2wwLAoFY4QPnfvr/ybDY+C+mcv1LmtL8kBcC8C2XGvdFsmz4rtRa+FHW4vDvxUD6Pira9UijwPOS3B74L2IQ9bfOqPY8pPb7MLrA+lcxsvtqJNb4Lm6G9hJuIPpJN4j1zBUs+UvZ+vgWWsD26lYU60QEmvhzZhb5H6JI+aAffvUvirz0Tah8+7R/FPqxiL72mZqi98cMPPm0r4z5pWZU+v58mPuJ/3z35yLo8YsGAPdHelD54STQ+yXFDvsnuHb2q8p+9Yb6HPhcbe76zrjq98gZKPDfoKD5zvqw9qn8APxa1oj3Qnk09SZ0YPeDvrz0DYXg9VPeyvSAKHD12TBW+X8vXvb1/ND4p5YQ9XaALPtWjoLs=')),
+        tensor('b1', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAp/sl0/')),
+        tensor('w2', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAxLCAzLCAzKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqhQ6a/HJclPiJwDb9/H20+283TP0dToT/a2H6/2yGdP0dTC74vc0a/4NzKvj3S+r6VnVy/EkmzvjIENL8E9uy+Xw1DvqJGDb/Aq9m+6I1av1Uu4r4cThe/vB55vpd8E7/60hS/1IQ5vwT5Sr8t7G69qpKROugzOzy7gSk8eNHsvrxx7b6wLrO9sYMUv4ubTz++zA2/0dpXv8YcrL6sCfW+fuNfv63VW7/3hBO/6mAcv2YgNr+WDw2/90P1vo+XCr+gciu/gF3Nvp8YCb95kAu/7mLIvgUB7b56S7O9b2iTPJfQoTyu6RTA90gjPjr2iD1svKY+NiJfv+RI5jwPWVA+3/Tvv174Ir0NSnC+LUN2PlTecj6zhVs9pqzXPbgpQ72n4LG9vSNkwPY77T6gUPw9HE5lv6sbRrz45Q09ZPegPGVBEr1AVjy/WXpxv8Ah477KrS+/A8JFv1Fsb77kubu+ZUMFvzuW8L4=')),
+        tensor('b2', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAxHO/q9x8v/DgfL8b9Hy/c+Z8v5HYfL9IzYS/EZqWvzGHf79L33y/')),
     ]
     nodes = [
-        helper.make_node('Slice', ['input', 'red_starts', 'red_ends'], ['red']),
-        helper.make_node('Cast', ['red'], ['red_u'], to=2),
-        helper.make_node('Pad', ['red_u', 'pads3', '', 'axes_hw'], ['ch3'], mode='constant'),
-        helper.make_node('Pad', ['red_u', 'pads6', '', 'axes_hw'], ['ch6'], mode='constant'),
-        helper.make_node('Pad', ['red_u', 'pads8', '', 'axes_hw'], ['ch8'], mode='constant'),
-        helper.make_node('Pad', ['red_u', 'pads7', '', 'axes_hw'], ['ch7'], mode='constant'),
-        helper.make_node('Max', ['ch3', 'ch6', 'ch7', 'ch8'], ['paint']),
-        helper.make_node('BitwiseXor', ['paint', 'one'], ['bg']),
-        helper.make_node('BitwiseXor', ['ch3', 'ch3'], ['zero']),
-        helper.make_node('Concat', ['bg', 'zero', 'zero', 'ch3', 'zero', 'zero', 'ch6', 'ch7', 'ch8'], ['small'], axis=1),
-        helper.make_node('Pad', ['small', 'out_pads'], ['output'], mode='constant'),
+        helper.make_node('Conv', ['input', 'w1', 'b1'], ['t1'], kernel_shape=[3, 3], pads=[1, 1, -26, -24]),
+        helper.make_node('Relu', ['t1'], ['t2']),
+        helper.make_node('Conv', ['t2', 'w2', 'b2'], ['output'], kernel_shape=[3, 3], pads=[1, 1, 28, 26]),
     ]
     value_infos = [
+        helper.make_tensor_value_info('t1', 1, [1, 1, 3, 5]),
+        helper.make_tensor_value_info('t2', 1, [1, 1, 3, 5]),
     ]
-    return model('task266_live_exact', nodes, inits, output_dtype=2, opset=18, value_infos=value_infos)
+    return model('task266_live_exact', nodes, inits, output_dtype=1, opset=16, value_infos=value_infos)

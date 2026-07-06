@@ -34,3 +34,10 @@ read the generator's coordinate bounds and shrink the working canvas to the TRUE
 An 8×8×8 fp32 crop (2048) beats any fp16-via-full-cast path because Pad cannot retype and the full-size cast
 intermediate dominates. Also: derive masks from each other (pres=(V>0); in-grid via 0-pad border) to DELETE
 whole channel-reduction convs, not just downcast them. → promote to project memory.
+
+
+## S16 adoption (2026-07-06) — yuu111111111 public-bundle net (+0.126)
+- Source: yuu111111111/neurogolf-6-failure-modes notebook (total 7235.05, embedded 400-net archive; MINED per-task despite lower total).
+- New grader cost = 1346 (mem 1176 + params 170), fail=0 bundled.
+- Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
+- Mechanism: int64->int32 recast on counted index tensors (cell_base, keep_pos_by_sum).

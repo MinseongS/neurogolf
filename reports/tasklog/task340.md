@@ -111,3 +111,13 @@ reduction found:
 Verified generator bound = 20 (bundled max 17×14). Flagged `colcount`/`rowcount` 1200B each are ReduceSum of the free input (inherently 30-wide); `og` [30,30] 900B feeds a QLinearMatMul → free Equal output. A 20×20 interior needs either an input Slice 12000B or Pad(og20→30) 900B (a wash). Confirms the existing tasklog 2400B floor. FLOOR.
 
 ⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (submission 54367833): 6091 -> 4714 (+0.256)
+Mechanism: value_info-legalized Slice/Pad crop off free input + Einsum.
+Gate (fresh_verify, inc/cand fail on 1500-2000): 0/0 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
+Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
+See memory [[neurogolf-urad-7225-bundle-vein]]. 
+
+## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 4714 -> 3709 (+0.240)
+Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

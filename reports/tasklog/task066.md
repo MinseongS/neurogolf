@@ -115,3 +115,6 @@ risk); epilogue 9 bool planes → ONE fp16 einsum 'bkh,bkw->bhw' (orientation = 
 9955+166 vs 16803+256 → +0.522. Fresh 2500×2+1500 div 0. fp16 einsum OK in ORT CPU.
 
 ## S11 (2026-07-03) — mech-15 finder scout: KILL — cost = 220-node S/U family legality SELECTION; output is a routed bent path, not separable rects. Carrier planes already einsum-folded S8. mech-15 cannot do family selection.
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k7(cost 10121): 3.7M 패치, ~400k viols(선형분리 불가, contradictions 아닌 halfspace 불가가 binding). 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).

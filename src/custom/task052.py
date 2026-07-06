@@ -10,21 +10,26 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('rois', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDQpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAQEAAAEBA')),
-        tensor('batch_indices', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAA==')),
-        tensor('solid_threshold', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAEA/')),
+        tensor('hsel', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMwLCAzKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
+        tensor('one', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/')),
+        tensor('k7', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAOBA')),
+        tensor('k5', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAKBA')),
+        tensor('z', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGIxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDMsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAA=')),
         tensor('pads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAbAAAAAAAAABsAAAAAAAAA')),
     ]
     nodes = [
-        helper.make_node('RoiAlign', ['input', 'rois', 'batch_indices'], ['row_hist'], coordinate_transformation_mode='half_pixel', mode='avg', output_height=3, output_width=1, sampling_ratio=3, spatial_scale=1.0),
-        helper.make_node('ReduceMax', ['row_hist'], ['row_max'], axes=[1], keepdims=1),
-        helper.make_node('Greater', ['row_max', 'solid_threshold'], ['solid_col']),
-        helper.make_node('Not', ['solid_col'], ['black_col']),
-        helper.make_node('And', ['solid_col', 'black_col'], ['zero_col']),
-        helper.make_node('Concat', ['black_col', 'zero_col', 'zero_col', 'zero_col', 'zero_col', 'solid_col'], ['top6_col'], axis=1),
-        helper.make_node('Concat', ['top6_col', 'top6_col', 'top6_col'], ['top6'], axis=3),
-        helper.make_node('Pad', ['top6', 'pads'], ['output'], mode='constant'),
+        helper.make_node('Einsum', ['input', 'input', 'hsel', 'one'], ['E'], equation='achw,achv,hr,xy->axry'),
+        helper.make_node('Greater', ['E', 'k7'], ['g7']),
+        helper.make_node('Equal', ['E', 'k5'], ['ns']),
+        helper.make_node('Concat', ['ns', 'z', 'z', 'z', 'z', 'g7'], ['cat'], axis=1),
+        helper.make_node('Concat', ['cat', 'cat', 'cat'], ['wide'], axis=3),
+        helper.make_node('Pad', ['wide', 'pads'], ['output'], mode='constant'),
     ]
     value_infos = [
+        helper.make_tensor_value_info('E', 1, [1, 1, 3, 1]),
+        helper.make_tensor_value_info('g7', 9, [1, 1, 3, 1]),
+        helper.make_tensor_value_info('ns', 9, [1, 1, 3, 1]),
+        helper.make_tensor_value_info('cat', 9, [1, 6, 3, 1]),
+        helper.make_tensor_value_info('wide', 9, [1, 6, 3, 3]),
     ]
-    return model('task052_live_exact', nodes, inits, output_dtype=9, opset=16, value_infos=value_infos)
+    return model('task052_live_exact', nodes, inits, output_dtype=9, opset=17, value_infos=value_infos)

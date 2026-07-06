@@ -10,27 +10,24 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
+        tensor('w_fg', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/')),
         tensor('big_f16', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAZA==')),
+        tensor('row_index', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDMwLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAQAAAQEAAAIBAAACgQAAAwEAAAOBAAAAAQQAAEEEAACBBAAAwQQAAQEEAAFBBAABgQQAAcEEAAIBBAACIQQAAkEEAAJhBAACgQQAAqEEAALBBAAC4QQAAwEEAAMhBAADQQQAA2EEAAOBBAADoQQAA8EE=')),
         tensor('affine_weight', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoASg==')),
         tensor('affine_bias', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAPA==')),
-        tensor('one_2d', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/')),
-        tensor('row_index', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDMwLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAQAAAQEAAAIBAAACgQAAAwEAAAOBAAAAAQQAAEEEAACBBAAAwQQAAQEEAAFBBAABgQQAAcEEAAIBBAACIQQAAkEEAAJhBAACgQQAAqEEAALBBAAC4QQAAwEEAAMhBAADQQQAA2EEAAOBBAADoQQAA8EE=')),
-        tensor('row_index_sq', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDMwLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AACAQAAAEEEAAIBBAADIQQAAEEIAAERCAACAQgAAokIAAMhCAADyQgAAEEMAAClDAABEQwAAYUMAAIBDAICQQwAAokMAgLRDAADIQwCA3EMAAPJDAEAERAAAEEQAQBxEAAApRABANkQAAEREAEBSRAAAYUQ=')),
         tensor('row_index_i8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDMwLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0=')),
         tensor('col_index_i8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEsIDMwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0=')),
-        tensor('foreground_channels', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGIxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAQEBAQEBAQEB')),
     ]
     nodes = [
-        helper.make_node('Einsum', ['input', 'one_2d'], ['counts'], equation='bchw,xy->bcxy'),
+        helper.make_node('Einsum', ['input', 'w_fg'], ['counts'], equation='bchw,cxy->bcxy'),
         helper.make_node('Cast', ['counts'], ['counts_f16'], to=10),
         helper.make_node('Cast', ['counts_f16'], ['count_nonzero'], to=9),
-        helper.make_node('And', ['count_nonzero', 'foreground_channels'], ['selectable']),
-        helper.make_node('Where', ['selectable', 'counts_f16', 'big_f16'], ['masked_counts']),
-        helper.make_node('ReduceMin', ['masked_counts'], ['area_f16'], axes=[1], keepdims=1),
+        helper.make_node('Where', ['count_nonzero', 'counts_f16', 'big_f16'], ['masked_counts']),
+        helper.make_node('ReduceMin', ['masked_counts'], ['area_f16'], keepdims=1),
         helper.make_node('Equal', ['masked_counts', 'area_f16'], ['selected_b']),
         helper.make_node('Cast', ['selected_b'], ['selected_f32'], to=1),
         helper.make_node('Einsum', ['input', 'row_index', 'selected_f32'], ['row_m1'], equation='bchw,bxhy,bcxy->bxy'),
-        helper.make_node('Einsum', ['input', 'row_index_sq', 'selected_f32'], ['row_m2'], equation='bchw,bxhy,bcxy->bxy'),
+        helper.make_node('Einsum', ['input', 'row_index', 'row_index', 'selected_f32'], ['row_m2'], equation='bchw,bxhy,bxhy,bcxy->bxy'),
         helper.make_node('Cast', ['row_m1'], ['row_m1_f16'], to=10),
         helper.make_node('Cast', ['row_m2'], ['row_m2_f16'], to=10),
         helper.make_node('Div', ['row_m1_f16', 'area_f16'], ['row_mean']),
@@ -48,4 +45,6 @@ def build(task):
         helper.make_node('Cast', ['selected_b'], ['selected_i8'], to=3),
         helper.make_node('Min', ['selected_i8', 'row_score_i8', 'col_score_i8'], ['output']),
     ]
-    return model('task049_live_exact', nodes, inits, output_dtype=3, opset=14)
+    value_infos = [
+    ]
+    return model('task049_live_exact', nodes, inits, output_dtype=3, opset=17, value_infos=value_infos)

@@ -66,3 +66,10 @@ the n shown cells are consecutive, so a 1-D modular Gather replaces a 30×30
 equality matrix (saved ~2700B vs the MatMul-Teq idiom). Pairs with the now-proven
 "grid extent is visible because off-grid is all-channels-off" lever → separable
 rowany⊗colany in-grid mask (120B vs 3600B ReduceMax plane).
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (submission 54367833): 4406 -> 4027 (+0.090)
+Mechanism: Einsum + GatherElements.
+Gate (fresh_verify, inc/cand fail on 1500-2000): 0/0 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
+Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
+See memory [[neurogolf-urad-7225-bundle-vein]]. 

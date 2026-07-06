@@ -54,3 +54,6 @@ to the un-transposed output; use the raw input-frame occupancy (`bg-ch0 OR M>0`)
 for the off-grid sentinel. Also: when every in-grid row/col is guaranteed to
 contain a background cell, the channel-0 background slice alone gives exact W/H via
 1-D reductions — no separate occupancy plane needed.
+
+
+## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 5741 -> 5732 (+0.002); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].

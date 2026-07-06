@@ -10,17 +10,24 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('one', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/')),
-        tensor('channel_sign', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIC/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAA')),
-        tensor('basis', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsIDMwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
-        tensor('coeff', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsIDMsIDMpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAwDTEAACewgCAIkQAAIC/AACeQgAAgL8AwDREAACAvwCAIsQAANhBAACAPwAA0MEAAAAAAACAvwAAAAAAANjBAAAAAAAA0EEAAADAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAMA=')),
+        tensor('one', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAPA==')),
+        tensor('channel_sign', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAvAAAAAAAAAAAADwAAAAAAAAAAA==')),
+        tensor('basis', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsIDMwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
+        tensor('coeff', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsIDMsIDMpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo30BXG/1KKuRVGirk3UIq5/9IlPVIiksBgoFKiYKAlvWCgkkAYrkYgtzHIk0agyJMYLsiTt7E=')),
     ]
     nodes = [
         helper.make_node('Einsum', ['input', 'input'], ['q'], equation='nchw,ncxy->n'),
         helper.make_node('Einsum', ['input', 'input', 'input'], ['p3'], equation='nchw,ncxy,ncab->n'),
-        helper.make_node('Concat', ['one', 'q', 'p3'], ['features'], axis=0),
-        helper.make_node('Einsum', ['features', 'input', 'channel_sign', 'basis', 'basis', 'coeff'], ['output'], equation='f,ndrc,k,ir,jc,fij->nkrc'),
+        helper.make_node('Cast', ['q'], ['q16'], to=10),
+        helper.make_node('Cast', ['p3'], ['p316'], to=10),
+        helper.make_node('Concat', ['one', 'q16', 'p316'], ['features'], axis=0),
+        helper.make_node('Einsum', ['one', 'features', 'channel_sign', 'basis', 'basis', 'coeff'], ['output'], equation='b,f,k,ir,jc,fij->bkrc'),
     ]
     value_infos = [
+        helper.make_tensor_value_info('q', 1, [1]),
+        helper.make_tensor_value_info('p3', 1, [1]),
+        helper.make_tensor_value_info('q16', 10, [1]),
+        helper.make_tensor_value_info('p316', 10, [1]),
+        helper.make_tensor_value_info('features', 10, [3]),
     ]
-    return model('task167_live_exact', nodes, inits, output_dtype=1, opset=13, value_infos=value_infos)
+    return model('task167_live_exact', nodes, inits, output_dtype=10, opset=13, value_infos=value_infos)

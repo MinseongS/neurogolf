@@ -87,3 +87,6 @@ K1=46/K2=47 UNCHANGED (leak-incident constraint respected). W1/W2 3600→1296 ea
 +P 1296+bool 324; mem 8100→5112, params 940→901, total 9040→6013. Bit-identical:
 0/800 vs deployed onnx, 2500+600 uncached fresh 0/0/0. Latency 4.5ms (was ~100-150ms).
 Backup task243_pre_s9.onnx.
+
+## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
+k5(cost 6013): 296k viols. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).

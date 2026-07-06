@@ -78,3 +78,6 @@ The residual ~16.0 floor = 3600B fp32 colour-Conv + 900B uint8 output-route, bot
 
 ## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
 mem 2792/16.92; full_idx 900B uint8 30x30 label carrier for free Equal->output, idx_f32 400B forced-fp32 crop, spatial_select [10,30] shape-locked. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).
+
+
+## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 3227 -> 3223 (+0.001); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].

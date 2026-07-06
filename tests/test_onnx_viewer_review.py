@@ -22,6 +22,23 @@ class ReviewSummaryTest(unittest.TestCase):
         self.assertEqual(summary["bbox_max"], (3, 4))
         self.assertTrue(summary["fixed_delta"])
 
+    def test_filters_oversized_examples_instead_of_crashing(self):
+        good = {"source": "arc-gen", "index": 0,
+                "input": [[1, 2], [3, 4]], "output": [[4, 3], [2, 1]]}
+        # 15x34 input exceeds the 30-wide ONNX grid; official scoring skips it.
+        oversized = {"source": "arc-gen", "index": 1,
+                     "input": [[0] * 34 for _ in range(15)],
+                     "output": [[0] * 17 for _ in range(15)]}
+
+        valid, skipped = viewer.convertible_examples([good, oversized])
+
+        self.assertEqual(skipped, 1)
+        self.assertEqual(len(valid), 1)
+        self.assertEqual(valid[0]["index"], 0)
+        # Every surviving example must be renderable without raising.
+        for example in valid:
+            viewer.example_to_arrays(example)
+
     def test_suggests_questions_from_cost_and_data_patterns(self):
         data_summary = {
             "fixed_delta": True,

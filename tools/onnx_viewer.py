@@ -30,6 +30,7 @@ from src.harness import (
     sanitize_model,
     score_network,
 )
+from tools.dashboard import render_dashboard
 
 
 NETWORKS = ROOT / "networks"
@@ -50,6 +51,17 @@ ARC_COLORS = {
     8: "#06b6d4",
     9: "#7c3aed",
 }
+
+
+@st.cache_data
+def load_manifest_tasks() -> dict[str, Any]:
+    path = REPORTS / "manifest.json"
+    if not path.exists():
+        return {}
+    with path.open() as f:
+        data = json.load(f)
+    tasks = data.get("tasks", {})
+    return tasks if isinstance(tasks, dict) else {}
 
 
 def color_grid_to_onehot(grid: np.ndarray) -> np.ndarray:
@@ -477,6 +489,25 @@ def example_to_arrays(example: dict[str, Any]) -> tuple[np.ndarray, np.ndarray, 
     return normalize_arc_grid(example["input"]), normalize_arc_grid(example["output"]), benchmark["input"]
 
 
+def convertible_examples(
+    examples: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], int]:
+    """Drop examples the ONNX grid can't hold (>30x30) so the viewer never crashes.
+
+    Official scoring also excludes these via convert_to_numpy returning None.
+    """
+    valid: list[dict[str, Any]] = []
+    skipped = 0
+    for example in examples:
+        try:
+            example_to_arrays(example)
+        except Exception:
+            skipped += 1
+            continue
+        valid.append(example)
+    return valid, skipped
+
+
 def run_examples(model_or_path: Any, examples: list[dict[str, Any]]) -> list[dict[str, Any]]:
     session, err = make_session(model_or_path)
     if err:
@@ -543,13 +574,31 @@ def append_proposal(task_num: int, proposal: str, questions: list[str]) -> pathl
     return path
 
 
-def main() -> None:
-    st.set_page_config(page_title="NeuroGolf ONNX Viewer", layout="wide")
-    st.title("NeuroGolf ONNX Viewer")
+def _initial_task() -> int:
+    """Initial task number for the viewer: ?task= query param, else drilled/default."""
+    qp = st.query_params.get("task")
+    if qp is not None and str(qp).isdigit():
+        return max(1, min(400, int(qp)))
+    return int(st.session_state.get("viewer_task", 187))
+
+
+def render_viewer() -> None:
+    st.title("🔬 NeuroGolf ONNX Viewer")
 
     with st.sidebar:
         st.header("Task")
-        task_num = st.number_input("Task", min_value=1, max_value=400, value=187, step=1)
+        task_num = st.number_input(
+            "Task", min_value=1, max_value=400, value=_initial_task(), step=1
+        )
+        manifest_tasks = load_manifest_tasks()
+        manifest_row = manifest_tasks.get(f"{int(task_num):03d}") or manifest_tasks.get(str(int(task_num)))
+        if manifest_row:
+            st.caption("Current manifest")
+            st.metric("points", f"{float(manifest_row.get('points', 0.0)):.6f}")
+            c1, c2 = st.columns(2)
+            c1.metric("mem", f"{int(manifest_row.get('memory', 0)):,}")
+            c2.metric("params", f"{int(manifest_row.get('params', 0)):,}")
+            st.caption(str(manifest_row.get("method", "-")))
         data_source = st.radio(
             "Examples",
             ["stored", "fresh cache"],
@@ -596,6 +645,12 @@ def main() -> None:
         examples, fresh_err = fresh_examples(int(task_num))
         if fresh_err:
             st.warning(fresh_err)
+    examples, skipped = convertible_examples(examples)
+    if skipped:
+        st.warning(
+            f"{skipped} example(s) exceed the 30×30 ONNX grid and were skipped "
+            "(they are also excluded from official scoring)."
+        )
     examples = examples[: int(max_examples)]
 
     if not examples:
@@ -765,5 +820,20 @@ def main() -> None:
             render_grid(diff_grid, f"{label}-diff", row["mismatches"])
 
 
+def _run_app() -> None:
+    st.set_page_config(page_title="NeuroGolf", layout="wide")
+    dashboard_page = st.Page(
+        render_dashboard, title="Dashboard", icon="📊", default=True
+    )
+    viewer_page = st.Page(
+        render_viewer, title="Task Viewer", icon="🔬", url_path="viewer"
+    )
+    # Expose the viewer page so the dashboard can drill down into it.
+    st.session_state["_viewer_page"] = viewer_page
+    st.navigation([dashboard_page, viewer_page]).run()
+
+
+# Streamlit executes the target script as "__main__"; importing the module
+# (e.g. in tests) must not launch the app.
 if __name__ == "__main__":
-    main()
+    _run_app()

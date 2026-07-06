@@ -160,3 +160,7 @@ extra cast/CumSum tensors exceed the removed split/add stack.
 
 No reusable registry patch proposed from this agent beyond the existing lesson:
 row-crop any run/scan mechanism after proving generator header/blank rows.
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (sub 54367833): 2751 -> 2692 (+0.022)
+Mechanism: Einsum + value_info Slice. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). Source-owned via live_to_exact_source --write-src, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].

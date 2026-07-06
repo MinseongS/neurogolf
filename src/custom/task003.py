@@ -17,7 +17,8 @@ def build(task):
         tensor('row2_idx', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAA==')),
         tensor('row3_idx', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoDAAAAAAAAAA==')),
         tensor('one_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoB')),
-        tensor('pads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwAAAAAAAAAVAAAAAAAAABsAAAAAAAAA')),
+        tensor('cw', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAyLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAEAAAAAAAAAAAAAAAAAAA==')),
+        tensor('zp0', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
     ]
     nodes = [
         helper.make_node('Slice', ['input', 'slice_blue_starts', 'slice_blue_ends'], ['one6_f']),
@@ -35,10 +36,9 @@ def build(task):
         helper.make_node('Where', ['is_period3', 'r2', 'r0'], ['tail2']),
         helper.make_node('Concat', ['one6', 'tail0', 'tail1', 'tail2'], ['ch2_valid'], axis=2),
         helper.make_node('BitwiseXor', ['one_u8', 'ch2_valid'], ['ch0_valid']),
-        helper.make_node('BitwiseXor', ['ch2_valid', 'ch2_valid'], ['zero1_valid']),
-        helper.make_node('Concat', ['ch0_valid', 'zero1_valid', 'ch2_valid'], ['valid3'], axis=1),
-        helper.make_node('Pad', ['valid3', 'pads'], ['output'], mode='constant'),
+        helper.make_node('Concat', ['ch0_valid', 'ch2_valid'], ['ch0ch2'], axis=1),
+        helper.make_node('ConvInteger', ['ch0ch2', 'cw', 'zp0'], ['output'], kernel_shape=[1, 1], pads=[0, 0, 21, 27]),
     ]
     value_infos = [
     ]
-    return model('task003_live_exact', nodes, inits, output_dtype=2, opset=18, value_infos=value_infos)
+    return model('task003_live_exact', nodes, inits, output_dtype=6, opset=18, value_infos=value_infos)

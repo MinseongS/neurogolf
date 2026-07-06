@@ -37,3 +37,12 @@ first full-line row, gather line/block cells to a tiny bitmap, solve on it, rout
 small result to the free output. Watch the linecolor probe — pick a line cell that is
 provably NOT an intersection (column 0 of a line row), since the stamp region can
 reach the corner when brow=bcol=0.
+
+## 2026-07-03 S12 — mech-16 (runtime-parameterized stamp) KILL (측정 반증)
+스카우트가 "per-sp 뱅크+mux ~660B"로 지목했으나 실측: 3개 grid conv는 free 입력의
+static-stride 단일-탭 컬러 읽기 (sample+reduce 융합, 각 ~200B 출력) = 이미 검출
+플로어. p 선-검출 후 runtime Gather로 통합하면 소스 평면이 필요 → full-res 컬러
+평면 3600B가 강제 (인컴번트 전체 mem 1651보다 큼). 후보 실측 6468 vs 1961 (−1.19pt),
+bit-identical(2500 fresh 발산 0)이지만 비용 실격. 산물: reports/candidates/task185_rts.py.
+⭐경계 조건: mech-16은 "기존 평면 위 same-shape 커널 뱅크"에만 성립 — 뱅크가
+free-input strided 탭 읽기면 통합이 오히려 평면을 구체화시킴. 재탐사 금지.

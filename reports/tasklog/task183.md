@@ -34,3 +34,7 @@ Everything else is ≤144B (the cyan fp32 6×6 Slice) or fp16/uint8 small planes
 ⭐ **size = sqrt(ReduceSum(input,[1,2,3])) − const** when the grid is a full k×k of one-hot cells (every cell sets exactly one channel ⇒ total sum = side²) — a 4B scalar, no row/col profile plane.
 ⭐ **equal-then-pad beats pad-then-equal** for per-cell-coloured outputs: build the [1,fewch,K,K] one-hot at the small active size, Cast uint8, then Pad-into-the-free-output — 720B vs the 900B full-canvas label carrier.
 ⭐ **nested Where for a separable 2×2 quadrant colour map**: qcol = Where(rowhalf, Where(colhalf,TL,TR), Where(colhalf,BL,BR)) — ONE K×K plane + two tiny row vectors, vs 8 outer-product Muls + a Sum.
+
+
+## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (sub 54367833): 1048 -> 1025 (+0.022)
+Mechanism: single Einsum. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). Source-owned via live_to_exact_source --write-src, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
