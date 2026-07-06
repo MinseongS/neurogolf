@@ -6,7 +6,7 @@ from __future__ import annotations
 import logging
 import numpy as np
 
-PROBE_VERSION = 3
+PROBE_VERSION = 4
 
 
 def _agree(flags: list[bool]) -> float:
@@ -164,15 +164,21 @@ def probe_flood_ccl(samples):
     # over 40 samples). Requiring mean component count > 4 keeps task077 True (measured ~6.5-7.2,
     # comfortable margin) while pulling the global rate back down to ~42% (measured 168/400).
     # Background-fill flood (bg_flood below) is unaffected -- it stays True unconditionally.
+    # PROBE_VERSION 4 (task-6 review fix): bg_fracs/dom_fracs/n_comps must stay length-aligned
+    # (all three appended-to exactly once per sample) so np.mean() over each is computed over the
+    # same denominator -- the early-continue branches below previously appended to bg_fracs/
+    # dom_fracs but NOT n_comps, silently shrinking n_comps's effective sample count whenever a
+    # generator mixed no-op/shape-mismatch samples with real ones. A no-op/mismatch sample
+    # contributes 0 components, so append 0 here too.
     bg_fracs, dom_fracs, n_comps = [], [], []
     for i, o in samples:
         i = np.asarray(i); o = np.asarray(o)
         if i.shape != o.shape:
-            bg_fracs.append(0.0); dom_fracs.append(0.0); continue
+            bg_fracs.append(0.0); dom_fracs.append(0.0); n_comps.append(0); continue
         changed = (i != o)
         n_changed = int(changed.sum())
         if n_changed == 0:
-            bg_fracs.append(0.0); dom_fracs.append(0.0); continue
+            bg_fracs.append(0.0); dom_fracs.append(0.0); n_comps.append(0); continue
         filled_bg = int(((i == 0) & changed).sum())
         bg_fracs.append(filled_bg / n_changed)
         _, counts = np.unique(i[changed], return_counts=True)
