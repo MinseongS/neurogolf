@@ -76,3 +76,8 @@ uint8.  Stored score: 266/266, mem 3144→2886, params 64, points
 ⭐ TRANSFERABLE: when a nonnegative fp32 profile is reduced to presence solely for
 `ArgMax`/`TopK` ordering over {0,1}, prefer `Greater(profile,0)->Cast(uint8)`
 over `Sign(profile)`.  Do not feed bool directly to ArgMax; ORT rejects it.
+
+## S17 (2026-07-06) — dtype-overpay recast (bit-identical safe golf, +dtype_overpay_scan)
+task234 present9 (int 0..67) → uint8 via upstream Cast(pixel_all→uint8) before Slice so Slice emits uint8. 2950→2934 (−16).
+Gate: evaluate bundled fail=0 + **bit-identical outputs** over all train/test/arc-gen (verified). Safe for both tracks + private LB.
+⭐ TRANSFERABLE: only ACTIVATION (node-output) dtype narrowing saves grader bytes — params counted by element-count (dtype-independent). Narrow the PRODUCER (upstream Cast/init dtype), never a post-Cast. Blocked when the plane is derived from / contracted with the free fp32 `input` (Einsum-vs-input, Slice/Conv of input, ScatterND updates vs fp32 data) → those force fp32. See [[neurogolf-fp16-count-plane-recast]].

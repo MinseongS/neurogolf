@@ -18,8 +18,14 @@
   (`overfit_submission.zip` → 400 "must be named submission.zip"). 제출 전 반드시 `submission.zip`으로 복사/rename.
   Kaggle API `max_daily_submissions=100` 확인. → 자유롭게 제출.
 
-## 🎯 사용자 방향 (S17 확정): "리더보드 통과되면 오버핏이든 뭐든 상관없어. 7248.76 완전히 가져가고 더 올려."
-private-LB 위험 명시적으로 수용. **public LB 최대화가 목표.** 안전/오버핏 구분 없이 점수↑면 채택.
+## 🚨🚨 S17 핵심 사실 (사용자, 명시 기록 지시): 체점 데이터셋은 항상 일정 = NO RESCORE
+"한번만 통과되면 계속 통과된다." bundled fail=0 한번 = 07-15 private LB까지 영구 통과.
+⇒ **오버핏은 영구 안전. safe/overfit 구분 무의미. fresh_verify 불필요.** 그냥 단일 bundled-fail=0 점수를
+최대화. 제출 하나(`submission.zip`)로 모든 넷을 bundled-min으로. 최고 = **LB 7248.94 (sub 54398145)**.
+단 메모리제이션은 여전히 死 (arc-gen 262/태스크). per-task leaky 재구성 = pure upside (위험 없음).
+
+## 🎯 사용자 방향 (S17): "리더보드 통과되면 오버핏이든 뭐든 상관없어. 더 올려."
+**목표 = 단일 bundled-fail=0 점수 최대화** (위 constant-dataset 사실로 안전/오버핏 구분 제거됨).
 
 ## 🔴 다음 세션 = 오버핏 극대화 (available 레버는 소진, 남은 건 DEEP per-task 재구성)
 S17에서 mechanical 오버핏 레버는 전부 소진 확인:

@@ -228,3 +228,8 @@ shared fail = known non-input-deterministic thin-pot ambiguity (unfixable).
 
 ## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
 k7(cost 6689): 588k viols, early kill. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).
+
+## S17 (2026-07-06) — dtype-overpay recast (bit-identical safe golf, +dtype_overpay_scan)
+task002 't'=Sub(ONE,g) {0,1}-ish → fp16 activation recast (t,W,g16 + inits fp16); Greater(t,W) is sign/zero-sensitive so fp16 magnitude overflow on W is harmless. 6689→5889 (−800).
+Gate: evaluate bundled fail=0 + **bit-identical outputs** over all train/test/arc-gen (verified). Safe for both tracks + private LB.
+⭐ TRANSFERABLE: only ACTIVATION (node-output) dtype narrowing saves grader bytes — params counted by element-count (dtype-independent). Narrow the PRODUCER (upstream Cast/init dtype), never a post-Cast. Blocked when the plane is derived from / contracted with the free fp32 `input` (Einsum-vs-input, Slice/Conv of input, ScatterND updates vs fp32 data) → those force fp32. See [[neurogolf-fp16-count-plane-recast]].

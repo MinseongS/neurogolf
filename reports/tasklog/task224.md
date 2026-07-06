@@ -67,3 +67,8 @@ ReduceMax; an intermediate Cast→fp16 of the 16×16 plane (512 B) is pure waste
 ⭐ **An "& ingrid" gate is redundant when a final `Where(ingrid, …, sentinel)`
 runs last** — the sentinel overwrites every outside-grid cell regardless, so any
 spurious inside-mask truth outside the grid is harmless. Saves a 2-D AND plane.
+
+## S17 (2026-07-06) — dtype-overpay recast (bit-identical safe golf, +dtype_overpay_scan)
+task224 row_has: replaced Sign(row_sum)→fp32 with Greater(row_sum,0)→bool + Cast→uint8 (row_sum∈{0,1,2}, threshold clamp needed); ArgMax on {0,1} identical. 2831→2772 (−59).
+Gate: evaluate bundled fail=0 + **bit-identical outputs** over all train/test/arc-gen (verified). Safe for both tracks + private LB.
+⭐ TRANSFERABLE: only ACTIVATION (node-output) dtype narrowing saves grader bytes — params counted by element-count (dtype-independent). Narrow the PRODUCER (upstream Cast/init dtype), never a post-Cast. Blocked when the plane is derived from / contracted with the free fp32 `input` (Einsum-vs-input, Slice/Conv of input, ScatterND updates vs fp32 data) → those force fp32. See [[neurogolf-fp16-count-plane-recast]].

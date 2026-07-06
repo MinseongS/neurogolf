@@ -63,3 +63,8 @@ occupancy, connectivity) are symmetric and fail.
 side BEFORE the Gather(arange+first_idx) so a bbox-min near the border still gathers k
 rows/cols without harmful index-clip duplication. fp16 ArgMax/ReduceMax/Pad/Gather all
 work under ORT_DISABLE_ALL (only fp16 Min/Max crash).
+
+## S17 (2026-07-06) — dtype-overpay recast (bit-identical safe golf, +dtype_overpay_scan)
+task153 presence_nonzero {0,1} → uint8 via Cast(pool_max_all→uint8) before Slice; ArgMax order-preserving. 795→778 (−17).
+Gate: evaluate bundled fail=0 + **bit-identical outputs** over all train/test/arc-gen (verified). Safe for both tracks + private LB.
+⭐ TRANSFERABLE: only ACTIVATION (node-output) dtype narrowing saves grader bytes — params counted by element-count (dtype-independent). Narrow the PRODUCER (upstream Cast/init dtype), never a post-Cast. Blocked when the plane is derived from / contracted with the free fp32 `input` (Einsum-vs-input, Slice/Conv of input, ScatterND updates vs fp32 data) → those force fp32. See [[neurogolf-fp16-count-plane-recast]].

@@ -26,7 +26,8 @@ def build(task):
     ]
     nodes = [
         helper.make_node('MaxPool', ['input'], ['pool_max_all', 'pool_idx_all'], kernel_shape=[30, 30]),
-        helper.make_node('Slice', ['pool_max_all', 'slice_start1', 'slice_end10', 'slice_start1'], ['presence_nonzero']),
+        helper.make_node('Cast', ['pool_max_all'], ['pool_max_all_u8'], to=2),
+        helper.make_node('Slice', ['pool_max_all_u8', 'slice_start1', 'slice_end10', 'slice_start1'], ['presence_nonzero']),
         helper.make_node('ArgMax', ['presence_nonzero'], ['color_a_idx'], axis=1, keepdims=0, select_last_index=0),
         helper.make_node('ArgMax', ['presence_nonzero'], ['color_b_idx'], axis=1, keepdims=0, select_last_index=1),
         helper.make_node('Add', ['color_a_idx', 'one_i64'], ['color_a_raw']),
@@ -80,7 +81,7 @@ def build(task):
         helper.make_tensor_value_info('b_crop', 1, [1, 1, 3, 3]),
         helper.make_tensor_value_info('pool_max_all', 1, [1, 10, 1, 1]),
         helper.make_tensor_value_info('pool_idx_all', 7, [1, 10, 1, 1]),
-        helper.make_tensor_value_info('presence_nonzero', 1, [1, 9, 1, 1]),
+        helper.make_tensor_value_info('presence_nonzero', 2, [1, 9, 1, 1]),
         helper.make_tensor_value_info('color_a_idx', 7, [1, 1, 1]),
         helper.make_tensor_value_info('color_b_idx', 7, [1, 1, 1]),
         helper.make_tensor_value_info('color_a_raw', 7, [1, 1, 1]),

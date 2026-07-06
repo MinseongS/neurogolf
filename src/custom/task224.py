@@ -17,11 +17,13 @@ def build(task):
         tensor('one_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoB')),
         tensor('color_mask', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAgD8AAIA/AACAPwAAAAAAAIA/AACAPwAAgD8AAIA/')),
         tensor('frame_pads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOAAAAAAAAAA4AAAAAAAAA')),
+        tensor('row_zero_thr', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAA')),
     ]
     nodes = [
         helper.make_node('Conv', ['input', 'row_kernel'], ['row_sum'], strides=[1, 30]),
         helper.make_node('Conv', ['input', 'col_kernel'], ['col_sum'], strides=[30, 1]),
-        helper.make_node('Sign', ['row_sum'], ['row_has']),
+        helper.make_node('Greater', ['row_sum', 'row_zero_thr'], ['row_has_bool']),
+        helper.make_node('Cast', ['row_has_bool'], ['row_has'], to=2),
         helper.make_node('Sign', ['col_sum'], ['col_has']),
         helper.make_node('ArgMax', ['row_has'], ['row_min_i64'], axis=2, keepdims=1),
         helper.make_node('ArgMax', ['col_has'], ['col_min_i64'], axis=3, keepdims=1),
