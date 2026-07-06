@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build reports/task_index.json — per-task structural + economic + semantic features."""
 from __future__ import annotations
-import json, math
+import json
 from pathlib import Path
 import onnx
 
@@ -43,11 +43,23 @@ def structural_row(model: onnx.ModelProto) -> dict:
         dtypes.add(_DTYPE_NAME.get(init.data_type, str(init.data_type)))
     for vi in list(model.graph.value_info) + list(model.graph.input) + list(model.graph.output):
         dtypes.add(_DTYPE_NAME.get(vi.type.tensor_type.elem_type, "?"))
-    tensors = []
-    for vi in model.graph.value_info:
-        tensors.append({"name": vi.name, "bytes": _tensor_bytes(vi),
-                        "shape": [d.dim_value or 0 for d in vi.type.tensor_type.shape.dim]})
-    tensors.sort(key=lambda x: x["bytes"], reverse=True)
+    tensors_by_name = {}
+    for vi in list(model.graph.value_info) + list(model.graph.input) + list(model.graph.output):
+        entry = {"name": vi.name, "bytes": _tensor_bytes(vi),
+                 "shape": [d.dim_value or 0 for d in vi.type.tensor_type.shape.dim]}
+        prev = tensors_by_name.get(entry["name"])
+        if prev is None or entry["bytes"] > prev["bytes"]:
+            tensors_by_name[entry["name"]] = entry
+    for init in model.graph.initializer:
+        n = 1
+        for d in init.dims:
+            n *= d
+        entry = {"name": init.name, "bytes": n * _DTYPE_BYTES.get(init.data_type, 4),
+                 "shape": list(init.dims)}
+        prev = tensors_by_name.get(entry["name"])
+        if prev is None or entry["bytes"] > prev["bytes"]:
+            tensors_by_name[entry["name"]] = entry
+    tensors = sorted(tensors_by_name.values(), key=lambda x: x["bytes"], reverse=True)
     topk_K = []
     for n in nodes:
         if n.op_type == "TopK":
@@ -85,7 +97,13 @@ def build_structural_economic() -> dict:
         arc = mapping.get(num, {}).get("arc_id", "")
         row = {"arc_id": arc, "economic": economic_row(minfo)}
         p = NETWORKS / f"task{int(num):03d}.onnx"
-        row["structural"] = structural_row(onnx.load(str(p))) if p.exists() else {}
+        structural = {}
+        if p.exists():
+            try:
+                structural = structural_row(onnx.load(str(p)))
+            except Exception:
+                structural = {}
+        row["structural"] = structural
         out[num] = row
     return out
 

@@ -1,4 +1,4 @@
-import importlib.util, math
+import importlib.util
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,3 +27,21 @@ def test_structural_row_flags_on_task150():
     assert "Gather" in row["ops"]
     assert row["node_count"] >= 1
     assert isinstance(row["flags"]["has_topk"], bool)
+
+def test_build_structural_economic_shape():
+    m = _load()
+    idx = m.build_structural_economic()
+    assert isinstance(idx, dict) and len(idx) > 0
+    missing_net_num = None
+    for num, row in idx.items():
+        assert set(row.keys()) >= {"arc_id", "structural", "economic"}
+        econ = row["economic"]
+        assert "cost" in econ and "bloat" in econ
+        p = ROOT / f"networks/task{int(num):03d}.onnx"
+        if not p.exists() and missing_net_num is None:
+            missing_net_num = num
+    if missing_net_num is not None:
+        assert idx[missing_net_num]["structural"] == {}
+    else:
+        # all 400 networks present locally -> can't exercise the missing-net branch here
+        pass
