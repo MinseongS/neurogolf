@@ -3,6 +3,7 @@
 samples = list of (input_grid, output_grid) numpy int arrays. Add a probe here + bump
 PROBE_VERSION to give the matching engine a new feature to slice on."""
 from __future__ import annotations
+import logging
 import numpy as np
 
 PROBE_VERSION = 1
@@ -59,7 +60,10 @@ def probe_color_source(samples):
         if len(pal) > 2:
             small = False
     nonempty = [p for p in delta_palettes if p]
-    if nonempty and all(p == nonempty[0] for p in nonempty):
+    if not nonempty:
+        # identity/no-delta: constant (empty) delta
+        return "FIXED_DELTA", 1.0
+    if all(p == nonempty[0] for p in nonempty):
         return "FIXED_DELTA", _agree([p == nonempty[0] for p in nonempty])
     if small:
         return "SMALL_K", 1.0
@@ -74,7 +78,9 @@ def probe_d4_transform_of_input(samples):
     for i, o in samples:
         i = np.asarray(i); o = np.asarray(o)
         flags.append(any(t.shape == o.shape and np.array_equal(t, o) for t in d4(i)))
-    return _agree(flags) > 0.9, _agree(flags)
+    agree = _agree(flags)
+    val = agree > 0.9
+    return val, (agree if val else 1 - agree)
 
 
 def _solid_rects_count(mask):
@@ -161,11 +167,33 @@ def probe_periodicity(samples):
     return int(val), cnt / len(periods)
 
 
+def _count_components_4conn(grid):
+    # 4-connected components of non-zero (foreground) cells, iterative flood fill.
+    visited = np.zeros_like(grid, dtype=bool)
+    h, w = grid.shape
+    n = 0
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] == 0 or visited[r, c]:
+                continue
+            n += 1
+            stack = [(r, c)]
+            visited[r, c] = True
+            while stack:
+                rr, cc = stack.pop()
+                for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+                    nr, nc = rr + dr, cc + dc
+                    if 0 <= nr < h and 0 <= nc < w and not visited[nr, nc] and grid[nr, nc] != 0:
+                        visited[nr, nc] = True
+                        stack.append((nr, nc))
+    return n
+
+
 def probe_n_objects_est(samples):
     counts = []
     for i, o in samples:
         i = np.asarray(i)
-        counts.append(int(len(np.unique(i)) - (1 if 0 in i else 0)))
+        counts.append(_count_components_4conn(i))
     return int(np.median(counts)), 1.0
 
 
@@ -191,6 +219,7 @@ def run_probes(samples) -> dict:
         try:
             value, conf = fn(samples)
         except Exception as e:  # a probe must never crash the whole build
+            logging.debug("probe %s failed: %r", name, e)
             value, conf = None, 0.0
         out[name] = {"value": value, "confidence": round(float(conf), 3)}
     return out

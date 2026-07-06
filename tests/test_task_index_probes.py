@@ -1,6 +1,7 @@
 import importlib.util
 from pathlib import Path
 import numpy as np
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -43,3 +44,39 @@ def test_run_probes_returns_all_keys_with_confidence():
     res = m.run_probes(_identity_samples())
     assert "shape_relation" in res and "confidence" in res["shape_relation"]
     assert res["shape_relation"]["value"] == "equal"
+
+
+def test_d4_confidence_direction():
+    m = _load()
+    g = np.array([[1, 2, 0], [0, 3, 4]])
+    rotated = np.rot90(g, 1)
+    samples = []
+    # 2/10 samples are a rot90 of the input; the rest are unrelated (not any d4 transform).
+    other = np.array([[9, 9, 9], [9, 9, 9]])
+    for k in range(10):
+        if k < 2:
+            samples.append((g.copy(), rotated.copy()))
+        else:
+            samples.append((g.copy(), other.copy()))
+    val, conf = m.probe_d4_transform_of_input(samples)
+    assert val is False
+    assert conf == pytest.approx(0.8, abs=1e-6)
+
+
+def test_color_source_identity_not_small_k():
+    m = _load()
+    val, conf = m.probe_color_source(_identity_samples())
+    assert val == "FIXED_DELTA"
+    assert val != "SMALL_K"
+
+
+def test_n_objects_counts_components_not_colors():
+    m = _load()
+    g = np.zeros((5, 5), dtype=int)
+    # three disjoint 1-cell blobs, all the SAME colour (5) -> 3 components, not 1 colour.
+    g[0, 0] = 5
+    g[2, 2] = 5
+    g[4, 4] = 5
+    samples = [(g.copy(), g.copy())]
+    val, conf = m.probe_n_objects_est(samples)
+    assert val == 3
