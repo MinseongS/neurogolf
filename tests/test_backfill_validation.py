@@ -14,7 +14,26 @@ def _mod(name, rel):
     m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
 
 
-@pytest.mark.parametrize("mechanism", ["topk_width", "walk_einsum", "signed_rect"])
+@pytest.mark.parametrize(
+    "mechanism",
+    [
+        "topk_width",
+        "walk_einsum",
+        "signed_rect",
+        "einsum_vs_free_input",
+        "qlinearconv_render",
+        pytest.param(
+            "gridsample_warp",
+            marks=pytest.mark.xfail(
+                reason=(
+                    "saved query d4_transform_of_input can't surface crop-shaped seed task209; "
+                    "needs a geometric-warp semantic probe — see .superpowers/sdd/progress.md follow-up"
+                ),
+                strict=True,
+            ),
+        ),
+    ],
+)
 def test_saved_query_surfaces_known_applied_tasks(mechanism):
     if not (ROOT / "reports/task_index.json").exists():
         pytest.skip("task_index.json not built yet")

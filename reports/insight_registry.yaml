@@ -1160,7 +1160,7 @@
     "title": "Replace a materialized mask/profile plane that only gets REDUCED with an Einsum/ReduceSum contracted directly against the FREE input",
     "status": "active",
     "coverage_ref": "einsum_vs_free_input",
-    "match_query": "copy_frac is not None and copy_frac > 0.9 and bloat > 1500",
+    "match_query": "copy_frac is not None and copy_frac > 0.7 and bloat > 1500",
     "source_tasks": [
       255,
       208,
