@@ -188,3 +188,20 @@ rebuild was actually built and measured:
 - **VERDICT RESTORED: task233 is at/near floor at 32796 / 14.55. Do NOT re-attempt the cheap
   rebuild.** Validated assets kept: scratchpad/proto.py (100% numpy mechanism), build_t233.py.
   Net negative result: the mechanism is correct but NOT cheaper — incumbent encoding is optimal.
+
+## S18 (2026-07-06) — deep-rewrite PoC re-attempt → FLOOR (confirmed 3 ways)
+User-requested deep redesign of the top-bloat net (overfit mem 32256, 263 nodes). Byte map:
+con1 Conv[1,1,30,30]fp32=3600 (color read), vspr Conv[1,1,28,28]fp32=3136 (3×3 sprite
+correlation), mul103/equ97 [5,324] match-matrix=4860, res18[784]fp16 TopK feed=1568, +~15
+30×30/28×28/18×18 load-bearing matcher masks. Reductions all blocked:
+- **dtype**: dtype_overpay_scan already flags con1+vspr as PRODUCER_BOUND but delta_points=0.0
+  — both are Conv OUTPUTS (ORT Conv output dtype = fp32 input dtype), un-recastable without
+  casting the fp32 input (=[1,10,30,30] 18000B, far worse). Conv→uint8 needs banned QuantizeLinear.
+- **canvas-crop**: output stage ALREADY cropped to ≤20×20 (measured: all 266 bundled outputs
+  ≤20×20; gat68/gat69/whe547 at 20). The 30×30 planes are the detection stage (sprites scatter
+  anywhere in 30×30) — irreducible.
+- **crop the 3 black-mark 30×30 masks (mul49/les47/con46) to 20×20**: needs data-dependent
+  float-Slice (INVALID_GRAPH on float; value_info_crop lever declared exhausted S16); ≤+0.1, high-risk.
+⇒ FLOOR (consistent with cristianoc oracle + S16/S17 calibration). No cheap structural rewrite.
+
+(note: 233 not mined this pass — no public net beat ours.)

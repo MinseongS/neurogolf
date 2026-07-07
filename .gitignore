@@ -19,6 +19,7 @@ scratch/
 /memprofile.py
 
 # Submission archives are reproducible artifacts
+/submission.zip
 submission/*.zip
 reports/probes/zips/*.zip
 reports/probes/candidates/*.onnx
@@ -33,7 +34,7 @@ networks/
 .playwright-mcp/
 
 # arc-gen generators (fresh-gating): project-local copy + portable zip.
-# Kept out of git — external repo, reproducible from /tmp/arc-gen.
+# Kept out of git, but the repo-local copy is authoritative for this project.
 /arc-gen/
 /arc-gen.zip
 
@@ -60,3 +61,4 @@ reports/fresh_cache/
 
 # Generated task-matching index (regenerate via reports/scripts/build_task_index.py)
 reports/task_index.json
+scratch_mine_keep/

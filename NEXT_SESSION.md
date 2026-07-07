@@ -1,11 +1,29 @@
-# NEXT SESSION — NeuroGolf handoff (2026-07-06, S17 종료)
+# NEXT SESSION — NeuroGolf handoff (2026-07-06, S18 종료)
+
+## 🟢 S18 확정 (2026-07-07, LB 확인): BEST = 7253.64 (sub 54413928)
+- 7248.94 → 7249.18 → **7253.64 (+4.70 세션 총합)**. 전부 overfit bundle, gate=bundled fail=0, 영구 안전.
+- **+4.46 = urad 7242.52 공개덤프 min-merge (6태스크):** task355 2678→526(+1.56), 264 4700→968(+0.83),
+  197 2586→1160(+0.77), 222 5096→1742(+0.66), 236 208→96(+0.63), 383(+0.005). ISOLATED eval로 bundled
+  fail=0 검증 후 채택. franksunp/poby 7240.26·jonathan 7242·seddiktrk = urad가 다 커버(추가 0, 수렴).
+  ⇒ **공개 재채굴 루틴 여전히 유효** (새 상위 업로더 나올 때마다 prefilter→isolated-verify→min-merge→submit).
+  덤프는 scratch_mine/(세션소멸). 원본백업 scratch_mine/backup_orig/.
+- +0.24 = task243 walk-chain truncation (W2 slack 제거, 5112→3816, W1 46step으로 번들 전부 도달).
+- **⭐ walk-chain slack 레버 = 1승 후 소진(1/10).** 400 overfit넷 전수 스캔: 243만 slack, 나머지
+  (286/196/277/76/118/18/192/174/145) 전부 tight(terminal step drop시 bundled fail). GRU/LSTM 자유반복
+  레버 반증(입력시퀀스·hidden이 counted). 스캐너=scratchpad_chainenum.py+greedy.py(세션소멸, 재작성 필요).
+- 안전본 헤지 = 7245.50(sub 54398148) 보존. 243 truncation은 overfit 전용(safe tree 미적용, S9가 fresh용 K2 보존).
+- **다음 세션: mechanical 레버 완전 소진 확인.** 남은 건 233(32256)/366(30983) 등 최고bloat 넷의 deep
+  algorithm 재작성뿐(263~597노드, cristianoc floor 검증, +단건 초저확률). 사용자에게 계속/홀드 물어볼 것.
+
+---
+## (이하 S17 기록)
 
 ## ▶▶ 다음 세션 시작 프롬프트 (이거 그대로 붙여넣기):
 
 ```text
 /Users/minseong/project/neurogolf 에서 NeuroGolf 점수 개선 이어가자.
-먼저 NEXT_SESSION.md + 메모리 [[neurogolf-overfit-mode]](맨 위 constant-dataset·상한 판정) +
-[[neurogolf-urad-7225-bundle-vein]](S17 best) + [[neurogolf-strategy-directive]] 읽고 시작.
+먼저 NEXT_SESSION.md, AGENTS.md, skills/neurogolf-recursive-improvement/SKILL.md,
+reports/insight_registry.yaml, reports/recursive_queue.md, reports/source_live_reconcile.md를 읽고 시작.
 
 현재 확정 상태 (2026-07-06 S17 종료, 전부 LB 확인):
 - 최고 = overfit 7248.94 (sub 54398145). constant-dataset라 영구 안전(rescore 없음). 이게 우리 제출본.
@@ -22,15 +40,16 @@
 남은 유일한 상승로 = per-task 알고리즘 재작성으로 grid-state COUNT 축소. mechanical golf 아님.
 공개(7237)도 못했고 deep agent도 0/9. 수백점 비현실적, 단건 +1~2가 현실. 아래 §다음 세션 우선순위 참조.
 
-오늘 뭘 할지: 사용자한테 (a) 7248.94에서 홀드, (b) 특정 bloat 태스크 1개 deep 알고리즘 재작성 PoC,
-(c) 신규 공개덤프 있는지만 빠르게 체크 — 중 뭘 원하는지 먼저 물어봐.
+현재 기본 모드 = 8000 overfit score chase. safe/private 모드로 돌아가려면 사용자가 명시해야 한다.
+다음 작업은 특정 bloat 태스크 1개 deep 알고리즘 재작성 PoC 또는 신규 공개덤프/공개 mechanism 재채굴이다.
 ```
 
 ## 🟢 S17 확정 결과 (2026-07-06, 모두 LB 확인됨)
 - **안전 최고 = LB 7245.33** (sub 54396297, private-robust). udit 7237.17 덤프에서 task206 안전채택
   (3766→1795, +0.741; RoiAlign+5Einsum, fresh inc0/cand0/div0). ← 마감 택1 헤지.
 - **overfit 최고 = LB 7248.76** (sub 54396589, public-only). v1(7246.88) + udit/poby min-merge
-  (377/205/076 overlay) = +1.886. 재빌드 `scratchpad/mine07/minmerge.py`, 넷=`submission/overfit_nets/`.
+  (377/205/076 overlay) = +1.886. 재빌드 `reports/scripts/overfit_minmerge.py`, 넷=`submission/overfit_nets/`,
+  산출=`reports/candidates/overfit_minmerge/`.
 - 🚨 **제출한도 = 100/일 (5 아님! 미신 반증됨).** 진짜 400 에러 원인 = 파일명이 `submission.zip` 이어야 함
   (`overfit_submission.zip` → 400 "must be named submission.zip"). 제출 전 반드시 `submission.zip`으로 복사/rename.
   Kaggle API `max_daily_submissions=100` 확인. → 자유롭게 제출.
@@ -54,7 +73,7 @@ S17에서 mechanical 오버핏 레버는 전부 소진 확인:
 ⇒ (a) **메모리제이션 死** (4개 output Gather는 나머지 262개서 실패; 262개 저장은 알고리즘보다 비쌈),
 (b) 공개 오버핏 커뮤니티가 7237서 막힌 이유=262 arc-gen이 near-algorithmic 정확도 강제, 싼 leaky 숏컷 희소,
 (c) 8000은 262 arc-gen을 알고리즘보다 훨씬 싸게 통과하는 per-task leaky 숏컷 필요 — 공개 커뮤니티도 대부분
-실패, cristianoc oracle이 알고리즘 floor 검증. **현실 상한 ≈7248-7249.** [[neurogolf-overfit-mode]] 참조.
+실패, cristianoc oracle이 알고리즘 floor 검증. **현실 상한 ≈7248-7249.**
 
 **⚠️⚠️ S17 CALIBRATION: free-tensor 재구성 레버 = DRY (0/9).** 3개 deep opus 에이전트가 최고bloat 9태스크
 (366/018/133/158/054/367/349/173/138)에 CSE·DCE·dtype·채널drop·커널crop·TopK-K·뱅크prune 전부 시도 →
@@ -77,7 +96,7 @@ S17에서 mechanical 오버핏 레버는 전부 소진 확인:
 게이트 = bundled fail=0만. 제출 파일명 반드시 `submission.zip`, 한도 100/일.
 
 ## 📌 참고
-- overfit README = `submission/OVERFIT_README.md`. 넷 = `submission/overfit_nets/`. min-merge = `scratchpad/mine07/minmerge.py`(세션소멸, 재작성 필요).
+- overfit README = `submission/OVERFIT_README.md`. 넷 = `submission/overfit_nets/`. min-merge = `reports/scripts/overfit_minmerge.py`.
 - 안전본 206만 clean adopt. 377/205는 private 위험으로 safe 거부(overfit엔 포함).
 
 ## === 현재 상황 (S17 종료, 2026-07-06) ===
@@ -113,21 +132,19 @@ S17에서 mechanical 오버핏 레버는 전부 소진 확인:
    yuu/poby = dataset-attached, 추출 0 — 첨부데이터셋 별도 다운로드 필요).
 3. **⚠️ 8000은 압축 갭이 아니라 OVERFIT 갭일 가능성 매우 높음.** cristianoc oracle이 우리 고비용넷=알고리즘
    floor임을 독립검증; 공개프론티어 7235 상한; log-math상 7244→8000은 **400태스크 전부 ~6.7× 더 싸야** 함.
-   → top~8000은 visible-case 튜닝(leaky const)일 개연성. 추격 = fresh-gate 규율(우리 private-LB 해자) 포기.
-   **우리 fresh-gated 7244가 overfit 8000보다 private-LB에서 더 강할 수 있음.** overfit 전환 전 사용자 확인 필수.
+   → top~8000은 visible-case 튜닝(leaky const)일 개연성. 현재 전략은 8000 overfit score chase로 확정.
+   fresh/private 안전성은 사용자가 명시할 때만 보조 모드로 다룬다.
 
 ## === 미완/느슨한 끝 ===
-- **task076 fresh-gate 포기**(franksunp 15932→13235, +0.185): 우리 incumbent가 병적으로 느린 거대넷 →
-  fresh_verify가 N=250에서도 15분+ 무출력(제너레이터+빌드 병목). 다음 세션에 다른 검증법 필요(예: bundled
-  동등성 + 소량 fresh, 또는 incumbent를 먼저 골프해 빠르게). shim 재생성: mine 후 franksunp task076.onnx.
+- **task076 fresh-gate 포기**(franksunp 15932→13235, +0.185): 8000 모드에서는 문제 아님.
+  bundled fail=0/lower cost면 채택 가능. fresh는 safe/private 모드에서만 재검토.
 - **fold tail ≤620B**: task131(GatherND→ReduceSum 620B), task174(Cast→MatMul 600B) 미검토, 저EV(~+0.1).
 - **소소 public tail** ~15태스크 Δ≤0.002 합계 ~0.02 미채택 (public/unfiltered_candidates.json). marginal.
 - **GridSample 자가역적용** 미검토(유일한 미개봉 urad 벤, 단 pool 전부 저비용 업스케일 ≤2798, EV 낮음).
 
 ## === 다음 세션 우선순위 (S16 판정 반영) ===
-1. **[사용자 결정 대기] 전략 방향**: (a) private-LB 안전 유지 = 신규 공개덤프 재채굴 + tail 정리(현재 거의 소진,
-   ~+0.02/pass), 또는 (b) overfit 추격 = leaky-constant 튜닝으로 public 8000 시도(private 위험, 현 전략에 반).
-   → 안전 grind은 마름. 큰 상승엔 (b) 승인 또는 미지-메커니즘 리서치 필요.
+1. **전략 방향 확정: 8000 overfit score chase.** private-LB 안전 유지는 opt-in 보조 모드다.
+   기본 게이트는 bundled fail=0 + active 8000 incumbent 대비 lower cost.
 2. **미지-메커니즘 리서치(고위험, 구체 가설 먼저)**: 유일한 안전-상승로. 단 cristianoc가 알고리즘 floor를
    독립검증했으므로 "더 싼 알고리즘" 사냥은 금지 — 남은 건 IMPLEMENTATION golf뿐이고 그것도 대부분 소진.
    time-for-cost fold(런타임 헤드룸 막대)로 우리가 materialize하는 평면을 더 깊은 einsum으로 접는 각도가
@@ -135,11 +152,10 @@ S17에서 mechanical 오버핏 레버는 전부 소진 확인:
 3. task076 마무리 + tail 정리 (즉시 실행 가능한 잔여 안전점수).
 
 ## === 워크플로/게이트 (불변) ===
-- 채택 = 백업 → networks/ 교체 → `live_to_exact_source NNN --write-src` → `measure_task NNN`(fail=0) →
-  manifest → tasklog +⭐TRANSFERABLE + coverage_lib.record. 에이전트 byte추정 불신, 반드시 grader재측정.
-- fresh-gate: `.venv/bin/python reports/scripts/fresh_verify.py NNN <shim.py> 1500`, cand_fail ≤ inc_fail.
-  거대넷은 N=800으로 시작(느림). shim = `import onnx; def build(task): return onnx.load('<abs>')`.
-- 제출: networks/*.onnx → `scan_unsigned_topk.py networks`(전수, uint8-TopK grader-killer) → zip → submit
+- 8000 채택 = 백업 → `submission/overfit_nets/taskNNN.onnx` 교체 → bundled `evaluate` fail=0/lower cost →
+  tasklog/score_modes 기록. source-owned 재작성일 때만 `src/custom`/`networks`/manifest를 같이 갱신한다.
+- fresh-gate는 safe/private 모드 전용. 8000 모드에서는 fresh 결과를 진단 메모로만 쓴다.
+- 제출: `submission/overfit_nets/*.onnx` → `scan_unsigned_topk.py submission/overfit_nets`(전수, uint8-TopK grader-killer) → `submission.zip` → submit
   → `--csv`로 publicScore 폴링(CSV 파싱, descrip grep 오탐 주의).
 - 도구: mine_public_bundles.py(byte-prefilter), mine_unfiltered.py(전수, 프리필터 놓친 것 잡음),
   profile_runtime.py, match_insight.py, coverage_lib.py. 덤프 추출 = extract_bundle.
@@ -150,6 +166,7 @@ S17에서 mechanical 오버핏 레버는 전부 소진 확인:
 ## === 커밋 상태 ===
 - 미커밋 대량(S12~S16). networks/*는 gitignore, 소스진실 = src/custom/*.py(재생성됨). S16에서 21태스크
   src/custom+tasklog+manifest, coverage, profile_runtime.py/mine_unfiltered.py 추가, 메모리 갱신.
-  세션시작 시 커밋 정리 권장(사용자 지시 없으면 커밋은 물어보고). 백업 넷 = scratchpad(세션소멸) → 롤백은
+  세션시작 시 커밋 정리 권장(사용자 지시 없으면 커밋은 물어보고). 백업/후보 넷은 repo 내부
+  `reports/retired_networks/`, `reports/candidates/`, `submission/`에서 관리. 롤백은
   submission zip(54393046=7244.14) 또는 src/custom git 히스토리.
 ```

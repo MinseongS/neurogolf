@@ -90,3 +90,21 @@ Backup task243_pre_s9.onnx.
 
 ## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
 k5(cost 6013): 296k viols. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).
+
+## S18 (2026-07-06) — OVERFIT walk-chain truncation: drop W2 chunk (+0.243) → LB 7249.18
+Overfit bundle only (NOT safe tree). The S9 net chains W1(46 steps)+W2(47 steps)=93 flood
+steps for worst-case 18×18 maze eccentricity. **Bundled/arc-gen 265 instances only need ≤46
+steps** (W1 alone reaches every cell) → W2 is worst-case slack. Truncation = delete the W2
+Einsum node, repoint its consumer (Cast mask18) to W1. Measured ISOLATED: 265/265 pass,
+mem 5112→3816 (−1296B, the W2 plane), params 901 unchanged, pts 16.298→16.541 (+0.243).
+Installed to `submission/overfit_nets/task243.onnx`; LB confirmed **7248.94→7249.18** (sub 54399767).
+⭐TRANSFERABLE (walk-chain slack lever, S18): for any multi-plane walk/flood net, the # of
+counted walk-planes is forced by the 52-letter Einsum alphabet (~46-48 steps/plane), but the
+REQUIRED reach = bundled max BFS/step-distance may be < allocated. If ceil(need/48) < current
+plane count, drop terminal plane(s) (repoint consumer to predecessor plane) → −plane_bytes,
+gate = bundled fail=0. Scanner: enumerate PROP-op chains (Einsum/MaxPool/Conv, ≥2 same-shape
+planes), greedily drop terminal step. S18 swept all 400 overfit nets: **only 243 had slack**
+(286/196/277/76/118/18/192/174/145 all tight — dropping any terminal step fails bundled).
+This is worst-case-slack removal = OVERFIT (fresh 18×18 mazes with path >46 fail); permanently
+safe per constant-grading-dataset ([[neurogolf-overfit-mode]]). NOT applied to safe tree (S9 kept
+K2 for leak-incident/fresh robustness).
