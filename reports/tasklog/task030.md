@@ -71,3 +71,11 @@ Gather-shift needs an explicit validity mask + colour Mul — both measured stri
 where anyR = ReduceMax(input, axes=[1,3])** (120 B [1,1,30,1]); gate the uint8 label to
 sentinel 10 there so the final Equal emits all-zero off-grid (the Pad only handles
 rows/cols ≥ canvas, not the short-grid interior rows 5–9).
+
+## 2026-07-08 — 8000-mode public tail (boristown 11:51)
+- Source: `reports/candidates/public_mine_20260708/boristown_chatgptloop_1151/submission/task030.onnx`.
+- Gate: isolated bundled `evaluate()` fail=0 and lower active cost. Cost `2145 -> 2144`
+  (memory `2040 -> 2040`, params `105 -> 104`), points
+  `17.32910516863788 -> 17.329571477809306`.
+- Applied to `submission/overfit_nets/task030.onnx`; backup in
+  `submission/overfit_nets/.minmerge_backup/task030.onnx`. Included in submission **54461084**.

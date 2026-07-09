@@ -3,7 +3,7 @@ output is a pure row-only (or col-only) reordering of input rows (cols),
 holding across ALL examples. Such tasks admit output = Gather(input, perm, axis)
 — one node, output free, perm is a [N] index → mem 0, cost ~= detection only.
 
-Usage: .venv/bin/python -m reports.scripts.perm_axis_scan
+Usage: uv run python -m reports.scripts.perm_axis_scan
 """
 import json, glob, os
 import numpy as np

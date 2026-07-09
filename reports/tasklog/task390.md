@@ -72,3 +72,11 @@ mem 2624/16.96; color_padded 900B min pre-Equal carrier (15x15 Equal=2250B worse
 **Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
 Backup `reports/retired_networks/task390_pre_s10.onnx`; source `public_candidates/bobmyers7186/task390.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
 No transferable mechanism — minor trim.
+
+## 2026-07-08 S31 — byte-identical initializer dedupe ADOPTED
+
+Candidate from `reports/candidates/dedupe_initializers_sweep.py`.
+
+One byte-identical initializer alias was rewired.  Bundled gate remained fail=0.
+Cost `3012 -> 3010` (params -2); active overlay updated in
+`submission/overfit_nets/task390.onnx`.

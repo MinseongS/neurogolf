@@ -55,8 +55,6 @@ reports/harvest_multi.*
 reports/relprobe.json
 reports/factored_scan.json
 reports/semantic_archetypes.*
-docs/superpowers/plans/
-docs/superpowers/specs/
 reports/fresh_cache/
 
 # Generated task-matching index (regenerate via reports/scripts/build_task_index.py)

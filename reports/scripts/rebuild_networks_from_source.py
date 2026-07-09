@@ -4,9 +4,9 @@ This repository treats `src/custom/taskNNN.py` as the source of truth.
 `networks/taskNNN.onnx` files are local build/deploy artifacts and are ignored by git.
 
 Usage:
-  PYTHONPATH=. .venv/bin/python reports/scripts/rebuild_networks_from_source.py
-  PYTHONPATH=. .venv/bin/python reports/scripts/rebuild_networks_from_source.py --tasks 1-10
-  PYTHONPATH=. .venv/bin/python reports/scripts/rebuild_networks_from_source.py --tasks 17,92,233
+  PYTHONPATH=. uv run python reports/scripts/rebuild_networks_from_source.py
+  PYTHONPATH=. uv run python reports/scripts/rebuild_networks_from_source.py --tasks 1-10
+  PYTHONPATH=. uv run python reports/scripts/rebuild_networks_from_source.py --tasks 17,92,233
 """
 
 from __future__ import annotations

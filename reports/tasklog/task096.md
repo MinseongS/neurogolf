@@ -119,3 +119,9 @@ Backup reports/retired_networks/task096_pre_s9.onnx.
 - New grader cost = 7682 (mem 7261 + params 421), fail=0 bundled.
 - Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
 - Mechanism: structural golf: fewer counted node-output intermediates (graph rewrite, functionally equal on fresh).
+
+---
+## 2026-07-08 — fold-batch floor verdict (residual-spatialop self-application)
+**Ran:** fold_finder flagged `[10,30]` fp32 ReduceSum→ReduceSum plane (1200B) as foldable. Deep opus agent fused the two-stage reduce into one `ReduceSum(input,[0,2,3])`, bit-identical.
+**Verdict: FLOOR.** Plane is multiply-consumed (2nd ReduceSum **and** a presence-bool Cast), so the fold only reroutes the tiny [10]=40B reduction; the [10,30] fp32 plane stays as the Cast source. Byte-neutral (+3 params → net worse). fp32 forced because ONNX reduce preserves free-input dtype; no sub-fp32 reduce op. Active unchanged (mem 7261).
+**Reopen:** ORT/opset exposing a dtype-casting reduce (emit uint8/fp16 directly) → both [10,30] planes recast to ~600B (−1200B).

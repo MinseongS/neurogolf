@@ -83,3 +83,14 @@ eliminates its ~900B counted output plane; everything else identical (1 Conv, 6 
 tap can be dropped — the Conv already emits the interior; the Slice was re-cropping an already-cropped
 plane." Same pattern to scan: any of our valid-Conv-crop nets (196/193/396) carrying a trailing Slice.
 Backup: scratchpad/backup/task222.onnx.bak. Bit-identical ⇒ private-LB safe.
+
+## 2026-07-08 — fp16 sweep ADOPTED (+0.166) + ⭐ OUTPUT-fp16 unlock
+- Deployed 2733 → 2313 (−420B), bundled fail=0, unsigned-TopK clean. All flagged planes
+  (R/C/rw/cw/X/dX) recast fp16.
+- ⭐⭐ TRANSFERABLE (co-bind wall breaker): planes pinned by a final Einsum/Concat to the graph
+  `output` dtype are recastable by making the FREE `output` itself fp16 — `calculate_memory`
+  skips input/output regardless of dtype, and `run_network` thresholds at `>0` so sign-exact fp16
+  passes. This drops the whole output-coupled downstream cluster to fp16 in one block. Contrast:
+  planes co-bound to the free fp32 INPUT via Einsum are genuine FLOOR (can't recast the
+  harness-fed fp32 input). `selBf` stayed fp32 (feeds qrow/qcol Einsums alongside input) with a
+  +20B Cast to feed only the X-branch. See [[neurogolf-fp16-count-plane-recast]].

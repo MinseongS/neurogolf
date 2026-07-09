@@ -1,5 +1,5 @@
 """Unified gate for task366 candidates (onnx path).
-Usage: .venv/bin/python reports/scripts/gate366.py CAND.onnx [N_fresh]
+Usage: uv run python reports/scripts/gate366.py CAND.onnx [N_fresh]
 Prints: mem, params, points, bundled fail, fresh fail (vs generator ground truth),
 and fresh divergence vs the live incumbent networks/task366.onnx.
 """

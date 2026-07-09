@@ -19,11 +19,11 @@ DETECTION
 
 USAGE
   # scan one net (report only)
-  .venv/bin/python -m reports.scripts.walk_chain_slack --task 286 --net submission/overfit_nets/task286.onnx
+  uv run python -m reports.scripts.walk_chain_slack --task 286 --net submission/overfit_nets/task286.onnx
   # sweep a whole bundle dir (report only)
-  .venv/bin/python -m reports.scripts.walk_chain_slack --dir submission/overfit_nets
+  uv run python -m reports.scripts.walk_chain_slack --dir submission/overfit_nets
   # apply the found truncations in-place (backs up to <net>.pretrunc)
-  .venv/bin/python -m reports.scripts.walk_chain_slack --task 243 --net submission/overfit_nets/task243.onnx --apply
+  uv run python -m reports.scripts.walk_chain_slack --task 243 --net submission/overfit_nets/task243.onnx --apply
 
 RESULT (S18 sweep of all 400 overfit nets): only task243 had slack (+0.243). 286/196/277/76/
 118/18/192/174/145 all tight -> dropping any terminal step fails bundled. Re-run after adopting

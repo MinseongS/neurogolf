@@ -1,7 +1,7 @@
-"""One-time runtime profiler for all 400 nets (time-for-cost lever, [[neurogolf-runtime-timeout-dimension]]).
+"""One-time runtime profiler for all 400 nets (time-for-cost lever).
 Measures median wall-clock ms/run per task under grader-style session options (ORT_DISABLE_ALL, no
 profiling). Writes reports/runtime_profile.json = {task: {ms_median, ms_max, n_runs, err}}.
-Usage: .venv/bin/python -m reports.scripts.profile_runtime [START END]
+Usage: uv run python -m reports.scripts.profile_runtime [START END]
 """
 import sys, os, json, time, pathlib
 import numpy as np, onnx, onnxruntime as ort

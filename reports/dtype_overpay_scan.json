@@ -2,41 +2,30 @@
  "summary": {
   "n_tasks_scanned": 323,
   "n_errors": 1,
-  "total_delta_points": 7.5552,
+  "total_delta_points": 7.3495,
   "class_counts": {
-   "FP16_SAFE": 160,
-   "U8_CANDIDATE": 586,
+   "FP16_SAFE": 159,
+   "U8_CANDIDATE": 583,
    "BLOCKED": 0,
    "PRODUCER_BOUND": 795,
-   "FLOOR": 281
+   "FLOOR": 280
   },
   "total_producer_bound_savings_bytes": 166420
  },
  "tasks": [
   {
    "task": 2,
-   "memory": 6100,
+   "memory": 5300,
    "params": 589,
-   "cur_points": 16.1918,
-   "headline_savings_bytes": 800,
+   "cur_points": 16.3192,
+   "headline_savings_bytes": 0,
    "producer_bound_savings_bytes": 1200,
    "new_points": 16.3192,
-   "delta_points": 0.1274,
-   "fp16_logged": false,
+   "delta_points": 0.0,
+   "fp16_logged": true,
    "error": null,
-   "n_fp32_tensors": 3,
-   "main_tensor": {
-    "name": "t",
-    "class": "FP16_SAFE",
-    "dims": [
-     1,
-     1,
-     20,
-     20
-    ],
-    "save_bytes": 800,
-    "max": 1.0
-   },
+   "n_fp32_tensors": 1,
+   "main_tensor": null,
    "tensors": [
     {
      "name": "g",
@@ -55,7 +44,7 @@
      "producer_op": "Slice",
      "producer_bound": true,
      "consumer_ops": [
-      "Sub"
+      "Cast"
      ],
      "einsum_consumer": false,
      "topk_consumer": false,
@@ -63,59 +52,6 @@
      "class": "PRODUCER_BOUND",
      "reason": "producer Slice consumes graph input directly (int 0..255)",
      "would_save_bytes": 1200
-    },
-    {
-     "name": "t",
-     "dims": [
-      1,
-      1,
-      20,
-      20
-     ],
-     "bytes_fp32": 1600,
-     "always_integer": true,
-     "binary": true,
-     "min": 0.0,
-     "max": 1.0,
-     "max_abs": 1.0,
-     "producer_op": "Sub",
-     "producer_bound": false,
-     "consumer_ops": [
-      "Einsum",
-      "Greater"
-     ],
-     "einsum_consumer": true,
-     "topk_consumer": false,
-     "dilated_maxpool_consumer": false,
-     "class": "FP16_SAFE",
-     "reason": "int<=2048 (u8 blocked: einsum)",
-     "would_save_bytes": 800
-    },
-    {
-     "name": "W",
-     "dims": [
-      1,
-      1,
-      20,
-      20
-     ],
-     "bytes_fp32": 1600,
-     "always_integer": true,
-     "binary": false,
-     "min": 0.0,
-     "max": 1.1937878713130486e+21,
-     "max_abs": 1.1937878713130486e+21,
-     "producer_op": "Einsum",
-     "producer_bound": false,
-     "consumer_ops": [
-      "Greater"
-     ],
-     "einsum_consumer": false,
-     "topk_consumer": false,
-     "dilated_maxpool_consumer": false,
-     "class": "FLOOR",
-     "reason": "max|v|=1193787871313048633344>2048",
-     "would_save_bytes": 0
     }
    ]
   },
@@ -18105,24 +18041,24 @@
   },
   {
    "task": 153,
-   "memory": 741,
+   "memory": 724,
    "params": 54,
-   "cur_points": 18.3217,
-   "headline_savings_bytes": 97,
+   "cur_points": 18.3433,
+   "headline_savings_bytes": 70,
    "producer_bound_savings_bytes": 66,
-   "new_points": 18.4518,
-   "delta_points": 0.1301,
+   "new_points": 18.4376,
+   "delta_points": 0.0943,
    "fp16_logged": true,
    "error": null,
-   "n_fp32_tensors": 14,
+   "n_fp32_tensors": 13,
    "main_tensor": {
-    "name": "presence_nonzero",
+    "name": "selected_mask",
     "class": "U8_CANDIDATE",
     "dims": [
      1,
-     9,
      1,
-     1
+     3,
+     3
     ],
     "save_bytes": 27,
     "max": 1.0
@@ -18145,7 +18081,7 @@
      "producer_op": "MaxPool",
      "producer_bound": true,
      "consumer_ops": [
-      "Slice"
+      "Cast"
      ],
      "einsum_consumer": false,
      "topk_consumer": false,
@@ -18153,32 +18089,6 @@
      "class": "PRODUCER_BOUND",
      "reason": "producer MaxPool consumes graph input directly (int 0..255)",
      "would_save_bytes": 30
-    },
-    {
-     "name": "presence_nonzero",
-     "dims": [
-      1,
-      9,
-      1,
-      1
-     ],
-     "bytes_fp32": 36,
-     "always_integer": true,
-     "binary": true,
-     "min": 0.0,
-     "max": 1.0,
-     "max_abs": 1.0,
-     "producer_op": "Slice",
-     "producer_bound": false,
-     "consumer_ops": [
-      "ArgMax"
-     ],
-     "einsum_consumer": false,
-     "topk_consumer": false,
-     "dilated_maxpool_consumer": false,
-     "class": "U8_CANDIDATE",
-     "reason": "int 0..255",
-     "would_save_bytes": 27
     },
     {
      "name": "a_crop",
@@ -29759,24 +29669,24 @@
   },
   {
    "task": 224,
-   "memory": 2460,
-   "params": 371,
-   "cur_points": 17.0516,
-   "headline_savings_bytes": 210,
+   "memory": 2400,
+   "params": 372,
+   "cur_points": 17.0727,
+   "headline_savings_bytes": 120,
    "producer_bound_savings_bytes": 210,
-   "new_points": 17.1287,
-   "delta_points": 0.0771,
+   "new_points": 17.1169,
+   "delta_points": 0.0443,
    "fp16_logged": true,
    "error": null,
-   "n_fp32_tensors": 6,
+   "n_fp32_tensors": 5,
    "main_tensor": {
-    "name": "row_has",
+    "name": "col_has",
     "class": "U8_CANDIDATE",
     "dims": [
      1,
      1,
-     30,
-     1
+     1,
+     30
     ],
     "save_bytes": 90,
     "max": 1.0
@@ -29799,7 +29709,7 @@
      "producer_op": "Conv",
      "producer_bound": true,
      "consumer_ops": [
-      "Sign"
+      "Greater"
      ],
      "einsum_consumer": false,
      "topk_consumer": false,
@@ -29832,32 +29742,6 @@
      "dilated_maxpool_consumer": false,
      "class": "PRODUCER_BOUND",
      "reason": "producer Conv consumes graph input directly (int 0..255)",
-     "would_save_bytes": 90
-    },
-    {
-     "name": "row_has",
-     "dims": [
-      1,
-      1,
-      30,
-      1
-     ],
-     "bytes_fp32": 120,
-     "always_integer": true,
-     "binary": true,
-     "min": 0.0,
-     "max": 1.0,
-     "max_abs": 1.0,
-     "producer_op": "Sign",
-     "producer_bound": false,
-     "consumer_ops": [
-      "ArgMax"
-     ],
-     "einsum_consumer": false,
-     "topk_consumer": false,
-     "dilated_maxpool_consumer": false,
-     "class": "U8_CANDIDATE",
-     "reason": "int 0..255",
      "would_save_bytes": 90
     },
     {
@@ -30366,24 +30250,25 @@
   },
   {
    "task": 234,
-   "memory": 2886,
-   "params": 64,
-   "cur_points": 17.0104,
-   "headline_savings_bytes": 340,
+   "memory": 2869,
+   "params": 65,
+   "cur_points": 17.0159,
+   "headline_savings_bytes": 313,
    "producer_bound_savings_bytes": 560,
-   "new_points": 17.1329,
-   "delta_points": 0.1225,
+   "new_points": 17.1287,
+   "delta_points": 0.1128,
    "fp16_logged": true,
    "error": null,
-   "n_fp32_tensors": 81,
+   "n_fp32_tensors": 80,
    "main_tensor": {
-    "name": "present9",
-    "class": "U8_CANDIDATE",
+    "name": "g0",
+    "class": "FP16_SAFE",
     "dims": [
-     9
+     1,
+     10
     ],
-    "save_bytes": 27,
-    "max": 69.0
+    "save_bytes": 20,
+    "max": 1.0
    },
    "tensors": [
     {
@@ -30400,8 +30285,8 @@
      "producer_op": "ReduceSum",
      "producer_bound": true,
      "consumer_ops": [
-      "Gather",
-      "Slice"
+      "Cast",
+      "Gather"
      ],
      "einsum_consumer": false,
      "topk_consumer": false,
@@ -30409,29 +30294,6 @@
      "class": "PRODUCER_BOUND",
      "reason": "producer ReduceSum consumes graph input directly (int<=2048)",
      "would_save_bytes": 20
-    },
-    {
-     "name": "present9",
-     "dims": [
-      9
-     ],
-     "bytes_fp32": 36,
-     "always_integer": true,
-     "binary": false,
-     "min": 0.0,
-     "max": 69.0,
-     "max_abs": 69.0,
-     "producer_op": "Slice",
-     "producer_bound": false,
-     "consumer_ops": [
-      "Greater"
-     ],
-     "einsum_consumer": false,
-     "topk_consumer": false,
-     "dilated_maxpool_consumer": false,
-     "class": "U8_CANDIDATE",
-     "reason": "int 0..255",
-     "would_save_bytes": 27
     },
     {
      "name": "color0_g",

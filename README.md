@@ -13,8 +13,9 @@ handoff docs as authority.
 - **Exploit the FREE `input`/`output` tensors aggressively.** They cost zero and op internals are
   uncounted — route all work through them (contract against the free input, write directly into the
   free output, collapse spatial ops into one Einsum) so no counted intermediate plane survives.
-- **Design only to "just passes the LB".** Gate = bundled fail=0 + smaller mem/params + fresh ~98%+.
-  Don't over-engineer robustness past what scores.
+- **8000 mode is the default.** Gate = bundled fail=0 + smaller mem/params. Fresh verification is
+  diagnostic only unless the user explicitly asks for safe/private mode. Don't over-engineer
+  robustness past what scores.
 - **Submit very freely.** 100/day, Kaggle keeps your BEST — a bad submit never costs standing.
 - **Mine public INSIGHT, not just nets — then generalize.** Use public Kaggle discussions, code
   notebooks, and net dumps. When a public solution beats ours on a task, reverse-engineer WHY it is
@@ -24,6 +25,10 @@ handoff docs as authority.
 ## Source of truth
 
 - `NEXT_SESSION.md` — **THE live handoff / next-session prompt (authoritative; current best + queue).**
+- `reports/score_modes.md` — active score mode definitions; default is 8000 overfit mode.
+- `submission/overfit_nets/` — active 8000-mode submission artifact set.
+- `reports/overfit_manifest.md` — measured active 8000-mode score state.
+- `reports/scripts/pack_overfit_submission.py` — packs `submission/overfit_nets/` into repo-root `submission.zip`.
 - `AGENTS.md` — repository-local agent instructions.
 - `reports/REBUILD_PLAYBOOK.md` — proven mechanisms + reject-checks + gates.
 - `reports/scripts/mine_public_bundles.py` — public-bundle mining routine (the S15 engine).
@@ -35,27 +40,44 @@ handoff docs as authority.
 - `src/custom/taskNNN.py` — source-owned builders for all 400 tasks.
 - `networks/taskNNN.onnx` — local deployed ONNX artifacts, ignored by git.
 
+## Environment
+
+Python dependencies are managed with `uv`. The local `.venv/` directory is a
+reproducible cache, not source of truth.
+
+```bash
+uv sync --dev
+```
+
+Use `uv run` for project commands:
+
+```bash
+PYTHONPATH=. uv run python reports/scripts/build_layer_inventory.py
+PYTHONPATH=. uv run streamlit run tools/onnx_viewer.py
+```
+
 ## Core rules
 
-- Public ONNX files are teacher artifacts only. Never blind-import them as final ownership.
-- Keep design control in `src/custom/taskNNN.py`.
+- Public ONNX files are valid 8000-mode overlays when they are cheaper and bundled-fail=0; also mine their mechanisms for transfer.
+- Keep reusable design control in `src/custom/taskNNN.py` when practical, but `submission/overfit_nets/` is the active 8000 submission set.
 - Record reusable discoveries in `reports/insight_registry.yaml` or tasklogs, then rescan all 400 tasks.
-- Verify stored and fresh behavior before claiming score improvement.
+- Verify bundled fail=0 and measured cost before claiming score improvement; fresh is optional diagnostic context in 8000 mode.
 - Kaggle submissions are effectively abundant for this project: 100/day.
 
 ## Standard refresh
 
 ```bash
-PYTHONPATH=. .venv/bin/python reports/scripts/build_layer_inventory.py
-PYTHONPATH=. .venv/bin/python reports/scripts/find_insight_candidates.py
-PYTHONPATH=. .venv/bin/python reports/scripts/source_live_reconcile.py
+PYTHONPATH=. uv run python reports/scripts/build_layer_inventory.py
+PYTHONPATH=. uv run python reports/scripts/find_insight_candidates.py
 ```
+
+Run `reports/scripts/source_live_reconcile.py` only when source-owned files or `networks/` changed.
 
 ## Rebuild local ONNX artifacts
 
 If `networks/` is absent or stale:
 
 ```bash
-PYTHONPATH=. .venv/bin/python reports/scripts/rebuild_networks_from_source.py
-PYTHONPATH=. .venv/bin/python reports/scripts/source_live_reconcile.py
+PYTHONPATH=. uv run python reports/scripts/rebuild_networks_from_source.py
+PYTHONPATH=. uv run python reports/scripts/source_live_reconcile.py
 ```

@@ -72,3 +72,63 @@ FLOORS re-priced: cplane 3600 fp32 (input fp32 locks einsum out-dtype), 3× Equa
 masks 5400B (K-batch neutral), 12 pairwise all-equal 2400B (fp16 bilinear-dot = exact
 wash, single-use views), Gather×16 views non-uniform indices + dynamic-Slice banned.
 Backup reports/retired_networks/task319_pre_s9.onnx. DO NOT re-probe repeat-group here.
+
+## 2026-07-07 — bundled dynamic-CSE active overlay (+0.0002)
+
+Built `reports/candidates/task319/task319_dynamic_cse_greedy.onnx` with
+`reports/candidates/dynamic_cse_active_probe.py`.  One single-byte duplicate
+carrier was rewired: `safe_name_132->safe_name_131`.
+
+Bundled gate: fail=0.  Cost: 5850 -> 5849 (memory 5686 -> 5685, params 164
+unchanged).  Active overlay updated in `submission/overfit_nets/task319.onnx`;
+backup at `reports/candidates/task319/task319_pre_dynamic_cse.onnx`.
+
+## 2026-07-08 — bounded-profile crop oracle: FAIL / byte-negative
+
+Context: after public tail adoption, active `submission/overfit_nets/task319.onnx`
+is the compact public bit-pack style net (`memory=5674`, `params=163`,
+`points=16.32802775479621`).  Dominant remaining counted tensors are two fp32
+profile Einsums:
+
+- `safe_name_24 = Einsum(input, powers30, equation='bchw,w->ch')`, `[10,30]`, 1200B.
+- `safe_name_25 = Einsum(input, equation='bchw->cw')`, `[10,30]`, 1200B.
+
+Oracle:
+
+- Raw bundled grid sizes are bounded by `19x19`.
+- However, downstream 5-row local views gather row-profile indices up to `24`
+  (`safe_name_116`), so a row profile needs at least length 25.  Column profile
+  only needs length 19.
+
+Probe:
+
+- Built `reports/candidates/task319/task319_profile_crop21x19.onnx` as a first
+  graph-surgery attempt.  It failed ORT bundled eval because `safe_name_116`
+  can index `21`, exceeding the cropped row profile.
+- A corrected Slice-based `25x19` input crop is byte-negative: the Slice output
+  itself is counted as a full fp32 tensor (`1*10*25*19*4 = 19000B`) before the
+  smaller profile, far worse than the incumbent two 1200B profiles.
+- A selector-Einsum crop avoids Slice but is also byte-negative: row selector
+  `25x30` plus column selector `19x30` costs about 1320 initializer elements to
+  save only about 640B of profile output.
+
+Result:
+
+The bounded-profile crop is not adoptable.  Reopen only if sparse initializers
+become accepted by the Kaggle grader, or if a new op can crop the free input
+inside the same counted profile op without paying dense selector params.
+
+## 2026-07-08 — zero-compare cumulative bool-cast tail ADOPTED
+
+Re-ran `reports/candidates/zero_compare_to_bool_cast_probe.py` on the current active
+overfit set and then combined the individually passing replacements with
+`reports/candidates/zero_compare_to_bool_cast/apply_cumulative.py`.
+
+Changed six repeated nonnegative presence tests:
+`safe_name_49`, `safe_name_53`, `safe_name_57`, `safe_name_61`, `safe_name_65`,
+`safe_name_69`.
+
+Artifact: `reports/candidates/task319/task319_zero_compare_tail.onnx`.
+Bundled gate: `267/267`, fail=0.  Cost: `5837 -> 5832` (memory `5674`
+unchanged, params `163 -> 158`).  Active backup:
+`submission/overfit_nets/.zero_compare_tail_backup/task319.onnx`.

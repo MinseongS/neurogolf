@@ -54,3 +54,8 @@ intermediate — and lets the outside-grid pad sentinel (254) be chosen to match
 correctly producing the all-channels-off region beyond the 18x18 grid (the generator's
 output is only 18x18, so cells r,c>=18 must be ALL-FALSE, not channel-0-true — the sentinel
 must exceed every channel value, never 0).
+
+## 2026-07-08 — ⭐ REGIME CRACK ADOPTED (batch 3, 900B mask → free-output Einsum)
+- 1668→1617 (+0.03). Periodic (r·c)%m = ((r%m)(c%m))%m separable via residue one-hots; k-indicator = 1-(t-(k-1))^2; ORT OneHot has no CPU kernel → use Gather(eye).
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task061/regime.onnx. Backup: reports/candidates/fatmid_adopt_backup/task061.onnx.bak.
+- ⭐ Memory neurogolf-regime-crack-freeoutput-einsum. ⚠️ Concurrent-session collision risk on candidate dirs — always re-measure on-disk before adopt.

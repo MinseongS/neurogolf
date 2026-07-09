@@ -23,7 +23,7 @@ Signatures (recipe → playbook toolbox #):
 
 Excludes tasks rebuilt in S8 and priced floors.
 
-  PYTHONPATH=. .venv/bin/python reports/scripts/recipe_matrix_scan.py
+  PYTHONPATH=. uv run python reports/scripts/recipe_matrix_scan.py
 """
 
 import json

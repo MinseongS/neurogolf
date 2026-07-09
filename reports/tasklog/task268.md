@@ -74,3 +74,23 @@ reconstructing the frame geometry from scalars.
 - New grader cost = 3356 (mem 3300 + params 56), fail=0 bundled.
 - Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
 - Mechanism: structural golf: fewer counted node-output intermediates (graph rewrite, functionally equal on fresh).
+
+## 2026-07-08 S35 — dynamic-CSE tail ADOPTED
+
+Artifact: `reports/candidates/task268/task268_dynamic_cse_greedy.onnx`.
+
+Bundled gate: `266/266`, memory `2960 -> 2956`, params unchanged `57`, cost
+`3017 -> 3013`. Included in salvage submission **54451991** (excluding the
+Kaggle-falsified task101 CSE), which completed at publicScore **7264.30**.
+Backup before this tail: `submission/overfit_nets/.dynamic_cse_tail_backup_20260708/task268.onnx`.
+
+## 2026-07-08 — fat-middle fresh-sweep ADOPTED (+0.026)
+- Documented "fp16 magnitude-band packing" angle is counterproductive here (at 10×10 a bool plane=100B,
+  fp16=200B → packing doubles cost). **Real win via fresh re-inspection**: `armsg=(eqS OR eqD) AND gcol`
+  rebuilt as `colv_g=Where(gcol,colv,30)` then `eqSg/eqDg=Equal(colv_g,·)` OR'd into Y10 — distributes the
+  gcol column-mask into the diagonal-arm Equals, eliminating separate `arms`+`armsg` 10×10 bool planes.
+  Sentinel 30 ∉ valid cols 0-9 nor sentinels ±99 → no false hits. Exact equivalence (266/266).
+- Gate: bundled fail=0, **DEPLOYED 3009 → 2930 (−79B)**, unsigned-TopK scan clean.
+- ⭐ TRANSFERABLE: distribute an AND-gate column/row mask into the compared Equals to drop the separate
+  gated-bool plane. Floor after: `cond`[1,1,30,30] bool 900B (output-welded) + `bgcropf`[1,1,10,10] fp32 400B.
+  Candidate: reports/candidates/task268/fatmid_attack.onnx.

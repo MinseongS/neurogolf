@@ -108,15 +108,15 @@ Manifest row for task 10: `memory 730`, `params 340`, `points 18.024586072544047
 Task-only verification:
 
 ```text
-PYTHONPATH=. .venv/bin/python reports/scripts/measure_task.py 010
+PYTHONPATH=. uv run python reports/scripts/measure_task.py 010
 -> {'ok': True, 'pass': 265, 'fail': 0, 'memory': 730, 'params': 340,
     'points': 18.024586072544047, 'error': None}
 
-PYTHONPATH=. .venv/bin/python src/harness.py networks/task010.onnx 10
+PYTHONPATH=. uv run python src/harness.py networks/task010.onnx 10
 -> ok true, pass 265, fail 0, memory 730, params 340,
    points 18.024586072544047
 
-PYTHONPATH=. .venv/bin/python reports/scripts/fresh_verify.py 010
+PYTHONPATH=. uv run python reports/scripts/fresh_verify.py 010
 -> fresh_instances=1500/1500, incumbent fail = 0
 ```
 

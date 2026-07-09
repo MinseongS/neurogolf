@@ -71,3 +71,27 @@ sentinel 30→26. mem 13789→12215, params 172→462. Bit-identical: 2000+600 u
 inc fail=2 = cand fail=2 (pre-existing 24-row edge case), div 0. Orthogonal to S8
 CODE_PLANE floor (pure size cut). Box 23×23 stack + cg30 exit-Pad = remaining floor.
 Backup task138_pre_s9.onnx.
+
+## 2026-07-07 auto-golfer rectangular 22x23 ray probe KILL
+
+Candidate: `reports/candidates/task138/rectangular_22x23_ray_probe.py`.
+
+Bundled max output extent is height 22, width 23, so auto-golfer tried replacing
+the active 23x23 square ray workspace with a 22x23 rectangular workspace.  This
+requires dropping the transpose-sharing trick and using separate vertical and
+horizontal MaxPool paths.  Byte model was promising: candidate cost `12215+462`
+to `11923+506`.
+
+Result: fail 137/266.  Four direction-polarity variants
+`task138_rect22_hrev{0,1}_vrev{0,1}.onnx` also failed.  The transpose-sharing
+path encodes more than just direction polarity; the direct horizontal MaxPool
+lowering is not equivalent.  Do not retry rectangular ray shrink without first
+proving a Python/ONNX oracle for the exact ray direction semantics.
+
+## 2026-07-08 S31 — byte-identical initializer dedupe ADOPTED
+
+Candidate from `reports/candidates/dedupe_initializers_sweep.py`.
+
+One byte-identical initializer alias was rewired.  Bundled gate remained fail=0.
+Cost `12267 -> 12266` (`memory 12215`, `params 52->51` equivalent active count);
+active overlay updated in `submission/overfit_nets/task138.onnx`.

@@ -65,3 +65,14 @@ active canvas (size≤12 lives top-left), then Pad the W×W mask to 30×30 once.
 
 
 ## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 4449 -> 4432 (+0.004); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].
+## 2026-07-08 — ReduceSum spatial profile -> Einsum tail ADOPTED
+
+Applied the public-derived `ReduceSum(input, axes=[2,3], keepdims=0)` to
+`Einsum(input, equation='bchw->bc')` rewrite from
+`reports/candidates/reducesum_spatial_to_einsum_probe.py`.
+
+Candidate:
+`reports/candidates/task378/task378_reducesum_spatial_to_einsum_greedy.onnx`.
+Bundled gate after adoption: fail=0, cost `4396 -> 4394`
+(memory `4280`, params `116 -> 114`).  Adopted into
+`submission/overfit_nets/task378.onnx`.

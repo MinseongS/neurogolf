@@ -48,3 +48,8 @@ the flat->2D reshape plane.
 Verified generator bound = 13 (in/out 9×13). Flagged `scalar30` uint8 [30,30] 900B is the Equal index plane for the free output; Equal is nonlinear so it can't move into the einsum. A 9×13 one-hot + Pad = 1170B > 900B. FLOOR.
 
 ⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).
+
+## 2026-07-08 — ⭐ REGIME CRACK ADOPTED (batch 2, 900B mask → free-output Einsum)
+- 1487→766 (+0.66). WAS FLOOR earlier same day (pre-lever). Block-structured copy via mixed-radix digit tables shared source/output; extends lever to Gather/DepthToSpace assembly.
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task075/regime.onnx (builder build_regime.py). Backup: reports/candidates/fatmid_adopt_backup/task075.onnx.bak.
+- ⭐ See memory neurogolf-regime-crack-freeoutput-einsum (vein taxonomy + sub-recipes). Vein list: reports/candidates/fresh_sweep/mask_dominance.json.

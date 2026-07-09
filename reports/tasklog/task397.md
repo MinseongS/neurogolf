@@ -23,3 +23,11 @@ mem 2648/17.05; cond30 900B bool=optimal Where(cond,green,FREE input) delta-rout
 **Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
 Backup `reports/retired_networks/task397_pre_s10.onnx`; source `public_candidates/bobmyers7186/task397.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
 No transferable mechanism — minor trim.
+
+## 2026-07-07 — local-only REJECTED signed INT8 TopK feed probe
+
+`reports/candidates/task397/task397_int8_topk_greedy.onnx` recast `min4_f`
+TopK feed to signed INT8.  Bundled gate fail=0.  Cost: 2782 -> 2717 (memory
+2582 -> 2516, params 200 -> 201).
+
+Follow-up pruning removed dead initializer `zero_f`. Cost: 2717 -> 2716.

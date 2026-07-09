@@ -91,3 +91,25 @@ No transferable mechanism — minor trim.
 
 
 ## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 2708 -> 2704 (+0.001); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].
+
+## 2026-07-08 — final output fp16 recast ADOPTED (+0.0379 local)
+
+Candidate: `reports/candidates/task355/task355_fp16_output.onnx`,
+built by `reports/candidates/task355/build_fp16_output.py`.
+
+Mechanism: deployed task355 ends with `selWu` and one-hot output-position
+initializer `e0` feeding a free graph-output `Einsum`. Recast `selWu` to fp16,
+convert `e0` to fp16, set graph `output` dtype fp16, and clear stale
+`value_info`. The output remains thresholded by `>0`, so 0/1 fp16 is exact.
+
+Gate:
+- incumbent: memory 496, params 42, cost 538, points 18.712141, bundled fail=0.
+- candidate: memory 476, params 42, cost 518, points 18.750025, bundled fail=0.
+- full active manifest after adoption: 400/400, local 7274.768491.
+- `scan_unsigned_topk.py submission/overfit_nets`: clean.
+
+Adopted into `submission/overfit_nets/task355.onnx`; backup:
+`reports/candidates/task355/adopt_backup_727485/task355.onnx`.
+Packed and submitted as Kaggle **54463756**, completed at displayed publicScore
+**7274.89**, with message
+`active 7274.768491 task355 fp16 final output cost 538->518 after task205 fail=0 topk clean`.

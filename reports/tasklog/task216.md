@@ -84,3 +84,9 @@ FLOORS: c12_f32 3200 = entry floor (both channels needed at 20×20; alternatives
 corner-finding 1200 + run-scan 1120 near-minimal u8. Backup task216_pre_s9.onnx.
 
 ## S11 (2026-07-03) — mech-15/pointer scout: KILL — output = variable-size crop of globally-ArgMax-selected most-red box; cost = winner-selection (3200B entry + corner/run-scan). No separable fills, no carrier. Floor stands.
+
+---
+## 2026-07-08 — fold-batch floor verdict (STALE tasklog above = old CumSum net; active is now compact mem 8584)
+**Ran:** fold_finder flagged `c12_f32[1,2,20,20]` fp32 slice (3200B, Slice(input)→Einsum). Deep opus agent tried rerouting the counting Einsum (`nkrc,k,br,bc->b` → counts[4]) to contract free `input` directly.
+**Verdict: FLOOR.** The Einsum was a FREE 2nd consumer of already-materialized `c12_f32`; c12_f32 is also the source for `Cast→c12 uint8` (feeds QLinearConv corner-detect + Gathers + crop). Reroute doesn't delete c12_f32 and ADDS ~560B (masks [4,20]→[4,30] + pads). Slice preserves free-input fp32 dtype; regional uint8/fp16 needs full-tensor cast first (9000/18000B) = worse. Active unchanged (mem 8584 par 76).
+**Reopen:** whole-net reformulation building the output box from free input without QLinearConv corner-detect; or slice+cast fusing op.

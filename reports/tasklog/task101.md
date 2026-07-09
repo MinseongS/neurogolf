@@ -156,3 +156,175 @@ kernel unregistered); stock fresh_verify aborts on incumbent inference errors �
 fresh_gate.py counts them as fails (consider upstreaming).
 
 ## S11 (2026-07-03) — mech-15/pointer scout: KILL — output = data-dependent blue sprite-template scatter at searched anchors (scale 1-3, per-instance shape); cost = detection slices + TopK anchor search, no carrier. Same bucket as 233/285 (assignment/detection).
+
+## 2026-07-07 — compiler-mechanism re-open: runtime Conv template anchors
+
+New cross-task mechanism found from task089: ORT accepts a runtime tensor as the
+second input to `Conv`, so a template recovered from the input can become a
+non-initializer convolution kernel.  A local sanity probe is stored at
+`reports/candidates/task101/dynamic_template_anchor_probe.py` and confirms the
+runtime-weight path in the current environment.
+
+This invalidates the strongest old blocker for the maximal reference-template
+anchor map: we do not necessarily need to enumerate red cells with
+`TopK(k_raw=29)` and then run the copy1/copy2/copy3 coverage chain.  Candidate
+compiler shape:
+
+1. keep the current 4x4 reference extraction for `p1_patch`/`p2_patch`;
+2. expand the dynamic red template to scale 1/2/3 kernels;
+3. run `Conv(red_plane, red_kernel_s)` and compare with the dynamic red-cell
+   count to get anchor maps;
+4. apply the existing 4-neighbor separation and maximal-scale suppression on
+   anchor maps, not on a 29-wide red-cell list;
+5. stamp hidden blue from dynamic blue kernels into the free final
+   `Where(blue_mask30, e1_vals, input)` output.
+
+Expected win, if it lowers cleanly: delete `rawpos_score`/`TopK(k_raw=29)` and
+much of the sequential raw-candidate coverage arithmetic.  Remaining risks:
+dynamic `Conv` uses fp32 tensors in the proven path, scale-2/3 kernels are bigger
+than the current sparse gather arithmetic, and the maximal-scale suppression may
+recreate enough full-map masks to lose the byte trade.  This is now a real
+compiler candidate, not a floor proof.
+
+## 2026-07-07 — direct 30x30 mask scatter tail probe KILL
+
+Candidate: `reports/candidates/task101/task101_direct_30_mask_scatter.onnx`.
+
+Hypothesis: replace the tail
+`ScatterElements(false[340]) -> Reshape[1,1,17,20] -> Pad[1,1,30,30] -> Where(output)`
+with a direct scatter into a 30x30 flat mask, deleting the counted Pad output.
+
+Result: bundled fail=0 but cost worsened badly: active 12928+822 -> candidate
+16768+1385.  The 17x20->30x30 flat-index retarget requires full 136-vector
+`Div/Mod/Mul/Add/Where` int32 carriers plus a larger false base initializer, so
+the Pad deletion is more than erased.
+
+Conclusion: tail-only sparse overlay is not the lever.  A real win still needs
+the runtime-template compiler to remove the raw red-candidate TopK/coverage
+path before the tail.
+
+## 2026-07-08 S32 — runtime-template compiler byte analysis
+
+Artifacts:
+
+- `reports/candidates/task101/dynamic_qlinearconv_probe.py`
+- `reports/candidates/task101/dynamic_convtranspose_probe.py`
+- `reports/candidates/task101/runtime_template_cost_model.py`
+- `reports/candidates/task101/runtime_template_compiler_analysis.md`
+
+New primitive checks:
+
+- Runtime tensor as `ConvTranspose` weight works in ORT, but fp32 stamping is
+  too expensive if used literally.
+- Runtime tensor as `QLinearConv` weight also works.  With scale=1 and zp=0 it
+  returns exact uint8 template-correlation counts; task101 red-template counts
+  are safely below 255.
+
+Byte model result:
+
+- fp32 runtime Conv + ConvTranspose, no suppression: estimated memory `16070`
+  vs active `12928` (bad).
+- fp32 with maximal suppression: `21310` (dead).
+- QLinear runtime matching + QLinear reversed-kernel stamping, no suppression:
+  estimated memory `11696` (about `-1232B`, potentially good).
+- QLinear with full maximal suppression: `15308` (bad).
+
+Conclusion: the compiler is real, but the viable form is narrow.  It must use
+runtime-weight `QLinearConv` for both matching and stamping; full maximal
+coverage suppression erases the win.  Next target is a cheap-filter candidate
+matching the earlier 4-neighbor/separation oracle, then patch only the remaining
+bundled false positives if they fit under the ~1232B margin.
+
+Follow-up oracle (`qlinear_anchor_oracle.py`):
+
+- raw anchor maps: fail `79`, all failures are extra blue (no misses after
+  allowing negative/off-grid anchors).
+- 4-neighbor separation: fail `19`, extra blue `83`, no misses.
+- scale-priority overlap: fail `0`.
+- full maximal suppression: fail `0`.
+
+The 19 separated failures are small-scale submatches inside larger red copies.
+Correctness does not require the current sequential copy claim machinery; a
+scale-priority overlap rule is enough.  But the obvious ONNX lowerings are still
+too expensive: direct full-grid red coverage and an anchor-coordinate bank both
+estimate around `15.3KB`, worse than the `12.9KB` active.  A score win needs a
+sub-1232B suppression lowering specialized to the `<=2` reference-red-cell
+case; otherwise the QLinear compiler is a correct-but-not-cheaper rewrite.
+
+## 2026-07-08 S33 — anchor-coordinate raw-bridge suppression
+
+New oracle artifact:
+
+- `reports/candidates/task101/anchor_coordinate_suppression_oracle.py`
+
+Result: the full scale-priority overlap rule can be narrowed.  It is enough to
+suppress only:
+
+1. raw scale-3 anchor coordinates -> scale-2 anchor coordinates;
+2. raw scale-2 anchor coordinates -> scale-1 anchor coordinates.
+
+The second stage deliberately uses **raw** scale-2 anchors, not accepted scale-2
+anchors.  This creates a bridge: a scale-3 match suppresses a scale-2 submatch,
+and that raw scale-2 submatch suppresses the scale-1 submatch.  The oracle is
+bundled `266/266`, extra `0`, miss `0`.  It rejects only 30 candidates on the
+bundle (`3->2`: 1, `2->1`: 29).
+
+Updated byte model:
+
+| QLinear compiler estimate | memory | vs active |
+|---|---:|---:|
+| no suppression | 11696 | -1232 |
+| two-stage anchor-coordinate suppression | 12914 | -14 |
+| full maximal suppression | 15308 | +2380 |
+
+This is the first correct suppression design that is plausibly under active,
+but the margin is only about 14B in the dense-kernel model.  An ONNX candidate
+must reuse existing padded anchor maps and QLinear scales, avoid a direct
+scale-3 -> scale-1 map, and avoid any extra full-grid carrier.  Otherwise it
+will be correct but not a score win.
+
+## 2026-07-08 S33b — real ONNX QLinear splice KILL
+
+Artifact:
+
+- `reports/candidates/task101/build_qlinear_anchor_splice.py`
+- `reports/candidates/task101/task101_qlinear_anchor_splice_no_suppression.onnx`
+- `reports/candidates/task101/task101_qlinear_anchor_splice_full_coverage.onnx`
+
+Implemented a real runtime-QLinear anchor/stamp compiler by splicing the
+incumbent graph up to reference extraction, then replacing raw TopK/copy
+claims/Scatter tail with dynamic QLinearConv anchor maps.  Correctness required
+several details that the hand byte model underpriced:
+
+- red input pad left/right/bottom for negative/off-work anchors;
+- boundary-aware separation with `K+2` kernels, because false submatches can
+  touch red just outside the template bbox;
+- scale-1 dynamic reference-bbox red-overlap exclusion;
+- reversed dynamic kernels for QLinearConv stamping.
+
+Measured results:
+
+| candidate | bundled | memory | params | verdict |
+|---|---:|---:|---:|---|
+| no suppression | 247/266 | 26140 | 278 | fail 19 |
+| full coverage suppression | 266/266 | 31886 | 278 | correct but worse |
+| active | 266/266 | 12928 | 822 | keep |
+
+Conclusion: this lowering is dead for score.  The earlier no-suppression
+estimate (`~11696B`) was falsified by the actual scorer; even with free
+suppression the measured base is already far above active.  Do not keep trying
+minor suppression-bank variants in this graph shape.  A future revival would
+need to avoid the dynamic anchor/stamp carriers themselves, not just suppress
+them more cheaply.
+
+## 2026-07-08 S35 — REJECTED dynamic-CSE micro tail
+
+Artifact: `reports/candidates/task101/task101_dynamic_cse_greedy.onnx`.
+
+This does **not** revive the QLinear anchor compiler. It is a mechanical active-net peephole:
+the dynamic CSE pass merged duplicate live carriers (`safe_name_100 -> safe_name_98`) without
+changing semantics. Bundled gate: `266/266`, memory `12908 -> 12904`, params unchanged `817`,
+cost `13725 -> 13721`. The combined micro-tail submission **54451532** completed at publicScore
+`7248.82` versus best `7264.29`; the later full-sweep submission **54451744** was also bad
+(`7248.83`). The overlay was reverted from
+`submission/overfit_nets/.micro_tail_backup_20260708/task101.onnx`.

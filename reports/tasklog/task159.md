@@ -70,3 +70,8 @@ naive flat-Gather by ~2.2KB here. Also: recover the magnifier as a cheap scalar
 from the red-ring PERIMETER count (12m+4) rather than a row-span reduction — no
 red full plane needed. Keep the magnify result rank-2 [K,K] and let it broadcast
 against the [1,1,K,K] geometry masks (skip the Reshape, saves one K*K plane).
+
+## 2026-07-08 — ⭐ REGIME CRACK ADOPTED (batch 2, 900B mask → free-output Einsum)
+- 1568→1006 (+0.44). Per-case geometry as INIT banks (params=elements) selected by tiny one-hot sel used twice (s,t → δ) for row/col.
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task159/regime.onnx (builder build_regime.py). Backup: reports/candidates/fatmid_adopt_backup/task159.onnx.bak.
+- ⭐ See memory neurogolf-regime-crack-freeoutput-einsum (vein taxonomy + sub-recipes). Vein list: reports/candidates/fresh_sweep/mask_dominance.json.

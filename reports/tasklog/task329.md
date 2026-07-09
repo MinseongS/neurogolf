@@ -28,3 +28,8 @@ In the one-hot embedding an OFF-GRID cell has ALL 10 channels = 0 (harness only 
 Verified generator bound = 9 (static + 5000 fresh + bundled all agree). The flagged `keep_input_b` [30,30] bool = 900B is the **Where cond** for the free 30×30 output; padding it back re-adds 900B. Cropping to B=9 forces a valid-conv k=22 → 4840 params, and 9×9 Where slicing adds +6480B — the crop costs far more than the 900B it saves. FLOOR.
 
 ⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).
+
+## 2026-07-08 — ⭐ REGIME CRACK ADOPTED (900B output-mask → free-output Einsum)
+- 1050→468 (+0.81). Copy-edit Where collapsed to Einsum('bkhw,tkc,stw,s->bchw',input,P,Qall,sel): rank-2 route + 4-elt one-hot state; largest node output 16B.
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task329/regime.onnx (builder build_regime.py). Backup: reports/candidates/fatmid_adopt_backup/task329.onnx.bak.
+- ⭐ TRANSFERABLE: the 900B [30,30] Where-mask is NOT a floor — fold routing into one N-ary Einsum to the FREE output (output>0 sign-decode). See memory neurogolf-regime-crack-freeoutput-einsum + the 60-task vein in reports/candidates/fresh_sweep/mask_dominance.json.

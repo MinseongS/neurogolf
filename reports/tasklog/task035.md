@@ -74,3 +74,24 @@ bounds need a float plane because ReduceMax/Min reject uint8/bool.
 ## S16 (2026-07-06) — public bit-identical golf (franksunp) ADOPTED
 Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent). Minor cost drop
 (dead-initializer / redundant-node removal), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## 2026-07-08 — public optimizer tail dedupe ADOPTED
+
+The 2026-07-08 public-code optimizer report still flagged safe duplicate
+initializer params after the +4.51 public re-mine.  Re-ran
+`reports/candidates/dedupe_initializers_active_probe.py` against the active
+overfit set and adopted `reports/candidates/task035/task035_dedupe_initializers.onnx`.
+
+- Gate: bundled fail=0, active cost `1970 -> 1909`.
+- Memory unchanged `1450`; params `520 -> 459`.
+- Local points `17.414211 -> 17.445665` (`+0.031454`).
+- Active backup: `submission/overfit_nets/.dedupe_public_optimizer_backup/task035.onnx`.
+
+## 2026-07-08 S35 — dynamic-CSE tail ADOPTED
+
+Artifact: `reports/candidates/task035/task035_dynamic_cse_greedy.onnx`.
+
+Bundled gate: `266/266`, memory `1450 -> 1436`, params unchanged `459`, cost
+`1909 -> 1895`. Included in salvage submission **54451991** (excluding the
+Kaggle-falsified task101 CSE), which completed at publicScore **7264.30**.
+Backup before this tail: `submission/overfit_nets/.dynamic_cse_tail_backup_20260708/task035.onnx`.

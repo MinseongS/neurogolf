@@ -46,3 +46,9 @@ convs. This dropped the shared `_hpwl` builder from 16.29 to 16.599 (mem 5520->4
 Verified generator bound = 20 (bundled max 13×12). Separable-einsum net 2215 total; the final Einsum 'ntc,th,tw->nchw' writes free [1,10,30,30]; factors Rf/Cf [5,30] and all builder planes are welded to 30 (task077 free-operand refutation). Cropping → counted 4000B Pad. FLOOR.
 
 ⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).
+
+## 2026-07-07 — initializer dedupe micro-overlay
+
+`reports/candidates/task335/task335_dedupe_initializers.onnx` rewired duplicate
+initializer `ax1->s1`.  Bundled gate fail=0.  Cost: 2215 -> 2214
+(params 109 -> 108).

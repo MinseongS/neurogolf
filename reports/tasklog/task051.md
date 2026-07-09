@@ -99,3 +99,8 @@ and `Where(ingridB, notpres, 0)` builds in-grid-background with no extra Mul.
 nonzero) - apex). A figure symmetric about its apex axis has its perpendicular
 centroid component EXACTLY 0, so sign() yields a clean axis unit vector — no
 neighbour inspection, no per-cell direction logic. (Verified 8000/0 fresh.)
+
+## 2026-07-08 — ⭐ REGIME CRACK ADOPTED (batch 3, 900B mask → free-output Einsum)
+- 1744→943 (+0.32). Beam/ray And-separable mask → additive free-output Einsum; k-stacked fp32 carriers via single Where(bool,pair11,pair10); bg-gate δ_d0 in mixer removes in-grid gates.
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task051/regime.onnx. Backup: reports/candidates/fatmid_adopt_backup/task051.onnx.bak.
+- ⭐ Memory neurogolf-regime-crack-freeoutput-einsum. ⚠️ Concurrent-session collision risk on candidate dirs — always re-measure on-disk before adopt.

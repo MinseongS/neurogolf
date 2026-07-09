@@ -105,4 +105,25 @@ Floors: colf 3600 fp32 entry, hp_all 4500.
 Mechanism: QLinearConv signed renderer.
 Gate (fresh_verify, inc/cand fail on 1500-2000): 0/0 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
 Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
-See memory [[neurogolf-urad-7225-bundle-vein]]. 
+See memory [[neurogolf-urad-7225-bundle-vein]].
+
+## S28 (2026-07-07) — ADOPTED overfit h_pos dead-border crop: 15042 -> 14892 (+0.010)
+
+Frontier audit selected task349 as the best local-stencil target: high cost but
+only 15 active nodes, dominated by `h_pos_u8` `[1,5,30,30]` (4500B), `ch9`
+Gather (3600B), and 900B compose carriers.  A direct learned Conv candidate
+(`reports/candidates/task349/direct_conv/task349_direct_conv_k36x20_seed1.onnx`)
+was rejected: cost 10811 but bundled pass 0/fail 267, so the single-linear
+direct-output mechanism cannot express size detection + valid bounds + priority.
+
+Intermediate probing showed `h_pos_u8` is sparse but uses all rows; columns are
+globally 0..28, with column 29 always dead across bundled examples.  Changing
+the first `QLinearConv` right pad `10 -> 9` shrinks `h_pos_u8` width 30->29, and
+changing the halo consumer right pad `5 -> 6` preserves alignment.  Bundled
+gate for `reports/candidates/task349/direct_conv/task349_hpos_w29.onnx`:
+pass 267/fail 0, mem 13710, params 1182, points 15.391420565.  Width 28 and
+below fail (w28: 266/1), so w29 is the exact bundled crop limit.
+
+Transferable mechanism: pad-compensated spatial crop of a Conv/QLinearConv
+producer when a dead border is empirically unused and the sole spatial consumer
+can absorb the crop by increasing the opposite padding.

@@ -84,3 +84,14 @@ must be a length-1 (`[1]`) initializer, NOT an empty `[]` array — an init with
 - New grader cost = 2100 (mem 2061 + params 39), fail=0 bundled.
 - Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
 - Mechanism: structural golf: fewer counted node-output intermediates (graph rewrite, functionally equal on fresh).
+
+
+---
+
+## 2026-07-08 — 8000-mode adoption (public re-mine, LB-confirmed 7264.26)
+
+**+0.2606 LB** (mem 1502, par 114; from franksunp-7249.50). Mechanism: 36-node MaxPool+GatherElements plane pipeline -> 59-node Einsum-heavy form (7 Einsum); wide pooled/gathered planes contracted into free-input Einsums.
+
+Gate: isolated `evaluate` bundled fail=0 + strictly cheaper than our incumbent + uint8-TopK scan clean.
+Artifact: `submission/overfit_nets/task036.onnx` (backup in `.minmerge_backup/`). Source dumps + notebook code under `reports/candidates/public_mine_20260708/`.
+This is a direct 8000-mode ONNX overlay (constant dataset => permanent). Source `src/custom/task036.py` NOT regenerated: the public net is optimizer-emitted (base64 in-notebook), no per-task Python builder to lift; the mechanism above IS the transferable insight.

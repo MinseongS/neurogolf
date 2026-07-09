@@ -61,15 +61,15 @@ has only `b1_check` and `b2_check`.
 Verification:
 
 ```text
-PYTHONPATH=. .venv/bin/python reports/scripts/measure_task.py 146
+PYTHONPATH=. uv run python reports/scripts/measure_task.py 146
 {'ok': True, 'pass': 267, 'fail': 0, 'memory': 380, 'params': 107,
  'points': 18.81173587691741, 'error': None}
 
-PYTHONPATH=. .venv/bin/python reports/scripts/fresh_verify.py 146
+PYTHONPATH=. uv run python reports/scripts/fresh_verify.py 146
 task146 arc=662c240a fresh_instances=1500/1500
   incumbent fail = 0
 
-PYTHONPATH=. .venv/bin/python -m src.adopt 146
+PYTHONPATH=. uv run python -m src.adopt 146
 ADOPTED: task146 real 18.80 -> 18.81 (generalizing)
 ```
 

@@ -72,3 +72,14 @@ Whole net floors near 7101 → 16.04.
 
 ## S8 (2026-07-02) — walk-einsum border flood (+0.432) ADOPTED, div 0
 9-iter Min-gated QLC flood chain (17×144B u8 planes) → ONE 8-conn 14-slot walk einsum on the 12×12 crop (task002 pattern: ring seeds, S entries 1.0, Greater(non,W) epilogue). 2772+272 vs 4500+187 → 16.547→16.979. Fresh 2500 cached + 5000 uncached + 600 div 0.
+
+## 2026-07-08 — fat-middle fresh-sweep ADOPTED (+0.098)
+- Deep-attack of the "separable row⊗col paint" open angle → that angle is DEAD (targets the retired
+  9-ch template-match formulation, floors ~6300 vs current flood champion). **Real win via fresh
+  re-inspection**: the 8-conn border-flood walk-Einsum carries `red`/`non`/`W` as fp32 (576B each);
+  `non`(=1-red, {0,1}) and `W`(small nonneg walk counts) are fp16-exact → recast to fp16 (288B each).
+- Gate: bundled fail=0 (266/266), **DEPLOYED 3039 → 2756 (−283B)**, unsigned-TopK scan clean.
+  (Note: measured vs DEPLOYED overfit net, not src — src baseline 3044 was staler.)
+- ⭐ TRANSFERABLE: fp16 count-plane recast on flood/walk intermediates holding {0,1} masks + small
+  walk counts. Floor after: `mask30`[1,1,30,30] bool 900B (output-welded, S10) + `red` fp32 576B (needed
+  for off-grid=traversable via 1-red). Candidate: reports/candidates/task251/fatmid_attack.onnx.

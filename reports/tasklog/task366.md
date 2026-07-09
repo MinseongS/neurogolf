@@ -223,3 +223,13 @@ incumbent.
 **16.0 (mem+params <= 8103) is INFEASIBLE.** Hard floor of the current structure alone =
 3600 (Conv) + 15503 (1-byte masks) = ~19.1K => ceiling ~15.15 even with perfect dtype golf.
 The whole public field at 30K+ corroborates. VERDICT: keep incumbent, de-prioritize task366.
+
+## 2026-07-07 — local-only REJECTED signed INT8 TopK feed probe (+0.0083)
+
+Candidate: `reports/candidates/task366/task366_int8_topk_greedy.onnx`.
+Recast `P_nb_flat_f` TopK feed/value output to signed INT8.  This is not the
+exact-cover breakthrough, but it recovers dtype memory while avoiding unsigned
+TopK submission errors.
+
+Bundled gate: fail=0.  Unsigned TopK scan: clean after adoption.  Cost: 31559
+-> 31299 (memory 30983 -> 30722, params 576 -> 577).

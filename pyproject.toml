@@ -1,0 +1,30 @@
+[project]
+name = "neurogolf"
+version = "0.1.0"
+description = "Local tooling for the Kaggle NeuroGolf 2026 effort."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "numpy",
+    # grader-match pins (verified 2026-07-09 against LB-accepted nets):
+    #  onnx 1.22 strict shape-infer rejects negative-pad Conv (30 nets);
+    #  ort >=1.27 MaxUnpool validation rejects task347; ort <=1.23 lacks fp16 Max / ConvInteger CPU kernels (55 nets)
+    "onnx==1.21.0",
+    "onnxruntime==1.26.0",
+    "pandas",
+    "streamlit",
+]
+
+[project.optional-dependencies]
+research = [
+    "scipy",
+    "torch",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+]
+
+[tool.uv]
+package = false

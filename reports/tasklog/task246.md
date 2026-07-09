@@ -57,3 +57,6 @@ sentinel (value ∉ {0..9}) so off-grid matches no channel.
 
 ## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (sub 54367833): 2753 -> 2637 (+0.043)
 Mechanism: Einsum/value_info crop. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). Source-owned via live_to_exact_source --write-src, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
+## 2026-07-09 — ⭐ REGIME CRACK ADOPTED (batch 5, opus)
+- 2634→2226 (+0.17). L-path (2-marker↔3-marker, color-8). Global-state 4 scalar positions; mask = rank-2 separable H-segment Rr(h)·cHq(w) + V-segment q_row(h)·Gc(w) with signed quadratics q=(x-a)(b-x); channel mix Dfull[3,10,10]. One free-output Einsum, no 30×30 plane.
+- Bundled fail=0, deployed-gated, TopK clean. Candidate reports/candidates/task246/regime.onnx. Confirms opus handles structured cracks. Memory neurogolf-regime-crack-freeoutput-einsum.

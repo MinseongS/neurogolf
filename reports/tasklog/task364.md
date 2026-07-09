@@ -119,3 +119,10 @@ mem 18500->15860, pts 15.115->15.2596. GB is a 0/1 one-hot mask; WLU/WT are boun
 fractional path-products (max 4.5e-4 / 0.28) -> no overflow, no decisive underflow.
 Verified bit-identical: 266 bundled fail=0 + 2000 fresh (0 divergence) + rebuilt-source
 fresh 1200/1200 fail=0. Source edit in src/custom/task364.py; params unchanged (elements).
+
+---
+## 2026-07-08 — fold-batch floor verdict (residual-spatialop self-application)
+**Ran:** fold_finder claimed `[1,2,20,22]` cast plane feeds 27 Einsums — STALE/wrong. Actual active net = 17 nodes / 2 Einsums (already-collapsed walk-chains). The [1,2,20,22] planes (GB fp32 / GBu uint8) feed QLinearConv, not the Einsums. Deep opus agent did full byte census (sums exactly to 14980).
+**Verdict: FLOOR.** GB (3520) = fp32 free-input slice, 2ch needed by (1,2,3,3) conv weight; idx (1760) = int32 forced (ORT Gather rejects <int32 indices, verified INVALID_GRAPH); fp16 seed masks/walk tables minimal (uint8 overflows walk-sum before Greater>0). Active unchanged (mem 14980 par 1177).
+**⭐ CROSS-CUTTING FINDING — sparse-initializer params lever (blocked locally):** local `calculate_params` counts `sparse_initializer` by NONZERO (vs dense full-prod). task364 tables are sparse → params 1177→219 (+~0.06). But `calculate_memory` runs `check_model(full_check=True)`+`infer_shapes(strict_mode=True)` which assigns sparse_tensor_type → all op type-inferences reject → scorer returns None (0 pts). Tested full/Sr-Sc-only/with-value_info — all fail checker. ORT executes correctly but our scorer can't score it.
+**Reopen:** (1) harness scorer tolerates sparse init / drops strict full_check; (2) opset op gains sparse-tensor type inference; (3) reformulation reading only 1 input channel in fp32 (GB 3520→1760).

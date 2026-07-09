@@ -67,3 +67,14 @@ collapses to a tiny K×K conv; here length is the full grid so no collapse.
 (30−(2−1)·10=20) in ONE op, so every downstream plane counts at 20×20 not 30×30.
 
 ## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-4 opus agent). Do not re-attempt without a new mechanism.
+## 2026-07-08 — ReduceSum spatial profile -> Einsum tail ADOPTED
+
+Applied the public-derived `ReduceSum(input, axes=[2,3], keepdims=0)` to
+`Einsum(input, equation='bchw->bc')` rewrite from
+`reports/candidates/reducesum_spatial_to_einsum_probe.py`.
+
+Candidate:
+`reports/candidates/task324/task324_reducesum_spatial_to_einsum_greedy.onnx`.
+Bundled gate after adoption: fail=0, cost `8864 -> 8862`
+(memory `7308`, params `1556 -> 1554`).  Adopted into
+`submission/overfit_nets/task324.onnx`.

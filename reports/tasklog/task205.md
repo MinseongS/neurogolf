@@ -89,3 +89,66 @@ Same idiom as task319 (Slice-reverse variant).
 
 
 ## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 11209 -> 9982 (+0.116); gate inc/cand=4/4 (safe). See [[neurogolf-urad-7225-bundle-vein]].
+
+## S16 (2026-07-07) — bundled dynamic-CSE active overlay (+0.0596)
+
+Built `reports/candidates/task205/task205_dynamic_cse_greedy.onnx` with
+`reports/candidates/dynamic_cse_active_probe.py`.  Bundled runtime signatures
+proved three window carriers were duplicate aliases with matching static
+shape/dtype: `rwin->rfl1`, `rfl2->rfl1`, `cwin->cfl2`.
+
+Bundled gate: fail=0.  Cost: 6225 -> 5865 (memory 6180 -> 5820, params 45
+unchanged).  Active overlay updated in `submission/overfit_nets/task205.onnx`;
+backup at `reports/candidates/task205/task205_pre_dynamic_cse.onnx`.
+
+## 2026-07-08 — fp16 sweep ADOPTED (+0.050)
+- Deployed 4891 → 4652 (−239B), bundled fail=0, unsigned-TopK clean.
+- Landed `safe_name_48` + its {0,1} downstream chain (48/50/58/60 + mirror 49/51/59/61, all
+  Cast-of-Greater = sign-exact fp16), with fp32 cast-backs only at Mul boundaries. The 5 flagged
+  Einsum-operand planes (15/20/25/76/79) were REJECTED — each Einsum co-binds the free fp32
+  `input`/`output`, so fp16 needs a cast-back exceeding the saving. Recastable planes = those whose
+  consumer is a comparison/Mul chain, NOT an Einsum-with-free-input. See [[neurogolf-fp16-count-plane-recast]].
+
+## 2026-07-08 — final-Einsum fp16 input recast ADOPTED (+0.0621 local)
+
+Candidate: `reports/candidates/task205/task205_fp16_final_einsum_inputs.onnx`,
+built by `reports/candidates/task205/build_fp16_output_variants.py`.
+
+Correction to the earlier fp16 sweep note: the final `Einsum` operands can be
+recast when the recast is inserted immediately before the final operand
+`Unsqueeze/Concat` chain and the free graph output is fp16. Upstream tensors
+remain fp32, so the free-input co-bind does not force expensive cast-backs.
+
+Gate:
+- incumbent: memory 4606, params 46, cost 4652, points 16.554947, bundled fail=0.
+- candidate: memory 4326, params 46, cost 4372, points 16.617024, bundled fail=0.
+- full active manifest after adoption: 400/400, local 7274.730608.
+- `scan_unsigned_topk.py submission/overfit_nets`: clean.
+
+Adopted into `submission/overfit_nets/task205.onnx`; backup:
+`reports/candidates/task205/adopt_backup_727479/task205.onnx`.
+Packed and submitted as Kaggle **54463492**, completed at displayed publicScore **7274.85**, with message
+`active 7274.730608 task205 final-einsum fp16 inputs cost 4652->4372 after task377 fail=0 topk clean`.
+
+## 2026-07-08 — residual coordinate-tail fp16 recast ADOPTED (+0.1508 local)
+
+Candidate: `reports/candidates/task205/task205_fp16_coord_tail.onnx`,
+built by `reports/candidates/task205/build_fp16_output_variants.py`.
+
+Mechanism: after the final-Einsum recast, the deployed fp16 scanner still flagged
+`safe_name_52..55` and `safe_name_66..69`. Part of that was a duplicate upper
+bound, but the coordinate/index tail was real: recast ArgMax coordinate Casts,
+`safe_name_1`/`safe_name_6`, the Add/Min/Gather-index path, and the small
+occupancy/value Mul tail to fp16. Cast-to-int64 for Gather accepts the fp16
+coordinate values, and the final output path was already fp16.
+
+Gate:
+- incumbent: memory 4326, params 46, cost 4372, points 16.617024, bundled fail=0.
+- candidate: memory 3714, params 46, cost 3760, points 16.767826, bundled fail=0.
+- full active manifest after adoption: 400/400, local 7274.919292.
+- `scan_unsigned_topk.py submission/overfit_nets`: clean.
+
+Adopted into `submission/overfit_nets/task205.onnx`; backup:
+`reports/candidates/task205/adopt_backup_727485_residual/task205.onnx`.
+Packed and submitted as Kaggle **54463952** (pending at write time), with message
+`active 7274.919292 task205 residual coord-tail fp16 cost 4372->3760 after task355 fail=0 topk clean`.

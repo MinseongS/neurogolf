@@ -163,3 +163,23 @@ live onnx: all div 0. Epilogue-fold REJECTED here (u8 QLC domain; einsum entry �
 ## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 19525 -> 16690 (+0.157)
 Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
 - Less-fusion: replaced Equal(r5c,0)+Cast(v_z→bool)+And with single Less(r5c,v_z) (valid since v_z∈{0,1}: r5c<v_z ≡ r5c==0 & v_z==1); dropped v_eq/v_zb planes. -800B mem (16100→15300), +0.049 pts (15.2774→15.3266). Fresh-gate 2500: 0 divergence vs incumbent.
+
+## 2026-07-07 — v_main→v_col linear fusion probe FAILED
+
+New mechanism probe: `v_main` is a counted `[1,10,20,20]` QLinearConv output (4000B)
+consumed only by a 1x1 `Wcol` QLinearConv to produce `v_col` (400B).  Tried replacing
+the pair with one direct QLinearConv whose kernel/bias are the linear composition
+`Wcol @ Wm`, under the hypothesis that bundled inputs might avoid the clipped
+intermediate's nonlinear cases.
+
+Candidate: `reports/candidates/task367/task367_fuse_vmain_vcol.onnx`.
+
+Result:
+
+- incumbent: `pass=266`, `fail=0`, `memory=15300`, `params=590`, `cost=15890`
+- fused: `pass=20`, `fail=246`, `memory=11300`, `params=121`, `cost=11421`
+
+Conclusion: the uint8 clip/thresholding in `v_main` is load-bearing; `v_col` is a
+sum of thresholded local predicates, not a linear predicate over the raw 5x5 patch.
+Do not retry simple linear composition.  A successful reduction would need a
+different predicate basis, not algebraic fusion.

@@ -81,3 +81,19 @@ over `Sign(profile)`.  Do not feed bool directly to ArgMax; ORT rejects it.
 task234 present9 (int 0..67) → uint8 via upstream Cast(pixel_all→uint8) before Slice so Slice emits uint8. 2950→2934 (−16).
 Gate: evaluate bundled fail=0 + **bit-identical outputs** over all train/test/arc-gen (verified). Safe for both tracks + private LB.
 ⭐ TRANSFERABLE: only ACTIVATION (node-output) dtype narrowing saves grader bytes — params counted by element-count (dtype-independent). Narrow the PRODUCER (upstream Cast/init dtype), never a post-Cast. Blocked when the plane is derived from / contracted with the free fp32 `input` (Einsum-vs-input, Slice/Conv of input, ScatterND updates vs fp32 data) → those force fp32. See [[neurogolf-fp16-count-plane-recast]].
+
+## S18 (2026-07-07) — bundled dynamic-CSE active overlay (+0.0165)
+
+Built `reports/candidates/task234/task234_dynamic_cse_greedy.onnx` with
+`reports/candidates/dynamic_cse_active_probe.py`.  Duplicate scalar/profile
+aliases were rewired, including `row_out_start_1->row_out_start`,
+`row_out_end_1->row_out_end`, `pure_*_1->pure_*`, `col_out_*_1->col_out_*`,
+`bbox_w_m1->bbox_w0`, `bbox_h_m1->bbox_h0`, and `arm_color_f_1->arm_color_f`.
+
+Bundled gate: fail=0.  Cost: 2934 -> 2886 (memory 2869 -> 2821, params 65
+unchanged).  Active overlay updated in `submission/overfit_nets/task234.onnx`;
+backup at `reports/candidates/task234/task234_pre_dynamic_cse.onnx`.
+
+Follow-up initializer dedupe removed duplicate scalar initializers via
+`reports/candidates/task234/task234_dedupe_initializers.onnx`.  Bundled gate
+remained fail=0.  Cost: 2886 -> 2884 (params 65 -> 63).

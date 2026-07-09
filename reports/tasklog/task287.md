@@ -56,3 +56,7 @@ ISOLATED fresh 200/200 and 500/500.
 - uint8 elementwise max = Where(Greater(a,b),a,b) (256B/16x16 plane); ORT has no
   uint8 Max. Cast the fp32 conv to uint8 at 30x30 (900B) and slice uint8 (256B) —
   cheaper than slicing fp32 (1024B) then casting.
+
+## 2026-07-09 — ⭐ REGIME CRACK ADOPTED (batch 4, 900B mask → free-output Einsum)
+- 1994→250 (+2.08, largest single regime win, mem 0). count-replaces-recovered-value: emit per-channel group-membership count, sign decode makes count the one-hot (orbit-SUM w/ noise-gate).
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task287/regime.onnx. See memory neurogolf-regime-crack-freeoutput-einsum.

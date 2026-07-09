@@ -84,4 +84,24 @@ Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=
 See memory [[neurogolf-urad-7225-bundle-vein]]. 
 
 ## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 12298 -> 11412 (+0.075)
-Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
+Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]]. 
+
+## 2026-07-07 auto-golfer scalar-line-colour probe KILL
+
+Candidate: `reports/candidates/task198/scalar_line_color_probe.py` writes
+`reports/candidates/task198/task198_scalar_line_color.onnx`.
+
+Hypothesis: active `Conv(input,W)->G` already has the colour-index plane, so
+delete the full `G_u8` cast plane.  Build `eq1` directly from `G`, infer pitch
+from a small `eq1` slice, sample the one grid-line colour as scalar `G[0,p-1]`,
+and use `vals=Where(eq1, cellexp, line_colour_scalar)`.
+
+Result: bundled fail 266/266.  Cost would have improved (`11305+107` to
+`10530+108`) if correct, so the byte model was valid.  Semantic failure:
+`G=0` represents outside the real grid on the 30x30 padded canvas, while `G=1`
+is black inside the real grid.  The scalar-line replay paints every non-`eq1`
+cell, including off-grid zeros, as the line colour.  Preserving off-grid zeros
+requires another full mask/replay plane, which erases the `G_u8` deletion.
+
+Do not retry scalar line-colour replay unless a free-output construction can
+distinguish off-grid `G=0` from line pixels without a counted full plane.

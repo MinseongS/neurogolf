@@ -12,7 +12,7 @@ Classes (cheapest→most expensive under the grader counting model):
   class).
 - RESHAPE: output grid shape differs from input (crop/scale/tile tasks).
 
-  PYTHONPATH=. .venv/bin/python reports/scripts/color_source_scan.py
+  PYTHONPATH=. uv run python reports/scripts/color_source_scan.py
 Writes reports/color_source_scan.json and prints a queue-oriented summary.
 """
 

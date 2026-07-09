@@ -171,3 +171,28 @@ coordinates plus a short offset scatter are the stronger family.
 ## S8 (2026-07-02) — pow2-log extremes (+0.280) ADOPTED, div 0
 row_has/col_has occupancy bands + 3 ArgMax → 3 free-input pow2-weight einsums (≤1 px/row per colour ⇒ exact). TRAP: ArgMax(select_last_index=1) on all-zero returns 29, and ch0 overflows pow2 — gated by ReduceSum(input)==2 (2-endpoint diagonals only). 3384+201 vs 4614+132 → 16.535→16.815.
 LESSON: REDUCE_ONLY converts ONLY when ≤1 pixel per reduced line (pow2 exact) AND consumers are index/extreme extraction; occupancy (max) over multi-pixel colours = floor.
+
+## 2026-07-07 — initializer dedupe micro-overlay
+
+`reports/candidates/task037/task037_dedupe_initializers.onnx` rewired duplicate
+initializer `unsq2->unsq_axis2`.  Bundled gate fail=0.  Cost: 3585 -> 3584
+(params 201 -> 200).
+
+## 2026-07-07 — local-only REJECTED signed INT8 TopK feed probe
+
+`reports/candidates/task037/task037_int8_topk_greedy.onnx` recast
+`last_offset_f` TopK feed to signed INT8.  Bundled gate fail=0.  Cost: 3584 ->
+3569 (memory 3384 -> 3368, params 200 -> 201).
+
+Follow-up pruning removed dead initializer `topk_i8_zero_037`. Cost: 3569 -> 3568.
+## 2026-07-08 — ReduceSum spatial profile -> Einsum tail ADOPTED
+
+Applied the public-derived `ReduceSum(input, axes=[2,3], keepdims=0)` to
+`Einsum(input, equation='bchw->bc')` rewrite from
+`reports/candidates/reducesum_spatial_to_einsum_probe.py`.
+
+Candidate:
+`reports/candidates/task037/task037_reducesum_spatial_to_einsum_greedy.onnx`.
+Bundled gate after adoption: fail=0, cost `3464 -> 3462`
+(memory `3264`, params `200 -> 198`).  Adopted into
+`submission/overfit_nets/task037.onnx`.

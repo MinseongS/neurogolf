@@ -32,7 +32,7 @@ semantic ideas into source-owned ONNX candidates.
 
 - `task002`: visible stored data supports the simple rectangle rule:
   enclosed black rectangles with green adjacent edges become yellow. Prior fresh-generator
-  noise notes could not be reproduced because `/tmp/arc-gen` is absent in the current
+  noise notes could not be reproduced because the repo-local `arc-gen/` generator is absent in the current
   workspace. The semantic correction was important, but the incumbent bitset flood was
   already compact; only a tiny params improvement was adopted.
 - `mem0` tasks: memory is already zero, so improvement requires reducing params. This can

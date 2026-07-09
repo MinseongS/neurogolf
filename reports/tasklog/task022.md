@@ -50,3 +50,14 @@ multiply by the marker mask (broadcast) and ReduceSum over space — no Gather/s
 data-dependent indexing. Fold the value-weight into that same Conv kernel ONLY if the output
 stays small (here it would have gone full-canvas, so keep the channel-collapse separate).
 Drop any output cell that is later overwritten (centre -> GRAY) to shave a Conv channel.
+
+
+---
+
+## 2026-07-08 — 8000-mode adoption (public re-mine, LB-confirmed 7264.26)
+
+**+0.9391 LB** (mem 162, par 738; from urad-7250.18). Mechanism: our 21-node GridSample+TopK+GatherND+Mod geometric warp collapsed to **4 nodes (Add, Einsum, Equal, Pad)** — the entire warp is ONE free-input Einsum. Eliminates the TopK and GridSample counted planes. Confirms GridSample-warp is Einsum-collapsible (previously an un-mined urad mechanism).
+
+Gate: isolated `evaluate` bundled fail=0 + strictly cheaper than our incumbent + uint8-TopK scan clean.
+Artifact: `submission/overfit_nets/task022.onnx` (backup in `.minmerge_backup/`). Source dumps + notebook code under `reports/candidates/public_mine_20260708/`.
+This is a direct 8000-mode ONNX overlay (constant dataset => permanent). Source `src/custom/task022.py` NOT regenerated: the public net is optimizer-emitted (base64 in-notebook), no per-task Python builder to lift; the mechanism above IS the transferable insight.

@@ -20,3 +20,9 @@ Dominant intermediates: `colored` [1,1,30,30] bool (the pyramid mask, ~900B infe
 
 ## INSIGHT (transferable)
 A row/col-COUPLED region mask `r + |c-col| < length` (pyramid/triangle/diamond) is NOT separable, but it is ONE plane via `Less(rowramp[1,1,30,1], thresh[1,1,1,30])` after folding all per-column geometry (|c-col|, length, in-grid width gate) into the tiny thresh VECTOR. Then a per-COLUMN colour one-hot `[1,10,1,30]` (parity-dependent) as the Where value-branch with input as the else-branch routes the full 10-ch expansion into the FREE output with zero extra full planes — off-grid and background fall out of the unchanged input automatically.
+
+## 2026-07-07 — initializer dedupe micro-overlay
+
+`reports/candidates/task348/task348_dedupe_initializers.onnx` rewired duplicate
+initializer `pad_val->u8_250`.  Bundled gate fail=0.  Cost: 1896 -> 1895
+(params 72 -> 71).

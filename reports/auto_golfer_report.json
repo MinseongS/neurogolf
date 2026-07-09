@@ -1,0 +1,7421 @@
+{
+  "generated_at_unix": 1783415422,
+  "probe_results": [
+    {
+      "probe": "reports/candidates/dedupe_initializers_active_probe.py",
+      "returncode": 0,
+      "seconds": 0.551,
+      "wins": [
+        {
+          "task": 354,
+          "delta_points": 0.001126,
+          "old_cost": 2666,
+          "new_cost": 2663,
+          "path": "reports/candidates/task354/task354_dedupe_initializers.onnx",
+          "line": "+0.001126 task354 cost 2666->2663 mem 2583->2583 params 83->80 est=3 safe_name_3->safe_name_2 /Users/minseong/project/neurogolf/reports/candidates/task354/task354_dedupe_initializers.onnx"
+        }
+      ],
+      "stdout_tail": "wins: 1\n+0.001126 task354 cost 2666->2663 mem 2583->2583 params 83->80 est=3 safe_name_3->safe_name_2 /Users/minseong/project/neurogolf/reports/candidates/task354/task354_dedupe_initializers.onnx\nTOTAL +0.001126"
+    },
+    {
+      "probe": "reports/candidates/prune_dead_constants_active_probe.py",
+      "returncode": 0,
+      "seconds": 0.144,
+      "wins": [],
+      "stdout_tail": "wins: 0\nTOTAL +0.000000"
+    },
+    {
+      "probe": "reports/candidates/noop_reshape_active_probe.py",
+      "returncode": 0,
+      "seconds": 0.207,
+      "wins": [],
+      "stdout_tail": "noop reshape candidates seen: 0\nchecked candidates: 0\nwins: 0\nTOTAL +0.000000"
+    },
+    {
+      "probe": "reports/candidates/dynamic_cse_active_probe.py",
+      "returncode": null,
+      "seconds": 45,
+      "wins": [],
+      "stdout_tail": "TIMEOUT: Command '['/Users/minseong/project/neurogolf/.venv/bin/python', 'reports/candidates/dynamic_cse_active_probe.py']' timed out after 45 seconds"
+    },
+    {
+      "probe": "reports/candidates/cast_dtype_batch_probe.py",
+      "returncode": 0,
+      "seconds": 19.63,
+      "wins": [],
+      "stdout_tail": "2026-07-07 18:09:18.983 python[13114:31621844] 2026-07-07 18:09:18.983879 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:19.125 python[13114:31621844] 2026-07-07 18:09:19.126076 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:19.481 python[13114:31621844] 2026-07-07 18:09:19.481974 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:19.568 python[13114:31621844] 2026-07-07 18:09:19.569519 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:19.768 python[13114:31621844] 2026-07-07 18:09:19.768989 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:19.983 python[13114:31621844] 2026-07-07 18:09:19.983583 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:20.515 python[13114:31621844] 2026-07-07 18:09:20.515703 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:20.657 python[13114:31621844] 2026-07-07 18:09:20.658338 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:21.316 python[13114:31621844] 2026-07-07 18:09:21.317174 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:21.321 python[13114:31621844] 2026-07-07 18:09:21.321725 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:21.325 python[13114:31621844] 2026-07-07 18:09:21.326126 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:21.330 python[13114:31621844] 2026-07-07 18:09:21.331587 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:21.336 python[13114:31621844] 2026-07-07 18:09:21.336668 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:21.844 python[13114:31621844] 2026-07-07 18:09:21.845425 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:22.061 python[13114:31621844] 2026-07-07 18:09:22.062375 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:22.259 python[13114:31621844] 2026-07-07 18:09:22.259726 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:22.262 python[13114:31621844] 2026-07-07 18:09:22.262704 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:22.337 python[13114:31621844] 2026-07-07 18:09:22.337902 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:22.340 python[13114:31621844] 2026-07-07 18:09:22.341452 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:22.631 python[13114:31621844] 2026-07-07 18:09:22.631669 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:22.964 python[13114:31621844] 2026-07-07 18:09:22.965331 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:23.080 python[13114:31621844] 2026-07-07 18:09:23.081268 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:23.202 python[13114:31621844] 2026-07-07 18:09:23.203346 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:23.300 python[13114:31621844] 2026-07-07 18:09:23.301418 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:23.369 python[13114:31621844] 2026-07-07 18:09:23.369826 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:23.549 python[13114:31621844] 2026-07-07 18:09:23.549706 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\n2026-07-07 18:09:23.648 python[13114:31621844] 2026-07-07 18:09:23.648773 [E:onnxruntime:, inference_session.cc:3853 EndProfiling] Could not write a profile because no model was loaded.\nchecked cast targets: 132\nwins: 0\nTOTAL +0.000000"
+    },
+    {
+      "probe": "reports/candidates/zero_concat_to_pad_active_probe.py",
+      "returncode": 0,
+      "seconds": 0.607,
+      "wins": [],
+      "stdout_tail": "zero-concat patterns seen: 2\nchecked candidates: 2\nwins: 0\nTOTAL +0.000000"
+    },
+    {
+      "probe": "reports/candidates/contiguous_gather_to_slice_active_probe.py",
+      "returncode": 0,
+      "seconds": 0.143,
+      "wins": [],
+      "stdout_tail": "contiguous gather patterns seen: 0\nchecked candidates: 0\nwins: 0\nTOTAL +0.000000"
+    },
+    {
+      "probe": "reports/candidates/negative_pad_normalize_probe.py",
+      "returncode": null,
+      "seconds": 45,
+      "wins": [],
+      "stdout_tail": "TIMEOUT: Command '['/Users/minseong/project/neurogolf/.venv/bin/python', 'reports/candidates/negative_pad_normalize_probe.py']' timed out after 45 seconds"
+    },
+    {
+      "probe": "reports/candidates/sign_argmax_uint8_active_probe.py",
+      "returncode": 0,
+      "seconds": 0.148,
+      "wins": [],
+      "stdout_tail": "sign->argmax candidates seen: 0\nchecked candidates: 0\nwins: 0\nTOTAL +0.000000"
+    },
+    {
+      "probe": "reports/candidates/defer_widening_cast_shape_probe.py",
+      "returncode": 0,
+      "seconds": 12.266,
+      "wins": [],
+      "stdout_tail": "defer-cast candidates seen: 4\nchecked candidates: 4\nwins: 0\nTOTAL +0.000000"
+    },
+    {
+      "probe": "reports/candidates/remove_gather_index_cast_probe.py",
+      "returncode": 0,
+      "seconds": 0.443,
+      "wins": [],
+      "stdout_tail": "index-cast candidates seen: 2\nchecked candidates: 2\nwins: 0\nTOTAL +0.000000"
+    }
+  ],
+  "wins": [
+    {
+      "task": 354,
+      "delta_points": 0.001126,
+      "old_cost": 2666,
+      "new_cost": 2663,
+      "path": "reports/candidates/task354/task354_dedupe_initializers.onnx",
+      "line": "+0.001126 task354 cost 2666->2663 mem 2583->2583 params 83->80 est=3 safe_name_3->safe_name_2 /Users/minseong/project/neurogolf/reports/candidates/task354/task354_dedupe_initializers.onnx"
+    }
+  ],
+  "archetype_rank": [
+    {
+      "task": 96,
+      "cost": 7682,
+      "points": 16.05336479109415,
+      "score": 756.5,
+      "raw_score": 3456.5,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "at-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "full_canvas": 3300,
+        "producer_bound_candidate": 2400,
+        "other": 1668,
+        "final_output_welded": 1604,
+        "index_or_profile": 1475,
+        "pad_concat_carrier": 900,
+        "scatter_feed": 48,
+        "topk_feed": 40
+      },
+      "top_tensors": [
+        {
+          "name": "row_sum_full",
+          "bytes": 1200,
+          "shape": [
+            10,
+            30
+          ],
+          "producer": "ReduceSum",
+          "consumers": [
+            "ReduceSum",
+            "Cast"
+          ],
+          "tags": [
+            "full_canvas",
+            "producer_bound_candidate"
+          ]
+        },
+        {
+          "name": "col_sum_full",
+          "bytes": 1200,
+          "shape": [
+            10,
+            30
+          ],
+          "producer": "ReduceSum",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "full_canvas",
+            "producer_bound_candidate"
+          ]
+        },
+        {
+          "name": "padded_color",
+          "bytes": 900,
+          "shape": [
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "radius_i32",
+          "bytes": 484,
+          "shape": [
+            11,
+            11
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Less",
+            "Gather",
+            "Gather"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "row_present_full",
+          "bytes": 300,
+          "shape": [
+            10,
+            30
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Gather"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "col_present_full",
+          "bytes": 300,
+          "shape": [
+            10,
+            30
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Gather"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "row_present_selected",
+          "bytes": 150,
+          "shape": [
+            5,
+            30
+          ],
+          "producer": "Gather",
+          "consumers": [
+            "Slice"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "col_present_selected",
+          "bytes": 150,
+          "shape": [
+            5,
+            30
+          ],
+          "producer": "Gather",
+          "consumers": [
+            "Slice"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 19,
+      "cost": 2793,
+      "points": 17.065128434054824,
+      "score": 486.2,
+      "raw_score": 486.2,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "final_output_welded": 1343,
+        "other": 1154,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "index_or_profile": 204
+      },
+      "top_tensors": [
+        {
+          "name": "safe_name_45",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "safe_name_15",
+          "bytes": 144,
+          "shape": [
+            1,
+            1,
+            6,
+            6
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "ReduceSum",
+            "Equal"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "safe_name_30",
+          "bytes": 144,
+          "shape": [
+            1,
+            1,
+            12,
+            12
+          ],
+          "producer": "And",
+          "consumers": [
+            "And",
+            "Where"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "safe_name_37",
+          "bytes": 144,
+          "shape": [
+            1,
+            1,
+            12,
+            12
+          ],
+          "producer": "Gather",
+          "consumers": [
+            "And"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "safe_name_38",
+          "bytes": 144,
+          "shape": [
+            1,
+            1,
+            12,
+            12
+          ],
+          "producer": "And",
+          "consumers": [
+            "Cast",
+            "Where"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "safe_name_39",
+          "bytes": 144,
+          "shape": [
+            1,
+            1,
+            12,
+            12
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "QLinearConv"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "safe_name_40",
+          "bytes": 144,
+          "shape": [
+            1,
+            1,
+            12,
+            12
+          ],
+          "producer": "QLinearConv",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "safe_name_41",
+          "bytes": 144,
+          "shape": [
+            1,
+            1,
+            12,
+            12
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 154,
+      "cost": 2759,
+      "points": 17.077376425782713,
+      "score": 471.0,
+      "raw_score": 471.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [
+        "open"
+      ],
+      "tag_bytes": {
+        "other": 1521,
+        "final_output_welded": 1092,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "index_or_profile": 48
+      },
+      "top_tensors": [
+        {
+          "name": "class30",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "red_f",
+          "bytes": 400,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "class15",
+          "bytes": 225,
+          "shape": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "red_u8",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Slice",
+            "Slice",
+            "Max"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "h_crop",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Max"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "v_crop",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Max"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "class_crop",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Max",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "bot3_f",
+          "bytes": 96,
+          "shape": [
+            1,
+            1,
+            3,
+            8
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 295,
+      "cost": 1604,
+      "points": 17.61974421157354,
+      "score": 420.8,
+      "raw_score": 420.8,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "final_output_welded": 1269,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "other": 229,
+        "index_or_profile": 36
+      },
+      "top_tensors": [
+        {
+          "name": "full_label",
+          "bytes": 900,
+          "shape": [
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "filled",
+          "bytes": 162,
+          "shape": [
+            9,
+            18
+          ],
+          "producer": "Less",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "default_label",
+          "bytes": 162,
+          "shape": [
+            9,
+            18
+          ],
+          "producer": "Where",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "small_label",
+          "bytes": 162,
+          "shape": [
+            9,
+            18
+          ],
+          "producer": "Where",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "counts",
+          "bytes": 40,
+          "shape": [
+            10
+          ],
+          "producer": "ReduceSum",
+          "consumers": [
+            "ReduceSum",
+            "Slice"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "nz_counts",
+          "bytes": 36,
+          "shape": [
+            9
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "ReduceSum",
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "in_width",
+          "bytes": 18,
+          "shape": [
+            1,
+            18
+          ],
+          "producer": "Less",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "fill_limit_raw",
+          "bytes": 18,
+          "shape": [
+            9,
+            1
+          ],
+          "producer": "Add",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 187,
+      "cost": 8322,
+      "points": 15.973342110457114,
+      "score": 250.0,
+      "raw_score": 3750.0,
+      "tasklog_penalty": 3500.0,
+      "tasklog_penalty_reasons": [
+        "floor ("
+      ],
+      "tag_bytes": {
+        "final_output_welded": 5000,
+        "producer_bound_candidate": 5000
+      },
+      "top_tensors": [
+        {
+          "name": "t2",
+          "bytes": 5000,
+          "shape": [
+            1,
+            2,
+            25,
+            25
+          ],
+          "producer": "Conv",
+          "consumers": [
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum"
+          ],
+          "tags": [
+            "final_output_welded",
+            "producer_bound_candidate"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 197,
+      "cost": 1201,
+      "points": 17.909090177920017,
+      "score": 235.0,
+      "raw_score": 235.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "index_or_profile": 600,
+        "other": 420,
+        "final_output_welded": 260
+      },
+      "top_tensors": [
+        {
+          "name": "g1_sliced",
+          "bytes": 400,
+          "shape": [
+            1,
+            10,
+            1,
+            10
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "masked",
+          "bytes": 200,
+          "shape": [
+            10,
+            10
+          ],
+          "producer": "Where",
+          "consumers": [
+            "ReduceMin"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "indices",
+          "bytes": 120,
+          "shape": [
+            30
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Gather"
+          ],
+          "tags": [
+            "final_output_welded",
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "eq_mat",
+          "bytes": 100,
+          "shape": [
+            10,
+            10
+          ],
+          "producer": "Equal",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "g1_am",
+          "bytes": 80,
+          "shape": [
+            1,
+            1,
+            10
+          ],
+          "producer": "ArgMax",
+          "consumers": [
+            "Squeeze"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "g1_ref",
+          "bytes": 80,
+          "shape": [
+            10
+          ],
+          "producer": "Squeeze",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "g1_ref_i",
+          "bytes": 40,
+          "shape": [
+            10
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Unsqueeze",
+            "Gather"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "g1_ref_u",
+          "bytes": 40,
+          "shape": [
+            1,
+            10
+          ],
+          "producer": "Unsqueeze",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 8,
+      "cost": 3198,
+      "points": 16.9297191066061,
+      "score": 220.5,
+      "raw_score": 220.5,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "final_output_welded": 1998,
+        "other": 1066,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900
+      },
+      "top_tensors": [
+        {
+          "name": "lab30",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "m8",
+          "bytes": 256,
+          "shape": [
+            1,
+            1,
+            16,
+            16
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "redplaced",
+          "bytes": 256,
+          "shape": [
+            1,
+            1,
+            16,
+            16
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "base",
+          "bytes": 256,
+          "shape": [
+            1,
+            1,
+            16,
+            16
+          ],
+          "producer": "Where",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "lab2",
+          "bytes": 256,
+          "shape": [
+            1,
+            1,
+            16,
+            16
+          ],
+          "producer": "Where",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "lab",
+          "bytes": 256,
+          "shape": [
+            1,
+            1,
+            16,
+            16
+          ],
+          "producer": "Where",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "redcrop",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            5,
+            5
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "pads_red",
+          "bytes": 64,
+          "shape": [
+            8
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 232,
+      "cost": 1410,
+      "points": 17.748655016627787,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 60,
+      "cost": 1010,
+      "points": 18.082294390164694,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 294,
+      "cost": 910,
+      "points": 18.186555400489105,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 344,
+      "cost": 910,
+      "points": 18.186555400489105,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 98,
+      "cost": 900,
+      "points": 18.197605236675688,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 114,
+      "cost": 900,
+      "points": 18.197605236675688,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 151,
+      "cost": 900,
+      "points": 18.197605236675688,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 176,
+      "cost": 210,
+      "points": 19.65289246928253,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 26,
+      "cost": 200,
+      "points": 19.701682633451963,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 135,
+      "cost": 200,
+      "points": 19.701682633451963,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 229,
+      "cost": 200,
+      "points": 19.701682633451963,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 313,
+      "cost": 188,
+      "points": 19.76355803717005,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 144,
+      "cost": 104,
+      "points": 20.35560910085863,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 314,
+      "cost": 100,
+      "points": 20.394829814011906,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 380,
+      "cost": 99,
+      "points": 20.40488014986541,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 152,
+      "cost": 90,
+      "points": 20.500190329669735,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 299,
+      "cost": 50,
+      "points": 21.087976994571854,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 116,
+      "cost": 30,
+      "points": 21.598802618337846,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 164,
+      "cost": 30,
+      "points": 21.598802618337846,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 172,
+      "cost": 30,
+      "points": 21.598802618337846,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 210,
+      "cost": 30,
+      "points": 21.598802618337846,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 311,
+      "cost": 30,
+      "points": 21.598802618337846,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 385,
+      "cost": 30,
+      "points": 21.598802618337846,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 16,
+      "cost": 10,
+      "points": 22.697414907005953,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 276,
+      "cost": 10,
+      "points": 22.697414907005953,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 309,
+      "cost": 10,
+      "points": 22.697414907005953,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 337,
+      "cost": 10,
+      "points": 22.697414907005953,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 87,
+      "cost": 5,
+      "points": 23.3905620875659,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 223,
+      "cost": 5,
+      "points": 23.3905620875659,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 307,
+      "cost": 5,
+      "points": 23.3905620875659,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 179,
+      "cost": 0,
+      "points": 25.0,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 241,
+      "cost": 0,
+      "points": 25.0,
+      "score": 0.0,
+      "raw_score": 0.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {},
+      "top_tensors": []
+    },
+    {
+      "task": 393,
+      "cost": 144,
+      "points": 20.030186700424,
+      "score": -7.5,
+      "raw_score": -7.5,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "other": 55,
+        "topk_feed": 40,
+        "final_output_welded": 30
+      },
+      "top_tensors": [
+        {
+          "name": "c",
+          "bytes": 40,
+          "shape": [
+            1,
+            10,
+            1,
+            1
+          ],
+          "producer": "GlobalAveragePool",
+          "consumers": [
+            "TopK"
+          ],
+          "tags": [
+            "topk_feed"
+          ]
+        },
+        {
+          "name": "ti",
+          "bytes": 32,
+          "shape": [
+            1,
+            4,
+            1,
+            1
+          ],
+          "producer": "TopK",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "m",
+          "bytes": 27,
+          "shape": [
+            1,
+            9,
+            3,
+            1
+          ],
+          "producer": "Equal",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "tv",
+          "bytes": 16,
+          "shape": [
+            1,
+            4,
+            1,
+            1
+          ],
+          "producer": "TopK",
+          "consumers": [],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "ti8",
+          "bytes": 4,
+          "shape": [
+            1,
+            4,
+            1,
+            1
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Slice"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "s",
+          "bytes": 3,
+          "shape": [
+            1,
+            3,
+            1,
+            1
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Transpose"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "st",
+          "bytes": 3,
+          "shape": [
+            1,
+            1,
+            3,
+            1
+          ],
+          "producer": "Transpose",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 6,
+      "cost": 153,
+      "points": 19.969562078607566,
+      "score": -9.0,
+      "raw_score": -9.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "other": 90,
+        "final_output_welded": 36
+      },
+      "top_tensors": [
+        {
+          "name": "left_blue_f",
+          "bytes": 36,
+          "shape": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "right_blue_f",
+          "bytes": 36,
+          "shape": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "small_output",
+          "bytes": 27,
+          "shape": [
+            1,
+            3,
+            3,
+            3
+          ],
+          "producer": "Where",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "left_blue",
+          "bytes": 9,
+          "shape": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "And"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "right_blue",
+          "bytes": 9,
+          "shape": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "And"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "red_mask",
+          "bytes": 9,
+          "shape": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "producer": "And",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 347,
+      "cost": 143,
+      "points": 20.03715536974009,
+      "score": -11.2,
+      "raw_score": -11.2,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "other": 72,
+        "final_output_welded": 45
+      },
+      "top_tensors": [
+        {
+          "name": "left4",
+          "bytes": 36,
+          "shape": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Greater"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "right0",
+          "bytes": 36,
+          "shape": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Greater"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "small2",
+          "bytes": 36,
+          "shape": [
+            1,
+            2,
+            3,
+            3
+          ],
+          "producer": "Where",
+          "consumers": [
+            "MaxUnpool"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "is_blank",
+          "bytes": 9,
+          "shape": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "producer": "Greater",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 235,
+      "cost": 170,
+      "points": 19.864201562949738,
+      "score": -18.8,
+      "raw_score": -18.8,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "final_output_welded": 75,
+        "other": 36
+      },
+      "top_tensors": [
+        {
+          "name": "top_left",
+          "bytes": 63,
+          "shape": [
+            1,
+            7,
+            3,
+            3
+          ],
+          "producer": "Equal",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "bits",
+          "bytes": 36,
+          "shape": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "producer": "GatherND",
+          "consumers": [
+            "MatMul"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "codes_f",
+          "bytes": 12,
+          "shape": [
+            1,
+            1,
+            3,
+            1
+          ],
+          "producer": "MatMul",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 322,
+      "cost": 200,
+      "points": 19.701682633451963,
+      "score": -24.8,
+      "raw_score": -24.8,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "final_output_welded": 99,
+        "other": 45
+      },
+      "top_tensors": [
+        {
+          "name": "crop_output",
+          "bytes": 90,
+          "shape": [
+            1,
+            10,
+            3,
+            3
+          ],
+          "producer": "Equal",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "color_index",
+          "bytes": 36,
+          "shape": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "producer": "Conv",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "color_index_u8",
+          "bytes": 9,
+          "shape": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "MaxPool"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "filled_index",
+          "bytes": 9,
+          "shape": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "producer": "MaxPool",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 21,
+      "cost": 324,
+      "points": 19.21925648420767,
+      "score": -35.0,
+      "raw_score": -35.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "final_output_welded": 140,
+        "other": 124
+      },
+      "top_tensors": [
+        {
+          "name": "rf",
+          "bytes": 60,
+          "shape": [
+            30
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Einsum"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "cf",
+          "bytes": 60,
+          "shape": [
+            30
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Einsum"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "bg",
+          "bytes": 40,
+          "shape": [
+            1,
+            10
+          ],
+          "producer": "Einsum",
+          "consumers": [
+            "Einsum",
+            "Einsum",
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "rl",
+          "bytes": 30,
+          "shape": [
+            30
+          ],
+          "producer": "Less",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "cl",
+          "bytes": 30,
+          "shape": [
+            30
+          ],
+          "producer": "Less",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "bh",
+          "bytes": 20,
+          "shape": [
+            1,
+            10
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Einsum"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "ht",
+          "bytes": 4,
+          "shape": [
+            1
+          ],
+          "producer": "Einsum",
+          "consumers": [
+            "Sub"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "hb",
+          "bytes": 4,
+          "shape": [
+            1
+          ],
+          "producer": "Einsum",
+          "consumers": [
+            "Sub"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 362,
+      "cost": 521,
+      "points": 18.744249958246634,
+      "score": -50.0,
+      "raw_score": -50.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "final_output_welded": 280,
+        "other": 80,
+        "index_or_profile": 40,
+        "scatter_feed": 8
+      },
+      "top_tensors": [
+        {
+          "name": "row_terms",
+          "bytes": 120,
+          "shape": [
+            2,
+            30
+          ],
+          "producer": "ScatterElements",
+          "consumers": [
+            "Einsum"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "col_terms",
+          "bytes": 120,
+          "shape": [
+            2,
+            30
+          ],
+          "producer": "ScatterElements",
+          "consumers": [
+            "Einsum"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "channel_counts",
+          "bytes": 40,
+          "shape": [
+            1,
+            10
+          ],
+          "producer": "ReduceSum",
+          "consumers": [
+            "Gather",
+            "Equal"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "channel_terms",
+          "bytes": 40,
+          "shape": [
+            1,
+            2,
+            10
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Einsum"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "color_f16",
+          "bytes": 20,
+          "shape": [
+            1,
+            1,
+            10
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Sub",
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "background_channel",
+          "bytes": 20,
+          "shape": [
+            1,
+            1,
+            10
+          ],
+          "producer": "Sub",
+          "consumers": [
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "color_channel",
+          "bytes": 10,
+          "shape": [
+            1,
+            10
+          ],
+          "producer": "Equal",
+          "consumers": [
+            "Unsqueeze"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "color_channel_3d",
+          "bytes": 10,
+          "shape": [
+            1,
+            1,
+            10
+          ],
+          "producer": "Unsqueeze",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 297,
+      "cost": 1389,
+      "points": 17.763660657245655,
+      "score": -75.0,
+      "raw_score": -75.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "final_output_welded": 840,
+        "index_or_profile": 270,
+        "other": 228
+      },
+      "top_tensors": [
+        {
+          "name": "compact",
+          "bytes": 756,
+          "shape": [
+            1,
+            9,
+            14,
+            6
+          ],
+          "producer": "Equal",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "top",
+          "bytes": 216,
+          "shape": [
+            1,
+            9,
+            1,
+            6
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "ArgMax",
+            "ReduceMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "ids",
+          "bytes": 84,
+          "shape": [
+            1,
+            1,
+            14,
+            6
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "fill_ids",
+          "bytes": 72,
+          "shape": [
+            1,
+            1,
+            12,
+            6
+          ],
+          "producer": "Mul",
+          "consumers": [
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "color_idx_i64",
+          "bytes": 48,
+          "shape": [
+            1,
+            1,
+            1,
+            6
+          ],
+          "producer": "ArgMax",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "fill_col_idx",
+          "bytes": 48,
+          "shape": [
+            12
+          ],
+          "producer": "Mod",
+          "consumers": [
+            "Gather"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "active_f",
+          "bytes": 24,
+          "shape": [
+            1,
+            1,
+            1,
+            6
+          ],
+          "producer": "ReduceMax",
+          "consumers": [
+            "Cast",
+            "ReduceSum"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "fill_color_rows",
+          "bytes": 12,
+          "shape": [
+            1,
+            1,
+            12,
+            1
+          ],
+          "producer": "Gather",
+          "consumers": [
+            "Mul"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 78,
+      "cost": 1293,
+      "points": 17.835279621228143,
+      "score": -75.0,
+      "raw_score": -75.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "other": 960,
+        "final_output_welded": 300
+      },
+      "top_tensors": [
+        {
+          "name": "out3",
+          "bytes": 300,
+          "shape": [
+            1,
+            3,
+            10,
+            10
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "red_bottom",
+          "bytes": 240,
+          "shape": [
+            1,
+            1,
+            6,
+            10
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "ReduceL1"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "blue_top",
+          "bytes": 200,
+          "shape": [
+            1,
+            1,
+            5,
+            10
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "ReduceL1"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "blue",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Less",
+          "consumers": [
+            "Xor",
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "before_end",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Less",
+          "consumers": [
+            "Xor",
+            "Not"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "red",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Xor",
+          "consumers": [
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "background",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Not",
+          "consumers": [
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "top_count",
+          "bytes": 40,
+          "shape": [
+            1,
+            1,
+            1,
+            10
+          ],
+          "producer": "ReduceL1",
+          "consumers": [
+            "Add",
+            "Less"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 171,
+      "cost": 759,
+      "points": 18.36799822260437,
+      "score": -81.0,
+      "raw_score": -81.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "other": 324,
+        "final_output_welded": 324
+      },
+      "top_tensors": [
+        {
+          "name": "t1",
+          "bytes": 324,
+          "shape": [
+            1,
+            1,
+            9,
+            9
+          ],
+          "producer": "Conv",
+          "consumers": [
+            "Relu"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "t2",
+          "bytes": 324,
+          "shape": [
+            1,
+            1,
+            9,
+            9
+          ],
+          "producer": "Relu",
+          "consumers": [
+            "Conv"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 160,
+      "cost": 1334,
+      "points": 17.804062773524432,
+      "score": -100.0,
+      "raw_score": -100.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "other": 764,
+        "final_output_welded": 400
+      },
+      "top_tensors": [
+        {
+          "name": "fg",
+          "bytes": 400,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "features_u8",
+          "bytes": 400,
+          "shape": [
+            1,
+            4,
+            10,
+            10
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "QLinearConv"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "fg_u8",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "QLinearConv",
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "square_u8",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "MaxPool",
+          "consumers": [
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "plus_u8",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "QLinearConv",
+          "consumers": [
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "center_u8",
+          "bytes": 64,
+          "shape": [
+            1,
+            1,
+            8,
+            8
+          ],
+          "producer": "QLinearConv",
+          "consumers": [
+            "MaxPool",
+            "QLinearConv"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 396,
+      "cost": 4929,
+      "points": 16.497108593294623,
+      "score": -150.8,
+      "raw_score": -150.8,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "other": 3784,
+        "final_output_welded": 907,
+        "index_or_profile": 152
+      },
+      "top_tensors": [
+        {
+          "name": "M0",
+          "bytes": 1296,
+          "shape": [
+            1,
+            1,
+            18,
+            18
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "Mf",
+          "bytes": 648,
+          "shape": [
+            1,
+            1,
+            18,
+            18
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Conv",
+            "Conv"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "Hbits",
+          "bytes": 648,
+          "shape": [
+            1,
+            1,
+            18,
+            18
+          ],
+          "producer": "Conv",
+          "consumers": [
+            "ReduceMax",
+            "ReduceMax"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "Vbits",
+          "bytes": 648,
+          "shape": [
+            1,
+            1,
+            18,
+            18
+          ],
+          "producer": "Conv",
+          "consumers": [
+            "ReduceMax",
+            "ReduceMax"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "onehot8",
+          "bytes": 640,
+          "shape": [
+            1,
+            10,
+            8,
+            8
+          ],
+          "producer": "Equal",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "black8",
+          "bytes": 256,
+          "shape": [
+            1,
+            1,
+            8,
+            8
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Less"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "nz8",
+          "bytes": 64,
+          "shape": [
+            1,
+            1,
+            8,
+            8
+          ],
+          "producer": "Less",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "painted8",
+          "bytes": 64,
+          "shape": [
+            1,
+            1,
+            8,
+            8
+          ],
+          "producer": "Where",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 256,
+      "cost": 2251,
+      "points": 17.28087015909327,
+      "score": -155.0,
+      "raw_score": -155.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "other": 1492,
+        "final_output_welded": 676,
+        "index_or_profile": 28
+      },
+      "top_tensors": [
+        {
+          "name": "pre",
+          "bytes": 676,
+          "shape": [
+            1,
+            4,
+            13,
+            13
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "red",
+          "bytes": 224,
+          "shape": [
+            1,
+            1,
+            7,
+            8
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "ReduceMax",
+            "ReduceSum"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "indiag",
+          "bytes": 169,
+          "shape": [
+            1,
+            1,
+            13,
+            13
+          ],
+          "producer": "Less",
+          "consumers": [
+            "Xor",
+            "And",
+            "And",
+            "And"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "ingrid",
+          "bytes": 169,
+          "shape": [
+            1,
+            1,
+            13,
+            13
+          ],
+          "producer": "And",
+          "consumers": [
+            "Xor"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "bg",
+          "bytes": 169,
+          "shape": [
+            1,
+            1,
+            13,
+            13
+          ],
+          "producer": "Xor",
+          "consumers": [
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "blue",
+          "bytes": 169,
+          "shape": [
+            1,
+            1,
+            13,
+            13
+          ],
+          "producer": "And",
+          "consumers": [
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "redc",
+          "bytes": 169,
+          "shape": [
+            1,
+            1,
+            13,
+            13
+          ],
+          "producer": "And",
+          "consumers": [
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "green",
+          "bytes": 169,
+          "shape": [
+            1,
+            1,
+            13,
+            13
+          ],
+          "producer": "And",
+          "consumers": [
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 304,
+      "cost": 1441,
+      "points": 17.726907404000478,
+      "score": -209.5,
+      "raw_score": -209.5,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "final_output_welded": 910,
+        "other": 458,
+        "index_or_profile": 36
+      },
+      "top_tensors": [
+        {
+          "name": "y9",
+          "bytes": 810,
+          "shape": [
+            1,
+            10,
+            9,
+            9
+          ],
+          "producer": "Equal",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "x",
+          "bytes": 324,
+          "shape": [
+            1,
+            9,
+            3,
+            3
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "GlobalAveragePool",
+            "Conv"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "blocks",
+          "bytes": 81,
+          "shape": [
+            1,
+            9,
+            3,
+            3
+          ],
+          "producer": "Where",
+          "consumers": [
+            "DepthToSpace"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "colors9",
+          "bytes": 81,
+          "shape": [
+            1,
+            1,
+            9,
+            9
+          ],
+          "producer": "DepthToSpace",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "counts",
+          "bytes": 36,
+          "shape": [
+            1,
+            9,
+            1,
+            1
+          ],
+          "producer": "GlobalAveragePool",
+          "consumers": [
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "grid_f",
+          "bytes": 36,
+          "shape": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "producer": "Conv",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "grid3",
+          "bytes": 9,
+          "shape": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Equal",
+            "Reshape"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "mask3",
+          "bytes": 9,
+          "shape": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "producer": "Equal",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 217,
+      "cost": 1470,
+      "points": 17.70698232022722,
+      "score": -227.8,
+      "raw_score": -227.8,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "final_output_welded": 911,
+        "other": 518
+      },
+      "top_tensors": [
+        {
+          "name": "crop10",
+          "bytes": 810,
+          "shape": [
+            1,
+            10,
+            9,
+            9
+          ],
+          "producer": "Where",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "bg9",
+          "bytes": 324,
+          "shape": [
+            1,
+            1,
+            9,
+            9
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Conv"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "mask_out6",
+          "bytes": 81,
+          "shape": [
+            1,
+            1,
+            3,
+            3,
+            3,
+            3
+          ],
+          "producer": "And",
+          "consumers": [
+            "Reshape"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "mask_out_b",
+          "bytes": 81,
+          "shape": [
+            1,
+            1,
+            9,
+            9
+          ],
+          "producer": "Reshape",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "color10",
+          "bytes": 40,
+          "shape": [
+            1,
+            10,
+            1,
+            1
+          ],
+          "producer": "ReduceMax",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "mod3_sums",
+          "bytes": 36,
+          "shape": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "producer": "Conv",
+          "consumers": [
+            "Less"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "color10_u8",
+          "bytes": 10,
+          "shape": [
+            1,
+            10,
+            1,
+            1
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Equal",
+            "Where"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "is_bg_color",
+          "bytes": 10,
+          "shape": [
+            1,
+            10,
+            1,
+            1
+          ],
+          "producer": "Equal",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 84,
+      "cost": 1895,
+      "points": 17.453025882483473,
+      "score": -420.0,
+      "raw_score": -420.0,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "final_output_welded": 1680,
+        "scatter_feed": 1680,
+        "other": 125
+      },
+      "top_tensors": [
+        {
+          "name": "indices",
+          "bytes": 840,
+          "shape": [
+            1,
+            5,
+            2,
+            21
+          ],
+          "producer": "Add",
+          "consumers": [
+            "ScatterElements"
+          ],
+          "tags": [
+            "final_output_welded",
+            "scatter_feed"
+          ]
+        },
+        {
+          "name": "updates",
+          "bytes": 840,
+          "shape": [
+            1,
+            5,
+            2,
+            21
+          ],
+          "producer": "Mul",
+          "consumers": [
+            "ScatterElements"
+          ],
+          "tags": [
+            "final_output_welded",
+            "scatter_feed"
+          ]
+        },
+        {
+          "name": "valid21",
+          "bytes": 84,
+          "shape": [
+            21
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "ReduceSum",
+            "Mul"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "valid_col21",
+          "bytes": 21,
+          "shape": [
+            21
+          ],
+          "producer": "Less",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "last_row_plane",
+          "bytes": 20,
+          "shape": [
+            1,
+            5,
+            1,
+            1
+          ],
+          "producer": "Mul",
+          "consumers": [
+            "Add"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 255,
+      "cost": 7597,
+      "points": 16.06449128849678,
+      "score": -530.8,
+      "raw_score": -530.8,
+      "tasklog_penalty": 0.0,
+      "tasklog_penalty_reasons": [],
+      "tag_bytes": {
+        "other": 4222,
+        "final_output_welded": 2123,
+        "full_canvas": 1800
+      },
+      "top_tensors": [
+        {
+          "name": "safe_name_154",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "QLinearMatMul",
+          "consumers": [
+            "Greater"
+          ],
+          "tags": [
+            "full_canvas"
+          ]
+        },
+        {
+          "name": "safe_name_155",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Greater",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas"
+          ]
+        },
+        {
+          "name": "safe_name_150",
+          "bytes": 240,
+          "shape": [
+            1,
+            1,
+            30,
+            8
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "safe_name_151",
+          "bytes": 240,
+          "shape": [
+            1,
+            1,
+            8,
+            30
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "safe_name_152",
+          "bytes": 240,
+          "shape": [
+            1,
+            1,
+            30,
+            8
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "QLinearMatMul"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "safe_name_153",
+          "bytes": 240,
+          "shape": [
+            1,
+            1,
+            8,
+            30
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "QLinearMatMul"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "safe_name_33",
+          "bytes": 120,
+          "shape": [
+            1,
+            30
+          ],
+          "producer": "Einsum",
+          "consumers": [
+            "Sub",
+            "Sub"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "safe_name_35",
+          "bytes": 120,
+          "shape": [
+            1,
+            30
+          ],
+          "producer": "Einsum",
+          "consumers": [
+            "Sub"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 54,
+      "cost": 20184,
+      "points": 15.087354509679106,
+      "score": -630.8,
+      "raw_score": 6369.2,
+      "tasklog_penalty": 7000.0,
+      "tasklog_penalty_reasons": [
+        " kill",
+        "floor ("
+      ],
+      "tag_bytes": {
+        "full_canvas": 8100,
+        "other": 6344,
+        "scatter_feed": 5742,
+        "index_or_profile": 4186,
+        "producer_bound_candidate": 3600,
+        "final_output_welded": 2732,
+        "pad_concat_carrier": 1024,
+        "dtype_candidate": 900
+      },
+      "top_tensors": [
+        {
+          "name": "labf",
+          "bytes": 3600,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Conv",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "full_canvas",
+            "producer_bound_candidate"
+          ]
+        },
+        {
+          "name": "fidx",
+          "bytes": 1024,
+          "shape": [
+            4,
+            8,
+            4
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "GatherND",
+            "ScatterND"
+          ],
+          "tags": [
+            "pad_concat_carrier",
+            "scatter_feed"
+          ]
+        },
+        {
+          "name": "lab",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Slice",
+            "Slice",
+            "Slice",
+            "Slice",
+            "Gather",
+            "Gather",
+            "Gather",
+            "Gather",
+            "ScatterND",
+            "Gather",
+            "Gather",
+            "Gather"
+          ],
+          "tags": [
+            "full_canvas",
+            "dtype_candidate",
+            "scatter_feed",
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "cleared",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "ScatterND",
+          "consumers": [
+            "GatherND",
+            "ScatterND"
+          ],
+          "tags": [
+            "full_canvas",
+            "scatter_feed"
+          ]
+        },
+        {
+          "name": "filled",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "ScatterND",
+          "consumers": [
+            "Gather",
+            "ScatterND"
+          ],
+          "tags": [
+            "full_canvas",
+            "scatter_feed",
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "hlined",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "ScatterND",
+          "consumers": [
+            "Gather",
+            "ScatterElements"
+          ],
+          "tags": [
+            "full_canvas",
+            "scatter_feed",
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "outlab",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "ScatterElements",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas"
+          ]
+        },
+        {
+          "name": "hgap",
+          "bytes": 480,
+          "shape": [
+            1,
+            1,
+            4,
+            30
+          ],
+          "producer": "Where",
+          "consumers": [
+            "CumSum"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 17,
+      "cost": 6455,
+      "points": 16.227389696719257,
+      "score": -1237.3,
+      "raw_score": 1462.7,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "other": 2091,
+        "dtype_candidate": 954,
+        "final_output_welded": 909,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "index_or_profile": 795
+      },
+      "top_tensors": [
+        {
+          "name": "matches_b",
+          "bytes": 954,
+          "shape": [
+            1,
+            106,
+            9
+          ],
+          "producer": "Equal",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "matches_u8",
+          "bytes": 954,
+          "shape": [
+            1,
+            106,
+            9
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "MatMulInteger"
+          ],
+          "tags": [
+            "dtype_candidate"
+          ]
+        },
+        {
+          "name": "labels30",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "rrcc",
+          "bytes": 441,
+          "shape": [
+            1,
+            1,
+            21,
+            21
+          ],
+          "producer": "Add",
+          "consumers": [
+            "Mod"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "pattern0",
+          "bytes": 441,
+          "shape": [
+            1,
+            1,
+            21,
+            21
+          ],
+          "producer": "Mod",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "scores_i32",
+          "bytes": 424,
+          "shape": [
+            1,
+            106,
+            1
+          ],
+          "producer": "MatMulInteger",
+          "consumers": [
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "sample_planes",
+          "bytes": 360,
+          "shape": [
+            10,
+            9
+          ],
+          "producer": "GatherND",
+          "consumers": [
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "input_sample_i64",
+          "bytes": 72,
+          "shape": [
+            1,
+            9
+          ],
+          "producer": "ArgMax",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 366,
+      "cost": 31559,
+      "points": 14.640385911220264,
+      "score": -1455.5,
+      "raw_score": 9044.5,
+      "tasklog_penalty": 10500.0,
+      "tasklog_penalty_reasons": [
+        "do not re-probe",
+        " kill",
+        "floor re-confirmed"
+      ],
+      "tag_bytes": {
+        "other": 10889,
+        "index_or_profile": 9522,
+        "full_canvas": 5400,
+        "final_output_welded": 4754,
+        "producer_bound_candidate": 3600,
+        "topk_feed": 2064,
+        "dtype_candidate": 1920,
+        "pad_concat_carrier": 900,
+        "scatter_feed": 367
+      },
+      "top_tensors": [
+        {
+          "name": "label30",
+          "bytes": 3600,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Conv",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "full_canvas",
+            "producer_bound_candidate"
+          ]
+        },
+        {
+          "name": "T_idx_for_present",
+          "bytes": 1020,
+          "shape": [
+            1,
+            255
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "GatherElements"
+          ],
+          "tags": [
+            "dtype_candidate",
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "label30_u8",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Slice",
+            "Gather"
+          ],
+          "tags": [
+            "full_canvas",
+            "dtype_candidate",
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "out_label30",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "P_nb_flat_f",
+          "bytes": 510,
+          "shape": [
+            1,
+            255
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "TopK"
+          ],
+          "tags": [
+            "topk_feed"
+          ]
+        },
+        {
+          "name": "k0_anchor_flat_f",
+          "bytes": 510,
+          "shape": [
+            1,
+            255
+          ],
+          "producer": "Where",
+          "consumers": [
+            "TopK"
+          ],
+          "tags": [
+            "topk_feed"
+          ]
+        },
+        {
+          "name": "k1_anchor_flat_f",
+          "bytes": 510,
+          "shape": [
+            1,
+            255
+          ],
+          "producer": "Where",
+          "consumers": [
+            "TopK"
+          ],
+          "tags": [
+            "topk_feed"
+          ]
+        },
+        {
+          "name": "k2_anchor_flat_f",
+          "bytes": 510,
+          "shape": [
+            1,
+            255
+          ],
+          "producer": "Where",
+          "consumers": [
+            "TopK"
+          ],
+          "tags": [
+            "topk_feed"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 286,
+      "cost": 18971,
+      "points": 15.149333223647455,
+      "score": -1474.2,
+      "raw_score": 12525.8,
+      "tasklog_penalty": 14000.0,
+      "tasklog_penalty_reasons": [
+        "do not re-probe",
+        " kill",
+        "floor re-confirmed",
+        "floor ("
+      ],
+      "tag_bytes": {
+        "producer_bound_candidate": 12500,
+        "final_output_welded": 2777,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "other": 813
+      },
+      "top_tensors": [
+        {
+          "name": "t25",
+          "bytes": 2500,
+          "shape": [
+            1,
+            1,
+            25,
+            25
+          ],
+          "producer": "Conv",
+          "consumers": [
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum",
+            "Einsum"
+          ],
+          "tags": [
+            "producer_bound_candidate"
+          ]
+        },
+        {
+          "name": "W1",
+          "bytes": 2500,
+          "shape": [
+            1,
+            25,
+            25
+          ],
+          "producer": "Einsum",
+          "consumers": [
+            "Einsum"
+          ],
+          "tags": [
+            "producer_bound_candidate"
+          ]
+        },
+        {
+          "name": "W2",
+          "bytes": 2500,
+          "shape": [
+            1,
+            25,
+            25
+          ],
+          "producer": "Einsum",
+          "consumers": [
+            "Einsum"
+          ],
+          "tags": [
+            "producer_bound_candidate"
+          ]
+        },
+        {
+          "name": "W3",
+          "bytes": 2500,
+          "shape": [
+            1,
+            25,
+            25
+          ],
+          "producer": "Einsum",
+          "consumers": [
+            "Greater"
+          ],
+          "tags": [
+            "producer_bound_candidate"
+          ]
+        },
+        {
+          "name": "label_f",
+          "bytes": 2500,
+          "shape": [
+            1,
+            1,
+            25,
+            25
+          ],
+          "producer": "Conv",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "producer_bound_candidate"
+          ]
+        },
+        {
+          "name": "lbl30",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "g",
+          "bytes": 625,
+          "shape": [
+            1,
+            25,
+            25
+          ],
+          "producer": "Greater",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "label_u8",
+          "bytes": 625,
+          "shape": [
+            1,
+            1,
+            25,
+            25
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 157,
+      "cost": 6990,
+      "points": 16.147764164772145,
+      "score": -1564.0,
+      "raw_score": 1136.0,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "do not re-probe",
+        "open"
+      ],
+      "tag_bytes": {
+        "other": 3494,
+        "index_or_profile": 1458,
+        "final_output_welded": 1252,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "scatter_feed": 590,
+        "topk_feed": 60
+      },
+      "top_tensors": [
+        {
+          "name": "color_grid",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "bottom5_4d",
+          "bytes": 240,
+          "shape": [
+            1,
+            1,
+            4,
+            15
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Greater"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "ch1_active10",
+          "bytes": 150,
+          "shape": [
+            1,
+            1,
+            10,
+            15
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "active_color_grid",
+          "bytes": 150,
+          "shape": [
+            1,
+            1,
+            10,
+            15
+          ],
+          "producer": "Where",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "top0_4d",
+          "bytes": 120,
+          "shape": [
+            1,
+            1,
+            2,
+            15
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Greater"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "ch1_active_flat_1",
+          "bytes": 90,
+          "shape": [
+            90
+          ],
+          "producer": "ScatterElements",
+          "consumers": [
+            "ScatterElements"
+          ],
+          "tags": [
+            "scatter_feed"
+          ]
+        },
+        {
+          "name": "ch1_active_flat_2",
+          "bytes": 90,
+          "shape": [
+            90
+          ],
+          "producer": "ScatterElements",
+          "consumers": [
+            "ScatterElements"
+          ],
+          "tags": [
+            "scatter_feed"
+          ]
+        },
+        {
+          "name": "ch1_active_flat_3",
+          "bytes": 90,
+          "shape": [
+            90
+          ],
+          "producer": "ScatterElements",
+          "consumers": [
+            "Gather",
+            "ScatterElements"
+          ],
+          "tags": [
+            "scatter_feed",
+            "index_or_profile"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 89,
+      "cost": 6745,
+      "points": 16.183443231358144,
+      "score": -1644.8,
+      "raw_score": 1055.2,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "other": 3262,
+        "index_or_profile": 1205,
+        "final_output_welded": 1069,
+        "scatter_feed": 995,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900
+      },
+      "top_tensors": [
+        {
+          "name": "color30_out",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "color13_f",
+          "bytes": 676,
+          "shape": [
+            1,
+            1,
+            13,
+            13
+          ],
+          "producer": "Conv",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "all_scatter_idx",
+          "bytes": 384,
+          "shape": [
+            96
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "ScatterElements"
+          ],
+          "tags": [
+            "scatter_feed"
+          ]
+        },
+        {
+          "name": "color17",
+          "bytes": 289,
+          "shape": [
+            1,
+            1,
+            17,
+            17
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Reshape"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "color17_flat",
+          "bytes": 289,
+          "shape": [
+            289
+          ],
+          "producer": "Reshape",
+          "consumers": [
+            "Gather",
+            "Gather"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "color13",
+          "bytes": 169,
+          "shape": [
+            1,
+            1,
+            13,
+            13
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Pad",
+            "Reshape",
+            "Where"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "color_flat",
+          "bytes": 169,
+          "shape": [
+            169
+          ],
+          "producer": "Reshape",
+          "consumers": [
+            "Equal",
+            "Equal",
+            "ScatterElements"
+          ],
+          "tags": [
+            "scatter_feed"
+          ]
+        },
+        {
+          "name": "red_anchor_flat",
+          "bytes": 169,
+          "shape": [
+            169
+          ],
+          "producer": "Equal",
+          "consumers": [
+            "Or",
+            "Where",
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 273,
+      "cost": 2160,
+      "points": 17.32213649932179,
+      "score": -1871.2,
+      "raw_score": 828.8,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "final_output_welded": 909,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "index_or_profile": 672,
+        "other": 488,
+        "topk_feed": 40
+      },
+      "top_tensors": [
+        {
+          "name": "fill_full",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "x4",
+          "bytes": 400,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "ReduceMax",
+            "ArgMax",
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "rect1_fill",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "And",
+          "consumers": [
+            "Or"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "rect2_fill",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "And",
+          "consumers": [
+            "Or"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "fill",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Or",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "left_col",
+          "bytes": 80,
+          "shape": [
+            1,
+            1,
+            10,
+            1
+          ],
+          "producer": "ArgMax",
+          "consumers": [
+            "GatherElements"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "right_col",
+          "bytes": 80,
+          "shape": [
+            1,
+            1,
+            10,
+            1
+          ],
+          "producer": "ArgMax",
+          "consumers": [
+            "GatherElements"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "row_score",
+          "bytes": 40,
+          "shape": [
+            1,
+            1,
+            10,
+            1
+          ],
+          "producer": "ReduceMax",
+          "consumers": [
+            "TopK"
+          ],
+          "tags": [
+            "topk_feed"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 124,
+      "cost": 1953,
+      "points": 17.42287806912332,
+      "score": -2052.8,
+      "raw_score": 647.2,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "final_output_welded": 1019,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "other": 494,
+        "index_or_profile": 364
+      },
+      "top_tensors": [
+        {
+          "name": "color_full",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "ch0_first5",
+          "bytes": 200,
+          "shape": [
+            1,
+            1,
+            5,
+            10
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Less"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "fg_source_map",
+          "bytes": 200,
+          "shape": [
+            1,
+            1,
+            5,
+            10
+          ],
+          "producer": "Add",
+          "consumers": [
+            "Gather"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "out_fg",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "color_crop",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Where",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "fg5",
+          "bytes": 50,
+          "shape": [
+            1,
+            1,
+            5,
+            10
+          ],
+          "producer": "Less",
+          "consumers": [
+            "Gather",
+            "Gather",
+            "Gather",
+            "Concat"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "bottom_fg",
+          "bytes": 50,
+          "shape": [
+            1,
+            1,
+            5,
+            10
+          ],
+          "producer": "Gather",
+          "consumers": [
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "fg_pad_flat",
+          "bytes": 46,
+          "shape": [
+            46
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Gather"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 240,
+      "cost": 1475,
+      "points": 17.703586731226082,
+      "score": -2065.0,
+      "raw_score": 635.0,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "final_output_welded": 900,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "index_or_profile": 280,
+        "other": 213
+      },
+      "top_tensors": [
+        {
+          "name": "color_index_grid",
+          "bytes": 900,
+          "shape": [
+            1,
+            30,
+            30
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "s0_pool",
+          "bytes": 40,
+          "shape": [
+            1,
+            10,
+            1,
+            1
+          ],
+          "producer": "MaxPool",
+          "consumers": [
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "s1_pool",
+          "bytes": 40,
+          "shape": [
+            1,
+            10,
+            1,
+            1
+          ],
+          "producer": "MaxPool",
+          "consumers": [
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "s2_pool",
+          "bytes": 40,
+          "shape": [
+            1,
+            10,
+            1,
+            1
+          ],
+          "producer": "MaxPool",
+          "consumers": [
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "s3_pool",
+          "bytes": 40,
+          "shape": [
+            1,
+            10,
+            1,
+            1
+          ],
+          "producer": "MaxPool",
+          "consumers": [
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "s4_pool",
+          "bytes": 40,
+          "shape": [
+            1,
+            10,
+            1,
+            1
+          ],
+          "producer": "MaxPool",
+          "consumers": [
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "s5_pool",
+          "bytes": 40,
+          "shape": [
+            1,
+            10,
+            1,
+            1
+          ],
+          "producer": "MaxPool",
+          "consumers": [
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "s6_pool",
+          "bytes": 40,
+          "shape": [
+            1,
+            10,
+            1,
+            1
+          ],
+          "producer": "MaxPool",
+          "consumers": [
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 99,
+      "cost": 1899,
+      "points": 17.450917289187714,
+      "score": -2077.0,
+      "raw_score": 623.0,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "final_output_welded": 900,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "other": 402,
+        "index_or_profile": 256,
+        "scatter_feed": 63
+      },
+      "top_tensors": [
+        {
+          "name": "scalar_padded",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "top_marker_channels",
+          "bytes": 128,
+          "shape": [
+            1,
+            8,
+            2,
+            2
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "ArgMax",
+            "ReduceMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "scalar_flat",
+          "bytes": 100,
+          "shape": [
+            100
+          ],
+          "producer": "ScatterElements",
+          "consumers": [
+            "Reshape"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "scalar_grid",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Reshape",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "bottom_marker_channels",
+          "bytes": 64,
+          "shape": [
+            1,
+            8,
+            2,
+            1
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "ArgMax",
+            "ReduceMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "render_updates",
+          "bytes": 63,
+          "shape": [
+            63
+          ],
+          "producer": "Gather",
+          "consumers": [
+            "ScatterElements"
+          ],
+          "tags": [
+            "scatter_feed"
+          ]
+        },
+        {
+          "name": "render_labels",
+          "bytes": 54,
+          "shape": [
+            54
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Gather"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "top_marker_arg",
+          "bytes": 32,
+          "shape": [
+            1,
+            2,
+            2
+          ],
+          "producer": "ArgMax",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 358,
+      "cost": 4027,
+      "points": 16.699223039148546,
+      "score": -2078.8,
+      "raw_score": 621.2,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "other": 1910,
+        "final_output_welded": 1443,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "index_or_profile": 524
+      },
+      "top_tensors": [
+        {
+          "name": "padded_ids",
+          "bytes": 900,
+          "shape": [
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "row_line",
+          "bytes": 420,
+          "shape": [
+            1,
+            21,
+            20
+          ],
+          "producer": "Where",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "inside_ids",
+          "bytes": 420,
+          "shape": [
+            1,
+            21,
+            20
+          ],
+          "producer": "Where",
+          "consumers": [
+            "Max"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "grid_ids",
+          "bytes": 420,
+          "shape": [
+            1,
+            21,
+            20
+          ],
+          "producer": "Max",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "row_counts",
+          "bytes": 120,
+          "shape": [
+            1,
+            30
+          ],
+          "producer": "Einsum",
+          "consumers": [
+            "ArgMax",
+            "ReduceMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "col_counts",
+          "bytes": 120,
+          "shape": [
+            1,
+            30
+          ],
+          "producer": "Einsum",
+          "consumers": [
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "row_sel_f",
+          "bytes": 120,
+          "shape": [
+            1,
+            30
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Einsum"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "col_sel_f",
+          "bytes": 120,
+          "shape": [
+            1,
+            30
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Einsum"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 71,
+      "cost": 2698,
+      "points": 17.0997339632323,
+      "score": -2091.0,
+      "raw_score": 609.0,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "other": 1299,
+        "final_output_welded": 1044,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "index_or_profile": 300
+      },
+      "top_tensors": [
+        {
+          "name": "color30",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "bg_active",
+          "bytes": 572,
+          "shape": [
+            1,
+            1,
+            11,
+            13
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Less",
+            "ReduceMin"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "color16",
+          "bytes": 256,
+          "shape": [
+            1,
+            1,
+            16,
+            16
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "non_bg_active_b",
+          "bytes": 143,
+          "shape": [
+            1,
+            1,
+            11,
+            13
+          ],
+          "producer": "Less",
+          "consumers": [
+            "Gather",
+            "Gather",
+            "And"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "active_reflected",
+          "bytes": 143,
+          "shape": [
+            1,
+            1,
+            11,
+            13
+          ],
+          "producer": "Gather",
+          "consumers": [
+            "And"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "restored_mask",
+          "bytes": 143,
+          "shape": [
+            1,
+            1,
+            11,
+            13
+          ],
+          "producer": "And",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "color_active",
+          "bytes": 143,
+          "shape": [
+            1,
+            1,
+            11,
+            13
+          ],
+          "producer": "Where",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "selected_gather_idx",
+          "bytes": 52,
+          "shape": [
+            13
+          ],
+          "producer": "Add",
+          "consumers": [
+            "Mod"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 109,
+      "cost": 1650,
+      "points": 17.591469433105374,
+      "score": -2103.8,
+      "raw_score": 596.2,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "final_output_welded": 937,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "other": 376,
+        "index_or_profile": 221
+      },
+      "top_tensors": [
+        {
+          "name": "class30",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "bg6f",
+          "bytes": 144,
+          "shape": [
+            1,
+            1,
+            6,
+            6
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Less"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "class12",
+          "bytes": 144,
+          "shape": [
+            1,
+            1,
+            12,
+            12
+          ],
+          "producer": "Gather",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "cls_rows",
+          "bytes": 84,
+          "shape": [
+            1,
+            1,
+            12,
+            7
+          ],
+          "producer": "Gather",
+          "consumers": [
+            "Gather"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "cls7",
+          "bytes": 49,
+          "shape": [
+            1,
+            1,
+            7,
+            7
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Gather"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "rowfold",
+          "bytes": 48,
+          "shape": [
+            12
+          ],
+          "producer": "Gather",
+          "consumers": [
+            "Gather",
+            "Gather"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "Lwin",
+          "bytes": 40,
+          "shape": [
+            1,
+            10,
+            1,
+            1
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "shp6",
+          "bytes": 36,
+          "shape": [
+            1,
+            1,
+            6,
+            6
+          ],
+          "producer": "Less",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 148,
+      "cost": 4888,
+      "points": 16.505461499148566,
+      "score": -2121.0,
+      "raw_score": 579.0,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "other": 2005,
+        "final_output_welded": 1908,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "index_or_profile": 672,
+        "scatter_feed": 50
+      },
+      "top_tensors": [
+        {
+          "name": "label30",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "right_red_area",
+          "bytes": 480,
+          "shape": [
+            1,
+            1,
+            24,
+            5
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast",
+            "ReduceMax"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "c8_top",
+          "bytes": 480,
+          "shape": [
+            1,
+            1,
+            10,
+            12
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "ReduceMax",
+            "Cast",
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "red23_b",
+          "bytes": 288,
+          "shape": [
+            1,
+            1,
+            24,
+            12
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "label_pre23",
+          "bytes": 288,
+          "shape": [
+            1,
+            1,
+            24,
+            12
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded"
+          ]
+        },
+        {
+          "name": "label23",
+          "bytes": 288,
+          "shape": [
+            1,
+            1,
+            24,
+            12
+          ],
+          "producer": "Where",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "label_tail",
+          "bytes": 168,
+          "shape": [
+            1,
+            1,
+            14,
+            12
+          ],
+          "producer": "Mul",
+          "consumers": [
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "right_red_area_b",
+          "bytes": 120,
+          "shape": [
+            1,
+            1,
+            24,
+            5
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 224,
+      "cost": 2772,
+      "points": 17.072675639690207,
+      "score": -2140.0,
+      "raw_score": 560.0,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "other": 1310,
+        "final_output_welded": 940,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "index_or_profile": 150
+      },
+      "top_tensors": [
+        {
+          "name": "frame_full",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "rect1",
+          "bytes": 256,
+          "shape": [
+            1,
+            1,
+            16,
+            16
+          ],
+          "producer": "And",
+          "consumers": [
+            "Xor"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "rect2",
+          "bytes": 256,
+          "shape": [
+            1,
+            1,
+            16,
+            16
+          ],
+          "producer": "And",
+          "consumers": [
+            "Xor"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "frame",
+          "bytes": 256,
+          "shape": [
+            1,
+            1,
+            16,
+            16
+          ],
+          "producer": "Xor",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "row_sum",
+          "bytes": 120,
+          "shape": [
+            1,
+            1,
+            30,
+            1
+          ],
+          "producer": "Conv",
+          "consumers": [
+            "Greater"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "col_sum",
+          "bytes": 120,
+          "shape": [
+            1,
+            1,
+            1,
+            30
+          ],
+          "producer": "Conv",
+          "consumers": [
+            "Sign"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "col_has",
+          "bytes": 120,
+          "shape": [
+            1,
+            1,
+            1,
+            30
+          ],
+          "producer": "Sign",
+          "consumers": [
+            "ArgMax",
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "has_all_f",
+          "bytes": 40,
+          "shape": [
+            1,
+            10,
+            1,
+            1
+          ],
+          "producer": "ReduceMax",
+          "consumers": [
+            "Mul"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 131,
+      "cost": 3977,
+      "points": 16.71171695479231,
+      "score": -2160.5,
+      "raw_score": 539.5,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "final_output_welded": 1874,
+        "scatter_feed": 1800,
+        "dtype_candidate": 1600,
+        "other": 712,
+        "topk_feed": 620,
+        "index_or_profile": 96
+      },
+      "top_tensors": [
+        {
+          "name": "scatter_idx",
+          "bytes": 1600,
+          "shape": [
+            1,
+            50,
+            4
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "ScatterND"
+          ],
+          "tags": [
+            "final_output_welded",
+            "dtype_candidate",
+            "scatter_feed"
+          ]
+        },
+        {
+          "name": "green_probe_vals",
+          "bytes": 620,
+          "shape": [
+            1,
+            155
+          ],
+          "producer": "GatherND",
+          "consumers": [
+            "TopK",
+            "ReduceSum"
+          ],
+          "tags": [
+            "topk_feed"
+          ]
+        },
+        {
+          "name": "updates72",
+          "bytes": 200,
+          "shape": [
+            1,
+            50
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "ScatterND"
+          ],
+          "tags": [
+            "final_output_welded",
+            "scatter_feed"
+          ]
+        },
+        {
+          "name": "scatter_idx8",
+          "bytes": 200,
+          "shape": [
+            1,
+            50,
+            4
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "red_anchor_vals",
+          "bytes": 96,
+          "shape": [
+            1,
+            24
+          ],
+          "producer": "GatherND",
+          "consumers": [
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "green_cand",
+          "bytes": 72,
+          "shape": [
+            1,
+            9
+          ],
+          "producer": "TopK",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "rows72_u",
+          "bytes": 50,
+          "shape": [
+            1,
+            50,
+            1
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "cols72_u",
+          "bytes": 50,
+          "shape": [
+            1,
+            50,
+            1
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Concat"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 345,
+      "cost": 1495,
+      "points": 17.690118514175214,
+      "score": -2182.5,
+      "raw_score": 517.5,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "final_output_welded": 900,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "other": 486,
+        "index_or_profile": 45
+      },
+      "top_tensors": [
+        {
+          "name": "red_mask",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "red_mask_small",
+          "bytes": 81,
+          "shape": [
+            1,
+            1,
+            9,
+            9
+          ],
+          "producer": "Concat",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "red_bottom_f",
+          "bytes": 36,
+          "shape": [
+            1,
+            1,
+            1,
+            9
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "gray_2_f",
+          "bytes": 36,
+          "shape": [
+            1,
+            1,
+            1,
+            9
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "gray_3_f",
+          "bytes": 36,
+          "shape": [
+            1,
+            1,
+            1,
+            9
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "gray_4_f",
+          "bytes": 36,
+          "shape": [
+            1,
+            1,
+            1,
+            9
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "gray_5_f",
+          "bytes": 36,
+          "shape": [
+            1,
+            1,
+            1,
+            9
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "gray_6_f",
+          "bytes": 36,
+          "shape": [
+            1,
+            1,
+            1,
+            9
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 61,
+      "cost": 1668,
+      "points": 17.58061941708131,
+      "score": -2185.0,
+      "raw_score": 515.0,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "final_output_welded": 900,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "other": 693,
+        "index_or_profile": 40
+      },
+      "top_tensors": [
+        {
+          "name": "full_mod",
+          "bytes": 900,
+          "shape": [
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Equal"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "product",
+          "bytes": 324,
+          "shape": [
+            18,
+            18
+          ],
+          "producer": "QLinearMatMul",
+          "consumers": [
+            "Mod"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "active_mod",
+          "bytes": 324,
+          "shape": [
+            18,
+            18
+          ],
+          "producer": "Mod",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "present",
+          "bytes": 40,
+          "shape": [
+            1,
+            10
+          ],
+          "producer": "ReduceMax",
+          "consumers": [
+            "ArgMax"
+          ],
+          "tags": [
+            "index_or_profile"
+          ]
+        },
+        {
+          "name": "row_mod",
+          "bytes": 18,
+          "shape": [
+            18,
+            1
+          ],
+          "producer": "Mod",
+          "consumers": [
+            "Transpose",
+            "QLinearMatMul"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "col_mod",
+          "bytes": 18,
+          "shape": [
+            1,
+            18
+          ],
+          "producer": "Transpose",
+          "consumers": [
+            "QLinearMatMul"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "mod_i64",
+          "bytes": 8,
+          "shape": [
+            1
+          ],
+          "producer": "ArgMax",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "mod_u8",
+          "bytes": 1,
+          "shape": [
+            1
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Mod",
+            "Mod"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 50,
+      "cost": 3852,
+      "points": 16.743652227081984,
+      "score": -2205.0,
+      "raw_score": 495.0,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "other": 2925,
+        "final_output_welded": 900,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900
+      },
+      "top_tensors": [
+        {
+          "name": "x8",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "fill",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "x8_u8",
+          "bytes": 225,
+          "shape": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "MaxPool",
+            "MaxPool",
+            "MaxPool",
+            "MaxPool",
+            "Greater"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "h_left",
+          "bytes": 225,
+          "shape": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "producer": "MaxPool",
+          "consumers": [
+            "Mul"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "h_right",
+          "bytes": 225,
+          "shape": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "producer": "MaxPool",
+          "consumers": [
+            "Mul"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "h_span",
+          "bytes": 225,
+          "shape": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "producer": "Mul",
+          "consumers": [
+            "Max"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "v_up",
+          "bytes": 225,
+          "shape": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "producer": "MaxPool",
+          "consumers": [
+            "Mul"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "v_down",
+          "bytes": 225,
+          "shape": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "producer": "MaxPool",
+          "consumers": [
+            "Mul"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 94,
+      "cost": 2709,
+      "points": 17.095665157914905,
+      "score": -2205.0,
+      "raw_score": 495.0,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "other": 1762,
+        "final_output_welded": 900,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900
+      },
+      "top_tensors": [
+        {
+          "name": "line_bg30",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "blue_f",
+          "bytes": 676,
+          "shape": [
+            1,
+            1,
+            13,
+            13
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast",
+            "AveragePool",
+            "AveragePool"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "blue15",
+          "bytes": 225,
+          "shape": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Greater"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "line_u8",
+          "bytes": 225,
+          "shape": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "producer": "Max",
+          "consumers": [
+            "Greater"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "line_bg15",
+          "bytes": 225,
+          "shape": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "producer": "Greater",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "blue_u8",
+          "bytes": 169,
+          "shape": [
+            1,
+            1,
+            13,
+            13
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "row_avg",
+          "bytes": 52,
+          "shape": [
+            1,
+            1,
+            13,
+            1
+          ],
+          "producer": "AveragePool",
+          "consumers": [
+            "Conv"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "col_avg",
+          "bytes": 52,
+          "shape": [
+            1,
+            1,
+            1,
+            13
+          ],
+          "producer": "AveragePool",
+          "consumers": [
+            "Conv"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 246,
+      "cost": 2637,
+      "points": 17.122602813646715,
+      "score": -2205.0,
+      "raw_score": 495.0,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "other": 1080,
+        "final_output_welded": 900,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "topk_feed": 240
+      },
+      "top_tensors": [
+        {
+          "name": "path30_b",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "h_part",
+          "bytes": 289,
+          "shape": [
+            1,
+            1,
+            17,
+            17
+          ],
+          "producer": "And",
+          "consumers": [
+            "Or"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "v_part",
+          "bytes": 289,
+          "shape": [
+            1,
+            1,
+            17,
+            17
+          ],
+          "producer": "And",
+          "consumers": [
+            "Or"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "path18_b",
+          "bytes": 289,
+          "shape": [
+            1,
+            1,
+            17,
+            17
+          ],
+          "producer": "Or",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "rows30",
+          "bytes": 120,
+          "shape": [
+            1,
+            1,
+            30,
+            1
+          ],
+          "producer": "Conv",
+          "consumers": [
+            "TopK"
+          ],
+          "tags": [
+            "topk_feed"
+          ]
+        },
+        {
+          "name": "cols30",
+          "bytes": 120,
+          "shape": [
+            1,
+            1,
+            1,
+            30
+          ],
+          "producer": "Conv",
+          "consumers": [
+            "TopK"
+          ],
+          "tags": [
+            "topk_feed"
+          ]
+        },
+        {
+          "name": "red_rows",
+          "bytes": 17,
+          "shape": [
+            1,
+            1,
+            17,
+            1
+          ],
+          "producer": "Equal",
+          "consumers": [
+            "And"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "green_cols",
+          "bytes": 17,
+          "shape": [
+            1,
+            1,
+            1,
+            17
+          ],
+          "producer": "Equal",
+          "consumers": [
+            "Or",
+            "And"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 102,
+      "cost": 2527,
+      "points": 17.165211892611808,
+      "score": -2205.0,
+      "raw_score": 495.0,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "other": 1514,
+        "final_output_welded": 900,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900
+      },
+      "top_tensors": [
+        {
+          "name": "fill30_bool",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "x5_grid",
+          "bytes": 576,
+          "shape": [
+            1,
+            1,
+            12,
+            12
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "x5_u8",
+          "bytes": 144,
+          "shape": [
+            1,
+            1,
+            12,
+            12
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "QLinearConv",
+            "QLinearConv",
+            "QLinearConv",
+            "QLinearConv"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "cand_u8_1",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "QLinearConv",
+          "consumers": [
+            "Max"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "fill_core2",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "MaxPool",
+          "consumers": [
+            "Max"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "fill_core3",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "MaxPool",
+          "consumers": [
+            "Max"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "fill_core4",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "MaxPool",
+          "consumers": [
+            "Max"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "fill_core",
+          "bytes": 100,
+          "shape": [
+            1,
+            1,
+            10,
+            10
+          ],
+          "producer": "Max",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 381,
+      "cost": 1963,
+      "points": 17.41777080572354,
+      "score": -2205.0,
+      "raw_score": 495.0,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "other": 1008,
+        "final_output_welded": 900,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900
+      },
+      "top_tensors": [
+        {
+          "name": "maroon30",
+          "bytes": 900,
+          "shape": [
+            1,
+            1,
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "red8_f",
+          "bytes": 320,
+          "shape": [
+            1,
+            1,
+            8,
+            10
+          ],
+          "producer": "Slice",
+          "consumers": [
+            "MatMul",
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "lower_bits",
+          "bytes": 160,
+          "shape": [
+            1,
+            1,
+            8,
+            10
+          ],
+          "producer": "Mod",
+          "consumers": [
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "right_seen",
+          "bytes": 80,
+          "shape": [
+            1,
+            1,
+            8,
+            10
+          ],
+          "producer": "GreaterOrEqual",
+          "consumers": [
+            "And"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "left_seen",
+          "bytes": 80,
+          "shape": [
+            1,
+            1,
+            8,
+            10
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "And"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "red8",
+          "bytes": 80,
+          "shape": [
+            1,
+            1,
+            8,
+            10
+          ],
+          "producer": "Cast",
+          "consumers": [
+            "Not"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "span",
+          "bytes": 80,
+          "shape": [
+            1,
+            1,
+            8,
+            10
+          ],
+          "producer": "And",
+          "consumers": [
+            "And"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "not_red8",
+          "bytes": 80,
+          "shape": [
+            1,
+            1,
+            8,
+            10
+          ],
+          "producer": "Not",
+          "consumers": [
+            "And"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    },
+    {
+      "task": 63,
+      "cost": 1873,
+      "points": 17.46470329755591,
+      "score": -2205.0,
+      "raw_score": 495.0,
+      "tasklog_penalty": 2700.0,
+      "tasklog_penalty_reasons": [
+        "irreducible-floor",
+        "open"
+      ],
+      "tag_bytes": {
+        "final_output_welded": 900,
+        "full_canvas": 900,
+        "pad_concat_carrier": 900,
+        "other": 580
+      },
+      "top_tensors": [
+        {
+          "name": "mark30",
+          "bytes": 900,
+          "shape": [
+            30,
+            30
+          ],
+          "producer": "Pad",
+          "consumers": [
+            "Where"
+          ],
+          "tags": [
+            "final_output_welded",
+            "full_canvas",
+            "pad_concat_carrier"
+          ]
+        },
+        {
+          "name": "mark_axis",
+          "bytes": 144,
+          "shape": [
+            12,
+            12
+          ],
+          "producer": "Or",
+          "consumers": [
+            "And"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "active_cells",
+          "bytes": 144,
+          "shape": [
+            12,
+            12
+          ],
+          "producer": "And",
+          "consumers": [
+            "And"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "mark",
+          "bytes": 144,
+          "shape": [
+            12,
+            12
+          ],
+          "producer": "And",
+          "consumers": [
+            "Pad"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "row_bg_sum",
+          "bytes": 48,
+          "shape": [
+            12,
+            1
+          ],
+          "producer": "Einsum",
+          "consumers": [
+            "Equal",
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "col_bg_sum",
+          "bytes": 48,
+          "shape": [
+            1,
+            12
+          ],
+          "producer": "Einsum",
+          "consumers": [
+            "Equal",
+            "Cast"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "row_empty",
+          "bytes": 12,
+          "shape": [
+            12,
+            1
+          ],
+          "producer": "Equal",
+          "consumers": [
+            "Or"
+          ],
+          "tags": [
+            "other"
+          ]
+        },
+        {
+          "name": "col_empty",
+          "bytes": 12,
+          "shape": [
+            1,
+            12
+          ],
+          "producer": "Equal",
+          "consumers": [
+            "Or"
+          ],
+          "tags": [
+            "other"
+          ]
+        }
+      ]
+    }
+  ]
+}

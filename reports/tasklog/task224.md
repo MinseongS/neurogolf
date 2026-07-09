@@ -72,3 +72,7 @@ spurious inside-mask truth outside the grid is harmless. Saves a 2-D AND plane.
 task224 row_has: replaced Sign(row_sum)→fp32 with Greater(row_sum,0)→bool + Cast→uint8 (row_sum∈{0,1,2}, threshold clamp needed); ArgMax on {0,1} identical. 2831→2772 (−59).
 Gate: evaluate bundled fail=0 + **bit-identical outputs** over all train/test/arc-gen (verified). Safe for both tracks + private LB.
 ⭐ TRANSFERABLE: only ACTIVATION (node-output) dtype narrowing saves grader bytes — params counted by element-count (dtype-independent). Narrow the PRODUCER (upstream Cast/init dtype), never a post-Cast. Blocked when the plane is derived from / contracted with the free fp32 `input` (Einsum-vs-input, Slice/Conv of input, ScatterND updates vs fp32 data) → those force fp32. See [[neurogolf-fp16-count-plane-recast]].
+
+## 2026-07-09 — ⭐ REGIME CRACK ADOPTED (batch 4, 900B mask → free-output Einsum)
+- 2712→1737 (+0.45). frame = R1⊗C1 - R2⊗C2 nested rects; 2nd input occurrence = per-channel counts free; detection Conv → Einsum(bchw,c->bh).
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task224/regime.onnx. See memory neurogolf-regime-crack-freeoutput-einsum.

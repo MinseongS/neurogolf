@@ -46,3 +46,7 @@ reduction can locate the colour pixel. Cost ~600 params but saves ~2160B memory 
 ## S16 (2026-07-06) — public bit-identical golf (franksunp) ADOPTED
 Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent). Minor cost drop
 (dead-initializer / redundant-node removal), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## 2026-07-09 — ⭐ REGIME CRACK ADOPTED (batch 4, 900B mask → free-output Einsum)
+- 1829→1613 (+0.13). parity via alt-vector reuse pmsign=Σcolvec·alt·alt; δ-shift = 1-tap Conv; [h<=row] = reverse CumSum.
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task199/regime.onnx. See memory neurogolf-regime-crack-freeoutput-einsum.

@@ -47,7 +47,7 @@ older source-owned L-parametric morphology candidate described below.
 Measured current source:
 
 ```text
-PYTHONPATH=. .venv/bin/python reports/scripts/measure_task.py 086
+PYTHONPATH=. uv run python reports/scripts/measure_task.py 086
 {'ok': True, 'pass': 266, 'fail': 0, 'memory': 2946, 'params': 190,
  'points': 16.9492966185297, 'error': None}
 ```
@@ -55,14 +55,14 @@ PYTHONPATH=. .venv/bin/python reports/scripts/measure_task.py 086
 Measured live ONNX:
 
 ```text
-PYTHONPATH=. .venv/bin/python src/harness.py networks/task086.onnx 86
+PYTHONPATH=. uv run python src/harness.py networks/task086.onnx 86
 ok=true, pass=266, fail=0, memory=2946, params=190, points=16.9492966185297
 ```
 
 Fresh incumbent verification:
 
 ```text
-PYTHONPATH=. .venv/bin/python reports/scripts/fresh_verify.py 086
+PYTHONPATH=. uv run python reports/scripts/fresh_verify.py 086
 task86 arc=3befdf3e fresh_instances=1500/1500
   incumbent fail = 0
 ```

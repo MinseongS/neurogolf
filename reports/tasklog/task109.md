@@ -50,3 +50,8 @@ sprite — keeps every work plane uint8/bool (half of fp16) and drops the E matr
 Greater, and 4 fp16 planes. The fold index min(i,t-i) auto-restricts to the source
 quadrant; AND the mirror with the in-grid rect AFTER gathering so the WORK-canvas
 reflection (about WORK/2) does not leak past the true 2s output region.
+
+## 2026-07-08 — ⭐ REGIME CRACK ADOPTED (batch 2, 900B mask → free-output Einsum)
+- 1645→1280 (+0.25). ingrid=(ΣR)(ΣR) gives in-grid mask free from the fold operand; two-term spatial⊗channel fills stack as [m;ones]×[d;e0].
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task109/regime.onnx (builder build_regime.py). Backup: reports/candidates/fatmid_adopt_backup/task109.onnx.bak.
+- ⭐ See memory neurogolf-regime-crack-freeoutput-einsum (vein taxonomy + sub-recipes). Vein list: reports/candidates/fresh_sweep/mask_dominance.json.

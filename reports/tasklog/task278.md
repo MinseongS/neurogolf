@@ -44,3 +44,18 @@ k5(cost 5483): 19.7k viols 고착. 상세: reports/train_to_golf_report.md. 재�
 ## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
 Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
 Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## S25 (2026-07-07) — auto-golfer 3x3 red-LUT classifier KILL
+
+Auto-golfer archetype rank picked task278 because the dominant counted tensor is the first
+`Conv(input)->h1` fp32 `[1,2,18,18]` plane (2592B).  Probe:
+`reports/candidates/task278/lut3x3_red_classifier.py` distilled the incumbent into a
+512-entry LUT over the 3x3 red-neighborhood, replacing the 2-channel Conv/QLinear detector
+with `Conv(red bit-code)->Cast(int32)->Gather(lut)->Pad->Where`.
+
+Measured candidate: memory 4140 vs active 4788, params 620 vs 224, but bundled fail
+265/265.  The reduced 3x3 code detects only side cells for vertical red dominoes and misses
+the top/bottom halo.  Reason: the active `Conv->QLinearConv` stack is an effective two-stage
+local classifier (roughly 5x5 context), not a pure 3x3 red-patch LUT.  A 5x5 LUT would need
+2^25 states or extra background/off-grid coding, so it is not economical.  Do not retry
+3x3 red-only LUT for this task; any replacement must preserve the second-stage context.

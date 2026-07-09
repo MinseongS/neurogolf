@@ -164,3 +164,14 @@ shrink `color3 int64 [1,3,3]` by replacing ArgMax colour decode with a compact
 uint8 label LUT only if it avoids materialising a larger one-hot/gather carrier;
 expected payoff at most 63B, kill if it introduces any `[1,10,3,3]` or larger
 intermediate.
+
+
+---
+
+## 2026-07-08 — 8000-mode adoption (public re-mine, LB-confirmed 7264.26)
+
+**+1.5241 LB** (mem 64, par 254; from franksunp-7249.50 "Compact ONNX Artifact Starter"). Mechanism: our 18-node Conv+Gather+Pad+Slice+Concat pipeline reduced to a **3-Einsum chain (+2 Sub)**. The whole spatial transform is re-expressed as chained contractions against the FREE input tensor, deleting every intermediate index/pad plane. This is the einsum-vs-free-input / bilinear-einsum lever applied to near-total collapse.
+
+Gate: isolated `evaluate` bundled fail=0 + strictly cheaper than our incumbent + uint8-TopK scan clean.
+Artifact: `submission/overfit_nets/task011.onnx` (backup in `.minmerge_backup/`). Source dumps + notebook code under `reports/candidates/public_mine_20260708/`.
+This is a direct 8000-mode ONNX overlay (constant dataset => permanent). Source `src/custom/task011.py` NOT regenerated: the public net is optimizer-emitted (base64 in-notebook), no per-task Python builder to lift; the mechanism above IS the transferable insight.

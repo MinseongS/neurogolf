@@ -54,3 +54,11 @@ a fixed output PERMUTATION (here the reversed middle row) folds for free into a 
 table. Combined with the ⭐ one-no-pad-Conv row+channel collapse and a 3×3 active canvas (no
 full plane), this lands a 16.7→17.6 closed-form win. ⭐ When the output grid is tiny, never
 materialise a 30×30 carrier — one-hot the small label and Pad uint8 into the FREE output.
+
+## 2026-07-07 — local-only REJECTED signed INT8 TopK feed probe
+
+`reports/candidates/task316/task316_int8_topk_greedy.onnx` recast `scores`
+TopK feed to signed INT8.  Bundled gate fail=0.  Cost: 426 -> 408 (memory 388
+-> 369, params 38 -> 39).
+
+Follow-up pruning removed dead initializer `topk_i8_zero_316`. Cost: 408 -> 407.

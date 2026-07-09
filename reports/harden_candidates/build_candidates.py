@@ -12,12 +12,14 @@ delta < min_on and > 0 so decode is provably preserved AND on/off populations
 (on>=min_on grid, off<=0 grid) both move >= delta away from the 0 threshold.
 """
 import sys
+from pathlib import Path
 import numpy as np
 import onnx
 from onnx import numpy_helper
 sys.path.insert(0, ".")
 
-OUT = "/private/tmp/claude-501/-Users-minseong-project-neurogolf/177792cb-5f3d-4200-9fb7-ec21a095bb36/scratchpad/harden"
+OUT = Path(__file__).resolve().parent / "out"
+OUT.mkdir(parents=True, exist_ok=True)
 
 def get_init(model, name):
     for i, init in enumerate(model.graph.initializer):
@@ -49,6 +51,6 @@ def harden_bias(inpath, outpath, bname, delta):
     print(f"saved {outpath} (bias -{delta}), new bias={b.tolist()}")
 
 if __name__ == "__main__":
-    harden_weight_centertap("networks/task220.onnx", f"{OUT}/task220_cand.onnx", "conv_weight", 0.5)
-    harden_weight_centertap("networks/task230.onnx", f"{OUT}/task230_cand.onnx", "conv_weight", 0.25)
-    harden_bias("networks/task294.onnx", f"{OUT}/task294_cand.onnx", "score_bias", 0.5)
+    harden_weight_centertap("networks/task220.onnx", OUT / "task220_cand.onnx", "conv_weight", 0.5)
+    harden_weight_centertap("networks/task230.onnx", OUT / "task230_cand.onnx", "conv_weight", 0.25)
+    harden_bias("networks/task294.onnx", OUT / "task294_cand.onnx", "score_bias", 0.5)

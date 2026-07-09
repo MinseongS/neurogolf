@@ -178,3 +178,14 @@ if a new primitive can produce orientation-swapped channel equality as a single
 counted 10x30 side tensor, or if official/runtime accounting changes to exempt
 one broadcast input to the final output op.  Otherwise this is a verified
 no-adopt but useful failure.
+
+
+---
+
+## 2026-07-08 — 8000-mode adoption (public re-mine, LB-confirmed 7264.26)
+
+**+0.2884 LB** (mem 1361, par 63; from franksunp-7249.50). Mechanism: 61->49 nodes; residual Cast/And/Or/Mod/Where scaffolding folded, ReduceMax + 3 Einsum replace redundant one-hot Gather planes.
+
+Gate: isolated `evaluate` bundled fail=0 + strictly cheaper than our incumbent + uint8-TopK scan clean.
+Artifact: `submission/overfit_nets/task013.onnx` (backup in `.minmerge_backup/`). Source dumps + notebook code under `reports/candidates/public_mine_20260708/`.
+This is a direct 8000-mode ONNX overlay (constant dataset => permanent). Source `src/custom/task013.py` NOT regenerated: the public net is optimizer-emitted (base64 in-notebook), no per-task Python builder to lift; the mechanism above IS the transferable insight.

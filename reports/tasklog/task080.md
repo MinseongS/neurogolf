@@ -72,3 +72,19 @@ halved `occ_cnt`, `edge_cnt`, `corner_cnt`, and the seed/occupancy cast planes.
 
 
 ## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 10563 -> 9834 (+0.072); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].
+
+## 2026-07-07 auto-golfer defer-colour-cast-after-Gather KILL
+
+Candidate: `reports/candidates/task080/defer_color_cast_after_gather.py` writes
+`reports/candidates/task080/task080_defer_color_cast_after_gather.onnx`.
+
+Hypothesis: remove the full `Cast(safe_name_29)->safe_name_30` uint8 30x30
+colour-index plane and instead gather fp32 to bitmap/scalar first, then cast
+the small gathered tensors.
+
+Result: bundled pass remains 231/231, but cost worsens from `9327+446` to
+`9821+446`.  The full uint8 cast is 900B, while the delayed version creates
+fp32 gathered carriers (`[1,1,10,30]`, `[1,1,10,10]`, plus scalar-row path)
+that cost more than the removed plane.  Do not retry cast-after-Gather for this
+task unless the gathered fp32 carriers can be fused into a free output or an
+existing counted tensor.

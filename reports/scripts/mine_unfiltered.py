@@ -1,7 +1,7 @@
 """Relaxed re-mine: grader-measure EVERY extracted source net (no byte prefilter).
 The prefilter in mine_public_bundles skips candidate files larger than ours, but grader-mem
 != file size (big cheap initializers, different node structure) -> can miss real wins.
-Usage: .venv/bin/python -m reports.scripts.mine_unfiltered <extracted_root>
+Usage: uv run python -m reports.scripts.mine_unfiltered <extracted_root>
 """
 import glob, json, math, os, sys
 import onnx

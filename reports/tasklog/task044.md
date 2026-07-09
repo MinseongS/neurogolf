@@ -60,3 +60,26 @@ See memory [[neurogolf-urad-7225-bundle-vein]].
 
 ## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 5647 -> 4984 (+0.125)
 Gate fresh_verify 1500: inc=1/1 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
+
+## 2026-07-08 S35 — zero-compare bool-cast peephole ADOPTED
+
+Artifact: `reports/candidates/zero_compare_to_bool_cast/task044_bgl_cast_bool.onnx`.
+
+Replaced one `Greater(..., 0)` boolean producer with a direct bool cast equivalent. Bundled gate:
+`266/266`, memory unchanged `4314`, params `424 -> 423`, cost `4738 -> 4737`.
+
+Initial combined submission **54451532** was bad (`7248.82`) because it also contained the
+Kaggle-falsified task101 dynamic-CSE overlay. Salvage submission **54451991**, with task101 removed
+and this task kept, completed at publicScore **7264.30**. Active overlay is adopted; backup before
+this tail: `submission/overfit_nets/.micro_tail_backup_20260708/task044.onnx`.
+
+## 2026-07-08 S36 — zero-compare tail rerun ADOPTED
+
+Re-ran `reports/candidates/zero_compare_to_bool_cast_probe.py` against the current
+active overfit set after the public tail.  The same `bgl` comparison still had a
+small residual params win in the active artifact.
+
+Artifact: `reports/candidates/task044/task044_zero_compare_tail.onnx`.
+Bundled gate: `266/266`, fail=0.  Cost: `4737 -> 4735` (memory `4314`
+unchanged, params `423 -> 421`).  Active backup:
+`submission/overfit_nets/.zero_compare_tail_backup/task044.onnx`.

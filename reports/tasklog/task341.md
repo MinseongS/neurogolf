@@ -29,3 +29,8 @@ Dominant survivors: **V32 [1,1,30,30] fp32 = 3600 B** (colour-index Conv entry, 
 Verified generator bound = 10. Flagged `bridge30` bool [30,30] 900B is a Where cond. A signed-einsum re-route WAS built and gates clean (bundled 266/266, fresh 2500 0-div) but prices **1491 vs incumbent 1429 (+62)**: the copy-term mixer [2,10,10]=200 params + Rt/Ct [2,30] 480B exceed the 900B saved. FLOOR — recorded explicitly so nobody rebuilds it. Candidate kept at scratchpad crop_b/cand341_trim.py, NOT adopted.
 
 ⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).
+
+## 2026-07-08 — ⭐ REGIME CRACK ADOPTED (900B output-mask → free-output Einsum)
+- 1427→1123 (+0.24). Separable rowmask∧colmask -> mixer(I + one off-diagonal) × (1 + r⊗c); k-stack built in 2 value-Pads with asymmetric pad values (β·γ=1).
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task341/regime.onnx (builder build_regime.py). Backup: reports/candidates/fatmid_adopt_backup/task341.onnx.bak.
+- ⭐ TRANSFERABLE: the 900B [30,30] Where-mask is NOT a floor — fold routing into one N-ary Einsum to the FREE output (output>0 sign-decode). See memory neurogolf-regime-crack-freeoutput-einsum + the 60-task vein in reports/candidates/fresh_sweep/mask_dominance.json.

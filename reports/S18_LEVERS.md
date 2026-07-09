@@ -3,6 +3,24 @@
 Session net: **LB 7248.94 → 7253.64 (+4.70)**, all overfit bundle, gate = bundled fail=0
 (permanent under the constant grading dataset — see memory `neurogolf-overfit-mode`).
 
+## 2026-07-07 continuation
+
+Fresh public mining remains live EV.  Pulling:
+
+- `uradkr/best-7242-98-score-urad-notebook-with-explain`
+- `hoangvux/neurogolf`
+- `boristown/neurogolf-chatgptloop`
+
+and running `reports/scripts/mine_overfit_minmerge.py` against the active
+`submission/overfit_nets/` found **32 bundled-fail=0 cheaper overlays, +0.3974
+local points**.  Active local total after the merge: **7254.378117**.  Largest
+contributors: task377 +0.0944, task384 +0.0566, task355 +0.0542, task338
++0.0442, task205 +0.0381.
+
+Important caveat: `scan_unsigned_topk.py` still reports pre-existing uint8 TopK
+offenders in task018/076/233/285.  The new public overlays did not add offenders.
+task173 was converted to a scan-clean crop25/fp16-TopK wrapper (+0.0044).
+
 | lever | Δ LB | how | tool |
 |---|---|---|---|
 | public overfit min-merge | **+4.46** | urad 7242.52 dump: 6 tasks cheaper than our bundle & bundled fail=0 | `reports/scripts/mine_overfit_minmerge.py` |
@@ -27,11 +45,11 @@ per-task eval (matches Kaggle grading, dodges the knife-edge batch undercount).
 kaggle kernels list -s neurogolf --sort-by dateRun --page-size 30      # find new uploaders
 kaggle kernels output <ref> -p mine/<name>                             # dumps = submission.zip
 unzip mine/<name>/submission.zip -d mine/<name>_nets
-.venv/bin/python -m reports.scripts.mine_overfit_minmerge mine/*_nets  # report cheaper+fail=0
-.venv/bin/python -m reports.scripts.mine_overfit_minmerge mine/*_nets --apply   # install winners
+uv run python -m reports.scripts.mine_overfit_minmerge mine/*_nets  # report cheaper+fail=0
+uv run python -m reports.scripts.mine_overfit_minmerge mine/*_nets --apply   # install winners
 # rebuild + scan + submit:
 cd submission/overfit_nets && zip -j ../../submission.zip task*.onnx && cd ../..
-.venv/bin/python reports/scripts/scan_unsigned_topk.py submission/overfit_nets
+uv run python reports/scripts/scan_unsigned_topk.py submission/overfit_nets
 kaggle competitions submit -c neurogolf-2026 -f submission.zip -m "..."
 ```
 
@@ -57,8 +75,8 @@ Tight: 286/196/277/76/118/18/192/174/145 (dropping any terminal step fails bundl
 newly-adopted urad nets (355/264/197/222/236/383) have no walk chains. **Re-run the scanner
 after every min-merge adopt** — a freshly-grafted public net may carry un-trimmed slack:
 ```
-.venv/bin/python -m reports.scripts.walk_chain_slack --dir submission/overfit_nets       # sweep
-.venv/bin/python -m reports.scripts.walk_chain_slack --task N --net PATH --apply          # one net
+uv run python -m reports.scripts.walk_chain_slack --dir submission/overfit_nets       # sweep
+uv run python -m reports.scripts.walk_chain_slack --task N --net PATH --apply          # one net
 ```
 
 ---

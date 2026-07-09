@@ -40,3 +40,38 @@ present non-cyan colour — pure [1,10,1,1] arithmetic, no bbox-area Where plane
 2-D colour plane at all. Rect mask = non-strict triangular prefix∧suffix-OR; eroded
 interior = the SAME with STRICT triangulars (k<r, k>r) — erodes the run 1 cell each end
 for free, no separate erosion Conv.
+
+
+---
+
+## 2026-07-08 — 8000-mode adoption (public re-mine, LB-confirmed 7264.26)
+
+**+0.4921 LB** (mem 1208, par 140; from franksunp-7249.50). Mechanism: wide ArgMax/TopK index-plane decode (53 nodes) replaced by **arithmetic coordinate decode** (76 nodes: Log/Floor/Div/Reshape). More nodes but far smaller COUNTED tensors — bit-pack/arithmetic index math instead of materialized one-hot/index planes. This is the bit-pack-encoding lever realized.
+
+Gate: isolated `evaluate` bundled fail=0 + strictly cheaper than our incumbent + uint8-TopK scan clean.
+Artifact: `submission/overfit_nets/task281.onnx` (backup in `.minmerge_backup/`). Source dumps + notebook code under `reports/candidates/public_mine_20260708/`.
+This is a direct 8000-mode ONNX overlay (constant dataset => permanent). Source `src/custom/task281.py` NOT regenerated: the public net is optimizer-emitted (base64 in-notebook), no per-task Python builder to lift; the mechanism above IS the transferable insight.
+
+## 2026-07-08 — zero-compare bool-cast tail ADOPTED
+
+Re-ran `reports/candidates/zero_compare_to_bool_cast_probe.py` on the current active
+overfit set.  `Greater(pres, 0)` is a nonnegative presence test, so replacing it
+with `Cast(pres -> BOOL)` preserves bundled semantics and removes the now-unused
+scalar zero initializer.
+
+Artifact: `reports/candidates/task281/task281_zero_compare_tail.onnx`.
+Bundled gate: `266/266`, fail=0.  Cost: `1348 -> 1344` (memory `1208 -> 1204`,
+params `140` unchanged).  Active backup:
+`submission/overfit_nets/.zero_compare_tail_backup/task281.onnx`.
+
+## 2026-07-08 — 8000-mode public tails after regime crack
+- `jackelysia/neurogolf-7250-25-v23-lucifer-unscored-carry` 11:39 first improved the
+  active overfit overlay: cost `1344 -> 1340` (memory `1204 -> 1200`, params unchanged
+  `140`), fail=0. Submitted as **54460887**, completed at **7270.82**.
+- `boristown/neurogolf-chatgptloop` 11:51 then improved it again: cost `1340 -> 1329`
+  (memory `1200 -> 1188`, params `140 -> 141`), points
+  `17.79957510705504 -> 17.807817941286753`, fail=0. Source:
+  `reports/candidates/public_mine_20260708/boristown_chatgptloop_1151/submission/task281.onnx`.
+- Applied to `submission/overfit_nets/task281.onnx`; backups in
+  `reports/candidates/public_mine_20260708/jackelysia_7250_25_1139/adopt_backup_726828/`
+  and `submission/overfit_nets/.minmerge_backup/task281.onnx`. Included in submission **54461084**.

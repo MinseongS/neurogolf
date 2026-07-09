@@ -77,3 +77,33 @@ COUNTED entry read; nets whose einsums read the free input in-op get WORSE. DO N
 
 ## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
 k5(cost 6331): val gate fail. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).
+
+## S30 (2026-07-08) — BRANCH-EINSUM EPILOGUE FOLD ADOPTED
+
+New representation proof-of-concept: folded `walk -> Greater -> Where(fill,
+yellow, input)` into one final `Einsum -> output`, deleting the counted 30x30
+`walk` and `fill` tensors entirely.  The final Einsum carries a branch index:
+
+- `s=0`: identity-copy branch, gated by any valid input occupancy;
+- `s=1`: add yellow where the rectangle-static walk predicate is positive;
+- `s=2`: strongly subtract the old non-yellow static channel where the predicate
+  is positive.
+
+The first attempt used subtract scale `1e9` and failed with multi-hot old static
+channels still alive.  Scale sweep found `1e14` is the first clean setting:
+
+| subtract scale | pass | fail | cost |
+|---:|---:|---:|---:|
+| 1e12 | 245 | 21 | 2160 |
+| 1e13 | 247 | 19 | 2160 |
+| 1e14 | 266 | 0 | 2160 |
+
+Adopted candidate:
+`reports/candidates/task077/task077_branch_einsum_fold_s1e+14.onnx`.
+Bundled gate: pass 266/fail 0, memory 0, params 2160, points 17.322136.
+
+Transferable mechanism: copy/edit `Where(mask, color, input)` epilogues can be
+compiled into a single free-output Einsum if the mask predicate is already a
+nonnegative polynomial.  Use a branch mixer for identity, add-colour, and
+subtract-old-colour terms; choose subtract scale by bundled sweep to beat the
+identity branch count.

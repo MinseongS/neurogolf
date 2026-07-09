@@ -152,9 +152,10 @@
     "source_tasks": [
       55,
       80,
-      338
+      338,
+      255
     ],
-    "rationale": "Task055 and task080 showed that quantized integer routing can collapse large fp16/fp32 selection planes when scales are 1 and zero-points are 0.  task338 extended this to a small thresholded run detector: fp16 Conv+bias(-2)+Relu for a 3-red horizontal wall is exactly bool->uint8 QLinearConv(sum3)+Equal(3), removing fp16 full-canvas planes and improving 15.414->15.552.",
+    "rationale": "Task055 and task080 showed that quantized integer routing can collapse large fp16/fp32 selection planes when scales are 1 and zero-points are 0.  task338 extended this to a small thresholded run detector: fp16 Conv+bias(-2)+Relu for a 3-red horizontal wall is exactly bool->uint8 QLinearConv(sum3)+Equal(3), removing fp16 full-canvas planes and improving 15.414->15.552.  Task255 extended the same idea to a rank-8 boolean row/column product: fp16 Cast+MatMul+Greater became uint8 Cast+QLinearMatMul+Greater, preserving exact sums in [0,8] and reducing cost 8978->7598.",
     "applies_when": {
       "any_ops": [
         "MatMul"
@@ -168,7 +169,8 @@
     "reject_when": {
       "any_tags": [
         "mem0_single_op",
-        "qlinear"
+        "qlinear",
+        "free_fp32_input_quantize_required"
       ]
     },
     "expected": {
@@ -176,7 +178,16 @@
       "risk": "medium",
       "verification": "stored eval, fresh eval if generator available, then adopt gate"
     },
-    "transformer": null
+    "transformer": null,
+    "measured_negative_2026_07_08": {
+      "task233": {
+        "what_was_run": "Coverage-audit follow-up replaced sprite-window Conv(input, wspr)->vspr with QuantizeLinear(input)->QLinearConv(wspr_u8)->Cast in reports/candidates/task233/task233_qlinear_wspr_probe.onnx.",
+        "tool_date": "manual ONNX surgery + src.harness.evaluate, 2026-07-08",
+        "result": "Bundled fail=0 but cost worsened 32667 -> 42457 because QuantizeLinear(input) materializes a counted [1,10,30,30] uint8 carrier. Active Conv reads the fp32 graph input for free.",
+        "reopen_trigger": "Only reopen for task233-style detector Convs if an integer activation carrier already exists/shared, a QLinear path can consume free fp32 input without counted quantization, or a public/top-team task233 net beats our active cost.",
+        "falsification_history": "This corrects the coverage-audit false positive that treated task233 as an unapplied QLinear candidate."
+      }
+    }
   },
   {
     "id": "free_final_onehot_equal",
@@ -344,14 +355,18 @@
   },
   {
     "id": "bounded_crop_before_connectivity_scan",
-    "title": "Run iterative connectivity/flood-fill on the generator's true max canvas, not the 30x30 harness canvas",
+    "title": "Run full-grid logic on the generator's true max canvas, not the 30x30 harness canvas",
     "status": "active",
     "source_tasks": [
-      187
+      187,
+      173
     ],
-    "rationale": "Task187 showed that grids are generated in a bounded 20..25 box.  Cropping after reducing the 10-channel input to one-channel label/mask planes avoids a huge fp32 input slice while shrinking every repeated MaxPool/Min flood-fill plane from 30x30 to 25x25.  The final one-channel label map is padded back to 30x30 with sentinel label 10 before final Equal.",
+    "rationale": "Task187 showed that grids are generated in a bounded 20..25 box.  Cropping after reducing the 10-channel input to one-channel label/mask planes avoids a huge fp32 input slice while shrinking every repeated MaxPool/Min flood-fill plane from 30x30 to 25x25.  Task173 extended this beyond flood-fill: the active 8000 overlay's full 30x30 1x1 label Conv plus sparse TopK/Scatter workspace was rebuilt as a 25x25 valid single-tap Conv workspace, then padded back to 30x30 with sentinel label 10 before final Equal.  This reduced active cost 12417->10979 with bundled fail=0, even after paying extra Conv params and a terminal Pad.",
     "applies_when": {
       "any_ops": [
+        "Conv",
+        "TopK",
+        "ScatterElements",
         "MaxPool",
         "Min",
         "ReduceMax"
@@ -371,7 +386,7 @@
     "expected": {
       "gain_type": "memory+generalization",
       "risk": "medium",
-      "verification": "confirm generator max height/width, stored eval, fresh adopt gate"
+      "verification": "confirm bundled/generator max height/width, stored eval, and final Pad-to-30 sentinel semantics; fresh is diagnostic only in 8000 mode"
     },
     "transformer": null
   },
@@ -439,7 +454,8 @@
     "reject_when": {
       "any_tags": [
         "mem0_single_op",
-        "assignment_wall"
+        "assignment_wall",
+        "free_fp32_input_quantize_required"
       ]
     },
     "expected": {
@@ -837,14 +853,16 @@
     "status": "active",
     "source_tasks": [
       285,
-      366
+      366,
+      233,
+      173,
+      76,
+      18
     ],
-    "rationale": "Task285 removed a full 900-cell fp16 cast before TopK by feeding TopK with the existing uint8 color-label vector. Stored score improved from 14.848481 to 14.922685 by reducing memory 25080->23247 with unchanged params. Task366 extended the same family to bool masks: bool TopK is invalid in ORT, but bool->uint8 full-vector casts plus tiny TopK-value fp16 recasts improved 14.497209->14.532108 by reducing memory 35927->34678. Because both incumbents have rare large-fresh failures, adoption was justified by 20000/20000 side-by-side incumbent equivalence, not by truth-fresh pass.",
+    "rationale": "Task285 removed a full 900-cell fp16 cast before TopK by feeding TopK with the existing uint8 color-label vector. Stored score improved from 14.848481 to 14.922685 by reducing memory 25080->23247 with unchanged params; the active S19 overlay extended this by converting all remaining uint8-derived TopK feeds (`gf`, `scoref`, `mf16`) and reduced cost 19767->18640. Task366 extended the same family to bool masks: bool TopK is invalid in ORT, but bool->uint8 full-vector casts plus tiny TopK-value fp16 recasts improved 14.497209->14.532108 by reducing memory 35927->34678. Task233 showed ORT TopK can consume uint8 0/1 score vectors directly: two fp16 TopK feeds (`res18` and `[5,324]` match matrix `mul103`) became uint8 with identical bundled outputs, reducing cost 32702->30278. Task173 extended the rule to sparse sprite-completion enumeration: three uint8-derived TopK feeds (`gs`, `protof`, `poutf`) became uint8 and reduced cost 13384->12417. Task076 applied it to four bool/uint8 sprite-correspondence TopK feeds and reduced cost 13235->12522. Task018 applied the same direct-uint8 TopK feed to two 121-cell score vectors and reduced cost 25286->25020. Because some incumbents in this family have rare large-fresh failures, adoption should be justified by stored pass plus side-by-side incumbent equivalence when truth-fresh is available.",
     "applies_when": {
-      "any_ops": [
-        "TopK",
-        "Cast",
-        "Gather"
+      "all_ops": [
+        "TopK"
       ],
       "any_tags": [
         "scatter",
@@ -876,9 +894,11 @@
     ],
     "rationale": "Task011 improved 17.343663->17.386181 by replacing nine channel-8 3x3 Slice+ReduceSum branches with one stride-4 3x3 Conv over the original one-hot input, followed by a compact Slice+Reshape. The Conv adds weight params, but removes repeated fp32 block slices and scalar reductions; stored and fresh 1500/1500 matched the incumbent exactly.",
     "applies_when": {
-      "any_ops": [
+      "all_ops": [
         "Slice",
-        "ReduceSum",
+        "ReduceSum"
+      ],
+      "any_ops": [
         "Concat"
       ],
       "any_tags": [
@@ -951,7 +971,7 @@
       243,
       77
     ],
-    "rationale": "S8 additions (late): EXACT-COUNT walks via 3-phase monotone machine {Stay,Move...} — each cell reached by exactly one walk, einsum value = run length/area, fp16-exact <=2048 (task145, refutes FLOOR verdicts on size/area tasks); checkerboard-parity paint via rank-1 stacked-parity einsums (task286); latency: repeated-operand SIZE dominates ORT multi-op einsum (use one small mask plane over repeating the 9000-elem input); single-tap KxK Conv = free crop. S8 additions: free-traversability (input repeated with (10,) colour selectors, shared colour letter pinned by P0[q] -> 1 letter/4-conn step, no t plane; task243), checkpoint constraints (triangular operands bind walk positions to output indices -> bbox conditions in-einsum; task077), gates-as-einsum-operands (data-dependent [K] selection vectors from tiny einsums multiply inside the big einsum, stacked fallback plane; task110). Original: Grader counts only NODE OUTPUTS (data/neurogolf_utils.py calculate_memory); everything inside a single op is free, and run_network applies a free >0 threshold at 'output'. Reachability = #walks > 0 is a polynomial in the input, so K propagation steps compile into ONE Einsum: operands G[m,r0],H[m,c0] (nonneg rank-terms for the seed set), then per step S[r_j,r_j+1], S[c_j,c_j+1] (tridiagonal-with-self, entries 0.5 -> 8-connected Chebyshev step; alternate single-axis S for 4-connected at 1 letter/step), and t[n,z,r_j,c_j] (traversable plane from one Conv). All operand values nonnegative -> no cancellation -> fp32 rounding/overflow cannot flip >0 semantics; keep per-step scale dyadic (0.5) so min path weight stays in normal-float range (subnormal-flush-safe). Letter budget 52: 8-conn = (52-5)/2 = 23 steps/einsum; 4-conn alternating H/V = 45 steps. task187 landed: 15 MaxPool+Min rounds (18.75KB) -> 1 Einsum (74 operands, 51 letters): mem 32850->15300, 14.58->15.29 (+0.71), fresh 17<=19 incumbent, and Kaggle grader accepts it (task313 = kojimar's 10-operand einsum precedent; 187 A/B submitted). Same-arity constraint: one einsum sums only uniform operand-set products, so heterogeneous output composition (drawing-copy + flood colours) still needs the classic uint8 label epilogue (~11.7KB floor here: t 3600 + W 3600 + label 3600+900 + 4x900 bool/uint8 planes).",
+    "rationale": "S8 additions (late): EXACT-COUNT walks via 3-phase monotone machine {Stay,Move...} \u2014 each cell reached by exactly one walk, einsum value = run length/area, fp16-exact <=2048 (task145, refutes FLOOR verdicts on size/area tasks); checkerboard-parity paint via rank-1 stacked-parity einsums (task286); latency: repeated-operand SIZE dominates ORT multi-op einsum (use one small mask plane over repeating the 9000-elem input); single-tap KxK Conv = free crop. S8 additions: free-traversability (input repeated with (10,) colour selectors, shared colour letter pinned by P0[q] -> 1 letter/4-conn step, no t plane; task243), checkpoint constraints (triangular operands bind walk positions to output indices -> bbox conditions in-einsum; task077), gates-as-einsum-operands (data-dependent [K] selection vectors from tiny einsums multiply inside the big einsum, stacked fallback plane; task110). Original: Grader counts only NODE OUTPUTS (data/neurogolf_utils.py calculate_memory); everything inside a single op is free, and run_network applies a free >0 threshold at 'output'. Reachability = #walks > 0 is a polynomial in the input, so K propagation steps compile into ONE Einsum: operands G[m,r0],H[m,c0] (nonneg rank-terms for the seed set), then per step S[r_j,r_j+1], S[c_j,c_j+1] (tridiagonal-with-self, entries 0.5 -> 8-connected Chebyshev step; alternate single-axis S for 4-connected at 1 letter/step), and t[n,z,r_j,c_j] (traversable plane from one Conv). All operand values nonnegative -> no cancellation -> fp32 rounding/overflow cannot flip >0 semantics; keep per-step scale dyadic (0.5) so min path weight stays in normal-float range (subnormal-flush-safe). Letter budget 52: 8-conn = (52-5)/2 = 23 steps/einsum; 4-conn alternating H/V = 45 steps. task187 landed: 15 MaxPool+Min rounds (18.75KB) -> 1 Einsum (74 operands, 51 letters): mem 32850->15300, 14.58->15.29 (+0.71), fresh 17<=19 incumbent, and Kaggle grader accepts it (task313 = kojimar's 10-operand einsum precedent; 187 A/B submitted). Same-arity constraint: one einsum sums only uniform operand-set products, so heterogeneous output composition (drawing-copy + flood colours) still needs the classic uint8 label epilogue (~11.7KB floor here: t 3600 + W 3600 + label 3600+900 + 4x900 bool/uint8 planes).",
     "applies_when": {
       "any_ops": [
         "MaxPool",
@@ -1046,7 +1066,14 @@
       "risk": "low: purely algebraic if pad value is outside channel ids and Equal broadcasts identically; verify ORT Pad supports the bool output dtype/opset when using onehot-before-pad",
       "verification": "stored eval and memory measurement for the single task; static break-even is compact_area * channel_count versus padded_label_area"
     },
-    "transformer": null
+    "transformer": null,
+    "measured_status_2026_07_08": {
+      "what_was_run": "Full active `submission/overfit_nets` scan for final `Pad(label)->Equal(...)->output` tails, plus a runtime probe on the first bundled example for each tail. Generated `reports/candidates/free_output_label_rescan.{py,json,md}` and `reports/candidates/free_output_label_runtime_probe.{py,json,md}`. Deep-built task124 direct free-output variants.",
+      "tool_date": "free_output_label_rescan.py + free_output_label_runtime_probe.py + task124/build_free_output_variants.py, 2026-07-08",
+      "result": "58 active final label tails found. The simple onehot-before-pad/order-swap route has 0 current wins: every active compact label area is >=100 cells, so 10-channel onehot-before-pad costs at least 1000B vs the 900B uint8 padded-label carrier. Task124's stronger task295-style `bg+delta` direct-output candidate was semantically correct (267/267) but worsened cost 1953->3024 because 10x30 projection params and background handling outweighed the removed carrier.",
+      "reopen_trigger": "Re-run after any new overlay/public min-merge/source rebuild creates a compact label tail with area <90, or when a task admits a task295-style direct free-output formula that avoids both counted onehot crop and large row/column projection params.",
+      "falsification_history": "The broad '900B output label floor' was falsified by task295 on 2026-07-08. Therefore this is not a family floor; it only demotes the simple label-pad/onehot-pad ordering rule under the measured area/cost conditions."
+    }
   },
   {
     "id": "uint8_presence_for_argmax",
@@ -1223,5 +1250,514 @@
       "verification": "stored eval, fresh_verify bit-identical vs incumbent"
     },
     "transformer": null
+  },
+  {
+    "id": "runtime_conv_template_anchor",
+    "title": "Compile runtime-extracted sprite/template masks into non-initializer Conv weights",
+    "status": "research",
+    "coverage_ref": "dynamic_template_anchor",
+    "match_query": "assignment_wall and template_match and bloat > 3000",
+    "source_tasks": [
+      89,
+      101
+    ],
+    "rationale": "Task089 proves ORT accepts a runtime tensor as Conv's W input: a learned-at-runtime 5x5 sprite kernel stamps all marker positions in one Conv. Task101 probes extend this: runtime tensors also work as ConvTranspose weights and, more importantly, as QLinearConv weights.  With scale=1/zp=0, dynamic QLinearConv gives exact uint8 template-correlation counts for bounded sprite templates. This re-opens task101's reference-template anchor map: instead of TopK(k_raw=29) over all red cells plus sequential coverage claims, build scale-specific red/blue template kernels from the 4x4 reference patch, run QLinearConv(red_u8, dynamic_red_kernel_s) to obtain anchor maps, then stamp hidden blue with padded anchor maps and reversed dynamic blue kernels via QLinearConv.  The byte model says fp32 Conv/ConvTranspose is a loss, QLinear no-suppression is potentially a win, and full maximal suppression erases the win.",
+    "applies_when": {
+      "any_ops": [
+        "Conv",
+        "QLinearConv",
+        "ConvTranspose",
+        "Gather",
+        "Slice"
+      ],
+      "any_tags": [
+        "template_match",
+        "sprite_stamp",
+        "assignment_wall",
+        "copy_color_source"
+      ],
+      "min_memory": 3000
+    },
+    "reject_when": {
+      "any_tags": [
+        "per_object_distinct_scale_vector",
+        "requires_overlapping_stamp_conflict_resolution"
+      ]
+    },
+    "expected": {
+      "gain_type": "compiler_rewrite_by_deleting_sparse_TopK_enumeration_and_coverage_chains",
+      "risk": "high: the QLinear no-suppression compiler has byte margin, but scale suppression / false-positive filtering can recreate the incumbent coverage cost. Avoid fp32 ConvTranspose; use runtime-weight QLinearConv for matching and reversed-kernel stamping.",
+      "verification": "first build task101 QLinear anchor-map candidate under reports/candidates/task101; compare against active overlay on bundled data; fresh_verify only diagnostic in 8000 mode; inspect whether remaining false positives fit in a small exception filter"
+    },
+    "transformer": null
+  },
+  {
+    "id": "dynamic_bundled_cse_rewire",
+    "title": "Use bundled runtime signatures to remove duplicate active overlay intermediates",
+    "status": "active",
+    "coverage_ref": "dynamic_cse",
+    "match_query": "active_overfit and bloat > 5000",
+    "source_tasks": [
+      173,
+      54,
+      158,
+      133,
+      233,
+      205,
+      92,
+      234,
+      23,
+      319
+    ],
+    "rationale": "In 8000 mode, public/min-merge overlays often retain duplicate fp/uint casts, scalar aliases, or detector payload predicates.  A safe compiler pass can expose intermediate tensors over all bundled examples, hash runtime values, and rewire a later tensor to an earlier tensor when the full bundled signature and static shape/dtype match.  S21 task173 reduced active cost 12363->11671 by deleting duplicate label-grid/cast carriers; task054 reduced 20373->20186 by deleting repeated scan scalar/vector aliases; task158/task133/task233 produced smaller confirmed wins.  Fresh verification is diagnostic only; the active gate is bundled fail=0 plus lower cost.",
+    "applies_when": {
+      "any_ops": [
+        "Cast",
+        "Where",
+        "Gather",
+        "ScatterElements",
+        "Equal",
+        "TopK"
+      ],
+      "any_tags": [
+        "high_memory",
+        "gather_heavy",
+        "scatter",
+        "public_overlay",
+        "exact_preserve"
+      ],
+      "min_memory": 5000
+    },
+    "reject_when": {
+      "any_tags": [
+        "requires_private_generalization_proof"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_by_rewiring_duplicate_node_outputs",
+      "risk": "medium: runtime equality over bundled examples is an overfit-mode proof only; require static shape/dtype match and bundled fail=0 after each rewrite",
+      "verification": "run reports/candidates/dynamic_cse_active_probe.py against active submission/overfit_nets; adopt only evaluated fail=0 lower-cost candidates, then scan_unsigned_topk and pack"
+    },
+    "transformer": "reports/candidates/dynamic_cse_active_probe.py"
+  },
+  {
+    "id": "dedupe_byte_identical_initializers",
+    "title": "Deduplicate byte-identical initializers after overlay and graph surgery",
+    "status": "active",
+    "coverage_ref": "initializer_dedupe",
+    "match_query": "active_overfit",
+    "source_tasks": [
+      54,
+      234,
+      348,
+      335,
+      37,
+      280,
+      64,
+      173,
+      18,
+      233,
+      138,
+      285,
+      390
+    ],
+    "rationale": "ONNX params are counted by initializer element count, even for byte-identical constants.  Public overlays, dynamic-CSE rewires, and hygiene fixes can leave repeated scalar/vector initializers.  A static pass rewires duplicate initializer uses to the first byte-identical initializer and removes the rest.  It produced small but deterministic 8000-mode gains on task054 and nine later active tasks after dynamic CSE.  The 2026-07-08 active sweep found only three more wins (tasks 138/285/390, total cost -7), so this is hygiene, not a major frontier mechanism.",
+    "applies_when": {
+      "any_ops": [
+        "Slice",
+        "Pad",
+        "Gather",
+        "ScatterElements",
+        "Cast"
+      ],
+      "min_params": 2
+    },
+    "reject_when": {
+      "any_tags": []
+    },
+    "expected": {
+      "gain_type": "params_by_deleting_duplicate_initializers",
+      "risk": "low: byte-identical constants are equivalent; still require bundled fail=0 and lower measured cost because shape inference/scorer quirks can reject rewritten models",
+      "verification": "run reports/candidates/dedupe_initializers_active_probe.py after overlay or graph-surgery passes; adopt only evaluated fail=0 lower-cost candidates"
+    },
+    "transformer": "reports/candidates/dedupe_initializers_active_probe.py"
+  },
+  {
+    "id": "signed_int8_topk_compact_feeds",
+    "title": "Signed INT8 TopK feeds are local-valid but Kaggle-rejected",
+    "status": "negative_filter",
+    "coverage_ref": "int8_topk",
+    "match_query": "has_topk_cast_feed and active_overfit",
+    "source_tasks": [
+      233,
+      173,
+      285,
+      76,
+      316,
+      397,
+      368,
+      18,
+      308,
+      366,
+      37
+    ],
+    "rationale": "Unsigned uint8 TopK feeds produced strong local memory wins but caused Kaggle submission errors.  Signed INT8 TopK was accepted by local ORT for small nonnegative score/label feeds and was not flagged by the unsigned-TopK submission scan; it recovered +0.37 local points across 11 active tasks.  However full submission 54418239 (`active 7254.783 signed-int8-topk compiler`), group oracle submissions 54418729/54418747, and all 11 single-task oracle submissions 54418836/54418838/54418840/54418844/54418846/54418849/54418852/54418856/54418858/54418860/54418861 returned Kaggle ERROR.  Signed INT8 TopK is therefore not a valid 8000-mode submission mechanism under the current grader, independent of task.",
+    "applies_when": {
+      "any_ops": [
+        "TopK",
+        "Cast",
+        "Where",
+        "Greater"
+      ],
+      "any_tags": [
+        "gather_heavy",
+        "scatter",
+        "high_memory",
+        "topk"
+      ],
+      "min_memory": 300
+    },
+    "reject_when": {
+      "any_tags": [
+        "requires_float_score_ordering",
+        "score_outside_int8_range",
+        "topk_tie_order_semantic"
+      ]
+    },
+    "expected": {
+      "gain_type": "negative_filter",
+      "risk": "certain Kaggle submission rejection based on full, group, and single-task oracle submissions",
+      "verification": "do not adopt signed INT8 TopK feeds unless a future Kaggle oracle explicitly disproves this rejection; local bundled fail=0 and unsigned scan clean are insufficient"
+    },
+    "transformer": "reports/candidates/signed_int8_topk_probe.py"
+  },
+  {
+    "id": "topk_k2_to_argmax_uint8_with_exception_patch",
+    "title": "ArgMax(uint8) binary-match replacement is local-valid but Kaggle-unsafe",
+    "status": "negative_filter",
+    "coverage_ref": "argmax_patch_topk",
+    "match_query": "TopK over binary match matrix with small k and consume-once fallback",
+    "source_tasks": [
+      233
+    ],
+    "rationale": "Task233 had a [5,324] boolean match matrix cast to fp16 solely because TopK(k=2) needed a supported numeric input.  Unsigned and signed 8-bit TopK are Kaggle-rejected, and replacing k=2 with a k=1 ArgMax(uint8) path plus bundled exception patches was also Kaggle-unsafe: local bundled fail=0 and scan-clean cost 32688->31915, but submission 54423143 completed with public score 7240.45, consistent with task233 scoring ~0.  The likely issue is official/Kaggle ArgMax uint8 tie behaviour or dtype semantics differing from local ORT on a binary match matrix.",
+    "applies_when": {
+      "any_ops": [
+        "TopK",
+        "ArgMax",
+        "ScatterND",
+        "Equal",
+        "Where"
+      ],
+      "any_tags": [
+        "gather_heavy",
+        "scatter",
+        "assignment_wall",
+        "topk"
+      ],
+      "min_memory": 3000
+    },
+    "reject_when": {
+      "any_tags": [
+        "requires_float_score_ordering",
+        "many_second_candidate_failures",
+        "no_small_runtime_fingerprint"
+      ],
+      "any_ops": [
+        "TopK"
+      ]
+    },
+    "expected": {
+      "gain_type": "negative_filter",
+      "risk": "certain LB score collapse for the tested task233 route despite local bundled fail=0",
+      "verification": "do not adopt ArgMax(uint8) binary-match replacements unless a future Kaggle oracle explicitly proves the target task scores"
+    },
+    "transformer": null
+  },
+  {
+    "id": "pad_compensated_spatial_crop",
+    "title": "Shrink dead Conv/QLinearConv borders and compensate in the sole spatial consumer padding",
+    "status": "active",
+    "source_tasks": [
+      349
+    ],
+    "rationale": "Task349's active QLinearConv detector produced `h_pos_u8` with shape [1,5,30,30], but bundled intermediate probing showed the last detector column was always zero.  Reducing the producer right pad 10->9 shrank the detector plane to [1,5,30,29], and increasing the sole halo QLinearConv consumer right pad 5->6 preserved alignment.  This lowered active cost 15042->14892 with bundled fail=0.  Width 28 failed, so the crop must be empirically gated.",
+    "applies_when": {
+      "any_ops": [
+        "Conv",
+        "QLinearConv",
+        "MaxPool"
+      ],
+      "any_tags": [
+        "local_stencil",
+        "conv_heavy",
+        "high_memory"
+      ],
+      "min_memory": 3000
+    },
+    "reject_when": {
+      "any_tags": [
+        "multi_consumer_spatial_alignment",
+        "dynamic_border_activity"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_by_removing_dead_spatial_border",
+      "risk": "low in 8000 mode only after bundled intermediate probe plus bundled fail=0; crop limit is task-specific",
+      "verification": "sweep producer output width/height with consumer pad compensation, adopt only exact bundled fail=0 and lower cost"
+    },
+    "transformer": null
+  },
+  {
+    "id": "zero_compare_to_bool_cast",
+    "title": "Replace nonnegative x > 0 masks with Cast(x -> bool)",
+    "status": "active",
+    "source_tasks": [
+      9,
+      44,
+      77,
+      134,
+      224,
+      281,
+      319,
+      233,
+      234,
+      308,
+      355,
+      363,
+      397
+    ],
+    "rationale": "Many active graphs build a boolean mask with Greater(x, scalar_zero), where x is a nonnegative count/presence score.  ONNX Cast to BOOL has the same semantics for zero/nonzero and removes the scalar zero initializer when it becomes unused.  A 2026-07-07 full active probe found 11 bundled-fail=0 one-parameter wins.  A 2026-07-08 rerun against the post-public-tail active set found 8 individual wins; cumulative adoption on tasks 044/281/319 lowered cost by another 11.  Coverage candidates are syntax hints only: most Greater-zero replacements are cost-neutral after evaluation.",
+    "applies_when": {
+      "any_ops": [
+        "Greater",
+        "NotEqual",
+        "Cast"
+      ],
+      "any_tags": [
+        "onehot_final_equal",
+        "scatter",
+        "scan",
+        "local_stencil",
+        "open_angle"
+      ],
+      "min_memory": 0
+    },
+    "reject_when": {
+      "any_tags": [
+        "signed_score_can_be_negative",
+        "strict_positive_not_nonzero"
+      ]
+    },
+    "expected": {
+      "gain_type": "params_by_deleting_zero_scalar_initializers",
+      "risk": "low after bundled eval; only valid when the compared tensor is known nonnegative and false iff exactly zero",
+      "verification": "candidate eval fail=0 and lower cost; do not infer from syntax alone when scores may be negative"
+    },
+    "transformer": "reports/candidates/zero_compare_to_bool_cast_probe.py"
+  },
+  {
+    "id": "branch_einsum_copy_edit_epilogue",
+    "title": "Fold copy/edit Where epilogues into one free-output branch Einsum",
+    "status": "active",
+    "source_tasks": [
+      77,
+      187
+    ],
+    "rationale": "Task077 proves the task187 epilogue-fold mechanism generalizes beyond flood fill.  A copy/edit graph `walk -> Greater -> Where(fill, yellow, input)` was rewritten as one final `Einsum -> output` with a branch index: identity-copy, add-yellow, and subtract-old-non-yellow-channel.  Because graph output is free, this deletes both the counted walk [1,30,30] and fill [1,30,30] planes.  The adopted bundled-clean candidate uses subtract scale 1e14, lowering task077 to memory 0 params 2160.  Task066 tested the same idea on a 20x20 hidden workspace and passed functionally but worsened cost (10121->11705) because 20->30 coordinate projection matrices and branch mixer params outweighed memory savings.",
+    "applies_when": {
+      "any_ops": [
+        "Einsum",
+        "Where",
+        "Greater"
+      ],
+      "any_tags": [
+        "marker_routed_path",
+        "scan",
+        "scatter",
+        "high_memory"
+      ],
+      "min_memory": 900
+    },
+    "reject_when": {
+      "any_tags": [
+        "mask_not_polynomial",
+        "requires_argmax_choice",
+        "negative_mask_score",
+        "requires_coordinate_projection"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_by_deleting_mask_and_copy_edit_epilogue",
+      "risk": "medium: branch identity count can overpower the subtract branch; sweep subtract scale and require bundled fail=0",
+      "verification": "build branch-index final output op, sweep subtract scale, compare bundled fail=0 and cost; inspect multi-hot failures"
+    },
+    "transformer": "reports/candidates/task077/branch_einsum_fold.py"
+  },
+  {
+    "id": "residual_spatialop_to_free_einsum_collapse",
+    "title": "Collapse residual spatial ops (Conv/GridSample/TopK/MaxPool/wide index planes) into free-input Einsum contractions",
+    "status": "active",
+    "source_tasks": [
+      11,
+      22,
+      36,
+      281
+    ],
+    "rationale": "2026-07-08 public re-mine (franksunp-7249.50-compact, urad-7250.18) beat OUR overfit nets on 26 tasks even though their totals sit ~9pts below ours. Op-census diff of the 4 biggest wins shows a single recurring mechanism: our nets still materialized spatial-op output planes the public frontier re-expressed as chained Einsum contractions against the FREE input/output. task011 Conv+Gather+Pad+Slice (18 nodes)->3-Einsum chain (mem 64). task022 GridSample+TopK+GatherND warp (21 nodes)->1 Einsum (4 nodes). task036 MaxPool+GatherElements->7 Einsum. task281 wide ArgMax/TopK index planes->arithmetic Log/Floor/Div coordinate decode (bit-pack), more nodes but far smaller counted tensors. These are the bilinear-einsum / einsum-vs-free-input / bit-pack levers applied to near-total collapse. The public dumps are optimizer-emitted (base64, no per-task Python), so the ADOPTED ONNX is the artifact and this entry is the transferable insight.",
+    "applies_when": {
+      "any_ops": [
+        "Conv",
+        "GridSample",
+        "TopK",
+        "MaxPool",
+        "GatherND",
+        "GatherElements"
+      ],
+      "any_tags": [
+        "spatial_warp",
+        "index_plane",
+        "one_hot",
+        "high_memory"
+      ]
+    },
+    "reject_when": {
+      "any_tags": [
+        "already_einsum_floor",
+        "load_bearing_detector_bank"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_by_contracting_spatial_planes_into_free_input_einsum",
+      "risk": "medium: not every spatial op is separable; some planes are load-bearing detector banks (all-live over 266 bundled instances). gate strictly on isolated bundled fail=0 + cheaper cost",
+      "verification": "op-census our overfit_nets for residual Conv/GridSample/TopK/MaxPool/wide-index planes; for each, min-merge vs any public dump OR hand-rebuild as free-input Einsum; isolated evaluate bundled fail=0 + lower mem+params"
+    },
+    "transformer": "reports/scripts/mine_overfit_minmerge.py",
+    "measured_status_2026_07_08": {
+      "what_was_run": "residual_spatialop_scan.py on all 400 overfit_nets (ranks collapse headroom); then structural cost-diff of our top-7 headroom nets (233/158/349/367/286/285/366) vs the BEST version across 9 public dumps (incl. franksunp-compact + urad optimizers).",
+      "tool_date": "residual_spatialop_scan.py + cost-diff, 2026-07-08",
+      "result": "On EVERY top-headroom task our net already <= the best public net (233: 32652<34394; 158: 20248<28483; 366: 31493<33745; ties on 349/285). The external collapse-optimizer CANNOT beat our high-cost nets => their residual spatial bytes (QLinearConv renderers, TopK detector banks) are load-bearing, not collapsible. Hand-rebuild EV on top targets = LOW, MEASURED not assumed. Later margin-0 public tail mining of franksunp/7249.95 + llccqq624 + lucifer (2026-07-08) found 65 tiny overlay wins and raised LB to 7264.52, but these were byte-level shared public optimizer tails, not a new high-bloat residual-spatial collapse. kernel-collapse on 26 new nets = task076 +0.002 only.",
+      "reopen_trigger": "(a) a NEW public uploader whose per-task cost beats ours on a flagged task, (b) a genuinely new op-collapse mechanism (not spatial->Einsum, which is saturated), (c) reverse-engineered 8000-team representation. Do NOT re-grind hand-collapse on 233/158/366 without one of these.",
+      "falsification_history": "This is a MEASURED-dry, not an assumed floor. If a future dump beats our top nets, that falsifies 'external optimizer can't beat us' and reopens hand-rebuild."
+    }
+  },
+  {
+    "id": "spatial_reducesum_to_einsum_profile_tail",
+    "title": "Replace spatial ReduceSum colour-count profiles with free-input Einsum profiles when scorer prices the axes initializer",
+    "status": "active",
+    "source_tasks": [
+      12,
+      18,
+      37,
+      203,
+      239,
+      324,
+      378,
+      388,
+      396
+    ],
+    "rationale": "Public task012 changed `ReduceSum(input, axes=[2,3], keepdims=0)` into `Einsum(input, equation='bchw->bc')` and saved a tiny counted tail.  Generalizing that exact op substitution over the active 400 nets found 17 candidates and 8 bundled-clean wins on 2026-07-08.  The memory tensor is unchanged, but the ReduceSum axes initializer becomes dead, lowering params by 2 per win.",
+    "applies_when": {
+      "all_ops": [
+        "ReduceSum"
+      ],
+      "input_shape": [
+        1,
+        10,
+        30,
+        30
+      ],
+      "output_shape": [
+        1,
+        10
+      ],
+      "axes": [
+        2,
+        3
+      ],
+      "keepdims": 0
+    },
+    "reject_when": {
+      "any_tags": [
+        "keepdims_required",
+        "non_spatial_axes",
+        "non_input_profile",
+        "axes_initializer_shared"
+      ]
+    },
+    "expected": {
+      "gain_type": "params_tail_by_deleting_reduce_axes_initializer",
+      "risk": "low-medium: local bundled semantics are exact, but tiny op substitutions should still be submitted freely and watched for Kaggle scorer gaps",
+      "verification": "run reports/candidates/reducesum_spatial_to_einsum_probe.py; adopt only bundled fail=0 + lower memory+params + scan_unsigned_topk clean"
+    },
+    "transformer": "reports/candidates/reducesum_spatial_to_einsum_probe.py",
+    "measured_status_2026_07_08": {
+      "what_was_run": "Full active 400 scan for ReduceSum(input, axes=[2,3], keepdims=0, shape [1,10,30,30]->[1,10]); each candidate rewritten to Einsum('bchw->bc') and bundled-evaluated.",
+      "tool_date": "reports/candidates/reducesum_spatial_to_einsum_probe.py, 2026-07-08",
+      "result": "17 candidates checked, 8 wins adopted: tasks 018/037/203/239/324/378/388/396. Local active 7264.400942 -> 7264.411366, total cost 1062470 -> 1062454, per-changed-task bundled fail=0, TopK scan clean. Submitted as Kaggle 54454741; completed at publicScore 7264.53.",
+      "reopen_trigger": "Re-run whenever new public/source overlays introduce fresh ReduceSum spatial colour-count profiles, or when a public dump shows another ReduceSum/Einsum pricing asymmetry.",
+      "falsification_history": "This is a public-mechanism-derived tail; earlier broad 'micro tails dry' claims were falsified by 2026-07-08 public margin-0 tails, so keep this scanner active rather than marking it exhausted."
+    }
+  },
+  {
+    "id": "output_coupled_fp16_free_output_recast",
+    "title": "Recast fp32 masks feeding only the free graph output to fp16",
+    "status": "active",
+    "source_tasks": [
+      222,
+      205,
+      355,
+      377
+    ],
+    "rationale": "Graph `output` is free and `run_network` thresholds `>0`, so exact 0/1 or small-integer fp32 tensors that only feed a final homogeneous op producing `output` can often be recast to fp16 if all same-type operands are adjusted. Task222 established the free-output-fp16 trick for output-coupled planes. Task377 extended it to a deployed final `Einsum`: recast `OHf/Xs/X` [1,5,10] and `R` [1,5,30] by changing `OHb->OHf`, `ab->R`, converting `SK` to fp16, and setting graph output fp16; bundled fail=0, cost 4567->3967. Task355 is the small clean version: final `selWu` and `e0` only feed graph-output `Einsum`, cost 538->518. Task205 added two placement variants: keep shared upstream fp32 tensors intact and insert fp16 Casts immediately before the final `Unsqueeze/Concat` operands, then recast the remaining coordinate/index tail to fp16 where Cast-to-int64 accepts exact fp16 coordinates; bundled fail=0, cost 4652->4372->3760.",
+    "applies_when": {
+      "any_ops": [
+        "Cast",
+        "Einsum",
+        "Concat"
+      ],
+      "any_tags": [
+        "free_output",
+        "output_coupled",
+        "fp32_mask",
+        "fp16_exact"
+      ],
+      "max_abs": 2048
+    },
+    "reject_when": {
+      "any_tags": [
+        "input_cobound",
+        "dilated_maxpool_consumer",
+        "non_integer_values",
+        "homogeneous_operand_not_recast"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_by_recasting_output-coupled_fp32_masks_to_fp16",
+      "risk": "medium: ONNX homogeneous ops require every float operand in the chain to match dtype; stale value_info can also pin types. Shared upstream tensors may feed input-co-bound fp32 paths, so prefer local casts immediately before the final-output operand chain when possible. Clear/regenerate value_info and bundled-evaluate.",
+      "verification": "run reports/candidates/fresh_sweep/scan_deployed_fp16.py; for each candidate, rebuild with all homogeneous operands adjusted, bundled evaluate fail=0 + lower memory+params, then scan_unsigned_topk"
+    },
+    "transformer": "reports/candidates/fresh_sweep/scan_deployed_fp16.py",
+    "measured_status_2026_07_08_task377": {
+      "what_was_run": "Built task377 candidate with `reports/candidates/task377/build_fp16_output_coupled.py`, changing final-Einsum mask chain to fp16 and clearing stale value_info.",
+      "tool_date": "build_fp16_output_coupled.py + src.harness.evaluate, 2026-07-08",
+      "result": "task377 bundled fail=0, cost 4567->3967 (memory 3552->2952, params 1015 unchanged), local points 16.573388->16.714235. Full active after adoption 400/400, local 7274.668531, TopK clean; submitted as Kaggle 54462993 and completed at publicScore 7274.79.",
+      "reopen_trigger": "Re-run deployed fp16 scan after every public/min-merge/free-output overlay because new output-coupled fp32 planes can appear or become isolated.",
+      "falsification_history": "Prior broad task377 'einsum angle floor' was falsified for the deployed graph. Distinguish structural detector-read floors from output-coupled dtype tails."
+    },
+    "measured_status_2026_07_08_task205": {
+      "what_was_run": "Built task205 candidates with `reports/candidates/task205/build_fp16_output_variants.py`: first final `Unsqueeze/Concat` operand casts, then residual coordinate/index-tail fp16 recast.",
+      "tool_date": "build_fp16_output_variants.py + src.harness.evaluate + build_overfit_manifest.py, 2026-07-08",
+      "result": "task205 bundled fail=0 twice: cost 4652->4372 (memory 4606->4326, params 46 unchanged), then 4372->3760 (memory 4326->3714, params 46 unchanged). Local points 16.554947->16.617024->16.767826. Full active after residual adoption 400/400, local 7274.919292, TopK clean; submitted residual as Kaggle 54463952 pending at write time.",
+      "reopen_trigger": "Re-run deployed fp16 scan after overlays; when a candidate also feeds free-input-co-bound paths, try local final-op casts before rejecting the tensor family.",
+      "falsification_history": "The earlier task205 fp16 note rejected safe_name_76/79 too broadly as input/output co-bound. A narrower final-cast placement recovered a real win, so future negatives must specify cast placement."
+    },
+    "measured_status_2026_07_08_task355": {
+      "what_was_run": "Built task355 candidate with `reports/candidates/task355/build_fp16_output.py`, recasting final output-only `selWu` and initializer `e0` to fp16 and setting graph output fp16.",
+      "tool_date": "build_fp16_output.py + src.harness.evaluate + build_overfit_manifest.py, 2026-07-08",
+      "result": "task355 bundled fail=0, cost 538->518 (memory 496->476, params 42 unchanged), local points 18.712141->18.750025. Full active after adoption 400/400, local 7274.768491, TopK clean; submitted as Kaggle 54463756 and completed at publicScore 7274.89.",
+      "reopen_trigger": "Re-run deployed fp16 scan after any overlay; even very small output-only one-hot/vector tails can still be worthwhile at low task cost.",
+      "falsification_history": "This confirms the output-coupled fp16 rule on a minimal final-output-only graph, reducing confidence in future broad 'too small to bother' dtype-tail dismissals."
+    }
   }
 ]

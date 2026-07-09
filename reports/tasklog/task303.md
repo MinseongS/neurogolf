@@ -47,3 +47,7 @@ cascades on all-black row/col recolour tasks.
 
 
 ## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 1452 -> 1450 (+0.001); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].
+## 2026-07-08 — ⭐ REGIME CRACK ADOPTED (900B output-mask → free-output Einsum)
+- 1450→700 (+0.73). 3 Einsums, 0 routing planes; in-grid gate rides ×input[0] inside free-output Einsum; per-axis cond = rank-2 d-packed gate, α=2^-10 sign-separation.
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task303/regime.onnx (builder build_regime.py). Backup: reports/candidates/fatmid_adopt_backup/task303.onnx.bak.
+- ⭐ TRANSFERABLE: the 900B [30,30] Where-mask is NOT a floor — fold routing into one N-ary Einsum to the FREE output (output>0 sign-decode). See memory neurogolf-regime-crack-freeoutput-einsum + the 60-task vein in reports/candidates/fresh_sweep/mask_dominance.json.

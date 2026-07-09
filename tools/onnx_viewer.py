@@ -1,7 +1,7 @@
 """Streamlit UI for inspecting NeuroGolf ONNX candidates.
 
 Run:
-    PYTHONPATH=. .venv/bin/streamlit run tools/onnx_viewer.py
+    PYTHONPATH=. uv run streamlit run tools/onnx_viewer.py
 """
 
 from __future__ import annotations

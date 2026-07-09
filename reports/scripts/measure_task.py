@@ -1,6 +1,5 @@
 """Measure a custom task's mem/params/points from its Python builder.
-Usage: .venv/bin/python -m reports.scripts.measure_task TASKNUM
-Set NEUROGOLF_ROOT to point at a worktree root to measure that tree's src/custom.
+Usage: uv run python -m reports.scripts.measure_task TASKNUM
 """
 import sys, importlib
 from src.harness import load_task, evaluate

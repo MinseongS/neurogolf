@@ -75,10 +75,10 @@ Equal(label30, channel_ids) -> output
 Verification:
 
 ```text
-PYTHONPATH=. .venv/bin/python reports/scripts/measure_task.py 354
+PYTHONPATH=. uv run python reports/scripts/measure_task.py 354
 {'ok': True, 'pass': 266, 'fail': 0, 'memory': 2674, 'params': 77, 'points': 17.080280239075424, 'error': None}
 
-PYTHONPATH=. .venv/bin/python reports/scripts/fresh_verify.py 354
+PYTHONPATH=. uv run python reports/scripts/fresh_verify.py 354
 task354 arc=ddf7fa4f fresh_instances=1500/1500
   incumbent fail = 0
 ```

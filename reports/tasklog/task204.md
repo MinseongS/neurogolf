@@ -57,3 +57,22 @@ einsum-proof: an Einsum's entry ticket = one fp32 spatial output (1600-3600B) + 
 NEW TRICK (unused, bank for later): signed parity-of-distance einsum — colour-state absorbing
 chain (move weight −1 through colour-0, self-loop +1 on colour-1) = exact (−1)^dist ±1 in one
 einsum, 3 letters/slot. Do NOT re-attempt task204 without a new mechanism.
+
+## 2026-07-08 — coverage false positive: `strided_conv_fixed_block_counts`
+
+What was run: read active `submission/overfit_nets/task204.onnx`, current tasklog, and the
+`strided_conv_fixed_block_counts` registry rule while triaging
+`reports/known_insight_coverage.md`.
+
+Result: the candidate is a graph-shape false positive.  Active task204 has three small
+`Slice` nodes, but the dominant structure is eight size-specific
+`QLinearConv(blue_u8, dw_3..dw_10)` anchor detectors plus seven parallel `MaxPool`
+fills.  This is not the task011 pattern of many same-stride `Slice+ReduceSum` block
+reads that one strided Conv can replace.  The S8 reject-check still applies:
+parallel per-size anchor dilations are not a collapsible chain.
+
+Reopen trigger: a new formulation that replaces the whole size-3..10 anchor/fill bank
+with a size-independent detector and clipped fill, or a public/top-team task204 ONNX
+below the current active cost.  Falsification history: prior task204 "floor" claims
+were already beaten by the uint8 anchor/output route, so this is only a rejection of
+the strided-block-count mechanism, not a task floor.

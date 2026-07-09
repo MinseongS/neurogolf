@@ -5,7 +5,7 @@ dominated by a small [K,4] int64 index, K ~ 2*max_changed_cells).
 Rank by: current points ASC (overpay headroom) among tasks whose worst-case edit is
 small enough that a scatter index beats the incumbent.
 
-Usage: .venv/bin/python -m reports.scripts.sparse_edit_scan
+Usage: uv run python -m reports.scripts.sparse_edit_scan
 """
 import json, glob, os, math
 import numpy as np

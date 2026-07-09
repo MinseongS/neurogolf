@@ -6,7 +6,7 @@ instances via the arc-gen generator, requires candidate fail=0 vs ground-truth.
 import sys, os, json, importlib, importlib.util, math
 import numpy as np, onnx, onnxruntime as ort
 # repo root at path[0] so `import src.*` works when run as a script (python reports/scripts/fresh_verify.py).
-# Set NEUROGOLF_ROOT to point at a worktree's root to test that worktree's edited src/custom.
+# NEUROGOLF_ROOT defaults to this repository root.
 _ROOT = os.environ.get("NEUROGOLF_ROOT") or os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.insert(0, _ROOT)
 # appended (NOT insert-0): arc-gen has its own src/ that would shadow ours.

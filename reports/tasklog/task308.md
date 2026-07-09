@@ -77,3 +77,11 @@ Equal output. The 7×7 ring lives entirely in fp16/bool [1,10,7,7] planes (~490�
 ## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
 Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
 Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## S17 (2026-07-07) — local-only REJECTED signed INT8 TopK feed probe
+
+`reports/candidates/task308/task308_int8_topk_greedy.onnx` recast
+`safe_name_19` TopK feed to signed INT8.  Bundled gate fail=0.  Cost: 1468 ->
+1455 (memory 1365 -> 1351, params 103 -> 104).
+
+Follow-up pruning removed dead initializer `safe_name_1`. Cost: 1455 -> 1454.

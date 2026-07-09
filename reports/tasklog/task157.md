@@ -61,3 +61,33 @@ flag (heuristic matcher plateaus ~95%, real-LB 0 on all-pass). Candidate Δ was 
 
 
 ## S15b (2026-07-06) — ADOPTED from franksunp 7233.12: 7243 -> 7024 (+0.031); gate inc/cand=61/61 (equal, safe). See [[neurogolf-urad-7225-bundle-vein]].
+
+## 2026-07-08 S35 — dynamic-CSE micro tail ADOPTED
+
+Artifact: `reports/candidates/task157/task157_dynamic_cse_greedy.onnx`.
+
+Mechanical active-net peephole only; it does not change the known private-fragile semantic wall.
+Bundled gate: `265/265`, memory `6596 -> 6595`, params unchanged `256`, cost `6852 -> 6851`.
+Initial combined submission **54451532** was bad (`7248.82`) because it also contained the
+Kaggle-falsified task101 dynamic-CSE overlay. Salvage submission **54451991**, with task101 removed
+and this task kept, completed at publicScore **7264.30**. Active overlay is adopted; backup before
+this tail: `submission/overfit_nets/.micro_tail_backup_20260708/task157.onnx`.
+
+## 2026-07-08 S38 — lucifer 10:21 public tail ADOPTED
+
+Artifact: `reports/candidates/public_mine_20260708/lucifer_safe_boost_1021/submission/task157.onnx`.
+
+Public re-mine after active **54458146/7264.54**:
+`prvsiyan/neurogolf-7250-24-w-visualizations` produced no downloadable ONNX output via
+`kaggle kernels output`; `lucifer19/chimera-safe-boost-caddies` and rerun
+`llccqq624/neurogolf-public-notebook` were scanned with
+`PYTHONPATH=. uv run python -m reports.scripts.mine_overfit_minmerge --margin 0`.
+Only task157 was adoptable, from lucifer.  Bundled gate: fail `0`, memory `6595 -> 6591`,
+params unchanged `256`, points `16.167850093997103 -> 16.168434120878935`.
+
+This is another tiny 8000-mode overlay on the same private-fragile semantic wall; it is not evidence
+that the two-region shape-correspondence rule has been solved.  Active backup before adoption:
+`reports/candidates/public_mine_20260708/lucifer_safe_boost_1021/adopt_backup_54458146/task157.onnx`.
+Full active manifest after adoption: `400/400`, total points `7264.550544427234`,
+total cost `1062063`; unsigned TopK scan clean.  Submitted as **54458829**, Kaggle completed at
+displayed publicScore **7264.67**.

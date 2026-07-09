@@ -57,3 +57,8 @@ the result is already [1,1,30,30] so NO reshape-duplicate plane is materialised.
 Off-grid cells get an out-of-band sentinel index (→ sentinel colour 10) so the
 final `Equal(carrier, ramp)` leaves them all-zero (the 30×30 pad region must be
 all-zero, NOT ch0=1 — convert_to_numpy only one-hots the true HxW region).
+
+## 2026-07-08 — ⭐ REGIME CRACK ADOPTED (batch 2, 900B mask → free-output Einsum)
+- 1475→457 (+1.12, memory=0). orbit-SUM replaces fold-MaxPool/ArgMax; telescoped ring = Σ nested-square rank-1 terms. One 10-operand Einsum.
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task240/regime.onnx (builder build_regime.py). Backup: reports/candidates/fatmid_adopt_backup/task240.onnx.bak.
+- ⭐ See memory neurogolf-regime-crack-freeoutput-einsum (vein taxonomy + sub-recipes). Vein list: reports/candidates/fresh_sweep/mask_dominance.json.

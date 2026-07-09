@@ -56,3 +56,8 @@ the gray-directly-above shift AND the start-column indicator.
 Verified generator bound = 10 (fixed size). Flagged `red_mask` [30,30] bool 900B is a Where cond; a 10→30 broadcast is impossible. A task187-style rebuild prices 1535 vs 1495 (−0.026); a 10×10 one-hot + Pad = 1000B > 900B. FLOOR.
 
 ⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).
+
+## 2026-07-08 — ⭐ REGIME CRACK ADOPTED (batch 2, 900B mask → free-output Einsum)
+- 1495→1128 (+0.28). WAS FLOOR earlier same day (peel recurrence). Threshold-run mask = signed linear-in-h + one dyadic scaling for own+shifted column; A[c,c]=-1 self-flip.
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task345/regime.onnx (builder build_regime.py). Backup: reports/candidates/fatmid_adopt_backup/task345.onnx.bak.
+- ⭐ See memory neurogolf-regime-crack-freeoutput-einsum (vein taxonomy + sub-recipes). Vein list: reports/candidates/fresh_sweep/mask_dominance.json.

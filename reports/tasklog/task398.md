@@ -50,3 +50,8 @@ the family of output planes is indexed by one small discrete parameter.
 ⭐ 2026-06-28 dtype update: Gather value planes feeding final `Equal` do not need fp16
 when values are colour labels/sentinel. Use uint8 `data/vtab/V/arange` and halve the
 only full plane.
+
+## 2026-07-08 — ⭐ REGIME CRACK ADOPTED (batch 3, 900B mask → free-output Einsum)
+- 2813→1510 (+0.62, mem 49B). Base-5 digit/carry factorization of anti-diagonal [r+j==f]; δwv−δv0 WMAP folds background branch; 16-operand Einsum.
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task398/regime.onnx. Backup: reports/candidates/fatmid_adopt_backup/task398.onnx.bak.
+- ⭐ Memory neurogolf-regime-crack-freeoutput-einsum. ⚠️ Concurrent-session collision risk on candidate dirs — always re-measure on-disk before adopt.

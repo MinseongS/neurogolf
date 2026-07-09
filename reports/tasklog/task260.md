@@ -48,3 +48,22 @@ input colour identified by "not bg, not the marker colour".
 ## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
 Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
 Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## 2026-07-07 — dtype-overpay ReduceSum feed probe KILL
+
+`dtype_overpay_scan.py` flagged the two small `Greater -> Cast(fp32) -> ReduceSum`
+feeds (`safe_name_36`, `safe_name_37`) as narrow integer carriers.  Two candidates
+were stored under `reports/candidates/task260/`:
+
+- `task260_uint8_reducesum_feeds.onnx`: load failure because ORT rejects uint8
+  input to `ReduceSum`.
+- `task260_fp16_reducesum_feeds.onnx`: load failure from ONNX Runtime precision
+  cast/type mismatch around the downstream fp32 path.
+
+Conclusion: this is a dtype-scan false positive unless the whole surrounding
+reduction path is rebuilt.  Do not direct-recast these ReduceSum feeds.
+
+## 2026-07-08 — ⭐ REGIME CRACK ADOPTED (batch 2, 900B mask → free-output Einsum)
+- 1573→734 (+0.76). Union of K dynamic parallel diagonals = 1-Π(x-k_i)^2 as 2K bilinear factors, int32 Einsum; affine bg routing A·F+B via t-axis; sentinel-k gates absent branches.
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task260/regime.onnx (builder build_regime.py). Backup: reports/candidates/fatmid_adopt_backup/task260.onnx.bak.
+- ⭐ See memory neurogolf-regime-crack-freeoutput-einsum (vein taxonomy + sub-recipes). Vein list: reports/candidates/fresh_sweep/mask_dominance.json.

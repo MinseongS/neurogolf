@@ -53,3 +53,7 @@ weighted (ch0=0) no-pad Conv — no occupancy plane. Interior-vs-border is the
 i.e. >2.5), and the Or(rowfree,colfree) condition already guarantees the cell is
 background so the explicit bg mask is droppable. opset-10 caveat: Equal rejects
 float, so use Less/Greater range tests on integer-valued counts.
+
+## 2026-07-09 — ⭐ REGIME CRACK ADOPTED (batch 4, 900B mask → free-output Einsum)
+- 1706→1521 (+0.12). 3-state row/col classification; signed-multiplicity relaxation drops Boolean-algebra nodes; residual = fp32 input co-bind on carrier 600B (mixed-dtype Einsum = next vein lever).
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task063/regime.onnx. See memory neurogolf-regime-crack-freeoutput-einsum.

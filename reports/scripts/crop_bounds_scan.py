@@ -21,7 +21,7 @@ Writes:  reports/crop_bounds_scan.json  (all 400 rows)
          reports/crop_bounds_scan.md    (ranked FLAGGED table)
 
 Single-process by design (two background scans share this CPU).  Run from repo
-root:  PYTHONPATH=. .venv/bin/python reports/scripts/crop_bounds_scan.py
+root:  PYTHONPATH=. uv run python reports/scripts/crop_bounds_scan.py
 """
 import importlib
 import json

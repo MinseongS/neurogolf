@@ -17,12 +17,12 @@ ROUTINE (end to end)
      mine_public_bundles.py's extractor instead):
        kaggle kernels output <ref> -p mine/<name>; unzip mine/<name>/submission.zip -d mine/<name>_nets
   3. Min-merge:
-       .venv/bin/python -m reports.scripts.mine_overfit_minmerge mine/urad_nets mine/poby_nets ...
+       uv run python -m reports.scripts.mine_overfit_minmerge mine/urad_nets mine/poby_nets ...
      -> prints every task where a dump net is cheaper AND bundled fail=0, with point delta.
   4. Adopt: re-run with --apply to install winners into submission/overfit_nets/ (backs up
      originals to <dir>/.minmerge_backup/), then rebuild + submit:
        cd submission/overfit_nets && zip -j ../../submission.zip task*.onnx && cd ../..
-       .venv/bin/python reports/scripts/scan_unsigned_topk.py submission/overfit_nets
+       uv run python reports/scripts/scan_unsigned_topk.py submission/overfit_nets
        kaggle competitions submit -c neurogolf-2026 -f submission.zip -m "..."
 
 S18 RESULT: urad 7242.52 -> 6 tasks (355 +1.56, 264 +0.83, 197 +0.77, 222 +0.66, 236 +0.63,

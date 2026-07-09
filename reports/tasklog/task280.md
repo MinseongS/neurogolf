@@ -53,3 +53,9 @@ over the object axis BEFORE the outer product — kills every [K,30,30] plane; (
 
 ## S8 (2026-07-02) — rect-recipe conversion ADOPTED, div 0
 moment einsums (Σr,Σc,Σr²,Σc²,Σrc) + closed-form quadratic (Sqrt IEEE-exact on perfect squares) locate the 2 red cells; red_f + double-TopK dropped; 6039→4146, +0.376. Fresh: agent uncached 2500 div0 + my uncached 400 div0.
+
+## 2026-07-07 — initializer dedupe micro-overlay
+
+`reports/candidates/task280/task280_dedupe_initializers.onnx` rewired duplicate
+initializer `not_left1_zero->zero_f`.  Bundled gate fail=0.  Cost: 4146 ->
+4145 (params 783 -> 782).

@@ -57,3 +57,8 @@ off-grid; `aCol`=a-Cramp in-grid / different sentinel off-grid) so each diagonal
 `Equal(Rclip[1,1,30,1], aCol[1,1,1,30])` is auto grid-clipped with NO separate
 ingrid plane, then `Where(diag, color_onehot, input)` routes into the FREE fp32
 output (input itself supplies in-grid bg + off-grid zeros).
+
+## 2026-07-08 — ⭐ REGIME CRACK ADOPTED (900B output-mask → free-output Einsum)
+- 1383→568 (+0.89). Diagonal predicate E(r,c)=0 as polynomial 1-E^2 in an 11-operand Einsum to free output; largest node output 80B.
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task141/regime.onnx (builder build_regime.py). Backup: reports/candidates/fatmid_adopt_backup/task141.onnx.bak.
+- ⭐ TRANSFERABLE: the 900B [30,30] Where-mask is NOT a floor — fold routing into one N-ary Einsum to the FREE output (output>0 sign-decode). See memory neurogolf-regime-crack-freeoutput-einsum + the 60-task vein in reports/candidates/fresh_sweep/mask_dominance.json.

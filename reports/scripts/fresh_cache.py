@@ -5,8 +5,8 @@ wall-clock, and every re-verification regenerates from scratch. This tool
 pre-generates N instances and stores the raw grids compactly; fresh_verify.py
 --cache then loads them in milliseconds.
 
-  PYTHONPATH=. .venv/bin/python reports/scripts/fresh_cache.py TASK N
-  PYTHONPATH=. .venv/bin/python reports/scripts/fresh_cache.py TASK N --append
+  PYTHONPATH=. uv run python reports/scripts/fresh_cache.py TASK N
+  PYTHONPATH=. uv run python reports/scripts/fresh_cache.py TASK N --append
 
 Cache: reports/fresh_cache/taskNNN.npz — int8 grids padded to 30x30 with -1
 (inputs, outputs, heights, widths). A 5s SIGALRM watchdog skips pathological

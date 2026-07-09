@@ -5,7 +5,7 @@ dtype (uint8/16/32/64) into TopK — invisible to local ORT/checker gates.
 See memory neurogolf-uint8-topk-grader-killer + reports/submission_log.md
 (submissions 54255339, 2026-07-02). Run on the exact nets going into the zip:
 
-  PYTHONPATH=. .venv/bin/python reports/scripts/scan_unsigned_topk.py [networks_dir]
+  PYTHONPATH=. uv run python reports/scripts/scan_unsigned_topk.py [networks_dir]
 
 Exit code 1 if any offender is found.
 """

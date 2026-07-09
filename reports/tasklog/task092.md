@@ -134,3 +134,18 @@ values are colour ids 0–9 (no overflow).
 - After:  `memory=6805`, `params=182`, `points=16.148193` (−20B, +0.0029).
 - Gate: bundled 265/265 identical (old vs new, 0 divergence) + **fresh 1500/1500
   pass**. Bit-identical by construction (dtype-only on bounded index).
+
+## 2026-07-07 — bundled dynamic-CSE active overlay (+0.0225)
+
+Built `reports/candidates/task092/task092_dynamic_cse_greedy.onnx` with
+`reports/candidates/dynamic_cse_active_probe.py`.  Duplicate 1-D endpoint/fill
+carriers were rewired: `top_o->top`, `right_m->right`, `left_o->left`,
+`dy2->dy2r`, `dx2->dx2r`, `bot_m->bot`.
+
+Bundled gate: fail=0.  Cost: 5399 -> 5279 (memory 4940 -> 4820, params 459
+unchanged).  Active overlay updated in `submission/overfit_nets/task092.onnx`;
+backup at `reports/candidates/task092/task092_pre_dynamic_cse.onnx`.
+
+Follow-up pruning after CSE removed now-dead initializer `notslot0` via
+`reports/candidates/task092/task092_prune_dead_constants.onnx`.  Bundled gate
+remained fail=0.  Cost: 5279 -> 5269 (memory 4820 unchanged, params 459 -> 449).

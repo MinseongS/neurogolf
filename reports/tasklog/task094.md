@@ -60,3 +60,7 @@ let the broadcast happen in the free final ops.
 **Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
 Backup `reports/retired_networks/task094_pre_s10.onnx`; source `public_candidates/bobmyers7186/task094.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
 No transferable mechanism — minor trim.
+
+## 2026-07-09 — ⭐ REGIME CRACK ADOPTED (batch 4, 900B mask → free-output Einsum)
+- 2677→1128 (+0.86). crosshair/line. NOT-color gate = ×(bg channel of free input); crosshair OR = 1-(1-R)(1-C); Pad(value=1) makes ones-row + placement in one node.
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task094/regime.onnx. See memory neurogolf-regime-crack-freeoutput-einsum.

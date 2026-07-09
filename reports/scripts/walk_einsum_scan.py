@@ -9,7 +9,7 @@ propagation/scan loops that the walk-einsum mechanism collapses
 
 Outputs reports/walk_einsum_scan.json + a ranked table to stdout.
 
-  PYTHONPATH=. .venv/bin/python reports/scripts/walk_einsum_scan.py
+  PYTHONPATH=. uv run python reports/scripts/walk_einsum_scan.py
 """
 
 import json

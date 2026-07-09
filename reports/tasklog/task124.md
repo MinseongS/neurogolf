@@ -43,3 +43,28 @@ true `tall` loses to a spurious `tall=1`). The diagonal shift per candidate is j
 `clip(leftcol(row t) − leftcol(row 0), 0, 2)`. This collapses what looked like a 9× full-plane
 detection (~9KB) into a handful of [8]-length vectors. Pairs with the task231 idiom (output = index
 Gather of a recovered small value plane, expansion routed into the FREE bool `Equal` output).
+
+## 2026-07-08 rescan — direct free-output label route rejected by measurement
+
+Context: active overfit task124 is no longer the stale tasklog incumbent. Current
+`submission/overfit_nets/task124.onnx` is bundled-clean at **memory 1879, params 74,
+cost 1953, points 17.422878**.
+
+Probe: `reports/candidates/free_output_label_runtime_probe.py` flagged task124 as a
+2-value compact label tail (`color_crop` [1,1,10,10] -> `Pad(color_full)` -> `Equal`).
+Built candidates in `reports/candidates/task124/build_free_output_variants.py`:
+
+- foreground-only free-output `Einsum`: **rejected**, bundled fail 267/267 because it
+  omitted the required channel-0 background inside the 10x10 output grid.
+- corrected `bg+delta` free-output `Einsum`: bundled pass 267/267, but **cost worsened
+  1953 -> 3024** (memory 1879 -> 2248, params 74 -> 776). The 10x30 row/column
+  projection params plus two-term background handling cost more than the removed 900B
+  label carrier.
+- bool `Pad` variant: ONNX checker/ORT rejected bool Pad for this opset/path.
+
+Negative verdict fields: what was run = task124 ONNX surgery plus bundled
+`src.harness.evaluate`; tool/date = `build_free_output_variants.py`, 2026-07-08;
+reopen trigger = a cheaper dynamic channel placement primitive, a bool-Pad-compatible
+opset/output path, or a way to avoid the 10x30 projection params; falsification history =
+the generic "900B label floor" was falsified by task295, so this rejection applies only
+to task124's 10x10 background-bearing label route, not the whole mechanism family.

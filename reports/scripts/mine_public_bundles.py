@@ -10,7 +10,7 @@ Usage:
   # 1. find newest dumps
   kaggle kernels list -s neurogolf --sort-by dateRun | head -30
   # 2. pull the ones you want into a dir (one subdir each), then:
-  .venv/bin/python -m reports.scripts.mine_public_bundles /path/to/pulled_kernels_dir
+  uv run python -m reports.scripts.mine_public_bundles /path/to/pulled_kernels_dir
 
 Extraction handles both embeddings seen so far:
   - split-string tuple assigned to B64 / PAYLOAD_B64 (urad, prvsiyan): exec the cell

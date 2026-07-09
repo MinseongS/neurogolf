@@ -174,3 +174,52 @@ See memory [[neurogolf-urad-7225-bundle-vein]]. **FALSIFIES the S13 'DEFINITIVE 
 
 ## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 23294 -> 21526 (+0.079)
 Gate fresh_verify 1500: inc=1/1 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
+
+## S16 (2026-07-07) — bundled dynamic-CSE active overlay (+0.0007)
+
+Built `reports/candidates/task133/task133_dynamic_cse_greedy.onnx` with
+`reports/candidates/dynamic_cse_active_probe.py`.  The bundled runtime signatures
+showed `keyw` and `mw` are identical with the same static shape/dtype, so
+consumers of `keyw` were rewired to `mw`.
+
+Bundled gate: fail=0.  Cost: 21506 -> 21490 (memory 20490 -> 20474, params
+1016 unchanged).  Active overlay updated in `submission/overfit_nets/task133.onnx`;
+backup at `reports/candidates/task133/task133_pre_dynamic_cse.onnx`.
+
+## 2026-07-08 — public-autopsy free-Einsum follow-up, no new candidate
+
+Tool/date: `reports/candidates/public_autopsy/724950_big_jump_fingerprint/` identified
+`free_input_einsum_substitution` and `final_equal_or_output_only` as real big-jump public
+mechanisms, with task133 still ranking high by broad active tags (`wide+spatial=23100`).
+Rechecked against current active and current public dumps:
+
+- active: fail=0, memory `20306`, params `1016`, cost `21322`, points `15.032505317`;
+- franksunp 7249-50: cost `21402` (worse);
+- urad 7250.18 / llccqq 10:18 / lucifer 10:21: same cost as active, no min-merge win.
+
+Current active largest counted carriers are `gridf` fp32 `[1,1,30,30]` = 3600B,
+`rowany/colany` fp32 profile planes = 2400B total, and the four per-scale
+`seed_m -> QLinearConv -> stamp_m` branches (8 counted uint8 30x30 planes).
+
+Semantic oracle: added intermediate outputs in
+`reports/candidates/task133/task133_debug_H_outputs.onnx` and ran stored + arc-gen bundle
+(`267` examples).  Scale usage is genuinely multi-branch:
+`m=1` appears in 188 examples, `m=2` in 218, `m=3` in 119, `m=4` in 34; all four scales
+co-occur in 5 examples.  Therefore the public task011-style single free-input Einsum collapse
+does not apply directly: the expensive part here is a per-object scale vector, not one global
+spatial transform.
+
+Mechanical follow-ups: `dynamic_cse_active_probe.py --tasks 133 285` found 0 wins; the global
+zero-compare rescan produced no task133 win.  Reopen trigger: a representation that computes
+per-object variable-magnify stamping without four static-kernel branches, or a public teacher
+strictly below active for task133.  Falsification history: prior task133 "definitive floor"
+claims were falsified by public QLinear/signed-renderer overlays, so this is only a narrow
+negative for the current public-autopsy free-Einsum signature.
+
+## 2026-07-08 — 8000-mode public tail (boristown 11:51)
+- Source: `reports/candidates/public_mine_20260708/boristown_chatgptloop_1151/submission/task133.onnx`.
+- Gate: isolated bundled `evaluate()` fail=0 and lower active cost. Cost `21322 -> 21278`
+  (memory `20306 -> 20262`, params unchanged `1016`), points
+  `15.03250531748958 -> 15.03457104592369`.
+- Applied to `submission/overfit_nets/task133.onnx`; backup in
+  `submission/overfit_nets/.minmerge_backup/task133.onnx`. Included in submission **54461084**.

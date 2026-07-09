@@ -170,3 +170,11 @@ cheaper than direct one-hot sparse updates.
 
 ## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 6193 -> 5147 (+0.185)
 Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
+
+## S16 (2026-07-07) — local-only REJECTED signed INT8 TopK feed probe
+
+`reports/candidates/task368/task368_int8_topk_greedy.onnx` recast
+`ph_flat_f16` TopK feed to signed INT8.  Bundled gate fail=0.  Cost: 5145 ->
+5042 (memory 4960 -> 4856, params 185 -> 186).
+
+Follow-up pruning removed dead initializer `topk_i8_zero_368`. Cost: 5042 -> 5041.

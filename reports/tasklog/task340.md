@@ -120,4 +120,15 @@ Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=
 See memory [[neurogolf-urad-7225-bundle-vein]]. 
 
 ## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 4714 -> 3709 (+0.240)
-Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
+Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]]. 
+
+## 2026-07-08 — public optimizer tail dedupe ADOPTED
+
+The 2026-07-08 public optimizer report flagged a remaining duplicate initializer
+tail.  Re-ran active dedupe and adopted
+`reports/candidates/task340/task340_dedupe_initializers.onnx`.
+
+- Gate: bundled fail=0, active cost `3405 -> 3404`.
+- Memory unchanged `3284`; params `121 -> 120`.
+- Local points `16.8669998 -> 16.8672935` (`+0.000294`).
+- Active backup: `submission/overfit_nets/.dedupe_public_optimizer_backup/task340.onnx`.

@@ -1,11 +1,11 @@
-"""Time-for-cost fold finder ([[neurogolf-einsum-vs-free-input-lever]], runtime headroom S16).
+"""Time-for-cost fold finder for the free-input einsum lever (runtime headroom S16).
 Find nets that MATERIALIZE a big counted node-output plane which is then CONTRACTED/REDUCED —
 those are candidates to fold into ONE fat einsum against the FREE input (never materializing the
 plane). Runtime is free for us (S16: 229ms/pass total), so a fatter/slower fold is affordable.
 
 Ranks big reducible planes by bytes, annotates producer op + consumer reducer + whether the plane's
 producer chain reads the FREE `input` (foldable straight off it). Excludes known-floor tasks.
-Usage: .venv/bin/python -m reports.scripts.fold_finder [min_bytes]
+Usage: uv run python -m reports.scripts.fold_finder [min_bytes]
 """
 import json, sys
 import onnx

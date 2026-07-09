@@ -68,3 +68,12 @@ rejects int64** — clip indices in float *before* casting to int64 for Gather.
 ⭐ Grey edges encode the box: 1-D `ReduceMax(channel5)` over each axis gives
 row/col presence; min/max indices via `Where(present, arange, ±sentinel)` +
 ReduceMin/Max give the bounding box as scalars — no 2-D bbox plane needed.
+
+## 2026-07-08 S35 — dynamic-CSE tail ADOPTED
+
+Artifact: `reports/candidates/task091/task091_dynamic_cse_greedy.onnx`.
+
+Bundled gate: `266/266`, memory `2853 -> 2849`, params unchanged `45`, cost
+`2898 -> 2894`. Included in salvage submission **54451991** (excluding the
+Kaggle-falsified task101 CSE), which completed at publicScore **7264.30**.
+Backup before this tail: `submission/overfit_nets/.dynamic_cse_tail_backup_20260708/task091.onnx`.

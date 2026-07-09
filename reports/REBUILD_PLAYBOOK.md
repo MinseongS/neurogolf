@@ -2,6 +2,16 @@
 
 Score = 25 − ln(mem+params). This file is the single onboarding doc for per-task rebuild agents.
 
+## Active mode: 8000 overfit score chase
+
+- Default objective: maximize the single submitted LB score toward 8000.
+- Gate: bundled fail=0 and lower `memory + params` than the active 8000-mode incumbent.
+- Fresh verification is diagnostic only in this mode. Do not reject a bundled-fail=0 cost win only
+  because it is not fresh/private robust.
+- Public/bundled ONNX overlays are allowed in `submission/overfit_nets/`; source-owned rewrites are
+  preferred only when they generalize or are cheap to own.
+- Safe/private mode is opt-in only. If using safe mode, say so explicitly and restore fresh gates.
+
 ## Grader counting model (proven on LB, data/neurogolf_utils.py)
 - Only NODE OUTPUTS are counted (inferred static shape bytes, maxed with ORT profiler trace).
   Graph `input`/`output` are FREE; a FREE `>0` threshold is applied to `output` by run_network.
@@ -169,7 +179,7 @@ Score = 25 − ln(mem+params). This file is the single onboarding doc for per-ta
   X-prep plane (≥4G²) + consumed Y for painters ⇒ ≥2× walk-einsum cost on everything
   expressible (task002: 6100+589 einsum vs ~14-19K RNN 2-D flood). Keep ONLY for a future
   sequential phase/reset machine no multilinear walk can express; canary-submit first.
-  Evidence: scratchpad lstm_bet exp1/exp2 (S9).
+  Evidence: repo-local candidate notes from S9 (`reports/candidates/` or tasklog when preserved).
 
 ## ORT/grader gotchas (all hit in S8)
 - No bool `Where` kernel on ORT CPU → mux via u8. u8 Min/MaxPool (incl. global) OK. fp16
@@ -183,19 +193,19 @@ Score = 25 − ln(mem+params). This file is the single onboarding doc for per-ta
   on BOTH fresh AND bundled; some incumbents memorize originals via trigger probes (task133).
 - TopK/ArgMax tie-break = ascending index; scan-order tricks rely on it (task233).
 
-## Procedure & gates (run from repo root; .venv/bin/python ALWAYS)
+## Procedure & gates (run from repo root; uv run python ALWAYS)
 1. Read generator (`reports/arc_mapping.json` → `arc-gen/tasks/task_<arcid>.py`) + incumbent
    `src/custom/taskNNN.py` + `reports/tasklog/taskNNN.md`. Byte-rank the counted planes first.
-2. numpy-validate the rule/replacement on ≥20000 fresh. Import generator with
-   `sys.path.append('arc-gen')` (NOT insert-0). Measure the incumbent's own fresh-fail rate.
-3. Build candidate in the session scratchpad as `cand.py` with `build(task)` (fresh_verify execs
+2. Numpy-validate the rule/replacement on bundled examples first. Fresh validation via
+   `sys.path.append('arc-gen')` (NOT insert-0) is useful diagnostic context, not an 8000-mode gate.
+3. Build candidate under `reports/candidates/` as `cand.py` with `build(task)` (fresh_verify execs
    it with `__package__='src.custom'`; relative imports `._exact`/`..harness` work).
    NEVER overwrite `src/custom/taskNNN.py` or `networks/taskNNN.onnx` (fresh_verify self-trap).
-4. Stored gate: `src.harness.evaluate` → fail=0 AND memory+params strictly below incumbent.
-5. Fresh gate — FAST ITERATION vs FINAL:
-   - iterate with the cache: `.venv/bin/python reports/scripts/fresh_verify.py N N N --cache`
-     (pre-generate once: `PYTHONPATH=. .venv/bin/python reports/scripts/fresh_cache.py TASK 2500`).
-   - FINAL gate must include one UNCACHED run (≥500) so the candidate can't overfit the cache:
+4. 8000-mode gate: `src.harness.evaluate` on bundled examples → fail=0 AND memory+params strictly below the active 8000-mode incumbent.
+5. Fresh diagnostic — FAST ITERATION vs SAFE MODE:
+   - iterate with the cache: `uv run python reports/scripts/fresh_verify.py N N N --cache`
+     (pre-generate once: `PYTHONPATH=. uv run python reports/scripts/fresh_cache.py TASK 2500`).
+   - SAFE MODE ONLY: final gate must include one UNCACHED run (≥500) so the candidate can't overfit the cache:
      candidate fail ≤ incumbent fail. (VALIDATED: a cache-greedy-fitted variant showed 1 fail
      cached vs 23 uncached on task017 — cached fail understates fitted-parameter fail ~3×.)
 6. Report raw data: candidate path, mechanism, stored eval dict, fresh_verify verbatim,

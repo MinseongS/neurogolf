@@ -8,19 +8,21 @@ Outputs:
   reports/frontier_queue.json  - full sorted list (rank_score desc)
   reports/frontier_queue.md    - human-readable top-60 + frontier seeds + summary
 
-Run:  .venv/bin/python reports/scripts/build_frontier_queue.py
+Run:  uv run python reports/scripts/build_frontier_queue.py
 """
 import json
 import math
 import os
 import statistics
+from pathlib import Path
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MANIFEST = os.path.join(REPO, "reports", "manifest.json")
 SEMMAP = os.path.join(REPO, "reports", "semantic_task_map.json")
-ORACLE_DIR = ("/private/tmp/claude-501/-Users-minseong-project-neurogolf/"
-              "cfe56f0a-1207-461d-9740-a7c988cfd952/scratchpad/"
-              "arc-code-golf-solutions")
+ORACLE_DIR = os.environ.get(
+    "NEUROGOLF_ORACLE_DIR",
+    str(Path(REPO) / "reports" / "oracles" / "arc-code-golf-solutions"),
+)
 OUT_JSON = os.path.join(REPO, "reports", "frontier_queue.json")
 OUT_MD = os.path.join(REPO, "reports", "frontier_queue.md")
 

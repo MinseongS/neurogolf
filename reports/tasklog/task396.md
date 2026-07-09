@@ -80,3 +80,14 @@ uncached fresh 2000: inc 0 / cand 0 / div 0. Latency 0.345ms.
 Floors: 1690-param 13×13×10 kernel irreducible (two-conv splits re-add ≥1444B plane;
 sparse_initializer blocked by sanitize_model rename gap). Backup reports/retired_networks/
 task396_pre_s9.onnx.
+## 2026-07-08 — ReduceSum spatial profile -> Einsum tail ADOPTED
+
+Applied the public-derived `ReduceSum(input, axes=[2,3], keepdims=0)` to
+`Einsum(input, equation='bchw->bc')` rewrite from
+`reports/candidates/reducesum_spatial_to_einsum_probe.py`.
+
+Candidate:
+`reports/candidates/task396/task396_reducesum_spatial_to_einsum_greedy.onnx`.
+Bundled gate after adoption: fail=0, cost `4928 -> 4926`
+(memory `4843`, params `85 -> 83`).  Adopted into
+`submission/overfit_nets/task396.onnx`.

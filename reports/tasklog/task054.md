@@ -72,3 +72,41 @@ stages consumed sequentially, reduction='max' union semantics block fusion) + Cu
 segment planes. Seeds already free-input einsum profiles. Only sub-300B micro-levers left.
 
 ## S11 (2026-07-03) — signed-priority overlay (playbook 15) scout: KILL — output preserves the arbitrary input (per-cell read floor 3600B) and the line overlays are data-dependent 2-D interval fills = mechanism-15's own ~3000B band floor; incumbent's 4x900B edit boards land at the same cost. S8 FLOOR stands.
+
+## 2026-07-07 — 8000-mode initializer dedupe micro-overlay ADOPTED
+
+Built `reports/candidates/task054/task054_dedupe.onnx` from the active overfit net by
+deduplicating six identical scalar initializers and rewiring their node inputs to the
+first identical initializer.  No graph behavior changed.
+
+Bundled gate:
+
+- incumbent: `pass=266`, `fail=0`, `memory=20091`, `params=288`, `cost=20379`,
+  `points=15.077739762140588`
+- candidate: `pass=266`, `fail=0`, `memory=20091`, `params=282`, `cost=20373`,
+  `points=15.078034226218099`
+
+Adopted directly into `submission/overfit_nets/task054.onnx`.  This is only a
+params micro-golf; the S8/S10/S11 structural floor assessment remains unchanged.
+
+## 2026-07-07 — bundled dynamic-CSE active overlay ADOPTED
+
+Built `reports/candidates/task054/task054_dynamic_cse_greedy.onnx` with
+`reports/candidates/dynamic_cse_active_probe.py`.  The probe exposes
+intermediate tensors over the bundled set, hashes their runtime values, and
+rewires a later tensor to an earlier tensor only when bundled signature and
+static shape/dtype are identical.
+
+Main duplicate families removed: small scan row/column scalar/vector carriers
+such as `sr*`, `sc*`, `mr*`, `mc*`, plus a few one-element flag/value aliases.
+The full edit-chain floor remains; this only removes repeated intermediates in
+the current active graph.
+
+Bundled gate: fail=0.  Cost: 20373 -> 20186 (memory 20091 -> 19904, params 282
+unchanged).  Active overlay updated in `submission/overfit_nets/task054.onnx`;
+backup at `reports/candidates/task054/task054_pre_dynamic_cse.onnx`.
+
+Follow-up pruning after the CSE rewrite removed now-dead initializers `TWO_I32`
+and `C28_64` via `reports/candidates/task054/task054_prune_dead_constants.onnx`.
+Bundled gate remained fail=0.  Cost: 20186 -> 20184 (memory 19904 unchanged,
+params 282 -> 280).

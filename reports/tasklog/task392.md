@@ -65,3 +65,8 @@ Also: recover painted-mask from the ch0 (background) slice `Less(bg,0.5)` — on
 [1,1,G,G] slice, NOT a 9-channel ReduceSum (saves the 3600B fg plane); recover a
 single fg colour scalar via `ReduceSum_k k·ReduceMax_spatial(input)` straight off
 the FREE input (40B), no grid slice.
+
+## 2026-07-08 — ⭐ REGIME CRACK ADOPTED (batch 3, 900B mask → free-output Einsum)
+- 1937→1310 (+0.39). ConvInteger-as-free-output: 1x1 ConvInteger pad does 10→30 placement inside free op; runtime u8 weight + w_zero_point=1 signed channel routing; constant-1 bias channel.
+- Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task392/regime.onnx. Backup: reports/candidates/fatmid_adopt_backup/task392.onnx.bak.
+- ⭐ Memory neurogolf-regime-crack-freeoutput-einsum. ⚠️ Concurrent-session collision risk on candidate dirs — always re-measure on-disk before adopt.

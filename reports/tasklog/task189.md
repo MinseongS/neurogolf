@@ -71,3 +71,11 @@ equivariant quadrant-recolor goes 16.15 → 16.97 (B-tier, +0.82).
 **Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
 Backup `reports/retired_networks/task189_pre_s10.onnx`; source `public_candidates/bobmyers7186/task189.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
 No transferable mechanism — minor trim.
+
+## 2026-07-08 — 8000-mode public tail (boristown 11:51)
+- Source: `reports/candidates/public_mine_20260708/boristown_chatgptloop_1151/submission/task189.onnx`.
+- Gate: isolated bundled `evaluate()` fail=0 and lower active cost. Cost `894 -> 892`
+  (memory unchanged `837`, params `57 -> 55`), points
+  `18.204294224826487 -> 18.206533867419992`.
+- Applied to `submission/overfit_nets/task189.onnx`; backup in
+  `submission/overfit_nets/.minmerge_backup/task189.onnx`. Included in submission **54461084**.

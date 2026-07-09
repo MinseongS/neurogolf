@@ -65,3 +65,14 @@ residual rule" for unrolled disambiguation nets.
 
 ## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
 k7(cost 6412): 514k 패치, 145k viols. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).
+
+## 2026-07-07 — bundled dynamic-CSE active overlay (+0.0100)
+
+Built `reports/candidates/task023/task023_dynamic_cse_greedy.onnx` with
+`reports/candidates/dynamic_cse_active_probe.py`.  Bundled runtime signatures
+showed `resid` and `Draw` are identical with matching static shape/dtype, so
+`resid` consumers were rewired to `Draw`.
+
+Bundled gate: fail=0.  Cost: 6412 -> 6348 (memory 6163 -> 6099, params 249
+unchanged).  Active overlay updated in `submission/overfit_nets/task023.onnx`;
+backup at `reports/candidates/task023/task023_pre_dynamic_cse.onnx`.

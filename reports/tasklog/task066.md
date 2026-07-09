@@ -118,3 +118,25 @@ risk); epilogue 9 bool planes → ONE fp16 einsum 'bkh,bkw->bhw' (orientation = 
 
 ## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
 k7(cost 10121): 3.7M 패치, ~400k viols(선형분리 불가, contradictions 아닌 halfspace 불가가 binding). 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).
+
+## 2026-07-08 S31 — branch-Einsum copy/edit tail probe KILL
+
+Candidate: `reports/candidates/task066/branch_einsum_tail.py`.
+
+Tried to transfer the task077 branch-Einsum epilogue fold.  The incumbent tail is
+`Einsum(ep_p,ep_q)->hidden_score`, `Greater`, `Pad 20x20->30x30`, then
+`Where(hidden30, green, input)`.  A functional candidate folded the copy/edit into
+one final output `Einsum` by concatenating an active-canvas copy branch with three
+path edit branches and three subtract-old-colour branches.
+
+Bundled gate passed for all tested subtract scales (`1..1e6`), but cost worsened:
+`10121 -> 11705` (`memory 9955->9655`, `params 166->2050`).  Root cause: the path
+factors live in a 20x20 workspace.  Embedding them into 30x30 output space requires
+two 20x30 projection matrices plus a 7x10x10 branch mixer, and the small memory
+saving from deleting `hidden_score/hidden_pos/hidden30/Where` is outweighed by
+projection/mixer params.
+
+Transfer condition refined: branch-Einsum copy/edit epilogue is attractive only
+when the edit predicate already lives on the final output coordinate grid, or the
+coordinate embedding is already present/free.  Do not retry this exact 20->30
+projection form for task066.

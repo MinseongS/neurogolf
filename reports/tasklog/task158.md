@@ -152,3 +152,15 @@ Conv fuses label+30→26×25 crop, crop is load-bearing for ab/pair sizes). pair
 [1,1,1,1]→[0,0,0,0]+compensating stamp pad = 43 fails (correlation alignment shift).
 TRANSFERABLE: input-derived fp32 planes are dtype-locked (Einsum needs input's f32), but
 DOWNSTREAM bool/mask fp32 planes that never touch input are free int8 downcasts.
+
+## S17 (2026-07-07) — bundled dynamic-CSE active overlay (+0.0023)
+
+Built `reports/candidates/task158/task158_dynamic_cse_greedy.onnx` with
+`reports/candidates/dynamic_cse_active_probe.py`.  Runtime-equivalent
+intermediates over the bundled set were rewired when static shape/dtype also
+matched: `inv44->e_bg`, `selb->ok1`, `okc2->ok1`, and small row/column vector
+aliases (`vr`, `vc_hi`, `vc`).
+
+Bundled gate: fail=0.  Cost: 20735 -> 20687 (memory 18089 -> 18041, params
+2646 unchanged).  Active overlay updated in `submission/overfit_nets/task158.onnx`;
+backup at `reports/candidates/task158/task158_pre_dynamic_cse.onnx`.

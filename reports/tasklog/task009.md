@@ -100,3 +100,8 @@ Conclusion: no adoptable improvement found beyond the landed 100B fold.
 
 ## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (sub 54367833): 7024 -> 6699 (+0.047)
 Mechanism: value_info Slice crop. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). Source-owned via live_to_exact_source --write-src, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
+---
+## 2026-07-08 — fold-batch floor verdict (residual-spatialop self-application)
+**Ran:** fold_finder flagged `[1,9,10,10]` fp16 `onehot16` plane (1800B, Cast→4 Einsum). Deep opus agent mapped 23 nodes (per-colour fill-between-same-marker via triangular-sep Einsums).
+**Verdict: FLOOR.** fp16 is smallest Einsum-legal dtype (pre-cast source is bool, Einsum rejects bool; int32=3600B worse). All 9 colour channels required (reduced code → false cross-colour matches; arc-gen exercises all 9). Dropping unused-in-train colours {5,6,7} → mem 5629 but `evaluate` scored fail 127/pts 0 (arc-gen uses all 9) = gate-invalid. Active unchanged (mem 6529 par 169).
+**Reopen:** new Einsum-legal sub-2-byte dtype in ORT build; or proof <9 colours ever appear across full graded set.

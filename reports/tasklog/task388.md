@@ -52,3 +52,14 @@ canvases (IW=6 vs W=12) so the MatMul matrices stay rectangular-small.
 
 
 ## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 2215 -> 2191 (+0.011); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].
+## 2026-07-08 — ReduceSum spatial profile -> Einsum tail ADOPTED
+
+Applied the public-derived `ReduceSum(input, axes=[2,3], keepdims=0)` to
+`Einsum(input, equation='bchw->bc')` rewrite from
+`reports/candidates/reducesum_spatial_to_einsum_probe.py`.
+
+Candidate:
+`reports/candidates/task388/task388_reducesum_spatial_to_einsum_greedy.onnx`.
+Bundled gate after adoption: fail=0, cost `2190 -> 2188`
+(memory `2119`, params `71 -> 69`).  Adopted into
+`submission/overfit_nets/task388.onnx`.

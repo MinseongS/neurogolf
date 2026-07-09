@@ -122,3 +122,9 @@ instead: per-row first/last via pow2-weight einsums 'bchw,cxy,dw->bdhy' + trunc(
 (coord−low mod 256 ≤ high−low) fuses GE/LE/And pairs. 9852+134 vs 13302+134 → 15.494→15.791.
 
 ## S11 (2026-07-03) — mech-15 finder scout: KILL — per-row fill extent depends on that row's dots (2-D per direction, tasklog-confirmed non-separable); cost = 4-direction prefix/suffix planes + exact-rect detector. No fat carrier.
+
+## 2026-07-07 — initializer dedupe micro-overlay
+
+`reports/candidates/task064/task064_dedupe_initializers.onnx` rewired duplicate
+initializer `axis2->slice2`.  Bundled gate fail=0.  Cost: 9986 -> 9985
+(params 134 -> 133).

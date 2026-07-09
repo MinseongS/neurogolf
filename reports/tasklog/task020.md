@@ -41,3 +41,11 @@ whole channel-reduction convs, not just downcast them. → promote to project me
 - New grader cost = 1346 (mem 1176 + params 170), fail=0 bundled.
 - Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
 - Mechanism: int64->int32 recast on counted index tensors (cell_base, keep_pos_by_sum).
+
+## 2026-07-08 — 8000-mode public tail (boristown 11:51)
+- Source: `reports/candidates/public_mine_20260708/boristown_chatgptloop_1151/submission/task020.onnx`.
+- Gate: isolated bundled `evaluate()` fail=0 and lower active cost. Cost `1257 -> 1256`
+  (memory `1104 -> 1104`, params `153 -> 152`), points
+  `17.86351679140975 -> 17.864312652971854`.
+- Applied to `submission/overfit_nets/task020.onnx`; backup in
+  `submission/overfit_nets/.minmerge_backup/task020.onnx`. Included in submission **54461084**.
