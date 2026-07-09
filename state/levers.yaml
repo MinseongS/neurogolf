@@ -43,7 +43,8 @@ levers:
     # boundary rule: mask = (arbitrary motif CONTENT) ⊛ (data-dependent 2-D POSITION),
     # OR a data-dependent run/coupling (task354 SameRun) → 900B u8 index-plane is cheapest;
     # every Einsum factorization prices higher.
-    batch6_floored: [354, 090, 390, 154, 034, 168, 381, 071]  # also do-NOT-re-attempt (batch6 DRY)
+    batch6_floored: [354, 090, 390, 154, 034, 168, 381]  # also do-NOT-re-attempt (batch6 DRY)
+    pending_unconfirmed: [71]  # 071 = build broken/likely floor, NOT confirmed — 재공격 허용
     crack_condition:  # sharpened 3-property test (batch6) — cracks ONLY if ALL hold, else FLOOR
       - "1. GLOBAL-STATE routing (predicate from ≤~16 scalars: offset/size/color/count), NOT content at a data-dependent position, NOT a data-dependent run/coupling."
       - "2. The 900B plane is a Where ROUTING mask, NOT an Equal DECODE discriminator (label30→Equal→10ch = dense-recolor floor: 124/354/390)."
@@ -106,9 +107,13 @@ levers:
     # ④같은 지문을 가진 우리의 다른 태스크 전수 재스캔·적용.
     ledger:
       - date: 2026-07-08
-        ran: "public_autopsy 65 wins 분석"
-        verdict: "65승 중 57 dedupe-tail·8 byte-tail (대형 지문 없음), 3-signature 클러스터 추출됨"
-        reopen: "새 공개 win 발생 시마다 (min-merge 채택과 항상 짝으로)"
+        ran: "public_autopsy — 724995_tail_fingerprint (S37 이전 공개 tail 65승 분석)"
+        verdict: "65승 중 57/65 params_tail_or_initializer_dedupe, 8 byte-tail; 500B+ exact lost-tensor 지문 없음 (+0.216 local tail은 대형 표현 붕괴가 아니라 대부분 optimizer byte 정리)"
+        reopen: "새 공개 tail win 발생 시마다 (min-merge 채택과 항상 짝으로)"
+      - date: 2026-07-08
+        ran: "public_autopsy — 724950_big_jump_fingerprint (.minmerge_backup 기준 vs franksunp/urad 7250.x 공개 덤프, 99건 과거 승리 비교)"
+        verdict: "3-signature 클러스터 추출: free_input_einsum_substitution(+1.720 local/3승), index_or_topk_plane_removed(+0.939 task022), final_equal_or_output_only(+0.595/4승); exact fingerprint 후보 task019/044/076이 task011과 동일한 lost Pad 900B 지문 공유"
+        reopen: "exact-fingerprint 후보(task019/044/076) 재공략 시 / 새 franksunp·urad 덤프 유입 시"
 
   - name: reducesum-spatial-einsum
     status: dormant
