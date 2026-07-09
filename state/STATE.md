@@ -12,7 +12,9 @@
    → 상세(DONE·FLOOR 재공격금지·crack 조건·NEXT 타깃): state/levers.yaml free-output-einsum-regime-crack 항목
 2. CONV-FP32 arsenal (074/080/198/383/187) + QLinearConv(349) — regime crack의 non-mask 일반화, 미증명.
 3. mixed-dtype carrier — 배포 넷 fp16 output-coupled/coordinate-tail 재캐스트(input-weld/consumer co-bind는 floor).
-4. 공개 min-merge 모니터링 — 새 업로더가 7250+ 갱신 시 margin-0 재채굴(dormant, 상시 pass 가치).
+4. 🔥 공개 min-merge — **발화됨 (2026-07-09 확인, 미채굴)**: 새 프론티어 prvsiyan 7266.72 /
+   ryosukeshiroshita 7266.48 / kutenk 7261.53 / jonathanncoletti merged91 워크벤치 (전부 구 채굴선
+   7250.24 위, +16pt 급등). 즉시 pull → `ng mine-public --margin 0` → 채택 승리마다 딥레인 짝.
 5. (levers.yaml의 live 레버 순회)
 
 ## 불변식 (재검증 금지)
