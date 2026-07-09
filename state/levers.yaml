@@ -27,6 +27,14 @@ levers:
         ran: "batch6 8태스크 (opus)"
         verdict: "7/8 floor — positioned-content mask는 크랙 불가, 1 broken(071)"
         reopen: "새 sub-recipe 발견 시; non-mask bloat(Conv 3600B, QLinearConv)로 일반화 시"
+      - date: 2026-07-09
+        ran: "public autopsy (min-merge 78승, task368/370 역공학, Fable 에이전트)"
+        verdict: "batch6 crack_condition #1('positioned-content ⇒ 900B index plane이 최저') 부분 반증 —
+          단 Einsum factorization에 한한 진술이었음. 새 lowering dynamic_kernel_stamp_conv(content→runtime
+          Conv kernel, position→anchor plane)가 task368(그 자체가 S11 sprite-stamp KILL이었음)을 5130→3599로
+          크랙. floor_tasks 중 stamp/crop 구조 보유 서브셋 재공격 허용: 062/012/112/099/163/102(+86 structured_untried).
+          354(SameRun)/348(coupled pyramid)/124(bitmask 1-D)는 stamp 구조 없음 — floor 유지."
+        reopen: "이미 발화 — insights.yaml dynamic_kernel_stamp_conv / dead_tap_dilated_conv_crop_decode 팬아웃으로 진행"
     # --- folded in from reports/regime_vein_worklist.md (2026-07-09), which is deleted later ---
     # Lever: fold a 900B [30,30] output-routing mask into a free-output Einsum
     # (output>0 sign-decode; input/output free any dtype). Gate: bundled fail=0 +

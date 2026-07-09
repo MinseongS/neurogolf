@@ -63,3 +63,10 @@ fail the scorer); recovering this is the difference between a passing and failin
 - cost: 910 -> 642 (points 18.5354)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task283.onnx
 - note: min-merge from nets
+
+## FALSIFIED 2026-07-09 (public autopsy)
+- "irreducible mem-0 single-Conv floor (910)" 반증 — 공개넷 642 도달 (+0.3489).
+- 탈출구: rank-1 factorization(black−gray 부호화 encoder) + dilated in-op crop(2×2, dil=20) +
+  int8 QLinearConv classifier(threshold-in-bias) + asymmetric-pad 재확장(free output).
+  grouped-conv/decompose 분석은 옳았음; rank-factorization+dilation이 미검토 3안이었음.
+- insights.yaml: rank1_bottleneck_dilated_crop_qconv_classifier. 동형 후보: task294 (knife-edge — isolated eval).

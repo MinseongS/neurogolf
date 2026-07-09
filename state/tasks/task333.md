@@ -91,3 +91,9 @@ mem 2792/16.92; full_idx 900B uint8 30x30 label carrier for free Equal->output, 
 - cost: 3186 -> 2401 (points 17.2164)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task333.onnx
 - note: min-merge from nets
+
+## FALSIFIED 2026-07-09 (public autopsy)
+- 과거 "3600B fp32 colour-Conv entry 축소불가 / ~16.0 floor" 판정 반증 — 공개넷 17.22 도달.
+- 메커니즘: dilated-Conv crop(dilations=[20,20] → 30→10 출력) + MaxPool running-max between-fill
+  (one-sided pad prefix/suffix max, sentinel 100, Min=fill colour). insights.yaml:
+  maxpool_runningmax_between_fill, dilated_conv_output_crop.

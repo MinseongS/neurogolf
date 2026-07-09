@@ -67,3 +67,8 @@ instead of a [N,12] key one-hot (saves ~4.8 KB). The whole thing lands as a labe
 - cost: 3905 -> 2949 (points 17.0108)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task069.onnx
 - note: min-merge from nets
+
+## ADOPTED-MECHANISM NOTE 2026-07-09 (public autopsy)
+- 우리 tasklog의 OPEN ANGLE (b) "anchor-correlation (risky, untried)"를 공개가 그대로 구현해 승리 —
+  runtime-template QLinearConv 상관검출 + flip-stamp. L-shape empty-corner 리스크는 correlation
+  peak counting으로 해결됨. insights.yaml: runtime_template_qlinearconv_correlate_stamp.

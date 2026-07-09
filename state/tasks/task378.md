@@ -87,3 +87,8 @@ Bundled gate after adoption: fail=0, cost `4396 -> 4394`
 - cost: 4394 -> 3091 (points 16.9638)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task378.onnx
 - note: min-merge from nets
+
+## FALSIFIED 2026-07-09 (public autopsy)
+- 과거 carrier 분석의 floor 판정 반증 — 공개넷 16.96 도달 (mem 4280→2974).
+- 메커니즘: separable Chebyshev(L∞) distance-field renderer — dr/dc 1-D fold-distance,
+  ring=Max(dr,dc); 15개 full-canvas bool plane → 8개. insights.yaml: separable_chebyshev_distance_field_renderer.

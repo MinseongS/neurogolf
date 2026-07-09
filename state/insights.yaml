@@ -1759,5 +1759,758 @@
       "reopen_trigger": "Re-run deployed fp16 scan after any overlay; even very small output-only one-hot/vector tails can still be worthwhile at low task cost.",
       "falsification_history": "This confirms the output-coupled fp16 rule on a minimal final-output-only graph, reducing confidence in future broad 'too small to bother' dtype-tail dismissals."
     }
+  },
+  {
+    "id": "compact_onehot_projector_einsum_endpoint_collapse",
+    "title": "Fold detection crops, 30-space selector planes, patch carriers, and Pad placement into free-endpoint N-ary Einsums with constant projector/placement matrices",
+    "status": "active",
+    "source_tasks": [
+      394
+    ],
+    "rationale": "Task394 public net (min-merge 2026-07-09, cost 2071->676, +1.1196) eliminated EVERY nonscalar 30-wide counted tensor: (1) detector crops (Slice->Reduce) become free-input Einsums against tiny constant channel/band projectors ('bkrc,k,ar->a' -> [7] vector, 196B crop plane gone); (2) selector matrices built by OneHot in COMPACT coordinates ([3,7] fp32, 84B) with out-of-range sentinel index for free lane masking, instead of Equal-vs-arange bool planes + Cast in 30-space (540B bool + 720B fp32 gone); (3) final gather-AND-place is ONE N-ary Einsum whose output IS the free graph output, with constant embedding matrices P(7x30)/Q(3x30) lifting compact coords to canvas space - the extracted patch (360B) and the Pad node vanish. Exchange rate: constants 1/element, fp32 intermediates 4/element, free-Einsum internals 0.",
+    "applies_when": {
+      "any_ops": [
+        "Pad",
+        "Slice",
+        "Equal",
+        "OneHot",
+        "Einsum",
+        "MatMul"
+      ],
+      "any_tags": [
+        "patch_copy",
+        "location_detection",
+        "periodic_reconstruction",
+        "onehot_final_equal"
+      ],
+      "min_memory": 1200
+    },
+    "reject_when": {
+      "any_ops": [
+        "ScatterND",
+        "ScatterElements",
+        "NonZero"
+      ],
+      "any_tags": [
+        "assignment_wall",
+        "connectivity_wall",
+        "value_transform_nonseparable",
+        "per_object_scale_vector",
+        "sparse_enumeration"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory: crop/selector/patch planes deleted into free-endpoint Einsum operands (params rise ~1/element for projector constants)",
+      "risk": "low when read/write locations are separable row x col gathers indexable by small scalar arithmetic; medium when masking relies on And-planes (use OneHot out-of-range sentinel instead)",
+      "verification": "ng gate cand.onnx --task N; confirm final Einsum output name == graph output and no Pad/patch remains"
+    },
+    "fanout_candidates_20260709": [
+      216,
+      209,
+      9,
+      92,
+      174,
+      177,
+      184,
+      25,
+      219,
+      23,
+      319,
+      310
+    ]
+  },
+  {
+    "id": "canvas_crop_shrink",
+    "title": "Shrink the whole 30x30 working canvas to the task's provable max extent NxN",
+    "status": "active",
+    "source_tasks": [],
+    "rationale": "qurore/kaggloop 7266.48 (mined 2026-07-09): prove from arc-gen generator source or >=10^4 sampled draws that a task never exceeds NxN; crop after input consumers, rewrite every 30/900 canvas constant to N/N^2, re-inflate once before the terminal free output. Their task018: 38247->33865. Un-mined across our 400 - fits ng scan shape (we have arc-gen locally). Every counted intermediate shrinks quadratically with canvas side.",
+    "applies_when": {
+      "any_ops": [],
+      "any_tags": [
+        "full_canvas_planes"
+      ],
+      "min_memory": 2000
+    },
+    "reject_when": {
+      "any_tags": [
+        "task_uses_full_30_canvas"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory: all full-canvas intermediates shrink (30^2->N^2)",
+      "risk": "medium - extent proof must come from arc-gen source or >=10^4 draws, then full fresh-gate; NEVER from bundled examples alone",
+      "verification": "ng gate + fresh >=1500"
+    }
+  },
+  {
+    "id": "valueinfo_legalized_dynamic_crop",
+    "title": "Attach static value_info to data-dependent Slice/Pad windows so checker+profiler accept bbox crops taken straight off the FREE input",
+    "status": "active",
+    "source_tasks": [],
+    "rationale": "qurore/kaggloop 7266.48 (mined 2026-07-09): the previously un-mined 'value_info crop' mechanism from the urad-7225 vein, now with recipe: compute bbox scalars, Slice the FREE input with dynamic starts/ends, and attach a static value_info to the result - onnx checker AND ORT profiler accept it, so the windowed plane is counted at the small declared shape (or the full-canvas plane materialized only-to-window is never counted at all). Their task014: 7985->4171. Generalizes to any net materializing a full-canvas plane just to window it. Related: value_info-preserve after node removal keeps shape-infer measurable and unblocks tail folds (their task158 30757->30241).",
+    "applies_when": {
+      "any_ops": [
+        "Slice",
+        "Pad"
+      ],
+      "any_tags": [
+        "bbox_crop",
+        "window_then_process"
+      ],
+      "min_memory": 1500
+    },
+    "reject_when": {
+      "any_tags": []
+    },
+    "expected": {
+      "gain_type": "memory: full-canvas pre-window planes vanish",
+      "risk": "medium - shape claim must hold on ALL inputs (grader strict shape-infer rejects undercounts); fresh-gate",
+      "verification": "ng gate; check grader-side trace counts the declared small shape"
+    }
+  },
+  {
+    "id": "bool_tail_u8_restructure",
+    "title": "bool And/Or/Where tails are a FALSE floor - recast to u8 variadic Max / u8 Where",
+    "status": "active",
+    "source_tasks": [],
+    "rationale": "qurore/kaggloop journal (mined 2026-07-09): bool tails (1B/element but many planes) systematically beaten by u8 restructure - variadic Max over u8 codes replaces Or-trees, u8 Where replaces And-masking, conditional-transpose pushed onto rank-1 factors (their task066 12366->11111). Their enabling claim: ORT 1.24.4 supports u8 arithmetic, which overturned their 'no u8 arith' floors. MUST verify each u8 op kernel exists under OUR pinned ort 1.26.0 before use. SAFETY: never feed u8 into TopK (grader-killer).",
+    "applies_when": {
+      "any_ops": [
+        "And",
+        "Or",
+        "Where",
+        "Not"
+      ],
+      "any_tags": [
+        "bool_tail"
+      ],
+      "min_memory": 1000
+    },
+    "reject_when": {
+      "any_ops": [
+        "TopK"
+      ],
+      "any_tags": []
+    },
+    "expected": {
+      "gain_type": "memory: N bool planes -> fewer u8 planes via variadic Max",
+      "risk": "low-medium; kernel availability under ort 1.26.0 to verify per op",
+      "verification": "ng gate bit-identical preferred, else fresh-gate"
+    }
+  },
+  {
+    "id": "separable_chebyshev_distance_field_renderer",
+    "title": "Replace half-plane mask algebra with a separable L-inf distance field: ring=Max(dr,dc); rings/rects/diagonals become scalar tests on one field",
+    "status": "active",
+    "source_tasks": [
+      378
+    ],
+    "rationale": "task378 public win (+0.3604, mem 4280->2974): 15 full-canvas [1,1,12,12] bool planes (4 diagonal-ray Equals + Ors + outer_box/outside_middle/payload_rect masks) collapsed to 8 planes by computing two 1-D fold-distances dr=max(top-r,r-bottom,0), dc=max(left-c,c-right,0) and ring=Max(dr,dc). Concentric ring k = Equal(ring,k) (inner bands auto-excluded); ALL four 45-degree corner rays + rect interior = ONE Equal(dr,dc) plus a 1-D distance gate; rect interior = ring==0.",
+    "applies_when": {
+      "any_ops": [
+        "Equal",
+        "Less",
+        "Greater",
+        "And",
+        "Or"
+      ],
+      "any_tags": [
+        "halfplane_mask_algebra",
+        "concentric_geometry",
+        "diagonal_rays"
+      ],
+      "min_memory": 1500
+    },
+    "reject_when": {
+      "any_tags": [
+        "non_rect_anchor",
+        "data_dependent_per_cell_map"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_by_deleting_full_canvas_bool_planes",
+      "risk": "low: bit-exact geometry given the same recovered rect scalars",
+      "verification": "ng gate + fresh 500; check clipped-at-edge configurations"
+    },
+    "fanout_candidates_20260709": [
+      54,
+      76,
+      80,
+      23,
+      209,
+      157,
+      319,
+      90,
+      234,
+      18
+    ]
+  },
+  {
+    "id": "maxpool_runningmax_between_fill",
+    "title": "Directional ray/between-fill via one-sided-pad MaxPool prefix/suffix maxes; Min(prefix,suffix) IS the fill colour when the barrier is sentinel-amplified",
+    "status": "active",
+    "source_tasks": [
+      333
+    ],
+    "rationale": "task333 public win (+0.2829, cost 3186->2401): scalar ArgMax+code-pack/unpack recovery (70 nodes, 434 params) replaced by 4 MaxPools with kernel [1,N]/[N,1] and one-sided pads=N-1 (per-cell running max each direction) on a uint8 colour plane with barrier colour re-coded to a large sentinel (green->100). Min(prefix-max,suffix-max) is nonzero exactly BETWEEN dot and barrier and equals the dot colour. Row/col gating = Greater(rowmax,sentinel-1). Supersedes triangular-matrix MatMul prefix sums: no [N,N] initializers, no >0 gates.",
+    "applies_when": {
+      "any_ops": [
+        "MatMul",
+        "ArgMax",
+        "Where"
+      ],
+      "any_tags": [
+        "directional_fill",
+        "ray_toward_barrier",
+        "triangular_matmul",
+        "scalar_recovery"
+      ],
+      "min_memory": 800
+    },
+    "reject_when": {
+      "any_tags": [
+        "multiple_barriers_per_line_with_distinct_colours",
+        "fill_colour_greater_than_sentinel"
+      ]
+    },
+    "expected": {
+      "gain_type": "params_and_memory_by_deleting_code_recovery_chain",
+      "risk": "medium: sentinel ordering must dominate all payload colours; verify tie/overlap fresh",
+      "verification": "ng gate + isolated fresh 500"
+    },
+    "fanout_candidates_20260709": [
+      9,
+      110,
+      377,
+      270,
+      222,
+      77,
+      325
+    ]
+  },
+  {
+    "id": "negpad_strided_conv_sampler_decoder",
+    "title": "Replace GatherND static-index sampling + MatMul decode with ONE Conv: strides = site pitch, negative pads = scan origin, kernel weights = the decode LUT (op internals free)",
+    "status": "active",
+    "source_tasks": [
+      235
+    ],
+    "rationale": "task235 public win (+0.2760, cost 170->129): GatherND(27 int64 indices)->bits(36B fp32)->MatMul->Equal one-hot(63B) replaced by Conv(k=2x2, strides=[30,5], pads=[-1,0,0,-14]) whose multi-channel kernel both samples one window per repeated panel AND emits a linear code equal to the answer colour (12B output). Negative-pad Conv is grader-legal on pinned onnx 1.21 (1.22 strict shape-infer rejects it - never upgrade). CAUTION: kernel code weights are fitted constants; re-derive per task, never copy.",
+    "applies_when": {
+      "any_ops": [
+        "GatherND",
+        "GatherElements",
+        "Gather"
+      ],
+      "any_tags": [
+        "static_index_sampling",
+        "periodic_panels",
+        "code_decode"
+      ],
+      "min_memory": 100
+    },
+    "reject_when": {
+      "any_tags": [
+        "data_dependent_sample_positions"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_by_fusing_sample_and_decode_into_free_op_internals",
+      "risk": "medium: linear-code solvability over observed classes must be checked, then fresh-gated",
+      "verification": "solve code on rule-enumerated classes, ng gate + fresh"
+    },
+    "fanout_candidates_20260709": [
+      17,
+      265,
+      131,
+      99,
+      336,
+      119,
+      109,
+      20,
+      189,
+      181
+    ]
+  },
+  {
+    "id": "xor_channel_id_convinteger_renderer",
+    "title": "Kill counted Equal one-hot planes: BitwiseXor(code, u8 channel ids) -> zero at match; ConvInteger(w=-1, zero_point=1) makes the match channel-max AND tiles/pads into the FREE output",
+    "status": "active",
+    "source_tasks": [
+      235
+    ],
+    "rationale": "task235: the [1,7,3,3] bool one-hot Equal plane (63B, counted) became xor_distance [1,10,3,1] uint8 (30B) + a grouped ConvInteger straight to output; sum(1-x) with zero_point=1 scores the xor==0 channel strictly highest, and the spatial broadcast (kernel [1,3], pads to 30x30) happens inside the free op. Extends qlinearconv_signed_renderer with an exact channel-match primitive. ort>=1.27 rejects some kernels - stay on 1.26.",
+    "applies_when": {
+      "any_ops": [
+        "Equal",
+        "Pad"
+      ],
+      "any_tags": [
+        "counted_onehot_plane",
+        "code_to_channel_render"
+      ],
+      "min_memory": 100
+    },
+    "reject_when": {
+      "any_tags": [
+        "onehot_reused_by_non_output_consumers"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_by_folding_onehot_and_tiling_into_free_output_op",
+      "risk": "low-medium: verify argmax margins incl. padded-region ties",
+      "verification": "ng gate + fresh; check off-grid argmax behaviour"
+    },
+    "fanout_candidates_20260709": [
+      9,
+      264,
+      237,
+      304,
+      297,
+      256,
+      396,
+      177,
+      250,
+      201,
+      238,
+      374,
+      156,
+      46,
+      308
+    ]
+  },
+  {
+    "id": "dynamic_kernel_stamp_conv",
+    "title": "Stamp a data-dependent patch at N data-dependent anchors via Conv(anchor_plane, extracted_patch_as_weight)",
+    "status": "active",
+    "source_tasks": [
+      368,
+      370
+    ],
+    "rationale": "task368 public win (5130->3599): Gather the source patch (4x4 labels), double-flip it, feed it as the RUNTIME weight of a Conv over a sparse corner/anchor indicator plane. One conv replicates the patch at every anchor, deleting TopK anchor selection, 12-offset int64 index construction, GatherND colour probes, ScatterElements (~1000B index/scatter tensors + ~60 nodes). ORT accepts non-initializer Conv/QLinearConv weights. Directly falsifies batch6 boundary rule 'content-at-data-dependent-position => 900B index plane is cheapest': content becomes a tiny kernel, position becomes a cheap anchor plane.",
+    "applies_when": {
+      "any_ops": [
+        "TopK",
+        "ScatterElements",
+        "ScatterND",
+        "GatherND"
+      ],
+      "any_tags": [
+        "sprite_stamp",
+        "scatter",
+        "anchor_scatter"
+      ],
+      "min_memory": 2200
+    },
+    "reject_when": {
+      "any_tags": [
+        "overlapping_stamps_nonmax",
+        "per_stamp_distinct_content"
+      ],
+      "notes": "stamp overlap must be additive-safe (disjoint or max-resolvable); all anchors must receive the SAME patch"
+    },
+    "expected": {
+      "gain_type": "memory_by_deleting_index_and_scatter_planes",
+      "risk": "low-medium; runtime W proven on 368/370 grader ORT",
+      "verification": "bundled fail=0 + fresh gate; check stamp-overlap semantics fresh"
+    },
+    "fanout_candidates_20260709": [
+      366,
+      233,
+      18,
+      54,
+      173,
+      101,
+      76,
+      96,
+      89,
+      157,
+      131,
+      284,
+      86,
+      133,
+      62,
+      12,
+      112
+    ]
+  },
+  {
+    "id": "dead_tap_dilated_conv_crop_decode",
+    "title": "Crop 30x30 -> HxW and channel-decode/code-collapse in ONE Conv whose dilated extra taps land in the guaranteed-zero region",
+    "status": "active",
+    "source_tasks": [
+      368,
+      333,
+      44
+    ],
+    "rationale": "Conv(input, W[1,10,2,2], dilations=[30-H,30-H]) outputs [1,1,H,W]: output size 30-(dilation+1)+1=H crops legally, taps at +dilation hit the all-zero region outside the grid, and per-channel weights decode one-hot->label (368: weights 0..9, 400B replaces 2x400B slices), one-hot->code alphabet (44: code 2c|gray flag, bias=-1), or colour-index with sentinel amplification (333: green->100, also replaces 300-param Einsum spatial_select). Works with 2x2 kernel for active canvas H<=15. Attacks every '3600B fp32 colour-slice / label-plane floor' verdict on small-canvas tasks.",
+    "applies_when": {
+      "any_ops": [
+        "Slice"
+      ],
+      "any_tags": [
+        "small_canvas",
+        "entry_slice",
+        "label_decode",
+        "colour_index_entry_plane"
+      ],
+      "min_memory": 400
+    },
+    "reject_when": {
+      "any_tags": [
+        "full_30x30_active_canvas",
+        "variable_grid_size"
+      ],
+      "notes": "canvas > 15 leaves no zero region for dead taps with 2x2 kernel"
+    },
+    "expected": {
+      "gain_type": "memory_by_fusing_crop_and_channel_reduction",
+      "risk": "low; onnx 1.21 shape-infer accepts (no negative pads), grader-proven",
+      "verification": "bit-identical where replacing pure slices; fresh gate otherwise"
+    },
+    "fanout_candidates_20260709": [
+      219,
+      157,
+      148,
+      363,
+      396,
+      154,
+      245,
+      107,
+      117,
+      93,
+      91,
+      23,
+      62,
+      102,
+      268,
+      163
+    ]
+  },
+  {
+    "id": "probe_then_build_single_branch",
+    "title": "Measure the discrete parameter first (GatherND probe + ArgMax), then build ONE parametric kernel instead of materializing all candidate branches + Where mux",
+    "status": "active",
+    "source_tasks": [
+      370
+    ],
+    "rationale": "task370 public win (8099->6598): old net paid 4x400B dilated repeat planes + 3x400B Where mux, probing validity AFTER computing every branch. New net probes the sprite at hint-(d,d) for d in {5,4,3,2} (4 bytes), ArgMax -> scalar D, then assembles ONE kernel: Kd = Min(static_identity_20x20, dynamic 'offset mod D == 0' vector), one QLinearConv. Companions: orientation canonicalization via Where(sign, arange, reversed)+Gather flips (kills per-direction weight banks), flip back after.",
+    "applies_when": {
+      "any_ops": [
+        "Where",
+        "QLinearConv",
+        "Conv"
+      ],
+      "any_tags": [
+        "candidate_bank",
+        "mux_chain",
+        "repeat_stamp"
+      ],
+      "min_memory": 3000
+    },
+    "reject_when": {
+      "any_tags": [
+        "branch_not_probe_separable"
+      ],
+      "notes": "needs a cheap scalar witness identifying the branch before the heavy op"
+    },
+    "expected": {
+      "gain_type": "memory_by_deleting_candidate_planes_and_mux",
+      "risk": "medium; probe must be proven unambiguous on fresh samples",
+      "verification": "fresh gate >= 1500 with divergence check"
+    },
+    "fanout_candidates_20260709": [
+      366,
+      138,
+      145,
+      328,
+      324,
+      379,
+      132,
+      4,
+      76,
+      233
+    ]
+  },
+  {
+    "id": "implicit_zero_category_free_output",
+    "title": "Drop the off-grid/background LUT category: a zero one-hot factor times the output Einsum yields the all-zero column, which (out>0) decodes correctly for free",
+    "status": "active",
+    "source_tasks": [
+      55,
+      368
+    ],
+    "rationale": "task055 (2555->1856): off-grid was an explicit 5th row/col category emitting sentinel 10 + Equal. Grader decodes (out>0) and off-grid targets are all-zero across channels, so letting off-grid rows/cols have NO category (zero factor) makes the free-output Einsum emit zeros there. Factors [30,5]->[4,30], LUT [5,5,10]->[10,4,4]. Dual for Equal-decode nets: pad with sentinel 255 (matches no channel id) instead of an off-grid mask (task368). Companion entry move: ONE channel-selective count-profile Einsum (zchw,yc->zyh) serves ALL per-axis predicates (line=count>k, in-grid=count==k, off-grid=count==0), replacing Slice+ReduceSum+Not/And entry planes.",
+    "applies_when": {
+      "any_ops": [
+        "Einsum",
+        "Equal",
+        "Pad"
+      ],
+      "any_tags": [
+        "lut_selection",
+        "onehot_final_equal",
+        "category_augmented_lut"
+      ],
+      "min_memory": 1500
+    },
+    "reject_when": {
+      "notes": "in-grid background must still be emitted explicitly (target ch0=1 in-grid vs all-zero off-grid)"
+    },
+    "expected": {
+      "gain_type": "memory_and_params_by_deleting_offgrid_category_or_mask",
+      "risk": "low",
+      "verification": "bundled fail=0 + fresh; off-grid cells decode all-false"
+    },
+    "fanout_candidates_20260709": []
+  },
+  {
+    "id": "bitpack_code_plane_arithmetic_decode",
+    "title": "Pack logical planes into one u8 arithmetic-code plane (or scalars) and decode at free ops: flag-bit codes, index-Einsum coordinate packing, code-sum identities, free-output Equal/ConvInteger unpack",
+    "status": "active",
+    "source_tasks": [
+      44,
+      323
+    ],
+    "rationale": "Public nets beat us on task044 (+0.3885) and task323 (+0.2894) by never materializing logical planes. Four composable moves: (1) collapse the 10-ch one-hot input into ONE u8 code grid via a single dilation-crop Conv with code alphabet 2c|flag_bit, so any color/flag mask is 1B/cell Equal/BitwiseAnd instead of a separate plane; (2) a one-hot marker plane packs into 2 scalars by index-weighted Einsum against the FREE input and decodes as Equal-vs-index-ramp outer product (rank-1 reconstruction) in u8 - kills the fp32 crop; (3) linear identities on the code alphabet (sum of present codes minus known codes) recover unknown colors with zero planes; (4) keep ONE packed u8 plane to the end, unpack to 10 channels only inside the FREE output node (Equal-vs-code-vector or 1x1 ConvInteger with pads doing canvas placement). Corollary: combinatorial logic on 1-byte scalar tensors costs ~1B/node - assignment logic previously priced as plane-cascades is nearly free as a scalar-register program (task044's 'INFEASIBLE' assignment wall solved this way).",
+    "applies_when": {
+      "any_ops": [
+        "Slice",
+        "Concat",
+        "Where",
+        "Equal",
+        "Conv"
+      ],
+      "any_tags": [
+        "multi_color_mask_planes",
+        "onehot_final_equal",
+        "fp32_crop_cast_down",
+        "where_chain_epilogue"
+      ],
+      "min_memory": 1200
+    },
+    "reject_when": {
+      "any_tags": [
+        "single_plane_already_packed",
+        "plane_not_projection_decodable"
+      ],
+      "notes": "Coordinate-pack variant EXACT-only: reject if cropped channel has >1 active pixel and is neither rank-1 nor row/col-cross (task125 rejected: 34-46 px). First fp32 touch of an input region is a read floor - packing wins by reducing HOW MANY touches. NEVER copy code alphabets/kernels/probe windows across tasks."
+    },
+    "expected": {
+      "gain_type": "memory_by_deleting_mask/onehot/where planes and fp32 crops",
+      "risk": "low for epilogue repacking (bit-identical achievable); medium for coordinate-pack; scalar-register rewrites need full bundled gate",
+      "verification": "ng gate; per-variant property check on bundled examples"
+    },
+    "fanout_candidates_20260709": [
+      233,
+      286,
+      23,
+      148,
+      363,
+      396,
+      390,
+      245,
+      62,
+      366,
+      145,
+      204,
+      379,
+      9,
+      89,
+      132,
+      105,
+      226
+    ]
+  },
+  {
+    "id": "axis_code_equal_mask_synthesis",
+    "title": "Collapse 2-D predicate compute to per-axis code vectors; synthesize the mask ONCE via broadcast Equal(row_code, col_code) with sentinel codes (over-fire tolerant)",
+    "status": "active",
+    "source_tasks": [
+      85
+    ],
+    "rationale": "Public task085 (4190->2875, +0.3766) computes NO 2-D plane except the final Where condition. Per-row descriptors (colour-sum, count, alternating-sign start-parity) come from multi-operand free-input Einsums 'nkhw,k->nh' / 'nkhw,k,w->nh' contracting channel AND the other spatial axis - falsifying the '3600B fp32 channel-reduction entry plane is irreducible' floor. Predicate logic runs on [30,1] fp16 vectors (neighbor-shift Equal replaces mod-K prefix machinery). Final mask = Equal(row_code[30,1], col_code[1,30]); sentinel values (2=non-target row, 3=off-grid column) encode never-fire AND grid validity free. The separable over-approximation is admissible because Where(mask, v, input) over-fires only on cells already equal to v (bg-over-bg no-op).",
+    "applies_when": {
+      "any_ops": [
+        "Conv",
+        "MatMul",
+        "MaxPool",
+        "CumSum",
+        "ReduceMax"
+      ],
+      "any_tags": [
+        "axis_interval_mask",
+        "row_col_separable_predicate",
+        "parity",
+        "prefix_scan"
+      ],
+      "min_memory": 2500
+    },
+    "reject_when": {
+      "any_tags": [
+        "positioned_content",
+        "connectivity_wall",
+        "same_run_coupling",
+        "dense_recolor_equal_decode"
+      ],
+      "notes": "unions of >=2 boxes collide in the row x col cross-product unless every collision cell is over-fire-safe"
+    },
+    "expected": {
+      "gain_type": "memory_by_deleting_upstream_2d_planes",
+      "risk": "medium - axis-profile collisions (same-colour same-width abutting bands) must be checked on >=500 fresh",
+      "verification": "ng gate + fresh; enumerate over-fire cells, confirm written value == existing value"
+    },
+    "fanout_candidates_20260709": [
+      64,
+      350,
+      367,
+      279
+    ]
+  },
+  {
+    "id": "moment_method_sparse_coordinate_recovery",
+    "title": "Recover exact coordinates/span/orientation of K-sparse channels from S1,Sh,Sh2,Sw,Shw free-input Einsum moments (fp16 closed form; covariance sign = diagonal orientation)",
+    "status": "active",
+    "source_tasks": [
+      37
+    ],
+    "rationale": "Public task037 (3462->2465, +0.3397) replaces pow2-log2 extreme extraction (Max/Log/Mul/Cast int64 chains) AND the GatherND input orientation probe with 5 moment Einsums ('bchw,h->bc' with ramp/h^2 weights, 'bchw,h,w->bc' cross). K=2 closed form: span=sqrt(2*Sh2-Sh^2), r_min=(Sh-span)/2, c_min=(Sw-span)/2, orientation sign = 2*Shw-Sh*Sw = (r1-r2)(c1-c2). All algebra fp16 on [1,slots] 12B vectors; int64 only at TopK/Scatter indices. Presence gate = Equal(count,K) as TopK score. fp16 exact: Sh2 <= 2*29^2 = 1682 < 2048.",
+    "applies_when": {
+      "any_ops": [
+        "Log",
+        "ArgMax",
+        "GatherND",
+        "TopK"
+      ],
+      "any_tags": [
+        "endpoint_extraction",
+        "pow2_log_codes",
+        "sparse_k_pixels"
+      ],
+      "min_memory": 0
+    },
+    "reject_when": {
+      "any_tags": [
+        "multi_pixel_occupancy"
+      ],
+      "notes": "variable/large K underdetermines coordinates from low moments - keep pow2-log for multi-pixel min/max extremes"
+    },
+    "expected": {
+      "gain_type": "memory_by_replacing_index_extraction_machinery",
+      "risk": "low-medium (fp16 moment exactness; Max(disc,0) clamp needed)",
+      "verification": "ng gate + >=500 fresh"
+    },
+    "fanout_candidates_20260709": []
+  },
+  {
+    "id": "identity_scale_qlinearconv_u8_transport",
+    "title": "Carry small-nonnegative-integer planes through Conv as uint8 via identity-scale QLinearConv (scale=1, zp=0)",
+    "status": "active",
+    "source_tasks": [
+      396
+    ],
+    "rationale": "Public task396 (+0.3237, 1363B) rewrote our fp16 bit-pack pipeline: Cast fp32->uint8 directly (not fp16), bit-pack Convs as QLinearConv with x_scale=y_scale=1, zp=0 (exact saturating integer conv; true values must stay <=255). Output planes count 1B/elem vs fp16 2B / fp32 4B. Use QLinearConv, NOT ConvInteger (ConvInteger emits int32 = 4B/elem). Companions: materialize 1-D probes (Gather a column, conv the vector) instead of full-plane second-axis convs; use bool prefix-threshold vectors (x >= [2^k ladder]) directly as geometric validity masks instead of count+iota compare.",
+    "applies_when": {
+      "any_ops": [
+        "Conv",
+        "Cast"
+      ],
+      "any_tags": [
+        "bitpack_or_arithmetic_decode",
+        "mask_conv",
+        "integer_plane"
+      ],
+      "min_memory": 1000
+    },
+    "reject_when": {
+      "any_tags": [
+        "plane_values_exceed_255",
+        "negative_intermediate_values_needed_unsigned",
+        "uint8_feeds_topk"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_halved_to_quartered_on_integer_conv_planes",
+      "risk": "low; bit-identical when values provably integer in [0,255]; CRITICAL: never let a resulting uint8 plane feed TopK",
+      "verification": "ng gate + fresh; assert max plane value <= 255 on bundled+fresh"
+    },
+    "fanout_candidates_20260709": [
+      233,
+      363,
+      368,
+      42
+    ]
+  },
+  {
+    "id": "rank1_bottleneck_dilated_crop_qconv_classifier",
+    "title": "Factor a mem-0 dense Conv[10,10,k,k] through a 1-channel signed encoder with dilated in-op crop + int8 QLinearConv classifier",
+    "status": "active",
+    "source_tasks": [
+      283
+    ],
+    "rationale": "Public task283 (+0.3489) broke our 'irreducible mem-0 single-Conv floor': when the fitted kernel's input-channel coupling is rank<=2 with complementary active channels (black ch0 vs gray ch5), encode enc = onehot_a - onehot_b as ONE plane via a 2x2 Conv with dilation (30-G) that simultaneously crops to the fixed GxG grid in-op (~40 params); classify with integer 3x3 stencils in QLinearConv(scale=1,zp=0,int8) with thresholds in the int32 bias; re-inflate GxG->30x30 via asymmetric pads INSIDE the QLinearConv; int8 graph output free. Wins iff G*5*G + ~140 params < current params: needs fixed grid <= ~12x12 and channel-rank collapsible to 1. Exact twin found: task294 (rank 2, channels [0,5], fixed 10x10) - KNIFE-EDGE net, isolated eval + old-net 5000-fresh first.",
+    "applies_when": {
+      "any_ops": [
+        "Conv"
+      ],
+      "any_tags": [
+        "mem0_single_conv",
+        "params_dominated",
+        "fixed_small_grid",
+        "low_channel_rank"
+      ],
+      "min_memory": 0
+    },
+    "reject_when": {
+      "any_tags": [
+        "variable_grid_size",
+        "channel_rank_over_2",
+        "grid_over_12"
+      ]
+    },
+    "expected": {
+      "gain_type": "params_by_factorization_plus_small_new_mem",
+      "risk": "medium; stencil thresholds re-derived from RULE (never copied); knife-edge single-conv nets need isolated-process eval",
+      "verification": "ng gate + fresh arc-gen; isolated eval for conv-flip suspects"
+    },
+    "fanout_candidates_20260709": [
+      294
+    ]
+  },
+  {
+    "id": "runtime_template_qlinearconv_correlate_stamp",
+    "title": "Replace per-object sequential detect/shift/erase loops with two dynamic-weight QLinearConvs: matched-filter correlation then flipped-template stamping",
+    "status": "active",
+    "source_tasks": [
+      69
+    ],
+    "rationale": "Public task069 (+0.2826) replaced our hardcoded 3-target loop with: extract the revealed sprite's KxK colour stamp from the input (Pad+Gather), Cast to uint8; QLinearConv(marker_mask, weight=footprint_at_runtime) -> correlation; anchors = Equal(corr, ReduceMax(corr)) (peak counting sidesteps empty-bbox-corner anchors for L-shapes); Gather-flip the stamp both axes and QLinearConv(anchor_mask, weight=flipped_stamp, full pads) stamps the pattern at ALL anchors in one op. N-independent, all u8, ort 1.26 accepts runtime weight tensors on QLinearConv. Requires identical sprites, non-overlapping, exact-match peak unique. Sibling of dynamic_kernel_stamp_conv (368/370).",
+    "applies_when": {
+      "any_ops": [
+        "Pad",
+        "ArgMax",
+        "Where"
+      ],
+      "any_tags": [
+        "repeated_per_object_blocks",
+        "identical_sprite_stamping",
+        "template_revealed_in_input"
+      ],
+      "min_memory": 1500
+    },
+    "reject_when": {
+      "any_tags": [
+        "sprites_differ_per_instance",
+        "overlapping_objects",
+        "partial_match_ambiguity"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory_and_nodes_by_deleting_object_loop",
+      "risk": "medium; correlation threshold = exact footprint count, verify fresh incl. boundary-touching sprites",
+      "verification": "ng gate + fresh arc-gen >= 2000"
+    },
+    "fanout_candidates_20260709": []
   }
 ]
