@@ -118,7 +118,9 @@ levers:
   - name: reducesum-spatial-einsum
     status: dormant
     scanner: null
-    scanner_archive: "git:pre-redesign:reports/candidates/reducesum_spatial_to_einsum_probe.py"
+    # 원본 probe는 세션 스크래치로 유실(전 git 히스토리에 부재 — 2026-07-09 검증). 메커니즘이 단순해
+    # 재작성 쉬움: ReduceSum(input,axes=[2,3],keepdims=0) → Einsum('bchw->bc') 치환, params -2/건.
+    scanner_archive: null
     recipe: null
     agent_class: opus
     expected_yield: "+0.2~0.5/task; 현재 잔여 0"
