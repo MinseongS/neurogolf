@@ -6,12 +6,11 @@ plane). Runtime is free for us (S16: 229ms/pass total), so a fatter/slower fold 
 Ranks big reducible planes by bytes, annotates producer op + consumer reducer + whether the plane's
 producer chain reads the FREE `input` (foldable straight off it). Excludes known-floor tasks.
 """
-import json
-
 import onnx
 from onnx import shape_inference, TensorProto
 
-from neurogolf.paths import ROOT, OVERFIT_NETS
+from neurogolf.paths import OVERFIT_NETS
+from neurogolf.manifest import load as load_manifest
 
 ITEMSIZE = {TensorProto.FLOAT:4, TensorProto.FLOAT16:2, TensorProto.DOUBLE:8,
             TensorProto.INT64:8, TensorProto.INT32:4, TensorProto.INT16:2, TensorProto.INT8:1,
@@ -39,13 +38,16 @@ def plane_bytes(vi):
 
 
 def scan_all(tasks: list[int] | None = None, min_bytes: int = 1500) -> dict:
-    man = json.load(open(ROOT / "reports" / "manifest.json"))["tasks"]
+    man = load_manifest()
     task_range = tasks if tasks else range(1, 401)
     rows = []
     for t in task_range:
         if str(t) in FLOORED:
             continue
-        cost = man[str(t)]["memory"] + man[str(t)]["params"]
+        row = man.get(f"{t:03d}")
+        if not row or row.get("cost") is None:
+            continue
+        cost = row["cost"]
         if cost < min_bytes:
             continue
         try:

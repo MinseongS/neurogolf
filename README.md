@@ -9,7 +9,7 @@ uv sync --dev
 uv run ng --help
 ```
 
-CLI(`ng`)는 Phase 2에서 생긴다. 그 전까지는 `reports/scripts/` 잔존 스크립트를 `uv run python`으로 직접 실행.
+`uv run ng --help` — 10 서브커맨드: status/score/gate/adopt/pack/submit/scan/queue/mine-public/verify.
 
 ## 디렉토리 맵
 

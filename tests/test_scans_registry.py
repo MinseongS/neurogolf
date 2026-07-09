@@ -15,3 +15,14 @@ def test_run_scan_writes_worklist(tmp_path, monkeypatch):
     import json
     data = json.loads(out.read_text())
     assert data["lever"] == "dummy" and data["items"][0]["task"] == 1
+
+
+def test_every_scanner_smoke_one_task():
+    """Each registered scanner must run cleanly on a single task and return
+    {"items": [...]} (empty is fine — task 2 legitimately floors some levers)."""
+    from neurogolf.scans import SCANNERS
+    for name, fn in SCANNERS.items():
+        result = fn([2])
+        assert isinstance(result, dict), f"{name} did not return a dict"
+        assert "items" in result, f"{name} result missing 'items' key"
+        assert isinstance(result["items"], list), f"{name} 'items' is not a list"

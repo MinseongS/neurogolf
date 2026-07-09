@@ -37,11 +37,11 @@ import sys
 
 import numpy as np
 
-from neurogolf.paths import ROOT, OVERFIT_NETS
+from neurogolf.paths import ROOT, OVERFIT_NETS, STATE
+from neurogolf.manifest import load as load_manifest
 
 NETS = OVERFIT_NETS
-MANIFEST = ROOT / "reports" / "manifest.json"
-TASKLOG = ROOT / "reports" / "tasklog"
+TASKLOG = STATE / "tasks"
 
 FP16_MAX_EXACT = 2048  # fp16 exactly represents integers up to 2^11
 
@@ -308,12 +308,12 @@ def run_one(task_num):
         return {"task": task_num, "error": f"parse: {e}: {p.stdout[:200]}", "tensors": []}
 
 
-def cur_points(mem, params):
-    return max(1.0, 25.0 - math.log(max(1.0, mem + params)))
+def cur_points(cost):
+    return max(1.0, 25.0 - math.log(max(1.0, cost)))
 
 
 def scan_all(tasks: list[int] | None = None) -> dict:
-    manifest = json.load(open(MANIFEST))["tasks"]
+    manifest = load_manifest()
 
     # which tasks already have an fp16 recast attempt logged
     fp16_logged = set()
@@ -325,7 +325,8 @@ def scan_all(tasks: list[int] | None = None) -> dict:
             pass
 
     if tasks:
-        run_tasks = [t for t in tasks if str(t) in manifest and manifest[str(t)].get("memory", 0) != 0]
+        run_tasks = [t for t in tasks
+                     if manifest.get(f"{t:03d}", {}).get("cost", 0)]
     else:
         run_tasks = []
         for k, v in manifest.items():
@@ -333,9 +334,9 @@ def scan_all(tasks: list[int] | None = None) -> dict:
                 tn = int(k)
             except ValueError:
                 continue
-            mem = v.get("memory", 0)
-            if mem == 0:
-                continue  # no counted intermediates -> nothing to recast
+            cost = v.get("cost", 0)
+            if not cost:
+                continue  # nothing counted -> nothing to recast
             run_tasks.append(tn)
     run_tasks.sort()
 
@@ -353,16 +354,18 @@ def scan_all(tasks: list[int] | None = None) -> dict:
     per_task = []
     for tn in run_tasks:
         r = results.get(tn, {"task": tn, "error": "missing", "tensors": []})
-        m = manifest[str(tn)]
-        mem, params = m.get("memory", 0), m.get("params", 0)
-        cur = cur_points(mem, params)
+        m = manifest.get(f"{tn:03d}", {})
+        cost = m.get("cost", 0)
+        cur = cur_points(cost)
         tens = r.get("tensors", [])
         headline_save = sum(t["would_save_bytes"] for t in tens
                             if t["class"] in ("FP16_SAFE", "U8_CANDIDATE"))
         pb_save = sum(t["would_save_bytes"] for t in tens if t["class"] == "PRODUCER_BOUND")
-        headline_save = min(headline_save, mem)  # can't drop below 0
-        new_mem = mem - headline_save
-        new_pts = cur_points(new_mem, params)
+        # headline_save is a subset-sum of counted-memory tensor savings, so it can never
+        # exceed total cost (memory+params) in practice; cap defensively anyway.
+        headline_save = min(headline_save, cost)  # can't drop below 0
+        new_cost = cost - headline_save
+        new_pts = cur_points(new_cost)
         delta = new_pts - cur
         # biggest recastable tensor
         recast = [t for t in tens if t["class"] in ("FP16_SAFE", "U8_CANDIDATE")]
@@ -372,12 +375,10 @@ def scan_all(tasks: list[int] | None = None) -> dict:
             b = recast[0]
             main_tensor = {"name": b["name"], "class": b["class"], "dims": b["dims"],
                            "save_bytes": b["would_save_bytes"], "max": b["max"]}
-        cost = mem + params
         eg = headline_save / cost if cost else 0.0
         per_task.append({
             "task": tn,
-            "memory": mem,
-            "params": params,
+            "cost": cost,
             "cur_points": round(cur, 4),
             "headline_savings_bytes": headline_save,
             "producer_bound_savings_bytes": pb_save,
