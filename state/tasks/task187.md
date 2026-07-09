@@ -156,3 +156,8 @@ inherent 0.53% sealed-pocket); graded div 0/500 random. Latency 4.5ms. mem+param
 9702→8322. Backup task187_pre_s9.onnx.
 ⭐ TRANSFERABLE: in-einsum index re-embed beats output Pad for cropped walk nets
 (fixes the task077-class blocker WHEN the walk einsum is the final op).
+
+## ADOPTED 20260709T055422Z
+- cost: 7622 -> 4911 (points 16.5008)
+- source: candidates/task187/cand.onnx
+- note: regime vein batch7: single-channel-t2 walk-einsum + epsilon-J rank-collapse constant branch (ones channel deleted, mem 5000->2500; ring seeds as 2 rank-1 terms; 21 transitions, geodesic margin 4). 0 divergence/2500 fresh (incumbent's own 0.6% sealed-pocket fail set matched). TRANSFERABLE: pair-axis affine branch -> epsilon-J slice collapses to positive scalar under sign-only decode, halves counted walk plane

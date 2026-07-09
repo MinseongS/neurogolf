@@ -71,3 +71,8 @@ Mechanism: Einsum/value_info crop. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN).
 - cost: 2226 -> 2067 (points 17.3661)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task246.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T054751Z
+- cost: 2067 -> 1128 (points 17.9718)
+- source: candidates/task246/cand.onnx
+- note: regime vein batch7: 11-operand free-output Einsum — out[c]=input[c]+m(h,w)*D[c]; endpoint-protected direction-symmetric quadratic (x-a+s/2)(b-x) bands, coefficient-vs-basis [1,h,h^2] trick (interval predicates = 12B coefficients); 500 fresh 0-fail. TRANSFERABLE: inclusive-start/exclusive-end quadratic kills dot-overwrite sign hazard without Min/Max

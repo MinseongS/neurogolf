@@ -102,6 +102,10 @@ levers:
         ran: "margin-0 min-merge (프론티어 7250.24 기준, ng mine-public)"
         verdict: "0승 — 현 채굴선 위 공개 프론티어 없음 (0-win = 'no cheaper bundled-fail=0 overlay found by this run', not exhausted)"
         reopen: "공개 프론티어가 현재 채굴선 위로 갱신 시 / 새 업로더 / 새 추출 ONNX 아티팩트"
+      - date: 2026-07-09
+        ran: "ng mine-public --margin 0 on 20260709 dumps (prvsiyan 7266.72, ryosukeshiroshita 7266.48, kutenk 7261.53, jonathanncoletti merged91) against current local 7295.45 overlay set"
+        verdict: "0승 — 이 공개 덤프들의 strictly-cheaper bundled-fail=0 per-task wins는 현재 배포본에 이미 흡수됐거나 현재 배포본보다 비싸다; this run found no additional margin-0 overlay, not exhausted"
+        reopen: "새 공개 프론티어/새 업로더/새 notebook output 또는 현재 배포본을 크게 바꾸는 채택 후 재실행"
 
   - name: public-insight-generalize
     status: live
@@ -114,6 +118,10 @@ levers:
     # ①메커니즘 역공학(op-delta 지문) ②src/custom/taskNNN.py로 소스 재현(빌드 재생성 가능) ③insights.yaml 등록
     # ④같은 지문을 가진 우리의 다른 태스크 전수 재스캔·적용.
     ledger:
+      - date: 2026-07-09
+        ran: "cost-1 레인 — 하위 10넷(087/140/223/307/016/276/309/337/312/166) 단일노드 재정식화 전수 공격 (opus, neurogolf.scoring.evaluate 실채점)"
+        verdict: "0승 — 전부 단일노드 파라미터 플로어 증명: 087/140 RoiAlign rois+batch_idx=5 (축반전 op 부재), 223/307 MaxRoiPool rois=5, 016/276/309/337 Gather idx=10 (임의 색순열), 312 Einsum 20 (g[5]=0 load-bearing 증명), 166 Einsum 24. sparse-initializer 루프홀(nnz만 과금, sanitize 통과법 발견)은 strict shape-infer가 sparse 입력 소비를 거부해 차단"
+        reopen: "grader sanitize/shape-infer가 sparse init를 dense 실체화하도록 바뀌면 즉시 (223/307→cost 2). 생산적 대체 레인: 무거운 넷에서 룰이 bare D4 symmetry인 것 스캔 (우리 cost-0 3개=Transpose/Einsum 대칭; 그들 25점 9개도 그 부류일 것)"
       - date: 2026-07-08
         ran: "public_autopsy — 724995_tail_fingerprint (S37 이전 공개 tail 65승 분석)"
         verdict: "65승 중 57/65 params_tail_or_initializer_dedupe, 8 byte-tail; 500B+ exact lost-tensor 지문 없음 (+0.216 local tail은 대형 표현 붕괴가 아니라 대부분 optimizer byte 정리)"

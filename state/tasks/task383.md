@@ -80,3 +80,34 @@ Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup 
 - cost: 5855 -> 5830 (points 16.3292)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task383.onnx
 - note: min-merge from nets
+
+## 2026-07-09 REGIME CRACK candidate (free-output einsum) — NOT YET ADOPTED
+`candidates/task383/cand.onnx` (builder `build_regime.py`): cost **2593** (mem 2212 + params 381)
+= **17.139 pts (+0.81 vs deployed 5830/16.329)**. Gate PASS (isolated bundled 266/266, fail=0),
+fresh **500/500**. The "floor ~16.3" verdict above (fp32 entry 2304 + 3 colour planes + Pad 900)
+is FALSIFIED: no colour plane, no Pad/Equal tail, no mask plane exist at all.
+
+**Mechanism:** entire back-end = ONE 9-operand Einsum writing the FREE `output`
+(`ta,ar,te,ec,tv,bkvi,vu,ukj,bjrc->bkrc`), sign-only (out>0) decode. 10 signed rank-1 terms:
+passthrough `(1-rm)(1-cm)*delta(k,j)*in` expanded to 4 signed terms (delta via static
+J2=[eye,ones] + P2 router, 206 params); row stripes `rm*(nb_c*eC0 + occ*eC1 - nb_c*eC1)`;
+col stripes symmetric. Occupancy gate = ones-slice of J2 contracting the free input
+(`occ = sum_j in[j]`), so off-grid auto-zeros. Dynamic state = 6 tiny vectors ONLY:
+nb_r/nb_c ([1,30] free-input einsum counts; box rows all =wide, cols all =tall, so
+raw COUNTS replace ibr/ibc — C0 scaled by h/w keeps sign, C1 gets 1-h<0 in-box),
+rm/cm (marker rows/cols: einsum of input x eC1 x ring-line one-hot, Min-clamped),
+eC0/eC1 ([1,10,1,1] dynamic Slice of input at (top,left)/(top+2,left+2)).
+bbox from ArgMax(counts, first-max=top since all box rows equal) + ReduceMax(=w,h);
+no reverse-Gather (bot = top+h via count).
+
+⭐ TRANSFERABLE: (1) when a struct's rows/cols have EQUAL nonbg counts, the raw count
+vector replaces the 0/1 indicator inside sign-decoded einsum terms (drops Greater+Cast,
+and ArgMax(count)=first edge); (2) `delta`+`ones` stacked J2 with a v->u router gives
+Where(cond,edit,input) passthrough + occupancy gating for 206 params inside one einsum;
+(3) dynamic-index colour read = Slice(input, Concat(argmax indices)) [1,10,1,1] = 40B,
+no colour-index plane needed anywhere.
+
+## ADOPTED 20260709T054637Z
+- cost: 5830 -> 2593 (points 17.1394)
+- source: candidates/task383/cand.onnx
+- note: regime vein batch7: 9-operand free-output Einsum (passthrough + stripe terms, sign decode) — no mask/colour/entry planes; raw equal-count vectors replace 0/1 indicators; stacked [eye,ones] J-operand router for Where-passthrough; dynamic Slice colour read 40B. 500 fresh 0-fail. Falsifies '~16.3 floor'. Residual ~+0.26 (VR/VC concat basis trick = reopen)

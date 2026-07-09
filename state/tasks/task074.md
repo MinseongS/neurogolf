@@ -95,3 +95,28 @@ k7(cost 9050): 10.4M 패치, 931k pos viols. 상세: reports/train_to_golf_repor
 - cost: 9050 -> 8398 (points 15.9643)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task074.onnx
 - note: min-merge from nets
+
+## 2026-07-09 regime-vein candidate (GATED, NOT adopted — candidates/task074/cand.onnx)
+Mechanism: the min-merged public net's ScatterElements orbit design pays 4x900B u8
+planes (Cast, flatten-Reshape, Gather flat, unflatten-Reshape) because
+ScatterElements/Gather force rank-matched [1,900] index/update shapes. Replacing
+the pair with **ScatterND(reduction=max) + GatherND sharing ONE [1,1,30,30,1]
+int64 index initializer** removes both Reshapes (ScatterND updates = the conv
+plane as-is; GatherND emits [1,1,30,30] directly), and scattering the **fp32**
+conv plane directly moves the u8 Cast from the 900-cell plane to the 136-orbit
+bottleneck (900B -> 544+136B). Graph: Conv(1x1 colour-index, maroon->0) 3600B ->
+ScatterND(base136, oidx, color_f, max) 544B -> Cast u8 136B -> GatherND(oidx)
+900B -> Equal(chan) = free output. mem 5180 + params 1056 (10+136+900+10) =
+**cost 6236 (16.2619 pts, +0.2976 vs deployed 8398)**. Gate PASS 267/267 fail=0;
+fresh 1000/1000, cand-vs-incumbent divergence 0. No TopK.
+⭐ TRANSFERABLE: any ScatterElements+Gather index-plane machinery on a flat [1,N]
+carrier collapses to ScatterND/GatherND with a single shared rank-(k+1) index
+init — kills BOTH flatten and unflatten Reshapes (2x plane bytes) at zero param
+cost; and when scatter reduces N cells -> K<<N slots, cast dtype AT THE K
+bottleneck, not at the N plane (fp32 scatter 544B < u8 cast 900B here). Direct
+rescan link: task349 + conv_fp32_arsenal members with Gather/Reshape index tails.
+
+## ADOPTED 20260709T053812Z
+- cost: 8398 -> 6236 (points 16.2619)
+- source: candidates/task074/cand.onnx
+- note: regime vein batch7: ScatterND(max)+GatherND with ONE shared rank-5 index init kills flatten/unflatten Reshapes + 900B u8 cast plane; cast at 136-orbit bottleneck not 900-cell plane. 1000 fresh 0-fail, 0 divergence. TRANSFERABLE: ScatterElements+Gather flat-carrier machinery -> ScatterND/GatherND shared index; dtype-cast at K-slot bottleneck (rescan: 349 + conv_fp32_arsenal index tails)

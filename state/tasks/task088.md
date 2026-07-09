@@ -28,11 +28,28 @@ well below the detection floor. Same shape as task036 (crop+shift).
 | # | angle | tier | mem | params | pts | fresh | outcome |
 |---|---|---|---|---|---|---|---|
 | 1 | counts→cornercol(==4)/spritecol(argmax); corner bbox from 1-D occupancy; Gather(input,spritecol,ch) full plane → 10×10 window shift; label map L→Equal | B | 12791 | 134 | **15.533** | 200/200 (+500/500) | WIN |
+| 2 | regime crack (2026-07-09): kill 900B class_pad — generator proves tall,wide∈[3,10] ⇒ fixed [1,1,10,11] tri-level u8 code plane (sprite=0/off=1=x_zp/bg=2, Pad value 1); terminal ConvInteger(1×1, runtime u8 w=1+δ(e,0)−m̂, w_zp=1, x_zp=1, static pads [0,0,20,19]) does one-hot expansion + 10→30 placement inside FREE int32 output; moment-bbox front-end unchanged | B | 1031 | 93 | **17.975** | 500/500 | WIN (gate PASS, not adopted — orchestrator gates) |
 
 ## Best achieved
-**15.533 @ mem 12791 params 134 — adopted? N (orchestrator gates).**
-Beats prior 13.846 by **+1.69** (≥+0.3 ✓). Generalizes: fresh isolated 200/200 AND a
-separate 500/500; the colour-ID + bbox rule is 0/5000 exact in numpy.
+**17.975 @ mem 1031 params 93 (cost 1124) — candidates/task088/cand.onnx, adopted? N (orchestrator gates).**
+Beats deployed 17.465 (cost 1872) by **+0.510**. Fresh 500/500; bundled 267/267 (gate PASS).
+Note: deployed net had meanwhile evolved to the moment-bbox + Slice-crop + Pad(900B)+Equal
+design (cost 1872); attempt 2 keeps its front-end and cracks the 900B tail.
+
+### Attempt-2 mechanism (regime crack, free-output ConvInteger)
+- Generator (`arc-gen/tasks/task_3de23699.py`): `wide, tall = randint(3,10)` ⇒ interior ≤10×10
+  ALWAYS, grid ≤24×24 (never >30). Licenses a FIXED compact canvas — no 30-space label plane.
+- Tri-level u8 code plane: crop bg-channel interior [1,1,t,w] fp32 (read floor 400B) → Cast u8
+  → `label2 = bg+bg` ∈ {0=sprite, 2=bg} → `xfix = Pad(label2 → [1,1,10,11], value=1)` (110B).
+  Code 1 = off-window = x_zero_point.
+- Terminal `ConvInteger(xfix, w_u8[10,1,1,1], x_zp=1, w_zp=1, kernel 1×1, static pads
+  [0,0,20,19])` → int32 [1,10,30,30] = FREE graph output. Runtime weight `w−w_zp = δ(e,0)−m̂`:
+  bg→ch0=+1, sprite→ch_m=+1 (others ≤0), off-window/pad→0. Decode (out>0) exact; ORT 1.26
+  ConvInteger pads with x_zero_point (verified numerically).
+- ⚠️ ORT buffer-reuse gotcha: shape-changing Pad output declared same size as its input's
+  declared value_info ([1,1,10,10]) gets planned into the input's (smaller actual) buffer →
+  runtime "Shape mismatch attempting to re-use buffer". Fix = give the Pad output a UNIQUE
+  declared size ([1,1,10,11]) and absorb the extra column in the terminal op's static pads.
 
 ## Irreducible-floor analysis
 Dominant intermediates (same floors as task036, ~15.6):
@@ -57,6 +74,16 @@ Everything else (counts 40 B, scalars, fp16 ramps) is small.
   single combined scan, but row & col mins/maxes need separate axes — no clean fusion.
 
 ## INSIGHT (transferable)
+⭐ **(attempt 2) Generator-proven fixed compact canvas + terminal ConvInteger placement:**
+when arc-gen source bounds the dynamic window (here ≤10×10), pad the compact code plane to
+that FIXED size with a dynamic Pad, then let ONE ConvInteger with STATIC pads do both the
+one-hot channel expansion (runtime u8 1×1 weight, w_zp=1 signed routing) and the
+compact→30×30 placement inside the free output. Tri-level code {lo, x_zp, hi} makes both
+active channels linear-separable with NO bias: extremes map to ±1 through (x−x_zp)(w−w_zp),
+the middle/pad value to 0. Kills Pad(900B)→Equal tails on every crop-to-origin task whose
+window is generator-bounded (task036 family). Sibling of canvas_crop_shrink +
+bitpack_code_plane_arithmetic_decode(4) + ConvInteger-as-free-output (task392).
+
 ⭐ "4 corner markers define a variable crop box" is the task036 crop+shift idiom with a
 cleaner colour-ID: count-based discrimination (corner = count==4, sprite = argmax-count)
 beats geometric span analysis when the marker colour has a FIXED small pixel count. Recover
@@ -64,3 +91,8 @@ the crop window from the marker colour's 1-D occupancy bbox (no second full plan
 Gather-shift the OTHER colour's plane to origin and recolour via a label map. Two distinct
 data-dependent scalars (window colour vs fill colour) cost only 2 cheap ArgMax/Equal over
 the 40 B counts vector — no extra planes.
+
+## ADOPTED 20260709T055657Z
+- cost: 1872 -> 1124 (points 17.9754)
+- source: candidates/task088/cand.onnx
+- note: regime vein batch7: generator-proven 10x10 canvas cap + tri-level u8 code + terminal ConvInteger (runtime u8 weight, x_zp=1) doing one-hot expansion AND compact->30x30 placement in the free output; 900B class_pad + 600B crop chain deleted. 500 fresh 0-fail. TRANSFERABLE: task036 crop+shift family + any generator-bounded lost-Pad:900B window; ORT buffer-reuse gotcha (unique declared size for shape-changing Pad)

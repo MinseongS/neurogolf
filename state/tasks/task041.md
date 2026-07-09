@@ -46,3 +46,8 @@ Dominant intermediate = the 3600B fp32 channel slice `ch [1,9,10,10]` — the si
 - Control candidate (bit-identical floor reconstruction): reports/candidates/task041_signed.py,
   fresh 2000/2000, divergence 0. Frontier-queue rank #3 was a false positive (oracle char-count
   ⊥ output-carrier byte floor).
+
+## ADOPTED 20260709T054140Z
+- cost: 1759 -> 1000 (points 18.0922)
+- source: candidates/task041/cand.onnx
+- note: regime vein batch7: single free-output Einsum ku,bura,ac,burp,cp->bkrc — interval-fill = prefix*suffix counts vs ONE shared triangular T (double subscript reference), bg repair via mixer row F_0 - 1024*sum(F_k); mem 0. 600 fresh 0-fail. Falsifies '3600B entry / 900B carrier' floor. TRANSFERABLE: shared-triangular double-reference halves position-operand cost of interval predicates
