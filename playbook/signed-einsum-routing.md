@@ -18,7 +18,7 @@
 1. output 렌더 → separable rect/segment로 분해 가능한지, colour roster가 상수인지 확인.
 2. per-class signed 채널 벡터 설계(loser 억제 부호, winner (M+1)e_q−M·𝟙, bg e_0). M = 측정된 max fill 다중도.
 3. 각 fill을 `sr,sc`(row/col profile) + `sv`(signed 채널)로 인코딩 → 하나의 free-output Einsum `sr,sc,sv->vrc`.
-4. `reports/candidates/`에 빌드 → `uv run ng gate cand.onnx --task NNN`(bundled fail=0, cost < 배포본).
+4. `candidates/`에 빌드 → `uv run ng gate cand.onnx --task NNN`(bundled fail=0, cost < 배포본).
 5. **모든 crossing/overlap-heavy grid를 손으로 만들어** 부호가 옳은지 검증(억제 부호 하나 틀리면 조용히 오답).
 6. `uv run ng adopt … --note "signed-einsum: separable fill priority"` + tasklog.
 

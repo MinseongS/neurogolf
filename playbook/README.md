@@ -19,8 +19,8 @@ per-task 에이전트가 점수 작업 중 읽는 메커니즘 레시피. 각 �
 ## 레거시 메커니즘 → 파일 매핑
 
 `_LEGACY_PLAYBOOK.md`(git `pre-redesign` 태그) 툴박스 16종 + 인사이트 46종의 귀속:
-- 툴박스 1–6,9,13a(walk/free-input/S=1.0/checkpoint/gates/exact-count/batched-K/epilogue-fold) → **walk-einsum.md**
-- 툴박스 7,8,14 + self-Einsum/free-final-onehot/direct-gather/label-pad-order/strided-conv/GridSample/moment-stats/band-profile/solid-marker/separable-LUT/sparse-edit → **free-output-einsum.md** (batch1/2/3 서브레시피 포함)
+- 툴박스 1–6,9(walk/free-input/S=1.0/checkpoint/gates/exact-count/batched-K) → **walk-einsum.md**
+- 툴박스 7,8,13a,14 + self-Einsum/free-final-onehot/direct-gather/label-pad-order/strided-conv/GridSample/moment-stats/band-profile/solid-marker/separable-LUT/sparse-edit → **free-output-einsum.md** (batch1/2/3 서브레시피 포함; 13a=epilogue-fold, 인사이트 `branch_einsum_copy_edit_epilogue`, source_tasks [77,187] — signed 믹서 T[s,v,w]로 copy+edit Where epilogue를 하나의 free-output branch Einsum으로 fold)
 - 툴박스 15 + parity-paint(286)/threshold-linearize(1)/uint8-presence(234) → **signed-einsum-routing.md**
 - 툴박스 10,11(→ 054 sparse-edit는 free-output),16(370 stamp-kernel) + dihedral(191)/runtime-anchor/sparse-conv/pad-crop/reducesum-einsum → **kernel-collapse.md**
 - dtype 계열(qlinear-LUT/scan-dtype/uint8-topk/int8-topk/argmax-uint8/dedupe-init/output-coupled-fp16) → **fp16-recast.md**
@@ -35,5 +35,9 @@ per-task 에이전트가 점수 작업 중 읽는 메커니즘 레시피. 각 �
 - `marker_routed_hidden_path_compiler`(task066) — endpoint-pair hidden path를 marker 픽셀에서 컴파일.
 - `rotation_component_template_scatter`(task233) — rotation-only 3×3 component template scatter.
 - `bounded_exact_cover_without_mode_background`(task366) — sparse object 위 bounded exact-cover (mode-colour 배경 가정 폐기).
+- **Fresh-fail budget spending**(레거시 툴박스 13, task023) — incumbent가 fresh X%에서 fail하면, 게이트를 fail=0이 아니라
+  "candidate fail ≤ incumbent fail"로 완화해 더 싼 룰을 채택 가능. **permanent-overfit 모드(user S17: bundled fail=0 한 번
+  통과=영구 통과)에서는 저가치** — bundled fail=0 자체가 이미 절대 게이트라 이 완화가 여는 여지가 거의 없음. 참조:
+  `git:pre-redesign:reports/REBUILD_PLAYBOOK.md`.
 
 이들은 drop이 아니라 **보류**: 값싼 lowering 아이디어가 나오면 해당 파일의 서브패턴으로 승격한다.

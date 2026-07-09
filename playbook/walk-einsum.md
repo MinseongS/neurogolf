@@ -24,7 +24,7 @@
 1. 생성기(`state/arc_mapping.json` → `arc-gen/tasks/…`) + 현행 `src/custom/taskNNN.py` + tasklog 읽고 counted 평면 바이트-랭크.
 2. 연결성 모델 확정: **BFS4 vs BFS8 vs ground-truth를 ≥20k fresh에서 측정**(3×3 MaxPool flood = 8-connected).
 3. seed·step·traversable operand 설계. 최대 BFS 거리 + 마진으로 스텝 수 결정. 거리가 크면 einsum 체인(경계에서 slot 비용 2D−1).
-4. 후보를 `reports/candidates/`(또는 워크트리)에 `build(task)`로 빌드 — **절대 `src/custom`·배포 onnx 덮어쓰지 말 것**.
+4. 후보를 `candidates/`(또는 워크트리)에 `build(task)`로 빌드 — **절대 `src/custom`·배포 onnx 덮어쓰지 말 것**.
 5. 게이트: `uv run ng gate cand.onnx --task NNN` (bundled fail=0 + 비용 < 배포본). fresh diagnostic로 candidate ≤ incumbent 확인.
 6. 채택: `uv run ng adopt cand.onnx --task NNN --note "walk-einsum: …"` → 소스 재생성·정합·tasklog 메커니즘 기록.
 7. 첫 사용 시 grader 안전 위해 A/B 서브밋(74-operand Einsum도 grader-safe로 확인됨).
@@ -43,6 +43,10 @@
 - **Batched-K placement (task219):** N개 복붙 per-band/case 블록 → 선행 dim K 하나 + placement `'kjr,ks,jsc,k->rc'`.
 - **Bounded crop before scan (task187/173):** 생성기 실제 max canvas(20~25box)에서 flood — 10ch→1ch label로 줄인
   뒤 crop, 모든 반복 MaxPool 평면을 30×30→25×25로 축소, 마지막에 sentinel label로 30×30 Pad-back.
+- **Single-tap valid-Conv entry crop (S9):** 30×30 평면이 **COUNTED entry read**일 때만 승리 — valid-Conv 하나로
+  크롭이 in-op(무료)으로 흡수된다. 실적: **task396 +0.147, task193 +0.136, task222 +0.086**. 적용 규칙: "30×30
+  평면이 COUNTED entry read일 때만 이긴다" — free-input walk-einsum의 최종 op가 아니라면 반대로 작동(아래
+  backfire 참조).
 
 ## 함정/거부 사례
 - **8-conn trap:** 3×3 MaxPool flood는 8-connected. 4-conn exact walk가 task187 fresh 49 vs 19로 FAIL. 항상 BFS4/BFS8/GT 측정.

@@ -7,7 +7,8 @@
 ## 언제 쓰나(스캐너/시그널)
 - 최종 Einsum/Concat 직전에 fp32 텐서가 FREE graph output으로만 흐름 → 그 텐서 + graph `output`을 fp16으로.
 - 시그널: `scan_dtype_and_shift_compression` 계열, 최종 output-coupled fp32 mask, coordinate/index tail.
-- 실적: task377 4567→3967(+0.14), task205 4652→4372→3760, task355 538→518, task222 2733→2313. 합 ~+0.58.
+- 실적(state/tasks/taskNNN.md 기록치): task377 4567→3967(+0.1408), task205 4652→4372(+0.0621)→3760(+0.1508),
+  task355 538→518(+0.0379), task222 2733→2313(+0.166).
 - **모든 채택/오버레이 후 재실행**; free-output rewrite 뒤 상류 tail 재검사(⚠️ levers.yaml: 스캐너 파일은 유실 — input-weld/co-bind 필터로 재작성 필요).
 
 ## 물리(왜 되나)

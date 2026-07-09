@@ -4,7 +4,7 @@
 > bit-identical. memory-sweep과 **직교하는 params 레인**. 레버: `kernel-collapse`(scanner `kernel_collapse`, agent=opus).
 
 ## 언제 쓰나(스캐너/시그널)
-- `uv run ng scan kernel_collapse` → `reports/candidates/worklists/kernel_collapse.json`: 배포 Conv 넷 전수 스윕.
+- `uv run ng scan kernel_collapse` → `candidates/worklists/kernel_collapse.json`: 배포 Conv 넷 전수 스윕.
 - 시그널: K×K Conv 커널의 실효 tap이 단일 위치(나머지 0) → 1×1 + pad로 동일 출력.
 - **새 Conv 넷 유입 시(min-merge/rebuild 후) 재실행.**
 

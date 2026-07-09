@@ -7,7 +7,7 @@
 > 인사이트 `branch_einsum_copy_edit_epilogue`, `residual_spatialop_to_free_einsum_collapse`.
 
 ## 언제 쓰나(스캐너/시그널)
-- `uv run ng scan mask_dominance` → `reports/candidates/worklists/mask_dominance.json`: ≥20×20 라우팅 평면이
+- `uv run ng scan mask_dominance` → `candidates/worklists/mask_dominance.json`: ≥20×20 라우팅 평면이
   넷 비용의 ≥30%를 차지하는 배포 넷(약 60개, 16 done, 잔여 ~45). 각각 +0.2~0.9 후보.
 - 시그널: 최종 `Where(mask, edit, input)` / `Pad(label)→Equal` / `Equal→Pad` output tail; `[1,1,30,30]` bool/u8 index 평면.
 - **PRE-FILTER(필수):** positioned-content mask는 SKIP(아래 taxonomy). global-state/structured(ring·block·periodic·diagonal·threshold-run·count)만 채굴.
@@ -24,7 +24,7 @@
 1. `ng scan mask_dominance`로 후보 확보 → positioned-content pre-filter로 걸러냄.
 2. 라우팅 predicate 분류 → 아래 서브패턴에서 factorization 선택.
 3. Einsum 설계: 최종 op이 FREE `output`을 직접 쓰도록. dynamic state는 tiny operand(one-hot/count)로, 위치 구조는 static operand로.
-4. `reports/candidates/taskNNN/regime.onnx` 빌드(`build_regime*.py`). **⚠️ 병렬 세션이 같은 candidate 디렉토리·`submission/overfit_nets/`를 공유** — 채택 직전 on-disk candidate 재측정, 오류/불일치면 build 재실행.
+4. `candidates/taskNNN/regime.onnx` 빌드(`build_regime*.py`). **⚠️ 병렬 세션이 같은 candidate 디렉토리·`submission/overfit_nets/`를 공유** — 채택 직전 on-disk candidate 재측정, 오류/불일치면 build 재실행.
 5. `uv run ng gate regime.onnx --task NNN` (bundled fail=0 + 비용 < **배포본**). unsigned TopK clean 확인.
 6. `uv run ng adopt regime.onnx --task NNN --note "regime crack: <predicate>"` → tasklog에 메커니즘 + ⭐TRANSFERABLE 기록.
 
