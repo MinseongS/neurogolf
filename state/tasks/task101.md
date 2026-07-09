@@ -339,3 +339,7 @@ cost `13725 -> 13721`. The combined micro-tail submission **54451532** completed
 - cost: 13725 -> 12973 (points 15.5294)
 - source: candidates/public_dumps/20260709/neurogolf-merged91-workbench/nets/task101.onnx
 - note: min-merge from nets
+
+
+## 20260709 — NO-WIN 재개 레저 (free-output-einsum fanout)
+092-fanout(opus 딥, 20260709): NO-WIN. multi-scale template detect-stamp(data-dependent position AND scale) = positioned-content + scale DOF. dynamic_kernel_stamp_conv sibling은 여기서 이미 측정 DEAD(26140~31886B vs 12928). 모든 지배 plane이 fp32-free-input floor. Reopen(공통): mixed-dtype Einsum escape(fp16 carrier + fp32 free-input co-bind) — ORT uniform-T가 현재 차단; 이게 풀리면 이 클래스 fp32-detection floor가 fp16으로 반토막. 또는 새 공개 덤프. scale-독립 stamp primitive(GridSample/Resize) 등장 시 재개.

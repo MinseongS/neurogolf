@@ -20,3 +20,8 @@ kernel forms.
 
 No rewrite adopted.  A float Conv variant would make the runtime colour kernel
 4x larger, and the 14-row maximum is required by the generator height bound.
+
+## ADOPTED 20260709T080333Z
+- cost: 904 -> 852 (points 18.2524)
+- source: candidates/task197/task197_u8_where_tail.onnx
+- note: u8 Where tail replaces fp32 Mul/Where source-index tail cost 904->852

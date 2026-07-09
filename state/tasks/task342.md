@@ -53,3 +53,6 @@ mem 1510/17.63; ScatterND int64 idx machinery, all 16 scatter points semanticall
 
 
 ## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 1093 -> 1084 (+0.008); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].
+
+## 20260709 — NO-WIN 재개 레저 (free-output-einsum fanout)
+092-fanout(opus 딥 + scatter-shrink 후속, 20260709): NO-WIN. positioned-content 2×2 placement; ORT fp16 CumSum 커널 부재로 위치 chain 전체 fp32 pin(~2300B) > ScatterND 998. scatter-shrink([16,4]→[4,4]) = MIRAGE: free-input bg canvas가 그 자체로 counted [1,10,30,30](18-36kB)라 idx 절감(416B) 압도. base=input scatter에서 point수=(#changed cells)×(flips/cell under >0 decode)는 irreducible. Reopen(공통): mixed-dtype Einsum escape(fp16 carrier + fp32 free-input co-bind) — ORT uniform-T가 현재 차단; 이게 풀리면 이 클래스 fp32-detection floor가 fp16으로 반토막. 또는 새 공개 덤프. 또는 fp16 CumSum 커널 / harness가 fp16 output 허용.

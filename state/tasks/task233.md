@@ -345,3 +345,7 @@ QuantizeLinear carrier, or a public/top-team task233 net below our active cost.
 - cost: 32667 -> 31975 (points 14.6273)
 - source: candidates/public_dumps/20260709/neurogolf-merged91-workbench/nets/task233.onnx
 - note: min-merge from nets
+
+
+## 20260709 — NO-WIN 재개 레저 (free-output-einsum fanout)
+092-fanout(opus 딥, 20260709): NO-WIN. 3×3 shape-hash correspondence(positioned content×content); 측정 9개 공개넷 중 최저(31975), from-scratch rebuild=87035(2.8×). min-merge cruft 0. detection이 con1 3600 + vspr 3136 fp32(co-bind lock). Reopen(공통): mixed-dtype Einsum escape(fp16 carrier + fp32 free-input co-bind) — ORT uniform-T가 현재 차단; 이게 풀리면 이 클래스 fp32-detection floor가 fp16으로 반토막. 또는 새 공개 덤프. mixed-dtype면 detection 6736→~3368(~+0.4).

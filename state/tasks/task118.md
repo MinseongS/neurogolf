@@ -128,3 +128,6 @@ Mechanism: QLinearConv signed renderer + value_info-legalized crop.
 Gate (fresh_verify, inc/cand fail on 1500-2000): 162/162 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
 Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
 See memory [[neurogolf-urad-7225-bundle-vein]]. both fail 162/2000 equally (task-inherent); urad cheaper at equal robustness.
+
+## 20260709 — NO-WIN 재개 레저 (free-output-einsum fanout)
+092-fanout(opus 딥, 20260709): NO-WIN. detection/phantom-rejection 문제 — 50% gray density에서 parallel/multilinear predicate는 ~85%, cheating oracle도 98.25% cap; phantom 제거에 non-linear MaxPool NMS 필수(einsum 표현 불가 → bundled fail>0 → gate REJECT). crop 이미 max grid(25×28), 단일 fp32 colour read(2800B) forced. Reopen(공통): mixed-dtype Einsum escape(fp16 carrier + fp32 free-input co-bind) — ORT uniform-T가 현재 차단; 이게 풀리면 이 클래스 fp32-detection floor가 fp16으로 반토막. 또는 새 공개 덤프. fp16 recast 대상 = {0,64,65} colour read(~1400B, fp16-exact).

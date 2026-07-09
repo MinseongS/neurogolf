@@ -116,3 +116,7 @@ Follow-up pruning after the CSE rewrite removed now-dead initializers `TWO_I32`
 and `C28_64` via `reports/candidates/task054/task054_prune_dead_constants.onnx`.
 Bundled gate remained fail=0.  Cost: 20186 -> 20184 (memory 19904 unchanged,
 params 282 -> 280).
+
+
+## 20260709 — NO-WIN 재개 레저 (free-output-einsum fanout)
+092-fanout(opus 딥 2-pass, 20260709): NO-WIN(단 룰 완전 크랙). oracle4.py = 검증된 정답 룰(266/266 bundled + 3000/3000 fresh, einsum-foldable primitive만; candidates/task054/에 보존). 배포넷(20131)은 이미 optimal compact-coordinate sparse-edit(ArgMax box-bounds→Gather/Scatter, full mask 미생성). 어떤 full-canvas einsum도 fp32 detection plane(label+box+seed+motif+segmented lines ≥18000B) 때문에 26k~37k > 20131. priority-fold는 anti-optimal(carrier는 이미 900B uint8 Equal tail). Reopen(공통): mixed-dtype Einsum escape(fp16 carrier + fp32 free-input co-bind) — ORT uniform-T가 현재 차단; 이게 풀리면 이 클래스 fp32-detection floor가 fp16으로 반토막. 또는 새 공개 덤프. public <19852 / generator가 box row/col 비공유 증명 시. ⭐재사용 primitive: 2-level(col-then-row) cumsum segmentation이 Loop/Scan 없이 stacked/transposed/overlapping 축정렬 rect 재구성. ⭐HEURISTIC: free-output/signed einsum fold는 counted mass가 avoidable label/priority CARRIER일 때만 이득 — fp32 spatial DETECTION이면 fold가 더 나쁨. 시도 전 detection-vs-carrier split을 측정하라.

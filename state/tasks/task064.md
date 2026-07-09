@@ -139,3 +139,8 @@ initializer `axis2->slice2`.  Bundled gate fail=0.  Cost: 9986 -> 9985
 - cost: 9504 -> 5997 (points 16.3010)
 - source: candidates/task064/cand.onnx
 - note: public-insight generalize: axis_code_equal_mask_synthesis (channel-selective free-input Einsum vectors replace 2x1200B presence planes; union exp-log codes delete pow2-log+box-bound machinery; two-direction sentinel band merges 5 compare planes into 3; 2000 fresh 0-fail) TRANSFERABLE: disjoint directional interval-fill families can merge compare pyramids via one sentinel-coded Sub/Max/LessOrEqual
+
+## ADOPTED 20260709T080428Z
+- cost: 5997 -> 5749 (points 16.3432)
+- source: candidates/task064/task064_fp16_profile_count_tail.onnx
+- note: fp16 profile-count tail: row/col presence ReduceSum area check cost 5997->5749

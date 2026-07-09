@@ -53,3 +53,7 @@ mem 2800/16.99; root_idx int32 400B=min index buffer, ch5_f 400B forced-fp32 cro
 - cost: 3022 -> 2825 (points 17.0537)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task330.onnx
 - note: min-merge from nets
+
+
+## 20260709 — NO-WIN 재개 레저 (free-output-einsum fanout)
+092-fanout(opus 딥, 20260709): NO-WIN. per-connected-component pixel counting(connectivity closure) — separable/low-rank 아님; task295 color-count sibling도 불일치(component-count ≠ color-count). flood mask load-bearing(trim variant 게이트=28 fail, not cheaper로 실증). fp32 gray read 400B + int32 scatter idx 400B가 floor. Reopen: grader-ORT가 int16 scatter idx 허용 / free fp32 input→≤100B uint8 mask 단일 fused op.

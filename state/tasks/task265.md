@@ -80,3 +80,8 @@ planes and the net gain shrinks.
 
 ## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
 k3(cost 4362): LP-proven infeasible(838 패치); k5: LP-proven infeasible(20k subset). 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).
+
+## ADOPTED 20260709T082013Z
+- cost: 4357 -> 4069 (points 16.6888)
+- source: candidates/task265/where_shrink.onnx
+- note: 092-fanout(opus): free_final_onehot Where(mask,red_onehot,input) deletes label->color30->Equal backend + drop anchor2 doubling plane; scan-order tie-break floor confirmed for full rule. fresh 0-fail/2000.

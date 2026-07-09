@@ -229,3 +229,7 @@ negative for the current public-autopsy free-Einsum signature.
   `15.03250531748958 -> 15.03457104592369`.
 - Applied to `submission/overfit_nets/task133.onnx`; backup in
   `submission/overfit_nets/.minmerge_backup/task133.onnx`. Included in submission **54461084**.
+
+
+## 20260709 — NO-WIN 재개 레저 (free-output-einsum fanout)
+092-fanout(opus 딥, 20260709): NO-WIN. variable-magnify 2D block stamp — block 경계가 arithmetic(anchor+r0·m), input-occupancy marker 아님 → profile 불가. einsum-upsample은 counted [4,30,30] placement(14400B) 필요 > 배포 Resize/QLinearConv stamp(7896B). fp32 detection block 6000B = fp32-co-bind floor. Reopen(공통): mixed-dtype Einsum escape(fp16 carrier + fp32 free-input co-bind) — ORT uniform-T가 현재 차단; 이게 풀리면 이 클래스 fp32-detection floor가 fp16으로 반토막. 또는 새 공개 덤프. 또는 public teacher <21278.

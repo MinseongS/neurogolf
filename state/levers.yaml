@@ -35,6 +35,15 @@ levers:
           크랙. floor_tasks 중 stamp/crop 구조 보유 서브셋 재공격 허용: 062/012/112/099/163/102(+86 structured_untried).
           354(SameRun)/348(coupled pyramid)/124(bitmask 1-D)는 stamp 구조 없음 — floor 유지."
         reopen: "이미 발화 — insights.yaml dynamic_kernel_stamp_conv / dead_tap_dilated_conv_crop_decode 팬아웃으로 진행"
+      - date: 2026-07-09
+        ran: "092 profile-product cohort 11 opus 딥 팬아웃 (054/076/101/118/133/206/233/265/285/330/342, 태스크당 전담) + 후속 2건(342 scatter-shrink, 054 mega-einsum)"
+        verdict: "1 WIN(task265 4357→4069 +0.069, free_final_onehot Where tail) / 10 NO-WIN. 각 tasklog에 4-field 재개 레저.
+          지배 3분류: positioned-content/stamp(076/101/206/233/285/342), non-linear 판정(118 phantom-NMS/330 connectivity-count),
+          fp32 spatial DETECTION floor(054/133). task054 룰 완전 크랙(oracle4.py 266+3000 fresh)이나 배포넷이 이미 optimal.
+          ⭐HEURISTIC: fold는 counted mass가 avoidable CARRIER일 때만 이득 — DETECTION이면 더 나쁨(시도 전 split 측정).
+          scatter-shrink는 MIRAGE(free-input bg canvas가 counted 18-36kB)."
+        reopen: "cohort 반복 금지. 유일한 forward lever = residual_lever(mixed-dtype Einsum escape) — 5+ 에이전트 독립 corroborate,
+          아래 residual_lever/conv_fp32_arsenal 참조. ORT-capability 프로브로 진행(태스크 공격 아님)."
     # --- folded in from reports/regime_vein_worklist.md (2026-07-09), which is deleted later ---
     # Lever: fold a 900B [30,30] output-routing mask into a free-output Einsum
     # (output>0 sign-decode; input/output free any dtype). Gate: bundled fail=0 +

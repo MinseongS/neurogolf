@@ -184,3 +184,7 @@ below active, or a new representation that avoids both the full fp32 color read 
 TopK enumeration without materializing dense pivot/reflection planes.  Falsification history:
 uint8/signed TopK local wins were Kaggle-falsified by unsigned/signed TopK submission behavior,
 so any future TopK dtype or K shrink must be isolated before adoption.
+
+
+## 20260709 — NO-WIN 재개 레저 (free-output-einsum fanout)
+092-fanout(opus 딥, 20260709): NO-WIN. data-dependent 2D reflection(shape→data-dependent pivot); free-output einsum엔 fold-coupling 텐서 ~18000 params 필요 > 19623 예산(=더 나쁨). 4회 독립 floor 확인 재확증. TopK feed 모두 fp16-clean 유지. Reopen(공통): mixed-dtype Einsum escape(fp16 carrier + fp32 free-input co-bind) — ORT uniform-T가 현재 차단; 이게 풀리면 이 클래스 fp32-detection floor가 fp16으로 반토막. 또는 새 공개 덤프. mixed-dtype면 fp16 shift carrier로 30×5 fold 가능(sibling 286/233/366 배치).

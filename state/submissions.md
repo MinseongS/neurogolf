@@ -651,3 +651,7 @@ built from submission/merged_nets/.
 | 2026-07-09 05:58Z | regime vein batch7 (insight-arsenal fanout): 6/6 cracks +3.23 (383/246/041/088/187/074) | **LB 7296.08 확정 (sub 54484248, 신기록)** |
 
 | 2026-07-09 06:27Z | kernel-collapse refresh after public/regime overlays: 14 adoptions +0.193 local -> 7296.1556; verify 400/400 fail=0 | **LB 7296.27 확정 (sub 54484750, 신기록)** |
+
+| 2026-07-09 08:05Z | dtype tail batch: task141 fp16 output tail +0.224, task197 u8 where tail +0.059, task064 fp16 profile-count tail +0.042 -> local 7296.4811 | **LB 7296.60 확정 (sub 54487028, 신기록)** |
+
+| 2026-07-09 08:21Z | 092-fanout(opus) + parallel dtype-tail stack: task265 free_final_onehot Where tail 4357->4069 (+0.069) on top of 141/197/064; local 7296.5495 |
