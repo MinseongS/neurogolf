@@ -10,28 +10,35 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('c8_starts', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAACAAAAAAAAAAAAAAA')),
-        tensor('c8_ends', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAACQAAABEAAAARAAAA')),
-        tensor('pads_fill', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANAAAAAAAAAA0AAAAAAAAA')),
-        tensor('idx13', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAwAAAA==')),
-        tensor('idx_col2', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAA==')),
-        tensor('axis3', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoDAAAAAAAAAA==')),
-        tensor('axis2', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAA==')),
-        tensor('green', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')),
+        tensor('sel8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAA')),
+        tensor('F', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsIDEwLCAxMCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC/AAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==')),
+        tensor('ones', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDMwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8=')),
+        tensor('one', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/')),
+        tensor('ax1', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAA==')),
     ]
     nodes = [
-        helper.make_node('Slice', ['input', 'c8_starts', 'c8_ends'], ['c8_f']),
-        helper.make_node('Cast', ['c8_f'], ['c8'], to=9),
-        helper.make_node('ReduceMax', ['c8', 'axis3'], ['row_mask'], keepdims=1),
-        helper.make_node('ReduceMax', ['c8', 'axis2'], ['col_mask_raw'], keepdims=1),
-        helper.make_node('Gather', ['col_mask_raw', 'idx13'], ['cols13'], axis=3),
-        helper.make_node('ReduceMin', ['cols13', 'axis3'], ['gap2'], keepdims=1),
-        helper.make_node('ScatterElements', ['col_mask_raw', 'idx_col2', 'gap2'], ['col_mask'], axis=3, reduction='add'),
-        helper.make_node('And', ['row_mask', 'col_mask'], ['rect_mask']),
-        helper.make_node('Xor', ['rect_mask', 'c8'], ['fill']),
-        helper.make_node('Pad', ['fill', 'pads_fill'], ['fill_full'], mode='constant'),
-        helper.make_node('Where', ['fill_full', 'green', 'input'], ['output']),
+        helper.make_node('Einsum', ['input', 'sel8'], ['rowcnt'], equation='naij,a->ni'),
+        helper.make_node('Einsum', ['input', 'sel8'], ['colcnt'], equation='naij,a->nj'),
+        helper.make_node('CumSum', ['rowcnt', 'ax1'], ['cumLr']),
+        helper.make_node('CumSum', ['rowcnt', 'ax1'], ['cumRr'], reverse=1),
+        helper.make_node('CumSum', ['colcnt', 'ax1'], ['cumLc']),
+        helper.make_node('CumSum', ['colcnt', 'ax1'], ['cumRc'], reverse=1),
+        helper.make_node('Min', ['cumLr', 'cumRr', 'one'], ['rowmask']),
+        helper.make_node('Min', ['cumLc', 'cumRc', 'one'], ['colmask']),
+        helper.make_node('Concat', ['ones', 'rowmask'], ['P'], axis=0),
+        helper.make_node('Concat', ['ones', 'colmask'], ['Q'], axis=0),
+        helper.make_node('Einsum', ['input', 'F', 'P', 'Q'], ['output'], equation='naij,tak,ti,tj->nkij'),
     ]
     value_infos = [
+        helper.make_tensor_value_info('rowcnt', 1, [1, 30]),
+        helper.make_tensor_value_info('colcnt', 1, [1, 30]),
+        helper.make_tensor_value_info('cumLr', 1, [1, 30]),
+        helper.make_tensor_value_info('cumRr', 1, [1, 30]),
+        helper.make_tensor_value_info('cumLc', 1, [1, 30]),
+        helper.make_tensor_value_info('cumRc', 1, [1, 30]),
+        helper.make_tensor_value_info('rowmask', 1, [1, 30]),
+        helper.make_tensor_value_info('colmask', 1, [1, 30]),
+        helper.make_tensor_value_info('P', 1, [2, 30]),
+        helper.make_tensor_value_info('Q', 1, [2, 30]),
     ]
-    return model('task070_live_exact', nodes, inits, output_dtype=1, opset=20, value_infos=value_infos)
+    return model('task070_live_exact', nodes, inits, output_dtype=1, opset=13, value_infos=value_infos)

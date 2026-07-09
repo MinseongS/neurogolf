@@ -66,3 +66,8 @@ Mechanism: Einsum/value_info crop. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN).
 ## 2026-07-09 — ⭐ REGIME CRACK ADOPTED (batch 5, opus)
 - 2634→2226 (+0.17). L-path (2-marker↔3-marker, color-8). Global-state 4 scalar positions; mask = rank-2 separable H-segment Rr(h)·cHq(w) + V-segment q_row(h)·Gc(w) with signed quadratics q=(x-a)(b-x); channel mix Dfull[3,10,10]. One free-output Einsum, no 30×30 plane.
 - Bundled fail=0, deployed-gated, TopK clean. Candidate reports/candidates/task246/regime.onnx. Confirms opus handles structured cracks. Memory neurogolf-regime-crack-freeoutput-einsum.
+
+## ADOPTED 20260709T041323Z
+- cost: 2226 -> 2067 (points 17.3661)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task246.onnx
+- note: min-merge from nets

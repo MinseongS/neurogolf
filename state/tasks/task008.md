@@ -124,3 +124,8 @@ Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-me
 ## S16 (2026-07-06) — public bit-identical golf (llccqq624) ADOPTED
 Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent). Minor cost drop
 (dead-initializer / redundant-node removal), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## ADOPTED 20260709T041319Z
+- cost: 3150 -> 2743 (points 17.0832)
+- source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task008.onnx
+- note: min-merge from nets

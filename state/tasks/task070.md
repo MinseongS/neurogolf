@@ -51,3 +51,8 @@ global-argmax wall that genuinely floors near ~13.4.
 
 ## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
 k5(cost 3008): 1.39M 패치, 19k viols 고착. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).
+
+## ADOPTED 20260709T041321Z
+- cost: 1862 -> 1682 (points 17.5723)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task070.onnx
+- note: min-merge from nets

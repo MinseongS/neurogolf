@@ -123,3 +123,8 @@ constrain the input distribution enough to make a global reduce exact.
 Anti-lever: gap-DOUBLING (offset 2^i) LEAKS across a single barrier cell (jumps
 over a red onto a non-red in the next run); barrier-bounded spread must step by
 radius 1.
+
+## ADOPTED 20260709T041319Z
+- cost: 1963 -> 1753 (points 17.5309)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task381.onnx
+- note: min-merge from nets

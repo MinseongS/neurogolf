@@ -10,31 +10,27 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('row_weights', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCA1KSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPw==')),
-        tensor('col_weights', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCA1LCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPw==')),
-        tensor('seven_f', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAOBA')),
-        tensor('eight_f', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAABB')),
-        tensor('batch_indices', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAA==')),
-        tensor('onehot_keep_mask', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAABAAACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/')),
-        tensor('spatial_pad', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAAAAAAAAABYAAAAAAAAA')),
+        tensor('w', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/')),
+        tensor('colorvec', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAAEAAAEBAAACAQAAAoEAAAMBAAADgQAAAAEEAABBB')),
+        tensor('K', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIC/AACAPwAAAEAAAEBAAACAQAAAoEAAAMBAAADgQAAAAEEAABBB')),
+        tensor('vals', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPw==')),
+        tensor('depth', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoeAAAAAAAAAA==')),
+        tensor('arange8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQAAAAAAAAABQAAAAAAAAAGAAAAAAAAAAcAAAAAAAAA')),
+        tensor('pads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAAAAAAAAABYAAAAAAAAA')),
     ]
     nodes = [
-        helper.make_node('Conv', ['input', 'row_weights'], ['row_score'], dilations=[1, 4], strides=[1, 30]),
-        helper.make_node('ArgMax', ['row_score'], ['top'], axis=2, keepdims=0),
-        helper.make_node('Cast', ['top'], ['top_f3'], to=1),
-        helper.make_node('Flatten', ['top_f3'], ['top_f'], axis=1),
-        helper.make_node('Add', ['top_f', 'eight_f'], ['bottom_f']),
-        helper.make_node('Conv', ['input', 'col_weights'], ['col_score'], dilations=[4, 1], strides=[30, 1]),
-        helper.make_node('ArgMax', ['col_score'], ['right'], axis=3, keepdims=0, select_last_index=1),
-        helper.make_node('Cast', ['right'], ['right_f3'], to=1),
-        helper.make_node('Flatten', ['right_f3'], ['right_f'], axis=1),
-        helper.make_node('Sub', ['right_f', 'seven_f'], ['left_f']),
-        helper.make_node('Add', ['left_f', 'eight_f'], ['after_right_f']),
-        helper.make_node('Concat', ['after_right_f', 'top_f', 'left_f', 'bottom_f'], ['rois'], axis=1),
-        helper.make_node('RoiAlign', ['input', 'rois', 'batch_indices'], ['crop_onehot'], coordinate_transformation_mode='half_pixel', mode='avg', output_height=8, output_width=8, sampling_ratio=1, spatial_scale=1.0),
-        helper.make_node('Equal', ['crop_onehot', 'onehot_keep_mask'], ['crop_bool']),
-        helper.make_node('Pad', ['crop_bool', 'spatial_pad'], ['output'], mode='constant'),
+        helper.make_node('Einsum', ['input', 'w'], ['rrow'], equation='nkbd,k->nb'),
+        helper.make_node('Einsum', ['input', 'w'], ['rcol'], equation='nkbd,k->nd'),
+        helper.make_node('ArgMax', ['rrow'], ['top'], axis=1, keepdims=0),
+        helper.make_node('ArgMax', ['rcol'], ['right'], axis=1, keepdims=0, select_last_index=1),
+        helper.make_node('Add', ['top', 'arange8'], ['idx_row']),
+        helper.make_node('Sub', ['right', 'arange8'], ['idx_col']),
+        helper.make_node('OneHot', ['idx_row', 'depth', 'vals'], ['Rt'], axis=-1),
+        helper.make_node('OneHot', ['idx_col', 'depth', 'vals'], ['Gt'], axis=-1),
+        helper.make_node('Einsum', ['input', 'colorvec', 'Rt', 'Gt'], ['co'], equation='nkbd,k,ab,ed->nae'),
+        helper.make_node('Equal', ['co', 'K'], ['crop_bool']),
+        helper.make_node('Pad', ['crop_bool', 'pads'], ['output'], mode='constant'),
     ]
     value_infos = [
     ]
-    return model('task177_live_exact', nodes, inits, output_dtype=9, opset=16, value_infos=value_infos)
+    return model('task177_live_exact', nodes, inits, output_dtype=9, opset=18, value_infos=value_infos)

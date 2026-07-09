@@ -27,3 +27,8 @@ over both edges; (2) orientation free from box aspect ratio via one Where.
 CRITICAL GOTCHA: off-grid cells (rows/cols ≥ actual grid extent) must be ALL-channel-False,
 NOT ch0-True — pad the colour-index label with sentinel >9 (99) before final Equal(L,arange)
 or every off-grid cell wrongly reports background and the [1,10,30,30] compare fails 0/N.
+
+## ADOPTED 20260709T041333Z
+- cost: 2743 -> 2679 (points 17.1068)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task154.onnx
+- note: min-merge from nets

@@ -14,16 +14,16 @@ def build(task):
         tensor('fg_start', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAA==')),
         tensor('fg_end', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoKAAAAAAAAAA==')),
         tensor('k3', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoDAAAAAAAAAA==')),
-        tensor('valid_gap', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAABD')),
-        tensor('row_thresholds', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDksIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAABEAACARAAAwEQAAABFAAAgRQAAQEUAAGBFAACARQAAkEU=')),
+        tensor('valid_gap', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAWA==')),
+        tensor('row_thresholds', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDksIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAYABkAGYAaABpAGoAawBsgGw=')),
         tensor('invalid_idx', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoJ')),
         tensor('channel_index', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDksIDEsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAQIDBAUGBwg=')),
         tensor('output_pads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVAAAAAAAAABsAAAAAAAAA')),
-        tensor('false_b', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGIxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
     ]
     nodes = [
         helper.make_node('Einsum', ['input', 'score_weights'], ['scores10'], equation='nchw,w->nc'),
-        helper.make_node('Slice', ['scores10', 'fg_start', 'fg_end', 'fg_start'], ['scores']),
+        helper.make_node('Cast', ['scores10'], ['scores10__c1'], name='castbnd_1', to=10),
+        helper.make_node('Slice', ['scores10__c1', 'fg_start', 'fg_end', 'fg_start'], ['scores']),
         helper.make_node('TopK', ['scores', 'k3'], ['top_scores', 'top_idx'], axis=1, largest=1, sorted=1),
         helper.make_node('ReduceMax', ['top_scores'], ['max_score'], axes=[1], keepdims=1),
         helper.make_node('Sub', ['max_score', 'valid_gap'], ['valid_threshold']),
@@ -33,8 +33,20 @@ def build(task):
         helper.make_node('Where', ['top_valid', 'top_idx_u8', 'invalid_idx'], ['active_top_idx']),
         helper.make_node('Equal', ['channel_index', 'active_top_idx'], ['color_mask']),
         helper.make_node('And', ['color_mask', 'row_valid'], ['active_output']),
-        helper.make_node('Pad', ['active_output', 'output_pads', 'false_b'], ['output'], mode='constant'),
+        helper.make_node('Pad', ['active_output', 'output_pads'], ['output'], mode='constant'),
     ]
     value_infos = [
+        helper.make_tensor_value_info('scores10', 1, [1, 10]),
+        helper.make_tensor_value_info('scores', 10, [1, 9]),
+        helper.make_tensor_value_info('top_scores', 10, [1, 3]),
+        helper.make_tensor_value_info('top_idx', 7, [1, 3]),
+        helper.make_tensor_value_info('max_score', 10, [1, 1]),
+        helper.make_tensor_value_info('valid_threshold', 10, [1, 1]),
+        helper.make_tensor_value_info('top_valid', 9, [1, 3]),
+        helper.make_tensor_value_info('row_valid', 9, [1, 1, 9, 1]),
+        helper.make_tensor_value_info('top_idx_u8', 2, [1, 3]),
+        helper.make_tensor_value_info('active_top_idx', 2, [1, 3]),
+        helper.make_tensor_value_info('color_mask', 9, [1, 9, 1, 3]),
+        helper.make_tensor_value_info('active_output', 9, [1, 9, 9, 3]),
     ]
     return model('task247_live_exact', nodes, inits, output_dtype=9, opset=13, value_infos=value_infos)

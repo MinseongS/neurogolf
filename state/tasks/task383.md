@@ -75,3 +75,8 @@ forced fp32 entry + 30x30 output the floor sits ~16.3 — re-golf buys +0.19, no
 ## S16 (2026-07-06) — public bit-identical golf (llccqq624, unfiltered re-mine) ADOPTED
 Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
 Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## ADOPTED 20260709T041336Z
+- cost: 5855 -> 5830 (points 16.3292)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task383.onnx
+- note: min-merge from nets

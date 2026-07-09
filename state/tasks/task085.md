@@ -106,3 +106,8 @@ the residue value that flags the target (here vpre≡2 mod 3 = band middle row) 
 background cells (bg cumulative count is always ≡0 mod the band height) — drop the `occ>0` AND
 plane and the intermediate `And` it feeds (−960 B here). Check the residue-vs-bg collision before
 adding an occupancy gate to any prefix-parity/phase task.
+
+## ADOPTED 20260709T041311Z
+- cost: 4190 -> 2875 (points 17.0362)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task085.onnx
+- note: min-merge from nets

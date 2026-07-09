@@ -116,3 +116,8 @@ Backup: reports/retired_networks/task174_pre_s11_cross.onnx.
 - New grader cost = 4378 (mem 3982 + params 396), fail=0 bundled.
 - Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
 - Mechanism: structural golf: fewer counted node-output intermediates (graph rewrite, functionally equal on fresh).
+
+## ADOPTED 20260709T041322Z
+- cost: 4347 -> 4027 (points 16.6992)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task174.onnx
+- note: min-merge from nets

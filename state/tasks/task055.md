@@ -74,3 +74,8 @@ builders, but not to true weighted sums that exceed uint8 or need fractional val
 post-LUT full-canvas `Where` planes can often be folded into the LUT by making
 the row/column factors mutually exclusive over `{bands, separator, off-grid}`.
 This turns multiple 30x30 override planes into small 1-D category vectors.
+
+## ADOPTED 20260709T041313Z
+- cost: 2555 -> 1856 (points 17.4738)
+- source: candidates/public_dumps/20260709/neurogolf-7266-48-github-com-qurore-kaggloop/nets/task055.onnx
+- note: min-merge from nets

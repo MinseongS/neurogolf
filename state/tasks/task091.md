@@ -83,3 +83,8 @@ Bundled gate: `266/266`, memory `2853 -> 2849`, params unchanged `45`, cost
 `2898 -> 2894`. Included in salvage submission **54451991** (excluding the
 Kaggle-falsified task101 CSE), which completed at publicScore **7264.30**.
 Backup before this tail: `submission/overfit_nets/.dynamic_cse_tail_backup_20260708/task091.onnx`.
+
+## ADOPTED 20260709T041327Z
+- cost: 2894 -> 2764 (points 17.0756)
+- source: candidates/public_dumps/20260709/neurogolf-7266-48-github-com-qurore-kaggloop/nets/task091.onnx
+- note: min-merge from nets

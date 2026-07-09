@@ -58,3 +58,8 @@ contain — here input ch5 (gray) must feed output ch0 (bg). The "bg channel = 1
 of input ch0" sub-pattern is the load-bearing detail that lets a single conv keep the
 off-grid border zero (a positive bias on bg would light the whole 30x30 border and
 fail the scorer); recovering this is the difference between a passing and failing conv.
+
+## ADOPTED 20260709T041312Z
+- cost: 910 -> 642 (points 18.5354)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task283.onnx
+- note: min-merge from nets

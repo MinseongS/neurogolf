@@ -89,3 +89,8 @@ Artifact: `reports/candidates/task044/task044_zero_compare_tail.onnx`.
 Bundled gate: `266/266`, fail=0.  Cost: `4737 -> 4735` (memory `4314`
 unchanged, params `423 -> 421`).  Active backup:
 `submission/overfit_nets/.zero_compare_tail_backup/task044.onnx`.
+
+## ADOPTED 20260709T041311Z
+- cost: 4735 -> 3212 (points 16.9254)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task044.onnx
+- note: min-merge from nets

@@ -10,17 +10,22 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('sample_indices', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDMsIDMsIDMpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAABQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAABgAAAAAAAAAAAAAAAAAAAAIAAAAAAAAABgAAAAAAAAAAAAAAAAAAAAEAAAAAAAAACgAAAAAAAAAAAAAAAAAAAAEAAAAAAAAACwAAAAAAAAAAAAAAAAAAAAIAAAAAAAAACwAAAAAAAAA=')),
-        tensor('code_w', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AACAQAAAAEA=')),
-        tensor('code_values', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDcsIDEsIDMpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAIA/AACAPwAAgD8AAABAAAAAQAAAAEAAAEBAAABAQAAAQEAAAIBAAACAQAAAgEAAAKBAAACgQAAAoEAAAMBAAADAQAAAwEA=')),
-        tensor('pads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAbAAAAAAAAABsAAAAAAAAA')),
+        tensor('detect_w', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAyLCAyKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAEBAAACAQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')),
+        tensor('channel_ids', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAQIDBAUGBwgJ')),
+        tensor('repeat_w', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAxLCAxLCAzKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAr///////////////////////////////////////8=')),
+        tensor('x_zero_point', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoB')),
     ]
     nodes = [
-        helper.make_node('GatherND', ['input', 'sample_indices'], ['bits'], batch_dims=1),
-        helper.make_node('MatMul', ['bits', 'code_w'], ['codes_f']),
-        helper.make_node('Equal', ['codes_f', 'code_values'], ['top_left']),
-        helper.make_node('Pad', ['top_left', 'pads'], ['output'], mode='constant'),
+        helper.make_node('Conv', ['input', 'detect_w'], ['code_f'], name='d', kernel_shape=[2, 2], pads=[-1, 0, 0, -14], strides=[30, 5]),
+        helper.make_node('Cast', ['code_f'], ['code_u8'], name='c', to=2),
+        helper.make_node('Transpose', ['code_u8'], ['code_rows'], name='t', perm=[0, 1, 3, 2]),
+        helper.make_node('BitwiseXor', ['code_rows', 'channel_ids'], ['xor_distance'], name='x'),
+        helper.make_node('ConvInteger', ['xor_distance', 'repeat_w', 'x_zero_point'], ['output'], name='r', group=10, kernel_shape=[1, 3], pads=[0, 2, 27, 29]),
     ]
     value_infos = [
+        helper.make_tensor_value_info('code_f', 1, [1, 1, 1, 3]),
+        helper.make_tensor_value_info('code_u8', 2, [1, 1, 1, 3]),
+        helper.make_tensor_value_info('code_rows', 2, [1, 1, 3, 1]),
+        helper.make_tensor_value_info('xor_distance', 2, [1, 10, 3, 1]),
     ]
-    return model('task235_live_exact', nodes, inits, output_dtype=9, opset=18, value_infos=value_infos)
+    return model('task235_live_exact', nodes, inits, output_dtype=6, opset=18, value_infos=value_infos)

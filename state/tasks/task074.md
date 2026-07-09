@@ -90,3 +90,8 @@ ceiling: a 6-downstream-plane D4 fill simply lands ~15.2, just under a 15.0 floo
 
 ## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
 k7(cost 9050): 10.4M 패치, 931k pos viols. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).
+
+## ADOPTED 20260709T041323Z
+- cost: 9050 -> 8398 (points 15.9643)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task074.onnx
+- note: min-merge from nets

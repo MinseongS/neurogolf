@@ -94,3 +94,8 @@ fp32 gathered carriers (`[1,1,10,30]`, `[1,1,10,10]`, plus scalar-row path)
 that cost more than the removed plane.  Do not retry cast-after-Gather for this
 task unless the gathered fp32 carriers can be fused into a free output or an
 existing counted tensor.
+
+## ADOPTED 20260709T041327Z
+- cost: 9713 -> 9262 (points 15.8663)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task080.onnx
+- note: min-merge from nets

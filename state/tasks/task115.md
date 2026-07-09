@@ -86,3 +86,8 @@ final mask with no separate zero-axis And. Took 16.67→16.75 by deleting two
 rule whose answer needs a per-axis weighted profile on BOTH axes when orientation is
 transpose-variant. Caps the score ~16.8 — same wall the public net hits. Report
 MARGINAL once both profiles are confirmed necessary by the transpose-invariance test.
+
+## ADOPTED 20260709T041331Z
+- cost: 1043 -> 1014 (points 18.0783)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task115.onnx
+- note: min-merge from nets

@@ -11,16 +11,17 @@ from ._exact import arr_b64, model, tensor
 def build(task):
     inits = [
         tensor('w_checksum', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAzLCAzKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAvwAAiMEAAIA/AAAAAACAkMMAAIhBAICQQwAAAAAAAAAAAAAAwAAACMIAAABAAAAAAACAEMQAAAhCAIAQRAAAAAAAAAAAAABAwAAATMIAAEBAAAAAAADAWMQAAExCAMBYRAAAAAAAAAAAAACAwAAAiMIAAIBAAAAAAACAkMQAAIhCAICQRAAAAAAAAAAAAACgwAAAqsIAAKBAAAAAAACgtMQAAKpCAKC0RAAAAAAAAAAAAADAwAAAzMIAAMBAAAAAAADA2MQAAMxCAMDYRAAAAAAAAAAAAADgwAAA7sIAAOBAAAAAAADg/MQAAO5CAOD8RAAAAAAAAAAAAAAAwQAACMMAAABBAAAAAACAEMUAAAhDAIAQRQAAAAAAAAAAAAAQwQAAGcMAABBBAAAAAACQIsUAABlDAJAiRQAAAAA=')),
-        tensor('zero_f', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAA')),
-        tensor('vvec', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAABAwAAAwMA=')),
+        tensor('zero_f', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAA==')),
+        tensor('vvec', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAADCAMY=')),
         tensor('arange3', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoJAAAACgAAAAsAAAA=')),
         tensor('padpads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAABsAAAAAAAAA')),
         tensor('padval', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoPAAAA')),
     ]
     nodes = [
         helper.make_node('Conv', ['input', 'w_checksum'], ['checks'], kernel_shape=[3, 3], pads=[0, 0, -21, 0], strides=[3, 30]),
-        helper.make_node('Equal', ['checks', 'zero_f'], ['eq0']),
-        helper.make_node('Cast', ['eq0'], ['eqf'], to=1),
+        helper.make_node('Cast', ['checks'], ['checks__c1'], name='castbnd_1', to=10),
+        helper.make_node('Equal', ['checks__c1', 'zero_f'], ['eq0']),
+        helper.make_node('Cast', ['eq0'], ['eqf'], to=10),
         helper.make_node('Einsum', ['eqf', 'vvec'], ['E'], equation='bcil,i->b'),
         helper.make_node('Cast', ['E'], ['Ei'], to=6),
         helper.make_node('Add', ['Ei', 'arange3'], ['first3']),

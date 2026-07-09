@@ -217,3 +217,8 @@ semantic morphology when the semantic rewrite materializes many planes. Before
 rewriting a compact learned `QLinearConv`, prove whether smaller local windows
 are sufficient and linearly separable over the full reachable generator state
 space. For task086, `11x11` is the minimum tested single-threshold local window.
+
+## ADOPTED 20260709T041330Z
+- cost: 3134 -> 3028 (points 16.9843)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task086.onnx
+- note: min-merge from nets

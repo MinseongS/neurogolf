@@ -115,3 +115,8 @@ source regenerated via live_to_exact_source --write-src, src↔live reconciled f
 as task264 — a detection/B net with one fixed detection Conv whose output only feeds a TopK
 rank can int8-quantize that Conv bit-safely. Selection: single fixed detection Conv → fp16
 TopK/ArgMax, currently fp16/fp32. Confirmed twice this session (264, 365) on the bobmyers pack.
+
+## ADOPTED 20260709T041315Z
+- cost: 3929 -> 3122 (points 16.9538)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task365.onnx
+- note: min-merge from nets

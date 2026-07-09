@@ -19,3 +19,8 @@ before padding to output.  A full-canvas label route would require a 30x30 uint8
 label (900 B) before final `Equal`, so the current 9x9 one-hot is cheaper.
 
 No rewrite adopted.
+
+## ADOPTED 20260709T041322Z
+- cost: 1441 -> 1320 (points 17.8146)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task304.onnx
+- note: min-merge from nets

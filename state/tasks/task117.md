@@ -153,3 +153,8 @@ Long-tail agent reported +14B win (its baseline read params=174 — wrong; real 
 runs) = −0.0062 LOSS. Adopted briefly, reverted to incumbent (verified 3922/243 restored).
 ⭐LESSON: re-measure the INCUMBENT yourself before trusting an agent's baseline numbers —
 this was the adoption-protocol 정합검증 step catching a bad delta.
+
+## ADOPTED 20260709T041323Z
+- cost: 4088 -> 3795 (points 16.7586)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task117.onnx
+- note: min-merge from nets

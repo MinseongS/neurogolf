@@ -148,3 +148,8 @@ Floors of new net: win 1296 + pp 900. Backup reports/retired_networks/task014_pr
 ## S16 (2026-07-06) — public bit-identical golf (llccqq624, unfiltered re-mine) ADOPTED
 Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
 Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## ADOPTED 20260709T041336Z
+- cost: 4117 -> 4097 (points 16.6820)
+- source: candidates/public_dumps/20260709/neurogolf-merged91-workbench/nets/task014.onnx
+- note: min-merge from nets

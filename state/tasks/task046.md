@@ -57,3 +57,8 @@ a true wall here = "per-segment data-dependent vertical roll + segmentation that
 connected TURNING path through junction pixels" — greedy local connectivity caps at ~53% on
 positions, proving the offset is global. Re-confirmed INFEASIBLE (the prior verdict held; this was
 NOT a false positive).
+
+## ADOPTED 20260709T041322Z
+- cost: 2274 -> 2085 (points 17.3575)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task046.onnx
+- note: min-merge from nets

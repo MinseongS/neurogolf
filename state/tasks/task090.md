@@ -83,3 +83,8 @@ risk = 0.85% fresh fail rate.
 already-floor unrolled scan for a −19 cost sliver, and it introduces a 0.85% fresh-fail budget
 the incumbent did not have. Not a pattern worth propagating; retained only as a marginal
 policy-gated cost trim pending LB verification.
+
+## ADOPTED 20260709T041340Z
+- cost: 3058 -> 3055 (points 16.9755)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task090.onnx
+- note: min-merge from nets

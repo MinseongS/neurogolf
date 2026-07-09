@@ -94,3 +94,8 @@ generalises 100%, but cannot beat the floor by +0.3.
 mem 4322/16.55; completed_scalar30 900B=min 30x30 carrier, sampled_colors 600B GridSample=cheap 15-pt read, TopK k=15=empirical bundled max. int16 Clip unimplemented in ORT. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).
 
 ## S11 (2026-07-03) — mech-15/pointer scout: KILL — NOT a 177-cousin: output = input ∪ rot90/180/270 about a SEARCHED centre; RoiAlign corner-swap does single-crop mirror only. Anatomy (GridSample+TopK+Scatter) already optimal; dominant cost = orbit-consistency centre search + 3600B detection. Floor re-re-confirmed.
+
+## ADOPTED 20260709T041334Z
+- cost: 4688 -> 4606 (points 16.5649)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task361.onnx
+- note: min-merge from nets

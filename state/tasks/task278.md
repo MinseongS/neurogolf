@@ -65,3 +65,8 @@ the top/bottom halo.  Reason: the active `Conv->QLinearConv` stack is an effecti
 local classifier (roughly 5x5 context), not a pure 3x3 red-patch LUT.  A 5x5 LUT would need
 2^25 states or extra background/off-grid coding, so it is not economical.  Do not retry
 3x3 red-only LUT for this task; any replacement must preserve the second-stage context.
+
+## ADOPTED 20260709T041321Z
+- cost: 5010 -> 4505 (points 16.5871)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task278.onnx
+- note: min-merge from nets

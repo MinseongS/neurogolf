@@ -56,3 +56,8 @@ the off-grid region WITHOUT a dedicated offgrid plane, push the sentinel into th
 setting that axis's distance to a huge value (99) on its 1-D bound mask — collapses
 both the offgrid OR-plane and the intermediate select-plane, leaving just the
 dominating-axis comparison + the index plane (2 canvas planes total).
+
+## ADOPTED 20260709T041330Z
+- cost: 3526 -> 3389 (points 16.8717)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task137.onnx
+- note: min-merge from nets

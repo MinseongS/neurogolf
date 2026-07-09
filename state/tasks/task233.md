@@ -340,3 +340,8 @@ shared by multiple QLinear ops.  This is not an "unapplied known insight"; it is
 a measured negative application on 2026-07-08.  Reopen trigger: a grader/ORT
 path that lets QLinearConv consume the free fp32 one-hot input without a counted
 QuantizeLinear carrier, or a public/top-team task233 net below our active cost.
+
+## ADOPTED 20260709T041334Z
+- cost: 32667 -> 31975 (points 14.6273)
+- source: candidates/public_dumps/20260709/neurogolf-merged91-workbench/nets/task233.onnx
+- note: min-merge from nets

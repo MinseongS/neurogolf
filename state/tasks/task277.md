@@ -69,3 +69,8 @@ a static seed/coordinate table that is subsequently BROADCAST or DIFFUSED (MaxPo
 often be stored at lower rank than its broadcast shape — audit large uint8/float seed initializers whose
 first consumer is a broadcasting Mul/Add or a diffusion pass, and shrink the redundant (later-diffused) axis
 to 1. But this is a per-net inspection, not a fan-out lever; do not build a scanner around it.
+
+## ADOPTED 20260709T041326Z
+- cost: 3741 -> 3540 (points 16.8281)
+- source: candidates/public_dumps/20260709/neurogolf-7266-48-github-com-qurore-kaggloop/nets/task277.onnx
+- note: min-merge from nets

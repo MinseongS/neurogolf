@@ -73,3 +73,8 @@ lights no channel there — fold the column sentinel into the colour value vecto
 sentinel as an extra MatMul rank-1 term (const −100 × og_row indicator). ⭐ Per-cell one-hot
 input means a plain occupancy ReduceSum gives 10/in-grid-column with NO seed signal; isolating a
 non-background pixel's position ALWAYS needs a channel-weighted (bg-zeroed) reduction.
+
+## ADOPTED 20260709T041316Z
+- cost: 753 -> 623 (points 18.5655)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task200.onnx
+- note: min-merge from nets

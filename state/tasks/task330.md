@@ -48,3 +48,8 @@ couple of small fp32 helpers and the [101] histogram buffer (404B). No 30x30 fp3
 
 ## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
 mem 2800/16.99; root_idx int32 400B=min index buffer, ch5_f 400B forced-fp32 crop; no input+delta route (in gray5→out ch0/1/2). No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).
+
+## ADOPTED 20260709T041323Z
+- cost: 3022 -> 2825 (points 17.0537)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task330.onnx
+- note: min-merge from nets

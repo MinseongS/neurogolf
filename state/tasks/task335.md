@@ -58,3 +58,8 @@ Verified generator bound = 20 (bundled max 13×12). Separable-einsum net 2215 to
 `reports/candidates/task335/task335_dedupe_initializers.onnx` rewired duplicate
 initializer `ax1->s1`.  Bundled gate fail=0.  Cost: 2215 -> 2214
 (params 109 -> 108).
+
+## ADOPTED 20260709T041315Z
+- cost: 1681 -> 1380 (points 17.7702)
+- source: candidates/public_dumps/20260709/neurogolf-7266-48-github-com-qurore-kaggloop/nets/task335.onnx
+- note: min-merge from nets

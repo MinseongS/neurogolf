@@ -86,3 +86,7 @@ k3(cost 6996): SGD fail; k5: LP numerically infeasible(HiGHS primal infeasible).
 
 ## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 6996 -> 6837 (+0.023)
 Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
+## ADOPTED 20260709T041314Z
+- cost: 6833 -> 5346 (points 16.4159)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task192.onnx
+- note: min-merge from nets

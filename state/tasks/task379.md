@@ -85,3 +85,8 @@ chain on the [1,1,1,WK] dot-row vector. Ray = row-vs-{dot,L} range masks; box =
 transpose+select of the masks once (uint8 Where works; bool Where does NOT).
 ⭐ ArgMax works on uint8 (ReduceSum/ReduceMax do not) — use it for "row index of
 the unique marker per column" to avoid a full coord×mask product plane.
+
+## ADOPTED 20260709T041318Z
+- cost: 9095 -> 7733 (points 16.0467)
+- source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task379.onnx
+- note: min-merge from nets

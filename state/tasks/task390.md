@@ -86,3 +86,8 @@ Candidate from `reports/candidates/dedupe_initializers_sweep.py`.
 One byte-identical initializer alias was rewired.  Bundled gate remained fail=0.
 Cost `3012 -> 3010` (params -2); active overlay updated in
 `submission/overfit_nets/task390.onnx`.
+
+## ADOPTED 20260709T041320Z
+- cost: 3010 -> 2699 (points 17.0994)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task390.onnx
+- note: min-merge from nets

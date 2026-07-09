@@ -65,3 +65,8 @@ Dominant intermediate = `colf30` [1,1,30,30] f32 = 3600B: the entry colour-index
 ## INSIGHT (transferable)
 ⭐ A "reassemble two detected objects into a variable-size output" task that LOOKS like shape-correspondence is closed-form when the geometry is a pure **spatial copy + optional 1-D mirror**: recover all geometry as 1-D-profile scalars (yellow-corner bbox → output size; nonzero-outside-box → sprite bbox), build a FIXED-MAX-SIZE (OH×OW) colour-index plane by Gather-ing source coords (with per-axis flip select = `Where(flip, w-2-j, j-1)`), overlay the border + an off-output **sentinel(99)** via a tiny Where chain, then Pad+Equal into the FREE output — no per-object plane army, no ArgMax/Gather/Pad scaffold. 79k→13.8k (+1.74).
 ⚠️ **OH/OW bound lesson:** the random generator distribution (heights 4-6) UNDER-represents the hand-crafted train examples (train[1] is 7×8). Always set the fixed-output max from the actual scored set (train+test+arc-gen), not from sampling the generator — sampling 5000 instances never produced the train[1] size.
+
+## ADOPTED 20260709T041329Z
+- cost: 3183 -> 3046 (points 16.9784)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task201.onnx
+- note: min-merge from nets

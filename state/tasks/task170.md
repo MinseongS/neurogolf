@@ -46,3 +46,8 @@ data-dependent `Gather(colf, rows, axis=2)`→`Gather(·, cols, axis=3)` into a 
 `smag = colspan/size` via exact float Div+Cast (no Mod). The col extent here is gen-guaranteed in-grid
 (`scol ≤ W-size·smag-1`) so smag never needs clip logic — read the generator's coord bounds to find the
 unclipped axis. Off-grid gather reads land on bg=0 (≠sc) so clipped bottom blocks self-zero — no H/W needed.
+
+## ADOPTED 20260709T041316Z
+- cost: 2537 -> 2125 (points 17.3385)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task170.onnx
+- note: min-merge from nets

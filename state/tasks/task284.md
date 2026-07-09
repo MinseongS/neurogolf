@@ -70,3 +70,8 @@ extent into the canonical frame by swapping the 1-D row/col extent vectors by is
 ⭐ Any broadcast Add/Mul that lands on [1,1,30,30] is upcast to fp32 (3600B) by ORT
 even with fp16 operands — keep boolean selections in BOOL (And/Or, 900B) and never
 let an orientation-mix become a 30×30 float Add.
+
+## ADOPTED 20260709T041319Z
+- cost: 3558 -> 3089 (points 16.9644)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task284.onnx
+- note: min-merge from nets

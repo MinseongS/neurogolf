@@ -74,3 +74,8 @@ parallel approximation just because fresh-N agrees.
 
 ## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
 k5(cost 4068): val gate fail (bundled train#2가 generator guarantee 위반 — S11, public-fatal anyway). 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).
+
+## ADOPTED 20260709T041318Z
+- cost: 4068 -> 3500 (points 16.8395)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task162.onnx
+- note: min-merge from nets

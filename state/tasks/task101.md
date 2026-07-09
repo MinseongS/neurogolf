@@ -334,3 +334,8 @@ cost `13725 -> 13721`. The combined micro-tail submission **54451532** completed
 `7248.82` versus best `7264.29`; the later full-sweep submission **54451744** was also bad
 (`7248.83`). The overlay was reverted from
 `submission/overfit_nets/.micro_tail_backup_20260708/task101.onnx`.
+
+## ADOPTED 20260709T041325Z
+- cost: 13725 -> 12973 (points 15.5294)
+- source: candidates/public_dumps/20260709/neurogolf-merged91-workbench/nets/task101.onnx
+- note: min-merge from nets

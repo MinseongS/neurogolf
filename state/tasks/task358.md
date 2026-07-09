@@ -79,3 +79,7 @@ Mechanism: Einsum + GatherElements.
 Gate (fresh_verify, inc/cand fail on 1500-2000): 0/0 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
 Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
 See memory [[neurogolf-urad-7225-bundle-vein]]. 
+## ADOPTED 20260709T041324Z
+- cost: 4027 -> 3798 (points 16.7578)
+- source: candidates/public_dumps/20260709/neurogolf-7266-48-github-com-qurore-kaggloop/nets/task358.onnx
+- note: min-merge from nets

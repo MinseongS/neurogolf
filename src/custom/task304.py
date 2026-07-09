@@ -10,28 +10,28 @@ from ._exact import arr_b64, model, tensor
 
 def build(task):
     inits = [
-        tensor('starts', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==')),
-        tensor('ends', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAoAAAAAAAAAAwAAAAAAAAADAAAAAAAAAA==')),
-        tensor('label_kernel', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDksIDEsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAAEAAAEBAAACAQAAAoEAAAMBAAADgQAAAAEE=')),
         tensor('pattern_shape', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoJAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAA=')),
         tensor('bg_code', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoJ')),
         tensor('color_codes', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoJAAECAwQFBgcI')),
         tensor('output_pads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAFQAAAAAAAAAVAAAAAAAAAA==')),
         tensor('output_pad_axes', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAAMAAAAAAAAA')),
+        tensor('count_cw', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDksIDEwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8=')),
+        tensor('sel3_line', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AACAPwAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
+        tensor('grid_cw', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAgD8AAABAAABAQAAAgEAAAKBAAADAQAAA4EAAAABB')),
+        tensor('sel3_grid', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMwLCAzKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
     ]
     nodes = [
-        helper.make_node('Slice', ['input', 'starts', 'ends'], ['x']),
-        helper.make_node('GlobalAveragePool', ['x'], ['counts']),
-        helper.make_node('ArgMax', ['counts'], ['major'], axis=1, keepdims=0),
-        helper.make_node('Cast', ['major'], ['major_u8'], to=2),
-        helper.make_node('Conv', ['x', 'label_kernel'], ['grid_f'], kernel_shape=[1, 1]),
-        helper.make_node('Cast', ['grid_f'], ['grid3'], to=2),
-        helper.make_node('Equal', ['grid3', 'major_u8'], ['mask3']),
-        helper.make_node('Reshape', ['grid3', 'pattern_shape'], ['pattern']),
-        helper.make_node('Where', ['mask3', 'pattern', 'bg_code'], ['blocks']),
-        helper.make_node('DepthToSpace', ['blocks'], ['colors9'], blocksize=3, mode='DCR'),
-        helper.make_node('Equal', ['colors9', 'color_codes'], ['y9']),
-        helper.make_node('Pad', ['y9', 'output_pads', '', 'output_pad_axes'], ['output'], mode='constant'),
+        helper.make_node('Einsum', ['input', 'count_cw', 'sel3_line', 'sel3_line'], ['counts2'], name='counts_einsum', equation='nchw,oc,h,w->no'),
+        helper.make_node('Einsum', ['input', 'grid_cw', 'sel3_grid', 'sel3_grid'], ['grid_f'], name='grid_einsum', equation='nchw,oc,hr,wk->nork'),
+        helper.make_node('ArgMax', ['counts2'], ['major'], name='major', axis=1, keepdims=0),
+        helper.make_node('Cast', ['major'], ['major_u8'], name='major_u8', to=2),
+        helper.make_node('Cast', ['grid_f'], ['grid3'], name='grid3', to=2),
+        helper.make_node('Equal', ['grid3', 'major_u8'], ['mask3'], name='mask3'),
+        helper.make_node('Reshape', ['grid3', 'pattern_shape'], ['pattern'], name='pattern'),
+        helper.make_node('Where', ['mask3', 'pattern', 'bg_code'], ['blocks'], name='blocks'),
+        helper.make_node('DepthToSpace', ['blocks'], ['colors9'], name='colors9', blocksize=3, mode='DCR'),
+        helper.make_node('Equal', ['colors9', 'color_codes'], ['y9'], name='y9'),
+        helper.make_node('Pad', ['y9', 'output_pads', '', 'output_pad_axes'], ['output'], name='output', mode='constant'),
     ]
     value_infos = [
     ]

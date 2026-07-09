@@ -87,3 +87,8 @@ centered half-size C=15 (= generator 최대 스탬프 오프셋; C=14는 fresh 2
 - New grader cost = 8104 (mem 7331 + params 773), fail=0 bundled.
 - Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
 - Mechanism: structural golf: fewer counted node-output intermediates (graph rewrite, functionally equal on fresh).
+
+## ADOPTED 20260709T041315Z
+- cost: 8099 -> 6598 (points 16.2055)
+- source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task370.onnx
+- note: min-merge from nets

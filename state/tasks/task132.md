@@ -66,3 +66,8 @@ fills every in-grid cell, so "any channel occupies row r" = "r < grid-H"); reduc
 fp32 occupancy over the channel axis gives it for ~120B, killing the naive [1,1,30,30]
 ReduceMax-over-channels in-grid plane (saved ~6500B here). Floor of this class = two fp32
 per-channel spatial reductions (~2400B) + the 900B uint8 label plane ⇒ ~15.8 pts ceiling.
+
+## ADOPTED 20260709T041320Z
+- cost: 4088 -> 3652 (points 16.7970)
+- source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task132.onnx
+- note: min-merge from nets

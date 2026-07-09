@@ -101,3 +101,8 @@ must be a length-1 (`[1]`) initializer, NOT an empty `[]` array — an init with
 Gate: isolated `evaluate` bundled fail=0 + strictly cheaper than our incumbent + uint8-TopK scan clean.
 Artifact: `submission/overfit_nets/task036.onnx` (backup in `.minmerge_backup/`). Source dumps + notebook code under `reports/candidates/public_mine_20260708/`.
 This is a direct 8000-mode ONNX overlay (constant dataset => permanent). Source `src/custom/task036.py` NOT regenerated: the public net is optimizer-emitted (base64 in-notebook), no per-task Python builder to lift; the mechanism above IS the transferable insight.
+
+## ADOPTED 20260709T041335Z
+- cost: 1610 -> 1589 (points 17.6291)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task036.onnx
+- note: min-merge from nets

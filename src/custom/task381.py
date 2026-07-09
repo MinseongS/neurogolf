@@ -5,47 +5,44 @@ This owns the live ONNX graph in Python source; it is a control baseline,
 not a semantic optimization.
 """
 from onnx import TensorProto, helper
-import numpy as np
 from ._exact import arr_b64, model, tensor
 
 
 def build(task):
     inits = [
-        tensor('red8_starts', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAA=')),
-        tensor('red8_ends', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoDAAAAAAAAAAkAAAAAAAAACgAAAAAAAAA=')),
-        tensor('axes_chw', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAIAAAAAAAAAAwAAAAAAAAA=')),
-        tensor('pads_output', np.array([1, 0, 21, 20], dtype=np.int64)),
-        tensor('pad_axes', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAAMAAAAAAAAA')),
-        tensor('maroon9', np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 1], dtype=np.float32).reshape(1, 10, 1, 1)),
-        tensor('powers_f', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAQAAAgEAAAABBAACAQQAAAEIAAIBCAAAAQwAAgEMAAABE')),
-        tensor('powers_u16', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPHUyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEsIDEwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAIABAAIABAAIABAAIAAAAEAAg==')),
-        tensor('next_powers_u16', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPHUyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEsIDEwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAQACAAQACAAQACAAAABAAIABA==')),
+        tensor('r_starts', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAA=')),
+        tensor('r_ends', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoDAAAAAAAAAAkAAAAAAAAACgAAAAAAAAA=')),
+        tensor('r_axes', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAIAAAAAAAAAAwAAAAAAAAA=')),
+        tensor('powers', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAQAAAgEAAAABBAACAQQAAAEIAAIBCAAAAQwAAgEMAAABE')),
+        tensor('powers_rev', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAABEAACAQwAAAEMAAIBCAAAAQgAAgEEAAABBAACAQAAAAEAAAIA/')),
+        tensor('thr', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAQAAAgEAAAABBAACAQQAAAEIAAIBCAAAAQwAAgEMAAABE')),
+        tensor('thr_rev', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAABEAACAQwAAAEMAAIBCAAAAQgAAgEEAAABBAACAQAAAAEAAAIA/')),
+        tensor('half', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAA/')),
+        tensor('pad_vals', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVAAAAAAAAABQAAAAAAAAA')),
+        tensor('pad_false', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGIxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
+        tensor('ch9sel', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA/')),
     ]
     nodes = [
-        helper.make_node('Slice', ['input', 'red8_starts', 'red8_ends', 'axes_chw'], ['red8_f']),
-        helper.make_node('MatMul', ['red8_f', 'powers_f'], ['code_f']),
-        helper.make_node('Cast', ['code_f'], ['code'], to=4),
-        helper.make_node('GreaterOrEqual', ['code', 'powers_u16'], ['right_seen']),
-        helper.make_node('Mod', ['code', 'next_powers_u16'], ['lower_bits']),
-        helper.make_node('Cast', ['lower_bits'], ['left_seen'], to=9),
-        helper.make_node('Cast', ['red8_f'], ['red8'], to=9),
+        helper.make_node('Slice', ['input', 'r_starts', 'r_ends', 'r_axes'], ['red8_f']),
+        helper.make_node('MatMul', ['red8_f', 'powers'], ['code_f']),
+        helper.make_node('MatMul', ['red8_f', 'powers_rev'], ['code2_f']),
+        helper.make_node('GreaterOrEqual', ['code_f', 'thr'], ['right_seen']),
+        helper.make_node('GreaterOrEqual', ['code2_f', 'thr_rev'], ['left_seen']),
         helper.make_node('And', ['left_seen', 'right_seen'], ['span']),
-        helper.make_node('Not', ['red8'], ['not_red8']),
-        helper.make_node('And', ['span', 'not_red8'], ['maroon8']),
-        helper.make_node('Pad', ['maroon8', 'pads_output', '', 'pad_axes'], ['maroon30'], mode='constant'),
-        helper.make_node('Where', ['maroon30', 'maroon9', 'input'], ['output']),
+        helper.make_node('Less', ['red8_f', 'half'], ['not_red']),
+        helper.make_node('And', ['span', 'not_red'], ['maroon8']),
+        helper.make_node('Pad', ['maroon8', 'pad_vals', 'pad_false'], ['maroonMask'], mode='constant'),
+        helper.make_node('Where', ['maroonMask', 'ch9sel', 'input'], ['output']),
     ]
     value_infos = [
         helper.make_tensor_value_info('red8_f', 1, [1, 1, 8, 10]),
         helper.make_tensor_value_info('code_f', 1, [1, 1, 8, 1]),
-        helper.make_tensor_value_info('code', 4, [1, 1, 8, 1]),
+        helper.make_tensor_value_info('code2_f', 1, [1, 1, 8, 1]),
         helper.make_tensor_value_info('right_seen', 9, [1, 1, 8, 10]),
-        helper.make_tensor_value_info('lower_bits', 4, [1, 1, 8, 10]),
         helper.make_tensor_value_info('left_seen', 9, [1, 1, 8, 10]),
-        helper.make_tensor_value_info('red8', 9, [1, 1, 8, 10]),
         helper.make_tensor_value_info('span', 9, [1, 1, 8, 10]),
-        helper.make_tensor_value_info('not_red8', 9, [1, 1, 8, 10]),
+        helper.make_tensor_value_info('not_red', 9, [1, 1, 8, 10]),
         helper.make_tensor_value_info('maroon8', 9, [1, 1, 8, 10]),
-        helper.make_tensor_value_info('maroon30', 9, [1, 1, 30, 30]),
+        helper.make_tensor_value_info('maroonMask', 9, [1, 1, 30, 30]),
     ]
-    return model('task381_live_exact', nodes, inits, output_dtype=1, opset=18, value_infos=value_infos)
+    return model('task381_live_exact', nodes, inits, output_dtype=1, opset=13, value_infos=value_infos)

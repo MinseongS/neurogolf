@@ -202,3 +202,8 @@ Candidate:
 Bundled gate after adoption: fail=0, cost `3464 -> 3462`
 (memory `3264`, params `200 -> 198`).  Adopted into
 `submission/overfit_nets/task037.onnx`.
+
+## ADOPTED 20260709T041313Z
+- cost: 3462 -> 2465 (points 17.1901)
+- source: candidates/public_dumps/20260709/neurogolf-7266-48-github-com-qurore-kaggloop/nets/task037.onnx
+- note: min-merge from nets

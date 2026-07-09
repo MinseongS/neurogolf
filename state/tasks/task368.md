@@ -184,3 +184,8 @@ Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-me
 5042 (memory 4960 -> 4856, params 185 -> 186).
 
 Follow-up pruning removed dead initializer `topk_i8_zero_368`. Cost: 5042 -> 5041.
+
+## ADOPTED 20260709T041312Z
+- cost: 5130 -> 3599 (points 16.8116)
+- source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task368.onnx
+- note: min-merge from nets

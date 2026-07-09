@@ -11,7 +11,7 @@ from ._exact import arr_b64, model, tensor
 def build(task):
     inits = [
         tensor('zero_f', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAA==')),
-        tensor('path_weights', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDMwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqAT0BPAE/AToBOQE4ATsBNgE1ATQBNwEyATEBMAEyASwBLgEoASoBJAEmASABIAEcARgBFAEQAQgBAADw=')),
+        tensor('path_weights', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDIwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqAT0BPAE/AToBOQE4ATsBNgE1ATQBNwEyATEBMAEyASwBLgEoASoBJ')),
         tensor('axis_one', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAA==')),
         tensor('topk_k', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoQAAAAAAAAAA==')),
         tensor('one_i8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoB')),
@@ -34,7 +34,7 @@ def build(task):
         tensor('output_pads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbAAAAAAAAAA4AAAAAAAAA')),
     ]
     nodes = [
-        helper.make_node('Conv', ['input', 'color_weights'], ['color_grid_f_full'], kernel_shape=[2, 1], dilations=[27, 1]),
+        helper.make_node('Conv', ['input', 'color_weights'], ['color_grid_f_full'], kernel_shape=[2, 1], dilations=[27, 1], pads=[0, 0, 0, -10]),
         helper.make_node('Cast', ['color_grid_f_full'], ['color_grid_u'], to=2),
         helper.make_node('ReduceMax', ['color_grid_u', 'path_color_axes'], ['path_color'], keepdims=0),
         helper.make_node('Greater', ['path_color', 'zero_u8'], ['path_bool']),
@@ -88,11 +88,11 @@ def build(task):
         helper.make_node('Pad', ['output_top', 'output_pads'], ['output'], mode='constant'),
     ]
     value_infos = [
-        helper.make_tensor_value_info('color_grid_f_full', 1, [1, 1, 3, 30]),
-        helper.make_tensor_value_info('color_grid_u', 2, [1, 1, 3, 30]),
-        helper.make_tensor_value_info('path_color', 2, [1, 30]),
-        helper.make_tensor_value_info('path_bool', 9, [1, 30]),
-        helper.make_tensor_value_info('path_score', 10, [1, 30]),
+        helper.make_tensor_value_info('color_grid_f_full', 1, [1, 1, 3, 20]),
+        helper.make_tensor_value_info('color_grid_u', 2, [1, 1, 3, 20]),
+        helper.make_tensor_value_info('path_color', 2, [1, 20]),
+        helper.make_tensor_value_info('path_bool', 9, [1, 20]),
+        helper.make_tensor_value_info('path_score', 10, [1, 20]),
         helper.make_tensor_value_info('topk_values', 10, [1, 16]),
         helper.make_tensor_value_info('source_idx64_b', 7, [1, 16]),
         helper.make_tensor_value_info('width_present', 9, [1, 16]),

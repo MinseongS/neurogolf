@@ -86,3 +86,8 @@ label carrier; the remaining class-level optimization is often to avoid
 computing unused selector/predicate scores.  For "select one of K blocks" tasks,
 check whether all K predicates are actually needed.  With an exactly-one-outlier
 promise, K-1 predicates may determine the selected block.
+
+## ADOPTED 20260709T041335Z
+- cost: 267 -> 265 (points 19.4203)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task146.onnx
+- note: min-merge from nets

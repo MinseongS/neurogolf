@@ -239,3 +239,8 @@ TopK submission errors.
 
 Bundled gate: fail=0.  Unsigned TopK scan: clean after adoption.  Cost: 31559
 -> 31299 (memory 30983 -> 30722, params 576 -> 577).
+
+## ADOPTED 20260709T041329Z
+- cost: 31559 -> 30159 (points 14.6858)
+- source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task366.onnx
+- note: min-merge from nets

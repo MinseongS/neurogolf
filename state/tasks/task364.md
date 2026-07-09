@@ -132,3 +132,8 @@ fresh 1200/1200 fail=0. Source edit in src/custom/task364.py; params unchanged (
 **Verdict: FLOOR.** GB (3520) = fp32 free-input slice, 2ch needed by (1,2,3,3) conv weight; idx (1760) = int32 forced (ORT Gather rejects <int32 indices, verified INVALID_GRAPH); fp16 seed masks/walk tables minimal (uint8 overflows walk-sum before Greater>0). Active unchanged (mem 14980 par 1177).
 **⭐ CROSS-CUTTING FINDING — sparse-initializer params lever (blocked locally):** local `calculate_params` counts `sparse_initializer` by NONZERO (vs dense full-prod). task364 tables are sparse → params 1177→219 (+~0.06). But `calculate_memory` runs `check_model(full_check=True)`+`infer_shapes(strict_mode=True)` which assigns sparse_tensor_type → all op type-inferences reject → scorer returns None (0 pts). Tested full/Sr-Sc-only/with-value_info — all fail checker. ORT executes correctly but our scorer can't score it.
 **Reopen:** (1) harness scorer tolerates sparse init / drops strict full_check; (2) opset op gains sparse-tensor type inference; (3) reformulation reading only 1 input channel in fp32 (GB 3520→1760).
+
+## ADOPTED 20260709T041321Z
+- cost: 16157 -> 14642 (points 15.4084)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task364.onnx
+- note: min-merge from nets

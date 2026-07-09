@@ -49,3 +49,8 @@ at KxK (cheap) then route 10-ch via `Where(bool_cond, onehot, input)` so the ONL
 plane is a 900B bool cond — never a fp16 30x30 (1800B) nor a 10-ch Concat (1690B). ⭐ Use
 **opset 13** (not the builders' default opset 10) when you need Pad to accept bool / pads as
 an input tensor; the scorer checks DOMAIN not VERSION, so an opset-13 graph scores fine.
+
+## ADOPTED 20260709T041313Z
+- cost: 2177 -> 1630 (points 17.6037)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task323.onnx
+- note: min-merge from nets

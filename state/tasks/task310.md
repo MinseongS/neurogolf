@@ -72,3 +72,8 @@ output size falls out for free as `span+1` of that colour — no NonZero/ArgMax 
 output extent needed. Combine task036's min-span colour id with task177's
 colf-window-Gather (carry arbitrary per-cell colours) to handle "crop a marked
 region that contains arbitrary colours" in closed form at the ~15.6 B-tier floor.
+
+## ADOPTED 20260709T041334Z
+- cost: 3227 -> 3184 (points 16.9341)
+- source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task310.onnx
+- note: min-merge from nets

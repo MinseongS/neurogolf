@@ -85,3 +85,8 @@ rows/cols ≥ canvas, not the short-grid interior rows 5–9).
   `17.32910516863788 -> 17.329571477809306`.
 - Applied to `submission/overfit_nets/task030.onnx`; backup in
   `submission/overfit_nets/.minmerge_backup/task030.onnx`. Included in submission **54461084**.
+
+## ADOPTED 20260709T041317Z
+- cost: 2144 -> 1803 (points 17.5028)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task030.onnx
+- note: min-merge from nets

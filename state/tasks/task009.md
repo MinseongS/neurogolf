@@ -111,3 +111,8 @@ Mechanism: value_info Slice crop. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). 
 **Ran:** fold_finder flagged `[1,9,10,10]` fp16 `onehot16` plane (1800B, Cast→4 Einsum). Deep opus agent mapped 23 nodes (per-colour fill-between-same-marker via triangular-sep Einsums).
 **Verdict: FLOOR.** fp16 is smallest Einsum-legal dtype (pre-cast source is bool, Einsum rejects bool; int32=3600B worse). All 9 colour channels required (reduced code → false cross-colour matches; arc-gen exercises all 9). Dropping unused-in-train colours {5,6,7} → mem 5629 but `evaluate` scored fail 127/pts 0 (arc-gen uses all 9) = gate-invalid. Active unchanged (mem 6529 par 169).
 **Reopen:** new Einsum-legal sub-2-byte dtype in ORT build; or proof <9 colours ever appear across full graded set.
+
+## ADOPTED 20260709T041340Z
+- cost: 6698 -> 6694 (points 16.1910)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task009.onnx
+- note: min-merge from nets

@@ -69,3 +69,8 @@ Candidate:
 Bundled gate after adoption: fail=0, cost `2190 -> 2188`
 (memory `2119`, params `71 -> 69`).  Adopted into
 `submission/overfit_nets/task388.onnx`.
+
+## ADOPTED 20260709T041316Z
+- cost: 2188 -> 1829 (points 17.4885)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task388.onnx
+- note: min-merge from nets

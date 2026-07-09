@@ -642,3 +642,5 @@ nets in ONE process under-scores scattered nets (ORT profiler state leak) — ba
 said 7141/7196; per-process isolated eval (matches Kaggle per-task scoring) = truth.
 networks/ NOT yet formalized (89 source regens + tasklogs pending); live submission
 built from submission/merged_nets/.
+
+| 2026-07-09 04:14Z | public min-merge 20260709: 4 dumps (prvsiyan 7266.72 / ryosukeshiroshita 7266.48 / kutenk 7261.53 / jonathanncoletti merged91), margin-0, 78 adoptions +10.30 -> local 7289.59 | **LB 7289.71 확정 (sub 54481576, 신기록)** |

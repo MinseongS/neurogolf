@@ -87,3 +87,7 @@ mem 2792/16.92; full_idx 900B uint8 30x30 label carrier for free Equal->output, 
 
 
 ## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 3227 -> 3223 (+0.001); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].
+## ADOPTED 20260709T041314Z
+- cost: 3186 -> 2401 (points 17.2164)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task333.onnx
+- note: min-merge from nets

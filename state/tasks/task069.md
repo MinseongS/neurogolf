@@ -62,3 +62,8 @@ min-pool). Do min-prop in NEGATED space so each step is a plain MaxPool with no 
 Build the offset->colour table as a dr/dc double-MatMul ([3,N]fp16 @ [N,4]fp16, colour-weighted)
 instead of a [N,12] key one-hot (saves ~4.8 KB). The whole thing lands as a label-map + final Equal.
 ⭐ Plus-min radius MUST be 1: a wider min-pool reaches across the inter-sprite gap and merges them.
+
+## ADOPTED 20260709T041314Z
+- cost: 3905 -> 2949 (points 17.0108)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task069.onnx
+- note: min-merge from nets

@@ -76,3 +76,8 @@ at 100 B. This trimmed 6100→4420 (+0.3 pts) with zero accuracy change.
 ⭐ A "corners-only" box is detected purely by min/max green index (a 1-D bbox), no
 2-D corner plane needed; the box interior offset (+1) is a constant added to the
 scalar.
+
+## ADOPTED 20260709T041329Z
+- cost: 2743 -> 2625 (points 17.1272)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task245.onnx
+- note: min-merge from nets

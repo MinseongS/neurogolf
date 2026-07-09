@@ -107,3 +107,7 @@ table; opposite corner-rays share one diagonal constant ((row-col)*f and
 
 ## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (sub 54367833): 3813 -> 3694 (+0.032)
 Mechanism: Einsum vs FREE input. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). Source-owned via live_to_exact_source --write-src, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
+## ADOPTED 20260709T041331Z
+- cost: 3681 -> 3576 (points 16.8180)
+- source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task107.onnx
+- note: min-merge from nets

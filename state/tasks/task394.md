@@ -50,3 +50,8 @@ intact on-grid cell — two tiny Gathers read the answer with NO pattern matmul.
 background [1,10,30,30], build the [1,10,bs,bs] one-hot small and `Pad` it (value 0) DIRECTLY
 into the FREE uint8 output — removes the ~900 B uint8 (or 1800 fp16 / 3600 fp32) 30x30 colour
 carrier entirely. Declare the graph output as UINT8 so the final Pad emits `output`.
+
+## ADOPTED 20260709T041310Z
+- cost: 2071 -> 676 (points 18.4838)
+- source: candidates/public_dumps/20260709/neurogolf-7266-48-github-com-qurore-kaggloop/nets/task394.onnx
+- note: min-merge from nets

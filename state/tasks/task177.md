@@ -72,3 +72,8 @@ a **bool one-hot masked by a 1×1 keep-conv** rather than collapsing to a colour
 plane and re-expanding — that kills one Conv plus the label/class const tables. This
 is the cheap realization of this tasklog's "carry input as bool" open angle (no
 9600B per-channel gather needed).
+
+## ADOPTED 20260709T041320Z
+- cost: 3619 -> 3249 (points 16.9139)
+- source: candidates/public_dumps/20260709/neurogolf-7266-48-github-com-qurore-kaggloop/nets/task177.onnx
+- note: min-merge from nets

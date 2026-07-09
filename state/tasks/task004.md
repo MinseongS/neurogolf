@@ -237,3 +237,8 @@ k3(cost 5137): 0 contradictions이지만 18 stubborn hinge viols, LP로 infeasib
 ## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
 Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
 Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## ADOPTED 20260709T041329Z
+- cost: 5090 -> 4866 (points 16.5100)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task004.onnx
+- note: min-merge from nets

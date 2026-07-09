@@ -170,3 +170,7 @@ row-crop any run/scan mechanism after proving generator header/blank rows.
 
 ## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (sub 54367833): 2751 -> 2692 (+0.022)
 Mechanism: Einsum + value_info Slice. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). Source-owned via live_to_exact_source --write-src, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
+## ADOPTED 20260709T041316Z
+- cost: 2644 -> 2218 (points 17.2956)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task354.onnx
+- note: min-merge from nets

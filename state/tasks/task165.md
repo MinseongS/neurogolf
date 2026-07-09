@@ -77,3 +77,8 @@ No transferable mechanism — minor trim.
 - New grader cost = 4840 (mem 4635 + params 205), fail=0 bundled.
 - Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
 - Mechanism: QLinearConv u8 signed-renderer replaces ConvTranspose+GatherND scatter (fp16 kernel->u8); mech (c) self-applied.
+
+## ADOPTED 20260709T041326Z
+- cost: 4800 -> 4544 (points 16.5784)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task165.onnx
+- note: min-merge from nets

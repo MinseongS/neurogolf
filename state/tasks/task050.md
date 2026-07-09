@@ -55,3 +55,7 @@ in-grid rectangle for free from `ReduceMax(input, axes=[1,3])`/`[1,2]` occupancy
 
 
 ## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 3911 -> 3852 (+0.015); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].
+## ADOPTED 20260709T041340Z
+- cost: 3850 -> 3849 (points 16.7444)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task050.onnx
+- note: min-merge from nets

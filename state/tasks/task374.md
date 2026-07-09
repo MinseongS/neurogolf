@@ -51,3 +51,8 @@ override min→2/max→1) drops 4 bool intermediates vs an explicit "and-not-min
 
 ## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
 mem 2262/17.26; output5 [1,5,10,10] bool 500B beats 900B pad-then-Equal; gray_crop_f 400B forced-fp32; fp16 counts already minimal. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).
+
+## ADOPTED 20260709T041331Z
+- cost: 2283 -> 2217 (points 17.2961)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task374.onnx
+- note: min-merge from nets

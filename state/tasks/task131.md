@@ -61,3 +61,8 @@ and in-grid (sum over ALL channels) is a zero-param ReduceSum over the free inpu
 ## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
 Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
 Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## ADOPTED 20260709T041332Z
+- cost: 3976 -> 3874 (points 16.7380)
+- source: candidates/public_dumps/20260709/neurogolf-merged91-workbench/nets/task131.onnx
+- note: min-merge from nets

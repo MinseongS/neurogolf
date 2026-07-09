@@ -76,3 +76,8 @@ canvas is in-grid → delete the bg slice and the whole in-grid Or chain; the 30
 Pad sentinel alone produces the off-canvas all-zero cells.** (−1300 B, +0.26 pt
 here.) Always check `input sizes` over 500 fresh instances before paying for an
 in-grid mask.
+
+## ADOPTED 20260709T041317Z
+- cost: 2516 -> 2123 (points 17.3394)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task250.onnx
+- note: min-merge from nets

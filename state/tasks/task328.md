@@ -66,3 +66,8 @@ Conclusion: do not retry plain bank factorization, unique-row compression, or
 label-pad-to-bool-output for this task.  A real win still needs a new lowering
 that generates packed row codes from scalar/vector logic without materializing
 18x18 corner distance fields.
+
+## ADOPTED 20260709T041326Z
+- cost: 6631 -> 6304 (points 16.2511)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task328.onnx
+- note: min-merge from nets

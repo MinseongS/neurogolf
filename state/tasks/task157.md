@@ -97,3 +97,8 @@ that the two-region shape-correspondence rule has been solved.  Active backup be
 Full active manifest after adoption: `400/400`, total points `7264.550544427234`,
 total cost `1062063`; unsigned TopK scan clean.  Submitted as **54458829**, Kaggle completed at
 displayed publicScore **7264.67**.
+
+## ADOPTED 20260709T041338Z
+- cost: 6847 -> 6823 (points 16.1719)
+- source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task157.onnx
+- note: min-merge from nets

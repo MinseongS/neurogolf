@@ -32,3 +32,8 @@ A row/col-COUPLED region mask `r + |c-col| < length` (pyramid/triangle/diamond) 
 `reports/candidates/task348/task348_dedupe_initializers.onnx` rewired duplicate
 initializer `pad_val->u8_250`.  Bundled gate fail=0.  Cost: 1896 -> 1895
 (params 72 -> 71).
+
+## ADOPTED 20260709T041321Z
+- cost: 1895 -> 1706 (points 17.5581)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task348.onnx
+- note: min-merge from nets

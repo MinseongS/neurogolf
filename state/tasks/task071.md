@@ -81,3 +81,8 @@ from the recovered scalar axis as `Equal(k+c, axis)` — no per-axis stack anywh
 Occlusion-robust axis = the unique axis where every visible cell's mirror lands on
 (shape OR occluder). Re-confirms blank-note "confirmed-infeasible" labels are
 ~false-positive: this one broke +0.80.
+
+## ADOPTED 20260709T041335Z
+- cost: 2682 -> 2663 (points 17.1128)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task071.onnx
+- note: min-merge from nets

@@ -84,3 +84,8 @@ the value plane: `ReduceMin(V, perp-axis) == colour` (a non-full line has a bg(0
 removing a dedicated fp16 gray-count plane entirely. The flip symmetry of a two-sided barrier makes flip a
 free no-op; only the horizontal/vertical orientation needs a scalar branch select done with bool And/Or
 (ORT Where is NOT implemented for bool, so select via `(horiz AND h) OR (NOT horiz AND v)`).
+
+## ADOPTED 20260709T041324Z
+- cost: 3531 -> 3332 (points 16.8887)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task093.onnx
+- note: min-merge from nets

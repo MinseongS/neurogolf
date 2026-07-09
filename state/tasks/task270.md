@@ -193,3 +193,8 @@ entry plane (900B) is already minimal. Net: mem floor ~20KB -> ~15.05, ~0.1 shor
   Pad with an out-of-range sentinel (e.g. 99), and Equal(uint8, uint8 arange) — ORT supports uint8
   Pad and uint8 Equal under ORT_DISABLE_ALL; off-grid sentinel keeps the harness's all-zero off-grid
   target satisfied.
+
+## ADOPTED 20260709T041330Z
+- cost: 2975 -> 2858 (points 17.0421)
+- source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task270.onnx
+- note: min-merge from nets
