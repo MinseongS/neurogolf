@@ -1,0 +1,189 @@
+# NeuroGolf lever registry — single durable home for lever verdicts.
+# Replaces prose-buried "exhausted/floor/ceiling" claims scattered across NEXT_SESSION/reports.
+#
+# EPISTEMIC RULE (binding): status is ONLY `live` or `dormant` — never "dead/exhausted/floor".
+# A lever is dormant, not dead. Every ledger entry MUST carry exactly 4 fields:
+#   date   — when the run/verdict was recorded
+#   ran    — what was actually run (tool + scope)
+#   verdict— the result (never a bare negative; always "not found by tool X at time T vs our net")
+#   reopen — the concrete reopen-trigger that re-activates the lever
+#
+# Schema (every lever): name / status(live|dormant) / scanner(str|null) /
+#   scanner_archive(str|null, git ref) / recipe(str|null) / agent_class(fable|opus) /
+#   expected_yield(str) / ledger(list of {date, ran, verdict, reopen}).
+# Extra keys are allowed on individual lever entries (schema is a minimum, not a cap) —
+# see free-output-einsum-regime-crack, which folds in the full regime vein worklist.
+
+levers:
+  - name: free-output-einsum-regime-crack
+    status: live
+    scanner: mask_dominance
+    scanner_archive: null
+    recipe: playbook/free-output-einsum.md
+    agent_class: fable
+    expected_yield: "+0.2~0.9/task, 잔여 ~45태스크 (16/18 crack 실적)"
+    ledger:
+      - date: 2026-07-08
+        ran: "batch6 8태스크 (opus)"
+        verdict: "7/8 floor — positioned-content mask는 크랙 불가, 1 broken(071)"
+        reopen: "새 sub-recipe 발견 시; non-mask bloat(Conv 3600B, QLinearConv)로 일반화 시"
+    # --- folded in from reports/regime_vein_worklist.md (2026-07-09), which is deleted later ---
+    # Lever: fold a 900B [30,30] output-routing mask into a free-output Einsum
+    # (output>0 sign-decode; input/output free any dtype). Gate: bundled fail=0 +
+    # cost < DEPLOYED (submission/overfit_nets/taskNNN.onnx).
+    # LB trajectory this vein: 7264.67 → 7279.34 (~+14.7 LB), almost all regime cracks.
+    done_tasks:  # cracked + adopted, by batch
+      b1: [329, 303, 141, 033, 341]
+      b2: [260, 075, 240, 159, 345, 109]
+      b3: [295, 392, 398, 061, 051]   # b1-b3 = the 16/18 "16 cracks across 3 batches" milestone
+      b4: [287, 094, 063, 199, 273, 224]
+      b5: [246, 190]
+      fp16_adoptions: [251, 268, 205, 222]
+    floor_tasks: [112, 163, 099, 102, 062, 012, 348, 124, 354]  # 9 confirmed floors — 재공격 금지
+    # boundary rule: mask = (arbitrary motif CONTENT) ⊛ (data-dependent 2-D POSITION),
+    # OR a data-dependent run/coupling (task354 SameRun) → 900B u8 index-plane is cheapest;
+    # every Einsum factorization prices higher.
+    batch6_floored: [354, 090, 390, 154, 034, 168, 381, 071]  # also do-NOT-re-attempt (batch6 DRY)
+    crack_condition:  # sharpened 3-property test (batch6) — cracks ONLY if ALL hold, else FLOOR
+      - "1. GLOBAL-STATE routing (predicate from ≤~16 scalars: offset/size/color/count), NOT content at a data-dependent position, NOT a data-dependent run/coupling."
+      - "2. The 900B plane is a Where ROUTING mask, NOT an Equal DECODE discriminator (label30→Equal→10ch = dense-recolor floor: 124/354/390)."
+      - "3. Mask FRACTION high (≥~45%); low-fraction (~30%, e.g. 090) loses to non-mask compute. AND the fold's fp32 operands (co-bound to the free input) must stay < the 900B bool mask — needs genuinely low-rank/static routing, not per-cell placement matrices (this fp32-co-bind economics is why 168/381/034 floor even though structured)."
+    next_targets:
+      structured_untried: [268, 086]  # 268 frame+diagonal arms; 086 ring/frame stamp + color-remap
+      deprioritize_near_floor: [251, 333, 042]  # 251 already fp16-adopted; 333 thin margin; 042 cross-scale FP risk
+      long_tail: "re-run mask_dominance_scan --min-frac 0.20 for <0.30-fraction masks"
+    conv_fp32_arsenal: [074, 080, 198, 216, 162, 002, 349]  # NOT bool/u8 Where-masks — need a NEW fold (collapse Conv/Slice into free-output contraction); biggest single-task upside if it works; unproven
+    residual_lever: "mixed-dtype Einsum — many adopted regime nets still carry a fp32 input-co-bound carrier (~600B, e.g. task063). ORT Einsum binds all operands to one dtype; need to separate input-contraction from carrier-contraction to send the carrier fp16 (~300B/net cheaper)."
+
+  - name: deployed-fp16-recast
+    status: live
+    scanner: null           # scan_deployed_fp16.py는 리포에 실존하지 않음(문서에만 존재) — 재작성 필요
+    scanner_archive: null
+    recipe: playbook/fp16-recast.md
+    agent_class: opus
+    expected_yield: "+0.03~0.3/task; output-coupled는 winnable, input-coupled는 floor"
+    ledger:
+      - date: 2026-07-08
+        ran: "task377/205/355 수작업 (final-Einsum 직전 fp16 Cast 삽입 패턴)"
+        verdict: "3승 채택 (+0.34 LB 합); 스캐너 파일은 유실 — 문서의 input-weld/co-bind 필터로 재작성해야 함"
+        reopen: "모든 채택/오버레이 후 재실행; free-output rewrite 후 상류 tail 재검사"
+
+  - name: kernel-collapse
+    status: live
+    scanner: kernel_collapse
+    scanner_archive: null
+    recipe: null
+    agent_class: opus
+    expected_yield: "+0.553 LB/배치 실적; params 레인 (memory-sweep과 직교), bit-identical"
+    ledger:
+      - date: 2026-07-08
+        ran: "kernel_collapse.py — 배포 Conv 넷 전수 스윕"
+        verdict: "+0.553 LB, 18승 (single-position Conv kernel → 1×1+pad, bit-identical)"
+        reopen: "새 Conv 넷 유입 시 재실행"
+
+  - name: public-minmerge
+    status: live
+    scanner: null           # CLI `ng mine-public`이 담당
+    scanner_archive: null
+    recipe: null
+    agent_class: opus
+    expected_yield: "새 프론티어당 +0.3~4.5 LB (S18 urad 7242.52 dump = +4.46 실적). 빠른 레인: onnx 바이트 채택만"
+    ledger:
+      - date: 2026-07-08
+        ran: "margin-0 min-merge (프론티어 7250.24 기준, ng mine-public)"
+        verdict: "0승 — 현 채굴선 위 공개 프론티어 없음 (0-win = 'no cheaper bundled-fail=0 overlay found by this run', not exhausted)"
+        reopen: "공개 프론티어가 현재 채굴선 위로 갱신 시 / 새 업로더 / 새 추출 ONNX 아티팩트"
+
+  - name: public-insight-generalize
+    status: live
+    scanner: public_autopsy
+    scanner_archive: null
+    recipe: playbook/public-insight.md
+    agent_class: fable
+    expected_yield: "borrowed net = +1 task; generalized mechanism = +N (실적: free_input_einsum_substitution +1.72/3태스크, task011 +1.52)"
+    # 깊은 레인 (user 지시 2026-07-09): 공개가 태스크별로 우리를 이기면 onnx 채택에서 멈추지 않는다 —
+    # ①메커니즘 역공학(op-delta 지문) ②src/custom/taskNNN.py로 소스 재현(빌드 재생성 가능) ③insights.yaml 등록
+    # ④같은 지문을 가진 우리의 다른 태스크 전수 재스캔·적용.
+    ledger:
+      - date: 2026-07-08
+        ran: "public_autopsy 65 wins 분석"
+        verdict: "65승 중 57 dedupe-tail·8 byte-tail (대형 지문 없음), 3-signature 클러스터 추출됨"
+        reopen: "새 공개 win 발생 시마다 (min-merge 채택과 항상 짝으로)"
+
+  - name: reducesum-spatial-einsum
+    status: dormant
+    scanner: null
+    scanner_archive: "git:pre-redesign:reports/candidates/reducesum_spatial_to_einsum_probe.py"
+    recipe: null
+    agent_class: opus
+    expected_yield: "+0.2~0.5/task; 현재 잔여 0"
+    ledger:
+      - date: 2026-07-08
+        ran: "reducesum_spatial_to_einsum_probe.py — 전수 스윕"
+        verdict: "8승 채택 후 잔여 0 (현 배포본 기준)"
+        reopen: "새 spatial ReduceSum 유입 시"
+
+  - name: walk-chain-slack
+    status: dormant
+    scanner: null
+    scanner_archive: "git:pre-redesign:reports/scripts/walk_chain_slack.py"
+    recipe: null
+    agent_class: opus
+    expected_yield: "+0.2/드문 히트; 넷당 최대 ~1 walk-plane, min-merge 채택마다 재검"
+    ledger:
+      - date: 2026-07-07
+        ran: "walk_chain_slack.py — 400 배포 넷 스윕"
+        verdict: "1/10 히트 (task243 W2만 worst-case slack, +0.24); 나머지 tight"
+        reopen: "새 walk-chain 넷 채택 시 (freshly-grafted public net may carry un-trimmed slack)"
+
+  - name: fold-reducible-plane
+    status: dormant
+    scanner: fold
+    scanner_archive: null
+    recipe: null
+    agent_class: opus
+    expected_yield: "재정식화 후에만; 현재 top4 floor"
+    ledger:
+      - date: 2026-07-08
+        ran: "fold 스캐너 — top4 후보"
+        verdict: "top4 4/4 floor (현 넷 기준)"
+        reopen: "새 공개 teacher / monster(233/366/285) 재정식화 후"
+
+  - name: topk-width-refit
+    status: dormant
+    scanner: null
+    scanner_archive: null
+    recipe: null
+    agent_class: opus
+    expected_yield: "+0.05~0.2/task 추정, 미검증 (K를 theoretical-max→empirical+margin으로 축소)"
+    ledger:
+      - date: 2026-07-08
+        ran: "borrowed-net TopK-K 폭 조사 (후보 식별만)"
+        verdict: "후보 46/361/377 식별, 미착수"
+        reopen: "fresh-gate 여유 있는 세션"
+
+  - name: runtime-timeout-spend
+    status: dormant
+    scanner: null
+    scanner_archive: null
+    recipe: null
+    agent_class: fable
+    expected_yield: "미지 — 새 축 (총 추론 runtime을 자원으로 지출)"
+    ledger:
+      - date: 2026-07-08
+        ran: "공개 discussion 채굴 (개념 확인만)"
+        verdict: "미탐사 축 — 스코어의 2번째 제약(총 inference runtime)을 자원으로 지출하는 lever, 아직 미착수"
+        reopen: "regime 베인 소진 후"
+
+  - name: dtype-overpay
+    status: dormant
+    scanner: dtype_overpay
+    scanner_archive: null
+    recipe: null
+    agent_class: opus
+    expected_yield: "이식 후 재판정 필요 (배포본 재조준 시)"
+    ledger:
+      - date: 2026-07-08
+        ran: "dtype_overpay_scan.py (networks/ 겨냥)"
+        verdict: "networks/ 스캔이 배포본과 diverge — 오판 이력, 배포본 재조준 필요 (배포본 fp16은 deployed-fp16-recast가 흡수)"
+        reopen: "스캐너 이식(Task 15, 배포본 재조준) 후 1회 재실행"

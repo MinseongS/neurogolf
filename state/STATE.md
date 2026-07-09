@@ -9,7 +9,7 @@
 ## 활성 베인 (지금 할 일, 기대이득 순)
 1. free-output-einsum regime crack — mask_dominance 잔여 ~45태스크 (16/18 crack). positioned-content
    mask는 floor(pre-filter로 skip), global-state/structured(ring/block/periodic/diagonal/threshold-run/count)만 채굴. +20~40 LB 잠재.
-   → 상세(DONE 16·FLOOR 9 재공격금지 목록·crack 조건·NEXT 타깃): reports/regime_vein_worklist.md
+   → 상세(DONE·FLOOR 재공격금지·crack 조건·NEXT 타깃): state/levers.yaml free-output-einsum-regime-crack 항목
 2. CONV-FP32 arsenal (074/080/198/383/187) + QLinearConv(349) — regime crack의 non-mask 일반화, 미증명.
 3. mixed-dtype carrier — 배포 넷 fp16 output-coupled/coordinate-tail 재캐스트(input-weld/consumer co-bind는 floor).
 4. 공개 min-merge 모니터링 — 새 업로더가 7250+ 갱신 시 margin-0 재채굴(dormant, 상시 pass 가치).
