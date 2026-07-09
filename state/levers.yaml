@@ -33,27 +33,27 @@ levers:
     # cost < DEPLOYED (submission/overfit_nets/taskNNN.onnx).
     # LB trajectory this vein: 7264.67 → 7279.34 (~+14.7 LB), almost all regime cracks.
     done_tasks:  # cracked + adopted, by batch
-      b1: [329, 303, 141, 033, 341]
-      b2: [260, 075, 240, 159, 345, 109]
-      b3: [295, 392, 398, 061, 051]   # b1-b3 = the 16/18 "16 cracks across 3 batches" milestone
-      b4: [287, 094, 063, 199, 273, 224]
+      b1: [329, 303, 141, 33, 341]
+      b2: [260, 75, 240, 159, 345, 109]
+      b3: [295, 392, 398, 61, 51]   # b1-b3 = the 16/18 "16 cracks across 3 batches" milestone
+      b4: [287, 94, 63, 199, 273, 224]
       b5: [246, 190]
       fp16_adoptions: [251, 268, 205, 222]
-    floor_tasks: [112, 163, 099, 102, 062, 012, 348, 124, 354]  # 9 confirmed floors — 재공격 금지
+    floor_tasks: [112, 163, 99, 102, 62, 12, 348, 124, 354]  # 9 confirmed floors — 재공격 금지
     # boundary rule: mask = (arbitrary motif CONTENT) ⊛ (data-dependent 2-D POSITION),
     # OR a data-dependent run/coupling (task354 SameRun) → 900B u8 index-plane is cheapest;
     # every Einsum factorization prices higher.
-    batch6_floored: [354, 090, 390, 154, 034, 168, 381]  # also do-NOT-re-attempt (batch6 DRY)
-    pending_unconfirmed: [71]  # 071 = build broken/likely floor, NOT confirmed — 재공격 허용
+    batch6_floored: [354, 90, 390, 154, 34, 168, 381]  # also do-NOT-re-attempt (batch6 DRY)
+    pending_unconfirmed: [71]  # 71 = build broken/likely floor, NOT confirmed — 재공격 허용
     crack_condition:  # sharpened 3-property test (batch6) — cracks ONLY if ALL hold, else FLOOR
       - "1. GLOBAL-STATE routing (predicate from ≤~16 scalars: offset/size/color/count), NOT content at a data-dependent position, NOT a data-dependent run/coupling."
       - "2. The 900B plane is a Where ROUTING mask, NOT an Equal DECODE discriminator (label30→Equal→10ch = dense-recolor floor: 124/354/390)."
       - "3. Mask FRACTION high (≥~45%); low-fraction (~30%, e.g. 090) loses to non-mask compute. AND the fold's fp32 operands (co-bound to the free input) must stay < the 900B bool mask — needs genuinely low-rank/static routing, not per-cell placement matrices (this fp32-co-bind economics is why 168/381/034 floor even though structured)."
     next_targets:
-      structured_untried: [268, 086]  # 268 frame+diagonal arms; 086 ring/frame stamp + color-remap
-      deprioritize_near_floor: [251, 333, 042]  # 251 already fp16-adopted; 333 thin margin; 042 cross-scale FP risk
+      structured_untried: [268, 86]  # 268 frame+diagonal arms; 86 ring/frame stamp + color-remap
+      deprioritize_near_floor: [251, 333, 42]  # 251 already fp16-adopted; 333 thin margin; 42 cross-scale FP risk
       long_tail: "re-run mask_dominance_scan --min-frac 0.20 for <0.30-fraction masks"
-    conv_fp32_arsenal: [074, 080, 198, 216, 162, 002, 349]  # NOT bool/u8 Where-masks — need a NEW fold (collapse Conv/Slice into free-output contraction); biggest single-task upside if it works; unproven
+    conv_fp32_arsenal: [74, 80, 198, 216, 162, 2, 349]  # NOT bool/u8 Where-masks — need a NEW fold (collapse Conv/Slice into free-output contraction); biggest single-task upside if it works; unproven
     residual_lever: "mixed-dtype Einsum — many adopted regime nets still carry a fp32 input-co-bound carrier (~600B, e.g. task063). ORT Einsum binds all operands to one dtype; need to separate input-contraction from carrier-contraction to send the carrier fp16 (~300B/net cheaper)."
 
   - name: deployed-fp16-recast
