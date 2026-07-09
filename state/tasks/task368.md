@@ -194,3 +194,8 @@ Follow-up pruning removed dead initializer `topk_i8_zero_368`. Cost: 5042 -> 504
 - cost: 3599 -> 3337 (points 16.8872)
 - source: candidates/task368/cand.onnx
 - note: public-insight generalize: identity_scale_qlinearconv_u8_transport (fp16 stamp Conv -> u8 QLinearConv, patch kernel kept u8; 265/265 bit-identical)
+
+## ADOPTED 20260709T061952Z
+- cost: 3337 -> 3307 (points 16.8962)
+- source: candidates/task368/kcollapse.onnx
+- note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays

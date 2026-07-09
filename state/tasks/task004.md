@@ -242,3 +242,8 @@ Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup 
 - cost: 5090 -> 4866 (points 16.5100)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task004.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T061941Z
+- cost: 4866 -> 4836 (points 16.5162)
+- source: candidates/task004/kcollapse.onnx
+- note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays

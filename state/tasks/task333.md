@@ -97,3 +97,8 @@ mem 2792/16.92; full_idx 900B uint8 30x30 label carrier for free Equal->output, 
 - 메커니즘: dilated-Conv crop(dilations=[20,20] → 30→10 출력) + MaxPool running-max between-fill
   (one-sided pad prefix/suffix max, sentinel 100, Min=fill colour). insights.yaml:
   maxpool_runningmax_between_fill, dilated_conv_output_crop.
+
+## ADOPTED 20260709T061950Z
+- cost: 2401 -> 2371 (points 17.2289)
+- source: candidates/task333/kcollapse.onnx
+- note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays

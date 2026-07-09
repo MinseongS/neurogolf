@@ -70,3 +70,8 @@ Dominant intermediate = `colf30` [1,1,30,30] f32 = 3600B: the entry colour-index
 - cost: 3183 -> 3046 (points 16.9784)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task201.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T061947Z
+- cost: 3046 -> 3016 (points 16.9883)
+- source: candidates/task201/kcollapse.onnx
+- note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays

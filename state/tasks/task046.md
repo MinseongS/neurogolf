@@ -62,3 +62,8 @@ NOT a false positive).
 - cost: 2274 -> 2085 (points 17.3575)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task046.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T061943Z
+- cost: 2085 -> 2075 (points 17.3623)
+- source: candidates/task046/kcollapse.onnx
+- note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays

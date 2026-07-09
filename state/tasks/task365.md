@@ -120,3 +120,8 @@ TopK/ArgMax, currently fp16/fp32. Confirmed twice this session (264, 365) on the
 - cost: 3929 -> 3122 (points 16.9538)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task365.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T061951Z
+- cost: 3122 -> 3092 (points 16.9634)
+- source: candidates/task365/kcollapse.onnx
+- note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays

@@ -89,3 +89,8 @@ Bundled gate after adoption: fail=0, cost `8864 -> 8862`
 - cost: 8862 -> 8639 (points 15.9360)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task324.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T061949Z
+- cost: 8639 -> 8609 (points 15.9394)
+- source: candidates/task324/kcollapse.onnx
+- note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays

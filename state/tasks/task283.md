@@ -70,3 +70,8 @@ fail the scorer); recovering this is the difference between a passing and failin
   int8 QLinearConv classifier(threshold-in-bias) + asymmetric-pad 재확장(free output).
   grouped-conv/decompose 분석은 옳았음; rank-factorization+dilation이 미검토 3안이었음.
 - insights.yaml: rank1_bottleneck_dilated_crop_qconv_classifier. 동형 후보: task294 (knife-edge — isolated eval).
+
+## ADOPTED 20260709T061948Z
+- cost: 642 -> 612 (points 18.5833)
+- source: candidates/task283/kcollapse.onnx
+- note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays

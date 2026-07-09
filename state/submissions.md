@@ -649,3 +649,5 @@ built from submission/merged_nets/.
 
 | 2026-07-09 06:03Z | regime vein batch7 (insight-arsenal fanout): 6/6 cracks +3.23 -> local 7295.96 (383 free-output 9-op einsum +0.81, 246 quadratic bands +0.61, 041 shared-triangular interval einsum mem0 +0.57, 088 canvas-cap ConvInteger +0.51, 187 epsilon-J walk +0.44, 074 ScatterND/GatherND shared-index +0.30). fail=0 topk clean |
 | 2026-07-09 05:58Z | regime vein batch7 (insight-arsenal fanout): 6/6 cracks +3.23 (383/246/041/088/187/074) | **LB 7296.08 확정 (sub 54484248, 신기록)** |
+
+| 2026-07-09 06:27Z | kernel-collapse refresh after public/regime overlays: 14 adoptions +0.193 local -> 7296.1556; verify 400/400 fail=0 | **LB 7296.27 확정 (sub 54484750, 신기록)** |

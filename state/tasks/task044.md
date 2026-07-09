@@ -94,3 +94,8 @@ unchanged, params `423 -> 421`).  Active backup:
 - cost: 4735 -> 3212 (points 16.9254)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task044.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T061943Z
+- cost: 3212 -> 3182 (points 16.9347)
+- source: candidates/task044/kcollapse.onnx
+- note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays

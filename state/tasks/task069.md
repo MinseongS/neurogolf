@@ -72,3 +72,8 @@ instead of a [N,12] key one-hot (saves ~4.8 KB). The whole thing lands as a labe
 - 우리 tasklog의 OPEN ANGLE (b) "anchor-correlation (risky, untried)"를 공개가 그대로 구현해 승리 —
   runtime-template QLinearConv 상관검출 + flip-stamp. L-shape empty-corner 리스크는 correlation
   peak counting으로 해결됨. insights.yaml: runtime_template_qlinearconv_correlate_stamp.
+
+## ADOPTED 20260709T061944Z
+- cost: 2949 -> 2919 (points 17.0210)
+- source: candidates/task069/kcollapse.onnx
+- note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays

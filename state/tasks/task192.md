@@ -90,3 +90,8 @@ Gate fresh_verify 1500: inc=0/0 (cand<=inc, safe rule). prvsiyan bundle = min-me
 - cost: 6833 -> 5346 (points 16.4159)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task192.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T061946Z
+- cost: 5346 -> 5316 (points 16.4215)
+- source: candidates/task192/kcollapse.onnx
+- note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays

@@ -50,3 +50,8 @@ structurally identical pairs (candidate inherits incumbent's packed weights).
 - cost: 910 -> 642 (points 18.5354)
 - source: candidates/task294/cand.onnx
 - note: public-insight generalize: rank1_bottleneck_dilated_crop_qconv_classifier (283-recipe twin; signed black/gray encoder + dilated in-op crop + int8 QLinearConv classifier, thresholds rule-derived; 2500-fresh bit-identical, isolated eval)
+
+## ADOPTED 20260709T061949Z
+- cost: 642 -> 612 (points 18.5833)
+- source: candidates/task294/kcollapse.onnx
+- note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays

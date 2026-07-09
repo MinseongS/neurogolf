@@ -132,3 +132,8 @@ Bundled gate: fail=0.  Cost: 13169 -> 12481 (memory 13080 -> 12391, params
 
 Follow-up pruning removed dead initializer `topk_i8_zero_076`.
 Cost: 12481 -> 12480 (params 90 -> 89).
+
+## ADOPTED 20260709T061945Z
+- cost: 12825 -> 12795 (points 15.5432)
+- source: candidates/task076/kcollapse.onnx
+- note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays
