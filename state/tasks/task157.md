@@ -102,3 +102,8 @@ displayed publicScore **7264.67**.
 - cost: 6847 -> 6823 (points 16.1719)
 - source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task157.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T131131Z
+- cost: 6823 -> 6819 (points 16.1725)
+- source: candidates/public_dumps/20260709_pm2/franksunp_compact-onnx-artifact-starter/task157.onnx
+- note: min-merge from franksunp_compact-onnx-artifact-starter

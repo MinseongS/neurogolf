@@ -131,3 +131,8 @@ Backup reports/retired_networks/task096_pre_s9.onnx.
 **Ran:** fold_finder flagged `[10,30]` fp32 ReduceSum→ReduceSum plane (1200B) as foldable. Deep opus agent fused the two-stage reduce into one `ReduceSum(input,[0,2,3])`, bit-identical.
 **Verdict: FLOOR.** Plane is multiply-consumed (2nd ReduceSum **and** a presence-bool Cast), so the fold only reroutes the tiny [10]=40B reduction; the [10,30] fp32 plane stays as the Cast source. Byte-neutral (+3 params → net worse). fp32 forced because ONNX reduce preserves free-input dtype; no sub-fp32 reduce op. Active unchanged (mem 7261).
 **Reopen:** ORT/opset exposing a dtype-casting reduce (emit uint8/fp16 directly) → both [10,30] planes recast to ~600B (−1200B).
+
+## ADOPTED 20260709T131132Z
+- cost: 7682 -> 7678 (points 16.0539)
+- source: candidates/public_dumps/20260709_pm2/franksunp_compact-onnx-artifact-starter/task096.onnx
+- note: min-merge from franksunp_compact-onnx-artifact-starter

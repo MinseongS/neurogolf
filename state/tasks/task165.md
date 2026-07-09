@@ -82,3 +82,8 @@ No transferable mechanism — minor trim.
 - cost: 4800 -> 4544 (points 16.5784)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task165.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T131129Z
+- cost: 4544 -> 4532 (points 16.5811)
+- source: candidates/public_dumps/20260709_pm2/franksunp_compact-onnx-artifact-starter/task165.onnx
+- note: min-merge from franksunp_compact-onnx-artifact-starter
