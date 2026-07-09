@@ -48,6 +48,10 @@ levers:
         ran: "stamp/crop 재개방 floor re-audit: canvas_crop_shrink task014 후보 gate + deployed ONNX cost-split for 112/062/099/163/102"
         verdict: "this run found no >=0.1 buildable stamp/crop candidate against current deployed nets. Hits are scalar label/mask carriers before final Equal/Where; deleting the 900B carrier requires a counted 10-channel onehot or dynamic selector bank that is equal/worse under ORT 1.26. task112's 900B final mask was inspected as the best-looking case but dynamic row/col selector replacement prices above the deletion."
         reopen: "final-output fused routing/scatter primitive, a scanner proof that label-vs-onehot expansion is net positive on a specific task, or a new public teacher demonstrating a cheaper scalar-carrier removal"
+      - date: 2026-07-09
+        ran: "task216 mask_dominance recheck: read task ledger/playbook/source/deployed ONNX, scored current net, gated existing candidates/task216/cand.onnx, gated all cached public task216.onnx artifacts, profiled deployed per-tensor memory, and re-ran mask_dominance queue"
+        verdict: "no-build by this run against deployed cost 8386. valueinfo_legalized_dynamic_crop is already adopted (crop declared/traced 374B); cached public nets all reject (best common public cost 8787); current 3200B c12_f32 Slice is load-bearing because it produces the uint8 c12 bridge used by QLinearConv corner detect, Gathers, crop, and red-count Einsum. Previously-costed c12-free/free-output projector designs remain cost-worse, so this is the same non-local winner-selection wall, not a missing known insight."
+        reopen: "new public teacher below cost 8386, a whole-net c12-free winner-selection/crop formulation cheaper than the current QLinearConv bridge, an op/scorer change that fuses Slice(fp32)->u8 crop/cast or lets QLinearConv consume the free fp32 input without a counted quantization bridge, or a new exact rule avoiding per-box extents/red-count ArgMax"
     # --- folded in from reports/regime_vein_worklist.md (2026-07-09), which is deleted later ---
     # Lever: fold a 900B [30,30] output-routing mask into a free-output Einsum
     # (output>0 sign-decode; input/output free any dtype). Gate: bundled fail=0 +
@@ -134,8 +138,12 @@ levers:
         reopen: "new public frontier/uploader/notebook output, a changed submission.zip in an existing notebook, or a local rewrite that materially changes deployed per-task baselines"
       - date: 2026-07-09
         ran: "parallel public min-merge from biohack44_neurogolf-2026-championship-best-solution plus yusuketogashi task090 follow-up; observed via tasklogs/status after task367 submit"
-        verdict: "6+1 adoptions landed locally: 171 759->435 (+0.557), 085 2875->2519 (+0.132), 044 3182->3169, 035 1895->1891, 233 31975->31938, 090 3055->3054->3053. Current local 7298.8191 and sub 54493921 PENDING. This falsifies the previous point-in-time public 0-win check because a new public dump/source appeared."
-        reopen: "public-insight-generalize autopsy of biohack44 deltas, especially task171 and task085, after 54493921 completes"
+        verdict: "6+1 adoptions landed locally: 171 759->435 (+0.557), 085 2875->2519 (+0.132), 044 3182->3169, 035 1895->1891, 233 31975->31938, 090 3055->3054->3053. Local at submit 7298.8191; sub 54493921 completed at publicScore 7298.94. This falsifies the previous point-in-time public 0-win check because a new public dump/source appeared."
+        reopen: "new public frontier/uploader/notebook output, or a new public-minmerge adoption whose op-delta has not yet been autopsied"
+      - date: 2026-07-09
+        ran: "public frontier refresh scout: checked the Kaggle dateRun-sorted recent notebook list; downloaded latest outputs for evgendvorkin/neurobaseline-eda, yusuketogashi/2026-neurogolf-baseline, lucifer19/neurogolf-agi-compression-core, biohack44/neurogolf-2026-championship-best-solution, and anasriaz/the-2026-neurogolf-championship into candidates/public_dumps/20260709_latest (only yusuketogashi/lucifer19/anasriaz exposed submission.zip); ran `uv run ng mine-public --margin 0 $(find candidates/public_dumps -type f -name 'submission.zip' | sort)` across 29 submission.zip artifacts"
+        verdict: "0 wins — TOTAL adoptable +0.0 across 0 tasks; no strictly-cheaper bundled-fail=0 overlay was found by this dated run versus the current deployed nets. This is a point-in-time public cache/frontier result, not exhaustion; prior public-minmerge 0-win verdicts were falsified by later biohack44 output."
+        reopen: "new public frontier/uploader/notebook output, a changed submission.zip in a recent notebook, or any local adoption/rewrite that materially changes deployed per-task baselines"
 
   - name: public-insight-generalize
     status: live
