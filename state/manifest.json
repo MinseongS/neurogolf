@@ -387,13 +387,13 @@
   "updated": "verify"
  },
  "044": {
-  "cost": 3169,
+  "cost": 3139,
   "fail": 0,
   "ok": true,
-  "points": 16.93882864030908,
-  "sha256": "6300e4cf66d4f143fd3ec1910af621f9e30ddc3ba546cf002b6a9ade9da4c01e",
+  "points": 16.948340443158045,
+  "sha256": "b3a88345cd9306239071a72be445bc624255a23f38b8b831f4f4784b3ace266c",
   "task": 44,
-  "updated": "20260709T123206Z"
+  "updated": "20260709T130912Z"
  },
  "045": {
   "cost": 1673,
@@ -954,13 +954,13 @@
   "updated": "verify"
  },
  "107": {
-  "cost": 3445,
+  "cost": 3415,
   "fail": 0,
   "ok": true,
-  "points": 16.855320816552243,
-  "sha256": "48db8052bc8a19e85508210c42c5d3ce0030bc0bb58371dd006c27e8ae7b9c8a",
+  "points": 16.864067227995108,
+  "sha256": "b0480a9de03d1f9ed34343d63fdedfa3a5a38a949a426ba197386827c81b8c63",
   "task": 107,
-  "updated": "20260709T122741Z"
+  "updated": "20260709T130912Z"
  },
  "108": {
   "cost": 300,

@@ -104,3 +104,8 @@ unchanged, params `423 -> 421`).  Active backup:
 - cost: 3182 -> 3169 (points 16.9388)
 - source: candidates/public_dumps/20260709_pm/biohack44_neurogolf-2026-championship-best-solution/_src_A/task044.onnx
 - note: min-merge from biohack44_neurogolf-2026-championship-best-solution
+
+## ADOPTED 20260709T130912Z
+- cost: 3169 -> 3139 (points 16.9483)
+- source: candidates/task044/kcollapse.onnx
+- note: kernel-collapse: single-position Conv kernel -> 1x1+pad, bit-identical params win on new min-merge Conv net. 3169->3139.

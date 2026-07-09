@@ -1,15 +1,17 @@
-# STATE - NeuroGolf live handoff (updated 2026-07-09, task367 pending LB)
+# STATE - NeuroGolf live handoff (updated 2026-07-09, 7298.94 confirmed)
 > Replace this file at session end; do not append. History lives in git and state/submissions.md.
 
 ## Confirmed State
-- Confirmed BEST LB: **7298.02** (sub **54493725**, complete).
-- Current local manifest: **7297.9375** (400/400). This includes task367 plus a later parallel/adopted task107 fold-scan win.
-- Latest submitted batch: **54493725** (`task367 v_main 10ch->6ch plus diagonal diffusion tap`, submitted 2026-07-09 12:24Z, local-at-submit **7297.9002**) -> publicScore **7298.02**.
-- Unsubmitted local delta after sub 54493725: `task107` cost **3576 -> 3445** (**+0.0373**) from `candidates/task107/cand.onnx`; below the user's standalone threshold, batch with the next meaningful win.
+- Confirmed BEST LB: **7298.94** (sub **54493921**, complete).
+- Current local manifest: **7298.8191** (400/400). This includes task367, fold-scan task174/task107, and biohack44 public min-merge adoptions.
+- Latest completed batch: **54493869** (`task174` symmetry-bitmask compaction + `task107` dead-tap conv, local-at-submit **7298.1222**) -> publicScore **7298.24**.
+- Latest completed public-minmerge batch: **54493921** (biohack44 public min-merge 6 adoptions on top of task174/task107, local-at-submit **7298.8191**) -> publicScore **7298.94**.
 - Latest completed submissions:
   - sub **54490915**: task080 fp32 colour-decode -> free-input Einsum per-read, publicScore **7297.79**.
   - sub **54491406**: task161 scalar carrier tail -> free-output Einsum, publicScore **7297.90**.
   - sub **54493725**: task367 predicate-bank prune + diagonal diffusion tap, publicScore **7298.02**.
+  - sub **54493869**: task174 symmetry-bitmask compaction + task107 dead-tap conv, publicScore **7298.24**.
+  - sub **54493921**: biohack44 public min-merge batch, publicScore **7298.94**.
 - Verification after latest adoption: `uv run ng gate candidates/task367/cand.onnx --task 367` PASS, source build via `tools/live_to_exact_source.py` + `tools/rebuild_networks_from_source.py --tasks 367` PASS, `uv run ng verify --hash` -> **HASH-OK**, `uv run ng pack` completed.
 - Deadline: 2026-07-15. Private is the fixed dataset; bundled fail=0 + cheaper than deployed remains the adoption gate.
 
@@ -60,5 +62,5 @@
 1. `uv run ng status`
 2. `kaggle competitions submissions -c neurogolf-2026 | head -6`
 3. Check new public dumps/notebooks first.
-4. Do not submit task107 alone; it is only +0.0373 and should be batched with the next >=+0.1 win.
+4. Public-insight-generalize biohack44 deltas, especially `task171` and `task085`; these were real +0.557/+0.132 public-teacher wins.
 5. If no public frontier, scan for task367-style predicate-bank prune + downstream repair candidates, then high-cost true rewrites with explicit cost-split proof before building.

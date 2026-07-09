@@ -132,6 +132,10 @@ levers:
         ran: "downloaded/refreshed lucifer19, yusuketogashi, jonathanncoletti merged91/90, prvsiyan, ryosukeshiroshita notebook outputs after task080/task161; ran `uv run ng mine-public --margin 0 candidates/public_dumps/20260709_refresh/*/submission.zip`"
         verdict: "0승 — refreshed public dumps contain no strictly-cheaper bundled-fail=0 overlay versus the current deployed set (local 7297.7794, LB 7297.90). This is a point-in-time public frontier check, not exhaustion."
         reopen: "new public frontier/uploader/notebook output, a changed submission.zip in an existing notebook, or a local rewrite that materially changes deployed per-task baselines"
+      - date: 2026-07-09
+        ran: "parallel public min-merge from biohack44_neurogolf-2026-championship-best-solution plus yusuketogashi task090 follow-up; observed via tasklogs/status after task367 submit"
+        verdict: "6+1 adoptions landed locally: 171 759->435 (+0.557), 085 2875->2519 (+0.132), 044 3182->3169, 035 1895->1891, 233 31975->31938, 090 3055->3054->3053. Current local 7298.8191 and sub 54493921 PENDING. This falsifies the previous point-in-time public 0-win check because a new public dump/source appeared."
+        reopen: "public-insight-generalize autopsy of biohack44 deltas, especially task171 and task085, after 54493921 completes"
 
   - name: public-insight-generalize
     status: live

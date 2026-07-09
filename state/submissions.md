@@ -665,6 +665,9 @@ built from submission/merged_nets/.
 
 | 2026-07-09 12:24Z | task367 v_main 10ch->6ch plus diagonal diffusion tap: 15890->14082 (+0.1207); local 7297.9002 | **LB 7298.02 확정 (sub 54493725, 신기록)** |
 
-| 2026-07-09 12:31Z | fold-scan(opus): task174 symmetry-bitmask compaction 4027->3348 (+0.185) + task107 dead-tap conv 3576->3445 (+0.037); local 7298.1222 |
+| 2026-07-09 12:31Z | fold-scan(opus): task174 symmetry-bitmask compaction 4027->3348 (+0.185) + task107 dead-tap conv 3576->3445 (+0.037); local 7298.1222 | **LB 7298.24 확정 (sub 54493869, 신기록)** |
+| 2026-07-09 12:33Z | public min-merge biohack44 best-solution: 6 adoptions +0.6966 (task171 +0.557, 085 +0.132, 044/035/233/090) on top of fold-scan 174/107; local 7298.8191 | **LB 7298.94 확정 (sub 54493921, 신기록)** |
 
 | 2026-07-09 12:33Z | public min-merge biohack44 best-solution: 6 adoptions +0.6966 (task171 +0.557, 085 +0.132, 044/035/233/090) on top of fold-scan 174/107; local 7298.8191 |
+
+| 2026-07-09 13:09Z | kernel-collapse on new min-merge Conv nets: task044 3169->3139, task107 3445->3415, bit-identical (+0.018) |

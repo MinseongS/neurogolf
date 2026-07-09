@@ -116,3 +116,8 @@ Mechanism: Einsum vs FREE input. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). S
 - cost: 3576 -> 3445 (points 16.8553)
 - source: candidates/task107/cand.onnx
 - note: fold-scan(opus): dead_tap_dilated_conv folds 3 fixed-pos fp32 colour reads (colsl/bcsl/ArgMax) into one 2x2 dilated Conv W[1,10,2,2] dil=25 -> [1,1,5,5] label plane; +25 taps land off-grid zero. 3576->3445, bit-identical 2000/2000 fresh.
+
+## ADOPTED 20260709T130912Z
+- cost: 3445 -> 3415 (points 16.8641)
+- source: candidates/task107/kcollapse.onnx
+- note: kernel-collapse: single-position Conv kernel -> 1x1+pad on top of dead-tap fold, bit-identical. 3445->3415.
