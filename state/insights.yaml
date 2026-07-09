@@ -2714,5 +2714,46 @@
       064,
       279
     ]
+  },
+  {
+    "id": "borrowed_net_redundant_branch_prune",
+    "title": "Public min-merge wins on 171/085 were dead-node / redundant-branch pruning, not new representation mechanisms",
+    "status": "active-negative-fanout",
+    "source_tasks": [
+      171,
+      85
+    ],
+    "rationale": "Autopsy of the biohack44 2026-07-09 min-merge (op-delta vs .backups) showed BOTH per-task wins over us were the public author removing a computation whose result is invisible to the decoded output, NOT a cheaper representation. task171 (759->435, +0.557): identical weights, ONE node deleted -- the Relu between Conv1[1,1,9,9] and Conv2 (t2 fp32 plane, 324B). The clamp (b1=-0.039) changes intermediate values but the argmax decode over the VALID grid region (grids are 3-9 wide; the diff lives only in the ignored 30x30 padding) is invariant, so the plane is dead. task085 (2875->2519 this merge, +0.132): 8 nodes deleted -- the entire parallel B-plane band-middle detector (Bdn/Bup Slice+Pad, eb1/eb2 Equal, mb/mab And). The A-plane vertical-neighbor-equality detector `ma = And(Equal(A,A_down), Equal(A,A_up))` already flags the middle row of every 3-tall constant band, and B is piecewise-constant over the SAME bands, so the B-branch is redundant (middle = And(ma,Bpos) instead of And(mab,Bpos)). Both are borrowed-net cleanup: the public net carried the author's un-pruned redundancy, which once removed happened to beat our net.",
+    "applies_when": {
+      "all_tags": [
+        "freshly_borrowed_public_net",
+        "pointwise_node_or_duplicated_detector_branch"
+      ],
+      "notes": "The generalizing ACTION (what the author did): for a freshly byte-adopted public net, ablate each pointwise node (Relu/Clip/Cast) by rewiring consumers to its input, and look for two branches computing the same predicate two ways where one implies the other; re-gate bundled fail=0. Dead nodes/branches survive removal AND drop cost. For 085 specifically: a neighbor-equality band-CENTER detector on ONE derived plane subsumes the same detector on ANY other plane that is piecewise-constant over the SAME bands -- drop the duplicate Slice/Pad/Equal/And chain."
+    },
+    "reject_when": {
+      "any_tags": [
+        "activation_load_bearing",
+        "index_bound_clamp",
+        "pow_domain_guard",
+        "already_activation_tight_net"
+      ],
+      "notes": "Does NOT generalize to our OWN deployed nets: systematic pointwise ablation of all 15 deployed Relu/Clip nets found 0 dead nodes (14/14 individually gated -> all bundled fail>0: 266 Relu fail=14, 336 fail=31, 042 fail=196, 368 Clip fail=60, 361 fail=216, 107 fail=182, 174 fail=81/59, 250 fail=265/262; the remaining Clips on 190/158/76/133/209/366 are Pow-domain guards or index-bound clamps, structurally required). Our nets are already activation-tight; the win only lands on newly-borrowed nets still carrying author redundancy."
+    },
+    "expected": {
+      "gain_type": "memory: delete a dead intermediate plane (171: 324B) or a whole redundant detector branch (085: ~1400B across 8 planes)",
+      "risk": "medium; MUST full bundled-gate (decode-invariance is per-net, not provable statically -- 266/042 disproved naive transfer)",
+      "verification": "op-delta vs .backups -> per-node/per-branch ablation -> ng gate bundled fail=0 + cost<deployed -> fresh_check"
+    },
+    "reopen_trigger": "Each new public net byte-adopted via min-merge: run pointwise-node ablation + duplicated-detector-branch scan on it BEFORE trusting the adoption is tight. Do NOT re-scan our own deployed nets (proven tight 2026-07-09).",
+    "falsification_ledger": [
+      {
+        "date": "2026-07-09",
+        "ran": "pointwise Relu/Clip ablation + gate across 15 deployed nets (266,336,42,368,361,107,174,250,190,158,76,133,209,366)",
+        "verdict": "0 fanout wins; every deployed Relu/Clip is load-bearing (14/14 gated fail>0)",
+        "reopen": "new borrowed public net adopted -> ablate ITS nodes/branches"
+      }
+    ],
+    "fanout_candidates_20260709": []
   }
 ]

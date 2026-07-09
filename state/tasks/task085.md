@@ -116,3 +116,18 @@ adding an occupancy gate to any prefix-parity/phase task.
 - cost: 2875 -> 2519 (points 17.1684)
 - source: candidates/public_dumps/20260709_pm/biohack44_neurogolf-2026-championship-best-solution/_src_A/task085.onnx
 - note: min-merge from biohack44_neurogolf-2026-championship-best-solution
+
+## 2026-07-09 public-insight deep-lane autopsy (op-delta vs .backups)
+Op-delta deployed(2519) vs backup task085_20260709T123205Z(2875): IDENTICAL inits, EIGHT nodes deleted —
+the entire parallel B-plane band-middle detector: Bdn_sl/Bdn + Bup_sl/Bup (Slice+Pad), eb1/eb2 (Equal),
+mb/mab (And). New `middle = And(ma, Bpos)` replaces `And(mab, Bpos)`. Mechanism: the A-plane vertical-
+neighbor-equality detector `ma = And(Equal(A,Adn), Equal(A,Aup))` already flags the center row of every
+3-tall constant band; B (the `sel`-weighted occupancy projection) is piecewise-constant over the SAME
+bands, so re-deriving the same band-center test on B is redundant. Dropping it removed ~1400B across the
+8 planes. This confirms + extends the task085 tasklog insight (residue/detector subsumption).
+
+⭐ TRANSFERABLE: registered insight `borrowed_net_redundant_branch_prune`. A neighbor-equality band-CENTER
+detector on ONE derived plane subsumes the same detector on ANY other plane piecewise-constant over the
+SAME bands — drop the duplicate Slice/Pad/Equal/And chain. Like 171 this was borrowed-net cleanup (author
+left the redundant branch in); no fanout found on our own nets (already tight). Reopen: scan each new
+min-merge net for duplicated detector branches before trusting the byte-adoption is tight.
