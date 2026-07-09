@@ -120,3 +120,37 @@ rescan link: task349 + conv_fp32_arsenal members with Gather/Reshape index tails
 - cost: 8398 -> 6236 (points 16.2619)
 - source: candidates/task074/cand.onnx
 - note: regime vein batch7: ScatterND(max)+GatherND with ONE shared rank-5 index init kills flatten/unflatten Reshapes + 900B u8 cast plane; cast at 136-orbit bottleneck not 900-cell plane. 1000 fresh 0-fail, 0 divergence. TRANSFERABLE: ScatterElements+Gather flat-carrier machinery -> ScatterND/GatherND shared index; dtype-cast at K-slot bottleneck (rescan: 349 + conv_fp32_arsenal index tails)
+
+## 2026-07-09 conv_fp32_arsenal free-input-Einsum fold — NO-WIN (floor re-confirmed)
+Analysis of deployed cost-6236 net (gate: 267/267, mem 5180, params 1056). Node bytes:
+- color_f [1,1,30,30] fp32 = **3600B (58%)** — Conv 1x1 colour-index (maroon->0). Read
+  is FIXED/data-independent (same colour weight at every pixel) => foldable IN ISOLATION.
+- orbit_f [136] fp32 544B; orbit_u8 [136] 136B; grid_u8 [1,1,30,30] u8 900B; params
+  color_w10+base136+oidx900+chan10=1056.
+BLOCK (why the fold does not apply): the fp32 colour plane is consumed by ScatterND
+**reduction=max** (D4-orbit occlusion fill NEEDS max, not sum), a NONLINEAR reduce =>
+there is no linear free-input Einsum contraction to fold it into. The only LINEAR
+reformulation is the one-hot orbit-OR `out[k,r,c]=Σ_{(p,q)∈orbit(r,c)} X[k,p,q]` decoded
+`>0` (free output [1,10,30,30]). Its D4 orbit-incidence kernel T[r,c,p,q]=1 iff same orbit
+is a SUM OF TWO separable pieces (direct A[r,p]B[c,q] + transposed A[c,p]B[r,q]; full D4
+includes the diagonal reflection). A single Einsum realizes only ONE separable product:
+- `'rp,cq,bkpq->bkrc'` (A,B [30,30], 1800 params, free output) yields ONLY the 4
+  non-transpose flip terms — WRONG (misses cells whose only visible member is a transpose
+  image). Adding the transpose needs either X_sym=Add(X,Transpose(X)) or a 2nd Einsum =>
+  a counted [1,10,30,30] fp32 intermediate = **36000B**, or a single-Einsum full kernel:
+  T [30,30,30,30]=810k / rank-136 membership 122k / transpose-augmented [2,30,30,30] 108k
+  params. ALL >> 6236.
+fp16 recast of the 3600B plane is blocked: Conv/Einsum reading the fp32 FREE input emit
+fp32 (mixed-dtype Einsum rejected by pinned ORT); casting color_f->fp16 adds an 1800B plane
+to save only 272B on orbit_f (net WORSE). Current Cast-to-u8 at the 136-orbit bottleneck +
+single-colour-channel carry is already the efficient regime. **Net at analyzed floor.**
+Reopen (falsification-ledger):
+1. run: manual free-input-Einsum fold + orbit-OR reformulation (separable/transpose-aug/
+   rank-136/full-incidence) + fp16 colour-plane recast, vs deployed cost-6236 net.
+2. tool+date: Opus agent manual + `ng gate`, 2026-07-09.
+3. reopen-trigger: (a) mixed-dtype Einsum (fp16 carrier over fp32 free input) available in
+   pinned ORT; (b) an op fusing a nonlinear MAX reduction with the free input in ONE node;
+   (c) public dump showing sub-3600B D4-orbit reconstruction.
+4. falsification-history: this net's "floor" has already fallen 9050->8398->6236 (+0.30
+   today); claim here is the SPECIFIC "max-reduction blocks linear fold + fp32 colour-index
+   3600B floor", re-confirmed not novel-asserted.

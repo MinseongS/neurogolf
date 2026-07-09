@@ -245,6 +245,63 @@ Bundled gate: fail=0.  Unsigned TopK scan: clean after adoption.  Cost: 31559
 - source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task366.onnx
 - note: min-merge from nets
 
+## 2026-07-09 — 0.X re-attack (fresh-eyes, post-22219): NO-WIN, colf 3600 = structural DETECTION floor
+
+Byte breakdown of deployed cost=22219 (mem 21990 + params 229, pts 14.9913):
+- `colf` Conv [1,1,30,30] fp32 = **3600** (single dominant plane, 16% of total)
+- `padded` u8 [30,30] = 900; `gU` u8 [1,1,30,30] = 900 (label plane)
+- 3x fp16 TopK feeds (cfH/fdfH/ndfH [1,255]) = 510 each = 1530
+- `Brow` u8 [1,1,15,30] = 450
+- ~35 tensors at 255B (bool/u8 [15,17] or [1,255] mask planes) + ~180 small int32/bool coord
+  tensors across the 3 replicated stamp blocks = ~15.5K tail
+- static-VI dtype totals: u8 6333, bool 6461, fp16 3612, fp32 4316, int32 1092, int64 176
+
+CARRIER-vs-DETECTION classification: `colf` is a pure **fp32 DETECTION** plane. Its ONLY consumer
+is `Cast->gU` (uint8 label plane); gU's ONLY consumers are the panel-A slice (`A4`) and the
+data-dependent panel-B gather (`Brow`). Per the fold heuristic, a fp32 detection read that must be
+materialized to be gathered CANNOT be folded into a free op -> NO-WIN by construction. It is not an
+avoidable carrier of output content.
+
+Why colf 3600 is a floor (all routes measured/derived WORSE):
+- Conv/Einsum reading the free fp32 input has output type == input type == fp32 (ONNX type
+  constraint T); a full 30x30 label read is 3600 min.
+- uint8 label via QLinearConv/ConvInteger needs uint8 input => Cast(input)[1,10,30,30] = **9000B**. Worse.
+- ArgMax(input,axis=1) label = int64 [1,30,30] = **7200B** peak. Worse.
+- Per-panel decode (Slice input->[1,10,15,17] fp32 2550 + Conv 1020 + Cast 255, x2 panels) = **7650**. Worse.
+  (The incumbent's decode-ONCE-to-u8-then-gather-cheap is provably optimal; gather source must be u8.)
+- Dual dilated dead-tap crop ([1,1,15,30]=1800 for horiz + [1,1,30,17]=2040 for vertical) = 3840,
+  AND the two shapes can't merge for the shared downstream slice/gather. Worse + infeasible.
+- fp16 label: Conv output = fp32 (input dtype); casting input->fp16 = **18000B**. Worse.
+- Transpose-normalize (make occupied region always 15xN): transpose output materializes a full
+  [1,10,30,30] fp32 = 3600. Worse.
+- GENERATOR FACT forcing this: panels tile the grid with NO gap; height in [10,15], width in [8,17];
+  horiz uses <=15 rows x <=30 cols, vertical uses <=30 rows x <=17 cols. Neither axis is statically
+  <=15 in both cases, and panel B start (Hh or Wh, in [10,15]) is data-dependent => a full uint8
+  label plane is required for the panel-B gather => a full fp32 label read is required.
+
+Tail (~15.5K of 255B masks + small coords) is the 3x replicated stamp-block machinery; batching is
+byte-neutral (2026-07-06 log, re-confirmed). dtype golf already exhausted last session (all >255B
+downcastable planes feed TopK; uint8-TopK is a grader-killer). No params lever (kernels already
+1x1/2x2; params=229).
+
+VERDICT: incumbent 22219 is at the structural floor of the current decode-first algorithm. NO fold /
+downcast / crop win exists via free-output-einsum, stamp-conv, or bitpack. Consistent with S9/S11/
+2026-07-06 floor verdicts; last session's 30159->22219 rewrite already captured the available insight gains.
+
+Reopen trigger (ledger):
+1. what was run: node-level output-byte dump of deployed net + CARRIER/DETECTION classification of
+   colf; derivation/measurement of 6 alternative label-plane constructions.
+2. tool+date: scratchpad breakdown.py (ORT 1.26 trace-mem, mirrors scoring.calculate_memory) +
+   scoring.calculate_params, 2026-07-09.
+3. reopen-trigger: (a) exact-cover semantic compiler successfully LOWERED to ONNX with fewer full-size
+   planes than incumbent (prior Python probe 5000/5000 fresh but never lowered; a correct correlation
+   solver still needs several 255B planes/box per 2026-07-06 -> floor near incumbent); (b) a new public
+   dump for task366 measured < 21990 mem; (c) a general mechanism that produces a full uint8 label
+   plane at peak < 3600B from an fp32 one-hot input (would refute the colf floor globally).
+4. falsification history: "AT byte floor / no endogenous lever" verdicts were reversed elsewhere
+   (task011 +1.52); treat this colf-floor as tool-vs-net-at-T, not durable truth. Durable physics only:
+   Conv/Einsum output dtype == fp32 free-input dtype; uint8 decode requires a 9000B input cast.
+
 ## ADOPTED 20260709T051157Z
 - cost: 30159 -> 22219 (points 14.9913)
 - source: candidates/task366/cand.onnx

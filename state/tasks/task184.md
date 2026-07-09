@@ -100,3 +100,8 @@ the plane is large.
 ## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
 Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
 Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## ADOPTED 20260709T084638Z
+- cost: 2039 -> 1860 (points 17.4717)
+- source: candidates/task184/task184_nonempty_greater.onnx
+- note: dtype-island: replace Sign(count)->Cast(uint8) with Greater(count,0)->Cast(uint8), dropping two fp32 nonempty vectors; fresh-equivalent pattern

@@ -133,3 +133,20 @@ below fail (w28: 266/1), so w29 is the exact bundled crop limit.
 Transferable mechanism: pad-compensated spatial crop of a Conv/QLinearConv
 producer when a dead border is empirically unused and the sole spatial consumer
 can absorb the crop by increasing the opposite padding.
+
+## 2026-07-09 — h_pos width re-probe KILL
+
+- date: 2026-07-09
+- ran: `candidates/task349/sweep_hpos_width.py` on current deployed net; tested
+  first `QLinearConv` right pad `9 -> 8/7` with compensating halo-consumer right
+  pad `6 -> 7/8`, then `uv run ng gate` for `hpos_w28.onnx` and `hpos_w27.onnx`.
+- verdict: no adoptable win. `w28` would save 150B (`cost 14892 -> 14742`) but
+  fails bundled `266/267`; the only fail is `arc-gen[116]`, losing the right-edge
+  green halo around a clipped 2x2 maroon block at columns 28-29. `w27` saves 300B
+  but fails `263/267`. A correction needs a right-edge halo patch injected into
+  the full label/output plane, which costs at least a full-width correction carrier
+  or makes final `Equal` non-final; both exceed the 150B saving.
+- reopen: reopen if a sub-150B sparse/right-edge correction can be fused into the
+  final output without materializing the `[1,10,30,30]` Equal result, or if a new
+  direct halo renderer replaces the two-stage `h_pos_u8 -> halo_u8` QLinearConv
+  chain.

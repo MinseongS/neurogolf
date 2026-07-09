@@ -90,3 +90,8 @@ the unique marker per column" to avoid a full coord×mask product plane.
 - cost: 9095 -> 7733 (points 16.0467)
 - source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task379.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T084638Z
+- cost: 7733 -> 7599 (points 16.0642)
+- source: candidates/task379/agent_ray_collapse/cyan_threshold_f32_width.onnx
+- note: tail cleanup: threshold cyan profiles before fp16 cast/crop and keep width scalar fp32; bundled pass and 1500/1500 fresh diff=0

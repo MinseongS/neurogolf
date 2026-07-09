@@ -25,3 +25,8 @@ No rewrite adopted.  A float Conv variant would make the runtime colour kernel
 - cost: 904 -> 852 (points 18.2524)
 - source: candidates/task197/task197_u8_where_tail.onnx
 - note: u8 Where tail replaces fp32 Mul/Where source-index tail cost 904->852
+
+## ADOPTED 20260709T094144Z
+- cost: 852 -> 753 (points 18.3759)
+- source: candidates/task197/task197_self_einsum.onnx
+- note: self-einsum template row: compute match/active directly from free input, deleting counted T/g Slice outputs; trades 360 selector params for -440B memory

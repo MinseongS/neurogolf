@@ -141,3 +141,8 @@ exact fp32); orientation = Cauchy equality Σcnt² == (Σcnt)² per row (single 
 input repeated); black-cell band colour = S_h − Σ rowcolor·occ contracted vs FREE input.
 3253+34 vs 6997+200 → 16.119→16.902. numpy 20000/20000; div 0 vs deployed on 2500.
 TRICK for registry: Cauchy uniformity test (Σx²==(Σx)² ⟺ ≤1 nonzero) as an einsum.
+
+## ADOPTED 20260709T084638Z
+- cost: 3055 -> 2817 (points 17.0566)
+- source: candidates/task202/task202_profile_u8.onnx
+- note: dtype-island: cast final band-profile equality island to uint8 (A/Am/B/Bm), bundled pass and 2581/2581 fresh diff=0

@@ -99,3 +99,8 @@ existing counted tensor.
 - cost: 9713 -> 9262 (points 15.8663)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task080.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T103925Z
+- cost: 9262 -> 6686 (points 16.1922)
+- source: candidates/task080/cand.onnx
+- note: arsenal fold(opus): full fp32 Conv(input,[0..9]) colour-decode feeding only position-selectable Gathers -> per-read free-input Einsum sum_c cw[c]*input*S_row*S_col (colour contraction inside free einsum, bit-identical on one-hot). 9262->6686. fresh 2511 0-mismatch.

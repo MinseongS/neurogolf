@@ -655,3 +655,9 @@ built from submission/merged_nets/.
 | 2026-07-09 08:05Z | dtype tail batch: task141 fp16 output tail +0.224, task197 u8 where tail +0.059, task064 fp16 profile-count tail +0.042 -> local 7296.4811 | **LB 7296.60 확정 (sub 54487028, 신기록)** |
 
 | 2026-07-09 08:21Z | 092-fanout(opus) + parallel dtype-tail stack: task265 free_final_onehot Where tail 4357->4069 (+0.069) on top of 141/197/064; local 7296.5495 |
+| 2026-07-09 08:47Z | dtype-island cleanup batch: task184 Sign->Greater 2039->1860 (+0.092), task202 u8 profile island 3055->2817 (+0.081), task379 cyan threshold 7733->7599 (+0.017); local 7296.7400 | **LB 7296.86 확정 (sub 54488045, 신기록)** |
+
+| 2026-07-09 09:42Z | task197 self-einsum template-row cleanup: delete counted T/g Slice outputs via free-input self-Einsum, 852->753 (+0.1235); local 7296.8635 | **LB 7296.98 확정 (sub 54489405, 신기록)** |
+| 2026-07-09 10:01Z | task343 fixed Slice->Conv colour reads -> free-input Einsums: 1222->756 (+0.4802); local 7297.3437 | **LB 7297.46 확정 (sub 54489856, 신기록)** |
+
+| 2026-07-09 10:40Z | arsenal fold(opus): task080 fp32 colour-decode -> free-input Einsum per-read, 9262->6686 (+0.326) on top of parallel task343/197; local 7297.6696 |

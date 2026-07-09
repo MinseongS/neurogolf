@@ -44,6 +44,10 @@ levers:
           scatter-shrink는 MIRAGE(free-input bg canvas가 counted 18-36kB)."
         reopen: "cohort 반복 금지. 유일한 forward lever = residual_lever(mixed-dtype Einsum escape) — 5+ 에이전트 독립 corroborate,
           아래 residual_lever/conv_fp32_arsenal 참조. ORT-capability 프로브로 진행(태스크 공격 아님)."
+      - date: 2026-07-09
+        ran: "stamp/crop 재개방 floor re-audit: canvas_crop_shrink task014 후보 gate + deployed ONNX cost-split for 112/062/099/163/102"
+        verdict: "this run found no >=0.1 buildable stamp/crop candidate against current deployed nets. Hits are scalar label/mask carriers before final Equal/Where; deleting the 900B carrier requires a counted 10-channel onehot or dynamic selector bank that is equal/worse under ORT 1.26. task112's 900B final mask was inspected as the best-looking case but dynamic row/col selector replacement prices above the deletion."
+        reopen: "final-output fused routing/scatter primitive, a scanner proof that label-vs-onehot expansion is net positive on a specific task, or a new public teacher demonstrating a cheaper scalar-carrier removal"
     # --- folded in from reports/regime_vein_worklist.md (2026-07-09), which is deleted later ---
     # Lever: fold a 900B [30,30] output-routing mask into a free-output Einsum
     # (output>0 sign-decode; input/output free any dtype). Gate: bundled fail=0 +
@@ -71,7 +75,12 @@ levers:
       deprioritize_near_floor: [251, 333, 42]  # 251 already fp16-adopted; 333 thin margin; 42 cross-scale FP risk
       long_tail: "re-run mask_dominance_scan --min-frac 0.20 for <0.30-fraction masks"
     conv_fp32_arsenal: [74, 80, 198, 216, 162, 2, 349]  # NOT bool/u8 Where-masks — need a NEW fold (collapse Conv/Slice into free-output contraction); biggest single-task upside if it works; unproven
-    residual_lever: "mixed-dtype Einsum — many adopted regime nets still carry a fp32 input-co-bound carrier (~600B, e.g. task063). ORT Einsum binds all operands to one dtype; need to separate input-contraction from carrier-contraction to send the carrier fp16 (~300B/net cheaper)."
+    residual_lever: "mixed-dtype Einsum — CONFIRMED DEAD on ORT 1.26 (2026-07-09 직접 프로브 /tmp/mixed_dtype_probe*.py):
+      Einsum·Conv 모두 fp32+fp16 operand 혼합을 REJECT(uniform-T). fp32 free input과 fp16 carrier를 한 op에서
+      co-bind하는 경로는 존재하지 않음. 이 레버를 open으로 취급 금지(5+ 에이전트가 반복 지목했으나 반증됨).
+      대체 (ACCEPT 확인): REDUCE-THEN-CAST — detection plane이 reduced form(row/col profile/count)으로만 필요하면
+      fp32로 reduce(작은 counted 중간텐서)한 뒤 Cast fp16 → 이후 전부 fp16 Einsum. per-task(detection이 축소 가능할 때만),
+      universal unlock 아님. Full-plane cast(input→fp16 18000B / →u8 9000B via QuantizeLinear)만 accept되나 이득 없음."
 
   - name: deployed-fp16-recast
     status: live
@@ -115,6 +124,10 @@ levers:
         ran: "ng mine-public --margin 0 on 20260709 dumps (prvsiyan 7266.72, ryosukeshiroshita 7266.48, kutenk 7261.53, jonathanncoletti merged91) against current local 7295.45 overlay set"
         verdict: "0승 — 이 공개 덤프들의 strictly-cheaper bundled-fail=0 per-task wins는 현재 배포본에 이미 흡수됐거나 현재 배포본보다 비싸다; this run found no additional margin-0 overlay, not exhausted"
         reopen: "새 공개 프론티어/새 업로더/새 notebook output 또는 현재 배포본을 크게 바꾸는 채택 후 재실행"
+      - date: 2026-07-09
+        ran: "ng mine-public --margin 0 over the same local 20260709 public dumps after task197/task343 adoptions (local manifest 7297.3437)"
+        verdict: "0승 — current local dumps contain no additional strictly-cheaper bundled-fail=0 overlay versus the post-task343 deployed set; this is a dated local-dump result, not public exhaustion"
+        reopen: "any new public frontier/uploader/notebook output, or a large local rewrite that changes the comparison baseline"
 
   - name: public-insight-generalize
     status: live
@@ -151,6 +164,14 @@ levers:
         ran: "public_autopsy — 724950_big_jump_fingerprint (.minmerge_backup 기준 vs franksunp/urad 7250.x 공개 덤프, 99건 과거 승리 비교)"
         verdict: "3-signature 클러스터 추출: free_input_einsum_substitution(+1.720 local/3승), index_or_topk_plane_removed(+0.939 task022), final_equal_or_output_only(+0.595/4승); exact fingerprint 후보 task019/044/076이 task011과 동일한 lost Pad 900B 지문 공유"
         reopen: "exact-fingerprint 후보(task019/044/076) 재공략 시 / 새 franksunp·urad 덤프 유입 시"
+      - date: 2026-07-09
+        ran: "fixed_slice_conv_to_free_input_einsum fanout: task343 built/gated/adopted, then current 400 deployed ONNX scan + selector-cost math for remaining fixed Slice(input)->1x1 Conv colour reads"
+        verdict: "1 WIN: task343 1222→756 (+0.4802), fresh 1500 diff=0, adopted/submitted. Post-adoption scan found no further >=0.1 fixed-1x1 colour-read candidate by this tool; residuals were dynamic Slice, non-1x1/stencil, full-spatial consumers, or selector params >= deleted Slice memory."
+        reopen: "new cheap dynamic selector construction, a new public teacher showing this pattern, or a concrete tasklog candidate where deleted fixed Slice bytes exceed selector cost by >=0.1 task points"
+      - date: 2026-07-09
+        ran: "parallel insight fanouts: perm_decode_free_equal_recolor on 102/251/302/268, probe_then_build on 138/145/328/324/379, axis-code on 367/350/279/064"
+        verdict: "this run found no concrete >=0.1 build candidate from these three fanouts. Main blockers: overlay masks are not colour permutations, branch/template banks are already gone or tied, and task367 needs >1513 cost saved while simple v_main fusion/pruning and round shrink fail."
+        reopen: "new public teacher on any named task, new diagonal/kernel lowering for 324/367, or a final routing primitive that changes the 900B mask/label economics"
 
   - name: reducesum-spatial-einsum
     status: dormant
@@ -231,3 +252,7 @@ levers:
         ran: "dtype_overpay_scan.py (networks/ 겨냥)"
         verdict: "networks/ 스캔이 배포본과 diverge — 오판 이력, 배포본 재조준 필요 (배포본 fp16은 deployed-fp16-recast가 흡수)"
         reopen: "스캐너 이식(Task 15, 배포본 재조준) 후 1회 재실행"
+      - date: 2026-07-09
+        ran: "uv run ng scan dtype_overpay against deployed set + gate/score checks for top residual candidates 070/190/377 after task197 adoption"
+        verdict: "this run's only clean >=0.1 residual was task197 and it is adopted. Remaining top residuals either hit ORT dtype constraints (CumSum uint8/fp16, mixed-dtype Einsum), are already adopted/tie, or require a source-owned rewrite not identified by this scan."
+        reopen: "verified ORT 1.26-compatible lowering that mixes FREE fp32 input with fp16/u8 carriers, or a new per-task island rewrite that avoids invalid dtype ops"

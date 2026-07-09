@@ -1004,9 +1004,10 @@
     "title": "Use the input twice in one Einsum to gate final output by axis activity",
     "status": "active",
     "source_tasks": [
-      67
+      67,
+      197
     ],
-    "rationale": "Task067 reached 25.0 by replacing scalar size recovery plus an explicit column mask with one self-Einsum: `bkrc,blcd->bkrc`, with both operands wired to `input`. The second operand sums row `c` over channels and columns, which is positive exactly when output column `c` is inside the active size. Because the only node output is graph output, the data-dependent gate is computed inside a free final op: mem 39->0, params 8->0, points 21.15->25.0; stored 266/266 and fresh 1500/1500.",
+    "rationale": "Task067 reached 25.0 by replacing scalar size recovery plus an explicit column mask with one self-Einsum: `bkrc,blcd->bkrc`, with both operands wired to `input`. The second operand sums row `c` over channels and columns, which is positive exactly when output column `c` is inside the active size. Because the only node output is graph output, the data-dependent gate is computed inside a free final op: mem 39->0, params 8->0, points 21.15->25.0; stored 266/266 and fresh 1500/1500. Task197 extends the same idea to a non-final predicate island: compute `match[w]=dot(input[:,1,0], input[:,1,w])` and `active[w]=sum_c input[c,1,w]` directly from the free input in two Einsums, deleting counted `T`/`g` Slice outputs (440B) while buying a 360-element static selector bank; cost 852->753 (+0.1235), fresh 1500 diff=0.",
     "applies_when": {
       "any_ops": [
         "ReduceSum",
@@ -2608,5 +2609,37 @@
       302,
       268
     ]
+  },
+  {
+    "id": "fixed_slice_conv_to_free_input_einsum",
+    "title": "Fold fixed Slice(input)->1x1 Conv colour reads into direct free-input Einsums when selector params are cheaper than counted windows",
+    "status": "active",
+    "source_tasks": [
+      106,
+      343
+    ],
+    "rationale": "task106 first showed that a fixed Slice(input) feeding a 1x1 colour/read Conv can be replaced by an Einsum wired directly to the FREE input when the read footprint is static: deleting a 360B counted slice and buying 81 selector params gave +0.328. task343 extends the rule to two fixed colour-read windows: replace `source_nonzero`/`source8_nonzero` Slice->Conv chains with free-input Einsums using static row/col/channel selectors, deleting 648B+108B counted windows and ending at cost 1222->756 (+0.4802), fresh 1500 diff=0.",
+    "applies_when": {
+      "all_tags": [
+        "fixed_slice",
+        "input_source",
+        "1x1_conv_or_colour_read"
+      ],
+      "notes": "Profitable only when static selector params plus any tiny selector intermediates are cheaper than the Slice/Conv activation memory they replace."
+    },
+    "reject_when": {
+      "any_tags": [
+        "dynamic_slice",
+        "non_1x1_stencil",
+        "full_spatial_output_needed",
+        "selector_params_ge_deleted_memory"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory: fixed input windows -> params/free-input contraction",
+      "risk": "low after fresh check",
+      "verification": "ng gate + fresh + hash verify"
+    },
+    "fanout_candidates_20260709": []
   }
 ]

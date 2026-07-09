@@ -82,3 +82,36 @@ with a size-independent detector and clipped fill, or a public/top-team task204 
 below the current active cost.  Falsification history: prior task204 "floor" claims
 were already beaten by the uint8 anchor/output route, so this is only a rejection of
 the strided-block-count mechanism, not a task floor.
+
+## 2026-07-09 — bitpack_code_plane_arithmetic_decode: NO-WIN (detection-dominated, no code/label plane stack)
+
+**What was run:** Static per-node output-byte dump of deployed `submission/overfit_nets/task204.onnx`
+(onnx 1.21.0 / ort 1.26.0, shape-inference), classified counted mass CARRIER vs DETECTION against
+the `bitpack_code_plane_arithmetic_decode` insight (fanout listed 204).
+
+**Byte breakdown (counted node outputs, final [1,10,30,30] output FREE):**
+- blue_f fp32 [1,1,20,20] = **1600B** — DETECTION entry floor (fp32 channel Slice of input; read floor, not packable)
+- anchor_3..10 (8 QLinearConv) = 1724B + fill_4..10 (7 MaxPool) = 2268B + orange_core/red_core = 648B → **4640B**
+  = the size-3..10 detector bank. DETECTION, parallel-not-chained, uint8 sub-400B spatial masks (not code planes).
+- out_state [1,4,20,20] u8 = **1600B** — the 4-channel linear BASIS for the free output conv (grid/blue/red/orange)
+- orange20+red20 = 800B, grid_u8 = 400B, blue_u8 = 400B, fp32 profiles rowp30/colp30 = 240B, misc = ~100B
+- Counted total ~9780B + init 626B. **No plane is a stack of bool/code/label planes; nothing is an avoidable CARRIER.**
+
+**Why bitpack does not apply (structural, durable):** The insight wins when several logical code/label/one-hot
+planes co-exist and can fold into ONE u8 arithmetic-code plane decoded by a nonlinear free op (Equal/ConvInteger).
+This net has NO such stack: (1) dominant mass is fp32 DETECTION (blue_f read floor) + the per-size uint8 detection
+bank (einsum/bitpack-proof: parallel spatial detectors, not a chain, already Max-reduced to 2 parity cores);
+(2) the only multi-plane tensor, out_state, is a near-one-hot LINEAR BASIS consumed by the final free QLinearConv,
+which does 4→10 channel expansion AND 20→30 canvas placement linearly. Packing grid/blue/red/orange (or
+orange_core/red_core) into one arithmetic code plane defeats the free LINEAR decode — a 1x1 conv from a single
+code channel is monotonic in the code value and cannot emit per-color indicator channels. Decoding a code plane
+needs Equal/threshold (nonlinear), whose output [1,10,20,20] (~3600B bool) becomes a COUNTED intermediate BEFORE
+the Pad canvas-placement, strictly worse than the current 1600B basis. Confirms S8 + 2026-07-08 coverage FP.
+
+**Reopen trigger (4-field):** (1) run: static byte-dump + CARRIER/DETECTION classification, bitpack insight;
+(2) tool+date: onnx 1.21.0 shape-infer + ng, 2026-07-09; (3) reopen-if: a formulation that replaces the
+size-3..10 anchor/fill bank with a size-independent corner+parity detector + clipped fill (removes the 4640B
+detection bank, making the code-plane epilogue the dominant mass) OR a nonlinear final free op that unpacks a
+code plane AND does canvas placement in ONE node, OR a public/top-team task204 ONNX below cost 10232;
+(4) falsification history: prior task204 "floor" claims were beaten by the uint8 anchor/output route (11364->10244);
+this rejects ONLY the bitpack mechanism for the current detection-dominated graph, not a task floor.

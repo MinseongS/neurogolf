@@ -94,3 +94,8 @@ Transferable rule: when the output is a pure crop/periodic remap of the original
 one-hot input, route the original one-hot tensor to the graph output with Gather
 instead of rebuilding labels and expanding them with Equal.  Off-grid columns can
 point at an already-zero padded input column to avoid Pad entirely.
+
+## ADOPTED 20260709T095604Z
+- cost: 1222 -> 756 (points 18.3720)
+- source: candidates/task343/task343_free_input_color.onnx
+- note: fixed Slice->Conv colour reads folded into free-input Einsums; deletes source_nonzero/source8_nonzero counted windows, buys static row/col selectors
