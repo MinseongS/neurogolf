@@ -128,6 +128,10 @@ levers:
         ran: "ng mine-public --margin 0 over the same local 20260709 public dumps after task197/task343 adoptions (local manifest 7297.3437)"
         verdict: "0승 — current local dumps contain no additional strictly-cheaper bundled-fail=0 overlay versus the post-task343 deployed set; this is a dated local-dump result, not public exhaustion"
         reopen: "any new public frontier/uploader/notebook output, or a large local rewrite that changes the comparison baseline"
+      - date: 2026-07-09
+        ran: "downloaded/refreshed lucifer19, yusuketogashi, jonathanncoletti merged91/90, prvsiyan, ryosukeshiroshita notebook outputs after task080/task161; ran `uv run ng mine-public --margin 0 candidates/public_dumps/20260709_refresh/*/submission.zip`"
+        verdict: "0승 — refreshed public dumps contain no strictly-cheaper bundled-fail=0 overlay versus the current deployed set (local 7297.7794, LB 7297.90). This is a point-in-time public frontier check, not exhaustion."
+        reopen: "new public frontier/uploader/notebook output, a changed submission.zip in an existing notebook, or a local rewrite that materially changes deployed per-task baselines"
 
   - name: public-insight-generalize
     status: live
@@ -172,6 +176,14 @@ levers:
         ran: "parallel insight fanouts: perm_decode_free_equal_recolor on 102/251/302/268, probe_then_build on 138/145/328/324/379, axis-code on 367/350/279/064"
         verdict: "this run found no concrete >=0.1 build candidate from these three fanouts. Main blockers: overlay masks are not colour permutations, branch/template banks are already gone or tied, and task367 needs >1513 cost saved while simple v_main fusion/pruning and round shrink fail."
         reopen: "new public teacher on any named task, new diagonal/kernel lowering for 324/367, or a final routing primitive that changes the 900B mask/label economics"
+      - date: 2026-07-09
+        ran: "post-task161 high-value audit: profile-product siblings 054/118/285/133/233, probe_then_build 138/145/328/324/379, axis/render 367/279/350/064, plus current high-cost memory split for 018/366/191/286"
+        verdict: "0 additional PASS >=+0.1 found. Existing candidates are tie/fail/cost-worse. task367 v_main prune 10ch->6ch is the best near-miss (15890->14082, +0.1215 priced) but fails arc-gen[3] by one overfilled right-edge cell; Wcol/bias tuning did not fix it. Other candidates either save <+0.1, require 10-channel/direct-selector expansion bigger than the deleted carrier, or are detection/assignment cores rather than removable carriers."
+        reopen: "task367: a <295B selective suppressor for the clipped right-edge overfill; high-cost tasks: a new public teacher or a true core rewrite for detection/assignment/stamp logic, not byte-tail cleanup"
+      - date: 2026-07-09
+        ran: "task367 near-miss repair + fanout: exhaustive 6-channel `v_main` subset sweep, Wc 3x3 tap sweep, then task349 5->3 `h_pos_u8` predicate-bank subset sweep"
+        verdict: "1 WIN: task367 raw 6-channel prune was repaired by adding one diagonal Wc diffusion tap, cost 15890->14082 (+0.1207), adopted/submitted. Fanout to task349 found no adoptable >=+0.1 analogue: every 3-of-5 radius-bank subset failed heavily (best 210/267 pass, 57 fail), confirming its radius classes are load-bearing under this tool/date."
+        reopen: "new scanner for predicate-bank prune plus downstream repair on other QLinearConv-bank tails; task349 only if a non-subset direct halo renderer or public teacher beats cost 14892"
 
   - name: reducesum-spatial-einsum
     status: dormant
@@ -256,3 +268,11 @@ levers:
         ran: "uv run ng scan dtype_overpay against deployed set + gate/score checks for top residual candidates 070/190/377 after task197 adoption"
         verdict: "this run's only clean >=0.1 residual was task197 and it is adopted. Remaining top residuals either hit ORT dtype constraints (CumSum uint8/fp16, mixed-dtype Einsum), are already adopted/tie, or require a source-owned rewrite not identified by this scan."
         reopen: "verified ORT 1.26-compatible lowering that mixes FREE fp32 input with fp16/u8 carriers, or a new per-task island rewrite that avoids invalid dtype ops"
+      - date: 2026-07-09
+        ran: "uv run ng scan dtype_overpay --tasks 126 188 289 181 320 332 375 394; built and gated boundary ONNX candidates under candidates/taskNNN for updates/masks/selectors/crop dtype islands"
+        verdict: "0 PASS in this scoped run. All legal boundary candidates had bundled fail=0 but were cost-worse vs deployed: 126 +60, 188 +112, 289 +180, 181 +216, 320 +432, 332 +20, 375 +74, 394 +84. The scanner savings are false positives from ScatterND/Einsum dtype equality or producer-bound Slice/Einsum; this repeats the known dtype-overpay false-positive history rather than proving a global floor."
+        reopen: "an ORT 1.26-compatible lowering that avoids same-dtype ScatterND/Einsum boundaries, a semantic rewrite replacing these final selector/scatter forms with a cheaper primitive, or a new public teacher for one of the named tasks"
+      - date: 2026-07-09
+        ran: "dtype_overpay queue recheck on task025 after task367: built `candidates/task025/topk_k3.onnx` by shrinking TopK/slot_projector K=4->3 and gated it"
+        verdict: "0 PASS. The candidate was cheaply priced (cost 7662) but failed bundled 35/266, so the apparent +0.1 dtype/slot saving is not available under strict gate. This is the same TopK-capacity risk class already documented for task025."
+        reopen: "a generator-proof safe K bound for the fixed public/bundled set, or a separate mechanism that removes slots without dropping required line multiplicity"

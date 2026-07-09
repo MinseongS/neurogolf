@@ -101,3 +101,8 @@ Bundled gate: `266/266`, memory `1450 -> 1436`, params unchanged `459`, cost
 `1909 -> 1895`. Included in salvage submission **54451991** (excluding the
 Kaggle-falsified task101 CSE), which completed at publicScore **7264.30**.
 Backup before this tail: `submission/overfit_nets/.dynamic_cse_tail_backup_20260708/task035.onnx`.
+
+## ADOPTED 20260709T123206Z
+- cost: 1895 -> 1891 (points 17.4551)
+- source: candidates/public_dumps/20260709_pm/biohack44_neurogolf-2026-championship-best-solution/_src_A/task035.onnx
+- note: min-merge from biohack44_neurogolf-2026-championship-best-solution

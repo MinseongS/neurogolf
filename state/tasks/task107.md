@@ -111,3 +111,8 @@ Mechanism: Einsum vs FREE input. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). S
 - cost: 3681 -> 3576 (points 16.8180)
 - source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task107.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T122741Z
+- cost: 3576 -> 3445 (points 16.8553)
+- source: candidates/task107/cand.onnx
+- note: fold-scan(opus): dead_tap_dilated_conv folds 3 fixed-pos fp32 colour reads (colsl/bcsl/ArgMax) into one 2x2 dilated Conv W[1,10,2,2] dil=25 -> [1,1,5,5] label plane; +25 taps land off-grid zero. 3576->3445, bit-identical 2000/2000 fresh.

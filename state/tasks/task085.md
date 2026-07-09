@@ -111,3 +111,8 @@ adding an occupancy gate to any prefix-parity/phase task.
 - cost: 4190 -> 2875 (points 17.0362)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task085.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T123205Z
+- cost: 2875 -> 2519 (points 17.1684)
+- source: candidates/public_dumps/20260709_pm/biohack44_neurogolf-2026-championship-best-solution/_src_A/task085.onnx
+- note: min-merge from biohack44_neurogolf-2026-championship-best-solution

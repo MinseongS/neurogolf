@@ -88,3 +88,13 @@ policy-gated cost trim pending LB verification.
 - cost: 3058 -> 3055 (points 16.9755)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task090.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T123209Z
+- cost: 3055 -> 3054 (points 16.9758)
+- source: candidates/public_dumps/20260709_pm/biohack44_neurogolf-2026-championship-best-solution/_src_A/task090.onnx
+- note: min-merge from biohack44_neurogolf-2026-championship-best-solution
+
+## ADOPTED 20260709T123237Z
+- cost: 3054 -> 3053 (points 16.9761)
+- source: candidates/public_dumps/20260709_pm/yusuketogashi_2026-neurogolf-baseline/task090.onnx
+- note: min-merge from yusuketogashi_2026-neurogolf-baseline

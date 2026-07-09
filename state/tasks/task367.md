@@ -189,3 +189,10 @@ Conclusion: the uint8 clip/thresholding in `v_main` is load-bearing; `v_col` is 
 sum of thresholded local predicates, not a linear predicate over the raw 5x5 patch.
 Do not retry simple linear composition.  A successful reduction would need a
 different predicate basis, not algebraic fusion.
+
+## ADOPTED 20260709T122438Z
+- cost: 15890 -> 14082 (points 15.4473)
+- source: candidates/task367/cand.onnx
+- note: prune v_main 10ch->6ch and add one diagonal tap to Wc diffusion; bundled pass, cost 15890->14082
+
+Mechanism detail: the pure 6-channel prune (`016789`) was already priced at the winning cost but failed only `arc-gen[3]` by one overfilled cell. A full channel restore would have cost ~452 and missed the user's +0.1 threshold. Exhaustive 6-channel subset sweep found no better PASS, so the repair moved downstream: `Wc` changed from the 4-neighbor plus center kernel to add a single upper-left diagonal tap. This recovered the missing suppressor geometry without changing memory or param count. Source was regenerated via `tools/live_to_exact_source.py` from `candidates/task367/cand.onnx`; `tools/rebuild_networks_from_source.py --tasks 367` rebuilt `networks/task367.onnx` at the same 13700/382 cost and `ng gate` PASS.

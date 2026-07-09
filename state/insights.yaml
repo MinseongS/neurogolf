@@ -2611,6 +2611,42 @@
     ]
   },
   {
+    "id": "scalar_carrier_tail_to_free_output_einsum",
+    "title": "Replace scalar label/code carriers and final Equal with a direct free-output Einsum",
+    "status": "active",
+    "source_tasks": [
+      161
+    ],
+    "rationale": "task161 improved 1808->1620 (+0.1098) by deleting uint8 scalar carriers Rvalu/Cvalu/Rval/Cval/Rv/Cv plus the full 30x30 code plane and final Equal. The row/column colour scalars stay as small fp32 features (Rvalf/Cvalf), rowok/colok are cast to fp32 once, tiny row/col/channel selector banks express background vs laser-colour terms, and the 10-channel output is emitted directly as the graph output. This is profitable when a scalar label carrier is only an intermediate decode surface and the final one-hot can be written by sign-positive terms without materializing a 900B code plane.",
+    "applies_when": {
+      "any_ops": [
+        "Equal",
+        "Max",
+        "Where",
+        "Cast"
+      ],
+      "all_tags": [
+        "scalar_label_carrier",
+        "final_equal",
+        "free_output_onehot"
+      ],
+      "min_memory": 800
+    },
+    "reject_when": {
+      "any_tags": [
+        "arbitrary_positioned_content",
+        "requires_per_cell_dynamic_label",
+        "direct_onehot_terms_exceed_deleted_carrier"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory: scalar/code carrier tail -> final output only",
+      "risk": "medium; depends on sign-safe margins and small feature banks",
+      "verification": "ng gate plus source build equivalence"
+    },
+    "fanout_candidates_20260709": []
+  },
+  {
     "id": "fixed_slice_conv_to_free_input_einsum",
     "title": "Fold fixed Slice(input)->1x1 Conv colour reads into direct free-input Einsums when selector params are cheaper than counted windows",
     "status": "active",
@@ -2641,5 +2677,42 @@
       "verification": "ng gate + fresh + hash verify"
     },
     "fanout_candidates_20260709": []
+  },
+  {
+    "id": "predicate_bank_prune_compensated_by_diffusion_tap",
+    "title": "Prune an over-wide QLinearConv predicate bank, then repair sparse failures by widening the downstream diffusion/union kernel",
+    "status": "active",
+    "source_tasks": [
+      367
+    ],
+    "rationale": "task367 improved 15890->14082 (+0.1207) by pruning `v_main` from 10 uint8 channels to the 6-channel basis {0,1,6,7,8,9}. The raw prune had exactly one bundled failure: a false fill caused by losing a suppressor pattern. Restoring a full channel cost too much, but adding one diagonal tap to the downstream 3x3 `Wc` diffusion kernel repaired the failure at zero additional memory and unchanged param count. This is a mechanism-level win: when the deleted channels only protect sparse boundary cases, the cheaper place to recover correctness can be a tiny downstream propagation/union kernel, not the original counted bank.",
+    "applies_when": {
+      "all_tags": [
+        "qlinearconv_predicate_bank",
+        "downstream_diffusion_or_union",
+        "sparse_failures_after_prune"
+      ],
+      "min_memory": 1000,
+      "notes": "Best candidates have a wide counted uint8 predicate bank feeding a small single-channel diffusion/fill tail. Exhaustive subset sweep plus tiny kernel-tap sweep is cheap and can find PASS candidates without adding memory."
+    },
+    "reject_when": {
+      "any_tags": [
+        "failures_dense_or_semantic",
+        "downstream_kernel_not_load_bearing",
+        "requires_restoring_full_channel"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory: delete counted predicate-bank channels; correctness recovered by params-only kernel tap",
+      "risk": "medium; requires full bundled gate because sparse failures can be non-obvious",
+      "verification": "subset sweep -> kernel-tap sweep -> ng gate + source rebuild"
+    },
+    "fanout_candidates_20260709": [
+      349,
+      204,
+      366,
+      064,
+      279
+    ]
   }
 ]

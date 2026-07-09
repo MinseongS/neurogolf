@@ -99,3 +99,8 @@ unchanged, params `423 -> 421`).  Active backup:
 - cost: 3212 -> 3182 (points 16.9347)
 - source: candidates/task044/kcollapse.onnx
 - note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays
+
+## ADOPTED 20260709T123206Z
+- cost: 3182 -> 3169 (points 16.9388)
+- source: candidates/public_dumps/20260709_pm/biohack44_neurogolf-2026-championship-best-solution/_src_A/task044.onnx
+- note: min-merge from biohack44_neurogolf-2026-championship-best-solution

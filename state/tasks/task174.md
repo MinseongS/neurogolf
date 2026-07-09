@@ -121,3 +121,8 @@ Backup: reports/retired_networks/task174_pre_s11_cross.onnx.
 - cost: 4347 -> 4027 (points 16.6992)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task174.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T123053Z
+- cost: 4027 -> 3348 (points 16.8839)
+- source: candidates/task174/cand.onnx
+- note: fold-scan(opus): symmetry-detector compaction — replace [N,W,W] reflection matrix + triple-product overlap Einsum with row column-bitmask palindrome test (rb=sum 2^s*M, rbrev=sum 2^(W-1-s)*M; palindrome iff rbrev==rb*2^(W-1-a) via power-table Gather); fp16-exact bounded. 4027->3348, bit-identical 2000/2000.

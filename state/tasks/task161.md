@@ -118,3 +118,8 @@ See memory [[neurogolf-urad-7225-bundle-vein]].
 - cost: 2131 -> 1808 (points 17.5000)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task161.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T105309Z
+- cost: 1808 -> 1620 (points 17.6098)
+- source: candidates/task161/cand.onnx
+- note: task161 scalar carrier tail collapsed to free-output einsum

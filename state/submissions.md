@@ -660,4 +660,11 @@ built from submission/merged_nets/.
 | 2026-07-09 09:42Z | task197 self-einsum template-row cleanup: delete counted T/g Slice outputs via free-input self-Einsum, 852->753 (+0.1235); local 7296.8635 | **LB 7296.98 확정 (sub 54489405, 신기록)** |
 | 2026-07-09 10:01Z | task343 fixed Slice->Conv colour reads -> free-input Einsums: 1222->756 (+0.4802); local 7297.3437 | **LB 7297.46 확정 (sub 54489856, 신기록)** |
 
-| 2026-07-09 10:40Z | arsenal fold(opus): task080 fp32 colour-decode -> free-input Einsum per-read, 9262->6686 (+0.326) on top of parallel task343/197; local 7297.6696 |
+| 2026-07-09 10:40Z | arsenal fold(opus): task080 fp32 colour-decode -> free-input Einsum per-read, 9262->6686 (+0.326) on top of parallel task343/197; local 7297.6696 | **LB 7297.79 확정 (sub 54490915, 신기록)** |
+| 2026-07-09 10:59Z | task161 scalar carrier tail -> free-output Einsum: 1808->1620 (+0.1098) on top of task080/343/197; local 7297.7794 | **LB 7297.90 확정 (sub 54491406, 신기록)** |
+
+| 2026-07-09 12:24Z | task367 v_main 10ch->6ch plus diagonal diffusion tap: 15890->14082 (+0.1207); local 7297.9002 | **LB 7298.02 확정 (sub 54493725, 신기록)** |
+
+| 2026-07-09 12:31Z | fold-scan(opus): task174 symmetry-bitmask compaction 4027->3348 (+0.185) + task107 dead-tap conv 3576->3445 (+0.037); local 7298.1222 |
+
+| 2026-07-09 12:33Z | public min-merge biohack44 best-solution: 6 adoptions +0.6966 (task171 +0.557, 085 +0.132, 044/035/233/090) on top of fold-scan 174/107; local 7298.8191 |
