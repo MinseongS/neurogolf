@@ -66,7 +66,7 @@ def _worker(num):
     return num, ok, run
 
 def main():
-    manifest = json.load(open("reports/manifest.json"))["tasks"]
+    manifest = json.load(open("state/safe_manifest.json"))["tasks"]
     real = 0.0; generalizes = 0; fails = []
     results = {}
     # maxtasksperchild=1: fresh process per task so generators (which share the
@@ -95,7 +95,7 @@ def main():
     for b,(n,p) in sorted(bym.items(),key=lambda x:-x[1][1]):
         print(f"   {b:12s} {n:3d} nets, {p:.1f} local pts lost")
     print("non-generalizing tasks:", " ".join(f"{num}({ok}/{run})" for num,ok,run,pts,meth in fails))
-    json.dump({str(n):{"ok":o,"run":r} for n,(o,r) in results.items()}, open("reports/genverify.json","w"))
+    json.dump({str(n):{"ok":o,"run":r} for n,(o,r) in results.items()}, open("state/genverify.json","w"))
 
 if __name__=="__main__":
     main()

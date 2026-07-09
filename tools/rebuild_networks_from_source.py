@@ -4,9 +4,9 @@ This repository treats `src/custom/taskNNN.py` as the source of truth.
 `networks/taskNNN.onnx` files are local build/deploy artifacts and are ignored by git.
 
 Usage:
-  PYTHONPATH=. uv run python reports/scripts/rebuild_networks_from_source.py
-  PYTHONPATH=. uv run python reports/scripts/rebuild_networks_from_source.py --tasks 1-10
-  PYTHONPATH=. uv run python reports/scripts/rebuild_networks_from_source.py --tasks 17,92,233
+  PYTHONPATH=. uv run python tools/rebuild_networks_from_source.py
+  PYTHONPATH=. uv run python tools/rebuild_networks_from_source.py --tasks 1-10
+  PYTHONPATH=. uv run python tools/rebuild_networks_from_source.py --tasks 17,92,233
 """
 
 from __future__ import annotations
@@ -19,9 +19,10 @@ from pathlib import Path
 import onnx
 
 from src.harness import ROOT, evaluate, load_task
+from neurogolf.paths import STATE
 
 NETWORKS = ROOT / "networks"
-MANIFEST = ROOT / "reports" / "manifest.json"
+MANIFEST = STATE / "safe_manifest.json"
 N_TASKS = 400
 
 

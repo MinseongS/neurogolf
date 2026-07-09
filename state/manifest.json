@@ -1,0 +1,3602 @@
+{
+ "001": {
+  "cost": 240,
+  "fail": 0,
+  "ok": true,
+  "points": 19.519361076658008,
+  "sha256": "04a88f45a39ace88078e25894aae81244e07ee32bb3ffdba80aafa7c2b0d8502",
+  "task": 1,
+  "updated": "verify"
+ },
+ "002": {
+  "cost": 5889,
+  "fail": 0,
+  "ok": true,
+  "points": 16.319158517055428,
+  "sha256": "5c8b6fc16feda9a25af488759952dcd5ae52fa7f22df0eb14041d7fbd21ed736",
+  "task": 2,
+  "updated": "verify"
+ },
+ "003": {
+  "cost": 260,
+  "fail": 0,
+  "ok": true,
+  "points": 19.439318368984473,
+  "sha256": "aafbad07e8d682d538c1dce9a95646f6c6f10c46bdab18dfa205ae42028ae95b",
+  "task": 3,
+  "updated": "verify"
+ },
+ "004": {
+  "cost": 5090,
+  "fail": 0,
+  "ok": true,
+  "points": 16.46496689045543,
+  "sha256": "e25e3f414edf2a265b9bb4fdf3e4b54e535b928a2c033c3aebb4e4b9e0d96b30",
+  "task": 4,
+  "updated": "verify"
+ },
+ "005": {
+  "cost": 6413,
+  "fail": 0,
+  "ok": true,
+  "points": 16.233917540851138,
+  "sha256": "b897460668dd1ff81d959ce6ea158cc503e5f59332ef974518dd17aa6f979f52",
+  "task": 5,
+  "updated": "verify"
+ },
+ "006": {
+  "cost": 153,
+  "fail": 0,
+  "ok": true,
+  "points": 19.969562078607566,
+  "sha256": "27adc62e63574d42025958cc392c4d83f66ea19f96826bb7b713fe9a3280201e",
+  "task": 6,
+  "updated": "verify"
+ },
+ "007": {
+  "cost": 127,
+  "fail": 0,
+  "ok": true,
+  "points": 20.15581291354141,
+  "sha256": "cef928b12283e629c3d150c6af54d5fd09071b7df15d76d68c69ac266344b9f8",
+  "task": 7,
+  "updated": "verify"
+ },
+ "008": {
+  "cost": 3150,
+  "fail": 0,
+  "ok": true,
+  "points": 16.944842268180324,
+  "sha256": "861e71ab80980abc62ebab414156d7aa429ef1e84023830fbcadf00081ff82bb",
+  "task": 8,
+  "updated": "verify"
+ },
+ "009": {
+  "cost": 6698,
+  "fail": 0,
+  "ok": true,
+  "points": 16.19043574664585,
+  "sha256": "5db86f3abbca7cac2e130974f0328b7ce3ac3c3c0f0ca713ce76bf72d23a1c54",
+  "task": 9,
+  "updated": "verify"
+ },
+ "010": {
+  "cost": 1002,
+  "fail": 0,
+  "ok": true,
+  "points": 18.09024671835519,
+  "sha256": "3f065a8894aa271eaf4c83431e8eb7933593a175bc744ed18abe31795ba8a1bd",
+  "task": 10,
+  "updated": "verify"
+ },
+ "011": {
+  "cost": 318,
+  "fail": 0,
+  "ok": true,
+  "points": 19.23794861721982,
+  "sha256": "8a384577fb4214d4cacfbef8e4eb97debdfcaeb562348e4dd42b6e6b9d0059e2",
+  "task": 11,
+  "updated": "verify"
+ },
+ "012": {
+  "cost": 2251,
+  "fail": 0,
+  "ok": true,
+  "points": 17.28087015909327,
+  "sha256": "4696a6d5e8de2cf4cd34839a89ef503275e80ad6ad0c722deaf67971122976c6",
+  "task": 12,
+  "updated": "verify"
+ },
+ "013": {
+  "cost": 1424,
+  "fail": 0,
+  "ok": true,
+  "points": 17.738774908028077,
+  "sha256": "b5f1e5c4871cbd88797e8e037f1f73175cfca71bfc303ea21465c9310ab36e9b",
+  "task": 13,
+  "updated": "verify"
+ },
+ "014": {
+  "cost": 4117,
+  "fail": 0,
+  "ok": true,
+  "points": 16.677119978230095,
+  "sha256": "0c91fd42d9fe1e43eba68c46e883e86b0df03bca5c38f8684f17ecb1b6e2ee79",
+  "task": 14,
+  "updated": "verify"
+ },
+ "015": {
+  "cost": 900,
+  "fail": 0,
+  "ok": true,
+  "points": 18.197605236675688,
+  "sha256": "c1de33ec3f93897cc55158d06ec99a2432ca7d77be70e217eeb75a80ce7a1e3e",
+  "task": 15,
+  "updated": "verify"
+ },
+ "016": {
+  "cost": 10,
+  "fail": 0,
+  "ok": true,
+  "points": 22.697414907005953,
+  "sha256": "cd5cf75133833cac3537097c778f5e89c8894adbe9ea2c632de652edfa15f76d",
+  "task": 16,
+  "updated": "verify"
+ },
+ "017": {
+  "cost": 6453,
+  "fail": 0,
+  "ok": true,
+  "points": 16.22769958206416,
+  "sha256": "611d383bff27797717269b900f3b84ea496ccc1f52e10daeaee74bc890b37d7a",
+  "task": 17,
+  "updated": "verify"
+ },
+ "018": {
+  "cost": 24358,
+  "fail": 0,
+  "ok": true,
+  "points": 14.899384383352944,
+  "sha256": "bfa8c0e482f0d577d4a0768952902f2c1c06bed09428a2c153b1085e60e2abcb",
+  "task": 18,
+  "updated": "verify"
+ },
+ "019": {
+  "cost": 2503,
+  "fail": 0,
+  "ok": true,
+  "points": 17.174754708568226,
+  "sha256": "08b1945d9ee9171968479c8f21430bade488d64ebe17970eed84adff0888dd1f",
+  "task": 19,
+  "updated": "verify"
+ },
+ "020": {
+  "cost": 1256,
+  "fail": 0,
+  "ok": true,
+  "points": 17.864312652971854,
+  "sha256": "f7db49fb30f6b2eff78ce6c117efd540906d9d1a5fe12062ca9dcf9bbb6ee009",
+  "task": 20,
+  "updated": "verify"
+ },
+ "021": {
+  "cost": 324,
+  "fail": 0,
+  "ok": true,
+  "points": 19.21925648420767,
+  "sha256": "014d964ed0937b3da52fef113d01f3dc5bc74432d55441883773265ce5a0530e",
+  "task": 21,
+  "updated": "verify"
+ },
+ "022": {
+  "cost": 900,
+  "fail": 0,
+  "ok": true,
+  "points": 18.197605236675688,
+  "sha256": "e92d07061f1aa758e526cf5ff5ee5d4d285a593cfaf1b88f52dac34e172667b8",
+  "task": 22,
+  "updated": "verify"
+ },
+ "023": {
+  "cost": 6348,
+  "fail": 0,
+  "ok": true,
+  "points": 16.2441049183537,
+  "sha256": "137c3046a8213bbf95adbd3d366bb2c0c1cb9ff935008479f3b51771f7664ce4",
+  "task": 23,
+  "updated": "verify"
+ },
+ "024": {
+  "cost": 110,
+  "fail": 0,
+  "ok": true,
+  "points": 20.299519634207584,
+  "sha256": "4c4ce2b238c9b9b5202816ce372fe3560842c800b768a978dd5fcb5e3dfc322b",
+  "task": 24,
+  "updated": "verify"
+ },
+ "025": {
+  "cost": 9817,
+  "fail": 0,
+  "ok": true,
+  "points": 15.808129144307479,
+  "sha256": "6660846318c85c573da3aa878f79a53161276a8055c964d10592e0a467df477d",
+  "task": 25,
+  "updated": "verify"
+ },
+ "026": {
+  "cost": 200,
+  "fail": 0,
+  "ok": true,
+  "points": 19.701682633451963,
+  "sha256": "4e21023f7bf8789307b7cde13ad32872ca59d6f2bcc7e1fe25790d042c748f31",
+  "task": 26,
+  "updated": "verify"
+ },
+ "027": {
+  "cost": 1308,
+  "fail": 0,
+  "ok": true,
+  "points": 17.823745467982857,
+  "sha256": "30e7fa87454ff24fca70334e11d75c801f4803ddeecd59dde50802169e6b27ff",
+  "task": 27,
+  "updated": "verify"
+ },
+ "028": {
+  "cost": 168,
+  "fail": 0,
+  "ok": true,
+  "points": 19.876036020596743,
+  "sha256": "86fd87984a4ec0466af7248fd16c4acafc9baec9bc3edbf473af557027e62b74",
+  "task": 28,
+  "updated": "verify"
+ },
+ "029": {
+  "cost": 5288,
+  "fail": 0,
+  "ok": true,
+  "points": 16.426804618468477,
+  "sha256": "afb5f0166ba1ed3bd0bef01baca1605d07943e9a1c3766adc9284ec96d446bd3",
+  "task": 29,
+  "updated": "verify"
+ },
+ "030": {
+  "cost": 2144,
+  "fail": 0,
+  "ok": true,
+  "points": 17.329571477809306,
+  "sha256": "91ce05ebe9524ccb4572666970bc0e3078fdc9a32b7c796d7dc619460ff59479",
+  "task": 30,
+  "updated": "verify"
+ },
+ "031": {
+  "cost": 637,
+  "fail": 0,
+  "ok": true,
+  "points": 18.543230344427837,
+  "sha256": "3c4eeba87acebceb14949914ad03cbcebdcc4169920faefb0f380a38e831fa8c",
+  "task": 31,
+  "updated": "verify"
+ },
+ "032": {
+  "cost": 910,
+  "fail": 0,
+  "ok": true,
+  "points": 18.186555400489105,
+  "sha256": "b9d1313d9ed711b5227f3aae6166bf5499f9f15eb531b65a9f4ac0a8515a3fe8",
+  "task": 32,
+  "updated": "verify"
+ },
+ "033": {
+  "cost": 787,
+  "fail": 0,
+  "ok": true,
+  "points": 18.331771751582597,
+  "sha256": "3f535659db9928d020da2ca9793ef1b08807476fbbd3c25c847664d71640c3df",
+  "task": 33,
+  "updated": "verify"
+ },
+ "034": {
+  "cost": 2261,
+  "fail": 0,
+  "ok": true,
+  "points": 17.27643752772203,
+  "sha256": "2bf0e3e9c15d0149cb996c64142eda65a49ae5daef0f85c948eac10504ba6846",
+  "task": 34,
+  "updated": "verify"
+ },
+ "035": {
+  "cost": 1895,
+  "fail": 0,
+  "ok": true,
+  "points": 17.453025882483473,
+  "sha256": "f50309fcb8156f70c0a4480e9f9d99d929f79e79fe67ddbf004d8bf650f18824",
+  "task": 35,
+  "updated": "verify"
+ },
+ "036": {
+  "cost": 1610,
+  "fail": 0,
+  "ok": true,
+  "points": 17.616010542021492,
+  "sha256": "a83f6c1f36a3f584c8416bc157f4b81deda3f270b196b9cfae2b2cada957598e",
+  "task": 36,
+  "updated": "verify"
+ },
+ "037": {
+  "cost": 3462,
+  "fail": 0,
+  "ok": true,
+  "points": 16.850398264263845,
+  "sha256": "ff445e875a5c8476b155870805bfc8978cc4e510c1e9d430da2ebfe0df081021",
+  "task": 37,
+  "updated": "verify"
+ },
+ "038": {
+  "cost": 213,
+  "fail": 0,
+  "ok": true,
+  "points": 19.638707834290575,
+  "sha256": "59e0f872fc276cc0f44d6e4b01785399fb34069866ae4dc931050c25dac212eb",
+  "task": 38,
+  "updated": "verify"
+ },
+ "039": {
+  "cost": 453,
+  "fail": 0,
+  "ok": true,
+  "points": 18.884107874516964,
+  "sha256": "2fefd1eb855204420cd892fbac6c861ddee74f26c743988eb4a129c4ae79a885",
+  "task": 39,
+  "updated": "verify"
+ },
+ "040": {
+  "cost": 190,
+  "fail": 0,
+  "ok": true,
+  "points": 19.752975927839515,
+  "sha256": "34c4840699dcbf379a0ad49f934c18f96525056b6771c7f3b81347d1becf3f30",
+  "task": 40,
+  "updated": "verify"
+ },
+ "041": {
+  "cost": 1759,
+  "fail": 0,
+  "ok": true,
+  "points": 17.52749925526244,
+  "sha256": "6edc6ffa0fa09eed51342fa69e9fec2e9d704d8511e703356c0e547bfadfb42b",
+  "task": 41,
+  "updated": "verify"
+ },
+ "042": {
+  "cost": 3110,
+  "fail": 0,
+  "ok": true,
+  "points": 16.95762199482672,
+  "sha256": "021858b9f5f4fe8ccca93e5db4fb1e94fc6aaded40b7dedad35331698ce741a3",
+  "task": 42,
+  "updated": "verify"
+ },
+ "043": {
+  "cost": 793,
+  "fail": 0,
+  "ok": true,
+  "points": 18.324176778365153,
+  "sha256": "f779cd25faf94b2cb7aba327fd656159c8993ea8751767ae384105af8f1dc153",
+  "task": 43,
+  "updated": "verify"
+ },
+ "044": {
+  "cost": 4735,
+  "fail": 0,
+  "ok": true,
+  "points": 16.537262994379823,
+  "sha256": "40cfb004c4256cd345048bfd5b10265e77a988a4b4f4075586eb595f97ac04cc",
+  "task": 44,
+  "updated": "verify"
+ },
+ "045": {
+  "cost": 1673,
+  "fail": 0,
+  "ok": true,
+  "points": 17.577626299013176,
+  "sha256": "4461a0e73d4fc10739f800b546dfb2051ce2e84e8a47c0a5c5cdabad25d13fca",
+  "task": 45,
+  "updated": "verify"
+ },
+ "046": {
+  "cost": 2274,
+  "fail": 0,
+  "ok": true,
+  "points": 17.27070432568952,
+  "sha256": "6636f21650e480e6a8f6cd06f2a1fe54c5577af897d538466d18e9db43fc2c0e",
+  "task": 46,
+  "updated": "verify"
+ },
+ "047": {
+  "cost": 862,
+  "fail": 0,
+  "ok": true,
+  "points": 18.240744729336306,
+  "sha256": "4250046ccbc9892e6183669a37594862c16730494a7d9c992c6c7dcfc539bb54",
+  "task": 47,
+  "updated": "verify"
+ },
+ "048": {
+  "cost": 803,
+  "fail": 0,
+  "ok": true,
+  "points": 18.31164528605324,
+  "sha256": "0c4ad4580ff998cf053588d1c1e263af1896e524e2356ab61e2721404059483c",
+  "task": 48,
+  "updated": "verify"
+ },
+ "049": {
+  "cost": 345,
+  "fail": 0,
+  "ok": true,
+  "points": 19.15645558296864,
+  "sha256": "90f67e98b88dc7cf18827011f97c5e3e7ffd2cb811ad3edb0e6b8268a26e011b",
+  "task": 49,
+  "updated": "verify"
+ },
+ "050": {
+  "cost": 3850,
+  "fail": 0,
+  "ok": true,
+  "points": 16.74417157271817,
+  "sha256": "9924035d8f5d91b6288ef9a5fb6e67bd3aaf0d8c142d971c23b60b90310e778a",
+  "task": 50,
+  "updated": "verify"
+ },
+ "051": {
+  "cost": 1270,
+  "fail": 0,
+  "ok": true,
+  "points": 17.853227820547364,
+  "sha256": "6d1a46ed2ecc9e3bb303a859495ba562ae5174a0d2ca74a25c78726e6df1629e",
+  "task": 51,
+  "updated": "verify"
+ },
+ "052": {
+  "cost": 194,
+  "fail": 0,
+  "ok": true,
+  "points": 19.73214184093667,
+  "sha256": "73403eca9b7eb65b36de58f28661463a4aa693005b6614a9706299a74877cb58",
+  "task": 52,
+  "updated": "verify"
+ },
+ "053": {
+  "cost": 30,
+  "fail": 0,
+  "ok": true,
+  "points": 21.598802618337846,
+  "sha256": "10606381decaf26919e53359e729a38be009b400fb457a623167a51d099363b7",
+  "task": 53,
+  "updated": "verify"
+ },
+ "054": {
+  "cost": 20131,
+  "fail": 0,
+  "ok": true,
+  "points": 15.089983805501172,
+  "sha256": "a96f56fbd67729750a371d3691607bdcd98804f2dcb89fcaf11475a359ae9817",
+  "task": 54,
+  "updated": "verify"
+ },
+ "055": {
+  "cost": 2555,
+  "fail": 0,
+  "ok": true,
+  "points": 17.154192497362196,
+  "sha256": "8d4b00ccf2716a75ae407159a843d2102b9b7e087d8e46747475917816a63b77",
+  "task": 55,
+  "updated": "verify"
+ },
+ "056": {
+  "cost": 34,
+  "fail": 0,
+  "ok": true,
+  "points": 21.473639475383838,
+  "sha256": "8809a9afcca258ec88e14e4cf78a9567d5b19b42ae4eb101df6cda60f0ae97e3",
+  "task": 56,
+  "updated": "verify"
+ },
+ "057": {
+  "cost": 668,
+  "fail": 0,
+  "ok": true,
+  "points": 18.495711826463356,
+  "sha256": "08cb47a45e2ae61855c9c10fa1c4d7c99473368e0fccde45446fac72d23c75d3",
+  "task": 57,
+  "updated": "verify"
+ },
+ "058": {
+  "cost": 1033,
+  "fail": 0,
+  "ok": true,
+  "points": 18.05977753088036,
+  "sha256": "a84154ad71bd2d36f4517fb6b177978f473d38a0e908a86c2a789fb9f6d8be7a",
+  "task": 58,
+  "updated": "verify"
+ },
+ "059": {
+  "cost": 510,
+  "fail": 0,
+  "ok": true,
+  "points": 18.76558927428163,
+  "sha256": "106f820ddb28086c95ea05d0fa4d890f0543dfb7c6b44a51d8a76fc885bedc22",
+  "task": 59,
+  "updated": "verify"
+ },
+ "060": {
+  "cost": 1010,
+  "fail": 0,
+  "ok": true,
+  "points": 18.082294390164694,
+  "sha256": "6e9f794373360e5802a5ae723bdd46c71b6992955781287016266e1dfbccbb04",
+  "task": 60,
+  "updated": "verify"
+ },
+ "061": {
+  "cost": 1617,
+  "fail": 0,
+  "ok": true,
+  "points": 17.611672140422893,
+  "sha256": "b42f07d922c6618bb027cf850b98980f09ca3972add3dea6fa418cb61852f7e5",
+  "task": 61,
+  "updated": "verify"
+ },
+ "062": {
+  "cost": 2524,
+  "fail": 0,
+  "ok": true,
+  "points": 17.166399776338896,
+  "sha256": "84ba2b1baf9ad0620d1c442497239ce770f64ddc1a9a38db66f6b15bfbd308d5",
+  "task": 62,
+  "updated": "verify"
+ },
+ "063": {
+  "cost": 1521,
+  "fail": 0,
+  "ok": true,
+  "points": 17.672876707740706,
+  "sha256": "22d47fa1373b15df6a84bb4e65b924801b73f2399f0c71642aa0e880bfeb836b",
+  "task": 63,
+  "updated": "verify"
+ },
+ "064": {
+  "cost": 9504,
+  "fail": 0,
+  "ok": true,
+  "points": 15.840531958397573,
+  "sha256": "5537b26fc9bda208ba21c1df46f440b2351bf3b934c94018f4e368999c45aa6f",
+  "task": 64,
+  "updated": "verify"
+ },
+ "065": {
+  "cost": 638,
+  "fail": 0,
+  "ok": true,
+  "points": 18.54166171665521,
+  "sha256": "b8b434ac832a270191b343a343693a2fb0e3863c40778cabaf753110e319bb51",
+  "task": 65,
+  "updated": "verify"
+ },
+ "066": {
+  "cost": 10121,
+  "fail": 0,
+  "ok": true,
+  "points": 15.777632247811098,
+  "sha256": "6d79db7311e5ae3f3d4a444ba9b423341d167d8c6cd6a4dee100f92e71cffeaf",
+  "task": 66,
+  "updated": "verify"
+ },
+ "067": {
+  "cost": 0,
+  "fail": 0,
+  "ok": true,
+  "points": 25.0,
+  "sha256": "071c16d1d46939f147e73c94eaf68aad70d1d158321fd596b372cf5d2aadfe9d",
+  "task": 67,
+  "updated": "verify"
+ },
+ "068": {
+  "cost": 623,
+  "fail": 0,
+  "ok": true,
+  "points": 18.565453481212547,
+  "sha256": "cbb36711a6312553ae309438eea3ebd0a8de44b8f4eede4fc53f37122e3a8988",
+  "task": 68,
+  "updated": "verify"
+ },
+ "069": {
+  "cost": 3905,
+  "fail": 0,
+  "ok": true,
+  "points": 16.729986937726213,
+  "sha256": "136f81fdf75dac39a58079604f60ca6e96ed6eb5c0bae3500c4bee249f7e1bc1",
+  "task": 69,
+  "updated": "verify"
+ },
+ "070": {
+  "cost": 1862,
+  "fail": 0,
+  "ok": true,
+  "points": 17.470593542162987,
+  "sha256": "a4b2250b6f7464ce03faa18ab183502e5342397d5691ebcbfa5a5f0a6569bf48",
+  "task": 70,
+  "updated": "verify"
+ },
+ "071": {
+  "cost": 2682,
+  "fail": 0,
+  "ok": true,
+  "points": 17.105681936158376,
+  "sha256": "d98ac0250f2665d72660a88ac6a3ad05dfaa75dc9d19f02e121bcc7c07b174dd",
+  "task": 71,
+  "updated": "verify"
+ },
+ "072": {
+  "cost": 421,
+  "fail": 0,
+  "ok": true,
+  "points": 18.957367166317617,
+  "sha256": "e4b4f0bb3133673a1dec7448483900c6f1b3419977a79bc9fd2ba9dceb27c587",
+  "task": 72,
+  "updated": "verify"
+ },
+ "073": {
+  "cost": 40,
+  "fail": 0,
+  "ok": true,
+  "points": 21.311120545886062,
+  "sha256": "81896f6e119ec944101a24d82133eed0b4642e88bf9e25e110ce15f3130a0e88",
+  "task": 73,
+  "updated": "verify"
+ },
+ "074": {
+  "cost": 9050,
+  "fail": 0,
+  "ok": true,
+  "points": 15.889479963306028,
+  "sha256": "5636020e7f1aa1913334757847a00e0151e0c0d6bc1fbb2c244c2a5e6dfed4b4",
+  "task": 74,
+  "updated": "verify"
+ },
+ "075": {
+  "cost": 766,
+  "fail": 0,
+  "ok": true,
+  "points": 18.358817830259408,
+  "sha256": "3abec89772b563bee8ad23a1d57a120cf9f1ac54ceb5ecf04d09fd189933bdb5",
+  "task": 75,
+  "updated": "verify"
+ },
+ "076": {
+  "cost": 12825,
+  "fail": 0,
+  "ok": true,
+  "points": 15.54084832996103,
+  "sha256": "57d84bad3868e2717c65fb4821dfbb588a172c3cc39a7acf529a5b2973da8b49",
+  "task": 76,
+  "updated": "verify"
+ },
+ "077": {
+  "cost": 2160,
+  "fail": 0,
+  "ok": true,
+  "points": 17.32213649932179,
+  "sha256": "f21a33d32a88f25a104e36bdc5ea853241c757b0d389f38865d5618f51fd5b39",
+  "task": 77,
+  "updated": "verify"
+ },
+ "078": {
+  "cost": 1293,
+  "fail": 0,
+  "ok": true,
+  "points": 17.835279621228143,
+  "sha256": "8b5693fc66f7722fa7163a5fd6854534d3d0c5e3eab48c4f5e789ba9f47f2b5b",
+  "task": 78,
+  "updated": "verify"
+ },
+ "079": {
+  "cost": 3103,
+  "fail": 0,
+  "ok": true,
+  "points": 16.959875335551622,
+  "sha256": "d3f5fad0d0e9caa3109c5cfa6fbfdc4bac5e63298d260ae973a5f9e2fb6ee65a",
+  "task": 79,
+  "updated": "verify"
+ },
+ "080": {
+  "cost": 9713,
+  "fail": 0,
+  "ok": true,
+  "points": 15.81877952659767,
+  "sha256": "91441f919efe5058c20ade2f190154c42ff5cab60e84cf59a35f44925b55df18",
+  "task": 80,
+  "updated": "verify"
+ },
+ "081": {
+  "cost": 464,
+  "fail": 0,
+  "ok": true,
+  "points": 18.860115447773744,
+  "sha256": "c15bc3ed7f4fd76fde6ff8a0c86b7455d78b9ff78474b7cdb2769b218150609e",
+  "task": 81,
+  "updated": "verify"
+ },
+ "082": {
+  "cost": 190,
+  "fail": 0,
+  "ok": true,
+  "points": 19.752975927839515,
+  "sha256": "ebd997260de0b3a155e6b72a67a5ceb4a596e148f9a40c421098009e1c27fe1e",
+  "task": 82,
+  "updated": "verify"
+ },
+ "083": {
+  "cost": 210,
+  "fail": 0,
+  "ok": true,
+  "points": 19.65289246928253,
+  "sha256": "292a56e292cb99f0b6376e103ef994a21e8aa2940d6f444f56e613b793bc8a24",
+  "task": 83,
+  "updated": "verify"
+ },
+ "084": {
+  "cost": 1895,
+  "fail": 0,
+  "ok": true,
+  "points": 17.453025882483473,
+  "sha256": "bfb9d7e887b11f295ee6fd3538c3dcde980fe4f204a99f2548199f213171fe03",
+  "task": 84,
+  "updated": "verify"
+ },
+ "085": {
+  "cost": 4190,
+  "fail": 0,
+  "ok": true,
+  "points": 16.659543987083815,
+  "sha256": "6a433f84f496434041d5ff4af495da0153b3c1d36f3b3db3a76d0f5809f1a84e",
+  "task": 85,
+  "updated": "verify"
+ },
+ "086": {
+  "cost": 3134,
+  "fail": 0,
+  "ok": true,
+  "points": 16.949934577084036,
+  "sha256": "09729bcf52fe9e449d88c050d41c279b318cc7530f16b4eafff1c9fb3e503201",
+  "task": 86,
+  "updated": "verify"
+ },
+ "087": {
+  "cost": 5,
+  "fail": 0,
+  "ok": true,
+  "points": 23.3905620875659,
+  "sha256": "63457b1e72ebd10f7092b7609a21d7772c0bcbe95ae3b2104b109fc36bc4837b",
+  "task": 87,
+  "updated": "verify"
+ },
+ "088": {
+  "cost": 1872,
+  "fail": 0,
+  "ok": true,
+  "points": 17.465237342962464,
+  "sha256": "af06c44d22477db678f0aa1129f0d76f5701ac0db11f726455d89a11f45fb1ca",
+  "task": 88,
+  "updated": "verify"
+ },
+ "089": {
+  "cost": 6715,
+  "fail": 0,
+  "ok": true,
+  "points": 16.187900891042663,
+  "sha256": "10f9cad2991ac34554ad8f2f7ee9645f186cd18b15e6096f5f4b423dd32395e4",
+  "task": 89,
+  "updated": "verify"
+ },
+ "090": {
+  "cost": 3058,
+  "fail": 0,
+  "ok": true,
+  "points": 16.97448361351099,
+  "sha256": "f3bb45978e2abf20d561f8ed9dad84a63eb971a6c2da9f985640d5d03d695dd0",
+  "task": 90,
+  "updated": "verify"
+ },
+ "091": {
+  "cost": 2894,
+  "fail": 0,
+  "ok": true,
+  "points": 17.02960509280857,
+  "sha256": "72f7e44a9774d71d75fc5e45314d57b73a3207ef5ba405d159bb734bb7804d3f",
+  "task": 91,
+  "updated": "verify"
+ },
+ "092": {
+  "cost": 5269,
+  "fail": 0,
+  "ok": true,
+  "points": 16.430404129790716,
+  "sha256": "f6e3e3e49b6ba52de5da4c6c9c2957c08056024abc1eb83b3f04ce71f7623adc",
+  "task": 92,
+  "updated": "verify"
+ },
+ "093": {
+  "cost": 3531,
+  "fail": 0,
+  "ok": true,
+  "points": 16.830663604071614,
+  "sha256": "f05747e0e694e10af2fe67330fa09914683654f4fc9f9b7e9252f5c03b1b480e",
+  "task": 93,
+  "updated": "verify"
+ },
+ "094": {
+  "cost": 1128,
+  "fail": 0,
+  "ok": true,
+  "points": 17.971798567941995,
+  "sha256": "b602422b27caf1c73462087588c048f82318840e719240a126fac936819efdca",
+  "task": 94,
+  "updated": "verify"
+ },
+ "095": {
+  "cost": 345,
+  "fail": 0,
+  "ok": true,
+  "points": 19.15645558296864,
+  "sha256": "fe61fee3b9c399e63e65e4acb22dde54bf9dda8c6e2a23e11f110130dfd49a63",
+  "task": 95,
+  "updated": "verify"
+ },
+ "096": {
+  "cost": 7682,
+  "fail": 0,
+  "ok": true,
+  "points": 16.05336479109415,
+  "sha256": "ac01042e7f3ba25e3464598613620d46566b4414c78cc0c02a144734a8e8c284",
+  "task": 96,
+  "updated": "verify"
+ },
+ "097": {
+  "cost": 910,
+  "fail": 0,
+  "ok": true,
+  "points": 18.186555400489105,
+  "sha256": "7bedb9b093b482fbcb2b61553bc0a8398db2daa7cc57991e2c965a89bc1eb66a",
+  "task": 97,
+  "updated": "verify"
+ },
+ "098": {
+  "cost": 900,
+  "fail": 0,
+  "ok": true,
+  "points": 18.197605236675688,
+  "sha256": "d67e3f62e2138e08ccaf5b2dc5f612f17f68a61bae97de583722954df0c12279",
+  "task": 98,
+  "updated": "verify"
+ },
+ "099": {
+  "cost": 1899,
+  "fail": 0,
+  "ok": true,
+  "points": 17.450917289187714,
+  "sha256": "ab94772539ef0dbfdc58037072177708007665f218165e04cac7062f626749df",
+  "task": 99,
+  "updated": "verify"
+ },
+ "100": {
+  "cost": 343,
+  "fail": 0,
+  "ok": true,
+  "points": 19.16226955283406,
+  "sha256": "d5fc8bcb730a3d00a25ba7e55d842596bdc72e5239d1fc22083e741e4b49fc8b",
+  "task": 100,
+  "updated": "verify"
+ },
+ "101": {
+  "cost": 13725,
+  "fail": 0,
+  "ok": true,
+  "points": 15.473025733622269,
+  "sha256": "5c36625ab4dc5830d8f604c67e00febc4c21563a062bbb9d15f639e9e8a90c07",
+  "task": 101,
+  "updated": "verify"
+ },
+ "102": {
+  "cost": 2527,
+  "fail": 0,
+  "ok": true,
+  "points": 17.165211892611808,
+  "sha256": "e525dbe3191aad09acf9fee7c06321ba050c1a3e04f6a8ce4ecd88a0461c9d7d",
+  "task": 102,
+  "updated": "verify"
+ },
+ "103": {
+  "cost": 60,
+  "fail": 0,
+  "ok": true,
+  "points": 20.9056554377779,
+  "sha256": "968116c04381da34de478a5103b5c2750f3cb67ebf6cf55df00983d12637629c",
+  "task": 103,
+  "updated": "verify"
+ },
+ "104": {
+  "cost": 238,
+  "fail": 0,
+  "ok": true,
+  "points": 19.527729326328526,
+  "sha256": "595cfba158a07e3ef2ad7265617d3368d61db512ca7b262d4ce3faf39fca50cc",
+  "task": 104,
+  "updated": "verify"
+ },
+ "105": {
+  "cost": 2849,
+  "fail": 0,
+  "ok": true,
+  "points": 17.045276665502094,
+  "sha256": "a29ca6b3f63d41f8fb02f71ab7ad8899e3767c5e5c31979a1866856d44fd8a9d",
+  "task": 105,
+  "updated": "verify"
+ },
+ "106": {
+  "cost": 626,
+  "fail": 0,
+  "ok": true,
+  "points": 18.560649628899903,
+  "sha256": "e1830f3821bacd5471705e7a966cdea81ee40634c2132e856403d4a2f2321448",
+  "task": 106,
+  "updated": "verify"
+ },
+ "107": {
+  "cost": 3681,
+  "fail": 0,
+  "ok": true,
+  "points": 16.78906026662098,
+  "sha256": "a48aee82a962e6841223ed81f7a4af5fe15e4cc08da8b04b261f053bdf565e6c",
+  "task": 107,
+  "updated": "verify"
+ },
+ "108": {
+  "cost": 300,
+  "fail": 0,
+  "ok": true,
+  "points": 19.2962175253438,
+  "sha256": "4d857e771a6685c81102d5df031017eb54270e27be36ee3bf5387a6b9f375eb1",
+  "task": 108,
+  "updated": "verify"
+ },
+ "109": {
+  "cost": 1280,
+  "fail": 0,
+  "ok": true,
+  "points": 17.845384643086337,
+  "sha256": "04e34741a380c873f2232771893e4ab8b8a7e38ac383b0b2961d4f33c13f8e6e",
+  "task": 109,
+  "updated": "verify"
+ },
+ "110": {
+  "cost": 5811,
+  "fail": 0,
+  "ok": true,
+  "points": 16.332492047924895,
+  "sha256": "c67c1ec3caf6e0fee36b462c03eea816fbd4c5216c14bd2cc69e6e36947dcb59",
+  "task": 110,
+  "updated": "verify"
+ },
+ "111": {
+  "cost": 309,
+  "fail": 0,
+  "ok": true,
+  "points": 19.266658723102253,
+  "sha256": "73def2a41945ee64dc024e226bdacbc7852201ef732d15f75c72a61fd1930e42",
+  "task": 111,
+  "updated": "verify"
+ },
+ "112": {
+  "cost": 1750,
+  "fail": 0,
+  "ok": true,
+  "points": 17.532628933082442,
+  "sha256": "9703c32e1a6e40fd6b5adfd9474064159d3fab2d83efb6f45c22ac0ecc23e25a",
+  "task": 112,
+  "updated": "verify"
+ },
+ "113": {
+  "cost": 30,
+  "fail": 0,
+  "ok": true,
+  "points": 21.598802618337846,
+  "sha256": "e9aa965897d848c51f99dfbb743103c9e32d850d6879cf002ac6475a5c3cc55f",
+  "task": 113,
+  "updated": "verify"
+ },
+ "114": {
+  "cost": 900,
+  "fail": 0,
+  "ok": true,
+  "points": 18.197605236675688,
+  "sha256": "c39ca86a834f10bee32b1c0c4a477a410341a559e5176dec42dd0a465f43823c",
+  "task": 114,
+  "updated": "verify"
+ },
+ "115": {
+  "cost": 1043,
+  "fail": 0,
+  "ok": true,
+  "points": 18.050143544999226,
+  "sha256": "0f5ece3d53c163e6da0bf9a0177c8b467735581a84381d1518781eacf99c297a",
+  "task": 115,
+  "updated": "verify"
+ },
+ "116": {
+  "cost": 30,
+  "fail": 0,
+  "ok": true,
+  "points": 21.598802618337846,
+  "sha256": "9b86289e7f6ef83775d45391feb8960e1942331e342333fa2939926f255931ad",
+  "task": 116,
+  "updated": "verify"
+ },
+ "117": {
+  "cost": 4088,
+  "fail": 0,
+  "ok": true,
+  "points": 16.684188868116458,
+  "sha256": "18a599d84fbd634ca44bbaad09a5c945dd1caba6392814f114788eed26c49efc",
+  "task": 117,
+  "updated": "verify"
+ },
+ "118": {
+  "cost": 12282,
+  "fail": 0,
+  "ok": true,
+  "points": 15.584109945110656,
+  "sha256": "853d7e92044414765ace7f061ffca8a59da1e8f4876c0750e7760beeb91584f8",
+  "task": 118,
+  "updated": "verify"
+ },
+ "119": {
+  "cost": 1363,
+  "fail": 0,
+  "ok": true,
+  "points": 17.782556568303466,
+  "sha256": "488903940d8825d9fa200cf6dce80cd5754aca5b04b4f0e19d65d6c353659a0d",
+  "task": 119,
+  "updated": "verify"
+ },
+ "120": {
+  "cost": 910,
+  "fail": 0,
+  "ok": true,
+  "points": 18.186555400489105,
+  "sha256": "fc30d11f717934fa41c8568a9cb73d00dbde289a682dec5177d9cbcc071ca068",
+  "task": 120,
+  "updated": "verify"
+ },
+ "121": {
+  "cost": 326,
+  "fail": 0,
+  "ok": true,
+  "points": 19.213102618633293,
+  "sha256": "9c552109e66313e735d5f9f805edbc1016c5a1003c61b6a6bb8490fbbfabcec5",
+  "task": 121,
+  "updated": "verify"
+ },
+ "122": {
+  "cost": 810,
+  "fail": 0,
+  "ok": true,
+  "points": 18.302965752333517,
+  "sha256": "9051f8398be34a6aed760ae16f17c724288178aa77495b14c8cb4f8764309023",
+  "task": 122,
+  "updated": "verify"
+ },
+ "123": {
+  "cost": 1342,
+  "fail": 0,
+  "ok": true,
+  "points": 17.798083682468373,
+  "sha256": "0430094cf07093b3d9c3ca41a4936bc34b8a2f31584711171a369fb1821a2d49",
+  "task": 123,
+  "updated": "verify"
+ },
+ "124": {
+  "cost": 1953,
+  "fail": 0,
+  "ok": true,
+  "points": 17.42287806912332,
+  "sha256": "2b2a6045dd7ba2948cc4c8edb6deed32ef234a484b527c857c447022e00d2362",
+  "task": 124,
+  "updated": "verify"
+ },
+ "125": {
+  "cost": 3463,
+  "fail": 0,
+  "ok": true,
+  "points": 16.850109455597575,
+  "sha256": "8d9bf139af7d651562cede3904cca52d5ff8f74373d8a80ea9e05836c1d08aa0",
+  "task": 125,
+  "updated": "verify"
+ },
+ "126": {
+  "cost": 605,
+  "fail": 0,
+  "ok": true,
+  "points": 18.59477154196916,
+  "sha256": "e0e258801442b6ffbfc2b2767ef33ed2e866055830a86c43379a61e2534e4532",
+  "task": 126,
+  "updated": "verify"
+ },
+ "127": {
+  "cost": 396,
+  "fail": 0,
+  "ok": true,
+  "points": 19.01858578874552,
+  "sha256": "758753b3ef8142d16751a2ccc98c3ac82bd96c6027898fc5664898fa17df9de6",
+  "task": 127,
+  "updated": "verify"
+ },
+ "128": {
+  "cost": 136,
+  "fail": 0,
+  "ok": true,
+  "points": 20.087345114263947,
+  "sha256": "cf78e3413eb95e5f4c2a3afa871de3440ebf210182829190b7e8c5e6e2ef9a56",
+  "task": 128,
+  "updated": "verify"
+ },
+ "129": {
+  "cost": 80,
+  "fail": 0,
+  "ok": true,
+  "points": 20.61797336532612,
+  "sha256": "c47bb845dc6bd3299c072c845f00a1b1d3493c8b91447bc2b29534460147f9b7",
+  "task": 129,
+  "updated": "verify"
+ },
+ "130": {
+  "cost": 30,
+  "fail": 0,
+  "ok": true,
+  "points": 21.598802618337846,
+  "sha256": "7ddd773493bf2587be0e83ea9e7fda5c3e443b05a960094b8d40c09962622c9b",
+  "task": 130,
+  "updated": "verify"
+ },
+ "131": {
+  "cost": 3976,
+  "fail": 0,
+  "ok": true,
+  "points": 16.711968432223536,
+  "sha256": "07810fd023057f6bd1e252be4414ae20ef6485fd5e5ff1b12bd1fbfaded120eb",
+  "task": 131,
+  "updated": "verify"
+ },
+ "132": {
+  "cost": 4088,
+  "fail": 0,
+  "ok": true,
+  "points": 16.684188868116458,
+  "sha256": "b0f3abfc4ca244b2522d5f0d4ea553604491ae72d70e18be7dcd26156de4733a",
+  "task": 132,
+  "updated": "verify"
+ },
+ "133": {
+  "cost": 21278,
+  "fail": 0,
+  "ok": true,
+  "points": 15.03457104592369,
+  "sha256": "d963ed5978d3a5d03c8bf32d419f92497b7091bb434440ba942d2e12e2fb063b",
+  "task": 133,
+  "updated": "verify"
+ },
+ "134": {
+  "cost": 1472,
+  "fail": 0,
+  "ok": true,
+  "points": 17.705622700711178,
+  "sha256": "0b37ca59eafdc0f0f014beb987b9f2fdc4eb3007ea327c9d7afbacd6d5484b7a",
+  "task": 134,
+  "updated": "verify"
+ },
+ "135": {
+  "cost": 200,
+  "fail": 0,
+  "ok": true,
+  "points": 19.701682633451963,
+  "sha256": "c3808e98dc661607db0d1f2de5eec4720719c216dfc986eb016ee931d6aa1148",
+  "task": 135,
+  "updated": "verify"
+ },
+ "136": {
+  "cost": 1154,
+  "fail": 0,
+  "ok": true,
+  "points": 17.949010552931956,
+  "sha256": "5f2b02e7e7f44d0ef3b7d37c48d50a3c6e0b9a024f23b5075e8eaa0ebd24cf30",
+  "task": 136,
+  "updated": "verify"
+ },
+ "137": {
+  "cost": 3526,
+  "fail": 0,
+  "ok": true,
+  "points": 16.832080637042182,
+  "sha256": "04badb657204a8b68681f14f668e77f55d4cb09b37f00adce8bb8be861422a72",
+  "task": 137,
+  "updated": "verify"
+ },
+ "138": {
+  "cost": 11716,
+  "fail": 0,
+  "ok": true,
+  "points": 15.631289292052376,
+  "sha256": "feb977a79a7ccb0b93e8812b09c28f035b39f11ba249dc014cec450983a818a8",
+  "task": 138,
+  "updated": "verify"
+ },
+ "139": {
+  "cost": 904,
+  "fail": 0,
+  "ok": true,
+  "points": 18.193170639607825,
+  "sha256": "476627b23abdbe5d2960135fdfb519fc099b8918eeb257323a777cc99fd209ed",
+  "task": 139,
+  "updated": "verify"
+ },
+ "140": {
+  "cost": 5,
+  "fail": 0,
+  "ok": true,
+  "points": 23.3905620875659,
+  "sha256": "63457b1e72ebd10f7092b7609a21d7772c0bcbe95ae3b2104b109fc36bc4837b",
+  "task": 140,
+  "updated": "verify"
+ },
+ "141": {
+  "cost": 568,
+  "fail": 0,
+  "ok": true,
+  "points": 18.657878581278847,
+  "sha256": "d783124f32050c481ee3f8012d56b2dd4271ddc4a53b96ab3ec85fb37b118162",
+  "task": 141,
+  "updated": "verify"
+ },
+ "142": {
+  "cost": 90,
+  "fail": 0,
+  "ok": true,
+  "points": 20.500190329669735,
+  "sha256": "18b4e10c739b09f16f0c3cdbde7b1be93eb0a143298b870912ae715d435ac750",
+  "task": 142,
+  "updated": "verify"
+ },
+ "143": {
+  "cost": 837,
+  "fail": 0,
+  "ok": true,
+  "points": 18.270175929510525,
+  "sha256": "c1d1531b12372e17f7fec8ff19b05b78fcd32061efb7dce318a3cd7fc0d1e221",
+  "task": 143,
+  "updated": "verify"
+ },
+ "144": {
+  "cost": 104,
+  "fail": 0,
+  "ok": true,
+  "points": 20.35560910085863,
+  "sha256": "4dcb2a2bfa3e7220f12863a4768cff115a957a78fc85fde9c159a9547088f809",
+  "task": 144,
+  "updated": "verify"
+ },
+ "145": {
+  "cost": 10492,
+  "fail": 0,
+  "ok": true,
+  "points": 15.741631659013235,
+  "sha256": "12b78d82986056200210ae12f3fd4b1307f7848ced09f1fa95d4d3b3d48d3ba9",
+  "task": 145,
+  "updated": "verify"
+ },
+ "146": {
+  "cost": 267,
+  "fail": 0,
+  "ok": true,
+  "points": 19.41275134159975,
+  "sha256": "63caf65f8d8b77a4f56bed770c891a81fa928bfd1804e22a0c9eea823ff9d5d3",
+  "task": 146,
+  "updated": "verify"
+ },
+ "147": {
+  "cost": 532,
+  "fail": 0,
+  "ok": true,
+  "points": 18.723356510658355,
+  "sha256": "3b2c25a31b335ab83a8f7c899832551061b1213e952e06ca68ca54c0c0ad0a7a",
+  "task": 147,
+  "updated": "verify"
+ },
+ "148": {
+  "cost": 4744,
+  "fail": 0,
+  "ok": true,
+  "points": 16.53536405932244,
+  "sha256": "78e0db6c28c821880fc888f666a64dda11a412829545615cd1dc760fb79a5738",
+  "task": 148,
+  "updated": "verify"
+ },
+ "149": {
+  "cost": 136,
+  "fail": 0,
+  "ok": true,
+  "points": 20.087345114263947,
+  "sha256": "0fdfeaa57ffced26d904cc2008288ef2d2cdd9fb7570c382f7fc5c5f3ef9ef86",
+  "task": 149,
+  "updated": "verify"
+ },
+ "150": {
+  "cost": 138,
+  "fail": 0,
+  "ok": true,
+  "points": 20.072746314842796,
+  "sha256": "b28ff85cfe8d7667bebd83ac11f5ec934a75054b4d7f06ca43e4f0e98ebf0ffb",
+  "task": 150,
+  "updated": "verify"
+ },
+ "151": {
+  "cost": 900,
+  "fail": 0,
+  "ok": true,
+  "points": 18.197605236675688,
+  "sha256": "31ef04f4e64e27c658fb606ce32533f20dc5dc6f0a622e1caf589a1871c43977",
+  "task": 151,
+  "updated": "verify"
+ },
+ "152": {
+  "cost": 90,
+  "fail": 0,
+  "ok": true,
+  "points": 20.500190329669735,
+  "sha256": "54bc32a1ef4228ed1c17147afe1ca1a698e8ea140f79fd1373e3ad25e4518858",
+  "task": 152,
+  "updated": "verify"
+ },
+ "153": {
+  "cost": 778,
+  "fail": 0,
+  "ok": true,
+  "points": 18.343273475821608,
+  "sha256": "048e52d62a11128c6faa2f817d5842de17fb2c7e2b25c6836eead02a69671787",
+  "task": 153,
+  "updated": "verify"
+ },
+ "154": {
+  "cost": 2743,
+  "fail": 0,
+  "ok": true,
+  "points": 17.083192509062396,
+  "sha256": "387b3c51b1ea5b2e23e43b3e6435a7156119c1e70246f75ac21735c977d1c61e",
+  "task": 154,
+  "updated": "verify"
+ },
+ "155": {
+  "cost": 142,
+  "fail": 0,
+  "ok": true,
+  "points": 20.04417294239874,
+  "sha256": "b38282884870cf44bd64adcf32643189614bdb617a954cc2a2522c60281ec663",
+  "task": 155,
+  "updated": "verify"
+ },
+ "156": {
+  "cost": 1562,
+  "fail": 0,
+  "ok": true,
+  "points": 17.64627766960037,
+  "sha256": "aea824c5f3b86312b0d017d65b6800acd039722ef41ab46d5668b4df5c7b9932",
+  "task": 156,
+  "updated": "verify"
+ },
+ "157": {
+  "cost": 6847,
+  "fail": 0,
+  "ok": true,
+  "points": 16.168434120878935,
+  "sha256": "8e1357a635e55e5310a253264feb9604e5fad1ddbb89fb1a5003bc3cb80dab43",
+  "task": 157,
+  "updated": "verify"
+ },
+ "158": {
+  "cost": 20329,
+  "fail": 0,
+  "ok": true,
+  "points": 15.080196282978935,
+  "sha256": "698e35d6b8b225afcaae718798acb805f88a1a943b2a5009cfb1b2c26e8e7435",
+  "task": 158,
+  "updated": "verify"
+ },
+ "159": {
+  "cost": 1006,
+  "fail": 0,
+  "ok": true,
+  "points": 18.086262649340316,
+  "sha256": "dfaf3d8cdfbe7d3d4a9578ee4dd5672f5f4fde0283e792e10d84d533c59b566f",
+  "task": 159,
+  "updated": "verify"
+ },
+ "160": {
+  "cost": 1334,
+  "fail": 0,
+  "ok": true,
+  "points": 17.804062773524432,
+  "sha256": "22f3397fdf3ef5224ffc9f34aef38952b58763aab80581cd58decf42bfe87d32",
+  "task": 160,
+  "updated": "verify"
+ },
+ "161": {
+  "cost": 2131,
+  "fail": 0,
+  "ok": true,
+  "points": 17.335653367901383,
+  "sha256": "c29a4882a4d622b016eb96eb90e5ce8a43c89a50bb7c7a6de00603b630528177",
+  "task": 161,
+  "updated": "verify"
+ },
+ "162": {
+  "cost": 4068,
+  "fail": 0,
+  "ok": true,
+  "points": 16.68909324283155,
+  "sha256": "d8c107f50433e03815a8460e737d82b0893b6a478a9c62526f49cb3d7a47249c",
+  "task": 162,
+  "updated": "verify"
+ },
+ "163": {
+  "cost": 1797,
+  "fail": 0,
+  "ok": true,
+  "points": 17.50612611321644,
+  "sha256": "bd13d8ccaa501c005fdc553b06e8fbe827612dc6689d8917f1551365e5f75cb2",
+  "task": 163,
+  "updated": "verify"
+ },
+ "164": {
+  "cost": 30,
+  "fail": 0,
+  "ok": true,
+  "points": 21.598802618337846,
+  "sha256": "e3ac7d41f4aab6edb8d79c585bfd487f1164cd0267ff15d311bc08ee5ee8ce97",
+  "task": 164,
+  "updated": "verify"
+ },
+ "165": {
+  "cost": 4800,
+  "fail": 0,
+  "ok": true,
+  "points": 16.523628803104017,
+  "sha256": "50a12b11db14cc3db9d3e5d1b4e0177ac70d784b68e72ab22edad144cbffda35",
+  "task": 165,
+  "updated": "verify"
+ },
+ "166": {
+  "cost": 24,
+  "fail": 0,
+  "ok": true,
+  "points": 21.821946169652055,
+  "sha256": "3bb5295f2555c152867174b7a6d6a375d445504910e1fb15b9fccf2fc6bc1cb8",
+  "task": 166,
+  "updated": "verify"
+ },
+ "167": {
+  "cost": 146,
+  "fail": 0,
+  "ok": true,
+  "points": 20.016393378291664,
+  "sha256": "e9b26cbc8bf2c2bf3a198186c75383cb3cc1b6aa3710c7c0e91eae7c49784a4d",
+  "task": 167,
+  "updated": "verify"
+ },
+ "168": {
+  "cost": 2237,
+  "fail": 0,
+  "ok": true,
+  "points": 17.28710903850987,
+  "sha256": "c81135be4a029d0baee760c6f2794dd3d9e2a0066f9f6286b41415dd9e015f46",
+  "task": 168,
+  "updated": "verify"
+ },
+ "169": {
+  "cost": 1670,
+  "fail": 0,
+  "ok": true,
+  "points": 17.5794210945892,
+  "sha256": "b48a4c4d7f561dc8a195db2e77be23897cac1c8c12eb729b46415a08c9966e3b",
+  "task": 169,
+  "updated": "verify"
+ },
+ "170": {
+  "cost": 2537,
+  "fail": 0,
+  "ok": true,
+  "points": 17.16126244040072,
+  "sha256": "28fc980b71a0d8cbbcca5c5b31e622ae01f64498594212374cfa157402487bbd",
+  "task": 170,
+  "updated": "verify"
+ },
+ "171": {
+  "cost": 759,
+  "fail": 0,
+  "ok": true,
+  "points": 18.36799822260437,
+  "sha256": "bba4826e537b460bc4d0c4eb4354e4dc599d6377a34983c32fd5de4676586f68",
+  "task": 171,
+  "updated": "verify"
+ },
+ "172": {
+  "cost": 30,
+  "fail": 0,
+  "ok": true,
+  "points": 21.598802618337846,
+  "sha256": "811040d6114fc274ee468ee6f6564c10ef8e10070fbf2b1fdbea33d5e812e736",
+  "task": 172,
+  "updated": "verify"
+ },
+ "173": {
+  "cost": 11320,
+  "fail": 0,
+  "ok": true,
+  "points": 15.665673648242826,
+  "sha256": "19931c5283f01d46cc0555a078566ddc433617f293597e5c81e1022cf6f1b53b",
+  "task": 173,
+  "updated": "verify"
+ },
+ "174": {
+  "cost": 4347,
+  "fail": 0,
+  "ok": true,
+  "points": 16.622758769011206,
+  "sha256": "a57a437f42e52db61c986aea701668409f9b125aa95a09108e7f8276b89968d6",
+  "task": 174,
+  "updated": "verify"
+ },
+ "175": {
+  "cost": 1255,
+  "fail": 0,
+  "ok": true,
+  "points": 17.865109148434115,
+  "sha256": "fe7db63dc72861eccfc34b3ebde598caab2df3f5b6007b03a8b7c8b9b44288df",
+  "task": 175,
+  "updated": "verify"
+ },
+ "176": {
+  "cost": 210,
+  "fail": 0,
+  "ok": true,
+  "points": 19.65289246928253,
+  "sha256": "90377d7d18ecb829911a960afcc184f1b8c3c7509cf4e6fa56ca8edd1acbd75b",
+  "task": 176,
+  "updated": "verify"
+ },
+ "177": {
+  "cost": 3619,
+  "fail": 0,
+  "ok": true,
+  "points": 16.806046976436257,
+  "sha256": "239b00587ca615e5deb34172efca8b208b86c37da004919cee1ee50713777ff1",
+  "task": 177,
+  "updated": "verify"
+ },
+ "178": {
+  "cost": 762,
+  "fail": 0,
+  "ok": true,
+  "points": 18.364053444313353,
+  "sha256": "66e61c74de60b59862917174af88c27556867a02d2fde541244f71c6f2812294",
+  "task": 178,
+  "updated": "verify"
+ },
+ "179": {
+  "cost": 0,
+  "fail": 0,
+  "ok": true,
+  "points": 25.0,
+  "sha256": "0d70a31241f81e31df2998ed042f689fae34f96e6872a4c61f098a98873d390c",
+  "task": 179,
+  "updated": "verify"
+ },
+ "180": {
+  "cost": 210,
+  "fail": 0,
+  "ok": true,
+  "points": 19.65289246928253,
+  "sha256": "8935e1b15874db736d5068ec7dbb504f83b2f05ba9a46281e7ea1c51f1e5c45f",
+  "task": 180,
+  "updated": "verify"
+ },
+ "181": {
+  "cost": 368,
+  "fail": 0,
+  "ok": true,
+  "points": 19.09191706183107,
+  "sha256": "eaebe82c3c33be788434a1f3c0fac14f5410d1ca8255ba6e9c33d779e7902f8b",
+  "task": 181,
+  "updated": "verify"
+ },
+ "182": {
+  "cost": 6069,
+  "fail": 0,
+  "ok": true,
+  "points": 16.289050874164147,
+  "sha256": "a14c4bc85d1601bf59599188ecafb0084ce58a33cee729d146c4c8174c409c79",
+  "task": 182,
+  "updated": "verify"
+ },
+ "183": {
+  "cost": 1024,
+  "fail": 0,
+  "ok": true,
+  "points": 18.068528194400546,
+  "sha256": "bb4cfc4ace6bfd71dfecbf1fea89d780d74f15e5759e562d5661352f0701b936",
+  "task": 183,
+  "updated": "verify"
+ },
+ "184": {
+  "cost": 2039,
+  "fail": 0,
+  "ok": true,
+  "points": 17.379785229425543,
+  "sha256": "3360dec3ae934908e4541d9649feaaa26123161342a4243b0942c952199a96ef",
+  "task": 184,
+  "updated": "verify"
+ },
+ "185": {
+  "cost": 1955,
+  "fail": 0,
+  "ok": true,
+  "points": 17.421854527580535,
+  "sha256": "cb2e45d47238e214af7d278e0c2bbd7c327446c2ad7c099e294bef0f338419a6",
+  "task": 185,
+  "updated": "verify"
+ },
+ "186": {
+  "cost": 103,
+  "fail": 0,
+  "ok": true,
+  "points": 20.365271011770364,
+  "sha256": "af77d33584923450953faff662fa5861ee849301196f266679c8cfc2fe580bc1",
+  "task": 186,
+  "updated": "verify"
+ },
+ "187": {
+  "cost": 7622,
+  "fail": 0,
+  "ok": true,
+  "points": 16.061205918566195,
+  "sha256": "1dc2f0addb1734ee2c4e331f8d2c746d244202a3e9047b2327003856e5e7a4f5",
+  "task": 187,
+  "updated": "verify"
+ },
+ "188": {
+  "cost": 764,
+  "fail": 0,
+  "ok": true,
+  "points": 18.361432210833478,
+  "sha256": "efce94591d90d91b418f893866e91a4c42e684031389dfd328731d679412cbfe",
+  "task": 188,
+  "updated": "verify"
+ },
+ "189": {
+  "cost": 892,
+  "fail": 0,
+  "ok": true,
+  "points": 18.206533867419992,
+  "sha256": "5a96d81af1af732af558ede01610b456f11c12b360f9108a95696d2814d15c24",
+  "task": 189,
+  "updated": "verify"
+ },
+ "190": {
+  "cost": 2355,
+  "fail": 0,
+  "ok": true,
+  "points": 17.235703993549482,
+  "sha256": "86bb87092fa008d9af2f5d9381bd79f70fdb5578dad4d7bebd7ab9cce9c65cc4",
+  "task": 190,
+  "updated": "verify"
+ },
+ "191": {
+  "cost": 11044,
+  "fail": 0,
+  "ok": true,
+  "points": 15.690357426949955,
+  "sha256": "1fb6373157f1456371764e02f82592eb127cc02b0ecacb6d25a19950a0e53293",
+  "task": 191,
+  "updated": "verify"
+ },
+ "192": {
+  "cost": 6833,
+  "fail": 0,
+  "ok": true,
+  "points": 16.17048090521922,
+  "sha256": "8bf659565bfe596815c3560deea4c3cb990dbe4149c63bb5819976bcc2a578bf",
+  "task": 192,
+  "updated": "verify"
+ },
+ "193": {
+  "cost": 910,
+  "fail": 0,
+  "ok": true,
+  "points": 18.186555400489105,
+  "sha256": "aa6ac89cbc5b59e6f71dd2f4e7044320f9783b3b6da247d95e9672baf2d19256",
+  "task": 193,
+  "updated": "verify"
+ },
+ "194": {
+  "cost": 949,
+  "fail": 0,
+  "ok": true,
+  "points": 18.14459120139007,
+  "sha256": "90ae34297a730bdbdbfac133d3782a7dbe6284a6f6e35bc2ad386500aa89b5fd",
+  "task": 194,
+  "updated": "verify"
+ },
+ "195": {
+  "cost": 921,
+  "fail": 0,
+  "ok": true,
+  "points": 18.174539963744692,
+  "sha256": "c0dfb9d0d286adb136519283db45d4f35b9329ec5b0bdef9f690bc6c0d507b64",
+  "task": 195,
+  "updated": "verify"
+ },
+ "196": {
+  "cost": 4536,
+  "fail": 0,
+  "ok": true,
+  "points": 16.580199154592414,
+  "sha256": "b5cbc3bbb1b76f5bde36015b01705b96383632a2abe0b81c3f7b1953b390bc06",
+  "task": 196,
+  "updated": "verify"
+ },
+ "197": {
+  "cost": 904,
+  "fail": 0,
+  "ok": true,
+  "points": 18.193170639607825,
+  "sha256": "547e278291b52a96f60cec390fe8e856274b86edda68d0064115d395680957c1",
+  "task": 197,
+  "updated": "verify"
+ },
+ "198": {
+  "cost": 11410,
+  "fail": 0,
+  "ok": true,
+  "points": 15.657754557143878,
+  "sha256": "e216b70b4262379c312ade1ad325dbc24244c2ad96881238dd70bc0e9db673fe",
+  "task": 198,
+  "updated": "verify"
+ },
+ "199": {
+  "cost": 1613,
+  "fail": 0,
+  "ok": true,
+  "points": 17.61414892187479,
+  "sha256": "c80a2095a7df27d1208a4c22589b5d6cc15fc21048222fe557fd580dfcbc2541",
+  "task": 199,
+  "updated": "verify"
+ },
+ "200": {
+  "cost": 753,
+  "fail": 0,
+  "ok": true,
+  "points": 18.375934772200107,
+  "sha256": "ca3bbd0ad88d1caa65cee84c729869d854002375b295b40ec55273ad99a80007",
+  "task": 200,
+  "updated": "verify"
+ },
+ "201": {
+  "cost": 3183,
+  "fail": 0,
+  "ok": true,
+  "points": 16.934420572717908,
+  "sha256": "f2efbdcd0d79ec46a3b16093fc508dfe43a15f8f02bbc4c134c0bd75935acefb",
+  "task": 201,
+  "updated": "verify"
+ },
+ "202": {
+  "cost": 3055,
+  "fail": 0,
+  "ok": true,
+  "points": 16.975465128394305,
+  "sha256": "ef77cd57cb936ee12b551972c0406354a4073e5add659a9ad39a8b7f578de5f4",
+  "task": 202,
+  "updated": "verify"
+ },
+ "203": {
+  "cost": 353,
+  "fail": 0,
+  "ok": true,
+  "points": 19.133531943066703,
+  "sha256": "235adb8f7be38f47a416a90a05c4225d5a18d299e1905d7d164999df9769c486",
+  "task": 203,
+  "updated": "verify"
+ },
+ "204": {
+  "cost": 10232,
+  "fail": 0,
+  "ok": true,
+  "points": 15.76672465674132,
+  "sha256": "84c7f08dc5d32d7207976cd538a9f76db1b4867f4507c5e233fcea111ad7c35a",
+  "task": 204,
+  "updated": "verify"
+ },
+ "205": {
+  "cost": 3760,
+  "fail": 0,
+  "ok": true,
+  "points": 16.76782576361606,
+  "sha256": "01cd89c619c3f2535f16d1c2ae773ec37dcb785e2fddcd14c2e26ba5320712ef",
+  "task": 205,
+  "updated": "verify"
+ },
+ "206": {
+  "cost": 1795,
+  "fail": 0,
+  "ok": true,
+  "points": 17.507239699077623,
+  "sha256": "89758cf1c05c121ede922ee1d582855f15a04c91af36c6269bfaba5db7eb3e4c",
+  "task": 206,
+  "updated": "verify"
+ },
+ "207": {
+  "cost": 236,
+  "fail": 0,
+  "ok": true,
+  "points": 19.53616819497439,
+  "sha256": "6fc9334a1ef11aa477e7d36866689101711a61905993040b632a8ec5c3163cce",
+  "task": 207,
+  "updated": "verify"
+ },
+ "208": {
+  "cost": 4172,
+  "fail": 0,
+  "ok": true,
+  "points": 16.663849183879336,
+  "sha256": "0792939861499b02cecf9ebe21d377237ab9cfccd53cc5109c81d643eabe7cad",
+  "task": 208,
+  "updated": "verify"
+ },
+ "209": {
+  "cost": 7775,
+  "fail": 0,
+  "ok": true,
+  "points": 16.041331262952568,
+  "sha256": "8bc1a4aaa947232cac23526b9371644644e7c20b4c0f81789413e2de64a907db",
+  "task": 209,
+  "updated": "verify"
+ },
+ "210": {
+  "cost": 30,
+  "fail": 0,
+  "ok": true,
+  "points": 21.598802618337846,
+  "sha256": "2e5fde7492f975a10351305a6a4fa0bc5ff2fa43eac4d5ff99a891c829b306d3",
+  "task": 210,
+  "updated": "verify"
+ },
+ "211": {
+  "cost": 270,
+  "fail": 0,
+  "ok": true,
+  "points": 19.401578041001624,
+  "sha256": "f8becd26db4c6d2f4068d22a7924733976063adfb56c458cb3189e93ef9a99e2",
+  "task": 211,
+  "updated": "verify"
+ },
+ "212": {
+  "cost": 2249,
+  "fail": 0,
+  "ok": true,
+  "points": 17.281759048040684,
+  "sha256": "14a35d55317bd16388d4b9fe5a0cc2f77ce954fa82c0efa1145b5fa4e020657f",
+  "task": 212,
+  "updated": "verify"
+ },
+ "213": {
+  "cost": 1850,
+  "fail": 0,
+  "ok": true,
+  "points": 17.477059081927628,
+  "sha256": "e4cc3948ab83d254f221f222a7ce4c531ba8f313e98e7e8109b11eee2caef983",
+  "task": 213,
+  "updated": "verify"
+ },
+ "214": {
+  "cost": 525,
+  "fail": 0,
+  "ok": true,
+  "points": 18.736601737408378,
+  "sha256": "23ce054bc1ed253b92154433cd52e6d042f0390a09d2b2f8f83beb50d9fa36bb",
+  "task": 214,
+  "updated": "verify"
+ },
+ "215": {
+  "cost": 739,
+  "fail": 0,
+  "ok": true,
+  "points": 18.394702079051797,
+  "sha256": "a4b558efc599055e12d21386e3b4d3862ffaae8707ebfa1dab32061f1b30e936",
+  "task": 215,
+  "updated": "verify"
+ },
+ "216": {
+  "cost": 8660,
+  "fail": 0,
+  "ok": true,
+  "points": 15.93352999844352,
+  "sha256": "409d867d055529c301c13e265a28a1cf18472d84652fca7122ceb853bc6b8226",
+  "task": 216,
+  "updated": "verify"
+ },
+ "217": {
+  "cost": 1470,
+  "fail": 0,
+  "ok": true,
+  "points": 17.70698232022722,
+  "sha256": "9a21213210224fc5f32444881cab88474276b4aa18221f77b6ac22295162413c",
+  "task": 217,
+  "updated": "verify"
+ },
+ "218": {
+  "cost": 619,
+  "fail": 0,
+  "ok": true,
+  "points": 18.571894727315403,
+  "sha256": "8b433cc5f9a1411427f6d53a7af5460f40f5813b6f34945f0ca2dedaaaa459f6",
+  "task": 218,
+  "updated": "verify"
+ },
+ "219": {
+  "cost": 7210,
+  "fail": 0,
+  "ok": true,
+  "points": 16.116775769721006,
+  "sha256": "6c1fff5fa12a1937981420a187f5911b7251077163c031d07c87e9aa8d2d49f7",
+  "task": 219,
+  "updated": "verify"
+ },
+ "220": {
+  "cost": 900,
+  "fail": 0,
+  "ok": true,
+  "points": 18.197605236675688,
+  "sha256": "b6b33c6a4477a7301bc4c211f98c967b37b155847ce8f6cbccf875a45aea36a7",
+  "task": 220,
+  "updated": "verify"
+ },
+ "221": {
+  "cost": 805,
+  "fail": 0,
+  "ok": true,
+  "points": 18.309157722581435,
+  "sha256": "e99b177dbaa8df0523dbb0b2dc758045ca2cd5e9a72030b2d3e7cc56823d47e0",
+  "task": 221,
+  "updated": "verify"
+ },
+ "222": {
+  "cost": 2313,
+  "fail": 0,
+  "ok": true,
+  "points": 17.25369933776856,
+  "sha256": "bd8e062f39ed5711f6b6d4d1494ca3dc9038997941831553c12af0ded830463a",
+  "task": 222,
+  "updated": "verify"
+ },
+ "223": {
+  "cost": 5,
+  "fail": 0,
+  "ok": true,
+  "points": 23.3905620875659,
+  "sha256": "a20e1a01ceda15257f92581785e4d00ef417c37e47bbd9c2cc3d3c963e38ae78",
+  "task": 223,
+  "updated": "verify"
+ },
+ "224": {
+  "cost": 1737,
+  "fail": 0,
+  "ok": true,
+  "points": 17.540085233758894,
+  "sha256": "359052523060c6536ed0dc235ad97c9cb37f185ea88c4a465ae3620504c48f14",
+  "task": 224,
+  "updated": "verify"
+ },
+ "225": {
+  "cost": 1031,
+  "fail": 0,
+  "ok": true,
+  "points": 18.06171551598304,
+  "sha256": "3a79af740af49d322484607191c5af888b47836cacfb9b32dc11bb59335b099e",
+  "task": 225,
+  "updated": "verify"
+ },
+ "226": {
+  "cost": 1534,
+  "fail": 0,
+  "ok": true,
+  "points": 17.664366018072798,
+  "sha256": "77e1c631c2b9911bc62588db803675cc349c7714f5e95fa8549b6f75dbd1447a",
+  "task": 226,
+  "updated": "verify"
+ },
+ "227": {
+  "cost": 100,
+  "fail": 0,
+  "ok": true,
+  "points": 20.394829814011906,
+  "sha256": "9ec83095fe583eda21ba08c6dea9e1c6ca01d13eeb7f565d93cc7bc47d663954",
+  "task": 227,
+  "updated": "verify"
+ },
+ "228": {
+  "cost": 962,
+  "fail": 0,
+  "ok": true,
+  "points": 18.130985549334294,
+  "sha256": "6149fe2184c638b48e57611c78f4f226e22985a63ad88267a116a789834efd77",
+  "task": 228,
+  "updated": "verify"
+ },
+ "229": {
+  "cost": 200,
+  "fail": 0,
+  "ok": true,
+  "points": 19.701682633451963,
+  "sha256": "4e56449b9c745647452dac693c2c5e05ac04a738c3178e6b3f5af0e88001f80c",
+  "task": 229,
+  "updated": "verify"
+ },
+ "230": {
+  "cost": 900,
+  "fail": 0,
+  "ok": true,
+  "points": 18.197605236675688,
+  "sha256": "d084700c91ed3561d73229a930d8ab80b2a36a761c017bdad03db281c36fdb42",
+  "task": 230,
+  "updated": "verify"
+ },
+ "231": {
+  "cost": 219,
+  "fail": 0,
+  "ok": true,
+  "points": 19.6109282701835,
+  "sha256": "4949c61285db2ed92f428438ed56d6492f1bdbbee979548b8ec59b0c30a76996",
+  "task": 231,
+  "updated": "verify"
+ },
+ "232": {
+  "cost": 1410,
+  "fail": 0,
+  "ok": true,
+  "points": 17.748655016627787,
+  "sha256": "764a0e30b4c2e37b5c1d40f2d751064c4408f0a2de968b8ce18c7c3afb89fc5d",
+  "task": 232,
+  "updated": "verify"
+ },
+ "233": {
+  "cost": 32667,
+  "fail": 0,
+  "ok": true,
+  "points": 14.605879326985828,
+  "sha256": "202408079b3234e49f168aba551480b645f13af1a03737890a5631470cbd22c7",
+  "task": 233,
+  "updated": "verify"
+ },
+ "234": {
+  "cost": 2780,
+  "fail": 0,
+  "ok": true,
+  "points": 17.069793793315316,
+  "sha256": "e8f2b11fafd3feed7d4a6b8e5c4832e4844c520a5810f53605a805f91108201f",
+  "task": 234,
+  "updated": "verify"
+ },
+ "235": {
+  "cost": 170,
+  "fail": 0,
+  "ok": true,
+  "points": 19.864201562949738,
+  "sha256": "149d4f26c129d8609654859b353a4b8eb715e382753f7b4909dab1d5cd9411c8",
+  "task": 235,
+  "updated": "verify"
+ },
+ "236": {
+  "cost": 126,
+  "fail": 0,
+  "ok": true,
+  "points": 20.163718093048523,
+  "sha256": "b422d6b5c34a300040bd2268aef0d31544cd33ec7c4a233438e9c0f6b598d9d1",
+  "task": 236,
+  "updated": "verify"
+ },
+ "237": {
+  "cost": 1836,
+  "fail": 0,
+  "ok": true,
+  "points": 17.484655428819565,
+  "sha256": "81836fa92e05e9e0353de5e4d5964e41c736761f31c3d892ca252fe44b886852",
+  "task": 237,
+  "updated": "verify"
+ },
+ "238": {
+  "cost": 1935,
+  "fail": 0,
+  "ok": true,
+  "points": 17.432137394536117,
+  "sha256": "23f1fda8668057f315f3047ee6373566dd982918084b3ac6020d68f005966cd3",
+  "task": 238,
+  "updated": "verify"
+ },
+ "239": {
+  "cost": 945,
+  "fail": 0,
+  "ok": true,
+  "points": 18.148815072506256,
+  "sha256": "d08a68185a8e8055e0400873bb2c8c866480d454091dd9501b297df3940d9de4",
+  "task": 239,
+  "updated": "verify"
+ },
+ "240": {
+  "cost": 457,
+  "fail": 0,
+  "ok": true,
+  "points": 18.875316609105795,
+  "sha256": "c236730293c4f4609584f52fd65f15a93c350f2c599e2cdff40b6500435a2070",
+  "task": 240,
+  "updated": "verify"
+ },
+ "241": {
+  "cost": 0,
+  "fail": 0,
+  "ok": true,
+  "points": 25.0,
+  "sha256": "0d70a31241f81e31df2998ed042f689fae34f96e6872a4c61f098a98873d390c",
+  "task": 241,
+  "updated": "verify"
+ },
+ "242": {
+  "cost": 431,
+  "fail": 0,
+  "ok": true,
+  "points": 18.933891909896253,
+  "sha256": "6b8777811f0f4add74c097e5c18023d40c68ffa1b9519f06aa1ebf07dd671230",
+  "task": 242,
+  "updated": "verify"
+ },
+ "243": {
+  "cost": 4717,
+  "fail": 0,
+  "ok": true,
+  "points": 16.541071716715738,
+  "sha256": "8bdf63fa30393e03fbdf26ca9bc909c8610aa889d86d035f78c8b9da425f6c34",
+  "task": 243,
+  "updated": "verify"
+ },
+ "244": {
+  "cost": 1179,
+  "fail": 0,
+  "ok": true,
+  "points": 17.92757809946263,
+  "sha256": "8b398d9dc6482f5434637ae9f5d79135001c39d8dc9847fdb469328796ddafbd",
+  "task": 244,
+  "updated": "verify"
+ },
+ "245": {
+  "cost": 2743,
+  "fail": 0,
+  "ok": true,
+  "points": 17.083192509062396,
+  "sha256": "cbd40a679c3d054762113e8818a38cc05c2a552e534bccf6c4c4d9fe48e7acec",
+  "task": 245,
+  "updated": "verify"
+ },
+ "246": {
+  "cost": 2226,
+  "fail": 0,
+  "ok": true,
+  "points": 17.29203846816451,
+  "sha256": "e5bdde0891996790bb459709a991c7de9e52d231a2ded5f869c2abf75060838e",
+  "task": 246,
+  "updated": "verify"
+ },
+ "247": {
+  "cost": 469,
+  "fail": 0,
+  "ok": true,
+  "points": 18.84939723155372,
+  "sha256": "ab2c685a04c87b7ab9aec8d38bf1f6c4a48a548dfb387cd971fff4e456bf5521",
+  "task": 247,
+  "updated": "verify"
+ },
+ "248": {
+  "cost": 151,
+  "fail": 0,
+  "ok": true,
+  "points": 19.982720163185075,
+  "sha256": "96d3d6359ebbbf3d6b8b5b47d0864a41d252918a5abb672776729e70dd1e0456",
+  "task": 248,
+  "updated": "verify"
+ },
+ "249": {
+  "cost": 261,
+  "fail": 0,
+  "ok": true,
+  "points": 19.435479592677307,
+  "sha256": "402c1c8b60d27dcad03bb2270b92fc42f4f8677588bd32ef179c9306aa5ef0f6",
+  "task": 249,
+  "updated": "verify"
+ },
+ "250": {
+  "cost": 2516,
+  "fail": 0,
+  "ok": true,
+  "points": 17.16957438217967,
+  "sha256": "974870881dfe2b8b83309f619448e9b134d62eb84d78e45d137ac99e0cb971c1",
+  "task": 250,
+  "updated": "verify"
+ },
+ "251": {
+  "cost": 2756,
+  "fail": 0,
+  "ok": true,
+  "points": 17.078464367866452,
+  "sha256": "f076d66b63c120f5f9a5ea3ec2dfd6b7aa5df52a7fa5a61ed8d1cec4bd7d3d5d",
+  "task": 251,
+  "updated": "verify"
+ },
+ "252": {
+  "cost": 180,
+  "fail": 0,
+  "ok": true,
+  "points": 19.807043149109788,
+  "sha256": "62fd80cbff2e6fc88c76d8b647e96f0bd350ca79c5a5ca4c4f89277638fa3fca",
+  "task": 252,
+  "updated": "verify"
+ },
+ "253": {
+  "cost": 500,
+  "fail": 0,
+  "ok": true,
+  "points": 18.78539190157781,
+  "sha256": "0491f16c4a6eb11d4f0ceb4d71ba78eef6fb2981a3c7b1b7cc2a2d748205ae74",
+  "task": 253,
+  "updated": "verify"
+ },
+ "254": {
+  "cost": 683,
+  "fail": 0,
+  "ok": true,
+  "points": 18.47350514042921,
+  "sha256": "581094feec22291904835a112071c55b1b7641fb65f2d4764f92aecee2cb9554",
+  "task": 254,
+  "updated": "verify"
+ },
+ "255": {
+  "cost": 7597,
+  "fail": 0,
+  "ok": true,
+  "points": 16.06449128849678,
+  "sha256": "303a1b2582ff2320158b507c1d22982ab03cd6364ec302ac04bc2fff9ab6ebac",
+  "task": 255,
+  "updated": "verify"
+ },
+ "256": {
+  "cost": 2063,
+  "fail": 0,
+  "ok": true,
+  "points": 17.368083486928747,
+  "sha256": "44097a53d81e9ed3e529ff79478d720751f3f4d0e13f431609ec382d8cb45080",
+  "task": 256,
+  "updated": "verify"
+ },
+ "257": {
+  "cost": 400,
+  "fail": 0,
+  "ok": true,
+  "points": 19.00853545289202,
+  "sha256": "e3d95820cb38f2cd7698dae782c40fa4baebd21a2a830e141eec99aebf177566",
+  "task": 257,
+  "updated": "verify"
+ },
+ "258": {
+  "cost": 160,
+  "fail": 0,
+  "ok": true,
+  "points": 19.924826184766175,
+  "sha256": "738171d54ac6fc7d6556d58aed18dd9824a66d946947eabf3cea15c4b94daa40",
+  "task": 258,
+  "updated": "verify"
+ },
+ "259": {
+  "cost": 892,
+  "fail": 0,
+  "ok": true,
+  "points": 18.206533867419992,
+  "sha256": "ead29447a4fa3c5e1bf6a699475bc34622d4f75b9823a496f049a2b05b75b532",
+  "task": 259,
+  "updated": "verify"
+ },
+ "260": {
+  "cost": 734,
+  "fail": 0,
+  "ok": true,
+  "points": 18.401490971385485,
+  "sha256": "60bd6f68cc0d5721909e924e7cd1f51dd56557a7a840fa03228156d3873e53fc",
+  "task": 260,
+  "updated": "verify"
+ },
+ "261": {
+  "cost": 200,
+  "fail": 0,
+  "ok": true,
+  "points": 19.701682633451963,
+  "sha256": "e902400aa057b6ba67104d8f25928bf1afa0cc8f2058089df56be98126d9d24f",
+  "task": 261,
+  "updated": "verify"
+ },
+ "262": {
+  "cost": 106,
+  "fail": 0,
+  "ok": true,
+  "points": 20.336560905887932,
+  "sha256": "b869bdad5131a5984bd3abceac4fda3bcc9d5c40f0f53e3d64bd65c3e2e46952",
+  "task": 262,
+  "updated": "verify"
+ },
+ "263": {
+  "cost": 670,
+  "fail": 0,
+  "ok": true,
+  "points": 18.49272228761499,
+  "sha256": "d6ab17ba68580d5d6013ace673e487b630880281ff5fd0fe0117150763c5e0ac",
+  "task": 263,
+  "updated": "verify"
+ },
+ "264": {
+  "cost": 2329,
+  "fail": 0,
+  "ok": true,
+  "points": 17.24680573011566,
+  "sha256": "18f2b72ad00aadc4f909aaf0bfe9e5b9fcf568b8bd295f8c36e529b5b2f4a237",
+  "task": 264,
+  "updated": "verify"
+ },
+ "265": {
+  "cost": 4357,
+  "fail": 0,
+  "ok": true,
+  "points": 16.620460973882558,
+  "sha256": "179c49a9c822e096f82734c60369b9d8143b5b0e095f977263f65abf77d79aa6",
+  "task": 265,
+  "updated": "verify"
+ },
+ "266": {
+  "cost": 311,
+  "fail": 0,
+  "ok": true,
+  "points": 19.260207087820767,
+  "sha256": "ccf8d8d5a847456696fda2699cab5171356fee1256c98ecf973ca3e1bb60bc9d",
+  "task": 266,
+  "updated": "verify"
+ },
+ "267": {
+  "cost": 758,
+  "fail": 0,
+  "ok": true,
+  "points": 18.36931661435763,
+  "sha256": "468c597a53bcce31d1460f96e1c03e6f66589982c93e5024c036bd190d2f2478",
+  "task": 267,
+  "updated": "verify"
+ },
+ "268": {
+  "cost": 2930,
+  "fail": 0,
+  "ok": true,
+  "points": 17.017242297988886,
+  "sha256": "75f1a0381f464e55beba06d314c4a7b05fa8f2d388af42a03b85e16d4aaa9a7d",
+  "task": 268,
+  "updated": "verify"
+ },
+ "269": {
+  "cost": 709,
+  "fail": 0,
+  "ok": true,
+  "points": 18.436144473467873,
+  "sha256": "051afa73f8158d7e9bb2a47747021ccb09e0f04361234cbace9f2f0e6caa5fa6",
+  "task": 269,
+  "updated": "verify"
+ },
+ "270": {
+  "cost": 2975,
+  "fail": 0,
+  "ok": true,
+  "points": 17.00200068202027,
+  "sha256": "19421e353ce5a96a4d467abf25efcb0b976177adc4bd12297b1876ec8b421648",
+  "task": 270,
+  "updated": "verify"
+ },
+ "271": {
+  "cost": 1187,
+  "fail": 0,
+  "ok": true,
+  "points": 17.92081560539033,
+  "sha256": "7801409769349e68d0dc405d1b0ceac428e2f2fc492c4fb6a9dcfd76d3a61a07",
+  "task": 271,
+  "updated": "verify"
+ },
+ "272": {
+  "cost": 402,
+  "fail": 0,
+  "ok": true,
+  "points": 19.003547911380977,
+  "sha256": "45e161f4b8f305f8af41ecdd93e8a8d1448978b7145b9065294fb804b88ea8bf",
+  "task": 272,
+  "updated": "verify"
+ },
+ "273": {
+  "cost": 1300,
+  "fail": 0,
+  "ok": true,
+  "points": 17.82988045655037,
+  "sha256": "9793fc981f7ab772ee672bd55429c44846ea6731f49e0a426264249ca6f153ae",
+  "task": 273,
+  "updated": "verify"
+ },
+ "274": {
+  "cost": 175,
+  "fail": 0,
+  "ok": true,
+  "points": 19.835214026076486,
+  "sha256": "46766215d780f29693964204ee3c59ca1dccb727b195afc1186a5621513ff43d",
+  "task": 274,
+  "updated": "verify"
+ },
+ "275": {
+  "cost": 1356,
+  "fail": 0,
+  "ok": true,
+  "points": 17.78770553149966,
+  "sha256": "085256d2a74cfdb63c3f4243e8394ce59ee73aa5d57dbe381c2319e037a270f7",
+  "task": 275,
+  "updated": "verify"
+ },
+ "276": {
+  "cost": 10,
+  "fail": 0,
+  "ok": true,
+  "points": 22.697414907005953,
+  "sha256": "ac61a5bb6540684d3f40289de6a3f7fd0fdeb26664697174edb4aab2ad3ce757",
+  "task": 276,
+  "updated": "verify"
+ },
+ "277": {
+  "cost": 3741,
+  "fail": 0,
+  "ok": true,
+  "points": 16.772891765651856,
+  "sha256": "71ccf3132d6782b21b973c2e8ec487ea8816e761938c00d70c6e45e16b26945a",
+  "task": 277,
+  "updated": "verify"
+ },
+ "278": {
+  "cost": 5010,
+  "fail": 0,
+  "ok": true,
+  "points": 16.48080880592109,
+  "sha256": "fd9c2e02009ce2e5da522e1701651e693d3a460b666f608c4f261530ade6b7b8",
+  "task": 278,
+  "updated": "verify"
+ },
+ "279": {
+  "cost": 5546,
+  "fail": 0,
+  "ok": true,
+  "points": 16.37916777382428,
+  "sha256": "224b4b930ab2b2c81c3e61eb430736e0c027f7f7355e175fc163868db3348347",
+  "task": 279,
+  "updated": "verify"
+ },
+ "280": {
+  "cost": 4145,
+  "fail": 0,
+  "ok": true,
+  "points": 16.670341932430603,
+  "sha256": "e2ee22aa91fed1005fb224a341c11264d3ae1fcb8e7bd2a1b6e1b5abe92889d2",
+  "task": 280,
+  "updated": "verify"
+ },
+ "281": {
+  "cost": 1329,
+  "fail": 0,
+  "ok": true,
+  "points": 17.807817941286753,
+  "sha256": "9cf1318d269365dde5db64c3d4697154d1529df9f2f84913792d0bd084cec71f",
+  "task": 281,
+  "updated": "verify"
+ },
+ "282": {
+  "cost": 446,
+  "fail": 0,
+  "ok": true,
+  "points": 18.899681047979936,
+  "sha256": "253d3690742b84433693170e7fe51c47dc5c8f51cb674eb65f4f5d026ce4e407",
+  "task": 282,
+  "updated": "verify"
+ },
+ "283": {
+  "cost": 910,
+  "fail": 0,
+  "ok": true,
+  "points": 18.186555400489105,
+  "sha256": "cfabeeeefbe18ba8308aff2843f3b81dc1a6fd6b5bd66b7c24ea021062f95a9e",
+  "task": 283,
+  "updated": "verify"
+ },
+ "284": {
+  "cost": 3558,
+  "fail": 0,
+  "ok": true,
+  "points": 16.82304613177422,
+  "sha256": "2d2f883b5723f0d650defa1ae0223935c71f5bb7befb0e83945fe2284852e9ed",
+  "task": 284,
+  "updated": "verify"
+ },
+ "285": {
+  "cost": 19623,
+  "fail": 0,
+  "ok": true,
+  "points": 15.115542373370678,
+  "sha256": "e3c9d3ad7019f38224d58ca2a76735b7794efbf0c5e44af6abd042905cba4431",
+  "task": 285,
+  "updated": "verify"
+ },
+ "286": {
+  "cost": 18271,
+  "fail": 0,
+  "ok": true,
+  "points": 15.186929617588335,
+  "sha256": "00a756f1e75f705a23e99a73d5aa2bc6c5c61073b452f7b2a38f64913e12c6f7",
+  "task": 286,
+  "updated": "verify"
+ },
+ "287": {
+  "cost": 250,
+  "fail": 0,
+  "ok": true,
+  "points": 19.478539082137754,
+  "sha256": "f1f07d18b2c47886fb39cfa67c7350961d90ca07b2a1f3f70a43b73346d6c631",
+  "task": 287,
+  "updated": "verify"
+ },
+ "288": {
+  "cost": 958,
+  "fail": 0,
+  "ok": true,
+  "points": 18.13515222202914,
+  "sha256": "b940e3e426cbcbf9ab398979e4b8b8f25df925310d97a25c9449665cdec5910e",
+  "task": 288,
+  "updated": "verify"
+ },
+ "289": {
+  "cost": 742,
+  "fail": 0,
+  "ok": true,
+  "points": 18.39065075683262,
+  "sha256": "b1732191194cfa822ade4715032526c990ebef64c71b4695b3b7222b8ea3d670",
+  "task": 289,
+  "updated": "verify"
+ },
+ "290": {
+  "cost": 355,
+  "fail": 0,
+  "ok": true,
+  "points": 19.127882210524582,
+  "sha256": "fe4571879d12667982f029cb6c5900e2747be1f16c85394c0363b108d98d7de4",
+  "task": 290,
+  "updated": "verify"
+ },
+ "291": {
+  "cost": 66,
+  "fail": 0,
+  "ok": true,
+  "points": 20.810345257973573,
+  "sha256": "68d63dc94d5e21076170e7e1196de034b8734bf11c122e26ec4636b79427b78f",
+  "task": 291,
+  "updated": "verify"
+ },
+ "292": {
+  "cost": 80,
+  "fail": 0,
+  "ok": true,
+  "points": 20.61797336532612,
+  "sha256": "f5dbb65451bb16d37f5e44041120e559dd95ac030ffb9d13dc5ac7c8850119d5",
+  "task": 292,
+  "updated": "verify"
+ },
+ "293": {
+  "cost": 1043,
+  "fail": 0,
+  "ok": true,
+  "points": 18.050143544999226,
+  "sha256": "3ab5be83f681ac4b155d3a450f2c45a17bb2c2f252e944a47888c5dc53c3caff",
+  "task": 293,
+  "updated": "verify"
+ },
+ "294": {
+  "cost": 910,
+  "fail": 0,
+  "ok": true,
+  "points": 18.186555400489105,
+  "sha256": "cb46c969ac7dd3444160f65313eb393fddf6e2956f2d584912212ebfb9320eb9",
+  "task": 294,
+  "updated": "verify"
+ },
+ "295": {
+  "cost": 393,
+  "fail": 0,
+  "ok": true,
+  "points": 19.02619038813074,
+  "sha256": "b1910039a4efe697da634e2171630347193385f34297c9b7cfdd447955c2c02d",
+  "task": 295,
+  "updated": "verify"
+ },
+ "296": {
+  "cost": 314,
+  "fail": 0,
+  "ok": true,
+  "points": 19.25060701409175,
+  "sha256": "2031a61ecc1ef337743204429274378413d76864774ecfcc6716ae89d72e91d1",
+  "task": 296,
+  "updated": "verify"
+ },
+ "297": {
+  "cost": 1389,
+  "fail": 0,
+  "ok": true,
+  "points": 17.763660657245655,
+  "sha256": "452224e903ef975db1c28e9cb32da5b379cdf780fef0a62baf442d5cbb338792",
+  "task": 297,
+  "updated": "verify"
+ },
+ "298": {
+  "cost": 135,
+  "fail": 0,
+  "ok": true,
+  "points": 20.09472522156157,
+  "sha256": "2573235e8c929179b9b8524214571e193f3d07cb523a85a3602201d48094d397",
+  "task": 298,
+  "updated": "verify"
+ },
+ "299": {
+  "cost": 50,
+  "fail": 0,
+  "ok": true,
+  "points": 21.087976994571854,
+  "sha256": "a69a1fe77866655468141574e3134327105b7b81e4e8a11f89c944003c645743",
+  "task": 299,
+  "updated": "verify"
+ },
+ "300": {
+  "cost": 526,
+  "fail": 0,
+  "ok": true,
+  "points": 18.73469878726229,
+  "sha256": "6bc4c53ed08e141552318c1db65f27043010b16704e665b1b1848be81a8a6a94",
+  "task": 300,
+  "updated": "verify"
+ },
+ "301": {
+  "cost": 1141,
+  "fail": 0,
+  "ok": true,
+  "points": 17.960339650137925,
+  "sha256": "6a0dacf07a88fca1e943fd90553008859e0cef635b22cb1c341c82f1a78fb604",
+  "task": 301,
+  "updated": "verify"
+ },
+ "302": {
+  "cost": 1774,
+  "fail": 0,
+  "ok": true,
+  "points": 17.519007837130474,
+  "sha256": "0fd5f5669021c4be796de455847a72006a4f63bd5fec6edfab974db6a77d391c",
+  "task": 302,
+  "updated": "verify"
+ },
+ "303": {
+  "cost": 700,
+  "fail": 0,
+  "ok": true,
+  "points": 18.448919664956595,
+  "sha256": "13e0ffeb45812a51c6dff59ab0f467e4d373db55c3a5b81e69b0d316b29c94e8",
+  "task": 303,
+  "updated": "verify"
+ },
+ "304": {
+  "cost": 1441,
+  "fail": 0,
+  "ok": true,
+  "points": 17.726907404000478,
+  "sha256": "2eb90ca37b20f6387b8fd17d9aa9da2664ea8b09372b54d00595219124202ce1",
+  "task": 304,
+  "updated": "verify"
+ },
+ "305": {
+  "cost": 636,
+  "fail": 0,
+  "ok": true,
+  "points": 18.544801436659878,
+  "sha256": "b0187c4bcff244b30eefffe33eab579fb478c1d138b7831d3a81b490243e624b",
+  "task": 305,
+  "updated": "verify"
+ },
+ "306": {
+  "cost": 300,
+  "fail": 0,
+  "ok": true,
+  "points": 19.2962175253438,
+  "sha256": "7e2d5154a5fd7d3ee9e1978e5653f19ff240f1ed7295525e3dbd8b447505799d",
+  "task": 306,
+  "updated": "verify"
+ },
+ "307": {
+  "cost": 5,
+  "fail": 0,
+  "ok": true,
+  "points": 23.3905620875659,
+  "sha256": "1380c8cf349e07e52b9e9aa56eef7f8f5dcdeb16d1f9772115e15881224190fa",
+  "task": 307,
+  "updated": "verify"
+ },
+ "308": {
+  "cost": 1467,
+  "fail": 0,
+  "ok": true,
+  "points": 17.70902522185702,
+  "sha256": "5213f72c8e48764135de85b4b655bfc0a807aadcd666eaa09c8aa05ec942ac51",
+  "task": 308,
+  "updated": "verify"
+ },
+ "309": {
+  "cost": 10,
+  "fail": 0,
+  "ok": true,
+  "points": 22.697414907005953,
+  "sha256": "62269a6ba15cda155fc7d4570f45061b5f0571747d6e80d8eaa4a47a41a7a98c",
+  "task": 309,
+  "updated": "verify"
+ },
+ "310": {
+  "cost": 3227,
+  "fail": 0,
+  "ok": true,
+  "points": 16.92069180794804,
+  "sha256": "8898287acc68528535484dcfb4543e4f390d915917b9d2c5d23656b2ec416858",
+  "task": 310,
+  "updated": "verify"
+ },
+ "311": {
+  "cost": 30,
+  "fail": 0,
+  "ok": true,
+  "points": 21.598802618337846,
+  "sha256": "e3ac7d41f4aab6edb8d79c585bfd487f1164cd0267ff15d311bc08ee5ee8ce97",
+  "task": 311,
+  "updated": "verify"
+ },
+ "312": {
+  "cost": 20,
+  "fail": 0,
+  "ok": true,
+  "points": 22.00426772644601,
+  "sha256": "a6bac8203e2525c5a82d556d990301890d0dd1da7a255dc4c0cc58a684f52857",
+  "task": 312,
+  "updated": "verify"
+ },
+ "313": {
+  "cost": 188,
+  "fail": 0,
+  "ok": true,
+  "points": 19.76355803717005,
+  "sha256": "15fe921feca62a48beab0c8812f6a7f9f2bf043698651a4d41dfda912f12b21c",
+  "task": 313,
+  "updated": "verify"
+ },
+ "314": {
+  "cost": 100,
+  "fail": 0,
+  "ok": true,
+  "points": 20.394829814011906,
+  "sha256": "378bc6f512d434d1fc0eba109893e8d881806ece4484f8c47af7e8974ab3d69f",
+  "task": 314,
+  "updated": "verify"
+ },
+ "315": {
+  "cost": 230,
+  "fail": 0,
+  "ok": true,
+  "points": 19.561920691076804,
+  "sha256": "787bee6b2f2c80870ae920101a7b2cacc023c085243e2014e5493b1e808d7209",
+  "task": 315,
+  "updated": "verify"
+ },
+ "316": {
+  "cost": 426,
+  "fail": 0,
+  "ok": true,
+  "points": 18.94556065373063,
+  "sha256": "6de7443bad8c82d27674e8048c14d23186673951b9f96d55ab65a7748b106f89",
+  "task": 316,
+  "updated": "verify"
+ },
+ "317": {
+  "cost": 146,
+  "fail": 0,
+  "ok": true,
+  "points": 20.016393378291664,
+  "sha256": "8046b1a3f2a5245b1808f959acf33a7687b454b614d7244ff5dc0ba6df39d2ac",
+  "task": 317,
+  "updated": "verify"
+ },
+ "318": {
+  "cost": 100,
+  "fail": 0,
+  "ok": true,
+  "points": 20.394829814011906,
+  "sha256": "31708e7a39c6d39e18b8df6fe2d7fef4571440e9f0771475f5669186499e2f59",
+  "task": 318,
+  "updated": "verify"
+ },
+ "319": {
+  "cost": 5832,
+  "fail": 0,
+  "ok": true,
+  "points": 16.328884726311507,
+  "sha256": "d8e000bcc7ffa0f4f7549a0c7d2f67617b074270b55a1c487c1a55e05b76e9f7",
+  "task": 319,
+  "updated": "verify"
+ },
+ "320": {
+  "cost": 770,
+  "fail": 0,
+  "ok": true,
+  "points": 18.35360948515227,
+  "sha256": "b27ed4c90509d27e3b8c2e730c29df69bf652defe7aca6db3cc9aae59524267f",
+  "task": 320,
+  "updated": "verify"
+ },
+ "321": {
+  "cost": 300,
+  "fail": 0,
+  "ok": true,
+  "points": 19.2962175253438,
+  "sha256": "1b716b674d3e6c83874a8d9b1b7e1b16e516689ce89d92ae48474def04ea2726",
+  "task": 321,
+  "updated": "verify"
+ },
+ "322": {
+  "cost": 170,
+  "fail": 0,
+  "ok": true,
+  "points": 19.864201562949738,
+  "sha256": "4a183a15a49111ceb8e99940446d29dbc2c89c2f74e1efadb2813348a23c688e",
+  "task": 322,
+  "updated": "verify"
+ },
+ "323": {
+  "cost": 2177,
+  "fail": 0,
+  "ok": true,
+  "points": 17.31429693876545,
+  "sha256": "cbca5387034be258aabb4a132cd9df5628bfb4e8b059713b6b9f3d8f285c35ff",
+  "task": 323,
+  "updated": "verify"
+ },
+ "324": {
+  "cost": 8862,
+  "fail": 0,
+  "ok": true,
+  "points": 15.910472248240564,
+  "sha256": "ab4cafb56ebc0b139da4fb96cf29202aa3943aba37d3eb18bc617a7d9b442f3f",
+  "task": 324,
+  "updated": "verify"
+ },
+ "325": {
+  "cost": 1483,
+  "fail": 0,
+  "ok": true,
+  "points": 17.698177657862068,
+  "sha256": "29ed2ee7660cc14f9dff2f4271c852a87091e6b7fb18e706aba4ce5206d8fec3",
+  "task": 325,
+  "updated": "verify"
+ },
+ "326": {
+  "cost": 30,
+  "fail": 0,
+  "ok": true,
+  "points": 21.598802618337846,
+  "sha256": "9aa0efcdbfcd83d1e3f22b53429dc0570c8d286b8d2840b5c57deb9ff7cc73ab",
+  "task": 326,
+  "updated": "verify"
+ },
+ "327": {
+  "cost": 638,
+  "fail": 0,
+  "ok": true,
+  "points": 18.54166171665521,
+  "sha256": "38efd2d259b718d9bdeca181040253c523f7f5fb2d6acf4ddd8ad2e185c2b68e",
+  "task": 327,
+  "updated": "verify"
+ },
+ "328": {
+  "cost": 6631,
+  "fail": 0,
+  "ok": true,
+  "points": 16.20048909863113,
+  "sha256": "4b38ae9b038e5504c07eae6c290ba25393cb8a7e0a94d76f978dc2a802e6f3f8",
+  "task": 328,
+  "updated": "verify"
+ },
+ "329": {
+  "cost": 468,
+  "fail": 0,
+  "ok": true,
+  "points": 18.851531704082355,
+  "sha256": "8dac73c62d2b40db98ede91836027787cc577db199d912c0eb1f7dcecdc5c6f9",
+  "task": 329,
+  "updated": "verify"
+ },
+ "330": {
+  "cost": 3022,
+  "fail": 0,
+  "ok": true,
+  "points": 16.986325857167316,
+  "sha256": "86f9047aa509cee1ceda116eb5ab1b86a3b6ca9515e7cd3fa4a0d21ae41cbf07",
+  "task": 330,
+  "updated": "verify"
+ },
+ "331": {
+  "cost": 910,
+  "fail": 0,
+  "ok": true,
+  "points": 18.186555400489105,
+  "sha256": "26cae802617a30009863801a715055238fb5620f90b2a2cbd15a8fe90bf8f8ef",
+  "task": 331,
+  "updated": "verify"
+ },
+ "332": {
+  "cost": 561,
+  "fail": 0,
+  "ok": true,
+  "points": 18.670279094477305,
+  "sha256": "a606cb8a41ec54844c2679e02af93498672686c44bf87f181f5a36330de169d5",
+  "task": 332,
+  "updated": "verify"
+ },
+ "333": {
+  "cost": 3186,
+  "fail": 0,
+  "ok": true,
+  "points": 16.933478509530005,
+  "sha256": "73d10082ea8a2d7fa8b22ef7593a5db09935860842c61318d2fcd75ab4879204",
+  "task": 333,
+  "updated": "verify"
+ },
+ "334": {
+  "cost": 194,
+  "fail": 0,
+  "ok": true,
+  "points": 19.73214184093667,
+  "sha256": "3aed754b3b13af23e3649151957654ce3394467526edec8540c2299563d18d8f",
+  "task": 334,
+  "updated": "verify"
+ },
+ "335": {
+  "cost": 1681,
+  "fail": 0,
+  "ok": true,
+  "points": 17.572855866591382,
+  "sha256": "97d576159c8f0462713809ca0b22252ebfe5625a198a991927d04d6dd606ee25",
+  "task": 335,
+  "updated": "verify"
+ },
+ "336": {
+  "cost": 1820,
+  "fail": 0,
+  "ok": true,
+  "points": 17.493408219929158,
+  "sha256": "8cffed4ad33ff1d68d4750b91ab147cbbf6d0ed96755ffa405c9c255ef1372c9",
+  "task": 336,
+  "updated": "verify"
+ },
+ "337": {
+  "cost": 10,
+  "fail": 0,
+  "ok": true,
+  "points": 22.697414907005953,
+  "sha256": "ddf20fcd2e9ef651a36c24b086dfd7e94c898127181afa695ed9df11f6bc7362",
+  "task": 337,
+  "updated": "verify"
+ },
+ "338": {
+  "cost": 8848,
+  "fail": 0,
+  "ok": true,
+  "points": 15.912053276237884,
+  "sha256": "857ebd11081aa0a0e59e42e10e11adb33cf86a537147ef2db9a9e57a86b02278",
+  "task": 338,
+  "updated": "verify"
+ },
+ "339": {
+  "cost": 140,
+  "fail": 0,
+  "ok": true,
+  "points": 20.058357577390694,
+  "sha256": "1b552a397ed48012726be177cee6de6d4d481a16891d3d445588bb8c43f738db",
+  "task": 339,
+  "updated": "verify"
+ },
+ "340": {
+  "cost": 3404,
+  "fail": 0,
+  "ok": true,
+  "points": 16.867293510306737,
+  "sha256": "231f9a7cb736280f93cdf44a81ae56a80a56cf8329df32fa00b403f26522e4e4",
+  "task": 340,
+  "updated": "verify"
+ },
+ "341": {
+  "cost": 1123,
+  "fail": 0,
+  "ok": true,
+  "points": 17.976241045261556,
+  "sha256": "c6c02ee27dab2a249506271ea9a857e6fa61edf2330665f94c2a3b0cd7cd5934",
+  "task": 341,
+  "updated": "verify"
+ },
+ "342": {
+  "cost": 1072,
+  "fail": 0,
+  "ok": true,
+  "points": 18.022718658369254,
+  "sha256": "29162826fc46cd0fb54bdd0ac5339dce3489ffb44b35a38d4fba33e005f5523a",
+  "task": 342,
+  "updated": "verify"
+ },
+ "343": {
+  "cost": 1222,
+  "fail": 0,
+  "ok": true,
+  "points": 17.89175586026846,
+  "sha256": "b6ae19edfa0c76ef570aec7ba35f4f5f8a95bc7e32bf656070ddf849becba851",
+  "task": 343,
+  "updated": "verify"
+ },
+ "344": {
+  "cost": 910,
+  "fail": 0,
+  "ok": true,
+  "points": 18.186555400489105,
+  "sha256": "ab771de30df51bdf923b28c375d49a64c1104f256e42d323f7bc824ae09457c7",
+  "task": 344,
+  "updated": "verify"
+ },
+ "345": {
+  "cost": 1128,
+  "fail": 0,
+  "ok": true,
+  "points": 17.971798567941995,
+  "sha256": "3453dad9acbdafe9b2f150e7c45d8c3caa0f1b7d57c4c1929653e8f2f702b8dd",
+  "task": 345,
+  "updated": "verify"
+ },
+ "346": {
+  "cost": 1254,
+  "fail": 0,
+  "ok": true,
+  "points": 17.865906278807135,
+  "sha256": "ff891cbb98470dc179970a4fe7818c7f8ae4c513e6ed1c5884eea3cf2a072c77",
+  "task": 346,
+  "updated": "verify"
+ },
+ "347": {
+  "cost": 143,
+  "fail": 0,
+  "ok": true,
+  "points": 20.03715536974009,
+  "sha256": "336aa4dc52e04071278c9795fab38a1068a6ea19718b391135fea381c3836cff",
+  "task": 347,
+  "updated": "verify"
+ },
+ "348": {
+  "cost": 1895,
+  "fail": 0,
+  "ok": true,
+  "points": 17.453025882483473,
+  "sha256": "2dc9dc34d4aa050d58f6395fd615bb98025c60a7f7e7936719a02173bb2d78ee",
+  "task": 348,
+  "updated": "verify"
+ },
+ "349": {
+  "cost": 14892,
+  "fail": 0,
+  "ok": true,
+  "points": 15.391420565007392,
+  "sha256": "b6d8d7fc002b5b41f0780ae8c8d6a36f1d747452b28815ded1a0d5515bab0442",
+  "task": 349,
+  "updated": "verify"
+ },
+ "350": {
+  "cost": 9036,
+  "fail": 0,
+  "ok": true,
+  "points": 15.891028122412106,
+  "sha256": "4fc1f47414a1dbf9bd9b89c6becc37189e1913658e09133b2f485d6dcf2ab2b9",
+  "task": 350,
+  "updated": "verify"
+ },
+ "351": {
+  "cost": 1014,
+  "fail": 0,
+  "ok": true,
+  "points": 18.078341815848873,
+  "sha256": "8a0433c1268cc73fb04b445e7bbf69380fa689d364c60680a4492c0863310a3e",
+  "task": 351,
+  "updated": "verify"
+ },
+ "352": {
+  "cost": 460,
+  "fail": 0,
+  "ok": true,
+  "points": 18.86877351051686,
+  "sha256": "b362afd3bde7a017fd6440dbf567352824223b2a5b667965a5a144d4602fde07",
+  "task": 352,
+  "updated": "verify"
+ },
+ "353": {
+  "cost": 244,
+  "fail": 0,
+  "ok": true,
+  "points": 19.5028317747068,
+  "sha256": "aca31888d6a834f7b63c41dc1e48addce3f44ca64537d5351f9ba073bc41b18b",
+  "task": 353,
+  "updated": "verify"
+ },
+ "354": {
+  "cost": 2644,
+  "fail": 0,
+  "ok": true,
+  "points": 17.119951799028424,
+  "sha256": "fe433cab4fd57169e76364a27a0a53d7444bcbea5db2012c39c927c0d1ba27cc",
+  "task": 354,
+  "updated": "verify"
+ },
+ "355": {
+  "cost": 518,
+  "fail": 0,
+  "ok": true,
+  "points": 18.75002475774052,
+  "sha256": "7442b16d350367c7ba087dd8b75f257f76ce9482e2fc68f32665be30a855b293",
+  "task": 355,
+  "updated": "verify"
+ },
+ "356": {
+  "cost": 1319,
+  "fail": 0,
+  "ok": true,
+  "points": 17.815370847282686,
+  "sha256": "d363f5013096c75275c1e6f59df48295df44416510e44ad98b3f8c832c1233cf",
+  "task": 356,
+  "updated": "verify"
+ },
+ "357": {
+  "cost": 291,
+  "fail": 0,
+  "ok": true,
+  "points": 19.326676732828506,
+  "sha256": "952ab4fb364629442b93bda05624d529ad2b5464efd7ed16c7c19fdf56622812",
+  "task": 357,
+  "updated": "verify"
+ },
+ "358": {
+  "cost": 4027,
+  "fail": 0,
+  "ok": true,
+  "points": 16.699223039148546,
+  "sha256": "b44b4c68a78122eeb99533fa01b501f1d2ddb6a77d3aebd32d64aac43d8ff596",
+  "task": 358,
+  "updated": "verify"
+ },
+ "359": {
+  "cost": 3866,
+  "fail": 0,
+  "ok": true,
+  "points": 16.740024340231724,
+  "sha256": "ab1735d18b7589d1fccfe6408a5f86c1e7d09ef27490658eae1ae39473a24248",
+  "task": 359,
+  "updated": "verify"
+ },
+ "360": {
+  "cost": 340,
+  "fail": 0,
+  "ok": true,
+  "points": 19.17105438238979,
+  "sha256": "8f4b3255883e9875722e8e7de278bf7edccb6b8cd76d02b04b25ff3809f133bb",
+  "task": 360,
+  "updated": "verify"
+ },
+ "361": {
+  "cost": 4688,
+  "fail": 0,
+  "ok": true,
+  "points": 16.54723866874315,
+  "sha256": "ab15e9429d065e9df4532a8eab9cca09fe723633f338a0bdc2a77ab928f73ae0",
+  "task": 361,
+  "updated": "verify"
+ },
+ "362": {
+  "cost": 521,
+  "fail": 0,
+  "ok": true,
+  "points": 18.744249958246634,
+  "sha256": "8c60889940a9a9bba3ae42179bea39424a771f5f78db04f10642eeb82903e23a",
+  "task": 362,
+  "updated": "verify"
+ },
+ "363": {
+  "cost": 4034,
+  "fail": 0,
+  "ok": true,
+  "points": 16.697486281485844,
+  "sha256": "dde4d2ff28614e78eed8c10505e142cb83fbb340dcf688e1355c545ae7ddb2be",
+  "task": 363,
+  "updated": "verify"
+ },
+ "364": {
+  "cost": 16157,
+  "fail": 0,
+  "ok": true,
+  "points": 15.30989132872317,
+  "sha256": "3a93f5bd8202e227d15aecd90a7bd2100d9b70f1e105570bf9140d0a18c392f4",
+  "task": 364,
+  "updated": "verify"
+ },
+ "365": {
+  "cost": 3929,
+  "fail": 0,
+  "ok": true,
+  "points": 16.72385978044154,
+  "sha256": "bd53172a0c3c2150df208316b9d3c6623e6acbfcf02a4061442731057c20a1c2",
+  "task": 365,
+  "updated": "verify"
+ },
+ "366": {
+  "cost": 31559,
+  "fail": 0,
+  "ok": true,
+  "points": 14.640385911220264,
+  "sha256": "81b63d827b89186d7b31546760891de7c3f5cdcaefc482aee0c1d4f116663f74",
+  "task": 366,
+  "updated": "verify"
+ },
+ "367": {
+  "cost": 15890,
+  "fail": 0,
+  "ok": true,
+  "points": 15.326554740469238,
+  "sha256": "6568c944903571511f91ab56230e34d7c8ef6774421e27c4b793d7917fa30fe8",
+  "task": 367,
+  "updated": "verify"
+ },
+ "368": {
+  "cost": 5130,
+  "fail": 0,
+  "ok": true,
+  "points": 16.457139061835186,
+  "sha256": "8c8ee75fac413cb88b9925512eac47797445d67d20340bf93703b14d9bdc1f43",
+  "task": 368,
+  "updated": "verify"
+ },
+ "369": {
+  "cost": 1393,
+  "fail": 0,
+  "ok": true,
+  "points": 17.760785026220194,
+  "sha256": "15d15fcf6d0a2f8ea9c864a618fa2f79d2f343c39ba89c051a6c39429ddd0b7c",
+  "task": 369,
+  "updated": "verify"
+ },
+ "370": {
+  "cost": 8099,
+  "fail": 0,
+  "ok": true,
+  "points": 16.00050412375101,
+  "sha256": "400fb899ebd065e57dc14d725841e2c3b52bf75614b926de22ab28eabec34911",
+  "task": 370,
+  "updated": "verify"
+ },
+ "371": {
+  "cost": 467,
+  "fail": 0,
+  "ok": true,
+  "points": 18.853670742331104,
+  "sha256": "ecfa0988f7e42712a487fc4830ed33fe760089b1a60a9adf40cd0895853bb798",
+  "task": 371,
+  "updated": "verify"
+ },
+ "372": {
+  "cost": 710,
+  "fail": 0,
+  "ok": true,
+  "points": 18.43473502996464,
+  "sha256": "264045a57ab3f1047ae0c573c8a8e9f0248500eda29465c3aaf399bcbdbc366e",
+  "task": 372,
+  "updated": "verify"
+ },
+ "373": {
+  "cost": 60,
+  "fail": 0,
+  "ok": true,
+  "points": 20.9056554377779,
+  "sha256": "a539d7451301e6cee582a2099169ffb9a3a9e13751a3bf674b7f1fd1a3f2746f",
+  "task": 373,
+  "updated": "verify"
+ },
+ "374": {
+  "cost": 2283,
+  "fail": 0,
+  "ok": true,
+  "points": 17.266754353470205,
+  "sha256": "f411fb2806a2e5ca29d145891184697b615d9164ad0bb0d6d0053c1249378554",
+  "task": 374,
+  "updated": "verify"
+ },
+ "375": {
+  "cost": 327,
+  "fail": 0,
+  "ok": true,
+  "points": 19.210039829102747,
+  "sha256": "1b34802c6ab4d672b625bc4774b1fb890f7567237ce6d55ac990e6ee8a597cfb",
+  "task": 375,
+  "updated": "verify"
+ },
+ "376": {
+  "cost": 186,
+  "fail": 0,
+  "ok": true,
+  "points": 19.774253326286797,
+  "sha256": "78d1a2fc70cb42c8a76933f37344ce8b7f814e76a37180cf4b3023274c8054a9",
+  "task": 376,
+  "updated": "verify"
+ },
+ "377": {
+  "cost": 3967,
+  "fail": 0,
+  "ok": true,
+  "points": 16.71423457948567,
+  "sha256": "c2cf84ad872ab7b3b6c84c9721b372beae52f0eec5fac1c0a4d1197d2855a600",
+  "task": 377,
+  "updated": "verify"
+ },
+ "378": {
+  "cost": 4394,
+  "fail": 0,
+  "ok": true,
+  "points": 16.612004747055444,
+  "sha256": "b00e20e81441f0b355ffcf2315b3f4262ff4cd898b7710064b382a39086602c1",
+  "task": 378,
+  "updated": "verify"
+ },
+ "379": {
+  "cost": 9095,
+  "fail": 0,
+  "ok": true,
+  "points": 15.884519909047777,
+  "sha256": "3eee253b42389c210ad58473334c8eab871d688b4ef3e47a7ea4195b2dd274f2",
+  "task": 379,
+  "updated": "verify"
+ },
+ "380": {
+  "cost": 99,
+  "fail": 0,
+  "ok": true,
+  "points": 20.40488014986541,
+  "sha256": "a836f8cfa2154e99819be0e4f1e019335b6349d6f8a1e613789c05c4c9ea30d5",
+  "task": 380,
+  "updated": "verify"
+ },
+ "381": {
+  "cost": 1963,
+  "fail": 0,
+  "ok": true,
+  "points": 17.41777080572354,
+  "sha256": "318ab205291d1a8a2994ce9e311523bf2883f5e68f3143df80981fc9ce4818f5",
+  "task": 381,
+  "updated": "verify"
+ },
+ "382": {
+  "cost": 5626,
+  "fail": 0,
+  "ok": true,
+  "points": 16.364846010950195,
+  "sha256": "7349940130cfda2dacdc91cc16f59090f6e60e18edb11a56bcdc3b0786b2c7dc",
+  "task": 382,
+  "updated": "verify"
+ },
+ "383": {
+  "cost": 5855,
+  "fail": 0,
+  "ok": true,
+  "points": 16.324948723968184,
+  "sha256": "321a640de46f31834bcf9466c6429caa20369d6be6eb3ab8fdca7f895fd6976a",
+  "task": 383,
+  "updated": "verify"
+ },
+ "384": {
+  "cost": 481,
+  "fail": 0,
+  "ok": true,
+  "points": 18.824132729894238,
+  "sha256": "75dc68ca140213f2a46eddf470420acc22a6e20067776370bb8b6b6eabc94834",
+  "task": 384,
+  "updated": "verify"
+ },
+ "385": {
+  "cost": 30,
+  "fail": 0,
+  "ok": true,
+  "points": 21.598802618337846,
+  "sha256": "e28317627971cf25f34f000820f94c18471693bdad0f52f989b5f148af68399e",
+  "task": 385,
+  "updated": "verify"
+ },
+ "386": {
+  "cost": 211,
+  "fail": 0,
+  "ok": true,
+  "points": 19.648141866523932,
+  "sha256": "9c919a54abba4d90e50d2c1ea47cc9a64586320ae794dd4dd55087a8015b2bd4",
+  "task": 386,
+  "updated": "verify"
+ },
+ "387": {
+  "cost": 3984,
+  "fail": 0,
+  "ok": true,
+  "points": 16.70995838129551,
+  "sha256": "293b62a40ba26b105ba06ce12e36939b9406fd3b69e6bdfba455f0e85c09105b",
+  "task": 387,
+  "updated": "verify"
+ },
+ "388": {
+  "cost": 2188,
+  "fail": 0,
+  "ok": true,
+  "points": 17.30925683645813,
+  "sha256": "9b3010758af081572416d44869168447c173e7f550859fde3ea444734283776b",
+  "task": 388,
+  "updated": "verify"
+ },
+ "389": {
+  "cost": 130,
+  "fail": 0,
+  "ok": true,
+  "points": 20.132465549544417,
+  "sha256": "0681ea20328fc88312ade626895809eb611fcc858e7114f824a58dc9254dc16a",
+  "task": 389,
+  "updated": "verify"
+ },
+ "390": {
+  "cost": 3010,
+  "fail": 0,
+  "ok": true,
+  "points": 16.99030464225708,
+  "sha256": "bf4f64eb80eb8851b4cb2d80c01723dc9fac83e41b6c37fce9e13a1664e6d4d6",
+  "task": 390,
+  "updated": "verify"
+ },
+ "391": {
+  "cost": 159,
+  "fail": 0,
+  "ok": true,
+  "points": 19.93109579777977,
+  "sha256": "4bc7032890900a5f45b119ec9204628a7fe476654f6fa81cb5e2bb8fd2bb3de8",
+  "task": 391,
+  "updated": "verify"
+ },
+ "392": {
+  "cost": 1310,
+  "fail": 0,
+  "ok": true,
+  "points": 17.822217583804804,
+  "sha256": "bb5fde17be992bbe9d6305c5919b97a5e31ed0c57b537528635559c2382adb33",
+  "task": 392,
+  "updated": "verify"
+ },
+ "393": {
+  "cost": 144,
+  "fail": 0,
+  "ok": true,
+  "points": 20.030186700424,
+  "sha256": "3227ff5557046125c5714de1588b8aae9247b3d9730b9f0b471c80819fd50cfc",
+  "task": 393,
+  "updated": "verify"
+ },
+ "394": {
+  "cost": 2071,
+  "fail": 0,
+  "ok": true,
+  "points": 17.364213138604416,
+  "sha256": "d00b758e0c9d8566ee4b6a258e6c46ff2c4ef166902298d21ed685593014409d",
+  "task": 394,
+  "updated": "verify"
+ },
+ "395": {
+  "cost": 165,
+  "fail": 0,
+  "ok": true,
+  "points": 19.89405452609942,
+  "sha256": "65facb9b3b11f926339f676d93e1cd606090eeef1911b62ae475043892395577",
+  "task": 395,
+  "updated": "verify"
+ },
+ "396": {
+  "cost": 4926,
+  "fail": 0,
+  "ok": true,
+  "points": 16.497717421319514,
+  "sha256": "e6b9d01739a6a842fa62b1cfc0aa2cdb428c8ac375a76958ae65dca3804f8c94",
+  "task": 396,
+  "updated": "verify"
+ },
+ "397": {
+  "cost": 2751,
+  "fail": 0,
+  "ok": true,
+  "points": 17.080280239075424,
+  "sha256": "9fba3d59db6ccd9288fc3b3478e1ceb7f41bdb9b7defdc86ee8c80ebed249a2a",
+  "task": 397,
+  "updated": "verify"
+ },
+ "398": {
+  "cost": 1510,
+  "fail": 0,
+  "ok": true,
+  "points": 17.680135070191028,
+  "sha256": "dbc6a55c23b5b8c2554fd840cd22caa4e4e7c41704d08af8e25220285a6fbe90",
+  "task": 398,
+  "updated": "verify"
+ },
+ "399": {
+  "cost": 60,
+  "fail": 0,
+  "ok": true,
+  "points": 20.9056554377779,
+  "sha256": "45353156c29ca2d704a43a8943687d3a6328af035d902edb07680f3bbce93684",
+  "task": 399,
+  "updated": "verify"
+ },
+ "400": {
+  "cost": 1181,
+  "fail": 0,
+  "ok": true,
+  "points": 17.92588318380264,
+  "sha256": "74bb526e867fa4243fab3aed44e15c060cbf5455badadcadcc6cf79f98a5e195",
+  "task": 400,
+  "updated": "verify"
+ }
+}

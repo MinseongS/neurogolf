@@ -2,7 +2,7 @@
 
 Keep-best contract: networks/taskXXX.onnx is only replaced when a candidate
 scores strictly more points, so repeated runs (and new solver tiers) can only
-improve the total. reports/manifest.json records method/points per task.
+improve the total. state/safe_manifest.json records method/points per task.
 """
 
 import argparse
@@ -11,10 +11,10 @@ import json
 import multiprocessing
 import zipfile
 from .harness import ROOT, evaluate, load_task
+from neurogolf.paths import STATE
 
 NETWORKS = ROOT / "networks"
-REPORTS = ROOT / "reports"
-MANIFEST = REPORTS / "manifest.json"
+MANIFEST = STATE / "safe_manifest.json"
 N_TASKS = 400
 
 def solve_custom(task, task_num=None):
@@ -107,7 +107,7 @@ def write_scoreboard(manifest):
             lines.append(f"| {k:03d} | {v.get('method') or '?'} | {v['memory']} | {v['params']} | {v['points']:.2f} |")
         else:
             lines.append(f"| {k:03d} | — | | | 0.00 |")
-    (REPORTS / "SCOREBOARD.md").write_text("\n".join(lines) + "\n")
+    (STATE / "SCOREBOARD.md").write_text("\n".join(lines) + "\n")
     return total, len(solved)
 
 
@@ -130,7 +130,7 @@ def main():
     args = parser.parse_args()
 
     NETWORKS.mkdir(exist_ok=True)
-    REPORTS.mkdir(exist_ok=True)
+    STATE.mkdir(exist_ok=True)
     manifest = load_manifest()
 
     if not args.report_only:

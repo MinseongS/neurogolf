@@ -45,7 +45,7 @@ def main():
     num = int(sys.argv[1])
     task = load_task(num)
     path = f"networks/task{num:03d}.onnx"
-    manifest = json.load(open("reports/manifest.json"))["tasks"]
+    manifest = json.load(open("state/safe_manifest.json"))["tasks"]
     arcgen = os.path.join(ROOT, "arc-gen")
     if os.path.isdir(arcgen) and arcgen not in sys.path:
         sys.path.append(arcgen)
@@ -72,7 +72,7 @@ def main():
     if not ev["ok"]:
         print(f"REJECT: custom fails stored eval ({ev['fail']} fail, err={ev['error']})")
         return
-    cand_path = f"reports/candidates/_adopt_task{num:03d}.onnx"
+    cand_path = f"candidates/_adopt_task{num:03d}.onnx"
     os.makedirs(os.path.dirname(cand_path), exist_ok=True)
     onnx.save(model, cand_path)
     cand_gen = fresh_ok_path(cand_path, num, gen)
@@ -86,7 +86,7 @@ def main():
     onnx.save(model, path)
     manifest[str(num)] = {"points": ev["points"], "memory": ev["memory"],
                           "params": ev["params"], "method": f"custom:task{num:03d}"}
-    json.dump({"tasks": manifest}, open("reports/manifest.json", "w"), indent=1)
+    json.dump({"tasks": manifest}, open("state/safe_manifest.json", "w"), indent=1)
     print(f"ADOPTED: task{num:03d} real {cur_pts:.2f} -> {ev['points']:.2f} (generalizing)")
 
 

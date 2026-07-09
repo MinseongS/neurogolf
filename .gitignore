@@ -21,8 +21,6 @@ scratch/
 # Submission archives are reproducible artifacts
 /submission.zip
 submission/*.zip
-reports/probes/zips/*.zip
-reports/probes/candidates/*.onnx
 .gstack/
 .worktrees/
 
@@ -44,22 +42,5 @@ networks/
 # Public teacher/reference artifacts are local-only.
 # They may be useful as teachers, but should not become source of truth.
 public_candidates/
-reports/public_teacher_sources/
-reports/public_teacher_insights/
-reports/public_teacher_report.*
 
-# Generated research scratch; reproducible or obsolete.
-reports/generated_exact_sources/
-reports/probes/
-reports/__pycache__/
-reports/scripts/__pycache__/
-reports/*.log
-reports/harvest_multi.*
-reports/relprobe.json
-reports/factored_scan.json
-reports/semantic_archetypes.*
-reports/fresh_cache/
-
-# Generated task-matching index (regenerate via reports/scripts/build_task_index.py)
-reports/task_index.json
 scratch_mine_keep/

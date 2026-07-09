@@ -8,6 +8,10 @@ def test_hash_check_detects_mutation(tmp_path, monkeypatch):
     baseline.write_text(hashlib.sha256(b"B").hexdigest() + "  task001.onnx\n")
     monkeypatch.setattr(verify, "OVERFIT_NETS", nets)
     monkeypatch.setattr(verify, "_baseline_file", lambda: baseline)
+    # hash_check prefers the live state/manifest.json when it carries sha256 rows;
+    # point manifest at tmp so the test stays hermetic once `ng verify --update`
+    # has created the real manifest.
+    monkeypatch.setattr(verify.manifest, "_path", lambda: tmp_path / "manifest.json")
     assert verify.hash_check() == ["task001.onnx"]
 
 def test_cli_has_all_subcommands():
