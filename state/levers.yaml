@@ -73,7 +73,7 @@ levers:
     status: live
     scanner: kernel_collapse
     scanner_archive: null
-    recipe: null
+    recipe: playbook/kernel-collapse.md
     agent_class: opus
     expected_yield: "+0.553 LB/배치 실적; params 레인 (memory-sweep과 직교), bit-identical"
     ledger:
@@ -86,7 +86,7 @@ levers:
     status: live
     scanner: null           # CLI `ng mine-public`이 담당
     scanner_archive: null
-    recipe: null
+    recipe: playbook/minmerge.md
     agent_class: opus
     expected_yield: "새 프론티어당 +0.3~4.5 LB (S18 urad 7242.52 dump = +4.46 실적). 빠른 레인: onnx 바이트 채택만"
     ledger:
