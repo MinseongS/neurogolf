@@ -645,6 +645,7 @@ built from submission/merged_nets/.
 
 | 2026-07-09 04:14Z | public min-merge 20260709: 4 dumps (prvsiyan 7266.72 / ryosukeshiroshita 7266.48 / kutenk 7261.53 / jonathanncoletti merged91), margin-0, 78 adoptions +10.30 -> local 7289.59 | **LB 7289.71 확정 (sub 54481576, 신기록)** |
 | 2026-07-09 05:26Z | public-insight generalize wave: 12 adoptions +3.14 -> local 7292.73 (294 rank1-qconv +0.35, 092 free-endpoint einsum +1.28, 064 axis-code +0.46, 366 equiv-golf +0.31, 009 maxpool-pack +0.21, 245 crop-decode +0.20, 086 perm-decode +0.14, 363/368 u8 +0.15, 216/008 value_info +0.05) |
-| 2026-07-09 05:56Z | regime/public-insight follow-up: submitted current overlay set; post-status manifest local 7295.96 (task041/074/088/187/246/383 included; submit message said 7295.45 before status refresh) | **PENDING (sub 54484027)** |
+| 2026-07-09 05:56Z | regime/public-insight follow-up: submitted current overlay set; post-status manifest local 7295.96 (task041/074/088/187/246/383 included; submit message said 7295.45 before status refresh) | **LB 7295.57 확정 (sub 54484027)** |
 
 | 2026-07-09 06:03Z | regime vein batch7 (insight-arsenal fanout): 6/6 cracks +3.23 -> local 7295.96 (383 free-output 9-op einsum +0.81, 246 quadratic bands +0.61, 041 shared-triangular interval einsum mem0 +0.57, 088 canvas-cap ConvInteger +0.51, 187 epsilon-J walk +0.44, 074 ScatterND/GatherND shared-index +0.30). fail=0 topk clean |
+| 2026-07-09 05:58Z | regime vein batch7 (insight-arsenal fanout): 6/6 cracks +3.23 (383/246/041/088/187/074) | **LB 7296.08 확정 (sub 54484248, 신기록)** |
