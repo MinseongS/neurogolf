@@ -16,6 +16,20 @@ import onnxruntime
 
 from neurogolf.paths import ROOT
 
+# The official Kaggle scorer catches `onnxruntime.ONNXRuntimeError`, which exists on
+# Kaggle's ORT build. Local ORT (1.26) instead exposes typed pybind exceptions
+# (Fail/RuntimeException/InvalidArgument/…) and has no `ONNXRuntimeError` attribute, so
+# the bare `except onnxruntime.ONNXRuntimeError` would itself raise AttributeError whenever
+# a net errors at inference. Resolve the correct type(s) once, preserving Kaggle behavior.
+try:
+    _ORT_RUNTIME_ERROR: object = onnxruntime.ONNXRuntimeError
+except AttributeError:
+    from onnxruntime.capi import onnxruntime_pybind11_state as _ort_state
+    _ORT_RUNTIME_ERROR = tuple(
+        v for v in vars(_ort_state).values()
+        if isinstance(v, type) and issubclass(v, Exception)
+    ) or (RuntimeError,)
+
 BATCH_SIZE, CHANNELS, HEIGHT, WIDTH = 1, 10, 30, 30
 GRID_SHAPE = [BATCH_SIZE, CHANNELS, HEIGHT, WIDTH]
 DATA_TYPE = onnx.TensorProto.FLOAT
@@ -233,7 +247,7 @@ def verify_subset(session, example_subset):
             else:
                 wrong += 1
                 failures.append(idx)
-        except onnxruntime.ONNXRuntimeError:
+        except _ORT_RUNTIME_ERROR:
             wrong += 1
             failures.append(idx)
     return right, wrong, failures

@@ -33,6 +33,9 @@ networks/
 # Local tool/session artifacts
 .playwright-mcp/
 
+# Scanner working dir (worklists, fresh_cache, per-task candidate onnx) — all generated.
+/candidates/
+
 # arc-gen generators (fresh-gating): project-local copy + portable zip.
 # Kept out of git, but the repo-local copy is authoritative for this project.
 /arc-gen/
