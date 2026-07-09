@@ -23,17 +23,26 @@ Current state and numbers live in `state/STATE.md`, not here — this file is pr
 
 ## 2. 표준 루프
 
-1. **Scan.** `uv run ng scan <lever>` (optionally `--tasks N N N` to restrict) prints a
-   worklist. `uv run ng queue` shows the standing cross-lever queue.
+1. **Scan.** `uv run ng scan <scanner>` (optionally `--tasks N N N` to restrict) prints a
+   worklist. The CLI dispatches on the lever's `scanner:` field value from `state/levers.yaml`
+   (note hyphen-vs-underscore — the lever name and the scanner name often differ), **not** on
+   the lever's own name. E.g. lever `free-output-einsum-regime-crack` → `uv run ng scan
+   mask_dominance`; lever `kernel-collapse` → `uv run ng scan kernel_collapse`. Levers with
+   `scanner: null` (e.g. `public-minmerge`) have no `ng scan` entry point at all — their recipe
+   file names the real one instead: for `public-minmerge` it is `uv run ng mine-public
+   <dump-dirs...> [--margin N] [--apply]`, and every `--apply` win must be paired with the
+   `public-insight-generalize` deep lane (see step 6). `uv run ng queue` shows the standing
+   cross-lever queue.
 2. **Fan out.** Take the worklist's top N candidates and dispatch one agent per task via
-   the `Agent` tool. Respect `agent_class` from the lever entry:
-   - `opus` — verified recipe, mechanical application. Use `subagent_type: "opus"`-class
-     agent (model override `opus`) when the recipe in `playbook/<file>.md` already covers
-     the pattern.
+   the `Agent` tool. Agent fan-out uses the `Agent` tool's `model` parameter, not a
+   `subagent_type` — there is no `"opus"` subagent type. `agent_class` in `state/levers.yaml`
+   maps to that `model` choice:
+   - `opus` — verified recipe, mechanical application. Pass `model: "opus"` when the recipe in
+     `playbook/<file>.md` already covers the pattern.
    - `fable` — novel mechanism / regime crack, needs judgment. Use the default/heavier
-     model (no override, or `fable` where supported).
+     model (omit `model`, i.e. Fable/기본 모델).
    Each agent's prompt MUST include: the recipe file path (`playbook/<lever's recipe>.md`),
-   the task ledger (`state/tasks/NNN.md`), and the deployed net path
+   the task ledger (`state/tasks/taskNNN.md`), and the deployed net path
    (`submission/overfit_nets/taskNNN.onnx`). Agents write candidates only under
    `candidates/taskNNN/` (repo-local scratch, gitignored) — never edit
    `submission/overfit_nets/` directly.
