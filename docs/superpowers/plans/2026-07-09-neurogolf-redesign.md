@@ -192,7 +192,8 @@ levers:
 
 나머지 8개 (같은 스키마로, ledger는 아래 출처에서 변환):
 - `kernel-collapse` — status: live, scanner: kernel_collapse, agent_class: opus. ledger: 2026-07-08 +0.553 LB 18승; reopen: "새 Conv 넷 유입 시 재실행".
-- `public-minmerge` — status: live, scanner: null (CLI `ng mine-public`이 담당), agent_class: opus. ledger: 2026-07-08 margin-0 0승 (프론티어 7250.24 기준); reopen: "공개 프론티어가 현재 채굴선 위로 갱신 시 / 새 업로더".
+- `public-minmerge` — status: live, scanner: null (CLI `ng mine-public`이 담당), agent_class: opus. ledger: 2026-07-08 margin-0 0승 (프론티어 7250.24 기준); reopen: "공개 프론티어가 현재 채굴선 위로 갱신 시 / 새 업로더". **빠른 레인**: onnx 바이트 채택만.
+- `public-insight-generalize` — status: **live**, scanner: public_autopsy, recipe: playbook/public-insight.md, agent_class: fable. **깊은 레인 (user 지시 2026-07-09)**: 공개가 태스크별로 우리를 이기면 onnx 채택에서 멈추지 않는다 — ①메커니즘 역공학(op-delta 지문) ②`src/custom/taskNNN.py`로 소스 재현(빌드 재생성 가능해야 함) ③insights.yaml 등록 ④같은 지문을 가진 우리의 다른 태스크 전수 재스캔·적용. expected_yield: "borrowed net = +1 task; generalized mechanism = +N (실적: free_input_einsum_substitution +1.72/3태스크, task011 +1.52)". ledger: 2026-07-08 autopsy 65승 중 57 dedupe-tail·8 byte-tail (대형 지문 없음), 3-signature 클러스터 추출됨; reopen: "새 공개 win 발생 시마다 (min-merge 채택과 항상 짝으로)".
 - `reducesum-spatial-einsum` — dormant, scanner_archive: "git:pre-redesign:reports/candidates/reducesum_spatial_to_einsum_probe.py". ledger: 2026-07-08 8승 채택 후 잔여 0; reopen: "새 spatial ReduceSum 유입 시".
 - `walk-chain-slack` — dormant, scanner_archive: "git:pre-redesign:reports/scripts/walk_chain_slack.py". ledger: 2026-07-07 1/10 (task243만 slack); reopen: "새 walk-chain 넷 채택 시".
 - `fold-reducible-plane` — dormant, scanner: fold, ledger: 2026-07-08 top4 4/4 floor; reopen: "새 공개 teacher / monster(233/366/285) 재정식화 후".
@@ -1081,9 +1082,9 @@ uv run ng score 1          # Expected: task001 row JSON, cost == baseline과 동
 ### Task 13: 스캐너 이식 + 레지스트리
 
 **Files:**
-- Create: `src/neurogolf/scans/__init__.py`, `src/neurogolf/scans/mask_dominance.py`, `src/neurogolf/scans/kernel_collapse.py`, `src/neurogolf/scans/fold.py`, `src/neurogolf/scans/dtype_overpay.py`, `src/neurogolf/scans/minmerge.py`, `src/neurogolf/scans/fresh.py`
+- Create: `src/neurogolf/scans/__init__.py`, `src/neurogolf/scans/mask_dominance.py`, `src/neurogolf/scans/kernel_collapse.py`, `src/neurogolf/scans/fold.py`, `src/neurogolf/scans/dtype_overpay.py`, `src/neurogolf/scans/minmerge.py`, `src/neurogolf/scans/fresh.py`, `src/neurogolf/scans/public_autopsy.py`
 - Test: `tests/test_scans_registry.py`
-- 이식 원본: `reports/scripts/{mask_dominance_scan,kernel_collapse,fold_finder,dtype_overpay_scan,mine_overfit_minmerge,fresh_verify}.py`
+- 이식 원본: `reports/scripts/{mask_dominance_scan,kernel_collapse,fold_finder,dtype_overpay_scan,mine_overfit_minmerge,fresh_verify,public_win_autopsy}.py`
 
 **Interfaces:**
 - Produces:
@@ -1167,7 +1168,8 @@ def show_queue() -> None:
 2. flat 스크립트/`sys.argv` 파싱 → `def scan_all(tasks: list[int] | None = None) -> dict` 함수로 감싸고 `{"items": [{"task": n, "expected_gain": g, ...원본 필드}]}` 반환. `expected_gain`은 원본이 절감 바이트를 내면 `saved_bytes` 기준 근사 `points_delta ≈ ln(cost)/…` 대신 단순히 `saved_bytes / cost` 비율로 정렬용 산출 (정확한 점수는 gate가 판정).
 3. `sys.path.insert(0,"src")` / `from harness import` → `from neurogolf.scoring import`.
 
-`minmerge.py`: `mine_overfit_minmerge.py`의 `static_cost/find_net/main`을 이식하되 `--apply`가 직접 파일을 덮지 않고 **후보별로 `neurogolf.adoption.adopt()`를 호출**하도록 변경 (게이트 단일화 — 원본의 자체 verify는 제거).
+`minmerge.py`: `mine_overfit_minmerge.py`의 `static_cost/find_net/main`을 이식하되 `--apply`가 직접 파일을 덮지 않고 **후보별로 `neurogolf.adoption.adopt()`를 호출**하도록 변경 (게이트 단일화 — 원본의 자체 verify는 제거). apply 후 요약 출력 마지막에 반드시 "deep-lane 안내"를 출력: 채택된 태스크 목록과 함께 `다음: ng scan public_autopsy 후 playbook/public-insight.md 딥레인 실행` (min-merge 채택은 항상 인사이트 역공학과 짝).
+`public_autopsy.py`: `public_win_autopsy.py`를 이식 — 승리한 공개 넷 vs 교체 직전 백업(`submission/.backups/` 또는 `.minmerge_backup/`)의 op-delta/lost-tensor 지문을 추출해 `{"items": [{"task": n, "signature": str, "lost_tensors": [...], "rescan_candidates": [...]}]}` 반환. 지문별 rescan_candidates = 같은 패턴을 가진 우리의 다른 배포 넷 (deep-lane의 ④ 적용 대상 목록).
 `fresh.py`: `fresh_verify.py`의 캐시 경로를 `CANDIDATES / "fresh_cache"`로 변경해 이식.
 `kernel_collapse.py`: import 시 실행되는 top-level 루프를 `scan_all` 내부로 이동, 출력 후보는 `CANDIDATES / f"task{n:03d}" / "kcollapse.onnx"`.
 
@@ -1239,10 +1241,17 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ### Task 15: playbook/ 분해
 
 **Files:**
-- Create: `playbook/README.md`(색인), `playbook/free-output-einsum.md`, `playbook/fp16-recast.md`, `playbook/kernel-collapse.md`, `playbook/minmerge.md`, `playbook/walk-einsum.md`, `playbook/signed-einsum-routing.md`
+- Create: `playbook/README.md`(색인), `playbook/free-output-einsum.md`, `playbook/fp16-recast.md`, `playbook/kernel-collapse.md`, `playbook/minmerge.md`, `playbook/public-insight.md`, `playbook/walk-einsum.md`, `playbook/signed-einsum-routing.md`
 - Delete(분해 후): `playbook/_LEGACY_PLAYBOOK.md`
 
 - [ ] **Step 1: `_LEGACY_PLAYBOOK.md`를 메커니즘 단위로 분해** — 각 파일 구조 고정: `## 언제 쓰나(스캐너/시그널)` `## 물리(왜 되나)` `## 레시피(단계)` `## 서브패턴` `## 함정/거부 사례`. free-output-einsum.md에는 NEXT_SESSION에서 증류한 batch3 서브레시피(input-as-Einsum-operand free counts, base-N digit factorization, ConvInteger-as-free-output, k-stacked Where carriers, residue one-hots)와 positioned-content = floor 택소노미를 반드시 포함.
+
+  `playbook/public-insight.md`는 신규 작성 (user 지시 2026-07-09) — **공개 코드 딥레인** 4단계 레시피:
+  1. **역공학**: min-merge 승리마다 `ng scan public_autopsy`로 op-delta/lost-tensor 지문 추출. 공개 노트북/discussion 원문도 읽고 설계 의도를 파악 (kaggle kernels pull로 소스 노트북 확보).
+  2. **소스 재현**: 채택한 공개 onnx를 그대로 두지 않고 `src/custom/taskNNN.py`를 그 메커니즘으로 재작성 — `PYTHONPATH=. uv run python -m src.pipeline --tasks NNN`으로 재생성 가능해야 완료. (빌린 넷은 재현 불가 블랙박스로 남기지 않는다.)
+  3. **인사이트 등록**: `state/insights.yaml`에 메커니즘 항목 추가 (지문, 적용 조건, 거부 조건, 실적).
+  4. **일반화 적용**: autopsy의 rescan_candidates(같은 지문의 우리 넷)에 에이전트 팬아웃 → `ng gate`/`ng adopt`. cristianoc 참조(동일 400태스크·룰 오라클, golf 상수는 절대 복사 금지) 활용 가능.
+  함정 섹션 필수 기재: golf 상수 복사 = private LB 누출; 공개 TOTAL이 낮아도 per-task 승리는 존재 (2026-07-09 user: "퍼블릭은 나보다 점수 낮지만 나보다 좋은 태스크는 있다").
 - [ ] **Step 2: levers.yaml의 `recipe:` 경로가 전부 실존하는지 확인**
 
 ```bash
