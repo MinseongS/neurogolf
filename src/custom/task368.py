@@ -27,13 +27,16 @@ def build(task):
         tensor('pad30', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUAAAAAAAAABQAAAAAAAAA')),
         tensor('pad255', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAr/')),
         tensor('one_i', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAA==')),
+        tensor('qs', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/')),
+        tensor('qz', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
     ]
     nodes = [
         helper.make_node('Conv', ['input', 'colW'], ['labc'], dilations=[20, 20], kernel_shape=[2, 2]),
         helper.make_node('Cast', ['labc'], ['labc16'], to=10),
         helper.make_node('Clip', ['labc16', 'zero_f16', 'one_f16'], ['occf']),
         helper.make_node('Conv', ['occf', 'akw'], ['aconv'], kernel_shape=[2, 2], pads=[1, 1, 0, 0]),
-        helper.make_node('Clip', ['aconv', 'zero_f16', 'one_f16'], ['cornf']),
+        helper.make_node('Greater', ['aconv', 'zero_f16'], ['corn_b']),
+        helper.make_node('Cast', ['corn_b'], ['cornf_u8'], to=2),
         helper.make_node('Cast', ['labc'], ['L'], to=2),
         helper.make_node('Greater', ['L', 'u0'], ['occb']),
         helper.make_node('Equal', ['L', 'u5'], ['is5']),
@@ -56,14 +59,18 @@ def build(task):
         helper.make_node('Pad', ['L', 'pad13', 'padz'], ['idx13']),
         helper.make_node('Gather', ['idx13', 'r4'], ['patchR'], axis=2),
         helper.make_node('Gather', ['patchR', 'c4'], ['patch'], axis=3),
-        helper.make_node('Cast', ['patch'], ['patchf'], to=10),
-        helper.make_node('Gather', ['patchf', 'flipi'], ['patchf2'], axis=2),
-        helper.make_node('Gather', ['patchf2', 'flipi'], ['W'], axis=3),
-        helper.make_node('Conv', ['cornf', 'W'], ['stampX'], kernel_shape=[4, 4], pads=[3, 3, 0, 0]),
-        helper.make_node('Cast', ['stampX'], ['outU10'], to=2),
+        helper.make_node('Gather', ['patch', 'flipi'], ['patchu2'], axis=2),
+        helper.make_node('Gather', ['patchu2', 'flipi'], ['W_u8'], axis=3),
+        helper.make_node('QLinearConv', ['cornf_u8', 'qs', 'qz', 'W_u8', 'qs', 'qz', 'qs', 'qz'], ['outU10'], kernel_shape=[4, 4], pads=[3, 3, 0, 0]),
         helper.make_node('Pad', ['outU10', 'pad30', 'pad255'], ['padU']),
         helper.make_node('Equal', ['padU', 'colveci'], ['output']),
     ]
     value_infos = [
+        helper.make_tensor_value_info('corn_b', 9, [1, 1, 10, 10]),
+        helper.make_tensor_value_info('cornf_u8', 2, [1, 1, 10, 10]),
+        helper.make_tensor_value_info('patch', 2, [1, 1, 4, 4]),
+        helper.make_tensor_value_info('patchu2', 2, [1, 1, 4, 4]),
+        helper.make_tensor_value_info('W_u8', 2, [1, 1, 4, 4]),
+        helper.make_tensor_value_info('outU10', 2, [1, 1, 10, 10]),
     ]
     return model('task368_live_exact', nodes, inits, output_dtype=9, opset=13, value_infos=value_infos)

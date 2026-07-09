@@ -85,3 +85,15 @@ this is a genuine ~16.8KB structural floor (≈15.27 pts), MARGINAL over a near-
 **Gate:** bundled cand fail=0; fresh N=2000 inc_fail=0 cand_fail=0. No TopK reject.
 Backup `reports/retired_networks/task350_pre_s10.onnx`; source `public_candidates/bobmyers7186/task350.onnx`. Gate data: scratchpad/gate_small/results.jsonl.
 No transferable mechanism — minor trim.
+
+## FLOOR VERDICT 2026-07-09 (axis-code 팬아웃, Fable 에이전트)
+- ran: axis-code 합성 전수 구조 열거(pow4/pow2 staircase, moment/selector einsum, fp16 score-plane,
+  free-output N-ary einsum + A-matrix sign decode, mod-plane, negpad-Conv entry) — 전부 조립·바이트계산;
+  최선 대안 9792 > 현행 9036. tool: scoring.py 미러 + fp32 수치검증(200k rows), 2026-07-09.
+- 구조 벽 2개: OR-wall(rowspan∨colspan은 per-axis 벡터로 equality/product/sign 표현 불가) +
+  blue-exclusion wall(per-cell counted read 불가피; 현행 624B u8 plane이 두 역할 겸용).
+- reopen: (a) grader ORT에서 bool/fp16 mixed-dtype Einsum 합법화(~+0.42) (b) OR-of-broadcast-compares
+  단일 op (c) cost<9036 공개 덤프 (d) bool/crop counting 변경.
+- falsification history: 이 태스크 "confirmed-infeasible" 라벨 자체가 과거 오판(룰은 closed-form);
+  "u8 MaxPool ORT 거부" 반증됨(현행 넷이 그것); "3600B 엔트리 불가축" 부분 반증(per-axis 코드는
+  free 추출 가능) — 남은 벽은 blue read + OR-wall.

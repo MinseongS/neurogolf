@@ -129,3 +129,8 @@ Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent).
 - cost: 3150 -> 2743 (points 17.0832)
 - source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task008.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T051556Z
+- cost: 2743 -> 2683 (points 17.1053)
+- source: candidates/task008/vi_cand.onnx
+- note: public-insight generalize: valueinfo_legalized_dynamic_crop fleet sweep — task008 crop window redeclared [1,1,5,5]->[1,1,3,5] (traced max-product 15 elems; crop flips orientation so per-dim max is vacuous, byte charge model allows max-product). Annotation-only, graph bytes identical. Fleet verdict: only genuine slack; 26 phantom hits were Cast/TopK traced=0 artifacts

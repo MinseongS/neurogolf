@@ -118,6 +118,18 @@ levers:
         ran: "public_autopsy — 724995_tail_fingerprint (S37 이전 공개 tail 65승 분석)"
         verdict: "65승 중 57/65 params_tail_or_initializer_dedupe, 8 byte-tail; 500B+ exact lost-tensor 지문 없음 (+0.216 local tail은 대형 표현 붕괴가 아니라 대부분 optimizer byte 정리)"
         reopen: "새 공개 tail win 발생 시마다 (min-merge 채택과 항상 짝으로)"
+      - date: 2026-07-09
+        ran: "valueinfo slack 전수 스윕 — 400넷 profiler-trace vs declared (candidates/valueinfo_sweep/scan.py, onnx 1.21/ort 1.26; 31넷 knife-edge/load-fail 스킵)"
+        verdict: "진성 슬랙 = task008 crop window 3텐서뿐 (+0.022 채택; task216 +0.032와 합쳐 메커니즘 2승). 원시 27태스크/7669B 히트 중 26태스크는 phantom — Cast(ORT가 InsertedPrecisionFreeCast_*로 개명)/TopK는 trace 이벤트 미발생(traced=0)이라 grader도 declared로만 과금, max()-슬랙 0"
+        reopen: "data-dependent Slice/Pad/bbox window를 도입하는 모든 신규 채택 시 해당 태스크 재스캔 (스캐너 상비)"
+      - date: 2026-07-09
+        ran: "identity_scale_qlinearconv_u8_transport 팬아웃 — task233/042 (opus, ORT 265예제 range 측정 + 커널 디코드)"
+        verdict: "233 floor — bit-weight 커널 값 256 + 출력 0–511(9bit)이 u8 계약 초과, 구조적 불가. 042 floor — m2_score −75..3(signed 필요) + m3 fractional weights; 공통 Max 재합류가 fp16 강제. (같은 팬아웃에서 363 +0.072 / 368 +0.075 채택 — 메커니즘 자체는 재확인됨)"
+        reopen: "233: split-kernel(≤255 Conv 2개 합) 또는 int16 quant 경로 / bitmask 폭 ≤8bit 증명 시. 042: Max/Greater epilogue 리팩터로 정수 sub-score 독립 채점 가능해질 때 / m3 matched filter 정수 재유도 시"
+      - date: 2026-07-09
+        ran: "dead_tap_dilated_conv_crop_decode 팬아웃 — task148 (opus, onnx 1.21/ort 1.26 shape-infer + ORT decode check)"
+        verdict: "task148 floor — 실제 캔버스 24×12(H 16–24)로 insight의 reject_when(canvas>15) 발화; 공유 code plane 1440B > 교체 대상 서브리전 슬라이스 합 1160B. 메커니즘 자체는 148에서도 정확히 디코드됨(기하 문제, 메커니즘 실패 아님)"
+        reopen: "≤~14×14 캔버스에서 멀티컬러 plane을 실체화하는 태스크 / cheap direct-to-u8 cropped decode op 등장 / downstream 리팩터로 code plane이 1440B 초과 대체 가능해질 때"
       - date: 2026-07-08
         ran: "public_autopsy — 724950_big_jump_fingerprint (.minmerge_backup 기준 vs franksunp/urad 7250.x 공개 덤프, 99건 과거 승리 비교)"
         verdict: "3-signature 클러스터 추출: free_input_einsum_substitution(+1.720 local/3승), index_or_topk_plane_removed(+0.939 task022), final_equal_or_output_only(+0.595/4승); exact fingerprint 후보 task019/044/076이 task011과 동일한 lost Pad 900B 지문 공유"

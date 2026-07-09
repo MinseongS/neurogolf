@@ -134,3 +134,8 @@ instead: per-row first/last via pow2-weight einsums 'bchw,cxy,dw->bdhy' + trunc(
 `reports/candidates/task064/task064_dedupe_initializers.onnx` rewired duplicate
 initializer `axis2->slice2`.  Bundled gate fail=0.  Cost: 9986 -> 9985
 (params 134 -> 133).
+
+## ADOPTED 20260709T045506Z
+- cost: 9504 -> 5997 (points 16.3010)
+- source: candidates/task064/cand.onnx
+- note: public-insight generalize: axis_code_equal_mask_synthesis (channel-selective free-input Einsum vectors replace 2x1200B presence planes; union exp-log codes delete pow2-log+box-bound machinery; two-direction sentinel band merges 5 compare planes into 3; 2000 fresh 0-fail) TRANSFERABLE: disjoint directional interval-fill families can merge compare pyramids via one sentinel-coded Sub/Max/LessOrEqual

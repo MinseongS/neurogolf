@@ -644,3 +644,4 @@ networks/ NOT yet formalized (89 source regens + tasklogs pending); live submiss
 built from submission/merged_nets/.
 
 | 2026-07-09 04:14Z | public min-merge 20260709: 4 dumps (prvsiyan 7266.72 / ryosukeshiroshita 7266.48 / kutenk 7261.53 / jonathanncoletti merged91), margin-0, 78 adoptions +10.30 -> local 7289.59 | **LB 7289.71 확정 (sub 54481576, 신기록)** |
+| 2026-07-09 05:26Z | public-insight generalize wave: 12 adoptions +3.14 -> local 7292.73 (294 rank1-qconv +0.35, 092 free-endpoint einsum +1.28, 064 axis-code +0.46, 366 equiv-golf +0.31, 009 maxpool-pack +0.21, 245 crop-decode +0.20, 086 perm-decode +0.14, 363/368 u8 +0.15, 216/008 value_info +0.05) |

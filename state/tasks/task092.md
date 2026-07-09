@@ -155,3 +155,8 @@ backup at `reports/candidates/task092/task092_pre_dynamic_cse.onnx`.
 Follow-up pruning after CSE removed now-dead initializer `notslot0` via
 `reports/candidates/task092/task092_prune_dead_constants.onnx`.  Bundled gate
 remained fail=0.  Cost: 5279 -> 5269 (memory 4820 unchanged, params 459 -> 449).
+
+## ADOPTED 20260709T045833Z
+- cost: 5269 -> 1472 (points 17.7056)
+- source: candidates/task092/cand.onnx
+- note: public-insight generalize: free-endpoint 10-operand Einsum (input x4 + triangular U x4 + flags/Cstack) — prefix*suffix profile products of FREE input replace ALL band/moment/selector machinery; signed KILLER weights keep priority linear under (out>0); 2000 fresh 0-fail. TRANSFERABLE: two-marker-per-channel fill-between tasks collapse to profile products inside one free einsum (cohort: 054/076/101/118/133/206/216/233/265/285/330/342/366)

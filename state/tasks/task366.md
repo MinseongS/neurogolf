@@ -244,3 +244,8 @@ Bundled gate: fail=0.  Unsigned TopK scan: clean after adoption.  Cost: 31559
 - cost: 31559 -> 30159 (points 14.6858)
 - source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task366.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T051157Z
+- cost: 30159 -> 22219 (points 14.9913)
+- source: candidates/task366/cand.onnx
+- note: public-insight generalize: probe_then_build (Scatter histogram -> free-input Einsum rank-1 indicators) + QLinearConv corner stencil (8-plane chain -> 510B) + merged single-pass stamp + fp16/u8 dtype golf on gated mux; equivalence-golf, 0 divergence over 3255 examples (incumbent's own 13/1600 fresh-fail rate matched exactly)

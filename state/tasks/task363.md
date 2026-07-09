@@ -73,3 +73,8 @@ old_wrong=12, new_wrong=12, **OLD-correct/NEW-wrong=0** → strict-equivalent re
 lower mem (both share the 12 baked-in illegal-validate edge failures). networks/
 task363.onnx rebuilt; manifest updated. Mechanism = the Einsum/delta-route-onto-FREE-
 input lever.
+
+## ADOPTED 20260709T045007Z
+- cost: 4034 -> 3754 (points 16.7694)
+- source: candidates/task363/cand.onnx
+- note: public-insight generalize: identity_scale_qlinearconv_u8_transport (fp16 score/paint Convs -> u8 QLinearConv w/ runtime u8 kernel; 265/265 bit-identical)

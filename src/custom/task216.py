@@ -173,7 +173,7 @@ def build(task):
         helper.make_tensor_value_info('crop_col_end_v', 6, [1]),
         helper.make_tensor_value_info('crop_starts', 6, [4]),
         helper.make_tensor_value_info('crop_ends', 6, [4]),
-        helper.make_tensor_value_info('crop', 2, [1, 2, 18, 18]),
+        helper.make_tensor_value_info('crop', 2, [1, 2, 11, 17]),
         helper.make_tensor_value_info('winner_height64', 7, []),
         helper.make_tensor_value_info('winner_width64', 7, []),
         helper.make_tensor_value_info('winner_height64_v', 7, [1]),

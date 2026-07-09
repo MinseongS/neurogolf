@@ -81,3 +81,8 @@ scalar.
 - cost: 2743 -> 2625 (points 17.1272)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task245.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T044936Z
+- cost: 2625 -> 2147 (points 17.3282)
+- source: candidates/task245/cand.onnx
+- note: public-insight generalize: dead_tap_dilated_conv_crop_decode entry transplant (3 fp32 slices -> 1 dilated code Conv + Equal masks, code alphabet task-derived; 267/267 bit-identical)

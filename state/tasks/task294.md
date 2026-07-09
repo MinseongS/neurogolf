@@ -45,3 +45,8 @@ Decision: PARKED. Grader passes the incumbent (all submissions incl. 7213.63);
 local rule = always grade 294 in isolation, never batched after task120.
 Caveat for local tooling: `dirty_gate.py`-style inc-then-cand ordering is vacuous for
 structurally identical pairs (candidate inherits incumbent's packed weights).
+
+## ADOPTED 20260709T044632Z
+- cost: 910 -> 642 (points 18.5354)
+- source: candidates/task294/cand.onnx
+- note: public-insight generalize: rank1_bottleneck_dilated_crop_qconv_classifier (283-recipe twin; signed black/gray encoder + dilated in-op crop + int8 QLinearConv classifier, thresholds rule-derived; 2500-fresh bit-identical, isolated eval)

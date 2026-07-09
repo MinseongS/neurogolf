@@ -116,3 +116,8 @@ Mechanism: value_info Slice crop. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). 
 - cost: 6698 -> 6694 (points 16.1910)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task009.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T045448Z
+- cost: 6694 -> 5418 (points 16.4025)
+- source: candidates/task009/cand.onnx
+- note: public-insight generalize: maxpool_runningmax_between_fill + bitpack_code_plane_arithmetic_decode (u8 pack=16*pos|colour, 4 one-sided MaxPool sweeps replace quadratic Einsums; onehot16 1800B + eq_b 900B never materialized, free-output Equal unpack; 800 fresh 0-fail)

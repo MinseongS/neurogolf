@@ -2512,5 +2512,101 @@
       "verification": "ng gate + fresh arc-gen >= 2000"
     },
     "fanout_candidates_20260709": []
+  },
+  {
+    "id": "pow4_code_compare_staircase",
+    "title": "Exact interval bool planes via ONE broadcast GreaterOrEqual against pow4 codes (no MaxPool stack, no log chain)",
+    "status": "active",
+    "source_tasks": [],
+    "rationale": "task350 floor analysis by-product (2026-07-09, verified 200k rows 0 mismatches): sum(marker*4^w) fp32 codes give exact 'w<=rmax'/'w>=rmin' bool planes via one broadcast GE each; rounding-safe (pow4 thresholds vs 2^-23 rel err); empty-line sentinel free (code=0). Wins wherever a SINGLE interval family (not an OR of two) is needed - the OR of row+col interval families is exactly where it loses to the u8 MaxPool decomposition.",
+    "applies_when": {
+      "any_ops": [
+        "MaxPool",
+        "CumSum",
+        "Log"
+      ],
+      "any_tags": [
+        "single_interval_family",
+        "axis_interval_mask"
+      ],
+      "min_memory": 800
+    },
+    "reject_when": {
+      "any_tags": [
+        "or_of_two_interval_families"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory: MaxPool/log-chain planes -> one GE plane",
+      "risk": "low (numerically verified)",
+      "verification": "ng gate; numeric exactness check"
+    },
+    "fanout_candidates_20260709": []
+  },
+  {
+    "id": "fsign_amatrix_routing",
+    "title": "out[c] = (sum_k input[k]*A[k,c]) * F(h,w) under (out>0): recolor-protection plane deleted when every protected colour sits on one side of F's sign",
+    "status": "active",
+    "source_tasks": [],
+    "rationale": "task350 floor analysis by-product (2026-07-09): fold protection (e.g. blue subset-of span) into the DECODE SIGNS of an A-matrix contraction times a signed field F, instead of a counted Where-protection plane. Blocked on 350 only by the fp32-operand cast of the bool span plane (mixed-dtype Einsum illegal on grader ORT). Potent where the mask is ALREADY a single fp32 plane.",
+    "applies_when": {
+      "any_ops": [
+        "Where"
+      ],
+      "any_tags": [
+        "recolor_with_protected_colours",
+        "single_fp32_mask_plane"
+      ],
+      "min_memory": 800
+    },
+    "reject_when": {
+      "any_tags": [
+        "protection_not_sign_separable"
+      ],
+      "notes": "reopen-linked: bool/fp16 mixed-dtype Einsum legality on grader ORT would unlock task350 (~+0.42)"
+    },
+    "expected": {
+      "gain_type": "memory: protection Where plane deleted",
+      "risk": "medium",
+      "verification": "ng gate + fresh"
+    },
+    "fanout_candidates_20260709": []
+  },
+  {
+    "id": "perm_decode_free_equal_recolor",
+    "title": "Keep INPUT colors in the label carrier; do the output color permutation for free in the final Equal via a runtime-permuted chan_ids vector",
+    "status": "active",
+    "source_tasks": [
+      86
+    ],
+    "rationale": "task086 rewrite (3028->2633, +0.1398, falsifies its batch6 floor): instead of materializing swapped block colors (3x144B Where-chain), the 900B label plane keeps input colors and the c0<->c1 swap folds into the free final Equal by comparing against a runtime-permuted 10-vector chan_perm (built from recovered colors with 2 Equal + 2 Where on [1,10,1,1] = 40B) - channel c1 fires where label==c0. Any runtime-derivable color permutation costs ~40B instead of per-plane Where chains.",
+    "applies_when": {
+      "any_ops": [
+        "Equal",
+        "Where"
+      ],
+      "any_tags": [
+        "final_equal",
+        "color_remap",
+        "recolor_by_permutation"
+      ],
+      "min_memory": 400
+    },
+    "reject_when": {
+      "any_tags": [
+        "output_colors_not_a_permutation_of_labels"
+      ]
+    },
+    "expected": {
+      "gain_type": "memory: recolor Where-chains -> 40B permuted id vector",
+      "risk": "low",
+      "verification": "ng gate + fresh"
+    },
+    "fanout_candidates_20260709": [
+      102,
+      251,
+      302,
+      268
+    ]
   }
 ]

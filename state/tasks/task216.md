@@ -96,3 +96,41 @@ corner-finding 1200 + run-scan 1120 near-minimal u8. Backup task216_pre_s9.onnx.
 **Ran:** fold_finder flagged `c12_f32[1,2,20,20]` fp32 slice (3200B, Slice(input)→Einsum). Deep opus agent tried rerouting the counting Einsum (`nkrc,k,br,bc->b` → counts[4]) to contract free `input` directly.
 **Verdict: FLOOR.** The Einsum was a FREE 2nd consumer of already-materialized `c12_f32`; c12_f32 is also the source for `Cast→c12 uint8` (feeds QLinearConv corner-detect + Gathers + crop). Reroute doesn't delete c12_f32 and ADDS ~560B (masks [4,20]→[4,30] + pads). Slice preserves free-input fp32 dtype; regional uint8/fp16 needs full-tensor cast first (9000/18000B) = worse. Active unchanged (mem 8584 par 76).
 **Reopen:** whole-net reformulation building the output box from free input without QLinearConv corner-detect; or slice+cast fusing op.
+
+---
+## 2026-07-09 — task394 compact-OneHot/projector generalization attempt → mechanism NO-TRANSFER; trace-max audit win instead (+274B, cand NOT adopted)
+**Ran:** full byte-costing of a task394-style rewrite (free-input detection Einsums, compact-coordinate OneHots
+w/ out-of-range sentinel, final N-ary placement Einsum straight to free output) against the live net's exact
+per-tensor grader accounting (profiler trace over all 266 bundled examples, replicating scoring.calculate_memory).
+**Tool+date:** manual per-tensor trace audit + generator analysis (task_8efcae92.py), 2026-07-09, onnx 1.21/ort 1.26.
+**Verdict on the 394 mechanism: NO-TRANSFER (anti-win), byte math:**
+- *Placement Einsum as graph output* ('bkrc,Ir,Jc->bkIJ'): row/col selector OneHots are fp32-welded to the free
+  input and must be 30-wide ⇒ [30,30]×2 = 7200B (compact [18,30]×2 = 4320B + 1080 const-lift params) vs the
+  current crop→Pad carrier at 648B (traced max 374B). Box patch is up to 18×18=324 cells vs task394's 3×3=9 —
+  the exchange rate inverts for large patches.
+- *Selector-plane elimination*: rm/cm [4,20] fp32 (320B ea) are RANGE masks (not Equal-vs-arange onehots) and are
+  einsum-welded to c12_f32; MatMulInteger/u8 alternative needs a red u8 plane (Slice 400B) ⇒ +300B net.
+- *c12-free detection* (Conv on free input, pads [1,1,-10,-10], corner stencil x(r,c)-x(r-1,c)-x(r,c-1)+bias):
+  detection itself gets cheaper (2800B vs 5200B) but scans go fp32 ([4,30] OneHot+vec+mask ⇒ +2100B) and the
+  epilogue loses its u8 channel-resolved source: cheapest c12-free epilogues = f32 input-Slice crop (traced max
+  8·187=1496B) or enc-plane + double-Pad + Equal-vs-iota sentinel (1224B + 2000B marginal source). Best full
+  c12-free design ≈ 9046B > 8584B deployed. c12_f32 3200 + c12 800 entry-bridge floor RE-CONFIRMED (3rd time).
+**Reopen-trigger:** a u8-producing op directly from the fp32 free input cheaper than a same-size f32 bridge; or
+grader change away from max(declared, traced-max) charging; or an exact winner-selection rule not requiring
+per-box extents (red counts are forced exact by unique-counts, so density/blur proxies stay dead).
+**Falsification history:** 2026-07-08 fold-batch verdict (c12_f32 floor) — held. S11 mech-15 KILL — held.
+**LANDED INSTEAD — value_info crop on `crop` (the un-mined urad-7225 mechanism, self-applied):** grader charges
+max(declared, traced-max); max winner box across all 266 bundled examples is 11×17=187 cells ⇒ traced max 374B,
+but declared [1,2,18,18] floored the charge at 648B. Candidate declares [1,2,11,17] (annotation-only, graph
+bit-identical). `candidates/task216/cand.onnx` (+ build_cand.py): **gate PASS 266/266, mem 8584→8310, params 76,
+cost 8660→8386, 15.9335→15.9657 (+0.0322)**; fresh 500/500 (136 of those had winner boxes exceeding the declared
+shape — ORT ignores intermediate value_info at runtime in both directions; bundled grading set is constant, so
+the 374B trace-max is permanent). NOT adopted (per session scope).
+⭐ TRANSFERABLE: **on any net with a dynamically-shaped intermediate (Slice/Pad crop carriers), diff declared
+value_info bytes vs profiler traced-max over the bundled set — declared > traced-max is free memory.** Scan all
+deployed nets for dynamic-shape value_info slack.
+
+## ADOPTED 20260709T050157Z
+- cost: 8660 -> 8386 (points 15.9657)
+- source: candidates/task216/cand.onnx
+- note: public-insight generalize: valueinfo_legalized_dynamic_crop self-applied — dynamic crop tensor declared [1,2,18,18] but traced max 11x17; re-declare shrinks charge 648B->374B, graph bit-identical, 500 fresh 0-fail. TRANSFERABLE: sweep all deployed nets for declared-vs-traced-max value_info slack

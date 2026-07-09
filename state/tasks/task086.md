@@ -222,3 +222,16 @@ space. For task086, `11x11` is the minimum tested single-threshold local window.
 - cost: 3134 -> 3028 (points 16.9843)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task086.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T052553Z
+- cost: 3028 -> 2633 (points 17.1241)
+- source: candidates/task086/cand.onnx
+- note: public-insight generalize: perm-decode (input colors kept in 900B label carrier; c0<->c1 swap folded into free final Equal via runtime-permuted chan_ids ~40B, replacing Where-chains) + retrained arm-exact int8 QLinearConv (verified over ALL 2149 generator states + 1000 fresh). Falsifies batch6 086 floor. TRANSFERABLE: final_equal + color-remap family (102/251/302/268)
+
+## SUB-LEVER NEGATIVE 2026-07-09 (Min-fusion, 팬아웃 에이전트)
+- ran: arm-vs-rest 선형분리성 — integer-perceptron + hinge-subgradient, 4 config(K11/K13 × slab±1),
+  전 2149 도달가능 상태; patch-level 모순 0 (정보이론적 벽 아님, linear-threshold 한정). 2026-07-09.
+- verdict: 미분리(viol ~1000–3500 plateau) — Greater+Cast 288B를 Min(base,1)로 접는 것 실패.
+- reopen: scipy/OR-tools 정확 LP/MILP feasibility로 K≤15 분리성 판정 시 / 2-channel·i16-accum 분류기.
+  추가 성공 가치는 +0.037~0.07뿐 (본 채택 대비).
+- falsification history: 첫 시도. 단 부모 "086 floor"(batch6)는 본 채택(+0.14)으로 반증됨.

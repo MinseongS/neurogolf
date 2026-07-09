@@ -189,3 +189,8 @@ Follow-up pruning removed dead initializer `topk_i8_zero_368`. Cost: 5042 -> 504
 - cost: 5130 -> 3599 (points 16.8116)
 - source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task368.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260709T045007Z
+- cost: 3599 -> 3337 (points 16.8872)
+- source: candidates/task368/cand.onnx
+- note: public-insight generalize: identity_scale_qlinearconv_u8_transport (fp16 stamp Conv -> u8 QLinearConv, patch kernel kept u8; 265/265 bit-identical)
