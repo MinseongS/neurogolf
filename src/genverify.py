@@ -9,7 +9,7 @@ import numpy as np
 import onnxruntime as ort
 from src.harness import convert_to_numpy, load_task, evaluate
 
-MAPPING = json.load(open("reports/arc_mapping.json"))
+MAPPING = json.load(open("state/arc_mapping.json"))
 ROOT = Path(__file__).resolve().parent.parent
 ARCGEN = ROOT / "arc-gen"
 if not ARCGEN.is_dir():
