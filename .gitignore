@@ -44,3 +44,5 @@ networks/
 public_candidates/
 
 scratch_mine_keep/
+state/seen_kernels.json
+state/poll_dumps.log
