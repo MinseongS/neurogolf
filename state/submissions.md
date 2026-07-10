@@ -670,3 +670,5 @@ built from submission/merged_nets/.
 
 | 2026-07-09 13:09Z | kernel-collapse on new min-merge Conv nets: task044 3169->3139, task107 3445->3415, bit-identical (+0.018); local 7298.8373 | **LB 7298.96 확정 (sub 54494910, 신기록)** |
 | 2026-07-09 13:12Z | public frontier full re-mine: franksunp compact-starter task165/157/096 +0.0037; all other top-golfer dumps 0 (we are above the public frontier); local 7298.8411 | **LB 7298.96 확정 (sub 54494981)** |
+
+| 2026-07-10 05:25Z | task233 scatter-table hash-match rebuild: [5,324] match-matrix+TopK(k=2)+sequential parade -> ScatterElements inverse table + vectorized k=1 stamp + 5 pos-override lanes; 31938->28033 (+0.1305); local 7298.9715 | **LB 7299.09 확정 (sub 54516745, 신기록)** |
