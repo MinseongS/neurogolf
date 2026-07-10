@@ -306,3 +306,10 @@ Reopen trigger (ledger):
 - cost: 30159 -> 22219 (points 14.9913)
 - source: candidates/task366/cand.onnx
 - note: public-insight generalize: probe_then_build (Scatter histogram -> free-input Einsum rank-1 indicators) + QLinearConv corner stencil (8-plane chain -> 510B) + merged single-pass stamp + fp16/u8 dtype golf on gated mux; equivalence-golf, 0 divergence over 3255 examples (incumbent's own 13/1600 fresh-fail rate matched exactly)
+
+## 2026-07-10 representation-inversion re-audit (task233 lens, opus agent) — NO BUILD
+- Ran: full graph dump + per-node byte map (onnx shape-inference / scorer trace), arg-select op trace, generator read, bundled-usage probes.
+- Verdict: **INJECTIVE-BUT-UNFAVORABLE-BYTES**. arg-select structure EXISTS and relation IS injective (box containment, dot counts 1/2/3 distinct) — but match matrix already collapsed to assign [6,3] bool = 18B; ScatterElements inverse table (~1KB) is byte-negative. 3x 510B fp16 TopK feeds are sparse-coordinate extraction, not match matrices. b2 lane exercised by 66.5% of examples (3000-sample probe) — not overrideable.
+- Tool+date: opus triage agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
+- Reopen triggers: a future net re-introducing a fat (N>=50) Equal([K,1],[1,N])->TopK plane; int8-TopK acceptance (3x510B->255B); mixed-dtype Conv (colf 3600B->1800B); new public net < 21990 mem.
+- Falsification history: this is the systematic 233-lens sweep prescribed by STATE.md Active Vein 1 after the 2026-07-10 task233 win falsified its own 07-09 CLOSED verdict; lens applied and did not fire here.

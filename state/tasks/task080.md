@@ -104,3 +104,15 @@ existing counted tensor.
 - cost: 9262 -> 6686 (points 16.1922)
 - source: candidates/task080/cand.onnx
 - note: arsenal fold(opus): full fp32 Conv(input,[0..9]) colour-decode feeding only position-selectable Gathers -> per-read free-input Einsum sum_c cw[c]*input*S_row*S_col (colour contraction inside free einsum, bit-identical on one-hot). 9262->6686. fresh 2511 0-mismatch.
+
+## 2026-07-10 deepfold ng_S fold probe (runtime-spend axis, opus) — NO BUILD
+- Ran: graph dump + ng_S producer/consumer trace; ORT 1.26 mixed-dtype einsum acceptance probe
+  (fp32×fp16, fp32×uint8 both REJECT); letter budget (6/52, not the blocker); scoring.evaluate confirm
+  (6686, 231/231).
+- Verdict: BLOCKED, two independent walls — (1) ng_S producer = Equal(data-dependent idx2d(p from
+  ArgMax), arange) one-hot: not multilinear, cannot live inside einsum; Gather alternative = counted
+  fp32 carriers 4000-12000B (already-logged KILL). (2) fp16/uint8 selector blocked by uniform-dtype
+  einsum binding the free fp32 input. Scanner's +0.198 bound unreachable.
+- Tool+date: opus agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
+- Reopen: mixed-dtype Einsum acceptance (ng_S→300-600B, +0.10~0.15); a free low-dtype input alias; or
+  a public task080 net avoiding the one-hot selector.

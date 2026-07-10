@@ -167,3 +167,15 @@ only needs to preserve ORDER (feeds TopK/ArgMax through an fp16 score), not exac
 is bit-safe here and shaves the conv working plane. Propagate to hash/rank/TopK template
 nets — selection criterion: a fixed-weight Conv whose output flows only into a TopK or
 ArgMax rank (not into arithmetic that must stay float-exact). Sibling hit this session = task365.
+
+## 2026-07-10 s8port fold probe (runtime-spend axis, opus) — NO BUILD
+- Ran: graph dump (20 nodes); tail map (palette u8[9] -> Gather(slot_map 9x9) -> Equal(channelvals) ->
+  eq9 bool[1,10,9,9] 810B -> Pad -> output); designed free-output fold 'nbvt,bpqt,br,bc,rpR,cqC->nvRC'
+  and computed the minimal fixed-param floor (648 gross / +558 net incl. unavoidable I[9,30]=270 identity
+  pad); gate arithmetic 900B dying (all bool/u8, zero fp32) − 0 − 558 = 342 < 480.
+- Verdict: BLOCKED on bytes — incumbent pays no fp32 on the dying planes (066 gate-condition negative
+  case), and einsum cannot "gather": reconstructing the 81-param slot_map + 8-param Pad as einsum
+  operands costs ~7x the bool bytes removed. Est. +267 cost if built.
+- Tool+date: opus agent, onnx 1.21.0 static analysis + ng gate, 2026-07-10.
+- Reopen: params-free small-template placement primitive; incumbent tail turning fp32; label16/
+  color_indices carrier fold making the whole stamp a genuine carrier.

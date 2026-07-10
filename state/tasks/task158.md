@@ -170,3 +170,10 @@ aliases (`vr`, `vc_hi`, `vc`).
 Bundled gate: fail=0.  Cost: 20735 -> 20687 (memory 18089 -> 18041, params
 2646 unchanged).  Active overlay updated in `submission/overfit_nets/task158.onnx`;
 backup at `reports/candidates/task158/task158_pre_dynamic_cse.onnx`.
+
+## 2026-07-10 representation-inversion re-audit (task233 lens, opus agent) — NO BUILD
+- Ran: full graph dump + per-node byte map (onnx shape-inference / scorer trace), arg-select op trace, generator read, bundled-usage probes.
+- Verdict: **NO-ARGSELECT-SUBSYSTEM**. spatial stamping net (12 matched-filter passes = 3 mags x 4 flips, ~9KB backbone); only arg-selects are two [10]-wide ArgMax point reductions (40B each). Mag lanes core not fallback: mag3 in 54/266 bundled (20%); magnified-sprite override = positioned content up to 9x9, not 25B scalar. Net is EXACT/general (fresh 200/200).
+- Tool+date: opus triage agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
+- Reopen triggers: new public net < 20329; mixed-dtype Conv halving lab_f 2600B; a cheaper stamping primitive avoiding 12 full-grid filter planes (none known).
+- Falsification history: this is the systematic 233-lens sweep prescribed by STATE.md Active Vein 1 after the 2026-07-10 task233 win falsified its own 07-09 CLOSED verdict; lens applied and did not fire here.

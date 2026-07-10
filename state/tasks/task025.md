@@ -157,3 +157,16 @@ so this is strictly a private-LB-risk trade, not a free win.
 - pos_onehot→left/right/signed_mask fp16 chain: ORT has NO fp16 CumSum kernel (measured INVALID_GRAPH).
   Color-count downstream (v_line_color_counts etc.) feeds input-Einsum51/53 → f32 required (wash).
 - No dead initializers. Design already casts every fp16-eligible leaf. No surviving lever.
+
+## 2026-07-10 deepfold concat-fold probe (runtime-spend axis, opus) — NO BUILD
+- Ran: deployed graph + row_feat/col_feat DAG dump; consumer einsum `bpr,bpw,bos,ps->borw` analysis;
+  priced concat-decompose (per-branch split → counted [1,10,30,30] fp16 18000B each = +54000B vs 1560B
+  saved) and input-einsum branch fold (branches non-linear: TopK/OneHot/Sign); letter budget 6/52 (not
+  the blocker).
+- Verdict: BLOCKED — p=13 axis is a DIAGONAL product of row_feat×col_feat (same-p), so the concat
+  cannot decompose into an N-ary einsum; only the tensor literally named `output` is free, so any split
+  materializes full-canvas intermediates. Reconfirms the S8 "free-output entry ticket 3120" floor from
+  the structural (not dtype) side.
+- Tool+date: opus agent, onnx 1.21.0 static analysis, 2026-07-10.
+- Reopen: a separable (non-diagonal) p-axis reformulation of the row/col factorization; or an op that
+  stacks heterogeneous planes with an uncounted output.

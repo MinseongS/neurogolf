@@ -131,3 +131,8 @@ detector on ONE derived plane subsumes the same detector on ANY other plane piec
 SAME bands — drop the duplicate Slice/Pad/Equal/And chain. Like 171 this was borrowed-net cleanup (author
 left the redundant branch in); no fanout found on our own nets (already tight). Reopen: scan each new
 min-merge net for duplicated detector branches before trusting the byte-adoption is tight.
+
+## ADOPTED 20260710T064647Z
+- cost: 2519 -> 2234 (points 17.2885)
+- source: /tmp/task085_cand.onnx
+- note: runtime-spend S8-port fanout: Where(punch,bg,input) tail (punch 900B Equal-parity plane + t/colcnt/q ~1170B) folded into ONE free-output einsum 'njhw,sjk,sh,sw->nkhw' — punch factorized rank-2 (me⊗co + mo⊗ce parity outer products), stack s=0 identity passthrough, KM K[j,k]=δ(k,0)−δ(j,k) erases to bg via Σ_j input[j]=1 contraction; plus Bpos occupancy chain dropped (empty-row false-middles harmless: K·e0=0). 2519->2234 (+0.120), bundled 265/0. TRANSFERABLE: parity/interval punch masks factorize as rank-K outer products into the free-output einsum; false-positives that erase already-bg cells are self-neutralizing under signed decode.

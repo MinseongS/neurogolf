@@ -17,13 +17,13 @@ def build(task):
         tensor('cidx', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEsIDE1KSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAQIDBAUGBwgJCgsMDQ4=')),
         tensor('zero_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
         tensor('c15_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoP')),
-        tensor('sent_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoK')),
         tensor('zero_f', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAA')),
-        tensor('outvals', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAQIDBAUGBwgJ')),
         tensor('shp1', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAA==')),
         tensor('shp_r', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAEAAAAAAAAADwAAAAAAAAABAAAAAAAAAA==')),
         tensor('shp_c', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAAPAAAAAAAAAA==')),
-        tensor('pads', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAA8AAAAAAAAA')),
+        tensor('e0', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')),
+        tensor('shp_cv', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAEAAAAAAAAACgAAAAAAAAA=')),
+        tensor('shp_b', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAMAAAAAAAAADwAAAAAAAAA=')),
     ]
     nodes = [
         helper.make_node('ReduceMax', ['input'], ['present'], axes=[2, 3], keepdims=1),
@@ -71,7 +71,6 @@ def build(task):
         helper.make_node('GreaterOrEqual', ['cidx', 'cmnA'], ['cgeA']),
         helper.make_node('LessOrEqual', ['cidx', 'cmxA'], ['cleA']),
         helper.make_node('And', ['cgeA', 'cleA'], ['cflA']),
-        helper.make_node('And', ['rflA', 'cflA'], ['rectA']),
         helper.make_node('Where', ['rowHasB', 'ridx', 'c15_u8'], ['rmnpB']),
         helper.make_node('ReduceMin', ['rmnpB'], ['rmnB'], axes=[2, 3], keepdims=1),
         helper.make_node('Where', ['rowHasB', 'ridx', 'zero_u8'], ['rmxpB']),
@@ -86,14 +85,20 @@ def build(task):
         helper.make_node('GreaterOrEqual', ['cidx', 'cmnB'], ['cgeB']),
         helper.make_node('LessOrEqual', ['cidx', 'cmxB'], ['cleB']),
         helper.make_node('And', ['cgeB', 'cleB'], ['cflB']),
-        helper.make_node('And', ['rflB', 'cflB'], ['rectB']),
-        helper.make_node('Where', ['gridcol', 'zero_u8', 'sent_u8'], ['gcexp']),
-        helper.make_node('Where', ['gridrow', 'gcexp', 'sent_u8'], ['t0']),
-        helper.make_node('Where', ['rectB', 'secondcolor', 't0'], ['t1']),
-        helper.make_node('Where', ['rectA', 'maxcolor', 't1'], ['t2']),
-        helper.make_node('Pad', ['t2', 'pads', 'sent_u8'], ['canvas30'], mode='constant'),
-        helper.make_node('Equal', ['canvas30', 'outvals'], ['output']),
+        helper.make_node('Sub', ['ohmax', 'e0'], ['cv0']),
+        helper.make_node('Sub', ['ohsec', 'e0'], ['cv1']),
+        helper.make_node('Reshape', ['cv0', 'shp_cv'], ['cv0r']),
+        helper.make_node('Reshape', ['cv1', 'shp_cv'], ['cv1r']),
+        helper.make_node('Reshape', ['e0', 'shp_cv'], ['cv2r']),
+        helper.make_node('Concat', ['cv0r', 'cv1r', 'cv2r'], ['CV'], axis=1),
+        helper.make_node('Concat', ['rflA', 'rflB', 'gridrow'], ['Br_b'], axis=1),
+        helper.make_node('Reshape', ['Br_b', 'shp_b'], ['Br_br']),
+        helper.make_node('Cast', ['Br_br'], ['Br'], to=1),
+        helper.make_node('Concat', ['cflA', 'cflB', 'gridcol'], ['Bc_b'], axis=1),
+        helper.make_node('Reshape', ['Bc_b', 'shp_b'], ['Bc_br']),
+        helper.make_node('Cast', ['Bc_br'], ['Bc'], to=1),
+        helper.make_node('Einsum', ['CV', 'Br', 'Sel', 'Bc', 'Sel'], ['output'], equation='ntv,nti,ri,ntj,cj->nvrc'),
     ]
     value_infos = [
     ]
-    return model('task132_live_exact', nodes, inits, output_dtype=9, opset=13, value_infos=value_infos)
+    return model('task132_live_exact', nodes, inits, output_dtype=1, opset=13, value_infos=value_infos)

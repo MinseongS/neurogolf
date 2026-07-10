@@ -252,17 +252,40 @@ levers:
         reopen: "fresh-gate 여유 있는 세션"
 
   - name: runtime-timeout-spend
-    status: dormant
-    scanner: null
+    status: live
+    scanner: null  # deepfold scan @ session scratchpad deepfold_scan.py — port to ng scan if the vein pays
     scanner_archive: null
     recipe: null
     agent_class: fable
-    expected_yield: "미지 — 새 축 (총 추론 runtime을 자원으로 지출)"
+    expected_yield: "deepfold 상위: 187(+≤0.71)/243(+0.17~0.56)/286(walk 3평면)/025(row+col 0.17)"
     ledger:
       - date: 2026-07-08
         ran: "공개 discussion 채굴 (개념 확인만)"
         verdict: "미탐사 축 — 스코어의 2번째 제약(총 inference runtime)을 자원으로 지출하는 lever, 아직 미착수"
         reopen: "regime 베인 소진 후"
+      - date: 2026-07-10
+        ran: "OPEN. (1) runtime re-profile: 전체 400넷 × 전체 번들 예제 = 4.26s (최악 task190 2.0s/4ex; 상위권 예산
+          12-18분 대비 ~200× 여유) — runtime은 우리 스케일에서 비제약, '더 뚱뚱한 단일 op' 트레이드 전면 허용.
+          (2) deepfold 스캔(구 fold.py의 3맹점 수정: dpts=ln(cost/(cost-B)) 랭킹, min 600B, indicator-algebra
+          max==sum>0 + Conv-as-reducer): 48 후보. linear_fold 신규: 187 t2 2500B(dpts≤0.71, 구 FLOORED
+          하드제외로 미노출), 243 P/W1 체인(자유출력 서명라우팅 포팅 설계 완료), 286 3×2500B, 025 row/col_feat.
+          indicator_fold 꼬리(900B Pad→Where 마스크 ~20건)는 대부분 mask_dominance done/floor 목록과 겹침 —
+          crack_condition 3-테스트 통과분 없음 재확인 필요시에만."
+        reopen: "n/a (live). 187/243 fork 설계 결과에 따라 286/025 후속."
+      - date: 2026-07-10
+        ran: "wave1 (linear_fold 딥다이브): 243 BUILD +0.160 / 187 NO(52/52 letter-budget floor, 새 floor
+          유형) / 025 NO(diagonal-p 곱) / 080 NO(data-dependent one-hot 셀렉터) / 286 선판정 NO(letter 포화).
+          wave1-fanout (s8port 5빌더): 251 +0.588(epsilon-J) / 132 +0.391(signed rank-K separable) /
+          177 +0.236(input-as-onehot) / 085 +0.120(rank-K punch) / 066 NO(fp32-coupling — 게이트 조건 정립).
+          wave2 (Equal→Pad onehot 꼬리 4건): 264/256/250/396 전원 NO — 모두 죽는 평면이 bool/u8라 게이트
+          조건 위반(+ 256 anti-diagonal AND 차단기, 264 템플릿 재구성 params, 250 uint8-Einsum 커널 부재)."
+        verdict: "축 실증 완료: 5승 +1.495 LB (7299.09→7300.59, sub 54518734). 메커니즘 =
+          insights.yaml s8port_free_output_tail_fold (서브레시피 5종). 경계 3법칙: (1) letter-budget
+          floor — einsum 언어가 op당 흡수량 상한 (52자, ~8 예약 ⇒ walk ~42쌍); (2) fp32-coupling 게이트 —
+          incumbent가 죽는 평면에 fp32를 내고 있을 때만 승리, fp16/bool 격리형은 fold가 역효과;
+          (3) 표현력 — AND-of-halfplanes/비분리 positioned content는 단일 >0 임계로 불가."
+        reopen: "새 fp32-paying nonlinearize+route 꼬리 유입 시(min-merge/신규 덤프마다 deepfold 재스캔);
+          mixed-dtype 또는 uint8/bool Einsum 커널; >52-index einsum."
 
   - name: dtype-overpay
     status: dormant

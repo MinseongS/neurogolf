@@ -2634,3 +2634,44 @@
     ran: scan_match_matrix (Equal 2D>=300B -> depth-3 -> TopK/ArgMax) over all 400 deployed nets, 2026-07-10 post-adoption
     result: 0 remaining hits; task233 was the unique correspondence-matrix net. Fingerprint stays live for NEW borrowed/public
       nets.
+- id: s8port_free_output_tail_fold
+  title: Fold nonlinearize+route tails (Cast/Greater/Equal->Pad->Where or Equal(label,K)->Pad) into ONE free-output einsum
+  status: active
+  source_tasks:
+  - 243
+  - 177
+  - 132
+  - 85
+  - 251
+  rationale: '2026-07-10 runtime-spend axis wave, 5 wins +1.495 LB total. Family: the net computes a plane,
+    nonlinearizes it (Cast/Greater/Equal), routes via Where or decodes via Equal-onehot, pads to output.
+    ALL of that folds into one einsum writing the free `output` under the free (output>0) per-channel
+    threshold. Sub-recipes: (1) 243 STACKED-CHAIN (187-S8 port): stack axis s rides the walk chain, s=0
+    identity slice = input passthrough, s=1 = computation; signed mixer T; reuse existing crop matrices as
+    in-einsum 18/25->30 embeds. (2) 251 EPSILON-J SINGLE-CHANNEL (187-batch7 port): when the Where paints
+    the W=0/unreached side, the gate plane is SHARED not stacked (s=0 = J/N rank-collapse constant K) —
+    halves the counted plane vs (1). (3) 177 INPUT-AS-ONEHOT-SOURCE: Equal(label,K)->Pad onehot-DECODE dies
+    by contracting the free one-hot input itself for the colour channel; identity embed P[k,30] reused on
+    both spatial axes. (4) 132 SIGNED RANK-K SEPARABLE: Where-cascade of separable rects = sum_k
+    (onehot_k - e0)⊗rowband_k⊗colband_k + e0⊗gridrow⊗gridcol. (5) 085 RANK-K PUNCH: parity/interval masks
+    factorize as outer products; K[j,k]=delta(k,0)-delta(j,k) erases to bg via sum_j input[j]=1;
+    false-positives erasing already-bg cells are self-neutralizing.'
+  applies_when:
+    any_ops:
+    - Einsum
+    - Where
+    - Equal
+    notes: 'einsum/conv result -> Cast/Greater/Equal -> (Pad) -> Where/Equal -> output tail with >=600B of
+      counted tail planes; einsum letter budget must fit (52 + one ellipsis; 8 letters reserved for
+      stack/channels/embeds => max ~42 walk pairs, measure bundled step-distance first)'
+  reject_when:
+    notes: 'GATE CONDITION (task066 measured 2026-07-10): fold pays ONLY if the incumbent already pays fp32
+      on the dying/operand planes. If it isolates fp16/bool machinery and touches the fp32 input only at a
+      final free Where, binding input into the uniform-dtype einsum forces fp32 (+dtype-doubling penalty).
+      Compute (dying bytes) - (fp32 penalty) - (added params, zeros count) >= ~480B before building.
+      Letter-saturated walk nets (187 52/52, 286 49-52/52, 002 52/52) are alphabet-floored for chain merges.'
+  expected:
+    gain_type: memory_by_deleting_tail_planes_into_free_output_einsum
+    risk: low (4/5 built candidates bit-identical or fresh-4000-clean; sign decode exact on integer fp32)
+    verification: ng gate bundled fail=0 + cheaper; fresh arc-gen if not bit-identical
+  transformer: null

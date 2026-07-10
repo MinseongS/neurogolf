@@ -115,3 +115,10 @@ detection bank, making the code-plane epilogue the dominant mass) OR a nonlinear
 code plane AND does canvas placement in ONE node, OR a public/top-team task204 ONNX below cost 10232;
 (4) falsification history: prior task204 "floor" claims were beaten by the uint8 anchor/output route (11364->10244);
 this rejects ONLY the bitpack mechanism for the current detection-dominated graph, not a task floor.
+
+## 2026-07-10 representation-inversion re-audit (task233 lens, opus agent) — NO BUILD
+- Ran: full graph dump + per-node byte map (onnx shape-inference / scorer trace), arg-select op trace, generator read, bundled-usage probes.
+- Verdict: **NO-ARGSELECT-SUBSYSTEM**. 8 parallel per-size QLinearConv anchors + MaxPool floods — spatial detector bank, zero arg-select ops (no TopK/ArgMax/Where-chain/Gather). Box-length histogram over 268 bundled: all sizes 3..10 exercised (L=9:3, L=10:2); rare-size override fails on bytes (deleting anchor+fill ~445-468B vs per-example 400B flood plane + stamp params = net-neutral-to-negative; floods are not scalar overrides).
+- Tool+date: opus triage agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
+- Reopen triggers: ledger OPEN ANGLE #1 (size-independent corner+parity detector); mixed-dtype fp16 blue_f (halves 1600B); new public net < 10232.
+- Falsification history: this is the systematic 233-lens sweep prescribed by STATE.md Active Vein 1 after the 2026-07-10 task233 win falsified its own 07-09 CLOSED verdict; lens applied and did not fire here.

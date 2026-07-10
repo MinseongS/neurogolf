@@ -233,3 +233,10 @@ negative for the current public-autopsy free-Einsum signature.
 
 ## 20260709 — NO-WIN 재개 레저 (free-output-einsum fanout)
 092-fanout(opus 딥, 20260709): NO-WIN. variable-magnify 2D block stamp — block 경계가 arithmetic(anchor+r0·m), input-occupancy marker 아님 → profile 불가. einsum-upsample은 counted [4,30,30] placement(14400B) 필요 > 배포 Resize/QLinearConv stamp(7896B). fp32 detection block 6000B = fp32-co-bind floor. Reopen(공통): mixed-dtype Einsum escape(fp16 carrier + fp32 free-input co-bind) — ORT uniform-T가 현재 차단; 이게 풀리면 이 클래스 fp32-detection floor가 fp16으로 반토막. 또는 새 공개 덤프. 또는 public teacher <21278.
+
+## 2026-07-10 representation-inversion re-audit (task233 lens, opus agent) — NO BUILD
+- Ran: full graph dump + per-node byte map (onnx shape-inference / scorer trace), arg-select op trace, generator read, bundled-usage probes.
+- Verdict: **NO-ARGSELECT-SUBSYSTEM**. variable-magnify STAMP task: 5 ArgMax are [1,10,1,1] bbox reductions (~80B); the injective magnifier gate (Equal(H,{1,2,3,4})) routes to 4 spatial-upsample branches with distinct static kernel_shape — a scatter table cannot replace an upsample (233 routed a scalar position; here the routed value is a 30x30 magnified block). m=4 branch used by 34/267 bundled — override would carry full colour blocks >>25B. Traced via official scorer ORT-profiler path (20262 mem exact).
+- Tool+date: opus triage agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
+- Reopen triggers: new public net < 21278; mixed-dtype Conv/Resize (6000B fp32 block halves, ~+0.3); a dynamic-scale spatial op (op vocabulary has none).|
+- Falsification history: this is the systematic 233-lens sweep prescribed by STATE.md Active Vein 1 after the 2026-07-10 task233 win falsified its own 07-09 CLOSED verdict; lens applied and did not fire here.

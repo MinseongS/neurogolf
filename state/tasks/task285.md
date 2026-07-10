@@ -188,3 +188,10 @@ so any future TopK dtype or K shrink must be isolated before adoption.
 
 ## 20260709 — NO-WIN 재개 레저 (free-output-einsum fanout)
 092-fanout(opus 딥, 20260709): NO-WIN. data-dependent 2D reflection(shape→data-dependent pivot); free-output einsum엔 fold-coupling 텐서 ~18000 params 필요 > 19623 예산(=더 나쁨). 4회 독립 floor 확인 재확증. TopK feed 모두 fp16-clean 유지. Reopen(공통): mixed-dtype Einsum escape(fp16 carrier + fp32 free-input co-bind) — ORT uniform-T가 현재 차단; 이게 풀리면 이 클래스 fp32-detection floor가 fp16으로 반토막. 또는 새 공개 덤프. mixed-dtype면 fp16 shift carrier로 30×5 fold 가능(sibling 286/233/366 배치).
+
+## 2026-07-10 representation-inversion re-audit (task233 lens, opus agent) — NO BUILD
+- Ran: full graph dump + per-node byte map (onnx shape-inference / scorer trace), arg-select op trace, generator read, bundled-usage probes.
+- Verdict: **NO-ARGSELECT-SUBSYSTEM**. 3 TopKs are enumeration/ranking (k=31 visible cells, k=3 pivot score, k=9 creature cells), not key-match arg-selects; eq [8,31] is a neighbor-consistency feature, not a correspondence matrix — no precomputed key set exists (pivot position is the thing being detected). Generator regenerates on overlap/adjacency (lines 46-55) so the consume-once fallback case structurally cannot occur; k widths bundled-tight (31->30 fails).
+- Tool+date: opus triage agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
+- Reopen triggers: new public net < 19623; mixed-dtype Conv halving cf 3600B (hard-closed); a reflection-reconstruction avoiding both fp32 read and full-grid scatter carrier (attack B dense alt measured 99952B = 4.0x, sparse is optimum).
+- Falsification history: this is the systematic 233-lens sweep prescribed by STATE.md Active Vein 1 after the 2026-07-10 task233 win falsified its own 07-09 CLOSED verdict; lens applied and did not fire here.

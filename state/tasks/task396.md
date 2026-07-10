@@ -102,3 +102,15 @@ Bundled gate after adoption: fail=0, cost `4928 -> 4926`
 - cost: 4926 -> 3566 (points 16.8208)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task396.onnx
 - note: min-merge from nets
+
+## 2026-07-10 s8port fold probe (runtime-spend axis, opus) — NO BUILD
+- Ran: graph dump; tail map (CM8 u8 -> Equal(iota10) onehot8 640B bool -> Pad top-left); SVD separability
+  render of the paint pattern (rank 4, scattered interior static = positioned non-separable content); gate
+  arithmetic on both reformulations (Pad-before-Equal: -640+900 = +260B worse; P-embed signed einsum:
+  ~break-even, mem -240 / params +240).
+- Verdict: BLOCKED on bytes — dying planes are bool/uint8 (no fp32 to reclaim), content non-separable so
+  the free-output path always re-pays >=900B (Equal) or 240-param embed (einsum). Consistent with
+  signed-einsum positioned-content doctrine; 066 gate condition applied pre-build.
+- Tool+date: opus agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
+- Reopen: a public task396 tail paying fp32; provably separable content (rank<=2); params-free 8->30
+  embed primitive; crop < 8.

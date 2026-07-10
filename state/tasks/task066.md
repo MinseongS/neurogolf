@@ -153,3 +153,17 @@ projection form for task066.
 - Tool+date: opus agent, onnx 1.21.0 / ort 1.26.0, 2026-07-09.
 - Reopen triggers: (1) ORT gains int8/uint8 Einsum/Where/CumSum kernel (~400-640B); (2) grader allows a 2nd free-named tensor (fp16 input copy halves the 2520B fp32 detection); (3) a public dump ships a smaller task066.
 - Falsification history: prior "20->30 projection branch-Einsum" no-build (S31 params blew 166->2050); this entry re-confirms via the orthogonal int8-kernel-absence lever.
+
+## 2026-07-10 S8-port router-tail reopen (runtime-spend axis, opus) — RE-CLOSED, sharper reason
+- Ran: exact tail mapping (ep_p/ep_q fp16 -> hidden_score 800B -> hidden_pos 400B -> hidden30 900B ->
+  Where(green)); numpy proof the free-output signed-decode fold is bit-exact (266/266); built minimal
+  fp32-embed fold /tmp/task066_cand.onnx; ng gate -> REJECT cand=10846 vs 10121 (fail=0, mechanism valid).
+- Verdict: the S8-port fold IS expressible here (supersedes S31's "not expressible" framing) but LOSES
+  +725: binding the free fp32 input into the einsum forces the fp16 endpoint machinery to fp32 (+1920B)
+  while the dying tail is only 2100B, and embed/mixer add +905 params. The incumbent's fp16+bool mask
+  isolation (input only entering at the free Where) is the true floor. ⭐GATE CONDITION for the S8-port
+  lane: fold pays only when the incumbent ALREADY pays fp32 on the einsum-operand side (243/187/251/132/
+  177/085), never when it isolates fp16/bool and touches input only at the output router.
+- Tool+date: opus agent, onnx 1.21.0 / ort 1.26.0, ng gate, 2026-07-10.
+- Reopen: mixed-dtype/fp16 Einsum kernel (flips to likely win); 2nd free-named tensor; smaller public
+  task066; heterogeneous-dtype free-output router op.

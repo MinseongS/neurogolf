@@ -173,3 +173,10 @@ were built against earlier overlays.  Results:
 
 Do not retry blind K shrink on task173.  The only locally cheaper pass candidate
 remains signed INT8 TopK, which is Kaggle-rejected.
+
+## 2026-07-10 representation-inversion re-audit (task233 lens, opus agent) — NO BUILD
+- Ran: full graph dump + per-node byte map (onnx shape-inference / scorer trace), arg-select op trace, generator read, bundled-usage probes.
+- Verdict: **NO-ARGSELECT-SUBSYSTEM**. positive exemplar of the 233 lens: colour-keyed injective correspondence ALREADY in ScatterElements[10]-LUT + Gather form (nodes 51-58). 3 TopKs are sparse-nonzero compaction (k=19/3/7), not match arg-selects; widths bundled-tight (S24: kK=18 fails 1/266). No rare lanes (4 sprite families all exercised).
+- Tool+date: opus triage agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
+- Reopen triggers: new public net < ~11.6K; mixed-dtype Conv halving labf 2500B (~+0.15); data-dependent float-Slice/dynamic-crop primitive (blocked by scorer symbolic-dim ban).
+- Falsification history: this is the systematic 233-lens sweep prescribed by STATE.md Active Vein 1 after the 2026-07-10 task233 win falsified its own 07-09 CLOSED verdict; lens applied and did not fire here.

@@ -150,3 +150,10 @@ can absorb the crop by increasing the opposite padding.
   final output without materializing the `[1,10,30,30]` Equal result, or if a new
   direct halo renderer replaces the two-stage `h_pos_u8 -> halo_u8` QLinearConv
   chain.
+
+## 2026-07-10 representation-inversion re-audit (task233 lens, opus agent) — NO BUILD
+- Ran: full graph dump + per-node byte map (onnx shape-inference / scorer trace), arg-select op trace, generator read, bundled-usage probes.
+- Verdict: **NO-ARGSELECT-SUBSYSTEM**. 15-node spatial detection+dilation renderer (death stars); no TopK/ArgMax/match-matrix; h_pos_u8 [1,5,30,29] 4350B = 5-radius spatial detector (radius axis, not candidate axis); ch9 Gather 3600B fp32 = detection entry. No fallback lanes to override (all 5 radii occur at size 30).
+- Tool+date: opus triage agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
+- Reopen triggers: mixed-dtype Gather/Conv (fp32 in->fp16 out) would halve ch9 3600B (~+0.12) — HARD-CLOSED by onnx 1.21 homogeneous-T; or new public net < 14892.
+- Falsification history: this is the systematic 233-lens sweep prescribed by STATE.md Active Vein 1 after the 2026-07-10 task233 win falsified its own 07-09 CLOSED verdict; lens applied and did not fire here.

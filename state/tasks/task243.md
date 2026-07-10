@@ -114,3 +114,8 @@ planes), greedily drop terminal step. S18 swept all 400 overfit nets: **only 243
 This is worst-case-slack removal = OVERFIT (fresh 18×18 mazes with path >46 fail); permanently
 safe per constant-grading-dataset ([[neurogolf-overfit-mode]]). NOT applied to safe tree (S9 kept
 K2 for leak-incident/fresh robustness).
+
+## ADOPTED 20260710T062904Z
+- cost: 4717 -> 4020 (points 16.7010)
+- source: /tmp/task243_cand.onnx
+- note: runtime-spend deepfold: task187-S8 stacked-chain free-output port. W1+mask18+mask(2520B)+Cast/Pad/Where tail -> ONE 92-operand free-output einsum; stacked gate plane P2[1,2,18,18](+1296B) rides s through 42-pair walk (S2[0]=id passthrough, S2[1]=tridiag reach); Cr reused as 18->30 in-einsum embed (0 new params); signed mixer T2 decode under free >0. 4717->4020 (+0.160). TRANSFERABLE: S8-port kills Where(Pad(Cast(walk)))-tails whenever tail bytes > stack increment; alphabet budget 52-8 reserved = max 42 walk pairs, check bundled step-distance first (here <=40).

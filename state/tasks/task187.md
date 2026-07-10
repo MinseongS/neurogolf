@@ -161,3 +161,20 @@ inherent 0.53% sealed-pocket); graded div 0/500 random. Latency 4.5ms. mem+param
 - cost: 7622 -> 4911 (points 16.5008)
 - source: candidates/task187/cand.onnx
 - note: regime vein batch7: single-channel-t2 walk-einsum + epsilon-J rank-collapse constant branch (ones channel deleted, mem 5000->2500; ring seeds as 2 rank-1 terms; 21 transitions, geodesic margin 4). 0 divergence/2500 fresh (incumbent's own 0.6% sealed-pocket fail set matched). TRANSFERABLE: pair-axis affine branch -> epsilon-J slice collapses to positive scalar under sign-only decode, halves counted walk plane
+
+## 2026-07-10 deepfold linear_fold candidate (runtime-spend axis, Fable fork) — NO BUILD
+- Ran: full graph/equation dump, letter-budget census, Wt/Bt semantics (bias absorbable via one-hot
+  row-sum), bundled extent measurement (24×25 = crop-tight), split/fp16/crop cost arithmetic. No build
+  (nothing survived on paper).
+- Verdict: t2 2500B is floored by the **einsum index-alphabet limit** — a NEW floor type for the
+  runtime-spend axis: op-internal compute is free, but the einsum LANGUAGE caps how much structure one
+  op can absorb, and this net already uses 52/52 letters (free set = ∅; 21 t2 slots × 3 fresh letters
+  needed ≈ 63). Split-einsum materializes ≥2500B intermediate (no win); crop is data-tight (24×25);
+  fp16 blocked by uniform-T einsum binding the free fp32 input. Scanner's +0.71 dpts bound unreachable;
+  realizable ≤ +0.02.
+- Tool+date: Fable fork, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
+- Reopen: (a) ORT einsum accepting >52 indices / multiple ellipses (hard-closed under pins);
+  (b) a legal non-einsum gated-walk op with cheaper counted output (LSTM/GRU/RNN legal-unexplored, but
+  spatial recurrence [625,625]≈390k params kills it here); (c) bundled max grid < 24×25.
+- Falsification history: first deepfold-scan candidate; scanner blind spot was FLOORED-list hard
+  exclusion, but the floor holds for a different reason (letter budget, not the old walk-family claim).

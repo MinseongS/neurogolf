@@ -148,3 +148,10 @@ Candidate:
 Bundled gate after adoption: fail=0, cost `24360 -> 24358`
 (memory `23668`, params `692 -> 690`).  Adopted into
 `submission/overfit_nets/task018.onnx`.
+
+## 2026-07-10 representation-inversion re-audit (task233 lens, opus agent) — NO BUILD
+- Ran: full graph dump + per-node byte map (onnx shape-inference / scorer trace), arg-select op trace, generator read, bundled-usage probes.
+- Verdict: **NO-ARGSELECT-SUBSYSTEM**. traced all arg-select ops (5 TopK, 10 ArgMax, 1 ScatterND, 43 Gather): TopK(k=2) [576] feeds are 1-D spatial position search (Equal([576],[1])), not [K,N] correspondence; marker<->marker injective matching ALREADY in direct ArgMax/Gather form; rotation computed arithmetically (Mod/Div->ScatterND), no 4-branch parade. 2-sprite lane exercised by ~50% bundled (num_sprites=randint(1,2)) — not overrideable. Residual: ~1.7KB stamping parade unroll-collapse ceiling ~+0.04 (below 0.1 bar; S8 already passed).
+- Tool+date: opus triage agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
+- Reopen triggers: new public net < 24358; unroll-collapse only if topping up a bigger win.
+- Falsification history: this is the systematic 233-lens sweep prescribed by STATE.md Active Vein 1 after the 2026-07-10 task233 win falsified its own 07-09 CLOSED verdict; lens applied and did not fire here.

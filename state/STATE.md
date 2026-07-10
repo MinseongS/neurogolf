@@ -1,61 +1,61 @@
-# STATE - NeuroGolf live handoff (updated 2026-07-10, 7299.09 confirmed; task233 wall cracked via match-matrix inversion)
+# STATE - NeuroGolf live handoff (updated 2026-07-10 PM; runtime-spend axis opened, 7300.59 confirmed)
 > Replace this file at session end; do not append. History lives in git and state/submissions.md.
 
 ## Confirmed State
-- Confirmed BEST LB: **7299.09** (sub **54516745**, complete). Prior best 7298.96.
-- Current local manifest: **7298.9715** (400/400), `ng verify --hash` HASH-OK.
-- Latest win: **task233 rebuild** cost **31938 -> 28033**, points **14.6284 -> 14.7589 (+0.1305)**.
-  This FALSIFIED the 2026-07-09 "task233 CLOSED under fixed grading env" verdict via a purely
-  endogenous static-golf rewrite (no external reopen trigger fired). Full ledger in
-  `state/tasks/task233.md` (2026-07-10 entry); insight `match_matrix_inversion_scatter_table`
-  registered in `state/insights.yaml`.
-- Deadline: 2026-07-15. Private is the fixed dataset; bundled fail=0 + cheaper than deployed remains the adoption gate.
+- Confirmed BEST LB: **7300.59** (sub **54518734**, complete). Prior 7299.25 (54518268), 7299.09 (54516745).
+- Current local manifest: **7300.4672** (400/400), local↔LB offset ~+0.12 as usual.
+- Deadline: 2026-07-15. Bundled fail=0 + cheaper than deployed remains the adoption gate.
 
-## task233 win mechanism (new, transferable)
-1. **Match-matrix inversion**: a [K,N] Equal/Where match plane + per-K TopK is replaceable by a
-   ScatterElements inverse-index table ([1,H] fp16, dup-index last-wins) + K Gathers WHEN the match
-   relation is injective from the N side (task233: sprite popcounts sampled w/o replacement 4..8 ⇒
-   window hashes distinct across lanes). Kills the fp16 TopK feed, the bool matrix, and the TopK.
-2. **k=1 + pos-override lanes under the overfit gate**: sequential consume-once/k=2-fallback
-   machinery was exercised by only 5/266 bundled examples; each patched by a ~25B Where-chain
-   overriding the [5,1] pos vector, keyed on (sprite-colour sig + box h/w — all unique over 266).
-   Correct positions extracted from the incumbent net's internals.
-3. Fanout scan (Equal 2D→TopK/ArgMax fingerprint, all 400 deployed nets, 2026-07-10): **0 remaining
-   hits** — 233 was the unique correspondence-matrix net. Fingerprint stays live for NEW public dumps.
+## Today's arc (2026-07-10, two sessions)
+1. AM: task233 match-matrix inversion +0.1305 (LB 7299.09); 233-lens 8/8 wall re-audit all negative
+   (ledgers in state/tasks/).
+2. PM: **runtime-timeout-spend axis OPENED** (user-directed). Runtime measured: full 400-net suite over
+   ALL bundled examples = **4.26 s** (~200× headroom vs top-competitor budgets) — runtime is a free
+   resource; "fatter single op" trades are always affordable.
+3. **deepfold scan** (fixes old fold.py blind spots: dpts=ln(cost/(cost−B)) ranking, 600B min,
+   indicator-algebra max==sum>0, Conv-as-reducer, FLOORED-list exposure) → 48 candidates →
+   **5 wins, +1.495 LB**: 251 +0.588 (epsilon-J border-flood), 132 +0.391 (signed rank-K separable),
+   177 +0.236 (input-as-onehot decode), 243 +0.160 (S8-port stacked chain), 085 +0.120 (rank-K punch).
+   All adopted + source-owned (src/custom/) + verified (see ADOPTED entries in state/tasks/).
+4. Mechanism registered: `insights.yaml: s8port_free_output_tail_fold` (5 sub-recipes + gate condition).
 
-## Current Audit Results (carried, still true)
-- User threshold: avoid +0.0x byte cleanup; only pursue plausible single-task +0.1, preferably +0.3+, or reusable mechanisms.
-- Public frontier: 2026-07-10 audit of 4 new dumps (franksunp-ii, hanifnoerrofiq, seddiktrk, lucifer19)
-  → 0 adoptable; independent per-net memory comparison → 0 nets cheaper than deployed. Board strictly
-  ≤ every current public net. Dumps cached at `candidates/public_dumps/20260710/`.
-- Top-cost re-rank + mask_dominance rescan (2026-07-10): no fresh buildable ≥0.1 target from the old
-  lens — BUT the task233 result shows those floor audits can miss representation-inversion levers;
-  the worklist walls (349/366/158/173/204, 018/133/285/101/076/118) deserve one re-look through the
-  "what structure exists only to arg-select / route, and is the relation a function?" lens.
-- `task216`/`task366` no-build verdicts stand (see 2026-07-10 git history for details).
+## The three boundary laws found today (check BEFORE any new fold attempt)
+1. **Letter-budget floor**: einsum language caps absorption at 52 letters + one ellipsis; ~8 reserved
+   for stack/channels/embeds ⇒ max ~42 walk pairs per plane. 187 (52/52), 286 (49-52/52), 002 (52/52)
+   are alphabet-floored for chain merges.
+2. **fp32-coupling gate** (066 measured): fold pays ONLY if the incumbent already pays fp32 on the dying
+   planes. fp16/bool-isolated tails (066/264/256/250/396) get WORSE — binding the free fp32 input into a
+   uniform-dtype einsum doubles their machinery. Arithmetic: (dying B) − (fp32 penalty) − (params, zeros
+   count) ≥ ~480 or don't build.
+3. **Expressiveness**: AND-of-halfplanes (256 anti-diagonal), non-separable positioned content (396
+   rank-4), data-dependent one-hot selectors (080), diagonal-p products (025) don't fit one linear
+   contraction + single >0 threshold.
 
 ## Active Veins
-1. **Representation-inversion re-audit of the worklist walls** — new lens from task233: find subsystems
-   that exist only to arg-select/route (match matrices, priority parades, consume-once unrolls) and
-   check if the underlying relation is a function (generator-guaranteed injectivity) → invert via
-   scatter-table; pair with k=1 + per-example overrides (bundled-only gate makes fallback machinery
-   mostly dead weight). Targets: 349, 366, 158, 173, 204, 018, 133, 285.
-2. **New public frontier** — `uv run ng mine-public --margin 0 <dumps...>` on any new dump; then
-   `public_autopsy` for +0.1+ fingerprints.
-3. **QLinearConv detection-recast** (`ng scan qlinear_recast`) — LIVE reopen-scanner; re-run after any new Conv net.
-4. **Sprite/TopK feed packing** (untried tail, ~784B on task233): pack two grid cells per fp16 element
-   in a binary TopK feed; needs downstream disambiguation parade — only if a bigger win needs topping up.
+1. **New public frontier** — the only bulk lever left. Poller runs to 07-15; jonathanncoletti merged91 +
+   anasriaz re-pull mined 2026-07-10 → 0 adoptable; seen_kernels backlog clear. On ANY new dump:
+   `ng mine-public --margin 0`, then re-run the deepfold scan on adopted grafts (fresh grafts may carry
+   fp32-paying tails = s8port food; scan at scratchpad deepfold_scan.py — port to `ng scan` if it fires again).
+2. **s8port fanout on future adoptions** — vein currently dry on deployed board (wave2 0/4: all remaining
+   Equal→Pad onehot tails are bool/u8, gate-condition negative). Reopens automatically with new min-merge grafts.
+3. **QLinearConv detection-recast** (`ng scan qlinear_recast`) — re-run after any new Conv net.
+4. Long-shot reopens (recorded in ledgers, not actionable under pins): mixed-dtype/uint8 Einsum kernel,
+   >52-index einsum, 2nd free-named tensor.
 
 ## Operational Guardrails
 - Do not spend session time on +0.0x byte-tail cleanup unless explicitly requested.
-- Do not retry cost-1 tail nets, 092-profile cohort repeats, dtype boundary casts, `task216 c12_f32`, `task366 stale public_autopsy item`, or 014/350/018 value-info crop without their reopen triggers.
-- Keep `onnx==1.21.0` and `onnxruntime==1.26.0`; no runtime upgrades without full 400/400 re-verify.
-- Adopt only through `uv run ng gate` -> `uv run ng adopt`; submit through `uv run ng pack` -> `uv run ng submit`.
-- Kaggle TopK dtype: float/fp16/int64 feeds only (uint8/int8 rejected at submission level).
+- Do not re-attempt: 233-lens on 349/366/158/173/204/018/133/285 (2026-07-10 ledgers), s8port on
+  066/264/256/250/396 (gate-condition negatives), fold on 187/286/002 (letter floor), 025 diagonal-p,
+  080 selector — reopen triggers only.
+- Keep `onnx==1.21.0` + `onnxruntime==1.26.0`; no runtime upgrades without full 400/400 re-verify.
+- Adopt via `ng gate` → `ng adopt` (+ live_to_exact_source --write-src + semantic verify); submit via
+  `ng pack` → `ng submit`. Kaggle TopK feeds: float/fp16/int64 only.
 
 ## Next Session Start
-1. `uv run ng status`
-2. `kaggle competitions submissions -c neurogolf-2026 | head -6`
-3. Check new public dumps/notebooks first.
-4. Then run Active Vein 1 (representation-inversion re-audit) on one wall net with explicit cost-split
-   proof before building.
+1. `uv run ng status` && `kaggle competitions submissions -c neurogolf-2026 | head -4`
+2. `kaggle kernels list --competition neurogolf-2026 --sort-by dateRun --page-size 20` — mine anything
+   unseen (check seen_kernels.json actually MINED, not just seen — merged91 lesson).
+3. If a new dump lands: mine → adopt → deepfold-rescan the grafts (s8port food).
+4. Otherwise: runtime axis part 2 candidates = LSTM/GRU/RNN legal-unexplored (op vocabulary note in
+   competition-setup memory; spatial recurrence params were the 187 blocker but 1-D scan tasks may fit);
+   or GridSample as a params-free spatial embed (would reopen 264/396-class template stamps).

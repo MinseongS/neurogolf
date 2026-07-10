@@ -89,3 +89,8 @@ Whole net floors near 7101 → 16.04.
 - ⭐ TRANSFERABLE: fp16 count-plane recast on flood/walk intermediates holding {0,1} masks + small
   walk counts. Floor after: `mask30`[1,1,30,30] bool 900B (output-welded, S10) + `red` fp32 576B (needed
   for off-grid=traversable via 1-red). Candidate: reports/candidates/task251/fatmid_attack.onnx.
+
+## ADOPTED 20260710T064810Z
+- cost: 2756 -> 1531 (points 17.6663)
+- source: /tmp/task251_cand.onnx
+- note: runtime-spend S8-port fanout (187-batch7 epsilon-J single-channel variant): Einsum(W)->Greater->Pad->Where(mask,BLUE,input) tail collapsed into ONE free-output einsum. Sole counted plane = t2 Conv [1,1,12,12] 576B (neg-pad 30->12 crop in-op, non-red traversability). Stack a∈{0,1} with t2 SHARED not stacked (halves vs 243): a=1 real 8-conn border flood (ring seed 2 rank-1 terms), a=0 J/12 rank-collapse constant K; signed T decode: out[1]=K−W (enclosed->BLUE), out[0]=W, out[2]=K. 14 transitions. 2756->1531 (+0.588). bundled 266/0, bit-identical, fresh 4000/4000. TRANSFERABLE: epsilon-J single-channel avoids the stacked-plane doubling whenever the Where paints the W=0 (unreached) side; border-flood/enclosure nets are the class.

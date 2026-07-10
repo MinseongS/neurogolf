@@ -71,3 +71,8 @@ per-channel spatial reductions (~2400B) + the 900B uint8 label plane ⇒ ~15.8 p
 - cost: 4088 -> 3652 (points 16.7970)
 - source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task132.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260710T064049Z
+- cost: 3652 -> 2469 (points 17.1884)
+- source: /tmp/task132_cand.onnx
+- note: runtime-spend S8-port fanout: Where->Where->Where->Pad->Equal label-map tail (rectA/rectB/t0-2/canvas30 ~2040B) folded into ONE free-output einsum 'ntv,nti,ri,ntj,cj->nvrc' as signed rank-3 separable decomposition — (onehot_color−e0)⊗rowband⊗colband per box + e0⊗gridrow⊗gridcol bg; disjointness makes ch0 exact; Sel identity-crop reused as 15->30 embed (0 new params). 3652->2469 (+0.391). bundled 267/0 + fresh 4000/0. TRANSFERABLE: separable-rect priority-fill tails fold as signed rank-K decomposition to free output.

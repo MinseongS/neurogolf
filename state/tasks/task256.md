@@ -37,3 +37,16 @@ the full rectangular grid boundary.
 ## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
 Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
 Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## 2026-07-10 s8port fold probe (runtime-spend axis, opus) — NO BUILD
+- Ran: graph dump + shape inference; geometric classification of fill channels; gate-condition
+  arithmetic (dying carriers are bool ~1690B; a fold would introduce fp32 anti-diagonal operands
+  >=2704B). NOTE: agent analyzed networks/task256.onnx (safe tree) — geometry blocker is
+  tree-independent.
+- Verdict: BLOCKED structurally — green/blue/redc = indiag ∧ row-halfplane intersections where indiag
+  is a DATA-DEPENDENT anti-diagonal (rowK+colK < Rrel+L). An AND of two independent half-planes is not
+  representable as one linear einsum score under a single >0 threshold (task084/233 documented blocker).
+  No s8port sub-recipe applies (Equal-onehot decode absent in analyzed net; rects non-separable).
+- Tool+date: opus agent, onnx 1.21.0, 2026-07-10.
+- Reopen: an incumbent paying fp32 on the fill planes; a primitive linearizing intersection-of-halfplanes
+  under >0 decode (would also unblock 084/233); smaller public task256.

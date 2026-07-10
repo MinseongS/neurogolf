@@ -81,3 +81,13 @@ in-grid mask.
 - cost: 2516 -> 2123 (points 17.3394)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task250.onnx
 - note: min-merge from nets
+
+## 2026-07-10 s8port fold probe (runtime-spend axis, opus) — NO BUILD
+- Ran: graph dump + per-tensor mem breakdown (2052 exact); tail map (F4->IM->Equal(colors6)->onehot6
+  bool 600B->Pad(contiguous)); ORT 1.26 Einsum dtype probe at opset 13 (fp16/int32 OK, uint8/bool
+  NOT_IMPLEMENTED); gate arithmetic 600 − 0 fp32 − 330 params = 270 < 480; best-case realized cost
+  2253-2453 > 2123.
+- Verdict: BLOCKED on bytes — onehot6 is BOOL (no fp32 to reclaim); non-contiguous channel placement
+  needs a [10,30] embed (+330 params); einsum forces an fp16 basis that re-spends the dying bytes.
+- Tool+date: opus agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
+- Reopen: uint8/bool Einsum kernel; public task250 < 1920 tail.
