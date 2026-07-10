@@ -354,3 +354,76 @@ QuantizeLinear carrier, or a public/top-team task233 net below our active cost.
 - cost: 31975 -> 31938 (points 14.6284)
 - source: candidates/public_dumps/20260709_pm/biohack44_neurogolf-2026-championship-best-solution/_src_A/task233.onnx
 - note: min-merge from biohack44_neurogolf-2026-championship-best-solution
+
+## 2026-07-09 — DYNAMIC-SHAPE HYPOTHESIS **FALSIFIED** (source + empirical proof)
+User challenge: "top scorers say no task <15, so task233 must have an unfound mechanism."
+Re-audited the ONE lever that S16 flagged as the only path to 16 (dynamic/cropped shapes).
+
+**What was run**: read `src/neurogolf/scoring.py::calculate_memory` (the official-mirror scorer)
++ two empirical probe nets scored via `scoring.evaluate` (2026-07-09).
+
+**Result — dynamic-shape lever is DEAD, two independent hard blocks:**
+1. `calculate_memory` returns None (→ net scores 0) if ANY tensor dim `HasField("dim_param")`
+   or lacks a positive `dim_value`. Symbolic/data-dependent shapes are OUTRIGHT BANNED.
+   Empirical: a dynamic-reshape net → `memory=None`, error "performance could not be measured", 0 pts.
+   (`NonZero`/`Compress`/`Unique` — the ops needed for data-dependent crop — are also in
+   `EXCLUDED_OP_TYPES`, a second independent block.)
+2. Counted mem per tensor = `max(static_declared, runtime_traced)`; runtime only ever INCREASES.
+   Empirical: a static `[1,10,30,30]` intermediate fed a 2×2 grid still counts the full 36000.
+   You cannot declare `[30,30]` and be charged for `[12,10]`; to reduce you must statically
+   declare smaller, which fails correctness (task233 generator reaches 30×30, per S9).
+
+**Consequence**: the ~13 full-grid `[30,30]` uint8 planes (the real cost mass, not con1/vspr)
+are genuinely floor-counted at 900 each. S16's "dynamic crop → ~16.1" is retracted. No known
+correct static formulation of the crop+4-rotation-3×3-match+stamp mechanism fits under
+mem+params<8103 (the e^9 needed for 16 pts); our from-scratch rebuild was 87035, incumbent 31938.
+No measured net (9 public + all our rebuilds) beats 14.63 → the secondhand "16점" claim has ZERO
+supporting evidence in anything measurable here.
+
+**Reopen triggers (unchanged, both external/runtime — not static-golf)**:
+- ORT mixed-dtype Conv/Einsum path opens (fp16 output from free fp32 input) → detection
+  6736→~3368, ~+0.24 → still only ~14.87, NOT 15. Currently blocked by ORT uniform-T.
+- A new public/top-team task233 net measures below 31938 (none to date).
+
+## 2026-07-09 — INDEPENDENT-FLOOR ORACLE run → floor CONFIRMED on non-self-referential basis
+Ran (this session): (1) real per-tensor counted-mem extraction via the official scorer trace
+(TOTAL=31199, not the naive static sum), (2) analytical minimal-compile of the cristianoc rule
+using the verified cost model.
+
+**Per-tensor result**: 42% of counted mem = 4 dtype-LOCKED carriers — con1 3600 (fp32 Conv out),
+vspr 3136 (fp32 Conv out), [5,324] Where 3240 + Equal 1620 (Kaggle rejects uint8/int8 TopK feed →
+fp16 forced), [784] TopK-feed 1568. None recastable under current ORT/Kaggle. The remaining ~18K
+[30,30]/[20,20] planes are a genuine distinct processing chain (MaxPool→Equal→Where→Min→Pad), NOT
+CSE duplicates; only a few Reshape rank-duplicates, un-elidable (Gather/Scatter consumers need the
+reshaped rank) → +0.0X only. Incumbent-surgery path = below +0.1 threshold.
+
+**Independent-floor decomposition**:
+- happy-path optimistic min = box-detect(~1.1K via Slice(input[red])+ReduceSum, CHEAPER than con1)
+  + sprite-detect 3.1K + [5,324] hash 6.4K (correlation-per-sprite is 5× worse → hash already optimal)
+  + working ~5K ≈ 16.5K → 25−ln(16500) ≈ **15.3** (happy-path bound is ABOVE 15).
+- BUT the generator's THREE adversarial configs (2026-06-30 stateless-reauthor, INDEPENDENT of our
+  net): (1) count-4 sub-3×3-bbox shapes, (2) margin-0 adjacent patches, (3) 8-disconnected shapes —
+  force the consume-once 2-pass matcher + multi-[30,30] working planes. Any simpler stateless form
+  measured 96.67% fresh < 98% gate. This lifts the CORRECT floor from ~15.3 to ≈ incumbent.
+
+**Why this is NOT self-referential**: the floor-setting constraint is the generator's while-loop
+config distribution (external), not "our net looks minimal". from-scratch rebuild = 87035 (worse,
+more planes); incumbent 31199 = best of 9 public + all rebuilds. 
+
+**VERDICT**: task233 = 31199/14.63 is at the independent correctness floor under {current scorer +
+ORT fp32-Conv-output + Kaggle-TopK-dtype} constraints. The ~14K gap between happy-path (15.3) and
+actual is generator-forced correctness cost, not slack. Reopen triggers (all EXTERNAL, none static-
+golf): ① ORT mixed-dtype Conv/Einsum (fp32-free-input → fp16 out) opens → carriers halve; ② Kaggle
+accepts int8 TopK → [5,324]/[784] feeds shrink; ③ new public/top-team net measures < 31199. Absent
+one of these, task233 is DORMANT — do not re-probe static-golf/dynamic-shape/from-scratch.
+
+## 2026-07-09 — mixed-dtype reopen-trigger EMPIRICALLY RE-CHARACTERIZED (was mislabeled "ORT")
+Tested (opset 13, onnx 1.21 / ort 1.26): `Einsum(fp32 input, fp16 weight)`, `Mul(fp32 input, fp16)`,
+`Conv(fp32 input, fp16 weight)` — ALL rejected at `onnx.shape_inference`/`checker` with
+"inconsistent type". The block is the ONNX operator TYPE SYSTEM (homogeneous-T constraint), enforced
+by the scorer's own `check_model(full_check=True)` + `infer_shapes(strict_mode=True)` — NOT an ORT
+runtime kernel gap. Since `onnx==1.21.0` is grader-pinned (no upgrade), reopen-trigger ① ("mixed-dtype
+opens → detection halves, +0.24") is NOT a soft/near lever — it is HARD-CLOSED by the pinned type
+system, an external competition-rule constraint we cannot change. Only genuinely actionable reopen
+trigger is ③ new public dump < 31199. ② int8-TopK is likewise Kaggle-rejected (external). Net: under
+the fixed grading env + our own levers, task233 is CLOSED, not merely dormant-pending-ORT.

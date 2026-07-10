@@ -146,3 +146,10 @@ Transfer condition refined: branch-Einsum copy/edit epilogue is attractive only
 when the edit predicate already lives on the final output coordinate grid, or the
 coordinate embedding is already present/free.  Do not retry this exact 20->30
 projection form for task066.
+
+## S? re-confirm floor (2026-07-09, opus agent) — NO BUILD
+- Ran: full node-byte dump + detection-vs-carrier classification + int8-recast probe (direct ORT 1.26 kernel test on Einsum/Where/MatMul/CumSum).
+- Verdict: cost 10121 is representation floor. ~2520B fp32 mass (rows_sum/cols_sum/cy_nat/cy_tr/v_f/cy_norm32) are Einsum/Where reads of the free fp32 `input`; narrowing needs an fp16/int8 `input` copy = [1,10,30,30] plane 9000-18000B >> saved. hidden_score/hidden_pos/hidden30 are irreducible OUTPUT-ROUTER carrier (task174 bitmask analogy does NOT transfer — they feed a per-cell Where router, not a reduction). int8 recast DEAD: ORT 1.26 has no int8 Einsum/Where/CumSum CPU kernel.
+- Tool+date: opus agent, onnx 1.21.0 / ort 1.26.0, 2026-07-09.
+- Reopen triggers: (1) ORT gains int8/uint8 Einsum/Where/CumSum kernel (~400-640B); (2) grader allows a 2nd free-named tensor (fp16 input copy halves the 2520B fp32 detection); (3) a public dump ships a smaller task066.
+- Falsification history: prior "20->30 projection branch-Einsum" no-build (S31 params blew 166->2050); this entry re-confirms via the orthogonal int8-kernel-absence lever.

@@ -135,3 +135,8 @@ einsum value = run length (NO multiplicity; self-loop walks only give >0 reachab
 materialized). fp16 exact ≤2048 (max area 360). 9244+1248 vs 13104+111 → 15.511→15.742.
 Fresh 2500+1500 fail 0 div 0; 5000 vs deployed onnx div 0. NEW TEMPLATE VARIANT for the
 registry: multiplicity-free exact-count walks (use for any run-length/area/size computation).
+
+## 2026-07-09 quick byte-classification (opus orchestrator) — same-class floor, NO BUILD
+- Ran: full node-dtype dump. Dominant 1600B `Slice(input)` et1 (1,1,20,20) = irreducible fp32 CONTENT crop (same role as task191 yellow_f32). Downstream already fp16 (bg20/Einsum/Where et10) + uint8/bool + params 1248 (Einsum PHI matrices).
+- Verdict: fp32-input carrier floor. The fp32 slice is the minimal content carrier; alternative fp16 copy needs a full fp16 input plane (larger). Everything else already min dtype.
+- Reopen trigger (class-wide): ORT mixed-dtype path (fp16 from fp32 input) — DEAD at ORT 1.26; or a smaller public task145 net. Date 2026-07-09, onnx 1.21.0/ort 1.26.0.

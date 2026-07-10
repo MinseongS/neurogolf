@@ -131,3 +131,8 @@ See memory [[neurogolf-urad-7225-bundle-vein]]. both fail 162/2000 equally (task
 
 ## 20260709 — NO-WIN 재개 레저 (free-output-einsum fanout)
 092-fanout(opus 딥, 20260709): NO-WIN. detection/phantom-rejection 문제 — 50% gray density에서 parallel/multilinear predicate는 ~85%, cheating oracle도 98.25% cap; phantom 제거에 non-linear MaxPool NMS 필수(einsum 표현 불가 → bundled fail>0 → gate REJECT). crop 이미 max grid(25×28), 단일 fp32 colour read(2800B) forced. Reopen(공통): mixed-dtype Einsum escape(fp16 carrier + fp32 free-input co-bind) — ORT uniform-T가 현재 차단; 이게 풀리면 이 클래스 fp32-detection floor가 fp16으로 반토막. 또는 새 공개 덤프. fp16 recast 대상 = {0,64,65} colour read(~1400B, fp16-exact).
+
+## 2026-07-09 quick byte-classification (opus orchestrator) — same-class floor, NO BUILD
+- Ran: full node-dtype dump. Dominant 2800B `Conv(input,W1)` et1 (1,1,25,28) = fp32 SPATIAL detector (stride output, then Cast->uint8). Remaining 13 planes all already-minimal uint8/bool 700B each (QLinearConv/Where/MaxPool/Max/GreaterOrEqual/Equal/Greater/And scoring pipeline) + 900 Pad output.
+- Verdict: fp32-input-locked detection floor (same class as task233/066/191). Not a fixed-position colour read -> free-input-Einsum fold gate (3-cond) does NOT apply; it's a spatial conv. uint8 planes already at min dtype.
+- Reopen trigger (class-wide): ORT mixed-dtype Conv path (fp16 output from free fp32 input) — CONFIRMED DEAD at ORT 1.26 uniform-T; or a smaller public task118 net. Date 2026-07-09, onnx 1.21.0/ort 1.26.0.

@@ -1,4 +1,4 @@
-# STATE - NeuroGolf live handoff (updated 2026-07-09, 7298.96 confirmed)
+# STATE - NeuroGolf live handoff (updated 2026-07-10, 7298.96 confirmed; new-dump + top-cost re-audit found 0 wins)
 > Replace this file at session end; do not append. History lives in git and state/submissions.md.
 
 ## Confirmed State
@@ -40,6 +40,8 @@
 - `task216`: no-build. The scanner's +0.385 signal is `c12_f32` (`[1,2,20,20]`, 3200B), a load-bearing fp32 bridge for QLinearConv/crop/count logic, not a removable output mask. Current cost **8386**; cached public artifacts are worse.
 - `task366`: no-build. The public-autopsy +0.306 item is stale from the already adopted **30159 -> 22219** rewrite. Current cost **22219**; further +0.1 needs ~2115B saved, and the only large tensor is load-bearing fp32 colour detection.
 - Existing high-ranked cached candidates re-gated against current deployed nets: mostly already-adopted ties or fail/cost-worse. `task133` Clip-drop gives only 2B, below threshold.
+- **2026-07-10 new-dump audit (4 notebooks published/updated 07-09 23:00→07-10 03:00, AFTER last mine):** `franksunp/compact-onnx-artifact-starter-ii`, `hanifnoerrofiq/the-epic-sax-ensembler` (327-net union), `seddiktrk/all-graph-surgeries` (142 votes), `lucifer19/agi-compression-core` (smallest zip). `ng mine-public --margin 0` over all four → **0 adoptable**. Independent per-net `calculate_memory` comparison (bypassing the fail gate) → **0 nets cheaper than deployed in ANY of the four**, incl. the most-compressed lucifer19. Board is strictly ≤ every current public net. Dumps cached at `candidates/public_dumps/20260710/`.
+- **2026-07-10 top-cost re-rank + mask_dominance rescan:** every top-30 cost net is floor-audited or public-optimal (233/018/366/133/285 floored; 054 rule-cracked-but-deployed-optimal; 158/364/138/173/204 = worklist walls; 286/025/338 FLOOR; 198/209/324 public-golfed). `mask_dominance` scanner (38 items) surfaces only the known-floored Pad-mask cohort (112/99/163/124/12/34/354/62…) + `task187` which is already at its regime-crack floor (2-node Conv+Einsum, 7622→4911 on 07-09). No fresh buildable ≥0.1 target this session.
 
 ## Active Veins
 1. **New public frontier** - first priority if a new dump appears: `uv run ng mine-public --margin 0 <submission.zip...>`, then autopsy only for +0.1+ fingerprints.

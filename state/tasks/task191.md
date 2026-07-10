@@ -200,3 +200,10 @@ Mechanism: motif_i32_sum was [1,1,5,5] int32 (100B) only to feed ReduceSum. moti
 - New grader cost = 11092 (mem 11009 + params 83), fail=0 bundled.
 - Fresh-gate 1500: incumbent fail = 13 | candidate fail = 13 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
 - Mechanism: structural golf: fewer counted node-output intermediates (graph rewrite, functionally equal on fresh).
+
+## S? re-confirm 6ch bank floor (2026-07-09, opus agent) — NO BUILD
+- Ran: per-channel necessity table on valid_u8_q (drop ch -> bundled fails): ch0=100, ch1=41, ch2=40, ch3=59, ch4=1, ch5=1. ALL 6 load-bearing (even ch4/ch5 each carry a whole painted shape: 12-cell in arc-gen #223, 22-cell in #27).
+- Verdict: channel-ablation DEAD (no dead/redundant channel). task367-style single-fail repair does NOT apply: the miss is a full shape not an edge cell, and validity/exclusion kernels are computed dynamically per-example (Concat of motif transposes) so there is no static weight to tweak — re-adding detection = restoring the channel. Two convs un-fusable (uint8 clamp between them is essential nonlinearity; uint8 already min dtype). yellow_f32 (2116B) = minimal irreducible fp32 carrier crop. No reduction >=800B survives.
+- Tool+date: opus agent (candidates/task191/ablate.py necessity harness), onnx 1.21.0 / ort 1.26.0, 2026-07-09.
+- Reopen triggers: (1) a primitive that detects a motif in multiple orientations within a single conv output channel without summation cross-talk (collapses the 6ch bank); (2) a way to get the uint8 yellow mask directly from fp32 input without any >=529-elem fp32 intermediate.
+- Falsification history: prior S16/motif fp16 recast wins are exhausted; this entry adds the full per-channel necessity proof that the 6ch bank itself is floored.
