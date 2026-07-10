@@ -11,6 +11,7 @@ from neurogolf.scans.fold import scan_all as _fold
 from neurogolf.scans.dtype_overpay import scan_all as _dtype_overpay
 from neurogolf.scans.public_autopsy import scan_all as _public_autopsy
 from neurogolf.scans.canvas_crop_shrink import scan_all as _canvas_crop_shrink
+from neurogolf.scans.qlinear_recast import scan_all as _qlinear_recast
 
 SCANNERS = {
     "mask_dominance": _mask_dominance,
@@ -19,6 +20,7 @@ SCANNERS = {
     "dtype_overpay": _dtype_overpay,
     "public_autopsy": _public_autopsy,
     "canvas_crop_shrink": _canvas_crop_shrink,
+    "qlinear_recast": _qlinear_recast,
 }
 
 

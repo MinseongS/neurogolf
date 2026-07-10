@@ -47,6 +47,7 @@
 1. **New public frontier** - first priority if a new dump appears: `uv run ng mine-public --margin 0 <submission.zip...>`, then autopsy only for +0.1+ fingerprints.
 2. **High-cost true rewrite** - remaining path to 7300 is not tail cleanup. Need a real replacement for large detection/assignment cores in `task233`, `task018`, `task133`, `task285`, `task349`, `task101`, `task076`, `task118`, or a new public teacher.
 3. **Predicate-bank prune + downstream repair** - `task367` proved the mechanism, but current fanout has no PASS yet. Reopen only with a new scanner/teacher, not another blind subset sweep on `task349`.
+4. **QLinearConv detection-recast** (`uv run ng scan qlinear_recast`, new 2026-07-10) - replace a fp32 detection Conv→Cast→uint8 with `QuantizeLinear(input)→QLinearConv→uint8`, bit-identical (ARC 0-9 quantizes losslessly). **Win iff `Σ Cout·OHW·3 > IHW·Cin_total`** (per-net: one shared full-input quantize). 2026-07-10 board sweep = **0 wins** — the 9000B shared quant exceeds the heaviest net's total fp32-conv mass (task233 6736B); only a multi-channel bank (Cout≥4) would win and those are already QLinearConv (task367). LIVE reopen-scanner: re-run after any new Conv net. See memory `neurogolf-detection-floor-costmodel-proof`.
 
 ## Operational Guardrails
 - Do not spend session time on +0.0x byte-tail cleanup unless explicitly requested.
