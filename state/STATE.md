@@ -1,121 +1,77 @@
-# STATE - NeuroGolf live handoff (updated 2026-07-12; k-calibration session — no submissions spent)
+# STATE - NeuroGolf live handoff (updated 2026-07-12 late; community-intel session: k-calibration + build wave)
 > Replace this file at session end; do not append. History lives in git and state/submissions.md.
 
 ## Confirmed State
-- Confirmed BEST LB: **7304.42** (sub **54576478**, MAIN v3, pure-max). Local 7304.3002, offset +0.12.
-- HEDGE v3 confirmed **7297.67** (sub **54576509**, MAIN v3 + 8 protections, handicap −6.75 as priced).
-- **FINAL SELECTION (before 07-15): MAIN v3 (54576478) + HEDGE v3 (54576509)** — re-verified via
-  `kaggle competitions submissions` 2026-07-12; scores match expected. ⚠️ USER ACTION still open:
-  confirm the two slots are actually SELECTED on the Kaggle website (cannot be checked via CLI).
-- Deadline: 2026-07-15 (private LB decides). Deployed tree = MAIN v3.
+- Confirmed BEST LB: **7305.62** (sub **54580604**, MAIN v4, pure-max, NEW RECORD). Local 7305.5047, offset +0.12, no zeros.
+- HEDGE v4 confirmed **7298.51** (sub **54580652** = MAIN v4 + 9 protections, handicap −7.11 as priced; all 9 executed cleanly).
+- **FINAL SELECTION (before 07-15): MAIN v4 (54580604) + HEDGE v4 (54580652).** Supersedes v3 pair
+  (54576478/54576509). ⚠️ USER ACTION: update the two selected slots on the Kaggle website.
+- Deployed tree = MAIN v4 (ng verify --hash OK post-restore). Deadline 2026-07-15 (private LB decides).
+- **IN-FLIGHT: task233 rebuild agent** (target 28033→12-15k, +0.63-0.85) was still running at handoff —
+  check candidates/task233/ (new filenames beyond cand_clamped_C/cand_v2A) for its verdict; if it gated
+  a win, adopt → MAIN v5 + HEDGE v5 resubmit (same procedure).
 
-## 🎲 HIDDEN-DRAW COUNT CALIBRATED: k ≈ 1–2 (2026-07-12, NO canary submission needed)
-Levers.yaml `hidden-draw-k-calibration` has the full ledger. Method: the public LB scoring of MAIN
-boards with ZERO task-zeros, given 31 incumbents with measured per-draw fresh-fail rates
-(joint per-draw survival q=0.345), is itself a k-likelihood. Posterior (conservative fixed-set
-reading): **k=1: 65.5%, k≤3: 96%, P(k≥10) < 0.01%**. The old "~260 draws" pricing (133-revert
-rationale) was off by two orders of magnitude. Private-zero risk for fail-rate p ≈ 1−(1−p)^1.5.
-- Data corrections made first: raw fresh_sweep_2026-07-11_raw.json PREDATES the ce8ecc7 >30-filter
-  fix — **021 "70%" and 184 "38%" were oversize artifacts** (deployed binaries re-measured clean:
-  021 0/446+0/626, 184 0/967+0/1256). Big rates re-confirmed REAL on deployed binaries:
-  **219 41.7%, 118 7.67%, 319 6.27%, 002 5.47%**. Mid-tails isolated n=2000: 018 2.0%, 023 2.55%,
-  017 1.0%, 101 0.85%, 085 0.3%, 066 0.25%, 048 0, 115 0. Do NOT cite the raw sweep json rates.
-- Consequences (all decided, do not re-litigate without ledger reopen triggers):
-  1. Canary probe lane CLOSED — evidence already conclusive, submissions saved.
-  2. Remaining ≤0.5% tails (101/285/133/173/105/377/158/363): private-zero ~0.5–0.8% each →
-     diagnosis/ports DO NOT PAY. Closed.
-  3. 018/023 (2.0%/2.55%, unprotected on both boards) hedge-port EV ≈ −0.2…−0.9pt → no builders.
-  4. **P(MAIN private-clean) ≈ 26–34%**, dominated by task219 (private-zero ~45–54%) → HEDGE v3
-     is the LIKELY final scoring board; the selected pair is optimal as-is. No board changes.
-- Fresh-GATING for adoptions is UNCHANGED (n≥1500 A/B) — k small reprices zero-RISK, not the gate.
+## 🎲 HIDDEN-DRAW COUNT: k ≈ 1–2 (calibrated 2026-07-12, levers.yaml hidden-draw-k-calibration)
+Public-LB survival of 31 risky incumbents (joint q=0.343) with zero task-zeros ⇒ posterior k=1: 66%,
+k≤3: 96%, P(k≥10)<0.01%. Private-zero risk for fail-rate p ≈ 1−(1−p)^1.5 (NOT ^260 — old formula
+retracted). robga (12th) independently corroborates ("minimal small hidden set"). Consequences: canary
+probe unnecessary; ≤0.5% tails don't pay to port; **P(MAIN private-clean) ≈ 25.5%, P(HEDGE ≈ 62.8%)**
+(task219@43% dominates MAIN risk; HEDGE covers it). Authoritative risk table =
+state/fresh_sweep_2026-07-12.json (400/400, deployed binaries, post >30-filter; raw 07-11 file has
+oversize ARTIFACTS — 021 "70%"/184 "38%" were false, do not cite it).
 
-## ⚖️ PORTFOLIO DOCTRINE (2026-07-12)
-Insurance belongs EXCLUSIVELY on the HEDGE slot. Every task ≥14.6pt > HEDGE-v3 public handicap
-~6.8pt, so ANY single silent-zero on MAIN already makes HEDGE the better selected board —
-MAIN-side insurance changes the best-of-two in NO world. MAIN carries only strict wins.
+## ⚖️ PORTFOLIO DOCTRINE (unchanged)
+Insurance EXCLUSIVELY on HEDGE (any task ≥14.6pt > handicap ~7.1 ⇒ single MAIN zero already flips the
+best-of-two). MAIN carries strict wins only (near-free repairs exempt).
 
-## HEDGE v3 protection manifest (8 nets, all bundled fail=0, candidates/ has the artifacts)
-219 exact (43.9%→0.30%, −1.25) | 319 exact (7.05%→0.18%, −0.91) | 002 rect-walk (5.58%→2.83%,
-−0.50) | 118 varm-peel (7.83%→3.33% strict-dominant, −0.86) | 205 2-D solidity (1.39%→0.01%,
-−1.94) | 233 clamped k=2 (2.69%→0.73% + crash-draw fixed, −0.16) | 188 FIX-B (1.03%→0.057%,
-−1.02) | 191 8-orient (0.887%→0.000%, −0.11). Rebuild procedure: swap candidates over
-overfit_nets, ng score each isolated, pack, submit, restore from scratchpad backup, verify --hash.
+## HEDGE v4 protection manifest (9 nets; artifacts in candidates/)
+219 exact_v1 (43%→0.30%) | 319 exact_matcher (6.9%→0.18%) | 002 rect_walk (4.8%→2.83%) | 118 varm_peel
+(6.8%→3.33%) | 205 hcov_vcov_2d (1.58%→0.01%) | 233 cand_clamped_C (3.0%→0.73%) | 188 fixB (0.67%→0.057%)
+| 191 exact_8orient (1.0%→0) | **048 src_rebuild (1.42%→0, NEW — deployed 048 is cheaper-but-riskier than
+its own src; divergence documented in task048 ledger)**. Rebuild: swap over overfit_nets → ng score each
+isolated → pack → submit → restore from scratchpad backup → verify --hash.
 
-## Lane closures (ledgered with reopen triggers — do NOT redispatch)
-- **hidden-draw-k-calibration CLOSED** (this session, see above).
-- **C/I triage CLOSED** (state/worklists/ci_triage_2026-07-11.md): 26 judged, 6 wins +3.32.
-  META-DISCRIMINATOR (26/26): win iff incumbent is a legacy Slice/Where/Gather chain.
-- **Legacy-chain board scan ≈0 remaining**; re-run tools/legacy_chain_scan.py after every mine-public.
-- **int8 reverse-arbitrage bounded to 191**; **kron rescan dry**; **deepfold rescan dry**;
-  **public lane dry** (2026-07-12 poll: 75 kernels scanned, no new/updated — nothing to mine).
-- Community-intel: drafted threads (076/118/173/101) were NEVER POSTED (mins00 profile: 0 topics)
-  — moot. Playwright headless CAN read Kaggle discussions without login (browser lane OPEN).
+## This session's scoreboard (7304.42 → 7305.62, +1.20 LB)
+- task010 rank-recolor einsum rebuild 1002→379 (+0.97; ⭐ guard-row trick: guaranteed-max slot = free
+  all-ones constant + self-organizing bg channel; [K,K] bool pairwise rank plane + free-output 11-op
+  einsum (cnt−d)(d+2−cnt) sign decode — see task010 tasklog TRANSFERABLE).
+- task008 trim rebuild 2683→2127 (+0.23 bit-identical; folded selectors, Floor-free decode, 4-cell
+  clamped ScatterND, rank-2 canvas).
+- task018 mechanism cracked (fresh 0.57% < incumbent 2.0% — "irreducible 2%" partly refuted) but cost
+  39915 no-adopt; arch floor 15-18K; reopen = lean-rewrite session using candidates/task018/ as spec.
 
-## 🔎 COMMUNITY INTEL HARVEST 2026-07-12 (Playwright, all recent threads read)
-- **task018 costs (thread 724263): 9th place = 4850, 19th ≈ 5000; 38th = 24360 (= our lineage,
-  we are 24358/14.90pt).** A ~4850 GENERAL mechanism exists ⇒ our 018 "wall" verdict falsified at
-  the representation level (info-ceiling ~99% still true — a rebuild only needs to match it).
-  +1.61pt on MAIN if matched; risk-adjusted EV ≈ +1.07 at p≈2% (incumbent's own ceiling rate).
-  Family port upside after: 076 (12795), 173 (11320), 118 (12282), 066 (10121), 025 (9817).
-- **≥4 tasks can score 25** (thread 723801: 19th and 48th both hold 4; we hold 3: 067/179/241).
-  48th's full histogram public: 15-16:11 | 16-17:19 | 17-18:40 | 18-19:70 | 19-20:97 | 20-21:106 |
-  21-22:29 | 22-23:17 | 23-24:2 | 25:9. Claim: top1 (7800) histogram = 9×25 + 2 in 23-24.
-- **robga (12th) corroborates k small** (thread 724226): "~2-5% of submitted task candidates score
-  0... the minimal SMALL hidden set that the leaderboard tests" — independent support for k≈1-2.
-- **Conv-bias UB audit run board-wide** (thread 699840, Georgy's check_conv_bias): 400 deployed +
-  hedge candidates → ONE flag, task144 (bias 4 vs out_ch 10) = FALSE POSITIVE, verified safe:
-  channels 4-9 weights are ALL-NaN (intentional golf trick; NaN+garbage=NaN → decode False,
-  heap-spray test 3× identical). Grader stack per thread: ort 1.24.4 + onnx 1.21.0 (matches pin).
-  Score-drift reports in that thread (Ali, Chan Kha Vu) = this UB class 2mo ago, NOT resampling.
-- Bobber Cheng "symbolic program is all you need" (724351): details promised post-deadline only.
+## ⚠️ COMMUNITY-INTEL RELIABILITY (durable lesson, 2026-07-12)
+Kaggle discussions readable WITHOUT login via Playwright headless (browser lane OPEN; drafted threads
+were never posted — moot). Per-task cost table harvested, then calibrated by 5 build verdicts:
+- **Micro-cost numbers are sparse-initializer LOCAL scores** (scorer counts sparse nnz; sparse ERRORS
+  the real grader — S18 sub 54360410). task001 "84" ≈ its sparse-nnz 78. Our 001/007 are AT dense
+  floors (rank-3-minimal, forced 30-wide axes); 003/006 within ~40B of floor accounting; 015 "300" was
+  an aspirational post (floor 900 re-derived, sparse rejection live-tested).
+- **Big-net numbers were real**: 010 "132"-class (we landed 379, best known dense), 008 "148" (dense-
+  infeasible, we landed 2127), 233 "12-15k" (agent in flight), 018 "4850" (likely not general-exact).
+- 1st place (Jan Vorel, 8063.39): 9× 25pt confirmed from a scored board; his full histogram is in the
+  fourth-25pt-hunt ledger context. Fourth-25 hunt = dormant (three-lens exhaustion; reopen = writeups).
+- Conv-bias UB audit (thread 699840 checker): board + hedge artifacts CLEAN; task144 flag = NaN-masked
+  intentional golf (heap-spray verified deterministic). Grader stack = ort 1.24.4 + onnx 1.21 (pin OK).
 
-## 🎯 PER-TASK COST INTEL TABLE (2026-07-12 harvest — +11.13pt CONFIRMED reachable gap)
-| task | ours | theirs | gap | source |
-|------|------|--------|-----|--------|
-| 008 | 2683 | 148 | **+2.90** | len8487 19th, thread 718974 |
-| 010 | 1002 | 132 | **+2.03** | same |
-| 018 | 24358 | 4850 | +1.61 | Kimura 9th, 724263 (fork building) |
-| 015 | 900 | ~~300~~ | ~~+1.10~~ | RETRACTED 2026-07-12: "300…" was an aspirational question post, nobody confirmed; our re-derived floor = 900 (single dense Conv, sparse-init grader-rejected live-tested, 1-byte plane ≥900; task015 ledger has the full proof + reopen triggers) |
-| 001 | 240 | 84 | +1.05 | len8487 84 / Jan Vorel(1st) 94, 715448+718974; mechanism hint: no intermediate, [1,10,30,30] free-output direct |
-| 233 | 28033 | ~12000 | +0.85 | len8487 "fable 5 ~12k", 9th 14902, 720501 |
-| 003 | 260 | 131 | +0.69 | 718974 |
-| 007 | 127 | 78 | +0.49 | pwxc00 54th, 718974 |
-| 006 | 153 | 100 | +0.43 | 718974 |
-⚠️ INTEL RELIABILITY CALIBRATION (2026-07-12, after 5 build verdicts): community SMALL-cost
-numbers are largely **sparse-initializer LOCAL scores** — scorer counts sparse nonzeros but
-sparse ERRORS on the real Kaggle grader (S18 measured: sub 54360410 SubmissionStatus.ERROR;
-strict shape-infer rejects every consumer op). Evidence: task001 "84" ≈ its sparse-nnz 78;
-micro-batch re-derived DENSE floors: 001=240 (ours, rank-3-minimal + forced 30-wide axes),
-007=127 (ours; their "78" unexplained by either accounting), 003 floor≈213 > "131",
-006 floor≈117 vs "100" (ours 153 — ~36B accounting slack, no construction found).
-015 "300" retracted (aspirational post; floor 900 re-derived). BIG-net numbers stay meaningful
-(233 14902/12k, 018 4850 — though 018 fork verdict: 4850 unlikely general-exact). Jan Vorel (1st, 8063.39): task001=94,
-"I have 9 25s", histogram = 0<15|11|19|40|70|97|106|29|17|2|9×25. LB snapshot 07-12: top7 ≥8000.
-task023-zero thread (719708) = Conv-bias UB class (Diana 3rd confirms) — we are audited clean.
-
-## Durable physics learned (memory/insights.yaml has kron_fractal_einsum)
-- **Hidden eval = k≈1–2 fresh arc-gen draws per task** (2026-07-12 Bayesian; see above).
-- **fp Conv with runtime weights is BROKEN in sequential grading** (ORT pre-packs run-0 weight)
-  — exact designs must use MatMul/Einsum/QLinearConv (task191 ledger).
-- Control flow fully dead: Loop/Scan EXCLUDED; If's GRAPH attr → calculate_memory returns None.
-- VI-slack audits must trace the FULL 266-bundle (4-example trace gives false slack; task310).
-- Bundled contains REAL-ARC draws, not only arc-gen (task131 k=10 forced by arc-agi example).
-- Sparse initializers categorically unusable; .backups can hold REGRESSED nets (rebuild from src).
+## Lane closures (ledgered; do NOT redispatch without reopen triggers)
+hidden-draw-k-calibration | fourth-25pt-hunt | C/I triage (26/26 discriminator: win iff legacy chain)
+| legacy-chain scan | int8-arbitrage (191 only) | kron | deepfold | public dumps (poll 07-12: 75 kernels,
+0 new) | 015 floor (900, sparse-rejection proof) | micro-family 001/003/006/007 (dense floors).
 
 ## Next Session Start
-1. `uv run ng status`; re-confirm 54576478/54576509 scores unchanged (a changed score = the
-   k-calibration reopen trigger #3 — recompute immediately).
-2. Kernel poll: `uv run python tools/poll_public_dumps.py` → any new dump: `ng mine-public
-   --margin 0 --apply` → fresh-gate grafts → legacy_chain + deepfold rescans.
-3. USER: confirm final-selection slots on Kaggle website; check the 076/118/173/101 discussion
-   replies (agent is blocked without browser login).
-4. Post-deadline: validate k≈1–2 against the actual private zero pattern (reopen trigger #4);
-   top-team writeups = the six hidden 25s + the fat-middle idiom (~680pt gap is
-   representation-class, not tuning).
+1. `uv run ng status`; confirm 54580604 = 7305.62 & 54580652 = 7298.51 unchanged (changed score ⇒
+   k-calibration reopen trigger — recompute); confirm USER set final selection to the v4 pair.
+2. Check task233 agent outcome (candidates/task233/) → adopt/resubmit if gated win.
+3. Kernel poll (`uv run python tools/poll_public_dumps.py`) → mine → legacy-chain + deepfold rescans.
+4. Optional intel re-poll via Playwright (new threads; task numbers for the six hidden 25s).
+5. Post-deadline: validate k≈1-2 against private zero pattern; writeups → six hidden 25s + 018-4850
+   mechanism + fat-middle idiom.
 
 ## Operational Guardrails
-- Fresh-gate every adoption (n≥1500 A/B vs incumbent); bit-identical exempt. Gate via ng gate →
-  ng adopt; price-exceptions are HEDGE-only (portfolio doctrine) and tasklog-documented.
-- Keep onnx==1.21.0 + onnxruntime==1.26.0. TopK feeds float/fp16/int64. submission.zip. 100/day.
-- Isolated eval for knife-edge nets (220/230/294 class, 233). Clamp every dynamic Gather/Scatter
-  index. Do not re-attempt ledgered floors without their reopen triggers.
+- Fresh-gate every adoption (n≥1500 A/B); bit-identical exempt. ng gate → ng adopt only; price
+  exceptions HEDGE-only. Source regeneration + src↔live reconcile after each adopt.
+- onnx==1.21.0 + onnxruntime==1.26.0 pins. TopK float/fp16/int64. submission.zip. 100/day.
+  NO sparse initializers EVER (grader-ERROR). Clamp all dynamic Gather/Scatter indices.
+- Isolated eval for knife-edge nets (220/230/294, 233). Check kaggle submissions list before ng submit
+  (parallel-session guard).
