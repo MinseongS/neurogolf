@@ -607,3 +607,33 @@ levers:
           revert pricing ('58% private-zero risk' was really ~0.6% at k=1.5 - the revert cost
           +0.175 LB unnecessarily, though it was the right call under then-known uncertainty).
           Negative-verdict types corrected here: raw-sweep tail table (021/184 artifacts)."
+
+  - name: fourth-25pt-hunt
+    status: dormant
+    scanner: null  # scratchpad pad_scan.py + einsum join-pattern testers (session 2026-07-12)
+    scanner_archive: null
+    recipe: null
+    agent_class: fable
+    expected_yield: "25 − our current points on the unknown 4th task (community holds 4; 1st place holds 9)"
+    ledger:
+      - date: 2026-07-12
+        ran: "Three-lens exhaustion: (1) full Pad/Slice/shift family scan, 3481 offsets x 398 tasks
+          on exact grader one-hot semantics -> 0 hits (not even identity); (2) Hardmax(axis=1)
+          canvas-bg-fill scan -> 0; (3) pure-input einsum join space: deployed-net collapse ranking
+          (all residual initializers are fixed structural constants, none presence-derivable) + two
+          hand-designed join-pattern libraries (17 + 25 patterns, degree 2-6) -> exactly {067,179,241}
+          re-derived, 0 new. Prior ≤4-operand exhaustive sweep (43113 eqs, commit 21a24ef) also 0.
+          Cheapest-net teardown (087/140/223/307/016/276/309/337) = irreducible external constants."
+        tool: "opus agent + orchestrator scans, 2026-07-12"
+        verdict: "the 4th community-held 25 is NOT: single Pad/Slice/shift, Hardmax, DepthToSpace,
+          any pure-input einsum join (structural proof: monotone conjunctive queries cannot do
+          coordinate arithmetic/permutations/disjunctions), or a de-sparsified cheap net. CAUTION:
+          community micro-cost intel proved sparse-mirage-prone this session — the '4th 25' claims
+          (2 teams) could themselves be sparse local scores that error on Kaggle; Jan Vorel's 9x25
+          histogram is from a SCORED 7800+ board though, so at least his 9 are real."
+        reopen: "(1) post-deadline writeups naming the tasks (expected 07-15+); (2) a new op-family
+          idea outside the three lenses (e.g. an attr-only op with nontrivial spatial semantics we
+          have not enumerated); (3) evidence that a specific task's rule is expressible with a
+          <=1-byte scalar intermediate chain."
+        falsification_history: "First systematic hunt. Related: the '만점 물리 exactly 9 tasks' claim
+          (memory competition-setup 2026-07-11) is CONFIRMED by Jan Vorel (1st) verbatim '9 25s'."
