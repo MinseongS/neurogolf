@@ -48,3 +48,7 @@ FIXED-SMALL: the dominant cost is the fp32 channel slice (3600B). Crop the slice
 ONE Slice (channel+row+col axes together), then lift the mask back to 30x30 via uint8 Pad (bool Pad is
 ORT-rejected) + Greater->bool. 5700->3720 (+0.42) with the Where output still free. The per-row colour
 vector (col0 [1,10,30,1] f32) and the two 30x30 uint8/bool pad-back planes are the residual floor.
+
+## 2026-07-11 — zero-cost (25pt) lens → FLOOR (see task307 entry for family; this task's specifics in the 2026-07-11 hunt report)
+ran: einsum-equation + attr-only single-op design space exhausted for this task's rule (details: hunt A report 2026-07-11 — 140/087 reflect-Pad seam residue arithmetic-verified; 312 g/s vectors rank-1-indecomposable).
+tool+date: fable fork, 2026-07-11. reopen: new attr-level primitive matching the rule; evidence this task is among the true nine 25s. falsification history: none.

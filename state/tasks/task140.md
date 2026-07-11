@@ -33,3 +33,7 @@ Cutting all 8 params only reaches ~19.11 (negligible). So +0.3 is INFEASIBLE.
 
 ## INSIGHT (transferable)
 ⭐ The uint8 whole-pipeline copy lever (task152) only pays off when the working plane is ALREADY small in a narrowable dtype at its creation. For a Slice/Gather pipeline the entry plane is fp32 (dtype inherited from the fp32 one-hot input); casting it to uint8 ADDS a plane rather than replacing one, and casting the full input first is catastrophic. A tiny fp32 crop (here 3x3x10 = 360B) of a 10-channel one-hot is already at floor for any per-cell permutation that keeps all channels — do not chase dtype tricks on it.
+
+## 2026-07-11 — zero-cost (25pt) lens → FLOOR (see task307 entry for family; this task's specifics in the 2026-07-11 hunt report)
+ran: einsum-equation + attr-only single-op design space exhausted for this task's rule (details: hunt A report 2026-07-11 — 140/087 reflect-Pad seam residue arithmetic-verified; 312 g/s vectors rank-1-indecomposable).
+tool+date: fable fork, 2026-07-11. reopen: new attr-level primitive matching the rule; evidence this task is among the true nine 25s. falsification history: none.

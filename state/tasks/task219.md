@@ -100,3 +100,41 @@ strictly ⊆); fresh_verify 2500 (1042≤1046) + 1500 (632≤633). Incumbent inh
 (public LB = bundled → still pointed). LOAD-BEARING QUIRKS preserved: 4-shift set {+2,+1,0,−1}
 (Δ=−2 spuriously wins), k=2 block uses band-0's occ[1] validity (bands can have internal empty
 rows). Latency 0.04ms.
+
+## 2026-07-11 — fresh-fail diagnosis + exact decision procedure (fork agent) — NUMPY VALIDATED, ONNX PORT PENDING
+Context: silent-zero reality (hidden arc-gen draws) made the deployed net's known ~42-44% inherent
+fresh-fail the board's largest private-LB risk (~7 expected pts at hidden-k≈1-2).
+
+FAILURE TAXONOMY (1500 fresh, size-filtered): 659 fails = 116 edge-only (right-edge partial C-tile
+truncation) + 427 interior (wrong sigma/shift selection) + 116 mixed. The S8 4-shift heuristic
+{+2,+1,0,-1} is the dominant error source, not the edge clipping.
+
+EXACT RULE (from generator source, task_90f3ed37): bands at rows[idx] (tall<=3, shared A/B/C pixel
+patterns, widths awide/bwide/cwide ∈ {1,2}, col_idx = awide*{1,2}); band0 complete; lower bands
+missing their C-tiling (from col_idx+bwide, step cwide, per-pixel clip) — output adds it in blue.
+KEY IDENTITIES: (i) s_k (fill start) = rightmost_occupied(band k) + 1  [bwide := max(bcols)+1 ⇒ B's
+last column always drawn]; (ii) width invariants: the LAST column of each of A/B/C's sampled pattern
+is always occupied (all three widths are max(cols)+1 of the sample); (iii) all lower bands share one
+relative row-mask ⇒ segmentation (internal 1-row holes in tall-3 bands vs distinct tall-1 bands) is
+decided by global consistency + parse-vote; (iv) band-0 row anchor d (lower visible top vs band0
+top) is a single global shift, recovered by joint (d, sigma) exact prefix-match.
+
+DECISION PROCEDURE (v6b, tools/t219_exact_ref.py): enumerate the finite parse space
+(d ∈ [0,tall), bw,aw ∈ {1,2}, col_k = s_k−bw ∈ {aw,2aw}, col_0 ∈ {aw,2aw}, sigma = col_0+bw,
+cw ∈ {1,2}) with checks: A-region prefix equality on [0,min(col_0,col_k)); B-block equality
+band0[:,sigma−bw:sigma] == band_k[:,s_k−bw:s_k]; A-tiling periodicity within [0,col_0); C-tiling
+periodicity of band0 from sigma (mod cw, auto edge-clip); the three max-col occupancy invariants;
+global (d,sigma,cw) consensus across all lower bands; tie-break prefer larger sigma.
+MEASURED: bundled 265/265 PASS; fresh 20000 → 62 fails (0.31%) vs incumbent 43.9% (142x).
+Residual 0.31% ≈ near-collision parses (ledger's measured oracle ceiling ~1/2174 = 0.046% is the
+hard floor; a few resolvable modes may remain).
+
+ONNX PORT (not built this session — dedicated build required): all machinery is fixed-size and
+vectorizable under the no-Loop opset: band stack [K<=7, 3, 10] via the S8 K-batching; the parse
+space is <=3*2*2*2*2 = 48 branches of small tensor equalities (Equal+ReduceMin) producing a vote
+tensor; selection = ArgMax over 48; fill = per-band broadcast of the selected pattern with
+(c-s_k) mod cw phase (index-table Gather, cw in {1,2} → two precomputed phase planes). Est. added
+cost over the deployed 7210: +1-3KB (well worth it: expected private value ≈ +6-7 pts vs zero-risk).
+The S8 net's K-batch/placement einsum skeleton is reusable; only the selector and fill subgraphs
+change. Fresh gate for the port: >=20k A/B, require <=0.4% and strictly ⊆-or-equal incumbent fails
+is NOT required (incumbent fails 44%) — require candidate fails <= 100/20k.
