@@ -89,3 +89,17 @@ free no-op; only the horizontal/vertical orientation needs a scalar branch selec
 - cost: 3531 -> 3332 (points 16.8887)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task093.onnx
 - note: min-merge from nets
+
+## 2026-07-11 — full July-arsenal audit (opus agent) → FLOOR, NO BUILD
+ran: full byte map + all 8 July arsenal mechanisms vs deployed cost 3332 (mem 3212 = 784 fp32
+  ch0-crop + 900 output-pad carrier + 5×196 count/ramp/compare planes + ~440 tiny builders);
+  gate-measured baseline pass=265 fail=0. Detection/counting ≈1876B, carrier ≈900B (output pad).
+tool+date: onnx/ort 1.21/1.26 static byte-map + ng gate, 2026-07-11.
+verdict: cost lives in DETECTION/COUNTING (QLinearMatMul masked-sum machine) — the documented
+  un-foldable class (task233 precedent); free-output/signed/s8port all miss. Only residual =
+  +0.0x bool-cast shaves (anti-directive).
+reopen: (1) new public task093 dump < 3332; (2) mixed-dtype Einsum unlock; (3) integer-typed
+  input channel (kills the 784 fp32 crop); (4) sub-900B 10-channel output-expansion primitive.
+falsification history: build-agent's own best was 8289; the 2026-07-09 public min-merge net
+  (3332) already exploits occupancy-only + QLinearMatMul counts + u8 label-pad. Both prior
+  open-angles independently re-derived as floors here.

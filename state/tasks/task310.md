@@ -77,3 +77,18 @@ region that contains arbitrary colours" in closed form at the ~15.6 B-tier floor
 - cost: 3227 -> 3184 (points 16.9341)
 - source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task310.onnx
 - note: min-merge from nets
+
+## 2026-07-11 — full July-arsenal audit + value_info-crop experiment (opus agent) → FLOOR, NO BUILD
+ran: full byte-map (mem 3108 = 2560 Slice[1,10,8,8] fp32 box carrier + ~548 moment-based
+  detection); value_info-crop candidates (5×5, 1×1) BUILT + GATED — passed checker + bundled
+  266/266 but memory unchanged 3108; byte-math on fp16/u8 recast, separable P·in·Q, GridSample,
+  two-Gather, ch0-drop (invalid — grader decodes per-channel >0, ch0 load-bearing).
+tool+date: onnx 1.21/ort 1.26, ng gate, scoring.py source read, 2026-07-11.
+verdict: at mechanism floor. ⭐DURABLE: value_info under-declaration NEVER beats the profiler
+  trace — calculate_memory takes max(static declared, runtime trace) per tensor; crop-by-
+  declaration only helps tensors absent from the trace.
+reopen: (1) ORT uniform-T escape (fp16 carrier co-bound with fp32 input); (2) an op reading
+  free fp32 one-hot → windowed colour-INDEX without full-canvas intermediate; (3) public dump
+  < 3184; (4) scoring change dropping the trace max (revives VI-crop → cost ~664).
+falsification history: the 2026-07-11 sweep hypothesis ("Slice plane partially carrier") is
+  FALSE — pure detection+carrier of output pixels.

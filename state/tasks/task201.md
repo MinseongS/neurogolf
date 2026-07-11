@@ -75,3 +75,37 @@ Dominant intermediate = `colf30` [1,1,30,30] f32 = 3600B: the entry colour-index
 - cost: 3046 -> 3016 (points 16.9883)
 - source: candidates/task201/kcollapse.onnx
 - note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays
+
+## NEGATIVE 2026-07-11 — full July-arsenal audit, 0 wins (fp32-input co-bind floor)
+- **what was run:** grader-exact byte map (scoring.py model: mem = Σ node-output num_el×dtype_itemsize
+  except free input/output; params = Σ init element-count, dtype-free). Counted floor = mem 2876 + params 140.
+  Dominant counted planes: `labels_dil` fp32 [1,1,13,13]=676 (1×1 colour-index Conv, neg-pad crop 30→13),
+  `output_small` bool [1,10,7,8]=560 (decode Equal→Pad), three 13×13 detection planes 169 ea
+  (`labels` u8 / `rect_mask` bool / `pat` u8), `yrow`+`ycol` fp32 [1,30]=120 ea (yellow-corner profiles).
+  Every July mechanism checked with byte math (below).
+- **tool+date:** uv run ng gate + onnx shape-infer byte map + scoring.py read, opus per-task agent, 2026-07-11.
+- **verdicts (why each fails):**
+  - fp16-recast / QLinearConv / s8port tail-fold: BLOCKED by fp32-input co-bind. Harness feeds
+    `np.float32` (scoring.py:53) → graph input MUST be fp32. Every entry reduction (`labels_dil` Conv,
+    `yrow`/`ycol` Einsum) inherits fp32 → 676/120/120 are dtype-locked. QLinearConv/ConvInteger need
+    uint8 input; a Cast(input→u8) = [1,10,30,30]=9000B counted → strictly worse. No fp32 dying plane
+    clears the ≥480 fold gate.
+  - free-output N-ary Einsum: FLOOR. Output interior = data-dependent SPRITE CONTENT stamped at a
+    data-dependent position (optionally flipped) = POSITIONED-CONTENT per vein taxonomy, not global-state
+    routing. `output_small` is a DECODE discriminator, not a Where ROUTING mask. All-or-nothing composition
+    → the un-foldable sprite floors the whole tail.
+  - signed-einsum separable routing: FLOOR (task233-class). Cost is in detection/sprite-stamp, not a
+    separable-fill priority/label carrier; box border is separable but the sprite interior is not.
+  - width-crop `yrow`/`ycol` [1,30]→[1,13]: IMPOSSIBLE. Einsum keeps the non-reduced spatial full-30;
+    can't slice inside einsum, and Slice(fp32 input→13×13)=6760B. Deriving extents from `labels` needs
+    ReduceMax-on-bool (unsupported) or new ≥169B planes → net ≥ break-even loss.
+  - dtype/index golf: ArgMax outputs int64-locked (8B); Gather indices int32-minimal (no int16 in ONNX);
+    all u8/bool planes already 1B. No redundant/dead tensor (0 dead outputs). kernel-collapse already applied.
+- **reopen-trigger:** (1) new public task201 dump beating cost 3016 (min-merge); (2) a grader change letting
+  input be declared uint8 (would unlock QLinearConv u8 colour-index → kills the 676B fp32 `labels_dil`,
+  ~+0.23); (3) mixed-dtype Einsum accepted by ORT (fp16 carrier under fp32 input co-bind) — the vein-wide
+  top residual lever; (4) a positioned-content stamp primitive (dynamic_kernel_stamp on fp32 input) proven
+  cheaper than the 507B 13×13 detection core.
+- **falsification history:** June "labels_f 676 irreducible" claim RE-CONFIRMED here under July arsenal
+  (input-dtype root cause identified, not just asserted). Prior redesign falsified generic "floor" claims
+  board-wide, so this stays a tool-conditional verdict, not durable truth.

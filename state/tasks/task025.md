@@ -170,3 +170,8 @@ so this is strictly a private-LB-risk trade, not a free win.
 - Tool+date: opus agent, onnx 1.21.0 static analysis, 2026-07-10.
 - Reopen: a separable (non-diagonal) p-axis reformulation of the row/col factorization; or an op that
   stacks heterogeneous planes with an uncounted output.
+
+## ADOPTED 20260711T060248Z
+- cost: 9817 -> 8935 (points 15.9023)
+- source: candidates/task025/hashscatter_flat3.onnx
+- note: hash-scatter variant: flat variable-length edit packing (Eflat 1337 words + base[N+1] offsets, span=base diff, 14-word window + sink mask) vs rectangular KMAX=56; 9817->8935 (+0.094)

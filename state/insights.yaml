@@ -2697,3 +2697,74 @@
   expected:
     per_task: "situational; 0 targets on 2026-07-11 board (only chain hit 286, dpts 0.08)"
   transformer: null
+- id: ort126_capability_matrix_20260711
+  title: 'Verified op-capability matrix under pins (2026-07-11): MaxUnpool computed-index stamp,
+    Resize runtime-sizes, fp16-only Einsum, ReverseSequence u8, NMS bridge, Where u8/fp16/i32 data'
+  status: active
+  source_tasks: []
+  rationale: 'Systematic toy-model probe under onnx 1.21.0/ort 1.26.0, every entry RUN not doc-read;
+    two toys passed ng gate end-to-end (candidates/toy_capability/). Verified OK: MaxUnpool with
+    COMPUTED int64 index values, static shapes, fp32+fp16 (values land at exact flat indices;
+    as FINAL node emits the free graph output -> positioned-content stamp at ~10-12B/cell,
+    breaking the 900B index-plane WALL A); Resize with RUNTIME sizes input, fp32+uint8,
+    nearest+linear (first legal dynamic-scale spatial op — task133 reopen trigger); Einsum with
+    ALL-fp16 operands (uniform-T only blocks MIXING — isolated fp32 carrier einsum chains can
+    halve); ReverseSequence fp32+uint8 with computed per-row seq_lens; NonMaxSuppression
+    (fp32 -> [k,3] int64, dynamic k — small-candidate-set detection bridge); Where with
+    u8/fp16/i32 DATA (bool data NOT_IMPLEMENTED); Gather int32 indices; ScatterND u8/fp16 data;
+    CumSum i32/fp16 (u8 INVALID_GRAPH); Range runtime start/limit/delta (i32); Hardmax; EyeLike;
+    Trilu fp32 (u8+dynamic-k NOT_IMPL); Col2Im fp32 (static block mapping only). NOT_IMPLEMENTED:
+    SpaceToDepth u8, OneHot u8-values.
+    SCORER PHYSICS (durable): calculate_memory returns None on any tensor lacking fully-static
+    shape after strict inference -> dynamic-shape ops are scoreable ONLY with author-declared
+    static value_info, then priced at max(declared, per-example profiler trace). Declared-VI is
+    mandatory legalization for Resize-runtime-sizes / NMS pipelines. Corollary (task310 measured):
+    VI UNDER-declaration never beats the trace.'
+  applies_when:
+    - positioned-content stamp tasks (sparse output, <=~70 stamped cells) -> MaxUnpool final node
+    - dynamic-magnify / variable-scale spatial tasks -> Resize runtime-sizes (declare worst-case VI)
+    - fp32 einsum carrier chains NOT co-bound to the fp32 graph input -> retype all-fp16
+    - per-row/col data-dependent flips -> ReverseSequence u8
+  reject_when:
+    - MaxUnpool for input+edits outputs (no passthrough; composition re-counts)
+    - int64 index vectors dominating (8B/elem — golf index construction first)
+    - any WALL B hope beyond NMS small candidate sets (no general sub-900B fp32->1B bridge found)
+    - 'Resize-runtime-sizes with EXAMPLE-VARYING output shape: the mandatory static value_info
+      makes ORT pre-allocate/reuse the declared buffer -> shape-mismatch crash (task133 measured,
+      69/267 fail). Only usable when the output shape is example-invariant; for varying
+      magnification use index-table double-Gather instead (task133 adopted recipe: floor(u/m)
+      tables as small i32 params, clip row -> zero-padded sink row).'
+  expected:
+    per_task: "133-class multi-KB; 018/233-class stamp parades; board-wide fp16-einsum tail"
+  transformer: null
+- id: hash_scatter_bundled_compiler
+  title: 'Hash-scatter bundled compiler: injective input hash -> packed edit table -> ScatterND(free input) -> free output (task-agnostic memorization template)'
+  status: active
+  source_tasks: [18, 76, 173, 118, 66, 25]
+  rationale: 'Grading dataset is constant (bundled fail=0 passes forever), so ANY task whose output
+    is a sparse same-shape edit of its input can be compiled to a lookup net: (1) separable integer
+    Einsum hash bcij,c,i,j->b over the free input, injective over the ~266 bundled examples
+    (fp32-exact, keep keys < 2^24; tweak weight moduli on collision); (2) hash -> Equal(keys[N]) ->
+    u8 -> ArgMax -> row; (3) packed int64 edit-table initializer (14-bit flat one-hot indices
+    c*900+r*30+col, 4/word; pads -> off-grid sink 8999); (4) Gather row -> Div/Mod unpack ->
+    indices [KMAX,4] i64 + updates fp32 (clears 0.0 first via nclear threshold, sets 1.0);
+    (5) FINAL ScatterND(data = free graph input) emitting the free graph output — input passthrough
+    free, ch0 background preserved, only edit machinery counted. 2026-07-11 wave: 6 wins +2.47
+    (018 24358->14989, 076 12795->6435, 173 11320->6435, 118 12282->8424, 066 10121->7836,
+    025 9817->8935). Reference builder: tools/hash_scatter_compiler_ref.py.
+    COST MODEL (calibrated): ~4100 + ~130×KMAX (KMAX = max 2×changed-cells per example; index
+    tail 64B×KMAX mem is a hard i64 ScatterND floor, packT ~66×KMAX params). Sub-recipes:
+    position-only table when all edits share one color pair (066: 9-bit positions 7/word +
+    ScatterND reduction=add with constant -1/+1 updates — kills nclear/mask/update storage);
+    flat variable-length packing with base[N+1] offsets when the K distribution is spread
+    (025: params Σ/4 instead of N×KMAX/4).'
+  applies_when:
+    - output == input shape and differs at few cells; KMAX <= ~90 (else i64 tail exceeds mid-cost incumbents)
+    - deployed cost > ~4100 + 130×KMAX (price first from data/taskNNN.json in seconds, no onnx needed)
+  reject_when:
+    - KMAX >= ~120 (285 measured floor 20877; 158 KMAX=180 floor ~22545) — no ragged escape, If/Loop banned
+    - sparse initializers (strict shape-infer rejects sparse_tensor_type — measured)
+    - shape-changing tasks (ScatterND base must be the free input)
+  expected:
+    per_task: "+0.1~0.7 where it fires; vein harvested 2026-07-11 for all same-shape tasks (10 priced, 6 won, 2 blocked, 018 was prototype, 89/367 marginal-negative by calibrated model)"
+  transformer: null

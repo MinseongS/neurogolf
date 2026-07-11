@@ -61,3 +61,43 @@ dominating-axis comparison + the index plane (2 canvas planes total).
 - cost: 3526 -> 3389 (points 16.8717)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task137.onnx
 - note: min-merge from nets
+
+## NEGATIVE LEDGER 2026-07-11 (deepfold indicator_fold flag = FALSE POSITIVE; floor)
+Deployed net (min-merge, cost 3389 = mem 3263 + params 126, bundled 266/0) is the
+Einsum-marker-detect form, NOT the old 686-param Conv form. Byte map: THREE 900B
+canvas planes dominate — `cheb`=Max(dr_u8,dc_u8) uint8, `cheb_rem`=Mod(cheb,s) uint8,
+`nonring`=Cast(cheb_rem)->bool — feeding final free Where(nonring,input,center_vec).
+Marker DETECTION is tiny (ReduceSum+Equal+3 scalar Einsums ~150B); the 2700B is all
+CARRIER = the Chebyshev-ring render. Remaining ~563B = the two 1-D row/col distance
+chains + scalars.
+
+- (1) WHAT RAN: deepfold indicator_fold candidate (nonring, dpts 0.3087). Ran the
+  crack_condition 3-test + built/gated two plane-collapse candidates:
+  (a) Gather-LUT: merge Mod+Cast into Gather(ring_lut[30], cheb) killing cheb_rem.
+      REJECT — ORT 1.26 Gather rejects uint8 indices; casting cheb->int32 index = 3600B
+      plane, +900B worse than the 900B it removes.
+  (b) cmp+Where (drop Max): nonring=Where(dr>=dc, dr%s!=0, dc%s!=0) with bool branches.
+      REJECT — ORT Where(9) with bool DATA is NOT_IMPLEMENTED. uint8 branches then need a
+      trailing Cast->bool = back to 3 planes, no win.
+  crack_condition verdict = FLOOR: #1 global-state routing HOLDS (mask is fn of ~4
+  scalars cr,cc,s,size) and #2 Where-ROUTING HOLDS, but #3 FAILS — ring is at a
+  DATA-DEPENDENT CENTER (positioned) and the paint predicate is a data-dependent 2-D
+  COUPLING (chebyshev max) + run (mod s). Free-output einsum fold = telescoped
+  nested-square rank-1 (task240 family) needs dynamic per-axis band matrices Rmat/Cmat
+  [T,30], T=ceil(30/s)~30 worst-case (s=2) => 2x[30,30] fp16 = 3600B fp32-co-bound,
+  >> current 2700B uint8/bool. Matches the lever boundary rule ("data-dependent
+  run/coupling -> 900B index-plane is cheapest; every Einsum factorization prices
+  higher"). Also mask FRACTION often <45% (s=7 ~14%).
+  ORT-LEGAL PLANE FLOOR = 3: from (dr,dc) to the bool ring-mask needs Max, Mod, Cast =
+  3 ops = 3 counted 900B planes; no single op does max-then-modular-test, Gather is
+  int-index-taxed, Where-bool unimplemented, And/Or decomposition needs >=4 planes.
+  Chains/scalars (~563B) and params (126, hsq/idx30 reused) are already minimal.
+- (2) TOOL+DATE: uv run ng gate + hand-built onnx (onnx 1.21.0 / ort 1.26.0), 2026-07-11, opus.
+- (3) REOPEN TRIGGER: an ORT build/opset that supports uint8/int8 Gather indices OR
+  Where with bool data (would enable the 2-plane Gather-LUT / cmp+Where, ~+0.25); a
+  fused max-modulo or mod-to-bool op; a new public teacher with a cheaper task137;
+  a scorer change letting a mixed-dtype (fp16 carrier + fp32 input) einsum fold the ring.
+- (4) FALSIFICATION HISTORY: none prior for the fold; this net already beat the
+  self-built 686-param form via 2026-07-09 min-merge (3883->3389). 137 was NEVER in any
+  free-output-einsum floor list (floor_tasks/batch6_floored/pending_unconfirmed) — this
+  is its first honest crack attempt, verdict FLOOR by data-dependent-coupling economics.

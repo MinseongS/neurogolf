@@ -75,3 +75,55 @@ let an orientation-mix become a 30×30 float Add.
 - cost: 3558 -> 3089 (points 16.9644)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task284.onnx
 - note: min-merge from nets
+
+## DEPLOYED NET ANATOMY (2026-07-11 audit)
+Mechanism CHANGED at 2026-07-09 adopt: no longer the MatMul-glyph net the prose above
+describes. Now a **sparse-edit ScatterND stamp**: base = free `input` (copy), then 56
+point-writes into fp32 output. mem 2912 / params 177 / cost 3089.
+- Byte map (mem, output [1,10,30,30] fp32 = 36000 is FREE):
+  - `indices` [56,4] **int64 = 1792** (61% of mem) — ScatterND indices, dtype-forced i64, STRUCTURAL carrier
+  - `idx8` [56,4] i8 = 224 (assembled in i8, one Cast to i64 = optimal)
+  - `rp`,`cp` fp32 [1,30] = 240 (row/col non-bg profiles → ArgMax rf/rl/cf/cl)
+  - `u56_r`,`u56_c`,`chans` i8 [56,1] = 168; a_vals/b_vals fp32 = 80; misc ~408
+- The 56 writes = 28 color-writes (+1 to colour channel) + 28 background-clears (−1 to
+  channel 0 at the SAME 28 positions). Both load-bearing: glyph cells sit on background
+  in `input`, so ch0 must be pushed ≤0 (decode is per-channel `(output>0)`, harness l233).
+- DETECTION/CARRIER split: no fp32 detection plane (unlike prose). All cost is the SPARSE
+  STAMP carrier (i64 indices 1792 + i8 idx assembly). Geometry (profiles/argmax/colours)
+  ~560. The i64 index is the only >900B tensor.
+- Oracle rule (reference/arc-code-golf-solutions/task284.py): 2 seed dots share a row/col;
+  each grows a "wrench" = vertical bar (5-tall) + perpendicular stem toward centre + 2 hook
+  cells past the bar ends; grid optionally transposed. Glyph = 6 disjoint rank-1 rects × 2
+  colours. Verified renders ex0/1/2.
+
+## NEGATIVE LEDGER 2026-07-11 — free-output fp16 signed-einsum LOSES (MEASURED)
+(1) WHAT RAN: built candidates/task284/einsum.onnx (build_einsum.py). Replaced ScatterND
+    tail with a 9-component free-output fp16 signed-einsum `b,kr,kc,kv->bvrc` writing fp16
+    `output` directly (6 glyph rank-1 rects split L/R hooks = 8 + 1 bg rectangle). Reused
+    deployed geometry scalars (rf/rl/cf/cl, a_s/b_s, sep/stem/drow/dcol). Bands built from
+    interval [lo,hi] via GreaterOrEqual+LessOrEqual+And+Cast(fp16). Correct 266/266 bundled.
+    `uv run ng gate` → **cost 4780 (mem 4642, params 138) vs deployed 3089 — REJECT, +1691.**
+(2) TOOL+DATE: uv run ng gate / onnxruntime==1.26.0 profiler measurement, 2026-07-11, opus.
+(3) BYTE MATH (why it loses): band-build = 6 bool [9,30] (1620) + 2 fp16 bands [9,30] (1080)
+    = 2700; + chanvec 180 + geometry (rp/cp 240, grid-reduces gr/gc 240, seed slices 80,
+    lo/hi lane int32 arithmetic ~430, misc) ≈ 1760. Interval bands need 2 comparisons each
+    (1350/axis irreducible). The separable-plane materialization (2700 just for 9 bands)
+    already exceeds the ScatterND i64-index carrier (1792); geometry then doubles the gap.
+    REGIME: for a SPARSE ~28-cell glyph, per-cell ScatterND (i64 indices) beats separable
+    free-output einsum — the inverse of the mask-dominant regime where einsum wins. The
+    deployed ScatterND net is at/near its structural floor (~2900 mem).
+(4) REOPEN-TRIGGER: (a) a band-construction primitive that yields fp16 interval masks in
+    ≤1 counted tensor/axis (would drop band-build 2700→~1080, then einsum ≈ 1080+180+geom
+    ~2300 < 3089); (b) a way to cut components below ~4 (merge wrench rects); (c) a cheaper
+    sparse stamp than i64 ScatterND (no i32 ScatterND on grader ORT; Loop/NonZero banned);
+    (d) new public dump with a smaller task284 net. FALSIFICATION HISTORY: none prior for
+    this specific claim; the 2026-07-09 min-merge already beat the old MatMul-glyph net
+    (16424→3089) so the einsum-plane family was implicitly dominated — now MEASURED.
+- DURABLE TECH FINDING (reusable): ORT 1.26 wraps fp16 Einsum in `InsertedPrecisionFreeCast`
+  nodes (fp16→fp32 operands, fp32→fp16 output [1,10,30,30]=18000) but these inserted nodes
+  are NOT in the static graph so calculate_memory does NOT count them → **fp16 free-output
+  einsum IS memory-viable** (the fp16-output-is-free trick works; harness decode `(out>0)`
+  is dtype-agnostic, scoring.py l114-115 skips output regardless of dtype). It just doesn't
+  help a sparse-glyph task. Also: rebuilt graphs that KEEP deployed runtime-Slice nodes MUST
+  carry the deployed `value_info` (pins Slice output shapes) or strict shape-infer emits
+  dim_param → calculate_memory returns None ("performance could not be measured").

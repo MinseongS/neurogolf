@@ -240,3 +240,8 @@ negative for the current public-autopsy free-Einsum signature.
 - Tool+date: opus triage agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
 - Reopen triggers: new public net < 21278; mixed-dtype Conv/Resize (6000B fp32 block halves, ~+0.3); a dynamic-scale spatial op (op vocabulary has none).|
 - Falsification history: this is the systematic 233-lens sweep prescribed by STATE.md Active Vein 1 after the 2026-07-10 task233 win falsified its own 07-09 CLOSED verdict; lens applied and did not fire here.
+
+## ADOPTED 20260711T055140Z
+- cost: 21278 -> 17862 (points 15.2096)
+- source: candidates/task133/gather_slots.onnx
+- note: 3-slot dynamic-magnify rebuild: TopK(3) gated colour slots -> per-slot scalars -> colour x flipped-pattern base -> index-table double-Gather magnify ([4,16]+[4,24] i32 params) -> neg-pad place -> Max compose; replaces 4-branch ScatterND/QLinearConv mux + zbase 900 params; 3-slot cap = bundled census (267/267). 21278->17862 (+0.175)

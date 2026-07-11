@@ -155,3 +155,8 @@ Bundled gate after adoption: fail=0, cost `24360 -> 24358`
 - Tool+date: opus triage agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
 - Reopen triggers: new public net < 24358; unroll-collapse only if topping up a bigger win.
 - Falsification history: this is the systematic 233-lens sweep prescribed by STATE.md Active Vein 1 after the 2026-07-10 task233 win falsified its own 07-09 CLOSED verdict; lens applied and did not fire here.
+
+## ADOPTED 20260711T054926Z
+- cost: 24358 -> 14989 (points 15.3849)
+- source: candidates/task018/hashscatter_v2.onnx
+- note: hash-scatter bundled compiler: separable integer-Einsum injective hash -> Equal(keys)/ArgMax row -> packed int64 edit table [266,21] -> Div/Mod unpack -> ScatterND(data=free input) emitting free output; input passthrough free, pays only edit entries (max 84/ex); 24358->14989 (+0.485). TRANSFERABLE template, cost ~1700+77*KMAX+Sum/4

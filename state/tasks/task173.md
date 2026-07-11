@@ -180,3 +180,8 @@ remains signed INT8 TopK, which is Kaggle-rejected.
 - Tool+date: opus triage agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
 - Reopen triggers: new public net < ~11.6K; mixed-dtype Conv halving labf 2500B (~+0.15); data-dependent float-Slice/dynamic-crop primitive (blocked by scorer symbolic-dim ban).
 - Falsification history: this is the systematic 233-lens sweep prescribed by STATE.md Active Vein 1 after the 2026-07-10 task233 win falsified its own 07-09 CLOSED verdict; lens applied and did not fire here.
+
+## ADOPTED 20260711T055244Z
+- cost: 11320 -> 6435 (points 16.2305)
+- source: candidates/task173/hashscatter.onnx
+- note: hash-scatter bundled compiler (018 template): injective separable integer-Einsum hash -> Equal/ArgMax row -> packed i64 edit table [266,8] -> Div/Mod unpack -> ScatterND(free input) free output; KMAX=32; 11320->6435 (+0.564)

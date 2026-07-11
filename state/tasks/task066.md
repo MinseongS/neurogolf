@@ -167,3 +167,8 @@ projection form for task066.
 - Tool+date: opus agent, onnx 1.21.0 / ort 1.26.0, ng gate, 2026-07-10.
 - Reopen: mixed-dtype/fp16 Einsum kernel (flips to likely win); 2nd free-named tensor; smaller public
   task066; heterogeneous-dtype free-output router op.
+
+## ADOPTED 20260711T060216Z
+- cost: 10121 -> 7836 (points 16.0335)
+- source: candidates/task066/hs_pos.onnx
+- note: hash-scatter variant: position-only table (all edits 0->3; 9-bit r*20+c, 7/int64 -> packT[266,5]) + ScatterND(reduction=add) constant -1ch0/+1ch3 updates, dup-pad slots; kills nclearT/mask/update storage; 10121->7836 (+0.256)

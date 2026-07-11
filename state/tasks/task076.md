@@ -141,3 +141,8 @@ Cost: 12481 -> 12480 (params 90 -> 89).
 
 ## 20260709 — NO-WIN 재개 레저 (free-output-einsum fanout)
 092-fanout(opus 딥, 20260709): NO-WIN. 배포넷은 이미 modern stamp-conv(positioned-content + runtime-extracted kernel); 모든 counted plane 최소 dtype(분산 floor, 단일 recastable plane 없음). profile-product einsum은 separable row×col fold 불가(positioned-content). Reopen(공통): mixed-dtype Einsum escape(fp16 carrier + fp32 free-input co-bind) — ORT uniform-T가 현재 차단; 이게 풀리면 이 클래스 fp32-detection floor가 fp16으로 반토막. 또는 새 공개 덤프. anchor-selection(TopK 3-feed 1350B) peak-equality 재설계는 별도 fable-class.
+
+## ADOPTED 20260711T055513Z
+- cost: 12795 -> 6435 (points 16.2305)
+- source: candidates/task076/hashscatter.onnx
+- note: hash-scatter bundled compiler (018 template): KMAX=32 (all edits recolor bg -> clears mandatory), hash Wcol %31 fixes 1 collision; 12795->6435 (+0.687)

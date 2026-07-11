@@ -1,6 +1,6 @@
 ---
 deployed_cost: 2849
-logged_costs_match: stale-likely
+logged_costs_match: verified-2026-07-11 (deployed=2849, 17.045pts, fail=0; body attempts table is the RETIRED 5089 net)
 migrated: 2026-07-09
 ---
 
@@ -50,6 +50,51 @@ sub-150B 1-D vectors.
   blue_f32 (needs col_inner_T/row_inner_T in fp32). ~286B → ~16.50.
 - Tighter canvas via col-offset slice (cols 2:11, WC=9) with shifted final Pad — saves ~26%
   on each W×W plane but complicates the pad placement; modest (~few hundred B).
+
+## 2026-07-11 AUDIT (opus per-task) — deployed net is a DIFFERENT, near-floor net
+**Ledger above was STALE.** Deployed `submission/overfit_nets/task105.onnx` is NOT the
+attempt-5 CumSum net (5089); it is a leaner **row-hash** rebuild: cost **2849** (mem 2740 +
+params 109), bundled fail=0 (266/266), **17.045 pts**. Byte map (top carriers):
+- `out_batch` [1,3,14,13] u8 **546B** — 3-channel output assembly (Concat bg/blue/red → Pad→output).
+- `fg` [1,1,14,9] fp32 **504B** — the single blue-channel detection read (Slice input ch1, cols 2:11).
+- 5× [1,1,14,13] u8 **182B** each (shape_u8, row_cols_u8, fg_u8, out_bg, out_red) = 910B.
+- fg_hash_u8 126B, row_hash 56B, rest sub-56B vectors. params=109 (coords/scalars/pads).
+
+Mechanism = bbox-from-blue via powers-of-2 column **row_hash** (MatMul weights 4..1024) →
+ArgMax top/bottom, ReduceMax-hash right-edge, Mod/power interior-cutline extraction; shape =
+rank-2 separable `A[r]·col_in_rect[c] + B[r]·side_cols[c]`; output one-hot via BitwiseXor +
+Concat + Pad. Blue channel = **verbatim per-cell copy of input ch1**.
+
+### NEGATIVE-VERDICT LEDGER (all July-arsenal levers, 2026-07-11, tool=uv run python/onnx + ng gate)
+1. **fp16 recast of `fg` (504B→252B) — BLOCKED.** `fg` is a `Slice(input)`; ORT Slice preserves
+   input dtype (input is fp32), so fg is *forced* fp32. A `Cast(fg→fp16)` ADDS a 252B counted
+   tensor while the 504B fp32 slice remains (Cast doesn't replace its source) → net WORSE. Hash
+   values are ≤2044 (<2048, fp16-exact) so exactness isn't the blocker; the forced-fp32 input
+   read is. `fg` is doubly-needed (hash MatMul + blue output plane) so it cannot be dropped.
+   Reopen: only if a u8/int view of `input` becomes available without a counted Cast, or if the
+   blue plane is sourced from the free output (see #2).
+2. **free-output N-ary Einsum / signed-einsum routing — BLOCKED (S11 floor).** Output = separable
+   bg/red rects (crackable) BUT channel-1 blue = per-cell copy of input, and the blue submask is
+   **rank 3-5** (measured on 12 examples, never rank-1) → non-separable, data-dependent. A single
+   free-output op cannot combine the separable (`sr,sc,sv->vrc`) and input-copy (`bkrc,kv->bvrc`)
+   contraction structures; hybrid needs a counted [10,30,30] bridge (matches playbook task084/S11
+   note). Signed-einsum only addresses label/priority carriers, not this input-copy channel or the
+   detection read (playbook task233 kill). Reopen: mixed-dtype Einsum (fp16 carrier + fp32-input
+   co-bind) if ORT ever lifts the uniform-T rule — the vein-wide top residual lever.
+3. **Canvas shrink (14×13) — BLOCKED.** Grid is always W=13, H∈[9,14] (measured, 266 ex); the
+   14×13 canvas = grid-MAX, required to fill background over the full grid (not the figure bbox,
+   which is only rows 1-12 cols 2-10). Cannot shrink without clipping tall grids.
+4. **Drop always-empty fg rows 0/13 (figure ∈ rows 1-12) — NOT WORTH.** Would save ~100-120B
+   (+0.04) but desyncs the 14-row detection coordinate system (row_coords/row_any/ArgMax all
+   14-wide, output canvas 14) → intricate multi-node offset rewrite for a <0.05 micro-win the 0.X
+   directive explicitly deprioritizes. Reopen: only alongside a larger detection rewrite.
+5. **kernel-collapse / QLinearConv / TopK-refit / dynamic-stamp / scatter-inverse — N/A.** No Conv,
+   no TopK, no Scatter, no dynamic kernel in this net.
+
+**Verdict:** deployed 2849 net is at/near representational floor for the direct row-hash+assembly
+mechanism. No gateable candidate found (cheapest real lever #4 = fragile +0.04, deprioritized).
+Falsification history: none prior for THIS net (ledger tracked the retired 5089 CumSum net).
+Reopen triggers: mixed-dtype Einsum unlock (ORT), or a public dump with a cheaper task105 net.
 
 ## INSIGHT (transferable)
 ⭐ "Restore the erased (off-color) cells of a separable figure" = recover the figure geometry

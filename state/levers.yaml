@@ -372,3 +372,33 @@ levers:
         falsification_history: "이 레인 자체는 무전과(첫 체계적 패스). 클래스 prior: wave2 264/256/250/396
           NO (2026-07-10) — 본 패스가 라우팅 측에서 독립 재확인. 8040-ceiling/AT-floor 반증 전력 고려,
           본 판정은 'GridSample-the-op under current pins'에 한정, '264/256/250 무레버' 주장 아님."
+
+  - name: hash-scatter-bundled-compiler
+    status: live
+    scanner: null  # pricing = pure data scan (diff stats from data/taskNNN.json); recipe tools/hash_scatter_compiler_ref.py
+    scanner_archive: null
+    recipe: null  # insights.yaml hash_scatter_bundled_compiler
+    agent_class: opus
+    expected_yield: "harvested 2026-07-11 (+2.47, 6/8); reopen per ledger"
+    ledger:
+      - date: 2026-07-11
+        ran: "capability-audit spinoff: MaxUnpool positioned-stamp probe on task018 turned into the
+          ScatterND(free-input) hash-lookup compiler (MaxUnpool unnecessary — ScatterND gives input
+          passthrough free). 400-task pricing scan (same-shape + diff stats) -> 10 targets; 8 built:
+          018 +0.485 / 076 +0.687 / 173 +0.564 / 118 +0.381 / 066 +0.256 (pos-only variant) /
+          025 +0.094 (flat-pack variant) ADOPTED; 158 REJECT (KMAX=180, honest floor ~22545 > 20329,
+          aggressive variants enumerated); 285 REJECT (KMAX=120, floor 20877 > 18674; sparse
+          initializer killed by strict shape-infer). 89/367 not built (calibrated price > deployed)."
+        tool: "opus build agents + ng gate, 2026-07-11"
+        verdict: "vein harvested for same-shape sparse-edit tasks under current KMAX economics
+          (~4100 + 130×KMAX vs deployed). NOT a global closure: cost model is i64-ScatterND-tail
+          conditional."
+        reopen: "(1) any int32-index scatter op or rank-3 index trick legal under pins (halves the
+          KMAX tail -> 158/285/367 reopen); (2) a ragged/varlen escape (new op or grader change);
+          (3) deployed-cost increases elsewhere making 89/367 margins positive; (4) shape-changing
+          variant: a free base other than input (none known — output-shape zeros base costs 9000
+          params); (5) K-outlier splitting via 2 chained ScatterND if a task's p95<<max profile
+          ever beats the double-machinery cost (rough math negative today)."
+        falsification_history: "None (lever born today). Note its sibling verdicts falsified fast:
+          '018 unroll-collapse ceiling +0.04' (2026-07-10 233-lens) fell to +0.485 within a day —
+          treat per-task 'floor' claims from OTHER lenses as non-binding for this lever."

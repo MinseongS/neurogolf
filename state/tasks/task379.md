@@ -95,3 +95,21 @@ the unique marker per column" to avoid a full coord×mask product plane.
 - cost: 7733 -> 7599 (points 16.0642)
 - source: candidates/task379/agent_ray_collapse/cyan_threshold_f32_width.onnx
 - note: tail cleanup: threshold cyan profiles before fp16 cast/crop and keep width scalar fp32; bundled pass and 1500/1500 fresh diff=0
+
+## NEGATIVE-VERDICT AUDIT 2026-07-11 (full July-arsenal re-audit, opus)
+**cost model confirmed:** cost 7599 = memory 7446 (node-output BYTES) + params 153 (element COUNT, not bytes). `ng gate` on deployed copy = pass 266/fail 0.
+**byte map:** DETECTION floor (fp32 einsum/reduce reading free input) = e1,e2,e3,e5,rMax,cMax = 720B + red-pos casts/slices ~440B — irreducible (einsum must be fp32 to consume free fp32 input; both orientations computed because horB is runtime). CARRIER = 11×[20,20] planes (ge,le,TRAIL,box0,box1,BOX,base,m_trail,m_box,m_box_T,MAP = 4400B) + padded[30,30] 900B. Compose/construction is at structural floor: 11 planes is the minimum for 4 priority levels (bg/line<trail<box) + build masks (trail needs ge,le; box needs box0,box1 as Where-conditions so cannot fold the &) + orientation (m_box_T,MAP=800B).
+**what ran (per-mechanism verdict, all LOSE or N/A):**
+- free-output N-ary Einsum / signed-rect routing: BLOCKED. TRAIL (ray) = (row in per-column [lo,hiBot]) is AND-of-halfplanes / non-separable per-column range — explicitly outside the one-linear-contraction+single->0 budget. Forces a materialized 2-D operand; at output-res 30x30 that operand is 900B and multiple complement operands (notBOX,notLINE) needed -> MORE expensive than current 20x20-crop+nested-Where. LOSE.
+- s8port tail fold: dying tail (base/m_trail/m_box/MAP/padded) is uint8/bool, NOT fp32 -> fp32-coupling gate fails, fold makes it WORSE. N/A.
+- BOX einsum-fold ((rb0 x DIL0)|(rb1 x DIL1) rank-2): einsum output must be fp16 -> [20,20]fp16=800B vs current bool planes 400B; +cast/greater. LOSE (fp16 penalty on small plane).
+- scatter-inverse(233)/dynamic-kernel-stamp/QLinearConv/kernel-collapse/TopK-refit/walk-chain-slack: no TopK, no Conv, no propagation chain, no match matrix — N/A.
+- fp16 recast: fp16 planes already fp16; fp32 entry einsums can't be recast (free fp32 input). No win.
+- tighter crop: bundled input dims max exactly 20x20 (grids 12..20, placed at origin); fixed [0:20] crop already tight. No win.
+- delete a branch: orientation split is 264 horizontal / **2 vertical** in bundled -> dual branch + transpose (800B) cannot be dropped without failing the 2 vertical examples.
+- orientation-elimination (build 2-D planes in true frame, skip m_box_T+MAP=800B): needs ~20 extra 1-D orientation-selects/transposes (~600B) -> net ~+200B (~+0.026 pts), high complexity/bug risk, plausibly net-negative. Not built (below directive's 0.X bar; marginal).
+- param reduction: 153 params all structurally needed (ones30/coordsP length-30 pinned to 30-wide free-input contraction; colorvec[10] pins 10 output channels; coord ramps needed).
+**tool+date:** onnx dump + static byte/param map + `ng gate` + bundled orientation/size scan, opus agent, 2026-07-11.
+**result:** NO win found >= gate (cost<7599). Deployed net is the smallest known: all 20+ public dumps are >=8108 static (ours 8016 static / 7599 grader). Net is at its mechanism floor for the ray+stamp closed-form family.
+**reopen trigger:** (1) new public dump for task379 with mem<7446; (2) a separable/linear reformulation of the per-column ray range that escapes AND-of-halfplanes (would unlock free-output einsum, ~-2000..-2900B); (3) a mechanism that supports the 2 vertical bundled cases without a full 20x20 transpose pair; (4) cost-model change making params byte-weighted (would reopen dtype/param levers).
+**falsification history:** none yet — first full-arsenal audit of this net. Prior June "irreducible-floor analysis" (self-referential) is superseded but its DURABLE physics (fp32 detection floor from free-input einsum, 900B pad optimal for 20x20 via label-pad<onehot-pad) re-confirmed here.

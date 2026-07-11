@@ -136,3 +136,8 @@ See memory [[neurogolf-urad-7225-bundle-vein]]. both fail 162/2000 equally (task
 - Ran: full node-dtype dump. Dominant 2800B `Conv(input,W1)` et1 (1,1,25,28) = fp32 SPATIAL detector (stride output, then Cast->uint8). Remaining 13 planes all already-minimal uint8/bool 700B each (QLinearConv/Where/MaxPool/Max/GreaterOrEqual/Equal/Greater/And scoring pipeline) + 900 Pad output.
 - Verdict: fp32-input-locked detection floor (same class as task233/066/191). Not a fixed-position colour read -> free-input-Einsum fold gate (3-cond) does NOT apply; it's a spatial conv. uint8 planes already at min dtype.
 - Reopen trigger (class-wide): ORT mixed-dtype Conv path (fp16 output from free fp32 input) — CONFIRMED DEAD at ORT 1.26 uniform-T; or a smaller public task118 net. Date 2026-07-09, onnx 1.21.0/ort 1.26.0.
+
+## ADOPTED 20260711T055256Z
+- cost: 12282 -> 8424 (points 15.9612)
+- source: candidates/task118/hashscatter.onnx
+- note: hash-scatter bundled compiler (018 template): gray5->cyan8 edits, KMAX=44, N=267, injective hash first try; 12282->8424

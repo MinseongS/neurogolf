@@ -123,3 +123,8 @@ See memory [[neurogolf-urad-7225-bundle-vein]].
 - cost: 1808 -> 1620 (points 17.6098)
 - source: candidates/task161/cand.onnx
 - note: task161 scalar carrier tail collapsed to free-output einsum
+
+## ADOPTED 20260711T054547Z
+- cost: 1620 -> 1340 (points 17.7996)
+- source: candidates/task161/fp16_tail.onnx
+- note: fp16-only free-output einsum tail: retype S_r/S_c/S_k inits + bool->fp16 Casts + fp16 graph output; ORT fp16 einsum kernel verified (all-fp16 legal, uniform-T only blocks mixing); 1620->1340 (+0.190)
