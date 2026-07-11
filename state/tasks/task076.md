@@ -146,3 +146,9 @@ Cost: 12481 -> 12480 (params 90 -> 89).
 - cost: 12795 -> 6435 (points 16.2305)
 - source: candidates/task076/hashscatter.onnx
 - note: hash-scatter bundled compiler (018 template): KMAX=32 (all edits recolor bg -> clears mandatory), hash Wcol %31 fixes 1 collision; 12795->6435 (+0.687)
+
+## 2026-07-11 — single-free-op bound-audit recompile lens → NO BUILD
+ran: bound-audit follow-up recompile (fable fork): full dump + consumer analysis; 5 redesigns byte-priced (window-Gather +1-2K, seed-bbox association UNSAFE at gap-1, flat-stage merge +225B, ScatterND final ~4x worse at K~126-252, QLinearConv occurrence >=+1K). Deployed 12795 (min-merge 07-09, 57 params) already implements matched-filter/anchor/window idiom near floor; audit premise ('118-node unroll, bound 3000') FALSE.
+tool+date: fable fork + hand byte-accounting vs generator, 2026-07-11.
+reopen: u8-index Gather or sub-4B index vectors; public net <12795; an op fusing flood-association.
+falsification history: the bound audit (2026-07-11) over-estimated this task's gap; its premise is corrected by this entry.

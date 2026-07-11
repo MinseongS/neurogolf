@@ -160,3 +160,9 @@ Bundled gate after adoption: fail=0, cost `24360 -> 24358`
 - cost: 24358 -> 14989 (points 15.3849)
 - source: candidates/task018/hashscatter_v2.onnx
 - note: hash-scatter bundled compiler: separable integer-Einsum injective hash -> Equal(keys)/ArgMax row -> packed int64 edit table [266,21] -> Div/Mod unpack -> ScatterND(data=free input) emitting free output; input passthrough free, pays only edit entries (max 84/ex); 24358->14989 (+0.485). TRANSFERABLE template, cost ~1700+77*KMAX+Sum/4
+
+## 2026-07-11 — single-free-op bound-audit recompile lens → NO BUILD
+ran: matched-filter/runtime-kernel recompile audit (fable fork): deployed 673-node net dumped — it is ALREADY a scalar pipeline (planes <=2304B; big 3 at known floors: 2304B fp32 entry Conv, 2x1152B fp16 TopK feeds, 1476B decode tail). Honest reprice of the bound-audit sketch = 17-19K vs 24358 (+0.3-0.55 ceiling, high exactness risk: sequential stamping + D4 dedup semantics). Lean 4850-class form OBSTRUCTED by association ambiguity (2 sprites share the special-color palette; within-cluster Chebyshev <=5 overlaps between-cluster >=4 -> no exact threshold). NOTE: 38th place reports 24360 (~=ours); the 9th-place 4850 has no fresh-robustness guarantee.
+tool+date: fable fork + hand byte-accounting vs generator, 2026-07-11.
+reopen: park unless an exact cluster-association primitive (no iteration) appears; leaked <10K task018 net; single-sprite generator proof (disproven: randint(1,2)). Fresh tail 15/1000 noted in sweep.
+falsification history: the bound audit (2026-07-11) over-estimated this task's gap; its premise is corrected by this entry.

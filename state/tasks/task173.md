@@ -195,3 +195,9 @@ remains signed INT8 TopK, which is Kaggle-rejected.
 - cost: 11320 -> 8920 (points 15.9039)
 - source: candidates/task173/hashscatter_probe.onnx
 - note: DIAGNOSTIC probe B: all-integer lookup chain (two-stage int32 hash Wc[0]=0, int32 Equal + iota-ReduceSum row select — no ArgMax/uint8, 32 distinct off-grid sinks — no dup ScatterND indices). 11320->8920 if it holds on LB; tests the 3 remaining divergence suspects at once
+
+## 2026-07-11 — single-free-op bound-audit recompile lens → NO BUILD
+ran: recompile audit (fable fork): Design A single runtime-kernel Conv is SEMANTICALLY SOUND (corr einsum 'bcij,bdkl,uik,vjl,cd->bcduv' in {0,1}; decode algebra verified) but costs 18.4K (kernel-assembly chain re-bills 900-3600B/op) vs 11320; channelwise filters 15.6-25K. Deployed is a tight TopK scalar pipeline at known floors. ROBUSTNESS: fails 8/2000 fresh (5 = TopK k=19 overflow, generator max >=23, bundled itself contains a 23; 3 = secondary logic gap). k>=24 refit = +1.7KB/-0.14pt, gate-blocked and EV~wash at 1-2 hidden draws — PARKED.
+tool+date: fable fork + hand byte-accounting vs generator, 2026-07-11.
+reopen: k>=24 refit if hidden-set size is ever established >2; computed-kernel assembly op; public net <11320.
+falsification history: the bound audit (2026-07-11) over-estimated this task's gap; its premise is corrected by this entry.

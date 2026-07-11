@@ -343,3 +343,9 @@ cost `13725 -> 13721`. The combined micro-tail submission **54451532** completed
 
 ## 20260709 — NO-WIN 재개 레저 (free-output-einsum fanout)
 092-fanout(opus 딥, 20260709): NO-WIN. multi-scale template detect-stamp(data-dependent position AND scale) = positioned-content + scale DOF. dynamic_kernel_stamp_conv sibling은 여기서 이미 측정 DEAD(26140~31886B vs 12928). 모든 지배 plane이 fp32-free-input floor. Reopen(공통): mixed-dtype Einsum escape(fp16 carrier + fp32 free-input co-bind) — ORT uniform-T가 현재 차단; 이게 풀리면 이 클래스 fp32-detection floor가 fp16으로 반토막. 또는 새 공개 덤프. scale-독립 stamp primitive(GridSample/Resize) 등장 시 재개.
+
+## 2026-07-11 — single-free-op bound-audit recompile lens → NO BUILD
+ran: runtime-kernel recompile re-audit (fable fork): the prescribed idiom was ALREADY measured dead 2026-07-08 S33b (26140-31886B vs 12973; legalization collateral — anchor padding, K+2 separation kernels, scale-1 exclusion — falsified the 11696B hand model 2.2x). No delta from today's capabilities (fp16-einsum irrelevant; Resize-runtime-sizes dead on example-varying scales).
+tool+date: fable fork + hand byte-accounting vs generator, 2026-07-11.
+reopen: mixed-dtype Einsum; scale-independent stamp primitive; public net <12973.
+falsification history: the bound audit (2026-07-11) over-estimated this task's gap; its premise is corrected by this entry.
