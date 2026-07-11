@@ -1,0 +1,53 @@
+# Profile-compile worklist (oracle info-structure triage, 2026-07-11)
+
+Source: fable-fork triage of all 400 rule oracles (reference/arc-code-golf-solutions) against
+deployed costs. Classes: P=profile-only, S=sparse-positional, C=per-cell (skip), I=iterative (skip).
+Counts over the 223 fat-middle tasks: P=49 (32 above bar), S=61 (15 above bar), C≈85, I≈28.
+Naive P-gap +58pt (realistic +20-35 after floors). Builders MUST check state/tasks/taskNNN.md for
+binding negatives first, derive worst-case semantics from the GENERATOR, and fresh-A/B ≥3000.
+
+## P-list (gap = ln(cost/naive bound))
+| gap | task | cost | rule |
+|-----|------|------|------|
+| 2.81 | 208 | 4172 | least-color ring = 4 bbox scalars → two band outer-products [WAVE1] |
+| 2.80 | 014 | 4097 | rows containing color-c + col-extent crop [WAVE1] |
+| 2.74 | 359 | 3866 | per-row majority color → row fill (± transpose) [WAVE1] |
+| 2.40 | 091 | 2764 | crop between two 5-columns / 5-row extents [WAVE1] |
+| 2.33 | 177 | 2565 | bbox crop + horizontal flip [WAVE1] |
+| 2.06 | 185 | 1955 | per-tile majority (separator-partitioned) [WAVE1] |
+| 2.03 | 084 | 1895 | fixed diagonals from grid size only [WAVE1] |
+| 2.01 | 184 | 1860 | block-partition → per-block first color |
+| 2.00 | 055 | 1856 | three 8-lines → 6 region fills [WAVE1] |
+| 2.00 | 213 | 1850 | border-color max fill + crop |
+| 1.99 | 388 | 1829 | cols-containing-color → 8-fill + 2× tile |
+| 1.94 | 224 | 1737 | inner ring of 5-bbox → C |
+| 1.91 | 070 | 1682 | 1s inside 8-bbox → 3 |
+| 1.81 | 063 | 1521 | empty-interior rows/cols → 3 |
+| 1.80 | 398 | 1510 | staircase tiling of row pattern |
+| 1.74 | 013 | 1424 | 2 cells → paint full columns |
+| 1.73 | 232 | 1410 | per-row alternate [color,5,…] after first nonzero |
+| 1.71 | 297 | 1389 | rows 2+ = broadcast tiled first-row |
+| 1.71 | 335 | 1380 | L-connector 8→2 (regime-cracked before — check ledger) |
+| 1.61 | 175 | 1255 | out=max(X,Xᵀ), 0→most-common, diag→v |
+| 1.55 | 244 | 1179 | uniform-row/col partition compress + reverse |
+| 1.52 | 301 | 1141 | histogram → sorted bar chart |
+| 1.51 | 246 | 1128 | L-path 8s between the 2 and 3 |
+| 1.43 | 293 | 1043 | per-row broadcast first cell (± transpose) |
+| 1.41 | 183 | 1024 | shrink center, 8→corner color per quadrant |
+| 1.40 | 060 | 1010 | content rows: left=row[0], right=row[-1], center 5 |
+| 1.39 | 010 | 1002 | 5-cells → column-first-appearance rank color |
+| 1.33 | 239 |  945 | histogram bar chart |
+| 1.28 | 151 |  900 | full-uniform cross → 8-cell stamp |
+| 1.27 | 259 |  892 | non-1 bbox crop + 1→0 |
+| 1.24 | 047 |  862 | each cell paints full row+col |
+
+## S-list primary
+278 (4505, 2-pair→3-ring), 387 (3984, point pairs), 377 (3967, RLE row→rings), 050 (3849, rays
+between 8-pairs), 069 (2919, template stamp at markers = 368-class runtime kernel), 270 (2858,
+single-step moves), 397 (2751, 2×2 block detect). Secondary: 008 383 037 190 212 250 245 030.
+
+## Caveats
+- Several P tasks carry other-lens ledger entries (161 re-golfed 07-11; 335/303 regime-cracked;
+  084 S5-optimized) — builder checks tasklog first.
+- Oracle magic constants are NOT ground truth (bundled-tuned); the GENERATOR is.
+- WAVE1 (8 builders, 2026-07-11): 208 014 359 091 177 185 084 055.
