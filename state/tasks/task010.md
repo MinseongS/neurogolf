@@ -207,3 +207,8 @@ to eliminate or shrink the 300B `I` carrier without materializing any bool
 pre-output.  A proof must beat the incumbent lower bound `memory+params = 1070`;
 generated/factorized `k` is not enough unless the final op can still broadcast
 directly to the graph output with fewer than 300 extra counted bytes.
+
+## ADOPTED 20260711T170814Z
+- cost: 1002 -> 379 (points 19.0625)
+- source: candidates/task010/rankeinsum.onnx
+- note: rank-recolor einsum rebuild 1002->379 (+0.97): guard-row trick (guaranteed-max slot = free all-ones constant + self-organizing bg channel) + [5,5] bool pairwise rank plane + free-output 11-operand einsum (cnt-d)(d+2-cnt) sign decode; fresh 2500/2500 div 0; community '132' = sparse mirage, this is the dense record
