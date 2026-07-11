@@ -466,3 +466,34 @@ levers:
           The COMPILER remains useful as tooling (e.g., building per-example probe nets)."
         falsification_history: "This entry falsifies BOTH todays '+2.47 wins' AND the 2026-07-06
           S17 constant-dataset doctrine (its falsification count: 1, first measured contradiction)."
+
+  - name: opset-uplift-u8-arith
+    status: dormant
+    scanner: null  # tools/u8_census.py (value-range + ancestry + consumer-dtype filters)
+    scanner_archive: null
+    recipe: null
+    agent_class: opus
+    expected_yield: "0 on current board (below); reopen triggers only"
+    ledger:
+      - date: 2026-07-11
+        ran: "dual-ort (1.26.0 + server 1.24.4 venv) u8 capability matrix at opset 17 (24 ops, ALL
+          verdicts identical across versions; u8 fails only Conv/CumSum/ReduceSum); 397-net census:
+          opset distribution 54% already >=14; fp16/fp32 planes >=200B with <=255-int values +
+          safe prod/cons = 71 tasks '+18.0' MIRAGE; ancestry filter (fp32-ness must come from
+          retypeable Cast/init/bool, not the free fp32 input) -> 8 tasks +1.05; consumer-dtype
+          filter -> 0 buildable: scatter-updates dtype-coupled to Scatter(data=input) fp32
+          (084/126/131/368); einsum-operand chains have no u8 Einsum kernel so boundary casts eat
+          the retype (025/002/219/066, honest ~+0.008/task)."
+        tool: "toy probes both orts + shape-infer/intermediate-fetch census (tools/u8_census.py), 2026-07-11 (fable fork)"
+        verdict: "lane dry on current board: everything 1B-able is already bool/u8; residual fp
+          planes are input-co-bound (backward via Slice/Conv/Einsum reads, forward via Scatter-data
+          dtype coupling) or einsum-operand-locked. Old opset-conditional floor verdicts (193) were
+          already routed around via bool And/Or. SERVER-PARITY FACT: ort 1.24.4 == 1.26.0 on all 24
+          probed ops — our pin is behaviorally faithful; probe venv reusable (scratch ort1244)."
+        reopen: "(1) u8/mixed-dtype Einsum kernel in a permitted ORT; (2) a Scatter variant with
+          updates dtype != data dtype (none in spec today); (3) new adoptions introducing
+          Cast-originated fp planes with u8-safe consumers (re-run tools/u8_census.py); (4)
+          MatMulInteger as ReduceSum-u8 substitute where consumers tolerate i32 (+0.0x micro-lane)."
+        falsification_history: "First systematic pass. Related: fp16-recast (2026-07-08 wins) and
+          fp16-only-einsum (2026-07-11 task161 +0.190) exploited the same co-bind boundary from the
+          fp16 side; this pass confirms the 1B floor beneath them."
