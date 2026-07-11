@@ -2,10 +2,9 @@
 > Replace this file at session end; do not append. History lives in git and state/submissions.md.
 
 ## Confirmed State
-- Confirmed BEST LB: **7304.38** (sub 54574503, MAIN v2). Local deployed tree = **7304.3002**.
-- **PENDING at handoff (check `kaggle competitions submissions | head -4`):**
-  - MAIN v3 (sub **54576478**, pure-max: v2 + task123 +0.040, expect ~7304.42)
-  - HEDGE v3 (sub **54576509**, MAIN v3 + 8 protections, expect ~7297.6)
+- Confirmed BEST LB: **7304.42** (sub **54576478**, MAIN v3, pure-max). Local 7304.3002, offset +0.12.
+- HEDGE v3 confirmed **7297.67** (sub **54576509**, MAIN v3 + 8 protections — handicap −6.75
+  exactly as priced; all 8 protection nets executed cleanly on the grader).
 - **FINAL SELECTION (before 07-15): MAIN v3 (54576478) + HEDGE v3 (54576509).** Supersedes the
   v2 pair (54574503/54574665). Deployed tree = MAIN v3 (ng verify --hash OK at handoff).
 - Deadline: 2026-07-15 (private LB decides).
