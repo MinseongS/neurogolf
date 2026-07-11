@@ -52,6 +52,34 @@ levers:
         ran: "task216 mask_dominance recheck: read task ledger/playbook/source/deployed ONNX, scored current net, gated existing candidates/task216/cand.onnx, gated all cached public task216.onnx artifacts, profiled deployed per-tensor memory, and re-ran mask_dominance queue"
         verdict: "no-build by this run against deployed cost 8386. valueinfo_legalized_dynamic_crop is already adopted (crop declared/traced 374B); cached public nets all reject (best common public cost 8787); current 3200B c12_f32 Slice is load-bearing because it produces the uint8 c12 bridge used by QLinearConv corner detect, Gathers, crop, and red-count Einsum. Previously-costed c12-free/free-output projector designs remain cost-worse, so this is the same non-local winner-selection wall, not a missing known insight."
         reopen: "new public teacher below cost 8386, a whole-net c12-free winner-selection/crop formulation cheaper than the current QLinearConv bridge, an op/scorer change that fuses Slice(fp32)->u8 crop/cast or lets QLinearConv consume the free fp32 input without a counted quantization bridge, or a new exact rule avoiding per-box extents/red-count ArgMax"
+      - date: 2026-07-11
+        ran: "structured_untried task086 crack attempt (fable fork): deployed 2633 dumped (fp32 Lin 576
+          + 5x144B u8/bool chain + Where-label 144 + Pad 900 + free Equal perm-decode); crack_condition
+          3-test applied; 5 alternative lowerings byte-priced (Equal-Pad reorder +540, einsum pad-embed
+          expressiveness-dead, Lin read floor, Min-fold prior negative, micro-tails < bar)."
+        verdict: "NO CRACK >=0.05. Listing was STALE — the ring/frame+color-remap crack already landed
+          2026-07-09 (perm-decode 3028->2633). Residual = dense-recolor decode floor (900B label-pad
+          before free Equal, boundary class 124/354/390) + learned-classifier routing mask (positioned
+          content, fails tests 1&3). 86 removed from next_targets.structured_untried."
+        reopen: "(1) sub-900B 10-channel output-expansion primitive (shared trigger with 093/125);
+          (2) K<=15 LP separability proof (value only +0.037~0.07); (3) new public task086 net < 2633."
+        falsification_history: "batch6 '086 floor' was falsified by the 07-09 adoption (+0.14+0.395);
+          THIS entry is scoped to the post-adoption 2633 net — the pointed-at crack was consumed, not blocked."
+      - date: 2026-07-11
+        ran: "structured_untried task268 crack attempt (fable fork): deployed dump (133 nodes, 2930),
+          oracle re-read, crack_condition 3-test, two einsum-fold lowerings byte-priced (V1 Y10-source
+          2-slot +565 LOSS; V2 decomposed-factor 4-slot with reused embed E[30,10] -10B = +0.003,
+          below bar, optimistically priced). Key: Pad is STATIC (fixed top-left 10x10), mask fraction
+          ~11%; diagonal arms r,c-coupled (rank-full); passthrough binds fp32 input -> uniform fp32."
+        verdict: "FLOOR for the free-output fold: dying mass = one 1B/elem bool plane (900B) vs any
+          fold re-materializing mask info at 4B/elem + embed/slot params. Same fp32-co-bind economics
+          as the 168/381/034 class. Tests 1/2 PASS, 3 FAILS (fraction + economics). 268 removed from
+          next_targets."
+        reopen: "(1) u8/bool or mixed-dtype Einsum kernel (flips V2 to ~-1000B); (2) Where with
+          sub-broadcast positioned cond; (3) rebuild making the mask >=45% or window non-static;
+          (4) 2nd free-named output tensor."
+        falsification_history: "First direct attempt on 268. Class prior: 168/381/034 floored on the
+          identical economics (batch6 2026-07-08); independently re-derived here on a static-pad variant."
     # --- folded in from reports/regime_vein_worklist.md (2026-07-09), which is deleted later ---
     # Lever: fold a 900B [30,30] output-routing mask into a free-output Einsum
     # (output>0 sign-decode; input/output free any dtype). Gate: bundled fail=0 +
@@ -75,7 +103,7 @@ levers:
       - "2. The 900B plane is a Where ROUTING mask, NOT an Equal DECODE discriminator (label30→Equal→10ch = dense-recolor floor: 124/354/390)."
       - "3. Mask FRACTION high (≥~45%); low-fraction (~30%, e.g. 090) loses to non-mask compute. AND the fold's fp32 operands (co-bound to the free input) must stay < the 900B bool mask — needs genuinely low-rank/static routing, not per-cell placement matrices (this fp32-co-bind economics is why 168/381/034 floor even though structured)."
     next_targets:
-      structured_untried: [268, 86]  # 268 frame+diagonal arms; 86 ring/frame stamp + color-remap
+      structured_untried: []  # EMPTIED 2026-07-11: 86 already cracked 07-09 (residual decode floor); 268 floored on fraction+fp32-co-bind — see ledger
       deprioritize_near_floor: [251, 333, 42]  # 251 already fp16-adopted; 333 thin margin; 42 cross-scale FP risk
       long_tail: "re-run mask_dominance_scan --min-frac 0.20 for <0.30-fraction masks"
     conv_fp32_arsenal: [74, 80, 198, 216, 162, 2, 349]  # NOT bool/u8 Where-masks — need a NEW fold (collapse Conv/Slice into free-output contraction); biggest single-task upside if it works; unproven
