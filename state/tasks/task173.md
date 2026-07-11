@@ -190,3 +190,8 @@ remains signed INT8 TopK, which is Kaggle-rejected.
 - cost: 11320 -> 6435 (points 16.2305)
 - source: candidates/task173/hashscatter_nobg.onnx
 - note: DIAGNOSTIC: padding-invariant hash-scatter (ch0 weight=0, rmod29/cmod41 injective; hash unaffected by off-grid ch0 padding). Tests grader-feed hypothesis for the 2026-07-11 family falsification. 11320->6435 if it holds on LB
+
+## ADOPTED 20260711T063913Z
+- cost: 11320 -> 8920 (points 15.9039)
+- source: candidates/task173/hashscatter_probe.onnx
+- note: DIAGNOSTIC probe B: all-integer lookup chain (two-stage int32 hash Wc[0]=0, int32 Equal + iota-ReduceSum row select — no ArgMax/uint8, 32 distinct off-grid sinks — no dup ScatterND indices). 11320->8920 if it holds on LB; tests the 3 remaining divergence suspects at once

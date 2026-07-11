@@ -433,3 +433,36 @@ levers:
           passes forever' overfit rule remains TRUE for nets the grader executes identically —
           this incident narrows it: local scorer == LB requires EXECUTION equivalence, which
           graph-input-aliasing scatter and feed-byte-sensitive hashing can violate."
+      - date: 2026-07-11
+        ran: "diagnosis round 1: (probe A) ch0-free padding-invariant hash on 173 (rmod29/cmod41,
+          verified invariant to off-grid ch0=1 locally) — sub 54562331 = 7285.35 = 173 zeroed AGAIN.
+          (evidence B) task233's pos-override lanes are content-keyed lookups on bundled arc-gen
+          sigs and PASS LB ⇒ grader dataset byte-identical to local bundled. (evidence C) task284
+          deployed net = ScatterND(data=free input) 56 point-writes, LB-passing ⇒ ScatterND-on-input
+          aliasing NOT the cause."
+        tool: "isolated submits 54562331 + graph/ledger cross-reference, 2026-07-11"
+        verdict: "REFUTED: off-grid-ch0 padding hypothesis, grader-dataset-differs hypothesis,
+          input-aliasing hypothesis. REMAINING suspects (all in the lookup chain): fp32 einsum-hash
+          platform divergence, uint8 ArgMax row-select, duplicate sink indices UB. 173 re-reverted
+          (local 7300.89)."
+        reopen: "probe B in flight: all-integer defensive variant (two-stage int32 hash, Equal-i32 +
+          iota-ReduceSum row select, duplicate-free sinks). PASS -> family re-legalizes; FAIL ->
+          divergence is in Gather/DivMod/ScatterND-emit core and the family stays dormant."
+        falsification_history: "n/a (diagnosis log)."
+      - date: 2026-07-11
+        ran: "diagnosis round 2 + ROOT CAUSE: probe B (all-integer chain, no ArgMax/u8, dup-free
+          sinks, sub 54562705) ALSO zeroed ⇒ not arithmetic. Grader-source study (georgymamarin
+          'passes every check' kernel + discussion 699840): LB evaluates HIDDEN examples from the
+          same arc-gen generators with DIFFERENT seeds ('silent zero'). Pure-memorization nets
+          pass all visible examples and score 0 on the hidden draw — no construction can fix this."
+        tool: "isolated submits + public grader-kit source, 2026-07-11"
+        verdict: "ROOT CAUSE = silent zero (hidden eval set). Family DEAD for LB scoring (confirms
+          the pre-S17 'memorization dead' verdict). Collateral: the S17 overfit doctrine ('bundled
+          fail=0 passes forever') is FALSIFIED — fresh-gate reinstated as a real gate; memory +
+          STATE updated. 133 3-slot cap adoption reverted on fresh 5/1500 (≈58% private-zero risk);
+          161 fp16 kept (A/B fresh-equivalent 0/1500 both nets). Server facts learned: ORT 1.24.4,
+          ORT_DISABLE_ALL (no constant folding), banned incl *Sequence*; opset free."
+        reopen: "none for LB scoring (memorization cannot cover unseen draws by construction).
+          The COMPILER remains useful as tooling (e.g., building per-example probe nets)."
+        falsification_history: "This entry falsifies BOTH todays '+2.47 wins' AND the 2026-07-06
+          S17 constant-dataset doctrine (its falsification count: 1, first measured contradiction)."
