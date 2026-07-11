@@ -525,3 +525,27 @@ levers:
         falsification_history: "First systematic pass. Related: fp16-recast (2026-07-08 wins) and
           fp16-only-einsum (2026-07-11 task161 +0.190) exploited the same co-bind boundary from the
           fp16 side; this pass confirms the 1B floor beneath them."
+
+  - name: const-subgraph-prefold
+    status: dormant
+    scanner: null  # structural const-propagation (see candidates/task132 builder); value_info must be stripped for folded tensors
+    scanner_archive: null
+    recipe: null
+    agent_class: opus
+    expected_yield: "harvested 2026-07-11 (+0.013); board is clean"
+    ledger:
+      - date: 2026-07-11
+        ran: "ORT_DISABLE_ALL billing insight (server never folds constants) -> structural scan of 400
+          nets (initializer-rooted const propagation). Initial scan overcounted (132 '71 const nodes'
+          = a propagation bug); honest structural result: 132 has 1 const node + 2 dead Casts
+          (folded, -32, ADOPTED 2469->2437 bit-identical 267/267); 377/325 single bool const each —
+          bool fold is COST-NEUTRAL by construction (1B/elem memory == 1/elem params), REJECT."
+        tool: "opus builder + ng gate, 2026-07-11"
+        verdict: "board is essentially const-clean; bool consts can never pay; fp32 consts pay 3B/elem
+          but none remain. BUILDER GOTCHA (durable): calculate_memory bills tensors present in
+          value_info — a const-folding tool MUST strip value_info entries for folded tensors or the
+          fold double-bills (+36 measured on 325 first pass)."
+        reopen: "new min-merge grafts carrying fp16/fp32 const chains (re-run structural scan);
+          any adoption pipeline that generates runtime-computed constant planes."
+        falsification_history: "First pass of this lane. The '+3.3 potential' from the buggy scan is
+          retracted — do not re-cite it."

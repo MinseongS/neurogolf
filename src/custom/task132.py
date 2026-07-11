@@ -24,6 +24,7 @@ def build(task):
         tensor('e0', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')),
         tensor('shp_cv', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAEAAAAAAAAACgAAAAAAAAA=')),
         tensor('shp_b', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAMAAAAAAAAADwAAAAAAAAA=')),
+        tensor('cv2r', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')),
     ]
     nodes = [
         helper.make_node('ReduceMax', ['input'], ['present'], axes=[2, 3], keepdims=1),
@@ -32,8 +33,6 @@ def build(task):
         helper.make_node('Less', ['chan4', 'maxc4'], ['lt']),
         helper.make_node('Where', ['lt', 'pc', 'zero_f'], ['pc2']),
         helper.make_node('ReduceMax', ['pc2'], ['sc04'], axes=[1], keepdims=1),
-        helper.make_node('Cast', ['maxc4'], ['maxcolor'], to=2),
-        helper.make_node('Cast', ['sc04'], ['secondcolor'], to=2),
         helper.make_node('Reshape', ['maxc4', 'shp1'], ['maxc1']),
         helper.make_node('Reshape', ['sc04', 'shp1'], ['secc1']),
         helper.make_node('Equal', ['chan10', 'maxc1'], ['ohmax_b']),
@@ -89,7 +88,6 @@ def build(task):
         helper.make_node('Sub', ['ohsec', 'e0'], ['cv1']),
         helper.make_node('Reshape', ['cv0', 'shp_cv'], ['cv0r']),
         helper.make_node('Reshape', ['cv1', 'shp_cv'], ['cv1r']),
-        helper.make_node('Reshape', ['e0', 'shp_cv'], ['cv2r']),
         helper.make_node('Concat', ['cv0r', 'cv1r', 'cv2r'], ['CV'], axis=1),
         helper.make_node('Concat', ['rflA', 'rflB', 'gridrow'], ['Br_b'], axis=1),
         helper.make_node('Reshape', ['Br_b', 'shp_b'], ['Br_br']),
