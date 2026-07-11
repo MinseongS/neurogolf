@@ -81,8 +81,15 @@ overfit_nets, ng score each isolated, pack, submit, restore from scratchpad back
 | 003 | 260 | 131 | +0.69 | 718974 |
 | 007 | 127 | 78 | +0.49 | pwxc00 54th, 718974 |
 | 006 | 153 | 100 | +0.43 | 718974 |
-These are EXISTENCE PROOFS below our costs ⇒ every ledgered floor on these tasks has its
-reopen trigger FIRED (public intel below our floor). Jan Vorel (1st, 8063.39): task001=94,
+⚠️ INTEL RELIABILITY CALIBRATION (2026-07-12, after 5 build verdicts): community SMALL-cost
+numbers are largely **sparse-initializer LOCAL scores** — scorer counts sparse nonzeros but
+sparse ERRORS on the real Kaggle grader (S18 measured: sub 54360410 SubmissionStatus.ERROR;
+strict shape-infer rejects every consumer op). Evidence: task001 "84" ≈ its sparse-nnz 78;
+micro-batch re-derived DENSE floors: 001=240 (ours, rank-3-minimal + forced 30-wide axes),
+007=127 (ours; their "78" unexplained by either accounting), 003 floor≈213 > "131",
+006 floor≈117 vs "100" (ours 153 — ~36B accounting slack, no construction found).
+015 "300" retracted (aspirational post; floor 900 re-derived). BIG-net numbers stay meaningful
+(233 14902/12k, 018 4850 — though 018 fork verdict: 4850 unlikely general-exact). Jan Vorel (1st, 8063.39): task001=94,
 "I have 9 25s", histogram = 0<15|11|19|40|70|97|106|29|17|2|9×25. LB snapshot 07-12: top7 ≥8000.
 task023-zero thread (719708) = Conv-bias UB class (Diana 3rd confirms) — we are audited clean.
 
