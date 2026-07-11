@@ -2088,13 +2088,13 @@
   "updated": "verify"
  },
  "233": {
-  "cost": 28033,
+  "cost": 24703,
   "fail": 0,
   "ok": true,
-  "points": 14.758862333384185,
-  "sha256": "b8bbe6a710bb5a51c43da507cf1562cb565388ded18577ee118201b3917262df",
+  "points": 14.885320027269417,
+  "sha256": "865d9310c2b7a20cad0af0b29e0af67e442b90808444cfd016385b88f63b6034",
   "task": 233,
-  "updated": "verify"
+  "updated": "20260711T182314Z"
  },
  "234": {
   "cost": 2780,

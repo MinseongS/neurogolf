@@ -576,3 +576,46 @@ falsification history: the 07-11 diagnosis quoted the k=2 reference at 0.60% and
   as that reference; measured here the BACKUP is ~1.7% (regressed min-merge) while the true
   reference (src build, 31975) is 0.73% — the diagnosis's harness used src.custom.build (correct),
   and the 0.60-vs-0.73 gap is seed variance.
+
+## 2026-07-12 — v3S structural rebuild BUILT+VERIFIED: 28033 -> 24703 (+0.126) — NOT ADOPTED (builder instruction)
+ran: full front-end/box/hash restructure at `candidates/task233/cand_v3S.onnx`
+  (builder `candidates/task233/build_v3S.py` + `v3S_ov_lanes.json`), targeting the 9th/19th-place
+  12-15k existence proof. Mechanisms (opset 16):
+  1. PACKED 1x1 Conv v=32*key+color (key: black=2, colored=1, red=0) -> Cast u8; MaxPool(3x3)
+     max in [32,63] == exact sprite detector (identical predicate to deployed 10*nonblack-red>81.5,
+     proven via generator margin-1 sprite separation) => second fp32 Conv (3136) DELETED.
+  2. bbox via Einsum('abcd,b->ac'/'->ad') nonblack profiles on FREE input minus
+     3*(window coverage) via ScatterElements(reduction='add', fp32 [1,30]) — exact under margin-1
+     => MaxPool-dilate/Equal/Where [30,30] parade (~3500B) DELETED. h/w/brow/bcol semantics identical.
+  3. OOG guard: grids are HxW<30x30; all-zero one-hot cells are invisible to MaxPool (deployed's
+     SUM sees them as black) -> windows clipped to r<H-2, c<W-2 via ones-Einsum profiles +
+     Min(dk, 255/0 masks). Without it: 103/266 bundled fail (edge-sprite false detections).
+  4. crop = Slice(packed u8) at profile bbox; holes = Min(Div(crop,64), rowmask, colmask)
+     (binary {2,64} in box; phantom holes masked in-cell) -> fp16 Conv(2^i, incl 256) hash ->
+     Cast int32 -> ScatterElements [1,512] table (deployed k=1 scatter-table match kept verbatim,
+     incl 4096 sentinel + stamp + pub lanes). Only 2 ov pos-override lanes needed (deployed: 5) —
+     clean masking removes the deployed net's phantom-hash divergences.
+NEGATIVE (ledger): ConvInteger u8 hole-hash is PROVABLY non-injective (9-bit needs weight 256 >
+  u8 max; 255-weight collides {center-only spurious window}={all-outer-8 sprite}=255). Measured:
+  every one of 19/600 fresh regressions had a shash==255 sprite. Tool: fresh A/B 2026-07-12.
+  Reopen: none (arithmetic impossibility); 8-bit table variant separately rejected (popcount-
+  adjacent pattern collision rate ~1.8%/draw est).
+gates: `ng gate` PASS — bundled 266/266 fail=0, cost 24703 (mem 23435, params 1268),
+  points 14.8853 vs deployed 28033/14.7589 = +0.1264.
+  Fresh A/B vs DEPLOYED net, identical draws, isolated ORT_DISABLE_ALL, 3 seeds x (600+900+900)
+  = 2400 draws: deployed fail 72 (3.00%), cand fail 57 (2.38%), REGRESS=0/2400 (cand failures are
+  a strict subset of deployed's), recover=15, ORT exceptions 0/2400 both nets.
+  Index-bounds audit: all dynamic Gather/Scatter indices range-proven (cells<=899 exact, scatter-add
+  rows<=29, hash in [0,510]<512, canvas idx<=399 behind 4096-sentinel hit gate); TopK feed fp16.
+residual Kaggle-semantics risk (local mirror clean, LB-unproven combos): opset 16 (deployed nets are
+  13), ScatterElements reduction='add' (opset-16 attr), u8 Div/Mod (u8 MaxPool/Min/Max/ReduceMin all
+  deployed-proven). Recommend a 1-task oracle submission before board adoption if budget allows.
+12-15k verdict: NOT reached. Analytic floor of this representation ~22.3k before correctness
+  surcharges (OOG guard +1.3k, 256-hash +0.8k, ov lanes +0.1k). The 14902/12k reports imply a
+  representation that kills the TopK feed (1568+784x2) or the [1,324] int32 hash-index plane or
+  the fp32 color read — none found here; scatter-table+TopK+crop machinery re-derived as load-bearing.
+
+## ADOPTED 20260711T182314Z
+- cost: 28033 -> 24703 (points 14.8853)
+- source: candidates/task233/cand_v3S.onnx
+- note: structural rebuild 28033->24703 (+0.126, fresh 3.00%->2.38% strict-subset regress 0/2400): packed 1x1 Conv 32*key+color + u8 MaxPool sprite detector (deletes 2nd fp32 Conv 3136B), profile-bbox via free-input einsum + fp32 ScatterElements(add) (deletes MaxPool-dilate parade ~3500B), OOG window guard, clean crop/hash -> 2 override lanes (was 5); repr floor ~22.3k ledgered; opset16+reduction-add combo LB-oracle = this submission

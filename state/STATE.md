@@ -2,14 +2,15 @@
 > Replace this file at session end; do not append. History lives in git and state/submissions.md.
 
 ## Confirmed State
-- Confirmed BEST LB: **7305.62** (sub **54580604**, MAIN v4, pure-max, NEW RECORD). Local 7305.5047, offset +0.12, no zeros.
-- HEDGE v4 confirmed **7298.51** (sub **54580652** = MAIN v4 + 9 protections, handicap −7.11 as priced; all 9 executed cleanly).
-- **FINAL SELECTION (before 07-15): MAIN v4 (54580604) + HEDGE v4 (54580652).** Supersedes v3 pair
-  (54576478/54576509). ⚠️ USER ACTION: update the two selected slots on the Kaggle website.
-- Deployed tree = MAIN v4 (ng verify --hash OK post-restore). Deadline 2026-07-15 (private LB decides).
-- **IN-FLIGHT: task233 rebuild agent** (target 28033→12-15k, +0.63-0.85) was still running at handoff —
-  check candidates/task233/ (new filenames beyond cand_clamped_C/cand_v2A) for its verdict; if it gated
-  a win, adopt → MAIN v5 + HEDGE v5 resubmit (same procedure).
+- Confirmed BEST LB: **7305.75** (sub **54581845**, MAIN v5, pure-max, NEW RECORD). Local 7305.6311, offset +0.12, no zeros.
+- HEDGE v4 confirmed **7298.51** (sub **54580652** = MAIN base + 9 protections, handicap as priced; all 9
+  executed cleanly). HEDGE v5 NOT needed: the only v4→v5 delta is task233, whose slot HEDGE overrides
+  with cand_clamped_C anyway — HEDGE v4 == would-be HEDGE v5.
+- **FINAL SELECTION (before 07-15): MAIN v5 (54581845) + HEDGE v4 (54580652).** Supersedes all prior
+  pairs. ⚠️ USER ACTION: set these two slots on the Kaggle website.
+- Deployed tree = MAIN v5 (233 adopted, src reconciled 266/266). Deadline 2026-07-15 (private decides).
+- **Grader capability PROVEN by sub 54581845:** opset 16 + ScatterElements(reduction='add') + u8 Div/Mod
+  all execute on the LB (task233 scored full) — usable in future builds.
 
 ## 🎲 HIDDEN-DRAW COUNT: k ≈ 1–2 (calibrated 2026-07-12, levers.yaml hidden-draw-k-calibration)
 Public-LB survival of 31 risky incumbents (joint q=0.343) with zero task-zeros ⇒ posterior k=1: 66%,
@@ -31,12 +32,14 @@ best-of-two). MAIN carries strict wins only (near-free repairs exempt).
 its own src; divergence documented in task048 ledger)**. Rebuild: swap over overfit_nets → ng score each
 isolated → pack → submit → restore from scratchpad backup → verify --hash.
 
-## This session's scoreboard (7304.42 → 7305.62, +1.20 LB)
+## This session's scoreboard (7304.42 → 7305.75, +1.33 LB)
 - task010 rank-recolor einsum rebuild 1002→379 (+0.97; ⭐ guard-row trick: guaranteed-max slot = free
   all-ones constant + self-organizing bg channel; [K,K] bool pairwise rank plane + free-output 11-op
   einsum (cnt−d)(d+2−cnt) sign decode — see task010 tasklog TRANSFERABLE).
 - task008 trim rebuild 2683→2127 (+0.23 bit-identical; folded selectors, Floor-free decode, 4-cell
   clamped ScatterND, rank-2 canvas).
+- task233 structural rebuild 28033→24703 (+0.126; packed-key u8 MaxPool sprite detector, profile-bbox
+  ScatterElements(add), OOG guard; fresh 3.00%→2.38% strict-subset; repr floor ~22.3k ledgered).
 - task018 mechanism cracked (fresh 0.57% < incumbent 2.0% — "irreducible 2%" partly refuted) but cost
   39915 no-adopt; arch floor 15-18K; reopen = lean-rewrite session using candidates/task018/ as spec.
 
@@ -60,9 +63,8 @@ hidden-draw-k-calibration | fourth-25pt-hunt | C/I triage (26/26 discriminator: 
 0 new) | 015 floor (900, sparse-rejection proof) | micro-family 001/003/006/007 (dense floors).
 
 ## Next Session Start
-1. `uv run ng status`; confirm 54580604 = 7305.62 & 54580652 = 7298.51 unchanged (changed score ⇒
+1. `uv run ng status`; confirm 54581845 = 7305.75 & 54580652 = 7298.51 unchanged (changed score ⇒
    k-calibration reopen trigger — recompute); confirm USER set final selection to the v4 pair.
-2. Check task233 agent outcome (candidates/task233/) → adopt/resubmit if gated win.
 3. Kernel poll (`uv run python tools/poll_public_dumps.py`) → mine → legacy-chain + deepfold rescans.
 4. Optional intel re-poll via Playwright (new threads; task numbers for the six hidden 25s).
 5. Post-deadline: validate k≈1-2 against private zero pattern; writeups → six hidden 25s + 018-4850
