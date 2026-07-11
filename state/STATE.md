@@ -69,6 +69,23 @@ overfit_nets, ng score each isolated, pack, submit, restore from scratchpad back
   Score-drift reports in that thread (Ali, Chan Kha Vu) = this UB class 2mo ago, NOT resampling.
 - Bobber Cheng "symbolic program is all you need" (724351): details promised post-deadline only.
 
+## 🎯 PER-TASK COST INTEL TABLE (2026-07-12 harvest — +11.13pt CONFIRMED reachable gap)
+| task | ours | theirs | gap | source |
+|------|------|--------|-----|--------|
+| 008 | 2683 | 148 | **+2.90** | len8487 19th, thread 718974 |
+| 010 | 1002 | 132 | **+2.03** | same |
+| 018 | 24358 | 4850 | +1.61 | Kimura 9th, 724263 (fork building) |
+| 015 | 900 | 300 | +1.10 | len8487, 723552 |
+| 001 | 240 | 84 | +1.05 | len8487 84 / Jan Vorel(1st) 94, 715448+718974; mechanism hint: no intermediate, [1,10,30,30] free-output direct |
+| 233 | 28033 | ~12000 | +0.85 | len8487 "fable 5 ~12k", 9th 14902, 720501 |
+| 003 | 260 | 131 | +0.69 | 718974 |
+| 007 | 127 | 78 | +0.49 | pwxc00 54th, 718974 |
+| 006 | 153 | 100 | +0.43 | 718974 |
+These are EXISTENCE PROOFS below our costs ⇒ every ledgered floor on these tasks has its
+reopen trigger FIRED (public intel below our floor). Jan Vorel (1st, 8063.39): task001=94,
+"I have 9 25s", histogram = 0<15|11|19|40|70|97|106|29|17|2|9×25. LB snapshot 07-12: top7 ≥8000.
+task023-zero thread (719708) = Conv-bias UB class (Diana 3rd confirms) — we are audited clean.
+
 ## Durable physics learned (memory/insights.yaml has kron_fractal_einsum)
 - **Hidden eval = k≈1–2 fresh arc-gen draws per task** (2026-07-12 Bayesian; see above).
 - **fp Conv with runtime weights is BROKEN in sequential grading** (ORT pre-packs run-0 weight)
