@@ -64,7 +64,8 @@ hidden-draw-k-calibration | fourth-25pt-hunt | C/I triage (26/26 discriminator: 
 
 ## Next Session Start
 1. `uv run ng status`; confirm 54581845 = 7305.75 & 54580652 = 7298.51 unchanged (changed score ⇒
-   k-calibration reopen trigger — recompute); confirm USER set final selection to the v4 pair.
+   k-calibration reopen trigger — recompute); confirm USER set final selection to MAIN v5 (54581845)
+   + HEDGE v4 (54580652) on the website.
 3. Kernel poll (`uv run python tools/poll_public_dumps.py`) → mine → legacy-chain + deepfold rescans.
 4. Optional intel re-poll via Playwright (new threads; task numbers for the six hidden 25s).
 5. Post-deadline: validate k≈1-2 against private zero pattern; writeups → six hidden 25s + 018-4850
