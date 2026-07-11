@@ -141,3 +141,14 @@ See memory [[neurogolf-urad-7225-bundle-vein]]. both fail 162/2000 equally (task
 - cost: 12282 -> 8424 (points 15.9612)
 - source: candidates/task118/hashscatter.onnx
 - note: hash-scatter bundled compiler (018 template): gray5->cyan8 edits, KMAX=44, N=267, injective hash first try; 12282->8424
+
+## 2026-07-11 — fresh-tail diagnosis (7.4% sweep) → NO-FIX this pass
+ran: 25 fails collected: net (20-node QLinearConv cross-detector, min-merged) misses whole cross
+  groups — variable arm-length variants outside the fixed matched-filter geometry. No TopK/K caps
+  to refit (checked); fix = variable-arm detection redesign (dedicated build, unpriced).
+tool+date: fail diff + graph dump, 2026-07-11 (fork).
+verdict: parked. Same bundled!=raw evidence as task002 (passes 267 bundled at 7.4% raw divergence
+  ~1e-9 coincidence) ⇒ bundled/hidden pipeline is curated; raw-sweep rate overstates private risk.
+reopen: hidden-set generation evidence; a variable-arm cross detector design (occurrence maps at
+  2-3 scales, priced vs 12282).
+falsification history: none (first diagnosis).

@@ -138,3 +138,18 @@ Artifact: `reports/candidates/task319/task319_zero_compare_tail.onnx`.
 Bundled gate: `267/267`, fail=0.  Cost: `5837 -> 5832` (memory `5674`
 unchanged, params `163 -> 158`).  Active backup:
 `submission/overfit_nets/.zero_compare_tail_backup/task319.onnx`.
+
+## 2026-07-11 — fresh-tail diagnosis (5.1% sweep) → FIXABLE, dedicated build needed
+ran: 25 fail instances classified with an exact clipped-anchor 2x-pattern matcher (numpy):
+  20/25 UNIQUELY FIXABLE (visible magnified fragment uniquely identifies sprite0; deployed
+  bit-packed row-signature matcher [nodes 63-100] picks wrong), 5/25 irreducible ambiguity
+  (fragment consistent with both sprites; generator picks sprite0 unobservably -> coin flip).
+tool+date: numpy matcher + graph dump, 2026-07-11 (fork).
+verdict: correct matcher would cut fail 5.1% -> ~0.5-1%. Blueprint: replace the row-signature
+  compare with exact clipped 2x matching — per candidate sprite, build 2x-upscaled runtime kernel
+  (double-Gather), Conv-correlate against padded magcolor mask (anchors incl. off-grid via pad 12),
+  require count==|visible| AND zero hits on ~magmask; select winner; keep the existing render tail.
+  Est. +1.5-3KB on 5832 (-0.2~-0.35pt) vs protection ~0.65-1.3pt at k=1-2 hidden draws — POSITIVE EV
+  if hidden draws are raw-like; NOTE the task002 bundled!=raw finding weakens the premise.
+reopen: dedicated builder session for the matcher; hidden-set generation evidence.
+falsification history: none (first diagnosis).

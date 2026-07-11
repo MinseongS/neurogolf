@@ -239,3 +239,20 @@ k7(cost 6689): 588k viols, early kill. 상세: reports/train_to_golf_report.md. 
 task002 't'=Sub(ONE,g) {0,1}-ish → fp16 activation recast (t,W,g16 + inits fp16); Greater(t,W) is sign/zero-sensitive so fp16 magnitude overflow on W is harmless. 6689→5889 (−800).
 Gate: evaluate bundled fail=0 + **bit-identical outputs** over all train/test/arc-gen (verified). Safe for both tracks + private LB.
 ⭐ TRANSFERABLE: only ACTIVATION (node-output) dtype narrowing saves grader bytes — params counted by element-count (dtype-independent). Narrow the PRODUCER (upstream Cast/init dtype), never a post-Cast. Blocked when the plane is derived from / contracted with the free fp32 `input` (Einsum-vs-input, Slice/Conv of input, ScatterND updates vs fp32 data) → those force fp32. See [[neurogolf-fp16-count-plane-recast]].
+
+## 2026-07-11 — fresh-tail diagnosis (5.6% sweep) → NO-FIX (rule-mismatch, shallow ceiling)
+ran: 25 fail instances collected + generator source read. TRUE rule = box(pot) interiors ∪ isolated
+  4-surrounded singles (raster cascade PROVEN impossible for runs>=2); deployed net implements
+  4-conn border-enclosure -> over-fills jointly-enclosed pockets. fp32-walk rebuild tested: fixes
+  0/25 (overflow NOT the cause). Rect-component refinement measured 2.9% (vs 5.4% baseline) over
+  4000 draws; residual = rectangular joint pockets incl. IRREDUCIBLE fake-ring ambiguity (a noise
+  ring identical to a pot is labeled unfilled by the generator).
+tool+date: numpy A/B vs generator (4000 draws) + onnx surgery probe, 2026-07-11 (fork).
+verdict: NO-FIX shipped. KEY EVIDENCE: net passes all 265 bundled yet raw-generate() diverges 5.4%
+  -> P(coincidence)~3e-7 ⇒ BUNDLED DATA IS NOT RAW generate() OUTPUT (curated/filtered params).
+  If the hidden set matches the bundled pipeline, raw-draw sweep rates OVERSTATE private risk.
+reopen: evidence on hidden-set generation (post-deadline writeups); an ONNX-cheap exact pot
+  detector (ring conv bank ~2.3K params priced, not built); rect-component walk variant (+~3KB,
+  2.9% residual) if hidden-set size is ever established >2 draws/task.
+falsification history: first diagnosis of this class; supersedes the naive '5.6% = depth/overflow'
+  hypotheses (both measured false).
