@@ -35,6 +35,7 @@ from tools.dashboard import render_dashboard
 
 NETWORKS = ROOT / "networks"
 CUSTOM = ROOT / "src" / "custom"
+STATE = ROOT / "state"
 FRESH_CACHE = ROOT / "reports" / "fresh_cache"
 REPORTS = ROOT / "reports"
 
@@ -55,13 +56,29 @@ ARC_COLORS = {
 
 @st.cache_data
 def load_manifest_tasks() -> dict[str, Any]:
-    path = REPORTS / "manifest.json"
-    if not path.exists():
-        return {}
-    with path.open() as f:
-        data = json.load(f)
-    tasks = data.get("tasks", {})
-    return tasks if isinstance(tasks, dict) else {}
+    safe_path = STATE / "safe_manifest.json"
+    live_path = STATE / "manifest.json"
+
+    tasks: dict[str, Any] = {}
+    if safe_path.exists():
+        with safe_path.open() as f:
+            data = json.load(f)
+        raw = data.get("tasks", {}) if isinstance(data, dict) else {}
+        if isinstance(raw, dict):
+            tasks.update({str(int(k)): v for k, v in raw.items() if isinstance(v, dict)})
+
+    if live_path.exists():
+        with live_path.open() as f:
+            data = json.load(f)
+        raw = data.get("tasks", data) if isinstance(data, dict) else {}
+        if isinstance(raw, dict):
+            for key, value in raw.items():
+                if not isinstance(value, dict):
+                    continue
+                normalized = str(int(value.get("task", key)))
+                tasks[normalized] = {**tasks.get(normalized, {}), **value}
+
+    return tasks
 
 
 def color_grid_to_onehot(grid: np.ndarray) -> np.ndarray:
@@ -560,8 +577,7 @@ def metric_text(result: dict[str, Any]) -> tuple[str, str, str]:
 
 
 def append_proposal(task_num: int, proposal: str, questions: list[str]) -> pathlib.Path:
-    path = REPORTS / "tasklog" / f"task{task_num:03d}.md"
-    path.parent.mkdir(parents=True, exist_ok=True)
+    path = STATE / "tasks" / f"task{task_num:03d}.md"
     checked = "\n".join(f"- {q}" for q in questions)
     text = (
         "\n\n## Human review proposal\n\n"

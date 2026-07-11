@@ -1,6 +1,6 @@
 """Overview dashboard page for the NeuroGolf Streamlit app.
 
-Aggregates the per-task scoreboard (`reports/manifest.json`) across all 400 tasks:
+Aggregates the per-task scoreboard (`state/manifest.json`) across all 400 tasks:
 score-band and operator-mechanism grouping, a sortable/filterable task table, and
 drill-down into the per-task Task Viewer.
 
@@ -22,11 +22,12 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-REPORTS = ROOT / "reports"
+STATE = ROOT / "state"
 
-MANIFEST_PATH = REPORTS / "manifest.json"
-INVENTORY_PATH = REPORTS / "global_layer_inventory.json"
-ARC_MAPPING_PATH = REPORTS / "arc_mapping.json"
+LIVE_MANIFEST_PATH = STATE / "manifest.json"
+SAFE_MANIFEST_PATH = STATE / "safe_manifest.json"
+INVENTORY_PATH = STATE / "global_layer_inventory.json"
+ARC_MAPPING_PATH = STATE / "arc_mapping.json"
 
 MAX_POINTS = 25.0
 # Ordered worst-last so the summary reads high -> low.
@@ -73,6 +74,7 @@ def build_rows(
         points = float(value.get("points", 0.0))
         memory = int(value.get("memory", 0))
         params = int(value.get("params", 0))
+        mem_params = int(value.get("cost", memory + params))
         method = str(value.get("method", ""))
         arc_row = arc_mapping.get(str(n)) or arc_mapping.get(key) or {}
         rows.append(
@@ -82,7 +84,7 @@ def build_rows(
                 "points": points,
                 "memory": memory,
                 "params": params,
-                "mem_params": memory + params,
+                "mem_params": mem_params,
                 "method": method,
                 "method_prefix": method.split(":")[0] if method else "",
                 "headroom": round(MAX_POINTS - points, 6),
@@ -193,9 +195,33 @@ def _load_json(path_str: str) -> Any:
         return json.load(f)
 
 
+def _tasks_from_manifest(manifest: Any) -> dict[str, Any]:
+    """Return a normalized task map keyed as "1".."400" from either manifest shape."""
+    if not isinstance(manifest, dict):
+        return {}
+    raw = manifest.get("tasks", manifest)
+    if not isinstance(raw, dict):
+        return {}
+
+    tasks: dict[str, Any] = {}
+    for key, value in raw.items():
+        if not isinstance(value, dict):
+            continue
+        try:
+            normalized = str(int(value.get("task", key)))
+        except (TypeError, ValueError):
+            continue
+        tasks[normalized] = value
+    return tasks
+
+
 def _load_all() -> tuple[list[dict[str, Any]], dict[str, list[int]]]:
-    manifest = _load_json(str(MANIFEST_PATH)) or {}
-    tasks = manifest.get("tasks", {}) if isinstance(manifest, dict) else {}
+    safe_tasks = _tasks_from_manifest(_load_json(str(SAFE_MANIFEST_PATH)))
+    live_tasks = _tasks_from_manifest(_load_json(str(LIVE_MANIFEST_PATH)))
+    tasks = dict(safe_tasks)
+    for key, live_row in live_tasks.items():
+        tasks[key] = {**tasks.get(key, {}), **live_row}
+
     inventory = _load_json(str(INVENTORY_PATH)) or {}
     by_op = inventory.get("by_op", {}) if isinstance(inventory, dict) else {}
     arc_mapping = _load_json(str(ARC_MAPPING_PATH)) or {}
@@ -285,7 +311,10 @@ def render_dashboard() -> None:
 
     rows, by_op = _load_all()
     if not rows:
-        st.warning(f"No scoreboard found. Expected {MANIFEST_PATH}.")
+        st.warning(
+            "No scoreboard found. Expected "
+            f"{LIVE_MANIFEST_PATH} or {SAFE_MANIFEST_PATH}."
+        )
         return
 
     k = kpis(rows)

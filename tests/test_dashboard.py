@@ -57,6 +57,31 @@ class BuildRowsTest(unittest.TestCase):
         self.assertEqual(sorted(r5["ops"].split(", ")), ["Conv", "MaxPool"])
         self.assertEqual(r5["n_ops"], 2)
 
+    def test_live_manifest_cost_becomes_mem_params(self):
+        rows = dashboard.build_rows(
+            {"001": {"task": 1, "points": 19.5, "cost": 240}},
+            {},
+            ARC,
+        )
+        self.assertEqual(rows[0]["task"], 1)
+        self.assertEqual(rows[0]["mem_params"], 240)
+        self.assertEqual(rows[0]["arc_id"], "aaa")
+
+
+class ManifestLoadTest(unittest.TestCase):
+    def test_manifest_shapes_are_normalized_to_task_numbers(self):
+        tasks = dashboard._tasks_from_manifest(
+            {
+                "001": {"task": 1, "points": 19.5, "cost": 240},
+                "bad": "skip me",
+            }
+        )
+        self.assertEqual(list(tasks), ["1"])
+        self.assertEqual(tasks["1"]["cost"], 240)
+
+        wrapped = dashboard._tasks_from_manifest({"tasks": {"2": {"points": 22.0}}})
+        self.assertEqual(list(wrapped), ["2"])
+
 
 class AggregateTest(unittest.TestCase):
     def setUp(self):
