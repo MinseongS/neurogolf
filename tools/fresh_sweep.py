@@ -33,6 +33,10 @@ for _ in range(n):
         ex = gen.generate()
     except Exception:
         continue
+    gi = np.array(ex["input"]); goa = np.array(ex["output"])
+    # graded universe is <=30x30 (net input [1,10,30,30]); bundled pipeline filters sizes
+    if max(gi.shape) > 30 or max(goa.shape) > 30:
+        continue
     runs += 1
     x = to_onehot(ex["input"])
     go = np.array(ex["output"]); h, w = go.shape
