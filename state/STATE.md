@@ -48,9 +48,26 @@ overfit_nets, ng score each isolated, pack, submit, restore from scratchpad back
 - **Legacy-chain board scan ≈0 remaining**; re-run tools/legacy_chain_scan.py after every mine-public.
 - **int8 reverse-arbitrage bounded to 191**; **kron rescan dry**; **deepfold rescan dry**;
   **public lane dry** (2026-07-12 poll: 75 kernels scanned, no new/updated — nothing to mine).
-- Community-intel threads (076/118/173/101 "under 9000?"): checking replies BLOCKED for the agent
-  (Kaggle discussions need browser login; Chrome extension not connected 2026-07-12) — USER checks
-  manually. Any YES falsifies an our-physics floor; 49th-histogram ≥+3.9pt bound stands.
+- Community-intel: drafted threads (076/118/173/101) were NEVER POSTED (mins00 profile: 0 topics)
+  — moot. Playwright headless CAN read Kaggle discussions without login (browser lane OPEN).
+
+## 🔎 COMMUNITY INTEL HARVEST 2026-07-12 (Playwright, all recent threads read)
+- **task018 costs (thread 724263): 9th place = 4850, 19th ≈ 5000; 38th = 24360 (= our lineage,
+  we are 24358/14.90pt).** A ~4850 GENERAL mechanism exists ⇒ our 018 "wall" verdict falsified at
+  the representation level (info-ceiling ~99% still true — a rebuild only needs to match it).
+  +1.61pt on MAIN if matched; risk-adjusted EV ≈ +1.07 at p≈2% (incumbent's own ceiling rate).
+  Family port upside after: 076 (12795), 173 (11320), 118 (12282), 066 (10121), 025 (9817).
+- **≥4 tasks can score 25** (thread 723801: 19th and 48th both hold 4; we hold 3: 067/179/241).
+  48th's full histogram public: 15-16:11 | 16-17:19 | 17-18:40 | 18-19:70 | 19-20:97 | 20-21:106 |
+  21-22:29 | 22-23:17 | 23-24:2 | 25:9. Claim: top1 (7800) histogram = 9×25 + 2 in 23-24.
+- **robga (12th) corroborates k small** (thread 724226): "~2-5% of submitted task candidates score
+  0... the minimal SMALL hidden set that the leaderboard tests" — independent support for k≈1-2.
+- **Conv-bias UB audit run board-wide** (thread 699840, Georgy's check_conv_bias): 400 deployed +
+  hedge candidates → ONE flag, task144 (bias 4 vs out_ch 10) = FALSE POSITIVE, verified safe:
+  channels 4-9 weights are ALL-NaN (intentional golf trick; NaN+garbage=NaN → decode False,
+  heap-spray test 3× identical). Grader stack per thread: ort 1.24.4 + onnx 1.21.0 (matches pin).
+  Score-drift reports in that thread (Ali, Chan Kha Vu) = this UB class 2mo ago, NOT resampling.
+- Bobber Cheng "symbolic program is all you need" (724351): details promised post-deadline only.
 
 ## Durable physics learned (memory/insights.yaml has kron_fractal_einsum)
 - **Hidden eval = k≈1–2 fresh arc-gen draws per task** (2026-07-12 Bayesian; see above).
