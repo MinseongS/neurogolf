@@ -62,3 +62,8 @@ never "channel 0 == 0".
 
 ## 2026-07-03 S12 — train-to-golf(단일 Conv SGD 컴파일) KILL
 k5(cost 3867): 6.6k+17.8k viols 고착, killed. 상세: reports/train_to_golf_report.md. 재탐사 금지 (mem-0 단일노드 경로는 이 태스크에서 선형분리 불가).
+
+## ADOPTED 20260711T094114Z
+- cost: 3866 -> 3806 (points 16.7557)
+- source: candidates/task359/absorb.onnx
+- note: sentinel double-absorb into chidx constant (rA/cB int8 Subs dropped, chidx->chidx+100); bit-identical 5000/0 fresh; 3866->3806 (+0.016). Overfit-trap listing cleared: incumbent is a clean general algorithm (5000/5000 fresh)

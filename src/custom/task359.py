@@ -12,10 +12,9 @@ def build(task):
     inits = [
         tensor('axW', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoDAAAAAAAAAA==')),
         tensor('axH', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAA==')),
-        tensor('one8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoB')),
         tensor('zero_f', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAA')),
         tensor('fifty8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoy')),
-        tensor('chidx', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAQIDBAUGBwgJ')),
+        tensor('chidx100', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIApkZWZnaGlqa2xt')),
     ]
     nodes = [
         helper.make_node('ReduceSum', ['input', 'axW'], ['rc'], keepdims=1),
@@ -31,7 +30,7 @@ def build(task):
         helper.make_node('Greater', ['cmatch', 'rmatch'], ['col_wins']),
         helper.make_node('Not', ['col_wins'], ['row_wins']),
         helper.make_node('Cast', ['row_wins'], ['c'], to=3),
-        helper.make_node('Sub', ['one8', 'c'], ['nc']),
+        helper.make_node('Cast', ['col_wins'], ['nc'], to=3),
         helper.make_node('Mul', ['rlab', 'c'], ['rterm']),
         helper.make_node('Mul', ['clab', 'nc'], ['cterm']),
         helper.make_node('Greater', ['rmaxc', 'zero_f'], ['rnon']),
@@ -39,18 +38,37 @@ def build(task):
         helper.make_node('Cast', ['rnon'], ['rnon8'], to=3),
         helper.make_node('Cast', ['cnon'], ['cnon8'], to=3),
         helper.make_node('Add', ['rterm', 'fifty8'], ['rA0']),
-        helper.make_node('Mul', ['rA0', 'rnon8'], ['rA1']),
-        helper.make_node('Sub', ['rA1', 'fifty8'], ['rA']),
+        helper.make_node('Mul', ['rA0', 'rnon8'], ['rApp'], name='rApp'),
         helper.make_node('Add', ['cterm', 'fifty8'], ['cB0']),
-        helper.make_node('Mul', ['cB0', 'cnon8'], ['cB1']),
-        helper.make_node('Sub', ['cB1', 'fifty8'], ['cB']),
-        # masked[i,j] = rA[i] + cB[j]; output[ch,i,j] = (masked == ch)
-        #             = (rA[i] == ch - cB[j]).  Route the channel dim through the
-        # narrow [1,10,1,30] strip D = chidx - cB instead of materializing the
-        # full [1,1,30,30] `masked` plane (900B -> 300B, bit-identical).
-        helper.make_node('Sub', ['chidx', 'cB'], ['D']),
-        helper.make_node('Equal', ['rA', 'D'], ['output']),
+        helper.make_node('Mul', ['cB0', 'cnon8'], ['cBpp'], name='cBpp'),
+        helper.make_node('Sub', ['chidx100', 'cBpp'], ['D']),
+        helper.make_node('Equal', ['rApp', 'D'], ['output']),
     ]
     value_infos = [
+        helper.make_tensor_value_info('rc', 1, [1, 10, 30, 1]),
+        helper.make_tensor_value_info('cc', 1, [1, 10, 1, 30]),
+        helper.make_tensor_value_info('rlab64', 7, [1, 1, 30, 1]),
+        helper.make_tensor_value_info('clab64', 7, [1, 1, 1, 30]),
+        helper.make_tensor_value_info('rlab', 3, [1, 1, 30, 1]),
+        helper.make_tensor_value_info('clab', 3, [1, 1, 1, 30]),
+        helper.make_tensor_value_info('rmaxc', 1, [1, 1, 30, 1]),
+        helper.make_tensor_value_info('cmaxc', 1, [1, 1, 1, 30]),
+        helper.make_tensor_value_info('rmatch', 1, []),
+        helper.make_tensor_value_info('cmatch', 1, []),
+        helper.make_tensor_value_info('col_wins', 9, []),
+        helper.make_tensor_value_info('row_wins', 9, []),
+        helper.make_tensor_value_info('c', 3, []),
+        helper.make_tensor_value_info('nc', 3, []),
+        helper.make_tensor_value_info('rterm', 3, [1, 1, 30, 1]),
+        helper.make_tensor_value_info('cterm', 3, [1, 1, 1, 30]),
+        helper.make_tensor_value_info('rnon', 9, [1, 1, 30, 1]),
+        helper.make_tensor_value_info('cnon', 9, [1, 1, 1, 30]),
+        helper.make_tensor_value_info('rnon8', 3, [1, 1, 30, 1]),
+        helper.make_tensor_value_info('cnon8', 3, [1, 1, 1, 30]),
+        helper.make_tensor_value_info('rA0', 3, [1, 1, 30, 1]),
+        helper.make_tensor_value_info('rApp', 3, [1, 1, 30, 1]),
+        helper.make_tensor_value_info('cB0', 3, [1, 1, 1, 30]),
+        helper.make_tensor_value_info('cBpp', 3, [1, 1, 1, 30]),
+        helper.make_tensor_value_info('D', 3, [1, 10, 1, 30]),
     ]
     return model('task359_live_exact', nodes, inits, output_dtype=9, opset=17, value_infos=value_infos)

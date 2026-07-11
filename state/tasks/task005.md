@@ -198,3 +198,10 @@ verdict: exact fix, +8B (6413->6421, -0.0009pt) — gate REJECT on strictly-chea
 reopen: n/a (fix in hand).
 falsification history: the borrowed net's S/SW lanes were never audited (bundled examples
   happen to avoid scol=9 deep-down cases — a silent-zero-class latent bug).
+
+## 2026-07-11 SAFETY-ADOPTED (documented price-rule exception)
+ray_center_fix_v2: borrowed-net Concat slot bug repaired (3 Slices + 1 Max added, 4 slots repointed).
+Gate: bundled 266/266 PASS on correctness; REJECT only on 'not strictly cheaper' (6421 vs 6413, +8B
+= -0.0009pt). Fresh A/B 4000: incumbent 118 fails (2.95%) -> candidate 0. Protection ~+0.49pt per
+hidden draw. Installed manually + ng verify --update per the 2026-07-11 fresh-gate doctrine
+(risk-dominant net; price exception documented here; correctness gate NOT bypassed).

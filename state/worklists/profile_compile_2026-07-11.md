@@ -51,3 +51,15 @@ single-step moves), 397 (2751, 2×2 block detect). Secondary: 008 383 037 190 21
   084 S5-optimized) — builder checks tasklog first.
 - Oracle magic constants are NOT ground truth (bundled-tuned); the GENERATOR is.
 - WAVE1 (8 builders, 2026-07-11): 208 014 359 091 177 185 084 055.
+
+## 49th-place distribution bounds (2026-07-11, rigorous)
+His histogram: 0 tasks <15, 11 in [15,16). Ours: 3 <15, 26 <16.
+=> At least 15 of our 26 sub-16 tasks have a <=8103-cost realization at 49th place.
+Under the minimal-gap assignment (his worst 11 = our costliest 11), the OTHER 15 carry
+guaranteed gaps: 101 >=0.47, 076 >=0.46, 118 >=0.42, 138 >=0.37, 198 >=0.34, 173 >=0.33,
+191 >=0.31, 145 >=0.26, 204 >=0.23, 066 >=0.22, 025 >=0.19, 350 >=0.11, 338 >=0.09,
+324 >=0.06, 216 >=0.03 — SUM >=+3.9 (any other assignment gives MORE).
+Also: our 3 sub-15 (233/018/366) are <=22026 for him (233 gap >=0.24).
+IMPLICATION: today's "floor" verdicts on 076/173/101 are OUR-PHYSICS floors, falsified in
+principle by his histogram. These 15 tasks = the reverse-engineering / community-intel target
+list ("under 9000 possible?" threads).

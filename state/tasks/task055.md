@@ -79,3 +79,8 @@ This turns multiple 30x30 override planes into small 1-D category vectors.
 - cost: 2555 -> 1856 (points 17.4738)
 - source: candidates/public_dumps/20260709/neurogolf-7266-48-github-com-qurore-kaggloop/nets/task055.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260711T094237Z
+- cost: 1856 -> 1739 (points 17.5389)
+- source: candidates/task055/where2.onnx
+- note: integer-category Where restructure (4-cat Equal/AND/Concat/Cast -> Where-chain cat + single Equal/Cast, -120B; off-grid guard +180B tax); behaviorally identical, fresh 3478/3478 A/B 0-diff; 1856->1739 (+0.065)

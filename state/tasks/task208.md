@@ -89,3 +89,33 @@ k5(cost 4726): val gate fail; k7 gain negative. 상세: reports/train_to_golf_re
 
 
 ## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 4726 -> 4209 (+0.116); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].
+
+## 2026-07-11 — profile-compile attempt: signed-Einsum mask-fold FALSIFIED (no win; net at floor)
+- **Ran:** full byte-audit of deployed net (cost 4172 = mem 4040 + params 132, gate 266/266,
+  fresh 3000/3000 fail=0). Generator invariant check (400 draws): least-freq color == boxcolor
+  in 400/400 (random_colors(3) picks 3 distinct NONZERO colors; black is rare noise + holes, never
+  least). Confirmed the "two identical black holes / box1 un-framed" rule.
+- **Byte drivers (counted):** cslice[1,1,17,17] fp32 = **1156** (black-detection entry) · mask[1,1,30,30]
+  bool = **900** (ring) · cu8 289 · zeroed 256 · convmap 256 · ring [30,1]/[1,30] edge tail ≈ 480 · 5
+  free-input reductions (cnt/Pm/Qm/Mr/Mc) 40 each. Everything else ≤40B scalars.
+- **Obstruction (mask fold, honest numbers):** the sketch's premise "kill the 900B mask via a
+  signed/free-output Einsum" does NOT pay here. Final routing is `Where(mask, oh_f[10,1,1], input)` →
+  the 900B is a **channel-collapsed bool** [1,30,30]; the Where else-branch is the FULL arbitrary
+  10-channel **positioned-content** input (not a band/interval/fill). Any additive/Einsum fold
+  (output = input + Einsum('c,by,bx->cyx', 2oh-1, ROW', COL), math verified correct under (>0)
+  decode) RE-EXPANDS the channel dim into a counted [10,30,30] intermediate = **9000B fp32 / 4500B
+  fp16** vs the 900B bool — strictly WORSE by +3600..+8100B. Input can't be folded into the outer-
+  product Einsum (rank-full, non-separable). This is exactly the detection-vs-carrier "positioned-
+  content, NOT interval/band/fill" caveat → regime-crack/mask_dominance lever is **out of scope** for 208.
+- **Detection entry (1156) re-confirmed floor:** Slice preserves fp32; casting input before slicing =
+  9000B; fp32-Conv path convmap 1024 (drops cu8 289 but +768) and fp16 path (578+512) both measured
+  worse (matches ledger S8). 17×17 is the minimal region (hole top-left ∈ [2,19-h], extent ≤18).
+- **Ring 900B re-confirmed floor:** any full-grid frame plane is ≥900 (bool); the rowval/colval<Less
+  trick already yields the frame in ONE 900B plane (outer-AND-NOT-inner would need THREE). Sub-30x30
+  routing needs a Pad (→900) or a [10,21,21] input Slice (17640) — both worse. Tail [30,1]/[1,30]
+  edge ops (~480B) are lean; no ≥100B reduction found without adding compares.
+- **Verdict:** deployed 4172 is at/near floor; no candidate written (would not gate cost<4172).
+  Reopen-trigger: a new op that produces a channel-collapsed frame plane <900B, OR a fp32→u8 spatial
+  op that skips the 1156B slice, OR a cheaper 2D all-black-rect detector. Falsification-history: none
+  yet (first fold attempt on 208; consistent with 2026-06-30 Einsum-vs-free-input win which already
+  harvested the separable carrier — remaining mass is fp32 detection + positioned-content passthrough).

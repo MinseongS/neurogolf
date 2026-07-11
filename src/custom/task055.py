@@ -12,32 +12,34 @@ def build(task):
     inits = [
         tensor('sel8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAA')),
         tensor('th2', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAACBA')),
-        tensor('two', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAABA')),
+        tensor('th0', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAA/')),
         tensor('csax', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAA==')),
-        tensor('arange3', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDMsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAA8AEA=')),
+        tensor('three', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAQg==')),
+        tensor('four', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoARA==')),
+        tensor('ar4', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDQsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAA8AEAAQg==')),
         tensor('T', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCA0LCA0KSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAPAAAADwAAAAAAAAAAAAAADwAAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAAAPAAAAAAAAAA8ADwAPAA8ADwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==')),
     ]
     nodes = [
         helper.make_node('Einsum', ['input', 'sel8'], ['rv'], equation='zchw,yc->zyh'),
         helper.make_node('Greater', ['rv', 'th2'], ['rlb']),
+        helper.make_node('Greater', ['rv', 'th0'], ['rgg']),
         helper.make_node('Cast', ['rlb'], ['rlf'], to=10),
         helper.make_node('CumSum', ['rlf', 'csax'], ['rband'], exclusive=1),
-        helper.make_node('Equal', ['rband', 'arange3'], ['rRbnd']),
-        helper.make_node('Equal', ['rv', 'two'], ['rcont']),
-        helper.make_node('And', ['rRbnd', 'rcont'], ['rR012']),
-        helper.make_node('Concat', ['rR012', 'rlb'], ['rRall'], axis=1),
-        helper.make_node('Cast', ['rRall'], ['rR'], to=10),
+        helper.make_node('Where', ['rgg', 'rband', 'four'], ['rw1']),
+        helper.make_node('Where', ['rlb', 'three', 'rw1'], ['rcat']),
+        helper.make_node('Equal', ['rcat', 'ar4'], ['rRb']),
+        helper.make_node('Cast', ['rRb'], ['rR'], to=10),
         helper.make_node('Einsum', ['input', 'sel8'], ['cv'], equation='zchw,yc->zyw'),
         helper.make_node('Greater', ['cv', 'th2'], ['clb']),
+        helper.make_node('Greater', ['cv', 'th0'], ['cgg']),
         helper.make_node('Cast', ['clb'], ['clf'], to=10),
         helper.make_node('CumSum', ['clf', 'csax'], ['cband'], exclusive=1),
-        helper.make_node('Equal', ['cband', 'arange3'], ['cRbnd']),
-        helper.make_node('Equal', ['cv', 'two'], ['ccont']),
-        helper.make_node('And', ['cRbnd', 'ccont'], ['cR012']),
-        helper.make_node('Concat', ['cR012', 'clb'], ['cRall'], axis=1),
-        helper.make_node('Cast', ['cRall'], ['cR'], to=10),
+        helper.make_node('Where', ['cgg', 'cband', 'four'], ['cw1']),
+        helper.make_node('Where', ['clb', 'three', 'cw1'], ['ccat']),
+        helper.make_node('Equal', ['ccat', 'ar4'], ['cRb']),
+        helper.make_node('Cast', ['cRb'], ['cR'], to=10),
         helper.make_node('Einsum', ['T', 'rR', 'cR'], ['output'], equation='kab,zar,zbc->zkrc'),
     ]
     value_infos = [
     ]
-    return model('task055_live_exact', nodes, inits, output_dtype=10, opset=17, value_infos=value_infos)
+    return model('task055_live_exact', nodes, inits, output_dtype=10, opset=18, value_infos=value_infos)

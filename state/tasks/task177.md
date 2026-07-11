@@ -82,3 +82,8 @@ is the cheap realization of this tasklog's "carry input as bool" open angle (no
 - cost: 3249 -> 2565 (points 17.1503)
 - source: /tmp/task177_cand.onnx
 - note: runtime-spend S8-port fanout: Einsum->Equal(label)->Pad onehot-decode tail folded into ONE free-output einsum 'nvbd,ab,ed,af,eg,v->nvfg' — input itself as one-hot colour source (kills co 256B + crop_bool 640B + Equal/Pad), P[8,30] identity embed reused on both axes (in-einsum top-left placement, no output Pad), w[0]=0 as channel-0 suppressor under free >0 decode. 3249->2565 (+0.236), bit-identical vs deployed + 300 fresh rects. TRANSFERABLE: onehot-DECODE tails (Equal(label,K)) fold via input-as-onehot-source; single P[k,30] reused across axes.
+
+## ADOPTED 20260711T093552Z
+- cost: 2565 -> 2509 (points 17.1724)
+- source: candidates/task177/A_int32idx.onnx
+- note: int32 index dtype (OneHot int32/int32 pair; idx 128->64B, -56B net); bit-identical 3500/0 fresh; 2565->2509 (+0.022)
