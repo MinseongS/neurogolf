@@ -63,3 +63,14 @@ Also: our 3 sub-15 (233/018/366) are <=22026 for him (233 gap >=0.24).
 IMPLICATION: today's "floor" verdicts on 076/173/101 are OUR-PHYSICS floors, falsified in
 principle by his histogram. These 15 tasks = the reverse-engineering / community-intel target
 list ("under 9000 possible?" threads).
+
+## LANE CLOSED (2026-07-11 late)
+Wave1 (8) + wave2 (8) + S-list (4) = 20 judged: 3 wins adopted (055 +0.065, 363* +0.048, 017* +0.028
+[*tier1 probes], plus wave1 177/359), 17 empirical floors. Root causes across all floors: (1)
+fp32-input-coupling (tensors born from / co-bound with the free fp32 input are dtype-pinned; escape
+costs an 18KB cast), (2) the 900B non-separable label/route plane before the free Equal, (3)
+params-element-count floors (398 mem=49!), (4) prior sessions already applied this exact idiom
+(07-09 profile-compile adoptions + public min-merges are tighter than the naive oracle bounds).
+Remaining P-rows (232/297/335/175/244/301/246/293/183/060/010/239/151/259/047) are LOWER-gap than
+the judged set → expect the same floors; do NOT dispatch builders without a new physics ingredient.
+All 20 incumbents measured fresh-clean (3000/3000) except previously-known tails.
