@@ -286,6 +286,23 @@ levers:
           (3) 표현력 — AND-of-halfplanes/비분리 positioned content는 단일 >0 임계로 불가."
         reopen: "새 fp32-paying nonlinearize+route 꼬리 유입 시(min-merge/신규 덤프마다 deepfold 재스캔);
           mixed-dtype 또는 uint8/bool Einsum 커널; >52-index einsum."
+      - date: 2026-07-11
+        ran: "deepfold 보드 1위 task243 P2 [1,2,18,18] fp32 2592B (dpts 1.035) 4각 설계감사 —
+          (1) fp16 emit, (2) s-축 de-stack, (3) producer chain-merge(게이트 21회 인라인), (4) 완전제거.
+          equation letter 실측 52/52; slot 의미(PSEL2/Qb2/S2/T2) initializer 덤프로 검증. 무빌드:
+          fp16은 fp32-coupling(자유 input이 dtype 고정, Cast 평면 ≥ 절감); de-stack은 표현력(2항합=s축,
+          all-pass vs passable slot-의존 게이트 강제, ungated-diffusion 변형은 count비 ~1e25로 fp32
+          overflow); chain-merge는 +63 fresh letters 필요 vs 여유 0; 공간축소는 gen 바운드 18×18."
+        tool: "onnx dump + hand byte-accounting, 2026-07-11 (fable fork agent)"
+        verdict: "P2는 stacked free-output walk-einsum 패밀리 내 표현 최소치; 4020 = 그 패밀리 플로어
+          (1428 params + [2,18,18] fp32 게이트 평면 1장). 태스크-절대 플로어 주장 아님. params 레인
+          (S2 648 + Cr 540)도 동일 표현력 논거로 stack/crop-강제."
+        reopen: "(1) bool/uint8/mixed-dtype Einsum 커널 허용 ORT(1B/elem 게이트=648B, +0.66);
+          (2) >52-index einsum; (3) gated matrix-power/masked-dilation 원자 op(평면 소멸, +1.03);
+          (4) walk-einsum 밖의 새 4-conn flood 설계 패밀리."
+        falsification_history: "'P2 irreducible' 자체는 무전과(평면이 2026-07-10 S8-port 트레이드에서
+          탄생). 단 task243 floor-판정 TYPE은 5회 반증(13.86→S8→S9→S18→S8-port) — 설계패밀리-조건부
+          진술로만 기록."
 
   - name: dtype-overpay
     status: dormant

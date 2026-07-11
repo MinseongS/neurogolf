@@ -297,12 +297,18 @@ def scan_fingerprint_candidates(base_dir: Path, rows: list, exclude_win_tasks: b
 
 
 def _resolve_backup(task: int) -> Path | None:
+    # Prefer the newest adopt-stamped backup: every adoption (incl. `ng mine-public
+    # --apply`) writes taskNNN_<adopt-ts>.onnx, so the lexicographically last entry is
+    # the true pre-adoption net. The unstamped .minmerge_backup copy is legacy and can
+    # be arbitrarily stale (396 stale-baseline incident, 2026-07-11) — fall back to it
+    # only when no stamped backup exists. File mtimes are useless here (copy2 preserves
+    # source mtime), hence name-timestamp ordering.
+    hits = sorted(glob.glob(str(ADOPT_BACKUPS / f"task{task:03d}_*.onnx")))
+    if hits:
+        return Path(hits[-1])  # latest adopt timestamp
     mm = MINMERGE_BACKUP / f"task{task:03d}.onnx"
     if mm.exists():
         return mm
-    hits = sorted(glob.glob(str(ADOPT_BACKUPS / f"task{task:03d}_*.onnx")))
-    if hits:
-        return Path(hits[-1])  # latest timestamp
     return None
 
 

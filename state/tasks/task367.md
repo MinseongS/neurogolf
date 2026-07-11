@@ -196,3 +196,8 @@ different predicate basis, not algebraic fusion.
 - note: prune v_main 10ch->6ch and add one diagonal tap to Wc diffusion; bundled pass, cost 15890->14082
 
 Mechanism detail: the pure 6-channel prune (`016789`) was already priced at the winning cost but failed only `arc-gen[3]` by one overfilled cell. A full channel restore would have cost ~452 and missed the user's +0.1 threshold. Exhaustive 6-channel subset sweep found no better PASS, so the repair moved downstream: `Wc` changed from the 4-neighbor plus center kernel to add a single upper-left diagonal tap. This recovered the missing suppressor geometry without changing memory or param count. Source was regenerated via `tools/live_to_exact_source.py` from `candidates/task367/cand.onnx`; `tools/rebuild_networks_from_source.py --tasks 367` rebuilt `networks/task367.onnx` at the same 13700/382 cost and `ng gate` PASS.
+
+## ADOPTED 20260711T042922Z
+- cost: 14082 -> 13926 (points 15.4585)
+- source: dumps/poby7722_7263/nets/task367.onnx
+- note: min-merge from nets

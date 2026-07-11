@@ -461,3 +461,23 @@ arg-select per-K over N, and the match relation is injective (each N-slot matche
 replace with ScatterElements inverse-index table + K Gathers; pair with k=1 + per-example
 pos-override lanes under the bundled-only overfit gate. Scan fingerprint: Equal([K,1],[1,N]) →
 Where → TopK. Candidates: any net with 2D match/correspondence TopK (rescan 349/366/158/173/204).
+
+## 2026-07-11 — 396-fingerprint quantized_integer_route rescan → NO
+ran: public_autopsy fingerprint follow-up (manual, outside qlinear_recast gate — its Cin_read
+  model overprices this net's already-paid u8 grid). Enumerated u8 QLinearConv re-routes of
+  con1(3600B)/vspr(3136B): Min+QLC(ones)+Equal all-nonblack route = −1452B, but numpy replay
+  over data/task233.json shows red-exclusion is load-bearing (4/4 examples, 20 all-red 3×3
+  windows flip detection); every u8 per-color-plane construction ≥2584B extra ⇒ net loss.
+  con1 10-ch decode locked (u8 route needs 9000B input cast — 3rd independent confirmation of
+  the fp32-detection floor, now from the integer side).
+tool+date: manual onnx dump + numpy bundled replay, 2026-07-11 (fable fork agent).
+reopen: (i) bundled-equivalent variant where red-exclusion moves into an existing counted plane
+  for free; (ii) any new already-paid multi-channel u8 plane appearing in 233 via future rebuild
+  (re-run the Min+QLC route then); (iii) 8-bit hash injectivity check (tbl 512→256, +0.018) if
+  0.0X passes are ever requested.
+falsification history: 233 "CLOSED" verdicts falsified twice (2026-07-08 net-surgery era claim;
+  2026-07-10 scatter-table −3905 after 07-09 independent-floor CONFIRMED). Confidence in this NO
+  is correspondingly moderate; covers only the quantized-integer-route lens, not 233 globally.
+NOTE: the autopsy fingerprint's expected_gain 0.32 was a STALE-BASELINE artifact (diffed vs the
+  2026-07-09 backup, not the pre-adoption deployed net); actual 396 win = one Reshape broadcast
+  elision (−32B). Scanner fix applied to src/neurogolf/scans/public_autopsy.py same day.

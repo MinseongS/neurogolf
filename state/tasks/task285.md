@@ -195,3 +195,8 @@ so any future TopK dtype or K shrink must be isolated before adoption.
 - Tool+date: opus triage agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
 - Reopen triggers: new public net < 19623; mixed-dtype Conv halving cf 3600B (hard-closed); a reflection-reconstruction avoiding both fp32 read and full-grid scatter carrier (attack B dense alt measured 99952B = 4.0x, sparse is optimum).
 - Falsification history: this is the systematic 233-lens sweep prescribed by STATE.md Active Vein 1 after the 2026-07-10 task233 win falsified its own 07-09 CLOSED verdict; lens applied and did not fire here.
+
+## ADOPTED 20260711T042922Z
+- cost: 19623 -> 18674 (points 15.1651)
+- source: dumps/poby7722_7263/nets/task285.onnx
+- note: min-merge from nets

@@ -114,3 +114,8 @@ Bundled gate after adoption: fail=0, cost `4928 -> 4926`
 - Tool+date: opus agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
 - Reopen: a public task396 tail paying fp32; provably separable content (rank<=2); params-free 8->30
   embed primitive; crop < 8.
+
+## ADOPTED 20260711T042923Z
+- cost: 3566 -> 3562 (points 16.8219)
+- source: dumps/poby7722_7263/nets/task396.onnx
+- note: min-merge from nets
