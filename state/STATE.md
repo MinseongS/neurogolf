@@ -75,7 +75,7 @@ overfit_nets, ng score each isolated, pack, submit, restore from scratchpad back
 | 008 | 2683 | 148 | **+2.90** | len8487 19th, thread 718974 |
 | 010 | 1002 | 132 | **+2.03** | same |
 | 018 | 24358 | 4850 | +1.61 | Kimura 9th, 724263 (fork building) |
-| 015 | 900 | 300 | +1.10 | len8487, 723552 |
+| 015 | 900 | ~~300~~ | ~~+1.10~~ | RETRACTED 2026-07-12: "300…" was an aspirational question post, nobody confirmed; our re-derived floor = 900 (single dense Conv, sparse-init grader-rejected live-tested, 1-byte plane ≥900; task015 ledger has the full proof + reopen triggers) |
 | 001 | 240 | 84 | +1.05 | len8487 84 / Jan Vorel(1st) 94, 715448+718974; mechanism hint: no intermediate, [1,10,30,30] free-output direct |
 | 233 | 28033 | ~12000 | +0.85 | len8487 "fable 5 ~12k", 9th 14902, 720501 |
 | 003 | 260 | 131 | +0.69 | 718974 |

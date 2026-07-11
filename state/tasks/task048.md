@@ -73,3 +73,13 @@ box0. ⭐ **Re-probe verdict: a flood/connectivity predicate over a variable-noi
 grid with a long path-length tail is a TRUE memory wall** — the deployed baseline is
 already near its honest floor; only ~+0.18 of dtype/op-fold golf is available and
 reducing rounds trades directly against the fresh-200 generalization gate.
+
+## 2026-07-12 — SRC-vs-DEPLOYED divergence found (clean fresh sweep)
+Deployed onnx (cost 803) fresh-fails 23/1500 = 1.53%; src.custom.task048 build (cost 1146,
+gate REJECT 'not strictly cheaper', bundled 270/270 fail=0) fresh-fails 0/1500; the two diverge
+on exactly the 23 fail draws. So the deployed net is a CHEAPER-BUT-RISKIER variant than its own
+source — earlier "0/2000 clean" isolated fresh reading was measured on the SRC build (self-trap).
+Artifact: candidates/task048/src_rebuild.onnx (gated numbers above).
+DECISION 2026-07-12: keep deployed on MAIN (swap EV ≈ +0.39 risk-removal − 0.356 cost ≈ break-even,
+portfolio doctrine says MAIN carries strict wins only); src_rebuild is a PRICED HEDGE-protection
+candidate (−0.356pt buys 1.53%→0) — include in any HEDGE v4 rebuild alongside the existing 8.

@@ -166,3 +166,34 @@ ran: matched-filter/runtime-kernel recompile audit (fable fork): deployed 673-no
 tool+date: fable fork + hand byte-accounting vs generator, 2026-07-11.
 reopen: park unless an exact cluster-association primitive (no iteration) appears; leaked <10K task018 net; single-sprite generator proof (disproven: randint(1,2)). Fresh tail 15/1000 noted in sweep.
 falsification history: the bound audit (2026-07-11) over-estimated this task's gap; its premise is corrected by this entry.
+
+## 2026-07-12 — general enumeration rebuild (fable fork, community-intel trigger "9th=4850") → MECHANISM PROVEN, COST NOT YET COMPETITIVE
+ran: full redesign + build. NEW MECHANISM (validated): (1) census/mode/markers via free-input einsums;
+(2) 2-sprite split = body-histogram gap (≥3, fallback ≥2 for real-ARC bundled) with **midpoint threshold**
+(gap-start+0.5 FAILS: markers overhang body by ≤3 into the gap — arc-gen[245] measured); (3) orig-vs-clone
+marker separation = **body-bbox+3 separable indicator** (Chebyshev-chain bound: orig-marker-to-body ≤3 vs
+clone-to-body ≥4 by box-gap; REFUTES the 2026-07-11 "no exact cluster-association primitive" obstruction —
+that audit tested marker-to-MARKER distances, marker-to-BODY is clean); (4) clone positions = residual-moment
+quadratics (exact fp32 sqrt of perfect squares) + Sxy pairing; (5) 8-assignment × 4×4-rot enumeration with
+anchor-difference exact rigid match (linear parts only, [8,2,4] residual via expanded-square einsums);
+(6) stamp = single ScatterND(data=input) with 96-row write list, dustbin=(0,*,29,29) pad cell (grid≤24),
+same-value duplicates only. numpy ref candidates/task018/ref_solver.py = 0.60% fail/2000 fresh (BETTER than
+incumbent ~2.0%); ONNX candidates/task018/build_cand.py → cand.onnx = bundled 266/266 fail=0 (incl. both
+real-ARC validate examples which VIOLATE generator separation guarantees — needed the fallback-2 gap gated
+on ns==2 [arc-gen 1-sprite bodies have 2-hole histograms] + midpoint thr), fresh 0/300 spot + **17/3000 = 0.57%** (candidates/task018/fresh_check.log).
+COST: first build 45930, after fp16-tail/fusion diet 39915 (fail=0 held) vs deployed 24358. Death by
+plumbing: ~500 nodes × ~80B avg (bool→fp32 casts, [30]-vector compare chains, [8,10] enum, [2,30,6]
+extraction 3.6K, int64 scatter-index chain 3.1K). Honest floor of THIS architecture with a full
+bool-ization+fp16+fusion rewrite ≈ high-20s K; a lean batched redesign might reach 15-18K (+0.3-0.5pt)
+— consistent with the 2026-07-11 audit's 17-19K reprice, NOT the 4850 class.
+tool+date: fable fork, onnx 1.21.0/ort 1.26.0, 2026-07-12.
+verdict: mechanism EXISTS and is fresh-robust at 0.6% (beats incumbent tail 2.0%); cost floor of the
+enumeration architecture ≈ 15-18K optimistic. The community 4850 is NOT a general-exact net under this
+representation (likely 1-sprite-only or luck-robust at k≈1) — the +1.61 intel gap is real only if a
+fundamentally cheaper representation exists.
+reopen: (1) a lean-rewrite session (bool-algebra pipeline + batched [2,2,30] side tensors + fused einsums)
+targeting <20K — candidate artifacts are ready as the semantic spec; (2) any leaked <10K task018 net;
+(3) the 0.6%-vs-2.0% tail delta alone justifies a HEDGE port if 018 ever gets protection budget.
+falsification history: REFUTES this file's 2026-07-11 "association ambiguity obstruction" (measured
+counterexample-free threshold via marker-to-body); CONFIRMS its 17-19K cost reprice against the parent
+session's 4850-target hypothesis.
