@@ -207,3 +207,107 @@ Mechanism: motif_i32_sum was [1,1,5,5] int32 (100B) only to feed ReduceSum. moti
 - Tool+date: opus agent (candidates/task191/ablate.py necessity harness), onnx 1.21.0 / ort 1.26.0, 2026-07-09.
 - Reopen triggers: (1) a primitive that detects a motif in multiple orientations within a single conv output channel without summation cross-talk (collapses the 6ch bank); (2) a way to get the uint8 yellow mask directly from fp32 input without any >=529-elem fp32 intermediate.
 - Falsification history: prior S16/motif fp16 recast wins are exhausted; this entry adds the full per-channel necessity proof that the 6ch bank itself is floored.
+
+## 2026-07-11 — fresh-tail diagnosis → (a) FIXABLE RULE-GAP (int8 under-detection, self-inflicted by S10)
+ran: verified deployed submission/overfit_nets/task191.onnx == src.custom.task191 (0 divergences/400 fresh,
+  isolated ORT DISABLE_ALL). It is the S10 bobmyers QLinearConv int8 template-match net (cost 11044,
+  15.690 pts). Reproduced the tail on 6000 fresh generate() draws → **50/6000 = 0.833% fresh-fail**
+  (matches the reported 0.8%). Failure-mode decomposition over all 50 fails (blue ch1 / yellow ch4 diff
+  vs ground-truth, connected-component analysis): **50/50 (100%) = pure blue-box UNDER-detection** —
+  exactly ONE whole oriented-match box missed per fail (1 connected component each, 12–22 cells = a full
+  dilated bbox; missed outer dims 4×4/5×4/4×5/5×5/3×5/5×3 ⇒ oriented (t,w) dilated+1, spanning all valid
+  pattern sizes/orientations). ZERO spurious boxes, ZERO yellow-overlay errors, ZERO wrong-dilation. The
+  net simply drops one exact match whose int8 QLinearConv correlation score fell just under threshold.
+  The generator output is a DETERMINISTIC function of the input (draw() computes `matches` purely by
+  exact-equality scan of the grid — no random tie-break in the output), so there is NO generator
+  ambiguity: every missed box is a genuine exact match a correct net must fire. Empirically confirmed a
+  fixable class: the on-disk exact fp32 MatMul/Equal net (dumps/evgendvorkin_eda/task191.onnx, no int8)
+  **fixes 50/50 of the deployed net's misses and scores 0/1500 fresh-fail** (bundled 267/267).
+tool+date: direct-ONNX repro harness (scratchpad diag191.py/analyze191.py/detmap191.py/testexact191.py)
+  vs arc-gen generator, 6000+ fresh draws, onnx 1.21.0 / ort 1.26.0 DISABLE_ALL, 2026-07-11 (fork).
+verdict: (a) FIXABLE RULE-GAP — the 0.83% tail is **self-inflicted** by the S10 relaxed-gate swap that
+  replaced our S8 exact fp32 product-of-sums einsum (0 fresh-fail over 5600) with the cheaper int8
+  QLinearConv (−7556 cost, +0.456 pts) carrying a documented ~0.95% int8 non-bit-exact fail budget. This
+  re-measures that budget at 0.833% and proves it is 100% under-detection, not ambiguity. FIX DESIGN:
+  revert to an EXACT (non-int8) matcher. Cheapest known exact form = REBUILD the S8 product-of-sums
+  einsum (mem 14070 + params 6576 = cost 20646, 15.065 pts) — NOTE it is NOT retained on disk (reports/
+  tree retired), so this is a rebuild not a swap. PRICE: cost 11044→~20646, pts 15.690→~15.065 =
+  **−0.625 CERTAIN pts** to remove the 0.833% hard-zero tail. (The on-disk exact MatMul/Equal net is a
+  ready alternative but far pricier: cost 44794, 14.290 pts = −1.40 certain — do NOT use it; rebuild the
+  einsum.) ECONOMICS: task scores 0 if ANY hidden draw fails (all-pass). Keep-int8 EV = 15.690·(1−p)^k,
+  fix EV = 15.065, p=0.00833. Break-even **k ≈ 4.9 hidden draws/task** (fix net-POSITIVE iff hidden set
+  draws ≥5 instances/task; at k=1 it is EV-negative by ~0.5 pt but removes a hard-zero private-LB tail).
+  Same open question as task205/002: the fix is worth building only if hidden-draw-count/task ≥5 is
+  established, or as pure private-LB variance insurance.
+reopen: build the exact-einsum revert (tail→0) if hidden-set draws/task ≥5 is ever established, or a
+  public dump ships an exact task191 net cheaper than ~20646; re-measure if a lower-cost 0-fresh-fail
+  matcher (e.g. int16/fp16-exact correlation avoiding int8 quant) is found that keeps cost near 11044.
+falsification history: first fresh-tail diagnosis of task191. CONFIRMS and quantifies the S9/S10 ledger
+  note that int8 QLinearConv is not bit-exact (~0.95% → measured 0.833%); ADDS the proof that 100% of
+  the tail is single-box under-detection on a deterministic (non-ambiguous) generator, so — unlike
+  task157 (heuristic plateau) and task209 (0.83% genuine ambiguity floor) — this tail is fully
+  removable by an exact feedforward net at a known certain-pt price.
+
+## 2026-07-12 — EXACT HEDGE BUILT: 8-orientation QLinearConv (cost 12348, tail→0) — ROOT-CAUSE REVISED
+ran: (1) verified the deployed 0.83% tail is NOT int8 inexactness — dumped valid_u8_q (the QLinearConv
+  match plane) vs an integer numpy correlation using the SAME runtime kernel/bias on EVERY deployed fresh
+  failure: planeDiff=0 (bit-exact) every time. (2) Decomposed 6 deployed under-detections: each missed box
+  sits at an anchor where NO valid channel fired ⇒ MATCH-DETECTION gap, not stamp/arith. (3) Structural
+  proof: bobmyers builds valid_u8_q as [1,**6**,23,23] — its runtime dihedral kernels apply only
+  {I,rot90,rot180,rot270,flipV,T} and OMIT {flipH, antiT}; on asymmetric motifs those 2 are distinct
+  templates, so a generator match in an omitted orientation is silently dropped (0 spurious, 100%
+  under-detect — matches the observed tail). (4) BUILT the fix: extend both runtime kernels 6→8 channels
+  (validity_flipH=flipH(valid_small), validity_antiT=antiT(valid_small); paired excl_flipH=flipV(excl_small),
+  excl_antiT=T(excl_small) via the reverse-engineered rule excl_τ=rot180∘τ(excl_small)); bias Expand 6→8.
+  Kept QLinearConv (proven bit-exact @ scale1/zero0 AND dynamic-weight-safe). Candidate =
+  candidates/task191/exact_8orient.onnx (builder candidates/task191/build_exact.py).
+  ALSO ruled out fp Conv for the correlation: an fp16-Conv exact variant passed ISOLATED single-shot but
+  failed 40/267 bundled in the sequential same-session grader — ORT PRE-PACKS the fp Conv weight on run-0
+  and reuses it, but the kernel here is a per-example runtime tensor ⇒ deterministic wrong output. This is
+  why every prior exact design used MatMul/Einsum/QLinearConv (dynamic-weight-safe), never a data-dependent
+  fp Conv. (Same class as the knife-edge conv-flip / isolated-eval rail.)
+tool+date: direct-ONNX repro + integer-corr oracle + arc-gen generator (8000 fresh draws, isolated
+  ORT DISABLE_ALL CPU), onnx 1.21.0 / ort 1.26.0, 2026-07-12 (BUILDER fork).
+gate: `ng gate candidates/task191/exact_8orient.onnx --task 191` → ok=true, pass=267, fail=0,
+  memory=12252, params=96, cost=12348, points=15.5788. REJECT reason = "not strictly cheaper
+  (cand=12348, deployed=11044)" ONLY (acceptable for HEDGE; correctness gate PASSES fail=0).
+fresh A/B 8000 (isolated): deployed_fail=71 (0.887%) | candidate_fail=0 (0.000%) | fixed 71/71 deployed
+  under-detections | 0 regressions. Candidate fixes every miss and breaks nothing.
+cost/points: 11044→12348 (+1304) ; 15.690→15.5788 = **−0.111 pts** to remove the 0.887% hard-zero tail.
+  (Far cheaper than the earlier estimated einsum-revert price of −0.625; the omitted-orientation fix costs
+  almost nothing because it only adds 2 match channels, not a whole materialized detection plane.)
+break-even: keep-int8 EV=15.690·(1−p)^k, fix EV=15.5788, p=0.00887 ⇒ break-even **k≈0.80 hidden
+  draws/task**. Since every task draws ≥1 hidden instance, the fix is EV-POSITIVE at k=1 already
+  (k=1 keep EV=15.551 < 15.579; k=2:15.413; k=3:15.276). Unlike the −0.625 einsum this needs NO
+  ≥5-draws assumption — it is EV-favourable for the exact net at any realistic hidden-draw count, and a
+  strict private-LB zero-tail insurance regardless.
+verdict: EXACT HEDGE candidate READY (not adopted, per instruction). REVISES the 2026-07-11 diagnosis:
+  the tail is a 6-of-8-orientation STRUCTURAL gap in bobmyers, NOT int8 non-bit-exactness (QLinearConv is
+  bit-exact here). The exact revert does NOT require the S8 einsum rebuild (~20646/−0.625) — extending the
+  existing QLinearConv to 8 orientations gets exactness at cost 12348/−0.111.
+reopen: if adopted to HEDGE (or MAIN — EV-favourable), source-own via live_to_exact_source + grader-side
+  re-measure; to push cost below deployed 11044 (MAIN by raw points) the only lever left is folding the
+  [1,8,23,23] valid plane into an einsum (S8-style) — the 12252 mem is dominated by valid_u8_q (4232) +
+  yellow_f32 (2116) + colour-assembly tail.
+NOTE ON FORK STATE: this fork did NOT produce any `exact_v4_fused.onnx` / `build_exact_v4.py` / a
+  cost-7716 net; those referenced artifacts are not from this fork and are not on disk here. This fork's
+  sole deliverable is exact_8orient.onnx (cost 12348) + build_exact.py above.
+
+## ADOPTED 20260711T152043Z (SAFETY PRICE-EXCEPTION, 005/188A-pattern)
+- cost: 11044 -> 12348 (points 15.6904 -> 15.5788, -0.1116)
+- source: candidates/task191/exact_8orient.onnx
+- note: 8-orientation dihedral completion (flipH+antiT added to bobmyers 6-channel
+  QLinearConv bank; excl_tau = rot180.tau rule); root cause was orientation OMISSION,
+  not int8 rounding. Fresh 8000: 0.887% -> 0.000%, 71/71 fixed, 0 regressions.
+  Break-even k~0.8 => EV-positive at k=1; orientation-coverage tail is not a
+  curation-filtered class. Bundled fail=0 gate UNCHANGED (267/267 isolated).
+  DURABLE GOTCHA (also in ledger): runtime-weight fp Conv is BROKEN in sequential
+  grading (ORT pre-packs run-0 weight) — exact designs must use MatMul/Einsum/QLinearConv.
+
+## PORTFOLIO REVERT 20260711T152157Z
+- The price-exception fix adopted above is MOVED to the HEDGE slot only; MAIN restored
+  to the pure-max net. Reason (portfolio math): every task >= 14.6pt > HEDGE-v3 public
+  handicap ~6.8pt, so ANY single silent-zero on MAIN already makes HEDGE the better
+  selected slot — MAIN-side insurance changes the best-of-two in NO world and costs
+  its price in the lenient world. DOCTRINE: insurance belongs exclusively on HEDGE;
+  MAIN carries only strict wins. (005-scale ~0.001pt repairs remain fine on MAIN.)

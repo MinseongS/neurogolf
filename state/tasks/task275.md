@@ -17,7 +17,25 @@ coloured AND `P[R%s, C%s]` is set, else 0; cells outside the `s²×s²` footprin
 cell, so a pure single-op Tier-S transform is impossible (must READ the colour grid → ~3600 floor
 for the one combined value plane). Reached 15.11 @ mem 18091.
 
-## Attempts
+## 2026-07-11 CANDIDATE-READY — Kronecker/fractal einsum (NOT yet adopted)
+
+NOTE: log below is stale — deployed net is now a public min-merge einsum build
+(cost 1356, 17.784 pts; sv-blended fp16 route tables + materialized source/mask
+planes), not the 9075 build documented here.
+
+`candidates/task275/task275_kron_einsum.onnx` (builder `build_kron_einsum.py`):
+**cost 837 (mem 25 + params 812), 18.270 pts = +0.486** vs deployed 1356/17.784.
+Gate PASS 266/266; fresh A/B 2000/2000, candidate != incumbent = 0.
+
+Mechanism: folds the deployed net's materialized source/mask planes back into
+the FINAL free-output einsum as direct free-input reads (input×2, 13 operands:
+`tcz,nzEF,uEr,uFv,tw,nwGH,uGd,uHe,u,uYr,uYd,uXv,uXe->ncYX`).
+⭐ Layout is NEVER detected: mod-s folding undoes the half-offset (offset ≡ s)
+and C vs P separate by CHANNEL (1-4 vs 8). ⭐ s∈{3,4} detected EXACTLY:
+ReduceSum(input) = 2s² (18 vs 32, threshold 20) — deterministic, replaces the
+old ~3e-6-miss bbox rule. sv one-hot blends the [2,30,4] tables inside the
+einsum via ONE shared letter u (deployed net's case-blend trick). 3 t-terms:
+colors / +4·e0·inside (occ-folds exactly 2 each) / −5·e0·Cnz·P.
 | # | angle | tier | mem | params | pts | fresh | outcome |
 |---|---|---|---|---|---|---|---|
 | 1 | full-plane slices (ch1-9, ch1-4) + Kron assembly | B | 89299 | 1690 | 13.58 | — | correct but huge |
@@ -78,3 +96,8 @@ already routed: the 10-channel expansion is the FREE BOOL `output = Equal(L, ara
 - ⭐ **Early spatial reduction beats channel slicing:** `ReduceMax(input, axes=[3])` → `[1,10,30,1]`
   (1200B) then slice channels gives all 1-D profiles cheaply; never slice `input` to `[1,9,30,30]`
   (32400B). And `Conv(input, 1×1 W)` puts the channel-weighting in PARAMS, not the 36000B Mul.
+
+## ADOPTED 20260711T141619Z
+- cost: 1356 -> 837 (points 18.2702)
+- source: candidates/task275/task275_kron_einsum.onnx
+- note: kron_fractal_einsum: two-subgrid Kronecker; layout never detected (mod-s fold + channel disjointness); s in {3,4} exact via ReduceSum(input)=2s^2; folds public net's source/mask planes into final einsum

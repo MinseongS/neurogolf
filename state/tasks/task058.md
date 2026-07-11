@@ -85,3 +85,17 @@ with a single `N%4==2` center patch cell. Crop the working canvas to the gen max
 size (20) before the per-cell algebra — 2.25× cheaper than 30×30 — then Pad the
 small label up. Variadic `Min(a,b,c,d)` is one plane vs three chained `Min`s; And
 is NOT variadic (max 2 inputs), Min/Max/Sum are.
+
+## 2026-07-11 — PROBE: content-free spiral CONSTRUCTOR rejected (triage ~40× optimistic)
+(1) Ran: built the full closed-form spiral constructor (green=(L%2==0) XOR (r==c+1 & c==L) OR
+    (N%4==2 & 2r==N & 2c==N-2), AND in-grid; L=min(r,c,e,f)), 20×20 fp16 crop, output via
+    Equal(label,arange). CORRECT (bundled 22/22, fail=0). Measured cost=12532 (mem 12467 + params 65),
+    15.56 pts — LOSES to deployed bitpack (1033 / 18.06) by −2.50. File: candidates/task058/constructor.onnx.
+(2) uv run ng gate candidates/task058/constructor.onnx --task 58 (onnx 1.21 / ort 1.26), 2026-07-11.
+(3) Reopen ONLY if a constructor emits the pattern in ONE free op with NO billed geometry plane.
+    STRUCTURAL floor: the deployed bitpack routes output=BitwiseAnd(row_bits,column_bits) with ZERO
+    pattern intermediates; any ARITHMETIC constructor must materialize L=min(r,c,e,f) (non-separably
+    couples r,c) + derived planes, each billed → mem ≥ several×1000B (measured 12467). Triage ~300B fantasy.
+(4) Falsifies triage row 058 "~300B constructor, gap ~1.2". Bitpack is at STRUCTURAL floor: cropping the
+    tables forces a billed pre-pad intermediate (≥48000B), and the 10-ch column table can't shrink below
+    10 (output channel dim). 058 = FLOOR at 1033.

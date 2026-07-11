@@ -313,3 +313,57 @@ Reopen trigger (ledger):
 - Tool+date: opus triage agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
 - Reopen triggers: a future net re-introducing a fat (N>=50) Equal([K,1],[1,N])->TopK plane; int8-TopK acceptance (3x510B->255B); mixed-dtype Conv (colf 3600B->1800B); new public net < 21990 mem.
 - Falsification history: this is the systematic 233-lens sweep prescribed by STATE.md Active Vein 1 after the 2026-07-10 task233 win falsified its own 07-09 CLOSED verdict; lens applied and did not fire here.
+
+## 2026-07-11 — fresh-tail diagnosis (~0.7% tail) → (b) HEURISTIC PLATEAU (rule recoverable, exact fix unaffordable); NOT irreducible, NOT cheaply fixable
+ran: ran the DEPLOYED net (submission/overfit_nets/task366.onnx, cost 22219, sha matches manifest —
+  NOT src.custom) directly in isolated ORT_DISABLE_ALL on fresh generate() draws. Reproduced tail:
+  34/4734 = 0.72% (also 16/2855 = 0.56% earlier) — consistent with the logged ~1.06%/13-per-1600.
+  Captured 34 failures + taxonomy: 15 gross (ndiff≥25, whole-rectangle/panel errors) + 19 small
+  (ndiff 5-17, mis-sized/unstamped rectangle); orientation 23 stacked / 11 side-by-side (~proportional,
+  not orientation-specific); only 4/34 leak a foreign color. Dominant mode = UNDER-RECONSTRUCTION: the
+  net leaves the placement-panel dots un-stamped (no forecolor rectangle) or stamps a wrong-size/
+  wrong-anchor rectangle; a few gross cases leak the TEMPLATE panel's background color into the output
+  (panel/forecolor-vs-background confusion). This is exactly the documented dot-color-collision +
+  template/placement + mode-background failure family (color-membership routing binds a placement dot
+  to the wrong template evidence, or the mode-bg heuristic mis-fires when a forecolor rectangle
+  dominates the panel).
+tool+date: isolated ORT (deployed onnx) A/B vs generator ground-truth, 4734 draws + failure taxonomy
+  (scratchpad diag.py/an366.py), onnx 1.21.0 / ort 1.26.0, 2026-07-11 (fork).
+verdict: (b) HEURISTIC PLATEAU. The rule is NOT irreducible — the task's own 2026-06-29 exact-cover
+  semantic compiler (candidate template-bg enumeration + bounded rectangle exact-cover + dot-stencil/
+  count geometric routing) scored 1000/1000 seed0 and 5000/5000 seed1 fresh, i.e. the output IS fully
+  determined by the input and the collisions are resolvable by GEOMETRY (stencil/count), not color. So
+  this tail is a heuristic approximation gap, NOT generator ambiguity (rules out (c)). But it is also
+  NOT a cheap (a) fix: every partial patch tried is incomplete (mode-bg prior 2950/3000; panel-size
+  prior fails; forecolor=mode(non-bg) needs full per-colour counting), and the only 100%-correct route
+  is the full bounded exact-cover solver, which prior floor analysis (S9/S11/2026-07-06/2026-07-09)
+  proves cannot be lowered to ONNX at or below 22219B (a correct correlation solver needs several
+  full-size 255B planes PER box → memory floor near/above the incumbent; batching the 3× stamp blocks
+  is byte-neutral). So no net-positive fix exists under the op/byte budget — the deployed 22219 net is
+  the best affordable heuristic (plateau), and this is NOT a self-inflicted regression (unlike
+  task205/task233).
+reopen: (a) exact-cover semantic compiler successfully LOWERED to ONNX with fewer full-size planes
+  than incumbent (never achieved — the hard part); (b) a public dump for task366 measured < 21990 mem;
+  (c) int8-TopK acceptance or mixed-dtype Conv shrinking the detection tail enough to fund a robust
+  2-D stencil-match plane; (d) a cheap dot-count/geometric router that beats color-membership on the
+  collision cases without full exact-cover. Any of these would move the tail below ~0.7% — none known.
+falsification history: first fresh-tail diagnosis of task366. Consistent with the 2026-06-29 dot-color
+  -collision captures and the 2026-07-09/07-10 floor verdicts; confirms the deployed 22219 net inherits
+  the incumbent heuristic's ~0.5-1% tail (as noted at adoption). Durable: rule is recoverable
+  (exact-cover 100%), so the tail is a build-affordability plateau, not an information floor.
+
+## 2026-07-11 — offense-lens note (366 = board's 3rd-most-expensive net, dual-purpose scan)
+- Cost structure (deployed 22219): dominant single plane = `colf` 3600B fp32 one-hot→label DETECTION
+  (16%); ~15.5KB tail = 3× replicated stamp-block 255B mask/coord planes (structure-driven, batching
+  byte-neutral); 3× fp16 TopK feeds 510B (uint8-TopK = grader-killer, blocked).
+- OFFENSE READ: NO new dual-purpose lens found. The `colf` 3600B fp32-detection floor is SHARED across
+  the decode-first family (task205 cgrid 3600, task187 label 3600) — a sub-3600B uint8-label mechanism
+  would be a BOARD-WIDE offense lever, but it is proven infeasible under onnx 1.21 type constraints
+  (Conv/Einsum output dtype == fp32 free-input dtype; uint8 label via QLinearConv needs a 9000B uint8
+  input cast; ArgMax label = 7200B int64). The ~15.5KB bulk is NOT an avoidable carrier (structural
+  replication, byte-neutral to batch), so it yields no offense multiplier.
+- Reusable primitives ALREADY harvested here (in insights, transferable to other nets): QLinearConv
+  corner-stencil compressing an 8-plane bool chain → 510B (stencil/pattern-match compression lens); and
+  probe_then_build (Scatter histogram → free-input Einsum rank-1 indicators) count-to-indicator fold.
+  Verdict: 366's expense is irreducible-detection + structural-replication, so it does not itself open a
+  new offense lens beyond these already-known primitives.

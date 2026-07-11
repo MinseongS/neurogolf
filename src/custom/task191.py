@@ -79,8 +79,9 @@ def build(task):
         helper.make_node('Cast', ['rect_b'], ['rect_f'], to=2),
         helper.make_node('Reshape', ['rect_f', 'shape_1155'], ['rect']),
         helper.make_node('Mul', ['patch', 'rect'], ['motif']),
-        helper.make_node('Cast', ['motif'], ['motif_i32_sum'], to=6),
-        helper.make_node('ReduceSum', ['motif_i32_sum'], ['total_motif_i32'], keepdims=0),
+        helper.make_node('Cast', ['motif'], ['motif_f16'], to=10),
+        helper.make_node('ReduceSum', ['motif_f16'], ['total_f16'], keepdims=0),
+        helper.make_node('Cast', ['total_f16'], ['total_motif_i32'], to=6),
         helper.make_node('Mul', ['total_motif_i32', 'two_i32_new'], ['two_total_i32']),
         helper.make_node('Sub', ['one_i32_new', 'two_total_i32'], ['bias_val_i32']),
         helper.make_node('Expand', ['bias_val_i32', 'conv_bias_i32_q_shape'], ['conv_bias_i32_q']),
@@ -145,7 +146,7 @@ def build(task):
         helper.make_tensor_value_info('rect_f', 2, [5, 5]),
         helper.make_tensor_value_info('rect', 2, [1, 1, 5, 5]),
         helper.make_tensor_value_info('motif', 2, [1, 1, 5, 5]),
-        helper.make_tensor_value_info('motif_i32_sum', 6, [1, 1, 5, 5]),
+        helper.make_tensor_value_info('motif_f16', 10, [1, 1, 5, 5]),
         helper.make_tensor_value_info('total_motif_i32', 6, []),
         helper.make_tensor_value_info('two_total_i32', 6, []),
         helper.make_tensor_value_info('bias_val_i32', 6, []),
@@ -175,5 +176,6 @@ def build(task):
         helper.make_tensor_value_info('yellow4_i8', 2, [1, 1, 23, 23]),
         helper.make_tensor_value_info('color', 2, [1, 1, 23, 23]),
         helper.make_tensor_value_info('color_30', 2, [1, 1, 30, 30]),
+        helper.make_tensor_value_info('total_f16', 10, []),
     ]
     return model('task191_live_exact', nodes, inits, output_dtype=9, opset=17, value_infos=value_infos)

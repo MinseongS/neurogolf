@@ -17,6 +17,21 @@ to width parity); the rightmost column is always green, alternating leftward.
 | # | angle | tier | mem | params | pts | fresh | outcome |
 |---|---|---|---|---|---|---|---|
 | 1 | Where(gray∧greencol, green_oh, input); W=Σcolpres; greencol=((C+W)%2==1) | A | 2912 | 61 | 17.00 | 500/500 | ADOPT |
+| 2 | free-output t-aug einsum `bjrc,tk,tc,tj->bkrc`; 3 terms e0·ingrid+(e5-e0)·gray+(e3-e5)·gray·greencol | A | 604 | 161 | 18.36 | 267/0 bundled | REJECT-cost (765>561) |
+
+## CI-triage 2026-07-11 ledger (BUILDER, opus) — 4-field negative verdict
+- **What ran:** built `candidates/task332/parity_einsum.onnx` (free-output single-Einsum recolor,
+  greencol=(c+W)%2 runtime, semantics VERIFIED correct: `ng gate` pass 267 / fail 0). Measured cost
+  **765** (mem 604 + params 161) vs deployed **561** → REJECT (not strictly cheaper).
+- **Why it loses:** Einsum requires all operands share the f32 input dtype, so the runtime column
+  tensors (Cc[3,30]=360B, greencol[1,30]=120B, s[1,30]=120B) are all f32 → 604B mem floor, above the
+  incumbent's 389B. Incumbent avoids this via QLinearConv (int8, output-free) + height-3 slabs; any
+  free-output einsum that reads `input` as an operand pays f32, and any f16 route needs a
+  [1,10,3,30]≈900B onehot slab + Pad. Both routes > 561. **Deployed net is at floor for the einsum family.**
+- **Tool+date:** `ng gate` (onnx 1.21/ort 1.26), 2026-07-11.
+- **Reopen trigger:** a way to feed a f16/int recolor plane to free output without a ≥360B runtime
+  column tensor (e.g. a per-column-parity conv-positioning trick cheaper than the current QLinearConv
+  label-build cr30+crop+labels+eq=320B).
 
 ## Best achieved
 17.00 @ mem 2912 params 61 — beats prior 16.32 by +0.68 AND fully generalizes (prior did not).

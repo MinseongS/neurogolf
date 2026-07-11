@@ -132,6 +132,38 @@ floor at TWO f32 planes.
 ~13.3KB net, compute 25−ln(mem−3600+par) BEFORE building — here it's 15.758, below
 the +0.3 bar even at zero replacement cost. Bail fast.
 
+## 2026-07-11 — LEDGER: 017→110 port ABANDONED (rules NOT identical on bundled set)
+BUILDER task (C/I triage ci_triage_2026-07-11.md row 110 "SAME RULE as 017") to port the
+deployed task017 net (template-match (mod,length,offset) → quadratic closed-form rebuild,
+cost 6273) onto task110. Verified from GENERATORS, not oracles. **Result: do NOT port.**
+
+4-field negative-verdict ledger entry:
+1. **What was run:** decoded both generators (arc-gen/tasks/task_0dfd9992.py = 017,
+   task_484b58aa.py = 110). Brute-forced whether each net's stored + fresh outputs satisfy
+   017's closed form `v=(rr²+cc²)%mod+1`, rr=(offset+row)%length−length//2 over ALL
+   (mod 4..9, length 4..mod, offset 1..length).
+   - 017 stored 4/4 follow quadratic → (6,6,1)(7,7,5)(8,4,1)(9,9,2). 017 net is correct there.
+   - **110 STORED (bundled) 4/4 follow quadratic: NONE.** task110.generate() has an EXTRA
+     `colors` branch (`r,c=row%(len(colors)//mod), col%mod; bitmap=colors[r*mod+c]`) that the
+     4 validate() examples ALL invoke via explicit `colors=[...]`. That branch is an arbitrary
+     explicit periodic tiling with row-period=len(colors)//mod ≠ col-period=mod — it does NOT
+     follow the quadratic form. A quadratic-closed-form net (what the 017 donor is) outputs the
+     wrong grid on every bundled example → **bundled fail would be 4/4** (mandatory gate = fail 0).
+   - 110 FRESH generate() (colors defaults None, never set in the offset-None branch) → 5/5 follow
+     quadratic. So the rule is IDENTICAL to 017 ONLY on fresh draws (genverify/fresh-gate), size 29 vs 21.
+2. **Tool + date:** brute-force numpy match over generator outputs, onnx==1.21.0 env, 2026-07-11.
+3. **Reopen trigger:** if task110's BUNDLED example set is ever regenerated to use only the
+   colors=None quadratic branch (rp==cp), the 017 closed-form becomes bundled-valid — but even
+   then the port is COST-dead (see below), so reopen only jointly with a size-29-formula-plane
+   cheaper than the deployed 5811 einsum net.
+4. **Falsification history:** none — this is the first 017→110 port attempt. Consistent with the
+   S8 note that task110's deployed net is a GENERAL per-axis period-detect+re-tile einsum (handles
+   arbitrary colors-branch tilings, 266/266 bundled), whereas the 017 net hard-assumes the quadratic.
+
+**Secondary blocker (cost):** even if bundled passed, task110 is 29×29 vs 017's 21×21, so the
+ported formula/label planes are strictly larger than 017's 6273 — above task110's deployed **5811**
+(manifest.json). No cost path to a win. **Not MAIN-eligible. No candidate built. Port abandoned.**
+
 ## S8 (2026-07-02) — WALK-EINSUM WIN: 13789 → 5811 (+0.864) ADOPTED
 Old "irreducible two-plane floor" (labels_f/inv30_f 3600B Convs) REFUTED under the
 grader-counting lens. New mechanism (see src/custom/task110.py docstring):

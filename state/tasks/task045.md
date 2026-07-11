@@ -25,5 +25,24 @@ Three [1,10,30,1] fp32 tensors dominate (leftcol/rightcol/both, 1200B each = 360
 - Replace the two 1200B endpoint slices with a single [1,10,30,2] gather of cols {0,9} then a product over the new axis (likely same/worse since the gathered tensor is also 1200B-class and adds a reduce).
 - Collapse leftcol*rightcol via a Conv contracting the width axis with a 2-tap kernel hitting cols 0,9 — but Conv can't do the per-channel AND (it sums, not multiplies), so not equivalent.
 
+## PROBE 2026-07-11 (signed-einsum rebuild) — DRY, incumbent at floor
+- **What was run:** built `candidates/task045/cand.onnx` — full signed-einsum rebuild, one
+  free-output Einsum `'bsqi,qv,ir,sc->bvrc'` summing 4 source slots (L endpoint@col0 /
+  R endpoint@col9 / F fill cols0-9 / bg grid-rect@ch0); W[q,v]=e_q−1024·e0 kills bg at any
+  coloured cell, `(out>0)` decodes. NOTE: deployed net is NOT the tasklog's 4650-mem attempt —
+  it is a compact ConvTranspose renderer, mem **1050** params **623** (render_weight[30,1,2,10]=600),
+  cost **1673** (17.578pt), measured live.
+- **Result (tool `ng gate` --task 45, 2026-07-11):** REJECT. Correct 265/0 (bundled fail=0) but
+  cost **2580** (mem 2100 + params 480) after cast-before-squeeze opt (was 2780). Params 480<623
+  (beats incumbent) but the SRC[1,4,10,6] assembly (Slice→Cast→Squeeze→Mul→Pad→Unsqueeze→Concat)
+  costs ~2100B counted memory vs the renderer's 1050 — cannot reach the 1193B needed to break even.
+- **Verdict:** signed-einsum mechanism is VALID here (playbook-correct) but structurally heavier
+  than the deployed ConvTranspose renderer. Incumbent at floor for this task.
+- **Reopen-trigger:** a free-output writer that renders all 10 channels from a <1000B descriptor
+  without per-source stacked SRC (e.g. a cheaper single-Conv/ConvTranspose param cut on render_weight
+  600), OR a new public dump with a smaller task045 net.
+- **Falsification history:** none reversed; this is the first independent rebuild attempt confirming
+  the deployed renderer's floor (prior tasklog floor analysis was vs the older 4650-mem net).
+
 ## INSIGHT (transferable)
 ⭐ When a "fill" colour VARIES per row/region but is exactly a one-hot already present in the input, use that one-hot directly as the Where VALUE in [1,10,30,1] form — it broadcasts to the free [1,10,30,30] output, so you never need a colour-index plane or per-region Equal. Endpoint-match = elementwise product of the two boundary column slices; ReduceMax over channels gives the per-row qualify flag.

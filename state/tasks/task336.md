@@ -64,3 +64,16 @@ gate is provably redundant — drop it (verified 0/10000).
 
 ## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
 mem 1188/17.30; fill_weights [13,36]=full rank 13 (no low-rank), scatter_indices [2,52,4] clear-pass required for one-hot validity. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).
+
+## 2026-07-11 — STALE worklist row; deployed BEATS triage's proposed mechanism (no build)
+Deployed (MEASURED today) = 1820 / 17.49: learned int8 2-layer QLinearMatMul (13 GatherND probes →
+A_i8[14,9] → hidden9 → B_i8[9,52] → 52 fill scores → Relu) → ScatterND(reduction='add') onto input at a
+FIXED 52-cell union (cyan interior-fill + drip). Cost is params-dominated: params=1056 (scatter_indices
+[2,52,4]=416, B[9,52]=468, A[14,9]=126, probe_indices[1,13,3]=39); mem only 764. The triage's proposed
+"profiles + ray" IS the OLD closed-form (tasklog attempt 5: mem 3372 params 55 → cost 3427) which is
+WORSE than the deployed 1820. Scatter 416 forced (52-cell union × 2 channels: cyan-set + ch0-clear under
+>0 scoring). The learned MLP decoder (A·B = 594 params) is already BELOW a naive (gap,depth,gravity)→52
+lookup (~40 configs × 52 = ~2080). Triage floor ~800 (gap 0.82) UNREACHABLE without a cheaper-than-594
+decoder; no mechanism-level build was dispatched (retraining the int8 MLP for a smaller hidden dim is a
+tuning lane, not a mechanism win, and risky). Reopen: a separable/rank-structured decoder for the
+config→52-cell map. FLOOR ≈ 1820.

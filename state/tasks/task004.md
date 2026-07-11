@@ -247,3 +247,40 @@ Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup 
 - cost: 4866 -> 4836 (points 16.5162)
 - source: candidates/task004/kcollapse.onnx
 - note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays
+
+## 2026-07-11 CI-triage BUILDER pass — signed-einsum/cumsum-extent DRY (floor re-confirmed w/ fresh measurement)
+- **ran:** Re-derived exact semantics from the GENERATOR (arc-gen/tasks/task_025d127b.py) + oracle
+  (reference/arc-code-golf-solutions/task004.py): rule = PER-COLOR extent shift — for each colour, let W=max
+  occupied row, l=max occupied col; each cell shifts RIGHT +1 iff (row<W AND col<l), else stay; colours COPY
+  arbitrary input colours. (Equivalent to the log's local bottom-row/2nd-last-row reformulation.) Then measured
+  the deployed net's (submission/overfit_nets/task004.onnx, opset13) full per-tensor byte split by exposing all
+  intermediates as ORT outputs. Then scanned all 20 public-dump task004 nets for a cheaper min-merge.
+- **tool+date:** ng gate + ORT per-tensor profiler + generator-driven carrier/detection split, 2026-07-11.
+- **verdict:** DRY — at floor for the current operator family; triage's proposed mechanism (signed-einsum
+  routing + cumsum extent masks) is a MISMATCH and does not beat 4836.
+  - Measured split (deployed, cost 4836 = mem 4772 + params 64, bundled 265/265, pts 16.5162):
+    DETECTION = `code_f`[1,1,16,16] fp32 **1024B** (mandatory 10→1 collapse, fp32 forced by fp32 input →
+    detection-vs-carrier heuristic: folding fp32 detection LOSES). CARRIER = `scalar_full`[1,1,30,30] uint8
+    **900B** + `scalar_valid`/`scalar_out` (16×16 uint8) — the genuine per-cell colour map. GEOMETRY/COLOUR
+    (shared) = ~9× 16×16 uint8/bool planes ≈ 2600B (vals=colour-index doubles as geometry Gather source, so
+    colour rides inside the geometry planes for free).
+  - **Signed-einsum-to-free-output inapplicable:** the lever needs SEPARABLE axis-aligned RECT fills with FIXED
+    colours. Here output = per-cell sheared OUTLINES (non-separable) with ARBITRARY per-instance COPIED colours
+    → Tier-S blocked (a fixed weight matrix W[q,v] cannot route random per-instance colours). Reject conditions
+    `assignment_or_detection_cost_dominant` + non-separable + arbitrary-copy-colour all fire. The data-dependent
+    per-row column-warp only closes into one einsum via a counted [1,30,30,30] selector operand (27000B) — dead.
+  - **Free-input colour route (task343 direct-gather / task209 GridSample) is expressible but LOSES:** output IS
+    a per-cell column-warp (src col = c or c−1, colour copied from input), but the index/grid carrier is WIDER
+    than the uint8 carrier — GatherElements int32 index [1,1,30,30]=3600B or GridSample grid fp16 [1,30,30,2]=1800B,
+    both > the 900B uint8 scalar carrier, and geometry must still be computed separately (colour+geometry no longer
+    share planes). Net LOSS. Confirms the log's "direct final-output routing … larger than the current scalar Pad".
+  - **cumsum extent masks** add planes without removing the code_f detection floor or the 900B carrier; the
+    per-color max-row/max-col extents are already computed cheaply via the row-separable local classification.
+  - No public min-merge: ALL 20 public-dump task004 nets measure mem 4772 (=our deployed) or worse (5044/5812/54000);
+    our net is the kernel-collapsed best-public. No cheaper source to adopt.
+  - No candidates/task004/ build produced (every reformulation is byte-accounted worse; a build would only confirm
+    a loss). Consistent with the standing S1 FLOOR verdict + 4 deep rechecks.
+- **reopen:** (1) a new public/top-team task004 dump measuring < mem 4772; (2) a NEW detection-fold primitive that
+  reads colour identity from the fp32 input WITHOUT a counted 10→1 fp32 entry plane; (3) a sub-900B per-cell
+  arbitrary-colour output carrier (e.g. a legal <1-byte-per-cell index feeding a free gather). None present 2026-07-11.
+- **MAIN-eligible:** NO.

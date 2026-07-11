@@ -92,3 +92,23 @@ Bundled gate after adoption: fail=0, cost `4396 -> 4394`
 - 과거 carrier 분석의 floor 판정 반증 — 공개넷 16.96 도달 (mem 4280→2974).
 - 메커니즘: separable Chebyshev(L∞) distance-field renderer — dr/dc 1-D fold-distance,
   ring=Max(dr,dc); 15개 full-canvas bool plane → 8개. insights.yaml: separable_chebyshev_distance_field_renderer.
+
+## 2026-07-11 — CI-triage builder probe (ray-extents einsum / back-end reduction): DRY
+⚠️ STALE-FLOOR NOTE: the "Irreducible-floor analysis" above (2x1200B chrow32/chcol32 presence
+planes, 1800B carrier) described the SUPERSEDED custom net @8938 — the deployed 3091 public net
+is ALREADY the separable_chebyshev_distance_field_renderer (12x12 active canvas); those planes are gone.
+ran: plane inventory of deployed net (mem 2974 = exact byte-sum reproduced, params 117). Fat planes:
+  labels30 [1,1,30,30] u8 900B Pad carrier + 8x [1,1,12,12] 144B (ring/ring2/drdc/pay_region/
+  struct_body/body/clip1/labels12) + ~920B front-end scalar recovery. Four angles priced:
+  (1) ray-extents gather-classtable fold: -36B mem but +144 params = net +108 LOSS;
+  (2) clip-fold into dr/dc: BREAKS (off-grid needs sentinel 10; fall-through gives label 0 =
+  ch0 TRUE, wrong vs in-grid black); (3) Equal-then-Pad 10-ch bool: 1440B > 900B, worse by 540B;
+  (4) front-end [1,10] scalar fuses: each Div/Floor/Sub/Mul is a distinct 40B plane, no fused op.
+tool+date: onnx plane-inventory + byte-sum model + hand-priced reformulations, 2026-07-11
+  (fork builder). No candidate gated (all angles priced >= incumbent 3091).
+verdict: DRY — floor for the separable-Chebyshev mechanism; labels30 900B is the minimal 30x30
+  carrier; every 12x12 plane load-bearing in the nested Where chain.
+reopen: renderer emitting 30x30 output WITHOUT a full-canvas label carrier (free-output Einsum
+  assembling 4 rays + 3 rings from separable row/col operands directly into output); OR proof
+  <=2 output colors collapses the two color-map Where planes to one.
+falsification history: this entry supersedes/corrects the stale 8938-era floor analysis above.

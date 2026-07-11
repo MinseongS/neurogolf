@@ -23,7 +23,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from neurogolf.manifest import load as load_manifest  # noqa: E402
 
 NETS = ROOT / "submission" / "overfit_nets"
-OUT = Path(__file__).parent / "deepfold_scan_20260710.json"
+OUT = Path(__file__).parent / "deepfold_scan_20260711.json"
 
 ITEMSIZE = {TensorProto.FLOAT: 4, TensorProto.FLOAT16: 2, TensorProto.DOUBLE: 8,
             TensorProto.INT64: 8, TensorProto.INT32: 4, TensorProto.INT16: 2,

@@ -281,12 +281,27 @@ levers:
 
   - name: runtime-timeout-spend
     status: live
-    scanner: null  # deepfold scan @ session scratchpad deepfold_scan.py — port to ng scan if the vein pays
+    scanner: null  # deepfold scanner persisted at tools/deepfold_scan.py (commit 869848e) — port to ng scan if the vein pays again
     scanner_archive: null
     recipe: null
     agent_class: fable
     expected_yield: "deepfold 상위: 187(+≤0.71)/243(+0.17~0.56)/286(walk 3평면)/025(row+col 0.17)"
     ledger:
+      - date: 2026-07-11
+        ran: "post-adoption deepfold rescan (tools/deepfold_scan.py, opus agent) over all 400 deployed
+          nets after the 07-11 adoptions (055/363/017/177/359/132/133/161/005 + poby min-merge);
+          output tools/deepfold_scan_20260711.json (44 rows); 3 boundary-law filters + floor/done
+          cross-check applied"
+        verdict: "0 new candidates vs 20260710 run — candidate set byte-identical (44 planes); only
+          numeric drift = task363 paint_mask30 dpts 0.274→0.290, but it is a BOOL 900B plane (fails
+          law 2 fp32-coupling gate, anti-candidate). All 37 indicator_fold rows are bool planes
+          (law-2 blocked); all 7 linear_fold rows pre-adjudicated (243 adopted / 187·286 letter floor
+          / 145 floored / 025 law-3 / 080 selector / 233 FLOORED). The 07-11 adoptions introduced no
+          new fp32-paying nonlinearize+route tail."
+        reopen: "next min-merge/adoption wave that touches a cost≥2000 net (re-run tools/deepfold_scan.py);
+          mixed-dtype or uint8/bool Einsum kernel; >52-index einsum"
+        falsification_history: "deepfold vein itself paid +1.495 on 07-10 after the original fold.py
+          '4/4 floor' verdict — a dry rescan is a dated tool result, not vein death."
       - date: 2026-07-08
         ran: "공개 discussion 채굴 (개념 확인만)"
         verdict: "미탐사 축 — 스코어의 2번째 제약(총 inference runtime)을 자원으로 지출하는 lever, 아직 미착수"

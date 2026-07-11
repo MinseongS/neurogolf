@@ -481,3 +481,98 @@ falsification history: 233 "CLOSED" verdicts falsified twice (2026-07-08 net-sur
 NOTE: the autopsy fingerprint's expected_gain 0.32 was a STALE-BASELINE artifact (diffed vs the
   2026-07-09 backup, not the pre-adoption deployed net); actual 396 win = one Reshape broadcast
   elision (−32B). Scanner fix applied to src/neurogolf/scans/public_autopsy.py same day.
+
+## 2026-07-11 — fresh-tail diagnosis (2.7% sweep) → CLASS (a) FIXABLE RULE-GAP (cheap-encoding regression); memorization lanes PROVEN harmless
+ran: 1500-draw fresh sweep of the DEPLOYED net (submission/overfit_nets/task233.onnx, cost 28033)
+  run DIRECTLY (NOT via fresh_check — its incumbent src.custom.task233 is the STALE pre-adoption
+  k=2 net, not the deployed scatter-table net), A/B'd on identical draws vs the pre-2026-07-10
+  k=2 consume-once parade net (src.custom.task233.build). Deployed net instrumented with the 5
+  ov{i}_det firing taps + base `pos` vs final `ov4_out`.
+  RESULTS (n=1500): DEPLOYED fresh-fail = 41/1500 = 2.73% (reproduced >>15). k=2-parade net on
+  the SAME draws = 9/1500 = 0.60%. 34/41 (83%) of deployed failures are FIXED by the k=2 net
+  (new_only=34, old_only=2, both-fail=7≈0.47%). Base tail confirms the ledger's ~1.8% (seed var).
+MISFIRE (the key question): the 5 memorization lanes ov0..ov4 are keyed on a CONJUNCTION =
+  (5 ordered sprite bg-colours safe_name_68[5,1]) AND (box-height safe_name_84) AND (box-width
+  safe_name_85); on fire they only redirect the stamp POSITION table (Where→pos→wnd→scatter idx,
+  gated by `valid`) — they cannot corrupt crop/shape/payload. Fire rate on fresh = 0/1500;
+  misfire (fire AND wrong) = 0. Analytical ceiling Σ per-lane ≈ 1.9e-5/draw (dominated by the
+  2-sprite lane ov1: 1/5·1/(9·8)·1/13·1/13), and only if the sprite geometry also differs
+  (near-certain) ⇒ private-LB risk from override misfire ≈ 1 in ~53k draws. VERDICT: the lanes
+  ONLY patch bundled examples; they are HARMLESS on hidden draws (they essentially never fire).
+root cause (vs generator task_97a05b5b, rotates=[0]*n ALWAYS on fresh ⇒ NOT a rotation issue):
+  the 2026-07-10 −3905 golf replaced the [5,324]match+TopK(k=2)+5-lane consume-once parade with a
+  single ScatterElements inverse-index table [1,512] (dup-hash LAST-WINS) + k=1 Gather. When the
+  generator's adversarial configs (margin-0 adjacent marks / count-4 sub-3×3 / 8-disconnected
+  shapes — all still emitted with rotates=0) produce a SECOND black 3×3 window sharing a sprite's
+  red-shape hash, the k=1 table returns only the last-scattered position with NO fallback → wrong
+  placement. The k=2 consume-once parade tries the 2nd candidate and recovers → its 0.6% floor.
+tool+date: direct-onnx fresh A/B harness (scratchpad/cmp233.py) + override-tap instrumentation +
+  init-key dump, 2026-07-11 (opus diagnosis fork). 1500 fresh generate() draws, fixed seed.
+verdict: CLASS (a) FIXABLE RULE-GAP — the ~2.7% tail is a cheap-encoding REGRESSION (the k=1
+  table dropped the k=2 fallback), NOT generator-irreducible. ~0.6% residual (both-fail, incl. the
+  k=2 net's own ~1 hard GatherElements-OOB error) is CLASS (c) irreducible adjacency/hash-collision.
+  FIX DESIGN + PRICE: restore a k=2/second-candidate fallback for the placement lookup (either revert
+  to the pre-2026-07-10 parade net = cost 31938, or add ONE fallback slot to the current table).
+  Price ≈ +3905 cost (28033→~31938) = −0.13 LB, buying ~2.1pp fresh-fail cut (2.7%→~0.6%). Under
+  the fresh-gate doctrine (p fresh-fail ⇒ ~1−(1−p)^260 private-zero risk), 2.7% is a MUCH larger
+  private-LB exposure than the 0.13pt it saves. RECOMMEND the fix IF a k=2 fallback can be added
+  WITHOUT reintroducing the parade net's GatherElements-OOB hard error (which is a Kaggle
+  whole-bundle-kill hazard — must be index-clamped). DIAGNOSIS ONLY: nothing under submission/ touched.
+reopen: (i) build+gate the k=2-fallback table variant (must clamp GatherElements indices to avoid
+  the parade net's OOB error); (ii) any public/top net measuring <28033 with lower fresh-fail;
+  (iii) if the deadline hedge board prefers max-cost-cut over max-protection, keep the k=1 net.
+falsification history: this SUPERSEDES the earlier framing that 233's tail was purely generator-
+  irreducible floor cost — the A/B proves 83% of the deployed tail is a self-inflicted encoding
+  regression recoverable at a known price. The memorization-misfire hypothesis (that the ScatterEl
+  pos-override lanes endanger hidden draws) is FALSIFIED: 0/1500 fire, ceiling ~1.9e-5/draw.
+
+## kron_fractal_einsum sweep DRY 2026-07-11 (agent)
+- what was run: fingerprint match — oracle IS a 3x3->9x9 fractal (`j[c+y%3]...*bool(j[c+y//3]...)`)
+  so it surfaced in the //3&%3 sweep. Assessed against the kron einsum recipe.
+- tool+date: oracle read + reject_when check, 2026-07-11.
+- verdict: REJECT (reject_when #1, data-dependent output shape). The rule crops via
+  `filter(any,zip(*...))` after a 4-rotation classify-dict + re-stamp — output shape is
+  example-variant, so the fixed 30-canvas selector-table embedding cannot hold. This is orthogonal
+  to the existing hash-scatter A/B verdict above (that lane stays the live one for 233).
+- reopen-trigger: a fixed-output-shape encoding of the crop (value_info-legalized bbox), OR the
+  kron mechanism gaining a data-dependent-shape variant (Resize-runtime-sizes example-invariant).
+
+## 2026-07-12 — k=2 fallback FIX BUILT + VERIFIED (design B: clamped parade revert) — NOT ADOPTED (EV candidate for HEDGE/final selection)
+ran: built `candidates/task233/cand_clamped_C.onnx` (builder `candidates/task233/build_clamped_C.py`):
+  regenerated the k=2 consume-once parade from `src.custom.task233.build` (= parade_src.onnx, cost
+  31975, bundled fail=0) and inserted Clip[0,dim−1] on EVERY dynamic gather/scatter index — Gather
+  safe_name_65 idx→[0,899], 5× GatherElements safe_name_142/170/200/227/244 idx→[0,399], and the
+  previously-missed ScatterElements safe_name_267 idx safe_name_265→[0,399] (this scatter ALSO
+  OOB-crashes: observed "idx=4550 must be within [-400,399]"; a first clamp attempt covering only
+  the gathers still raised). Fixed-init Gather safe_name_116 idx=[1] on size-2 axis = inherently safe.
+  Gate: `ng gate` → bundled 266/266 fail=0, cost 32810 (mem 32068, params 742), points 14.6015 —
+  price REJECT vs deployed 28033/14.7589 (Δ +4777 cost, −0.1574 pts). Checker full_check passes;
+  single input/output, domain '' only, no banned ops/subgraphs, TopK feeds fp16 (never uint8).
+  Fresh A/B, ISOLATED per-process ORT (knife-edge rule), 4 processes (seeds 111/222/333 ×1700 FINAL
+  + seed-31415 2000-draw checkpoint corroboration = 7100 draws, ORT_DISABLE_ALL):
+  - pooled 5100: DEPLOYED(k1 table) fail 137 = 2.69%; CAND(clamped) fail 37 = 0.73%; CAND ORT
+    exceptions = 0/5100 (0/7100 incl. corroboration run). Divergence: RECOVER (dep fails, cand
+    passes) = 116 (2.27pp); REGRESS (cand fails, dep passes) = 16 (0.31pp — k=2 parade vs k=1 table
+    pick different fallbacks in ambiguous configs; neither dominates per-draw); both-fail = 21 (0.41%).
+  - HAZARD PROOF: unclamped parade_src raised exactly 1 ORT error in 5100 (the ~1/1500–1/5000 OOB);
+    on that SAME draw the clamped candidate ran clean AND produced the CORRECT output (clampfire=1,
+    fire_ok=1). On every non-fire draw cand output == parade_src output bit-wise (c!=src = 0):
+    clamps proven no-ops except on the crash draw.
+  - SIDE FINDING: the backup `submission/.backups/task233_20260710T052443Z.onnx` (min-merged 31938
+    parade, 222 nodes) fresh-fails ~1.7% — WORSE than src.custom.build 31975 (224 nodes, 0.73%);
+    the 07-09 min-merge silently dropped a Less/Where guard. Any parade revert must use
+    src.custom.task233.build, NOT that backup.
+tool+date: ng gate + 4-process isolated-ORT fresh A/B (scratchpad master_ab3.py), 2026-07-12.
+verdict: fix VERIFIED at price −0.157 public LB for fresh-fail 2.69%→0.73% (−1.96pp) with ZERO
+  exception risk (all 8 index ops clamped/safe). EV under p⇒1−(1−p)^260 private-zero doctrine:
+  deployed survives (1−.0269)^260 ≈ 0.08% → task-EV ≈ 0.01 pts; candidate survives (1−.0073)^260
+  ≈ 15.0% → task-EV ≈ 2.19 pts; net private-EV ≈ +2.18 pts for −0.157 public. NOT adopted
+  (builder instruction); recommend HEDGE-board adoption, and MAIN too if selection weights private EV.
+reopen: (i) design A (k=2 fallback WITHIN the scatter-table framework) was not built — could recover
+  much of the +4777 price (~+1600 est. for one fallback [1,512] table + guarded 2nd Gather); build
+  only if −0.157 public is judged too expensive; (ii) any public net <28033 with ≤0.8% fresh-fail;
+  (iii) both-fail residual 0.41% = the new irreducible target (configs where even k=2 misplaces).
+falsification history: the 07-11 diagnosis quoted the k=2 reference at 0.60% and framed the backup
+  as that reference; measured here the BACKUP is ~1.7% (regressed min-merge) while the true
+  reference (src build, 31975) is 0.73% — the diagnosis's harness used src.custom.build (correct),
+  and the 0.60-vs-0.73 gap is seed variance.

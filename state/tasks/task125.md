@@ -95,6 +95,24 @@ minimal-shape (13×13 active, 15×15 ring stage, one 30×30 label). No fp32 dyin
    15.867 pts / mem 8775 — the deployed net was silently re-golfed to 3463 by a later session and the
    Attempts table + OPEN ANGLES below are obsolete (they target the retired 8775-net epilogue).
 
+## 2026-07-11 — rect-segmentation-primitive re-check (ci_triage builder) → DRY, CONFIRMS FLOOR
+ran: generator-derived semantics (task_543a7ed5.py L54-62): pink(6) rects each with a punched hole
+  (input hole shows as bg cyan); output = pink stays pink, interior hole→yellow(4), 1-cell green(3)
+  ring around each rect bbox. This IS interval/band/fill rect-segmentation and the deployed 3463 net
+  ALREADY implements the primitive optimally (4 directional MaxPool bounded-reach dilation = per-rect
+  enclosure AND; Pad ring; additive 0/1/2/3 code; free Equal decode). Checked whether a 2-level cumsum
+  formulation of the enclosure beats the deployed directional-MaxPool formulation.
+tool+date: generator read + existing 2026-07-11 full-arsenal audit (this file, above), 2026-07-11.
+verdict: NO cheaper build. A cumsum-based enclosure produces the same masks as the deployed directional
+  MaxPool (reach-6 dilation lives inside a free op), so it saves 0 carrier bytes. Dominant cost is
+  DETECTION — the 676B fp32 pink read `p` (Slice preserves fp32 input dtype) — which is orthogonal to
+  the segmentation method and irreducible under onnx-1.21 op-types (see full audit above). Output is
+  positioned-content dense-recolor (Equal decode), not a foldable low-rank Where mask. DID NOT BUILD.
+reopen: identical to the full-audit reopen triggers above (public dump < 3463; <845B fp32→u8 pink read;
+  4-way-AND→single-Conv collapse; grader scores outside-15 cells).
+falsification history: consistent with the 2026-07-11 full-arsenal audit (FLOOR at 3463); the pre-07-11
+  ledger's 15.867/mem-8775 floor claim was already falsified by the silently-regolfed 3463 deployed net.
+
 ## INSIGHT (transferable)
 ⭐ Multi-component "find each rectangle + fill its hole + outline its bbox" is NOT a flood-fill /
 connectivity wall when the input has only TWO colors (shape + bg): an interior hole = a bg cell with

@@ -1,0 +1,1108 @@
+[
+ {
+  "task": 243,
+  "floored": false,
+  "cost": 4020,
+  "bytes": 2592,
+  "dpts": 1.035,
+  "shape": [
+   1,
+   2,
+   18,
+   18
+  ],
+  "dtype": 1,
+  "producer": "Einsum",
+  "consumers": [
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum"
+  ],
+  "tensor": "P2",
+  "kind": "linear_fold"
+ },
+ {
+  "task": 187,
+  "floored": false,
+  "cost": 4911,
+  "bytes": 2500,
+  "dpts": 0.7114,
+  "shape": [
+   1,
+   1,
+   25,
+   25
+  ],
+  "dtype": 1,
+  "producer": "Conv",
+  "consumers": [
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum"
+  ],
+  "tensor": "t2",
+  "kind": "linear_fold"
+ },
+ {
+  "task": 168,
+  "floored": false,
+  "cost": 2237,
+  "bytes": 900,
+  "dpts": 0.5147,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "ray_b30",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 34,
+  "floored": false,
+  "cost": 2261,
+  "bytes": 900,
+  "dpts": 0.5076,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "mask30",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 102,
+  "floored": false,
+  "cost": 2527,
+  "bytes": 900,
+  "dpts": 0.4403,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "fill30_bool",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 264,
+  "floored": false,
+  "cost": 2329,
+  "bytes": 810,
+  "dpts": 0.4274,
+  "shape": [
+   1,
+   10,
+   9,
+   9
+  ],
+  "dtype": 9,
+  "producer": "Equal",
+  "consumers": [
+   "Pad"
+  ],
+  "tensor": "oh",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 256,
+  "floored": false,
+  "cost": 2063,
+  "bytes": 676,
+  "dpts": 0.397,
+  "shape": [
+   1,
+   4,
+   13,
+   13
+  ],
+  "dtype": 9,
+  "producer": "Equal",
+  "consumers": [
+   "Pad"
+  ],
+  "tensor": "pre",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 397,
+  "floored": false,
+  "cost": 2751,
+  "bytes": 900,
+  "dpts": 0.3962,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "cond30",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 202,
+  "floored": false,
+  "cost": 2817,
+  "bytes": 900,
+  "dpts": 0.3849,
+  "shape": [
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Equal",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "mark",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 268,
+  "floored": false,
+  "cost": 2930,
+  "bytes": 900,
+  "dpts": 0.367,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "cond",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 90,
+  "floored": false,
+  "cost": 3053,
+  "bytes": 900,
+  "dpts": 0.3493,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "And",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "mask",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 42,
+  "floored": false,
+  "cost": 3110,
+  "bytes": 900,
+  "dpts": 0.3416,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "cyan30",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 250,
+  "floored": false,
+  "cost": 2123,
+  "bytes": 600,
+  "dpts": 0.3321,
+  "shape": [
+   1,
+   6,
+   10,
+   10
+  ],
+  "dtype": 9,
+  "producer": "Equal",
+  "consumers": [
+   "Pad"
+  ],
+  "tensor": "onehot6",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 137,
+  "floored": false,
+  "cost": 3389,
+  "bytes": 900,
+  "dpts": 0.3087,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Cast",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "nonring",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 162,
+  "floored": false,
+  "cost": 3500,
+  "bytes": 900,
+  "dpts": 0.2973,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "block30",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 363,
+  "floored": false,
+  "cost": 3580,
+  "bytes": 900,
+  "dpts": 0.2895,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "paint_mask30",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 117,
+  "floored": false,
+  "cost": 3795,
+  "bytes": 900,
+  "dpts": 0.2707,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "cond",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 50,
+  "floored": false,
+  "cost": 3849,
+  "bytes": 900,
+  "dpts": 0.2663,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "fill",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 265,
+  "floored": false,
+  "cost": 4069,
+  "bytes": 900,
+  "dpts": 0.25,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "red30_bool",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 208,
+  "floored": false,
+  "cost": 4172,
+  "bytes": 900,
+  "dpts": 0.243,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Less",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "mask",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 165,
+  "floored": false,
+  "cost": 4532,
+  "bytes": 900,
+  "dpts": 0.2214,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Greater",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "fill30",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 196,
+  "floored": false,
+  "cost": 4536,
+  "bytes": 900,
+  "dpts": 0.2212,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "green_full",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 396,
+  "floored": false,
+  "cost": 3562,
+  "bytes": 640,
+  "dpts": 0.1981,
+  "shape": [
+   1,
+   10,
+   8,
+   8
+  ],
+  "dtype": 9,
+  "producer": "Equal",
+  "consumers": [
+   "Pad"
+  ],
+  "tensor": "onehot8",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 80,
+  "floored": false,
+  "cost": 6686,
+  "bytes": 1200,
+  "dpts": 0.1978,
+  "shape": [
+   10,
+   30
+  ],
+  "dtype": 1,
+  "producer": "Cast",
+  "consumers": [
+   "Einsum",
+   "Einsum"
+  ],
+  "tensor": "ng_S",
+  "kind": "linear_fold"
+ },
+ {
+  "task": 279,
+  "floored": false,
+  "cost": 5546,
+  "bytes": 900,
+  "dpts": 0.1771,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "cond",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 64,
+  "floored": false,
+  "cost": 5749,
+  "bytes": 900,
+  "dpts": 0.1703,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "fill_mask",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 2,
+  "floored": false,
+  "cost": 5889,
+  "bytes": 900,
+  "dpts": 0.1659,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "mask30",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 286,
+  "floored": true,
+  "cost": 18271,
+  "bytes": 2500,
+  "dpts": 0.1471,
+  "shape": [
+   1,
+   1,
+   25,
+   25
+  ],
+  "dtype": 1,
+  "producer": "Conv",
+  "consumers": [
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum"
+  ],
+  "tensor": "t25",
+  "kind": "linear_fold"
+ },
+ {
+  "task": 286,
+  "floored": true,
+  "cost": 18271,
+  "bytes": 2500,
+  "dpts": 0.1471,
+  "shape": [
+   1,
+   25,
+   25
+  ],
+  "dtype": 1,
+  "producer": "Einsum",
+  "consumers": [
+   "Einsum"
+  ],
+  "tensor": "W1",
+  "kind": "linear_fold"
+ },
+ {
+  "task": 286,
+  "floored": true,
+  "cost": 18271,
+  "bytes": 2500,
+  "dpts": 0.1471,
+  "shape": [
+   1,
+   25,
+   25
+  ],
+  "dtype": 1,
+  "producer": "Einsum",
+  "consumers": [
+   "Einsum"
+  ],
+  "tensor": "W2",
+  "kind": "linear_fold"
+ },
+ {
+  "task": 370,
+  "floored": false,
+  "cost": 6598,
+  "bytes": 900,
+  "dpts": 0.1467,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "mask30",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 255,
+  "floored": false,
+  "cost": 7597,
+  "bytes": 900,
+  "dpts": 0.1261,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Greater",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "safe_name_155",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 350,
+  "floored": false,
+  "cost": 9036,
+  "bytes": 900,
+  "dpts": 0.1049,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "gp",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 66,
+  "floored": true,
+  "cost": 10121,
+  "bytes": 900,
+  "dpts": 0.0931,
+  "shape": [
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "hidden30",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 25,
+  "floored": false,
+  "cost": 9817,
+  "bytes": 780,
+  "dpts": 0.0828,
+  "shape": [
+   1,
+   13,
+   30
+  ],
+  "dtype": 10,
+  "producer": "Concat",
+  "consumers": [
+   "Einsum"
+  ],
+  "tensor": "row_feat",
+  "kind": "linear_fold"
+ },
+ {
+  "task": 25,
+  "floored": false,
+  "cost": 9817,
+  "bytes": 780,
+  "dpts": 0.0828,
+  "shape": [
+   1,
+   13,
+   30
+  ],
+  "dtype": 10,
+  "producer": "Concat",
+  "consumers": [
+   "Einsum"
+  ],
+  "tensor": "col_feat",
+  "kind": "linear_fold"
+ },
+ {
+  "task": 145,
+  "floored": true,
+  "cost": 10492,
+  "bytes": 800,
+  "dpts": 0.0793,
+  "shape": [
+   1,
+   1,
+   20,
+   20
+  ],
+  "dtype": 10,
+  "producer": "Cast",
+  "consumers": [
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum",
+   "Einsum"
+  ],
+  "tensor": "bg16",
+  "kind": "linear_fold"
+ },
+ {
+  "task": 145,
+  "floored": true,
+  "cost": 10492,
+  "bytes": 800,
+  "dpts": 0.0793,
+  "shape": [
+   1,
+   1,
+   20,
+   20
+  ],
+  "dtype": 10,
+  "producer": "Einsum",
+  "consumers": [
+   "Einsum"
+  ],
+  "tensor": "width16",
+  "kind": "linear_fold"
+ },
+ {
+  "task": 118,
+  "floored": false,
+  "cost": 12282,
+  "bytes": 900,
+  "dpts": 0.0761,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "Spad",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 101,
+  "floored": false,
+  "cost": 12973,
+  "bytes": 900,
+  "dpts": 0.0719,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "safe_name_352",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 350,
+  "floored": false,
+  "cost": 9036,
+  "bytes": 624,
+  "dpts": 0.0716,
+  "shape": [
+   1,
+   1,
+   26,
+   24
+  ],
+  "dtype": 9,
+  "producer": "Greater",
+  "consumers": [
+   "Pad"
+  ],
+  "tensor": "g",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 367,
+  "floored": false,
+  "cost": 13926,
+  "bytes": 900,
+  "dpts": 0.0668,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "v_pad",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 118,
+  "floored": false,
+  "cost": 12282,
+  "bytes": 700,
+  "dpts": 0.0587,
+  "shape": [
+   1,
+   1,
+   25,
+   28
+  ],
+  "dtype": 9,
+  "producer": "And",
+  "consumers": [
+   "Pad"
+  ],
+  "tensor": "S",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 233,
+  "floored": true,
+  "cost": 28033,
+  "bytes": 800,
+  "dpts": 0.029,
+  "shape": [
+   1,
+   1,
+   20,
+   20
+  ],
+  "dtype": 10,
+  "producer": "Cast",
+  "consumers": [
+   "Conv"
+  ],
+  "tensor": "safe_name_102",
+  "kind": "linear_fold"
+ }
+]

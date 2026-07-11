@@ -121,3 +121,18 @@ Mechanism: value_info Slice crop. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). 
 - cost: 6694 -> 5418 (points 16.4025)
 - source: candidates/task009/cand.onnx
 - note: public-insight generalize: maxpool_runningmax_between_fill + bitpack_code_plane_arithmetic_decode (u8 pack=16*pos|colour, 4 one-sided MaxPool sweeps replace quadratic Einsums; onehot16 1800B + eq_b 900B never materialized, free-output Equal unpack; 800 fresh 0-fail)
+
+## 2026-07-11 — CI-triage builder probe (signed-einsum extent-fill angle): DRY
+ran: worklist ci_triage row (gap 1.10) — signed-einsum per-colour row/col extent-fill formulation
+  priced against the deployed maxpool+bitpack net (cand.onnx = deployed, cost 5418, mem 5329 exact
+  plane-sum, params 89). Per-colour interval fill needs colour SEPARATION: einsum form forces a
+  10-channel one-hot marker plane [1,10,10,10]=1000B + prefix/suffix 2x1000B, vs incumbent's 100B
+  single-channel bitpack planes (colour in low 4 bits). Between-fill chain audited op-by-op: zero
+  fusible/redundant planes (u8 forces BitwiseOr pack + BitwiseAnd decode; per-direction ramps unshareable).
+tool+date: onnx plane-budget audit + ng gate --task 9, 2026-07-11 (fork builder).
+verdict: DRY — signed-einsum (playbook 15) structurally DOMINATED by deployed bitpack
+  (detection-vs-carrier trap: einsum reintroduces the 10-ch carrier the bitpack avoids).
+  2x900B DepthToSpace render carrier = standing binding floor. No candidate produced.
+reopen: sub-2-byte Einsum-legal dtype in ORT (10-ch one-hot marker <=500B); OR a free-output
+  primitive rendering the 30x30 linegrid without the 2x900B super-cell carrier; OR public dump <5418.
+falsification history: none for this angle (first signed-einsum pricing on the 5418 net).

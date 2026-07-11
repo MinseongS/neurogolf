@@ -50,6 +50,30 @@ or ≤120B vectors. `output` is FREE (graph output). mem+params=6944 → ~16.15.
 - Drop `x19`'s 2916B by contracting channels on the FULL input then slicing a single-channel colf — net
   worse (colf30 = 3600B). No sub-2916 single-channel colour read at 9×9 currently exists.
 
+## PROBE 2026-07-11 (s8port free-output fold) — DRY analytic, incumbent at floor
+- **What was run:** structural audit of the DEPLOYED net (mem **1700** params **138** cost **1836**,
+  17.485pt, live) vs a proposed s8port free-output-einsum fold to kill the dominant plane.
+  Dominant counted plane = `active_output` = Equal(masked,palette) = **[1,10,9,9] bool = 810B**
+  (10-ch one-hot at max grid 9×9), then free Pad→30×30. Rest = packed_grid30 120B + 4×81B + smaller.
+- **Key finding:** the deployed net ALREADY implements the s8port-optimal shape — Conv-pack colour
+  read (`Conv(input, packed_kernel[1,10,1,8])`→single-channel packed index, which AVOIDS the 2916B
+  9-ch fp32 slice documented as the naive floor above), a single-channel computed label `masked`, and
+  ONE Equal→onehot expand (810B, minimal: bool, cropped to the 9×9 max grid) + free Pad.
+- **Why the fold LOSES (analytic):** writing the free [1,10,30,30] output via one einsum that contracts
+  the free input one-hot for colour (`'bvrx,brc->bvrc'`, killing the 810B onehot) requires EITHER
+  (a) a multichannel input slice = **2916B** fp32 (ORT upcasts fp16/uint8; Conv rejects uint8) — worse,
+  OR (b) feeding full [1,10,30,30] input to the einsum (free) but then the fill/last-col masks must
+  span full 30×30 → `hmask[1,30,30]` fp16 = **1800B each** (×2-3 for horiz/vert/bg) — worse than 810B.
+  Computing at the cheap 9×9 crop forces exactly the Equal→Pad tail already deployed. 810B is the floor
+  for a 10-ch onehot at max grid 9×9 (already bool = minimal). No candidate built (any correct
+  forward-fill rebuild provably ≥ the 810B plane + its own machinery > 1836).
+- **Reopen-trigger:** a sub-810B route to a 10-channel 30×30 one-hot output (e.g. a legal op that
+  onehot-decodes a single-channel label into the free output without a counted [C,9,9] plane), OR a
+  new public dump with a smaller task237 net, OR a proven <120B multichannel colour read.
+- **Falsification history:** none reversed. Corroborates (not self-referential) this net's own
+  "2916B multichannel-read floor" doc — the deployed net beat that via Conv-pack and now sits at the
+  onehot-output floor.
+
 ## INSIGHT (transferable)
 ⭐ A "ray from a single per-row seed to the row's end" = plain `CumSum` along that axis (prefix sum =
 suffix fill when there is exactly one nonzero per row) — dodges the missing cum-max op entirely.

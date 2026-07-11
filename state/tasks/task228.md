@@ -50,3 +50,14 @@ colour plane is ever built. ⭐ Collapsing N disjoint single-cell stamps (differ
 label map: build it as ONE MatMul of a [W,N_rows] row-selector by an [N_cols,W] colour-bearing
 col-selector instead of an N-deep Where chain (here 2 rows × 2 cols via Concat→MatMul: 3 planes → 1).
 fp16 `Equal(ramp, scalar)` builds a single-index mask in ONE op (no Sub/Abs/Greater triple).
+
+## 2026-07-11 — STALE worklist row; deployed already at ScatterND-int64 floor (no build)
+Deployed (MEASURED today) = 962 / 18.13 — NOT 15.99/8011 in the header. It is ALREADY the triage's cited
+"284-style rule-based ScatterND point-writes" (rule-driven from two coord Einsums → u8 scalar extraction;
+NOT hash-keyed; LB-safe). Per-tensor breakdown: the dominant tensor is scatter_indices int64 [16,4] = 512B
+of the 849 mem. STRUCTURALLY FORCED: ScatterND mandates int64 indices; the input→output diff is 8
+pixel-writes (4 interior-corner clears + 4 outer-corner sets), each needing TWO channel writes under the
+(>0) one-hot scoring (clear old channel + set new) = 16 rows × 4 coords. A channel-vector scatter ([K,3]
+with channel-last data) would require transposing the fp32 input to [1,30,30,10] = a 36000B intermediate.
+Triage floor ~399 (gap 0.88) UNREACHABLE; no sub-512 index tensor exists, so no build was dispatched.
+Reopen: a cheaper-than-int64 ND point-write op (none in the opset). FLOOR ≈ 962.

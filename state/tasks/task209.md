@@ -97,3 +97,45 @@ Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=
 See memory [[neurogolf-urad-7225-bundle-vein]]. our incumbent fresh-failed 216/2000 (already ~0 on private LB); urad both cheaper AND more robust — strict win.
 
 ## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 7927 -> 7862 (+0.008); gate inc/cand=34/34 (safe). See [[neurogolf-urad-7225-bundle-vein]].
+
+## 2026-07-11 — fresh-tail diagnosis → MIXED (c-irreducible floor + expensive-(a), NO-FIX)
+ran: reproduced deployed net (submission/overfit_nets/task209.onnx, the S15 urad GridSample solver,
+  164 nodes — NOT the old overfit) on fresh generate() draws. 2000-draw + 6000-draw sweeps. For every
+  net-fail I enumerated ALL params (mag∈{2,3,4}×irow×icol) that reproduce the exact input via a ≥2
+  full color-matching-block cover (sprite shape/colors read unambiguously from the bottom native copy,
+  box geom from the 4 yellow corners), then rendered each candidate's output. Analyzer validated:
+  ground-truth output reproducible from a consistent triple 47/47. Bundled stored train+test 4/4 pass.
+tool+date: direct-ONNX repro harness + full-enumeration ambiguity oracle vs arc-gen generator
+  (6000 fresh draws) + reference/arc-code-golf-solutions/task209.py cross-check, 2026-07-11 (fork).
+verdict: net fresh-fail = **2.30%** (138/6000; matches the 2.2% sweep). SPLIT:
+  • **0.83% (50/138) = class (c) IRREDUCIBLE generator ambiguity.** Same input admits ≥2 distinct
+    valid outputs. CONCRETE INSTANCE: box(brow,bcol,wide,tall)=(2,4,14,11), sprite pix
+    [(0,0,8),(0,1,2),(0,2,2),(1,0,3),(1,1,3)]; consistent triples (mag=3,irow=1,icol=1) AND
+    (mag=3,irow=1,icol=4) — differ only in icol, both reproduce the input exactly. 9/12 of the
+    ambiguous fails have COLLINEAR shown blocks (single sprite row/col) → offset under-determined
+    (confirms the old Wall-1). NO net can beat this floor; net already tie-breaks 33/83 ambiguous
+    draws correctly. Base ambiguity rate = 1.38% (matches ledger's ~1.55%).
+  • **1.47% (88/138) = uniquely-determined but net-wrong.** Full enumeration finds exactly ONE
+    consistent triple, so a smarter feedforward solver COULD get these (NOT Loop/Scan/NonZero-blocked
+    — it is a bounded ~3×15×15 candidate grid + per-candidate complete-block validation + argmax
+    Gather). Failure profile: mag∈{3,4} (30/35 sampled) with exactly 2 collinear shown blocks
+    (27/35) — the cheap GridSample heuristic mis-recovers scale/offset when the magnified footprint
+    is large and evidence is minimal. Reference oracle (arc-code-golf task209.py) ALSO fails 45/47 of
+    these → the deployed net already tracks the best-known feedforward heuristic. This is technically
+    class-(a) FIXABLE but the ONLY exact fix is the Wall-2 full-enumeration solver (materializes ~700
+    candidate planes → detection floor ~13–14 pt) which is **−2 to −3 pt below the current ~16.0 pt
+    net** and STILL capped at the 0.83% irreducible floor. NET-NEGATIVE at any k≥1 hidden draw
+    (16.0×0.977=15.6 > 13.5×0.992=13.4). NO-FIX shipped.
+reopen: a public dump net with measured fresh-fail <2.3% on THIS generator (adopt if cand≤inc &
+  cheaper, per S15 routine); OR evidence the hidden/private set is curated/filtered (not raw
+  generate()) — as found for task002 — which would make the 0.83% floor an overstatement; OR a
+  cheap targeted scale/offset-recovery fix for the mag∈{3,4}+2-collinear-block mode that regresses
+  neither the 265 bundled nor mem (none found — the binding step is a runtime-factor Kronecker
+  re-stamp, already GridSample-encoded).
+falsification history: SUPERSEDES the pre-redesign S8/S9 "13.357 stored unbeatable + fresh ~9.8%
+  ambiguity wall" verdict — those were measured against the OLD overfit base; the current deployed
+  net is the S15 urad GridSample SOLVER at 2.30% fresh-fail (far better), and the true irreducible
+  floor is 0.83% (not the earlier ~1.55–9.8% figures, which conflated ambiguity with heuristic
+  plateau). Wall-1 (collinear-shown offset under-determination) CONFIRMED with a concrete 2-output
+  instance; Wall-2 (no cheap exact form) CONFIRMED (best-known oracle also plateaus, exact needs
+  detection-floor enumeration).

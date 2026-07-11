@@ -53,6 +53,20 @@ separators) can be a single appended synthetic source cell via Concat, so the fp
 slice only covers the data-dependent colours, not the constants.
 
 
+## CI-triage 2026-07-11 ledger (BUILDER, opus) — 4-field negative verdict
+- **What ran:** re-derived from generator (3×3 block S copied to 3 fixed rotated slots + 2 gray
+  separators, region 3×11). Inspected deployed `networks/task214.onnx`: it already folds channel→label
+  in ONE Einsum(input,cw[1,10],sel[30,3],sel) → cg[1,1,3,3] (36B, avoids the 360B f32 slice), does the
+  rotations with uint8 Gather/Transpose (9B each), builds label grid lc[1,1,3,11] (33B), then
+  Equal(lc, colorramp[1,9,1,1]) → onehot core[1,9,3,11] **bool 297B** → Pad → free output.
+- **Why 525 is floor:** the 297B onehot is the dominant cost and is the *minimum* for onehot-before-Pad
+  (9 channels × 3×11 = 297 bool). onehot-AFTER-pad = 9×900 = 8100; a direct place-to-output einsum needs
+  either an 8100-param permutation weight or a [1,10,3,11] f32 (1320B) pre-Pad intermediate. All routes
+  > 525. sel[30,3]=90 params is cheaper than the 360B f32 slice it replaces. **Deployed net is at floor.**
+- **Tool+date:** onnx graph inspection + generator read, 2026-07-11. (No rebuild gated — would reproduce.)
+- **Reopen trigger:** ORT Einsum/onehot path that writes a <297B channel-expanded plane at 3×11, or a
+  uint8-Einsum place-to-output cheaper than the current Gather-chain + 297B onehot.
+
 ## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (submission 54367833): 767 -> 525 (+0.379)
 Mechanism: single-node Einsum + Gather/Pad.
 Gate (fresh_verify, inc/cand fail on 1500-2000): 0/0 -> adopted under safe rule (cand fail <= inc fail AND cheaper).

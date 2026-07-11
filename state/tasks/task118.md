@@ -152,3 +152,34 @@ verdict: parked. Same bundled!=raw evidence as task002 (passes 267 bundled at 7.
 reopen: hidden-set generation evidence; a variable-arm cross detector design (occurrence maps at
   2-3 scales, priced vs 12282).
 falsification history: none (first diagnosis).
+
+## 2026-07-11 — variable-arm detector REDESIGN built (2-round coverage-peel) → HEDGE candidate
+ran: (1) reproduced tail: incumbent fail 85/1000 = 8.5% (seed 1); classified 40 fails = miss_whole_cross
+  ~55% (local-max NMS suppresses a weaker true cross within 7x7 of a stronger one), global-L misselect
+  ~35% (mx3>mx2 picks L=2 on true-L=3), phantom ~8%, invisible ~5%. (2) numpy design shootout (exact
+  ONNX semantics, 3000/seed): 4-round global-argmax peel + coverage L-select + gray-center 2.33%; chosen
+  build = 2-round peel (round1 local-NMS th cL, round2 global-argmax th 1; state w u8 {0,64,65}, peel =
+  Where(cover, min(vc,64), w); ok_L = ReduceMax(final w) < 65) + L-select "sel3 = ok3 & (!ok2 | mx(s3)>mx(s2))".
+  (3) KEY bundled finding: gray-center constraint + prefer-L3 (fresh-optimal, 2.33%) FAILS 8 bundled —
+  5 legacy validate() grids have RED cross centers (modern generator invariant violated; generator's own
+  "TODO: ensure center&length known" era) and 3 L-amb examples (86/106/123) whose curated truth is L=2.
+  Reference oracle tries n=2 FIRST and returns on first cover ⇒ curated (reference-solvable-filtered) data
+  answers L=2 in the zero-evidence ambiguity ⇒ built the reference-faithful rule instead; bundled 267/267
+  with NO memorization. (4) gate: candidates/task118/varm_peel.onnx (build_varm_peel.py, 53 nodes, opset 18
+  like incumbent) → pass 267 fail=0, cost 29045 (mem 28914 + params 131), points 14.7234; REJECT only on
+  cost vs 12282. (5) fresh A/B (same-stream, ONNX vs ONNX): seed11/4000 cand 112 (2.80%) vs inc 297 (7.42%);
+  seed3/3000 cand 121 (4.03%) vs inc 251 (8.37%); pooled 7000: cand 3.33% vs inc 7.83%; candidate failures
+  are a STRICT SUBSET of incumbent failures on both seeds (both==cand_fail) — instance-wise dominance.
+tool+date: ng gate + scratchpad sim/AB scripts, 2026-07-11 (fork), onnx 1.21.0/ort 1.26.0.
+verdict: HEDGE-eligible, NOT MAIN (cost 29045 > 12282; points 15.5840 → 14.7234, Δ −0.8606 for tail
+  7.8%→3.3% with strict instance dominance). NOT adopted. Residual tail = invisible crosses + L-amb-answered-
+  against + rare tie/wrongcenter; the first two are reference-UNsolvable ⇒ likely filtered out of curated
+  hidden data (task002-style curation), so effective hidden-side divergence is closer to the ~0.3-0.5%
+  tie/wrongcenter class. ORT 1.26 gotcha recorded: Where has NO bool-X/Y kernel (u8 Where fine).
+reopen: if private-LB evidence shows fresh-style hidden draws (memorization nets 0-ing), submit this as the
+  118 hedge; if a cheaper counted-plane fusion is found (fp32 colour read 2800B + 38 u8/bool planes = the
+  cost; mixed-dtype Conv escape would halve the fp32 read), re-price vs 12282. A 2.33%-tail variant
+  (gray-center + prefer-L3 + 8-entry hash-scatter patch, ~36.5K) was designed but NOT built — strictly
+  dominated unless hidden is fresh-drawn AND uncurated.
+falsification history: "parallel detectors top out ~85%" (attempt #1) — falsified for the NMS+peel class:
+  2-round ONNX peel reaches 96.7-97.2% fresh with bundled fail=0.

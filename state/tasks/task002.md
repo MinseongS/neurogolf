@@ -256,3 +256,24 @@ reopen: evidence on hidden-set generation (post-deadline writeups); an ONNX-chea
   2.9% residual) if hidden-set size is ever established >2 draws/task.
 falsification history: first diagnosis of this class; supersedes the naive '5.6% = depth/overflow'
   hypotheses (both measured false).
+
+## 2026-07-11 — rect-component walk variant BUILT (HEDGE candidate, not adopted)
+ran: numpy A/B re-derivation (4000 draws, seed 20260711): INC 223 (5.58%) -> RECT 113 (2.83%),
+  fixes 110 / breaks 0, walk2 slots-to-fixpoint max 32 (46-slot budget, margin 14). Built
+  `candidates/task002/rect_walk.py|.onnx`: deployed graph + rectangularity refinement — a 4-conn
+  component is a solid rect iff no 2x2 window holds exactly 3 cells (L-corner); s = Einsum(A,t,A)
+  2x2 sums [19,19] fp16, e3 = Equal(s,3), e3f = Cast, W2 = SECOND 46-slot alternating walk einsum
+  seeded from all 4 violation-window cells (spread via A[19,20] pair-sum incidence INSIDE the
+  einsum, no materialized plane; violations computed on t not the enclosed mask — 3-count window
+  cells are mutually 4-adjacent so seeds never cross components), fill = Greater(t, W1+W2).
+tool+date: rect_ab.py scratch harness + ng gate + fresh_check n=4000, 2026-07-11.
+verdict: HEDGE-READY, NOT ADOPTED. gate: bundled fail=0 (268/268), cost 9675 (mem 8705 + params
+  970) vs deployed 5889 -> gate REJECT only on 'not strictly cheaper' (expected for hedge).
+  Points 15.8227 vs 16.3191 = **-0.4964 pts buys fresh tail 5.58% -> 2.83%** (halved; residual =
+  irreducible fake-ring ambiguity, do not chase below). Fresh ONNX A/B 4000: cand 113 vs inc 223,
+  cand!=inc 117, ALL divergences remove fill (cand fill set is a strict subset of incumbent's:
+  enc AND NOT bad); 8 ms/run. No <=5889 path exists: refinement is inherently additive (needs
+  s/e3/e3f/W2/Wsum planes ~+3405B mem +381 params) and no deployed plane can be shaved to offset.
+reopen: adopt into HEDGE bundle only if hidden-set draw count is established >2/task or private-LB
+  fresh-rate evidence appears; if 380-param A bothers, ConvTranspose spread alternative costs MORE
+  (+800 mem for -376 params = net worse).

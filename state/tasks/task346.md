@@ -66,3 +66,15 @@ row⊗col rule; the rule is an inherently 2-D 8-neighbour monochrome-ring detect
 
 ## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
 mem 1224/17.87; CONST-OUTPUT false—output=centre colour of mono 3x3 ring (per-cell); fewer-pixel shortcut only 262/266. int8 QLinearConv ring test already minimal. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).
+
+## 2026-07-11 — STALE worklist row; deployed already at 2-fp32-slice floor (no build)
+Deployed (MEASURED today via per-tensor breakdown) = 1254 / 17.87 — NOT the 15.88/9069 in the header.
+It is ALREADY the triage's proposed "conv predicate + tiny out": ReduceMax+TopK the 2 present colours →
+per-channel Slices → QLinearConv 3×3 ring predicate → ScatterElements → 1×1 Pad. Breakdown: patch0
+[1,1,10,10] fp32 = 400B + center1 [1,1,8,8] fp32 = 256B = 656B of the 1224 mem; both are input Slices
+(Slice preserves fp32) and are STRUCTURALLY FORCED — the ring is a 2-D 8-neighbour monochrome test
+(non-separable), needs a ≥10×10 window (ring spans rows/cols 1..10), and per-channel slicing (2 channels,
+100+64 elems) is strictly cheaper than a 10-channel window ([1,10,12,12]=5760B) or a whole-input cast
+(18000B). Triage floor ~500 (gap 0.92) UNREACHABLE; no sub-656 mem exists under grader physics, so no
+build was dispatched. Reopen: an opset-≤16 op that emits a non-fp32 plane directly from the fp32 input
+(none known). FLOOR ≈ 1254.

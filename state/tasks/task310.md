@@ -92,3 +92,23 @@ reopen: (1) ORT uniform-T escape (fp16 carrier co-bound with fp32 input); (2) an
   < 3184; (4) scoring change dropping the trace max (revives VI-crop → cost ~664).
 falsification history: the 2026-07-11 sweep hypothesis ("Slice plane partially carrier") is
   FALSE — pure detection+carrier of output pixels.
+
+## 2026-07-11 (2nd) — ci_triage row "valueinfo-legalized crop (216/008 class)" (BUILDER, opus agent) → DRY, floor RE-CONFIRMED independently
+ran: per-tensor byte-map of DEPLOYED net (submission/overfit_nets/task310.onnx, sha e8f6c2df5a,
+  cost 3184) — declared static shape vs ORT profile traced-max over the FULL 266-example bundled set
+  (train+test+arc-gen), single accumulating session (mirrors scoring.evaluate). Box carrier =
+  `safe_name_50` Slice output. Note: over the 4 local ARC train/test examples it traces only [1,10,7,7]
+  =1960B (looks like 600B slack), but over the full 266 (arc-gen included) it reaches [1,10,8,8]=2560B.
+tool+date: onnx 1.21 / ort 1.26, shape_inference(strict) + ORT profiler trace, 2026-07-11.
+verdict: DRY — box carrier declared [1,10,8,8]=2560B, bundled traced-max also [1,10,8,8]=2560B (an
+  8×8 box EXISTS in the arc-gen bundled set; boxlength∈5..8). declared == traced ⇒ zero VI slack; charge
+  = max(declared,traced)=2560 either way. This independently RE-CONFIRMS the 2026-07-11 (1st) floor
+  verdict: the earlier VI experiment declared 5×5 & 1×1 (both below traced) and correctly saw no change;
+  the tighter test (re-declare to the exact bundled traced-max) also yields nothing because that max IS
+  the full 8×8. DURABLE gotcha logged: value_info audits MUST trace the full 266-bundle (arc-gen), not
+  the 4 ARC train/test — the local-4 max UNDERSTATES the carrier (7×7 vs true 8×8) and would produce a
+  FALSE +600B slack signal. NOT MAIN-eligible.
+reopen: unchanged from 1st verdict — (1) ORT uniform-T fp16 carrier escape; (2) op reading free fp32
+  one-hot → windowed colour-INDEX with no full-canvas intermediate; (3) public dump < 3184; (4) scoring
+  change dropping the max(declared,traced) charge (would revive VI-crop only if bundled box < 8×8, which
+  it is not).

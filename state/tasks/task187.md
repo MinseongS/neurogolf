@@ -178,3 +178,44 @@ inherent 0.53% sealed-pocket); graded div 0/500 random. Latency 4.5ms. mem+param
   spatial recurrence [625,625]≈390k params kills it here); (c) bundled max grid < 24×25.
 - Falsification history: first deepfold-scan candidate; scanner blind spot was FLOORED-list hard
   exclusion, but the floor holds for a different reason (letter budget, not the old walk-family claim).
+
+## 2026-07-11 — fresh-tail diagnosis (~0.6% tail) → (c) IRREDUCIBLE generator ambiguity (proven) + (b) plateau remainder
+ran: ran the DEPLOYED net (submission/overfit_nets/task187.onnx, cost 4911, sha matches manifest —
+  NOT src.custom) directly in isolated ORT_DISABLE_ALL on fresh generate() draws. Reproduced tail:
+  38/6000 = 0.63% (also 11/3000 = 0.37% an earlier run) — consistent with the logged 0.9%/0.53%.
+  Captured 38 failures + built a per-failure component analyzer (own 4-conn labeler; no scipy). Root
+  cause is 100% UNIFORM: EVERY one of 80/80 (then 38/38 instances) diff cells is truth=GREEN(3),
+  pred=RED(2) — ZERO under-fill, zero color/drawing errors, zero distance-bound (geodesic) failures.
+  This is the documented SEALED-POCKET mode, NOT the old distance>15 concern: the net's 8-conn walk
+  cannot reach a black pocket walled off by line color, marks it "enclosed"=red, but the generator's
+  TRUE rule is red = box INTERIORS ONLY (output inits to green, only real drawn boxes punch red), so a
+  line-sealed pocket must be green.
+tool+date: isolated ORT (deployed onnx) A/B vs generator ground-truth, 6000 draws + component/ring
+  analyzer (scratchpad diag.py/ambig187.py), onnx 1.21.0 / ort 1.26.0, 2026-07-11 (fork).
+verdict: (c) IRREDUCIBLE generator ambiguity — PROVEN with instances. Of the 38 failures, 12 (32%)
+  are SOLID-RING: the green pocket is enclosed by a COMPLETE solid single-color rectangular ring,
+  byte-for-byte identical to a real generator box interior, yet labeled green. AIRTIGHT PROOF-PAIR in
+  one grid (in=(20,24)): a real box interior at rows9-15 cols4-10 (solid color-7 ring → RED) and a
+  line-formed pocket at rows16-18 cols6-11 (identical solid color-7 ring, interior (17,7-10) → GREEN)
+  coexist — identical local pixels, opposite labels. Box vs line is a HIDDEN generator variable absent
+  from the input (lines only draw on black cells and use the same `color`; 4 line segments can
+  coincidentally close a perfect rectangle ring), and interior size does not disambiguate (a 1×4
+  interior = valid box tall=3/wide=6). Therefore NO input→output function — at ANY memory/op budget —
+  can label both correctly. The irreducible floor ≈ SOLID-RING rate ≈ 0.32·0.63% ≈ 0.2%. The other 26
+  (68%) are GAPPY-RING (pocket ring has a gap the 8-conn flood can't traverse): those ARE separable in
+  principle by an exact solid-rectangle box-interior detector, but that is the (b) HEURISTIC PLATEAU
+  the task's own 2026-07-02 note already priced at ~30KB (>>4911) and still-imperfect on partial lines.
+  This is NOT a self-inflicted regression (unlike task205/task233): the 4911 walk-einsum is a correct
+  8-conn flood; the tail is inherent to ANY connectivity proxy for a box-interior rule. Orthogonal to
+  the 52/52 letter-budget MEM floor (that governs cost, not correctness).
+reopen: none for the SOLID-RING (c) subset — it is a hard information floor (reopen only if the
+  generator changes so boxes/lines become distinguishable). For the GAPPY-RING (b) subset: an exact
+  solid-ring box-interior detector that fits BELOW the current 4911 budget with 0 divergence — none
+  known (prior estimate ~30KB, byte-negative and imperfect). Re-measure if a public dump ships a
+  lower-fail task187 net (would refute the plateau, not the (c) floor).
+falsification history: first fresh-tail diagnosis of task187. SHARPENS the 2026-07-02 "sealed-pocket =
+  inherent flood failure" note from a heuristic claim to a PROVEN input-ambiguity floor (solid-ring
+  instances). Corrects the prior framing that the tail was distance>15 (geodesic): 0/38 failures were
+  distance-bound; all were sealed pockets, 1/3 of them provably irreducible. Durable physics: red =
+  box interior is NOT a connectivity property, and a solid color rectangle ring is generator-ambiguous
+  between box (red) and coincidental line-closure (green).

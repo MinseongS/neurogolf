@@ -65,3 +65,24 @@ then green = blue·dilate8(interior) (corners reach centre interior diagonally �
 not 4-conn). Build the {0,1,3} label on the CROP and Pad once to 30×30 with a 99 sentinel.
 
 ## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-1/2 opus agents; occupancy/max-semiring reductions or sub-400B u8 banks). Do not re-attempt without a new mechanism.
+
+## 2026-07-11 — rect-segmentation-primitive expressibility check (ci_triage builder) → DRY, NOT interval/band/fill
+ran: generator-derived semantics (task_810b9b61.py L63-82): output cell = GREEN(3) iff its box has
+  w>=3 AND t>=3 AND grow==-1 AND gcol==-1 (no knocked-out perimeter cell); else stays BLUE(1). The
+  green predicate is a per-box GLOBAL "ring is a complete closed loop" property — a single black gap
+  anywhere on a box's perimeter must recolor the ENTIRE ring back to blue. Tested whether the 2-level
+  cumsum rect-segmentation primitive (interval/band/fill via directional prefix/suffix reductions) can
+  express ring-completeness.
+tool+date: generator read + task-file attempt ledger (attempt #2), 2026-07-11.
+verdict: NOT interval/band/fill = POSITIONED-CONTENT/GLOBAL-CLOSURE (per detection-vs-carrier CAUTION,
+  092-scope excludes this). Ring-completeness is a connectivity/flood property, NOT an axis-aligned
+  segmentation: attempt #2 (bounded per-direction enclosure = the task125 rect lever) already FAILED
+  314/400 here because a gap on one wall still leaves interior cells seeing blue in the OTHER 3
+  directions — a separable/cumsum reach test is provably blind to the gap. The only correct mechanism
+  is the exterior/bad-box FLOOD (attempts #3/#4), already what the deployed net does. Deployed 4536
+  (public dilation net). NO cheaper rect-segmentation build exists. DID NOT BUILD.
+reopen: (a) a public/top-team task196 dump < 4536; (b) a robust LOCAL bad-seed detector (gap-adjacency
+  + flat/thin) enabling the ~6-iter bad-box flood over the current 11-iter exterior flood (~+0.27, see
+  OPEN ANGLES above); (c) a new op that reads global ring-closure without a full flood.
+falsification history: consistent with attempt #2 (rect lever) FAIL 314/400 and S8 priced-FLOOR verdict;
+  this is the first explicit rect-segmentation-expressibility ledger entry. No prior claim falsified.

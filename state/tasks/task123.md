@@ -57,3 +57,8 @@ the band-colour palette from a single input line (column 0 = `colors[0..L-1]`), 
 region. Footprint guard: when the output grid is exactly K×K with no interior background,
 Pad the label with a sentinel ≥10 (NOT 0) so off-footprint cells are all-channels-off, not
 channel-0-on (a pad-0 silently lights background and fails every fresh instance).
+
+## ADOPTED 20260711T144528Z
+- cost: 1342 -> 1289 (points 17.8384)
+- source: candidates/task123/cand.onnx
+- note: free-input palette-read fold: 3-operand Einsum('bcij,c,ki->bkj') reads row-0 colour line off free input, kills 200B fp32 Slice intermediate; fresh 2500 cand=inc=0

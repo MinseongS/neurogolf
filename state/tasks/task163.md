@@ -66,3 +66,15 @@ Pad above the small 11×11 working planes.
 
 ## S8 (2026-07-02) — rect-recipe conversion ADOPTED, div 0
 two scalar einsums 'bchw,c,h->' locate the single yellow; yellow11 plane dropped; 2345→1797, +0.266. Fresh: agent uncached 2500 div0 + my uncached 400 div0.
+
+## kron_fractal_einsum sweep DRY 2026-07-11 (agent)
+- what was run: assessed as a stamp/block-copy candidate (source block -> mask-selected target
+  block, output ALWAYS 11x11 so NOT a shape reject; copy factors row(x)col per tasklog).
+- tool+date: oracle + deployed-net structure read, 2026-07-11.
+- verdict: OUT OF RECIPE (no build). Placement is fully DATA-DEPENDENT (R,C,mr,mc recovered from
+  the unique yellow pixel) -> selection is per-axis one-hot-driven Equal/inrange matrices, NOT the
+  recipe's FIXED div/mod tables. The deployed 1797 net already realises the exact double-MatMul a
+  kron fold would use; the only fold saving is merging the two selection MatMuls into one einsum to
+  drop the [1,10,11,11] intermediate (~968B fp16) — small, uncertain vs an already-lean net.
+- reopen-trigger: if a general data-dependent-selection einsum fold is proven elsewhere (merge
+  Srow @ x @ Scol into one node) with a measured >0.1 saving, port it here first.

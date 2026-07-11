@@ -205,3 +205,25 @@ Gate: bundled 266/266 PASS on correctness; REJECT only on 'not strictly cheaper'
 = -0.0009pt). Fresh A/B 4000: incumbent 118 fails (2.95%) -> candidate 0. Protection ~+0.49pt per
 hidden draw. Installed manually + ng verify --update per the 2026-07-11 fresh-gate doctrine
 (risk-dominant net; price exception documented here; correctness gate NOT bypassed).
+
+## 2026-07-11 — CI-triage builder probe (dynamic_kernel_stamp_conv 368-class rebuild): DRY, FLOOR reaffirmed
+ran: incumbent fresh baseline re-measured post-v2 fix: 0/2000 fails @ cost 6421. Per-tensor
+  breakdown: cost center = ray-lattice ASSEMBLY (ray_total 529 + color21 441 + ~180 small
+  ray-slice planes ~= 4KB), NOT the stamp (already ONE QLinearConv) — 368-class collapses the
+  wrong step. Sized the required anchor/origins plane: ray span +-20 => 41x41 kernel = 1681
+  params single-ch / 13448 grouped 8-dir; origins plane [1,8,21,21] = 3528B u8 / 7056B fp16
+  (Conv output float) — the origins plane ALONE >= budget. Colors differ per ray => per-direction
+  colored seeds require the same hint-detection the incumbent pays. Verified stamps are always
+  disjoint (additive-safe) — legalizes the final Conv but doesn't cheapen origins. Abandoned at
+  cost-analysis per effort ceiling; no gateable candidate (would also re-derive all clip/phase
+  edge cases that caused the old 2.95% tail, high fresh-fail risk for no win).
+tool+date: onnx static byte-accounting + fresh_check(5, n=2000), 2026-07-11 (fork builder).
+verdict: DRY / FLOOR reaffirmed. dynamic_kernel_stamp_conv attacks the final stamp (already
+  cheap); the phase-coupled per-color ray-origin construction is the true cost center and is
+  not simplified by the mechanism. Incumbent (v2, 0-fail) stands at 6421.
+reopen: phase-free origins construction (cheap S mod 4 normalization proof, or single-channel
+  color-packed ray walk-einsum carrying per-direction color without an 8-ch plane); OR public
+  dump <6421; OR a primitive generating a strided colored ray from one seed without a +-20-span
+  kernel or 8-ch intermediate.
+falsification history: consistent with 2026-07-01 FLOOR verdict; adds quantified 368-class
+  pricing (the worklist's suggested mechanism is now priced OUT, not just doubted).

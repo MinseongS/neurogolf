@@ -38,6 +38,23 @@ directly (single Slice each, no ReduceMax), AND-broadcast to the [1,1,H,W] mask,
 fixed fill color into the FREE Where output. Confirm the fill never overlaps the markers
 (here rows>=1, cols<=8 guarantee disjointness) so a plain Where (no priority chain) suffices.
 
+## CI-triage 2026-07-11 ledger (BUILDER, opus) — 4-field negative verdict
+- **What ran:** derived the free-output separable construction from the generator: 4 rank-1 terms
+  {bg=e0·inside_r·inside_c, graycol9=(e5-e0)·marker_r·right_c, grayrow0=(e5-e0)·top_r·marker_c,
+  red=(e2-e0)·marker_r·marker_c}, marker lines = f16 slices of `input` (input NOT an einsum operand).
+  Inspected deployed `networks/task043.onnx`: its Einsum equation is `bkc,ki,kj,birx,bjxw->bcrw` with
+  channels[1,4,10]·row_sel[4,3]·col_sel[4,3]·row_basis[1,3,30,1]·col_basis[1,3,1,30] — **byte-for-byte
+  the same 4-term/3-basis-line f16 separable einsum I derived.** No cheaper construction exists.
+- **Cost anatomy (deployed 793 = mem 588 + params 205):** the two f16 basis [1,3,30,1]=180B each (360B)
+  dominate; each carries 2 static indicator lines + 1 runtime marker line = minimal 3 rows. Basis MUST be
+  30-long to write the free [1,10,30,30] output directly (a 10-long basis → [1,10,10,10] einsum out → Pad
+  intermediate ≫). marker slices+casts are minimal (36+18 each). No op is droppable without breaking
+  onehot correctness. **FLOOR.**
+- **Tool+date:** onnx graph inspection + generator read, 2026-07-11. (Did not gate a rebuild — it would
+  reproduce the deployed net.)
+- **Reopen trigger:** an Einsum operand dtype below f16 (uint8) accepted by ORT, which would halve the
+  two 180B basis lines; or a non-separable-avoiding trick that drops one of the 3 basis rows per axis.
+
 ## S10 (2026-07-03) — crop-to-bound priced FLOOR
 Verified generator bound = 10. Flagged `row_basis`/`col_basis` f16 [1,3,30,1]/[1,3,1,30] 180B each carry einsum free-output dims; the input is not an einsum operand axis, so there's no task187-style re-embed carrier. P[10,30]×2 adds +600 params > the 240B saved. FLOOR.
 

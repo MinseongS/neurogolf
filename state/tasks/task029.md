@@ -118,3 +118,31 @@ OLD FLOOR REFUTED on two counts:
    n²(4(Σr²+Σc²)−n²−16n+16)==4(Σr²−Σc²)² ∧ n>7 on [1,10] free-input einsums (O(1) bytes)
    replaces 2400B axis-count planes; only 120B presence planes remain for bbox ArgMax.
 Backup reports/retired_networks/task029_pre_s9.onnx.
+
+## 2026-07-11 — ci_triage row "profile-compile + valueinfo crop" (BUILDER, opus agent) → DRY, mechanism inapplicable
+ran: per-tensor byte-map of the DEPLOYED net (submission/overfit_nets/task029.onnx, sha afb5f0166b,
+  cost 5288) via scoring.calculate_memory physics — declared static shape vs ORT profile traced-max
+  over the full 266-example bundled set (train+test+arc-gen). Net is opset-12, ops =
+  {GridSample×1, Einsum×5, ArgMax×5, Pad×2, OneHot, ...}. Crop carrier = `grid` [1,30,30,2] fp16
+  = 3600B; detection = 120B×4 presence/count vectors (rcnt/ccnt/gxpart/gypart) + tiny.
+tool+date: onnx 1.21 / ort 1.26, shape_inference(strict) + ORT profiler trace, 2026-07-11.
+verdict: DRY — the assigned valueinfo-legalized-crop mechanism (216/008 win class) is STRUCTURALLY
+  INAPPLICABLE here. That win requires a data-dependent Slice/Pad crop tensor whose author-declared
+  static shape OVER-approximates the bundled traced-max (charge = max(declared, traced), scoring.py
+  L117/L150). This net has NO dynamic-shape tensor: shape_inference(strict) resolves every intermediate
+  to an exact static shape (calculate_memory returns a number, not None; zero dim_param/non-static
+  value_info), so declared == exact runtime everywhere — no over-declaration to shrink. The crop+
+  translate is carried by GridSample with a FULL static [1,30,30,2] fp16 sampler grid (always 900
+  cells×2×2B), not a shrinking window, so there is nothing to re-declare. The "profile-compile /
+  per-color row-count profile" alternative is a REGRESSION: S9 already replaced 2400B per-channel
+  axis-count planes with O(1) moment-identity einsums; reintroducing per-color profiles ADDS ~2280B.
+  Reintroducing a Slice-based interior crop to manufacture VI-underdeclaration would carry a
+  10-channel fp32 window (up to ~16000B, interior ≤~23×23) — far worse than the 3600B fp16 grid, and
+  max(declared,traced) still floors it at the bundled traced-max interior. Deployed net is at the
+  GridSample mechanism floor. NOT MAIN-eligible.
+reopen: (1) a u8/fp16-producing op reading the free fp32 one-hot into a windowed colour-INDEX without
+  any full-canvas intermediate (would undercut both the 3600B grid and the moment detection);
+  (2) an exact ring discriminator not needing per-channel extents; (3) scoring change dropping the
+  max(declared,traced) charge; (4) public dump < 5288.
+falsification history: OLD "MARGINAL floor ~9600" (2026-06-19/S8) was REFUTED by S9 GridSample
+  (5436). This 2026-07-11 audit confirms the post-S9 GridSample net (5288) has no VI-crop slack.

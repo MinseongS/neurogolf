@@ -19,3 +19,8 @@ No source change.
 **Blocker class:** full-output-carrier. The 490B `block` one-hot is the emission floor: background channel-0 must be set to 1 across the whole in-grid 7×7 (per-channel carrier), so the plane cannot shrink below G²×10 for a colour-replacement whose output size = input size. Already logged FLOOR.
 
 **Lever:** no lever visible (background-channel carrier is structural). fp16 recast blocked — one-hot is uint8 already, Pad needs uint8.
+
+## ADOPTED 20260711T135833Z
+- cost: 758 -> 358 (points 19.1195)
+- source: candidates/task267/einsum_fold.onnx
+- note: 343-class free-input einsum fold: single free-output Einsum 'bjrc,tk,tr,tc,tj->bkrc' with t-axis merging bg-fill+recolor terms; separable inner-5x5 mask (60 params); fixed marker read (6,0) generator-proven; falsifies the old self-referential 490B carrier floor; fresh A/B 2000: cand=inc identical

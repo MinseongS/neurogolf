@@ -74,3 +74,16 @@ Bundled gate after adoption: fail=0, cost `2190 -> 2188`
 - cost: 2188 -> 1829 (points 17.4885)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task388.onnx
 - note: min-merge from nets
+
+## kron_fractal_einsum sweep DRY 2026-07-11 (agent)
+- what was run: cost-model feasibility for a Kronecker/tiling einsum fold (out = P tiled 2x2,
+  the colour tile "binds both r and c" -> mod-fold input read, exactly what the deployed
+  index-Gather net's label plane avoids). Confirmed sizes 2..6 all present in arc-gen
+  (46/53/60/46/57 of n=262) -> the mod-s placement tables need 5 size cases.
+- tool+date: manifest cost read + arc-gen size histogram, 2026-07-11.
+- verdict: REJECT (reject_when #2, selector exceeds table budget). Two mod-fold tables at
+  5 cases x 30 x 6 ~= 1800 params + cyan-column nonlinearity + size-detect + channel mixers
+  exceeds the deployed 1829 index-Gather cost. Variable size kills the fixed-table win (contrast
+  275 s in {3,4} = 2 cases OK).
+- reopen-trigger: a same-rule task with <=2 tile-sizes, OR a proof the cyan+tile decode collapses
+  into one <=800-param table (would flip the budget).

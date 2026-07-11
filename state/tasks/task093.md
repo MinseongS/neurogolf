@@ -103,3 +103,19 @@ reopen: (1) new public task093 dump < 3332; (2) mixed-dtype Einsum unlock; (3) i
 falsification history: build-agent's own best was 8289; the 2026-07-09 public min-merge net
   (3332) already exploits occupancy-only + QLinearMatMul counts + u8 label-pad. Both prior
   open-angles independently re-derived as floors here.
+
+## 2026-07-11 — rect-segmentation-primitive re-check (ci_triage builder) → DRY, CONFIRMS FLOOR
+ran: generator-derived semantics (task_4093f84a.py L43-56): per line perpendicular to the gray band,
+  COUNT the colored pixels on each side, then STACK that many gray cells contiguously against the band
+  edge (output all gray = band + stacks). Split the rule into (a) the STACK = a contiguous interval
+  fill lo<=r<=hi (2-level-cumsum / interval-fill expressible) and (b) the per-line COUNT that sets the
+  interval length. Checked whether the rect-segmentation primitive reduces the dominant cost.
+tool+date: generator read + existing 2026-07-11 full-arsenal audit (this file, above), 2026-07-11.
+verdict: NO cheaper build. The interval-fill half (a) is ALREADY what the deployed 3332 net does
+  (CONTIGUOUS-SPAN: gray = r0-na <= r <= r1+nb, one run). The dominant cost is half (b) — the per-line
+  COUNT, a QLinearMatMul masked-sum reduction (DETECTION/COUNTING), which the cumsum/interval primitive
+  does NOT address (counting != segmentation). Un-foldable counting class (task233 precedent). Output is
+  all-gray via free Equal, u8 label already minimal. DID NOT BUILD.
+reopen: identical to the full-audit reopen triggers above (public dump < 3332; mixed-dtype Einsum;
+  integer-typed input channel killing the 784 fp32 crop; sub-900B 10-ch output-expansion primitive).
+falsification history: consistent with the 2026-07-11 full-arsenal FLOOR verdict; no prior claim falsified.

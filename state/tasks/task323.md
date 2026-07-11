@@ -54,3 +54,19 @@ an input tensor; the scorer checks DOMAIN not VERSION, so an opset-13 graph scor
 - cost: 2177 -> 1630 (points 17.6037)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task323.onnx
 - note: min-merge from nets
+
+## 2026-07-11 — CI-triage builder probe (walk/ray einsum + kernel-split): DRY
+ran: worklist ci_triage row (gap 0.85). Walk-einsum ruled inapplicable (fixed stamp, no
+  input-dependent traversability — nothing to collapse; single SAME-conv is the natural form).
+  Built the one live lever vs the 625B kernel: two-branch quadrant split into two 13x13
+  per-branch QLinearConvs + Max (candidates/task323/build_twoconv.py + twoconv.onnx),
+  ORT-verified over 169 marker positions, ng gate --task 323.
+tool+date: onnx build + ng gate + 169-position ORT equivalence, 2026-07-11 (fork builder).
+verdict: DRY — split costs 1681 > deployed 1630 (params 656->430 = -226B, but mem 974->1251 =
+  +277B for the second conv's materialized output plane). 25x25 kernel = stamp-support floor
+  (staircase branches genuinely reach +-12 both axes; kernel sparse 50-nonzero but unexploitable).
+reopen: sub-byte conv-weight dtype in ORT; OR proof grid ever <13 (shrinks +-12 support); OR a
+  grouped/strided conv variant emitting both quadrant stamps into ONE output plane (flips the
+  +277B mem penalty).
+falsification history: consistent with the 2026-07 "point-symmetric kernel / closed-form
+  predicate cost more" negatives above; this adds the measured two-conv price (1681).

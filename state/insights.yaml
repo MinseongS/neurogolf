@@ -2768,3 +2768,31 @@
   expected:
     per_task: "+0.1~0.7 where it fires; vein harvested 2026-07-11 for all same-shape tasks (10 priced, 6 won, 2 blocked, 018 was prototype, 89/367 marginal-negative by calibrated model)"
   transformer: null
+- id: kron_fractal_einsum
+  title: Compile Kronecker/fractal outputs to ONE free-output N-ary Einsum (div/mod placement tables + mod-s folded free-input reads)
+  status: active
+  source_tasks: [217, 304, 275]
+  rationale: 'Fractal/Kronecker outputs out[s*i+a, s*j+b] = A[i,j]*B[a,b] compile to ONE free-output
+    N-ary Einsum: factor the output coordinate with two [30,s] selector tables — Tdiv[Y,i]=1{Y//s==i,
+    Y<s^2} (self-gates the canvas) and Tmod[Y,a]=1{Y%s==a} — and recover BOTH operands as direct
+    free-input reads INSIDE the einsum via mod-s folding (sum over E%s==a of input[.,E,F] undoes any
+    block/half offset on an otherwise-empty canvas; input x2 operand reuse). One-hot assembly via the
+    (out>0) signed decode: stack 2-3 t-terms in the channel mixer Wmix[t,c,z] — colors delta(c,z),
+    background +alpha*e0[c]*inside (alpha = exact occupancy-fold scale), suppressor
+    -(alpha+1)*e0[c]*mask-product. Variable size: blend [K,30,s] tables with an exact one-hot case
+    vector through ONE shared einsum letter (no cross-terms). Nonlinearities (argmax-mode, size
+    detect) stay outside as tiny counted planes. ORT 1.26 runs 12-13-operand Einsums <1ms/example;
+    onnx 1.21 strict shape-infer fills all value_info. 2026-07-11 wave: 3/3 first-build hits
+    (217 1470->510 +1.059 single-node memory-0; 304 1320->564 +0.850 mode-onehot only nonlinearity;
+    275 1356->837 +0.486 layout never detected — mod-s fold + channel disjointness absorb all 4
+    layouts, s in {3,4} exact via ReduceSum(input)=2s^2). Falsified task217 2026-06-29 "close to a
+    semantic floor" verdict. Builders: candidates/task{217,275,304}/build_kron_einsum.py.'
+  applies_when:
+    - rule is "stamp pattern P at cells selected by mask M" / grid tiling / self-similar expansion
+    - nets with materialized source/mask planes feeding a final einsum (275-class - fold them back in as input reads)
+  reject_when:
+    - data-dependent output shapes (selector tables need a fixed 30-canvas embedding)
+    - selector need exceeds table budget (K cases x [30,s] must stay below the deleted planes)
+  expected:
+    per_task: "+0.4~1.1 where the fractal/tiling structure exists; rescan on any new tiling-rule task or materialized-stamp net"
+  transformer: null
