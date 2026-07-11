@@ -153,3 +153,9 @@ verdict: correct matcher would cut fail 5.1% -> ~0.5-1%. Blueprint: replace the 
   if hidden draws are raw-like; NOTE the task002 bundled!=raw finding weakens the premise.
 reopen: dedicated builder session for the matcher; hidden-set generation evidence.
 falsification history: none (first diagnosis).
+
+## 2026-07-11 exact-matcher rebuild (candidates/task319/exact_matcher.onnx)
+cost 14567 (vs deployed 5832, -0.914pt); fresh 11/6000 (0.183%) vs incumbent 423/6000 (7.05%),
+38x; bundled 267/267; decision-identical to numpy reference across 3 seeds. Gate REJECT price-only.
+DISPOSITION: HEDGE bundle (EV +0.21 at k=1 raw hidden draw, negative if fully curated).
+~1-2KB further golf possible (u8 compare planes, Identity elision) if promoted to main later.

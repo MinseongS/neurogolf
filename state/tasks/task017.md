@@ -146,3 +146,7 @@ each dropped cell trades private-LB robustness for a few hundred bytes.
 
 ## S15b (2026-07-06) — RE-ADOPTED from prvsiyan 7235.05 min-merge notebook (further golf): 7004 -> 6455 (+0.082)
 Gate fresh_verify 1500: inc=25/25 (cand<=inc, safe rule). prvsiyan bundle = min-merge of public sources, had a cheaper variant than my prior net. Source-owned via live_to_exact_source, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
+## ADOPTED 20260711T101238Z
+- cost: 6453 -> 6273 (points 16.2560)
+- source: candidates/task017/batchdims.onnx
+- note: GatherND batch_dims=2: sample_nd_idx [10,9,4]->[1,10,9,2] (-180 params; S1 lever dropped by the S10 kojimar graft, restored); bit-identical fresh 3000/0; 6453->6273 (+0.028)
