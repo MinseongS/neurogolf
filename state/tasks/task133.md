@@ -245,3 +245,8 @@ negative for the current public-autopsy free-Einsum signature.
 - cost: 21278 -> 17862 (points 15.2096)
 - source: candidates/task133/gather_slots.onnx
 - note: 3-slot dynamic-magnify rebuild: TopK(3) gated colour slots -> per-slot scalars -> colour x flipped-pattern base -> index-table double-Gather magnify ([4,16]+[4,24] i32 params) -> neg-pad place -> Max compose; replaces 4-branch ScatterND/QLinearConv mux + zbase 900 params; 3-slot cap = bundled census (267/267). 21278->17862 (+0.175)
+
+## ADOPTED 20260711T091016Z
+- cost: 21278 -> 19800 (points 15.1066)
+- source: candidates/task133/gather_slots_s4.onnx
+- note: 4-slot dynamic-magnify (S=4 = generator structural max, randint(2,4) proven; slot3 = insurance, functionally inert on 20000+ fresh draws); fresh A/B 6000: S4==S3==deployed 20 shared generator-pathology fails, 0 regressions; 21278->19800 (+0.072)
