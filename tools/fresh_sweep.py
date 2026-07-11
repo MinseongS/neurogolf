@@ -50,9 +50,14 @@ print(json.dumps({"task": t, "fails": fails, "runs": runs}))
 '''
 
 
-def run_task(t: int, n: int) -> dict:
-    r = subprocess.run([sys.executable, "-c", WORKER, str(t), str(n)],
-                       capture_output=True, text=True, cwd=ROOT, timeout=3600)
+def run_task(t: int, n: int, timeout: int) -> dict:
+    try:
+        r = subprocess.run([sys.executable, "-c", WORKER, str(t), str(n)],
+                           capture_output=True, text=True, cwd=ROOT, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return {"task": t, "error": f"timeout>{timeout}s"}
+    except Exception as e:  # never kill the pool
+        return {"task": t, "error": repr(e)[-300:]}
     if r.returncode != 0 or not r.stdout.strip():
         return {"task": t, "error": (r.stderr or "no output")[-300:]}
     return json.loads(r.stdout.strip().splitlines()[-1])
@@ -63,18 +68,24 @@ def main() -> None:
     ap.add_argument("--n", type=int, default=1500)
     ap.add_argument("--tasks", type=int, nargs="*", default=None)
     ap.add_argument("--jobs", type=int, default=8)
+    ap.add_argument("--timeout", type=int, default=900)
+    ap.add_argument("--resume", action="store_true",
+                    help="skip tasks already present (without error) in today's sweep file")
     args = ap.parse_args()
-    tasks = args.tasks or list(range(1, 401))
+    path = ROOT / "state" / f"fresh_sweep_{date.today().isoformat()}.json"
     out = {}
+    if args.resume and path.exists():
+        out = {k: v for k, v in json.loads(path.read_text()).items() if not v.get("error")}
+        print(f"resume: {len(out)} tasks already swept")
+    tasks = [t for t in (args.tasks or range(1, 401)) if str(t) not in out]
     with ProcessPoolExecutor(max_workers=args.jobs) as ex:
-        futs = {ex.submit(run_task, t, args.n): t for t in tasks}
+        futs = {ex.submit(run_task, t, args.n, args.timeout): t for t in tasks}
         for f in as_completed(futs):
             r = f.result()
             out[str(r["task"])] = r
+            path.write_text(json.dumps(out, indent=1, sort_keys=True))  # incremental
             if r.get("fails") or r.get("error"):
                 print(f"task{r['task']:03d}: {r}", flush=True)
-    path = ROOT / "state" / f"fresh_sweep_{date.today().isoformat()}.json"
-    path.write_text(json.dumps(out, indent=1, sort_keys=True))
     bad = [r for r in out.values() if r.get("fails")]
     err = [r for r in out.values() if r.get("error")]
     print(f"\nswept {len(out)} tasks: {len(bad)} with fresh fails, {len(err)} errors -> {path}")
