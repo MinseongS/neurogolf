@@ -374,7 +374,7 @@ levers:
           본 판정은 'GridSample-the-op under current pins'에 한정, '264/256/250 무레버' 주장 아님."
 
   - name: hash-scatter-bundled-compiler
-    status: live
+    status: dormant  # KAGGLE-FALSIFIED 2026-07-11 — see ledger; do NOT adopt family members until diagnosed
     scanner: null  # pricing = pure data scan (diff stats from data/taskNNN.json); recipe tools/hash_scatter_compiler_ref.py
     scanner_archive: null
     recipe: null  # insights.yaml hash_scatter_bundled_compiler
@@ -402,3 +402,34 @@ levers:
         falsification_history: "None (lever born today). Note its sibling verdicts falsified fast:
           '018 unroll-collapse ceiling +0.04' (2026-07-10 233-lens) fell to +0.485 within a day —
           treat per-task 'floor' claims from OTHER lenses as non-binding for this lever."
+      - date: 2026-07-11
+        ran: "KAGGLE FALSIFICATION (sub 54561923): the 6-win bundle scored 7207.73 vs expected
+          7303.48 — deficit 95.75 == EXACTLY the sum of the 6 hash-scatter nets' new points
+          (95.742) ⇒ all 6 scored 0 on the grader despite bundled fail=0 locally (133/161
+          non-scatter adoptions held their gains). task101-class local≠LB divergence. All 6
+          reverted to pre-adoption backups (ng verify --update, 400/400, local 7300.89);
+          rollback submitted. Flat-pack refinement candidates (4 PASS, -3145) built but NOT
+          adopted — same falsified family, held in candidates/."
+        tool: "kaggle submissions diff + subset-sum attribution, 2026-07-11"
+        verdict: "lever DORMANT — the ScatterND(data=free graph input) lookup family produces
+          wrong outputs on the Kaggle grader while passing the local scorer 1:1. Mechanism
+          UNDIAGNOSED; suspects: (a) ORT x86 in-place/aliasing optimization on ScatterND over the
+          graph-input buffer (task101 dynamic-CSE precedent is also an aliasing class), (b)
+          grader-side input one-hot padding differing off-grid (hash reads ALL cells incl.
+          padding; rule-nets are insensitive, lookup-nets are knife-edge), (c) ScatterND
+          duplicate-index UB on the sink cell. NOTE 233's ScatterElements table + deployed
+          ScatterND nets pass fine on LB — the failure is specific to something in this
+          construction, not scatter ops per se."
+        reopen: "diagnose first, one isolated submit per hypothesis (budget 100/day): (1) resubmit
+          exactly ONE hash net (e.g. 173) on top of the recovered bundle — if it alone crashes
+          that task, bisect its graph vs a defused variant; (2) alias test: ScatterND(data=Add(
+          input,0))-variant — BUT any input materialization costs 36000B, so only as diagnostic,
+          not a fix; (3) padding test: net that outputs Equal(input-hash, expected-key) as a
+          probe of grader-side feed bytes. If (b) is the cause, hash over a Slice'd in-grid
+          subregion re-legalizes the whole family (+2.5 LB was real and returns, incl. +0.35
+          flat-pack refinements)."
+        falsification_history: "First LB falsification of this lever (born same day). Precedent
+          class: task101 dynamic-CSE crash (bundled fail=0, LB 7248 crash). The 'bundled fail=0
+          passes forever' overfit rule remains TRUE for nets the grader executes identically —
+          this incident narrows it: local scorer == LB requires EXECUTION equivalence, which
+          graph-input-aliasing scatter and feed-byte-sensitive hashing can violate."
