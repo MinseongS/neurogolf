@@ -138,3 +138,12 @@ cost over the deployed 7210: +1-3KB (well worth it: expected private value ≈ +
 The S8 net's K-batch/placement einsum skeleton is reusable; only the selector and fill subgraphs
 change. Fresh gate for the port: >=20k A/B, require <=0.4% and strictly ⊆-or-equal incumbent fails
 is NOT required (incumbent fails 44%) — require candidate fails <= 100/20k.
+
+## 2026-07-11 exact-rule ONNX port (candidates/task219/exact_v1.onnx)
+cost 25124 (mem 23860 + params 1264) vs deployed 7210 = -1.249pt public; fresh 18/6000 (0.30%,
+oracle floor ~0.046%); bundled 265/265; server ORT 1.24.4 runs 4/4. Gate REJECT on price only.
+DISPOSITION: goes into the HEDGE bundle (portfolio strategy — Kaggle final selection takes 2
+submissions: one cheap-risky board + one max-protected board = best-of-two on private).
+Raw-only variant (est. -5K cheaper, 4.26% fresh fail) rejected — dominated across hidden-set
+uncertainty. Anchor-alignment shortcut rejected (bundled train[1] uses out-of-distribution
+col=3 parameters).
