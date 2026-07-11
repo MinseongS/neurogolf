@@ -134,3 +134,8 @@ Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent).
 - cost: 2743 -> 2683 (points 17.1053)
 - source: candidates/task008/vi_cand.onnx
 - note: public-insight generalize: valueinfo_legalized_dynamic_crop fleet sweep — task008 crop window redeclared [1,1,5,5]->[1,1,3,5] (traced max-product 15 elems; crop flips orientation so per-dim max is vacuous, byte charge model allows max-product). Annotation-only, graph bytes identical. Fleet verdict: only genuine slack; 26 phantom hits were Cast/TopK traced=0 artifacts
+
+## ADOPTED 20260711T171307Z
+- cost: 2683 -> 2127 (points 17.3375)
+- source: candidates/task008/trim2_cand.onnx
+- note: trim rebuild 2683->2127 (+0.232, bit-identical): selectors folded into extraction einsums, Floor-free log-decode, label re-encode -> direct Cast(crop) red stamp, cyan path -> 4-cell clamped ScatterND + rank-2 canvas; community '148' = sparse mirage, dense floor accounting in tasklog
