@@ -2675,3 +2675,25 @@
     risk: low (4/5 built candidates bit-identical or fresh-4000-clean; sign decode exact on integer fp32)
     verification: ng gate bundled fail=0 + cheaper; fresh arc-gen if not bit-identical
   transformer: null
+- id: rnn_lstm_gru_legal_recurrence
+  title: RNN/LSTM/GRU are LEGAL and their recurrence is nearly free (Y omissible, Y_h-only counting)
+  status: candidate
+  source_tasks: []
+  rationale: 'Op-vocabulary probe 2026-07-11 (8 toy nets scored via repo score_network under pinned
+    onnx 1.21.0/ort 1.26.0): EXCLUDED_OP_TYPES bans Loop/Scan/If-style subgraph ops but NOT
+    RNN/LSTM/GRU; checker + strict shape-infer + profiling-trace scoring all pass. CPU kernels
+    exist for fp32 RNN/LSTM/GRU and fp16 LSTM/RNN. The Y (full-sequence) output is omissible via
+    empty-string node output (calculate_memory skips empty names, scoring.py:86), so a 30-step
+    recurrence counts as little as Y_h [1,B,H] = 120B with params 12-27 at H=1. Loop/Scan power
+    survives in these ops.'
+  applies_when:
+    - a rank-3 fp32/fp16 [S,B,C] plane is ALREADY counted for other reasons (marginal X cost 0)
+    - a task needs >42-step 1-D recurrence (beyond the 52-letter einsum walk cap, no letter budget)
+    - output is row/col-constant reachable from Y_h 120B + free Expand
+  reject_when:
+    - X must be materialized from the free rank-4 one-hot input (counted rank-3 X >=3600B fp32
+      loses to walk-einsum which reads input at 0B and absorbs <=42 steps into one plane)
+    - 2-D 4-conn floods (one RNN pass per path TURN; 187/286/002 verified not 1-D)
+  expected:
+    per_task: "situational; 0 targets on 2026-07-11 board (only chain hit 286, dpts 0.08)"
+  transformer: null

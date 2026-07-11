@@ -303,6 +303,23 @@ levers:
         falsification_history: "'P2 irreducible' 자체는 무전과(평면이 2026-07-10 S8-port 트레이드에서
           탄생). 단 task243 floor-판정 TYPE은 5회 반증(13.86→S8→S9→S18→S8-port) — 설계패밀리-조건부
           진술로만 기록."
+      - date: 2026-07-11
+        ran: "RNN/LSTM/GRU op-vocabulary probe (fable fork): scoring.py legality 감사(EXCLUDED 목록 +
+          subgraph-attr 체크), 8 toy nets를 repo score_network로 실측(fp32 RNN/LSTM/GRU + fp16
+          LSTM/RNN 커널 전부 존재; Y는 빈 출력명으로 생략 가능 → 30-스텝 scan이 Y_h 120B로 카운트,
+          params 12-27 at H=1), 400 배포넷 structural chain scan(≥2 same-shape ≥1500B propagation
+          planes)."
+        tool: "toy ort models + repo scorer + chain scan, 2026-07-11 (fable fork agent)"
+        verdict: "LEGAL + 커널 존재 (insights.yaml rnn_lstm_gru_legal_recurrence에 등재) — 단 이번
+          스캔에서 paying target 0: 유일 chain hit 286(net_kill 1400B, dpts 0.08 < 0.1, 게다가 4-conn
+          maze vs 1-D op). 근본 경제학: rank-4 one-hot 입력이 counted rank-3 X ≥3600B fp32를 강제,
+          walk-einsum은 input을 0B로 읽고 평면당 ≤42스텝 흡수 — RNN 우위는 >42-스텝 1-D 재귀뿐인데
+          현 보드에 부재(letter-floored 187/286/002 전부 2-D 4-conn flood 확인)."
+        reopen: "(1) rank-3 fp32 [S,B,C] 평면이 이미 다른 이유로 counted인 넷(한계 X비용 0);
+          (2) row/col-상수 출력 고비용 태스크(Y_h 120B + free Expand); (3) >42-스텝 1-D 재귀를 들여오는
+          미래 rebuild/덤프; (4) 기존 fp16 평면 경유 fp16 LSTM X(X 1800B로 반감 — 새 fp16 채택 후 재검)."
+        falsification_history: "이 op 패밀리 첫 프로브(무전과). 능력 사실(합법성/fp16 LSTM 커널/Y_h-only
+          카운팅)은 DURABLE — 오늘 0승과 무관하게 유효."
 
   - name: dtype-overpay
     status: dormant
@@ -328,3 +345,30 @@ levers:
         ran: "dtype_overpay queue recheck on task025 after task367: built `candidates/task025/topk_k3.onnx` by shrinking TopK/slot_projector K=4->3 and gated it"
         verdict: "0 PASS. The candidate was cheaply priced (cost 7662) but failed bundled 35/266, so the apparent +0.1 dtype/slot saving is not available under strict gate. This is the same TopK-capacity risk class already documented for task025."
         reopen: "a generator-proof safe K bound for the fixed public/bundled set, or a separate mechanism that removes slots without dropping required line multiplicity"
+
+  - name: gridsample-spatial-embed
+    status: dormant
+    scanner: null
+    scanner_archive: null
+    recipe: null
+    agent_class: fable
+    expected_yield: "0 (산술적 사망 — 아래 ledger)"
+    ledger:
+      - date: 2026-07-11
+        ran: "GridSample params-free spatial-embed lane (STATE next-session item): toy kernel matrix
+          (dtype×mode×opset, 실측 under pinned onnx 1.21.0/ort 1.26.0 — fp32/fp16 X OK, uint8/bool X
+          NO KERNEL); byte-accounting vs deployed 264/256/250 tails (각각 2.2×/4×/손실); 400넷 sweep
+          '≥3 same-grid fp32 rearrangement planes'(유일한 승리 구성, 2NP+4P<4NP needs N≥3) = 0 hits;
+          fp32/fp16 rearr plane ≥400B census = 58넷 전원 single Slice-of-free-input 읽기 —
+          GridSample은 Slice에 엄밀 열세 (동일 출력바이트 + 4B/px grid)."
+        tool: "toy ort models + shape-infer sweep, 2026-07-11 (fable fork agent)"
+        verdict: "레인 산술적 사망: grid ≥4B/px(fp16 params) 또는 data-dependent 시 counted, vs bool
+          1B/px incumbent 꼬리; bool GridSample 커널 부재로 free-output 발행 불가. wave2 차단기
+          (264 template params, 256 AND-of-halfplanes)는 재개방되지 않음 — GridSample은 grid-paid,
+          params-free가 아님."
+        reopen: "(1) bool/uint8 GridSample 커널 허용 ORT; (2) grid를 sub-linear 비용으로 암시 생성하고
+          출력이 free graph output(bool)인 op; (3) 공유 sampling pattern의 fp32 rearr plane ≥3장을
+          내는 미래 넷; (4) initializer 좌표가 출력바이트보다 싸지는 grader 변경."
+        falsification_history: "이 레인 자체는 무전과(첫 체계적 패스). 클래스 prior: wave2 264/256/250/396
+          NO (2026-07-10) — 본 패스가 라우팅 측에서 독립 재확인. 8040-ceiling/AT-floor 반증 전력 고려,
+          본 판정은 'GridSample-the-op under current pins'에 한정, '264/256/250 무레버' 주장 아님."

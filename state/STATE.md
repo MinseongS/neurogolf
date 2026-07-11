@@ -1,61 +1,65 @@
-# STATE - NeuroGolf live handoff (updated 2026-07-10 PM; runtime-spend axis opened, 7300.59 confirmed)
+# STATE - NeuroGolf live handoff (updated 2026-07-11; poby7722 min-merge +0.0618, idea-lane audit day)
 > Replace this file at session end; do not append. History lives in git and state/submissions.md.
 
 ## Confirmed State
-- Confirmed BEST LB: **7300.59** (sub **54518734**, complete). Prior 7299.25 (54518268), 7299.09 (54516745).
-- Current local manifest: **7300.4672** (400/400), local↔LB offset ~+0.12 as usual.
+- Confirmed BEST LB: **7300.65** (sub **54559732**, complete). Prior 7300.59 (54518734).
+- Current local manifest: **7300.5290** (400/400), local↔LB offset ~+0.12 as usual.
 - Deadline: 2026-07-15. Bundled fail=0 + cheaper than deployed remains the adoption gate.
 
-## Today's arc (2026-07-10, two sessions)
-1. AM: task233 match-matrix inversion +0.1305 (LB 7299.09); 233-lens 8/8 wall re-audit all negative
-   (ledgers in state/tasks/).
-2. PM: **runtime-timeout-spend axis OPENED** (user-directed). Runtime measured: full 400-net suite over
-   ALL bundled examples = **4.26 s** (~200× headroom vs top-competitor budgets) — runtime is a free
-   resource; "fatter single op" trades are always affordable.
-3. **deepfold scan** (fixes old fold.py blind spots: dpts=ln(cost/(cost−B)) ranking, 600B min,
-   indicator-algebra max==sum>0, Conv-as-reducer, FLOORED-list exposure) → 48 candidates →
-   **5 wins, +1.495 LB**: 251 +0.588 (epsilon-J border-flood), 132 +0.391 (signed rank-K separable),
-   177 +0.236 (input-as-onehot decode), 243 +0.160 (S8-port stacked chain), 085 +0.120 (rank-K punch).
-   All adopted + source-owned (src/custom/) + verified (see ADOPTED entries in state/tasks/).
-4. Mechanism registered: `insights.yaml: s8port_free_output_tail_fold` (5 sub-recipes + gate condition).
+## Today's arc (2026-07-11)
+1. **Public mine**: poby7722 renamed kernel slug 7240→7263.52 (slug rename evades seen_kernels —
+   also match by AUTHOR when polling). margin-0 → 3 wins: 285 +0.0496 / 367 +0.0111 / 396 +0.0011.
+   Src regen + semantic verify 3/3. evgendvorkin EDA re-run = profiler JSONs only, no nets.
+2. **public_autopsy scanner FIXED**: it preferred the unstamped stale .minmerge_backup → bogus
+   fingerprints/expected_gain (396 "quantized_integer_route +0.32" was a stale-baseline artifact;
+   real 396 win = one Reshape broadcast elision −32B). Now prefers latest adopt-stamped
+   submission/.backups/taskNNN_*.onnx. All 3 wins = pure per-net byte tails, no board fingerprint.
+3. **Idea-lane audit, 4 lanes closed with 4-field ledgers** (levers.yaml / tasks/task233.md):
+   - 233 quantized-route lens: NO — red-exclusion is load-bearing on bundled (4/4 ex), u8
+     per-color plane ≥2584B > savings; fp32-detection floor 3rd independent confirm.
+   - 243 P2 [1,2,18,18] 2592B (deepfold board #1, dpts 1.035): NO — design-family floor
+     (52/52 letters MEASURED, fp32-coupling, s-axis expressiveness). 4020 = family floor.
+   - GridSample spatial embed: arithmetically DEAD (grid ≥4B/px vs bool 1B/px tails; no bool/u8
+     kernel → no free-output emission; 400-net sweep for ≥3 shared-grid fp32 rearr planes = 0).
+   - RNN/LSTM/GRU: **LEGAL + kernels exist (incl. fp16 LSTM) + Y omissible → 30-step recurrence
+     counts as Y_h 120B** (insights.yaml rnn_lstm_gru_legal_recurrence) — but 0 paying targets
+     (rank-4 one-hot input forces counted rank-3 X ≥3600B; walk-einsum reads input free).
 
-## The three boundary laws found today (check BEFORE any new fold attempt)
-1. **Letter-budget floor**: einsum language caps absorption at 52 letters + one ellipsis; ~8 reserved
-   for stack/channels/embeds ⇒ max ~42 walk pairs per plane. 187 (52/52), 286 (49-52/52), 002 (52/52)
-   are alphabet-floored for chain merges.
-2. **fp32-coupling gate** (066 measured): fold pays ONLY if the incumbent already pays fp32 on the dying
-   planes. fp16/bool-isolated tails (066/264/256/250/396) get WORSE — binding the free fp32 input into a
-   uniform-dtype einsum doubles their machinery. Arithmetic: (dying B) − (fp32 penalty) − (params, zeros
-   count) ≥ ~480 or don't build.
-3. **Expressiveness**: AND-of-halfplanes (256 anti-diagonal), non-separable positioned content (396
-   rank-4), data-dependent one-hot selectors (080), diagonal-p products (025) don't fit one linear
+## Boundary laws (check BEFORE any new fold attempt)
+1. **Letter-budget floor**: 52 letters + ellipsis; ~8 reserved ⇒ max ~42 walk pairs/plane.
+   187/286/002 alphabet-floored; 243 chain-merge needs +63 letters vs 0 headroom.
+2. **fp32-coupling gate**: fold pays ONLY if incumbent already pays fp32 on the dying planes;
+   fp16/bool-isolated tails get worse. (dying B) − (fp32 penalty) − (params) ≥ ~480 or don't build.
+3. **Expressiveness**: AND-of-halfplanes, non-separable positioned content, data-dependent
+   one-hot selectors, diagonal-p products, two-term sums (243 s-axis) don't fit one linear
    contraction + single >0 threshold.
 
 ## Active Veins
-1. **New public frontier** — the only bulk lever left. Poller runs to 07-15; jonathanncoletti merged91 +
-   anasriaz re-pull mined 2026-07-10 → 0 adoptable; seen_kernels backlog clear. On ANY new dump:
-   `ng mine-public --margin 0`, then re-run the deepfold scan on adopted grafts (fresh grafts may carry
-   fp32-paying tails = s8port food; scan at scratchpad deepfold_scan.py — port to `ng scan` if it fires again).
-2. **s8port fanout on future adoptions** — vein currently dry on deployed board (wave2 0/4: all remaining
-   Equal→Pad onehot tails are bool/u8, gate-condition negative). Reopens automatically with new min-merge grafts.
+1. **New public frontier** — the only bulk lever left. Poll to 07-15
+   (`kaggle kernels list --competition neurogolf-2026 --sort-by dateRun`); check seen_kernels by
+   author+slug (slug renames!); on ANY new dump: `ng mine-public <dir> --margin 0 --apply`, then
+   deepfold-rescan the grafts (`uv run python tools/deepfold_scan.py` — now repo-persisted).
+2. **s8port fanout on future adoptions** — dry on current board; reopens with new min-merge grafts.
 3. **QLinearConv detection-recast** (`ng scan qlinear_recast`) — re-run after any new Conv net.
-4. Long-shot reopens (recorded in ledgers, not actionable under pins): mixed-dtype/uint8 Einsum kernel,
-   >52-index einsum, 2nd free-named tensor.
+4. Long-shot reopens (ledgered, not actionable under pins): mixed-dtype/uint8/bool Einsum or
+   GridSample kernel, >52-index einsum, gated matrix-power atomic op, >42-step 1-D recurrence
+   (RNN capability is proven-legal and waiting — see insights.yaml).
 
 ## Operational Guardrails
 - Do not spend session time on +0.0x byte-tail cleanup unless explicitly requested.
-- Do not re-attempt: 233-lens on 349/366/158/173/204/018/133/285 (2026-07-10 ledgers), s8port on
-  066/264/256/250/396 (gate-condition negatives), fold on 187/286/002 (letter floor), 025 diagonal-p,
-  080 selector — reopen triggers only.
+- Do not re-attempt without reopen triggers: 233-lens list (349/366/158/173/204/018/133/285),
+  s8port gate-negatives (066/264/256/250/396), letter-floor (187/286/002), 243 P2 family floor,
+  GridSample lane, RNN on current board, 025 diagonal-p, 080 selector.
 - Keep `onnx==1.21.0` + `onnxruntime==1.26.0`; no runtime upgrades without full 400/400 re-verify.
-- Adopt via `ng gate` → `ng adopt` (+ live_to_exact_source --write-src + semantic verify); submit via
-  `ng pack` → `ng submit`. Kaggle TopK feeds: float/fp16/int64 only.
+- Adopt via `ng gate` → `ng adopt` (+ live_to_exact_source --write-src + semantic verify); submit
+  via `ng pack` → `ng submit`. Kaggle TopK feeds: float/fp16/int64 only.
 
 ## Next Session Start
 1. `uv run ng status` && `kaggle competitions submissions -c neurogolf-2026 | head -4`
-2. `kaggle kernels list --competition neurogolf-2026 --sort-by dateRun --page-size 20` — mine anything
-   unseen (check seen_kernels.json actually MINED, not just seen — merged91 lesson).
-3. If a new dump lands: mine → adopt → deepfold-rescan the grafts (s8port food).
-4. Otherwise: runtime axis part 2 candidates = LSTM/GRU/RNN legal-unexplored (op vocabulary note in
-   competition-setup memory; spatial recurrence params were the 187 blocker but 1-D scan tasks may fit);
-   or GridSample as a params-free spatial embed (would reopen 264/396-class template stamps).
+2. `kaggle kernels list --competition neurogolf-2026 --sort-by dateRun --page-size 20` — mine
+   anything unseen; compare by AUTHOR too (poby slug-rename lesson); check seen_kernels MINED.
+3. If a new dump lands: mine → adopt → deepfold-rescan grafts (tools/deepfold_scan.py).
+4. Otherwise the endogenous idea board is fully ledgered as of 07-11 — new gains need either a
+   new public teacher, a reopen trigger firing, or a genuinely new design family. Candidate
+   unexplored directions: 8000-tier reverse engineering (top ~7982 — what representation system
+   do they run?), and re-reading competition discussion for op-capability hints.
