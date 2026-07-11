@@ -564,3 +564,46 @@ levers:
           any adoption pipeline that generates runtime-computed constant planes."
         falsification_history: "First pass of this lane. The '+3.3 potential' from the buggy scan is
           retracted — do not re-cite it."
+
+  - name: hidden-draw-k-calibration
+    status: dormant
+    scanner: null  # tools/fresh_sweep.py (post ce8ecc7 >30-filter) + Bayesian survival analysis
+    scanner_archive: null
+    recipe: null
+    agent_class: fable
+    expected_yield: "decision-lever only (no direct LB points): sets whether exact ports pay"
+    ledger:
+      - date: 2026-07-12
+        ran: "Bayesian k-posterior from public-LB survival evidence, NO canary submission needed.
+          Corrected the risky-task table first: raw fresh_sweep_2026-07-11_raw.json predates the
+          ce8ecc7 >30-filter fix -> 021 '70%' and 184 '38%' are oversize artifacts (re-measured
+          on DEPLOYED binaries with filter: 021 0/446, 184 0/967, plus proper-harness 0/626 and
+          0/1256). Big rates RE-CONFIRMED real on deployed binaries: 219 41.7%, 118 7.67%,
+          319 6.27%, 002 5.47%. Mid-tails isolated-re-measured n=2000: 018 2.0%, 023 2.55%,
+          017 1.0%, 101 0.85%, 085 0.3%, 066 0.25%, 048 0, 115 0. Joint per-draw survival of the
+          31-task risky set q=0.345; observation = MAIN boards scored with zero task-zeros
+          (offset +0.12). Posterior (uniform prior k=1..300): k=1 65.5%, k=2 22.6%, k=3 7.8%,
+          P(k>=5)=1.4%, P(k>=10)<0.01% (conservative fixed-set single-observation reading;
+          resampled-per-submission reading gives k=1 at 96%)."
+        tool: "deployed-binary sweep-logic re-measures + fresh_check isolated n=2000 + posterior calc, 2026-07-12 (fable, this session)"
+        verdict: "k ~= 1-2 hidden fresh draws per task. The '~260 draws' risk model (memory
+          overfit-mode, 133-revert rationale) is OFF BY TWO ORDERS OF MAGNITUDE. Consequences:
+          (1) canary probe submission UNNECESSARY - closed without spending submissions;
+          (2) remaining <=0.5% tails (101/285/133/173/105/377/158/363) have ~0.5-0.8%
+          private-zero prob each -> diagnosis/ports DO NOT PAY;
+          (3) 018 (2.0%) / 023 (2.55%) hedge-port EV = 0.7 x ~0.5pt gain - 0.5..1.25pt port cost
+          < 0 -> do not dispatch builders;
+          (4) P(MAIN v3 private-clean) ~= 26-34%, dominated by task219 (private-zero ~45-54%) ->
+          HEDGE v3 is the LIKELY scoring board; final selection MAIN v3 + HEDGE v3 stays optimal.
+          Note fresh-GATING for adoptions is UNCHANGED (n>=1500 A/B) - k small lowers zero-RISK
+          pricing, not the adoption gate."
+        reopen: "(1) an observed public-LB task-zero on a board whose measured p<1% (would imply
+          k large or distribution shift - recompute immediately); (2) any official statement /
+          discussion post giving the hidden-draw count (check discussion 699840 replies);
+          (3) score of the two selected boards changing between now and 07-15 (would imply
+          re-evaluation/resampling); (4) post-deadline private reveal - validate k against actual
+          zero pattern."
+        falsification_history: "This entry itself falsifies the k~260 assumption used for the 133
+          revert pricing ('58% private-zero risk' was really ~0.6% at k=1.5 - the revert cost
+          +0.175 LB unnecessarily, though it was the right call under then-known uncertainty).
+          Negative-verdict types corrected here: raw-sweep tail table (021/184 artifacts)."
