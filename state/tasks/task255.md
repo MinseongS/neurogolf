@@ -60,3 +60,17 @@ See memory [[neurogolf-urad-7225-bundle-vein]]. both fail 65/1500 equally; urad 
 - Removed unused scalar initializer `safe_name_29`.  Bundled gate remains pass
   with fail=0.
 - Cost: 7598 -> 7597 (memory 7245 unchanged, params 353 -> 352).
+
+## 2026-07-11 — fresh-tail diagnosis → NO-FIX (algorithm-approximation, rebuild-scale)
+ran: fresh-tail repair fork: 600-draw reproduce (29 fails, 4.8%, no crashes; wrong greedy
+  rectangle selection/growth). Oracle = maximal-empty-rectangle greedy packing with global
+  tie-breaks and an unbounded growth loop; the borrowed net approximates it. The S18-era
+  min-merge ledger itself recorded "Fresh-gate 1500: incumbent fail = 57 | candidate fail = 57"
+  — the ~4% inherent rate predates all our adoptions.
+tool+date: diag harness + oracle read, 2026-07-11.
+verdict: NO-FIX at smallest-change scale — exact repair = full-task rebuild of the greedy
+  packing (rect enumeration + iterative growth + global tie-breaks), multi-session scale.
+  Exposure ≈ 0.045×16.06×k ≈ 0.72k pts.
+reopen: a dedicated rebuild session; or a public task255 net with a lower fresh-fail rate
+  (fresh-A/B any future min-merge candidate before adopting).
+falsification history: none (first diagnosis of the fresh tail).

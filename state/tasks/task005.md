@@ -182,3 +182,19 @@ direction detection.
 
 
 ## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 6801 -> 6763 (+0.006); gate inc/cand=48/48 (safe). See [[neurogolf-urad-7225-bundle-vein]].
+## 2026-07-11 — fresh-tail diagnosis → ROOT-CAUSED + FIXED (candidate, gate price-blocked)
+ran: fresh-tail repair fork. 3000-draw A/B + direction/position classification: ALL failures at
+  sprite scol=9 (srow 9-12), divergence confined to S(1,0) and SW(1,-1) ray lanes. Graph dump
+  found the bug: the borrowed net's ray-assembly Concats use ray_k2_w_5_1_slice (WEST-probe
+  content) as filler at middle-column slots of ray_row_7/ray_row_9 where the N-side mirror uses
+  nw_1_1/n_1_5 (direction-correct 1x1 slices), and ray_row_8/ray_row_10 middle slots lack the
+  deep-repeat Max term the N-side has (block_0_5 = Max(n shallow, n deep)).
+  FIX (candidates/task005/ray_center_fix_v2.onnx): +2 Slice (1x1 s/sw centers) + 1 Slice + 1 Max
+  (s deep col-3 term), 4 Concat slots repointed. Bundled 266/266; fresh A/B 4000: incumbent
+  118 fails (2.95%) -> candidate 0 fails.
+tool+date: onnx surgery + generator A/B, 2026-07-11 (fresh-tail fork).
+verdict: exact fix, +8B (6413->6421, -0.0009pt) — gate REJECT on strictly-cheaper only.
+  Protection ≈ 0.03×16.23×k_draws ≈ +0.49k expected pts. SAFETY-ADOPTION RECOMMENDED.
+reopen: n/a (fix in hand).
+falsification history: the borrowed net's S/SW lanes were never audited (bundled examples
+  happen to avoid scol=9 deep-down cases — a silent-zero-class latent bug).

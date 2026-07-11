@@ -107,3 +107,16 @@ displayed publicScore **7264.67**.
 - cost: 6823 -> 6819 (points 16.1725)
 - source: candidates/public_dumps/20260709_pm2/franksunp_compact-onnx-artifact-starter/task157.onnx
 - note: min-merge from franksunp_compact-onnx-artifact-starter
+
+## 2026-07-11 — fresh-tail diagnosis → NO-FIX (known heuristic-matcher plateau)
+ran: fresh-tail repair fork: 300-draw reproduce (9 fails, 3.0%; placement/truncation errors in
+  the gray-shape-to-hole jigsaw fit). This matches the task's OWN ledger wall: "graph-matching /
+  exact-cover join over data-dependent variable-size shapes = genuine feedforward-ONNX WALL;
+  heuristic matchers plateau ~95%" under banned Loop/Scan/NonZero.
+tool+date: diag harness + ledger cross-ref, 2026-07-11.
+verdict: NO-FIX — the 3-4% tail is the documented plateau of the best-known feedforward
+  heuristic; exact matching is op-vocabulary-blocked. Exposure ≈ 0.035×16.17×k ≈ 0.57k pts.
+reopen: the ledger's own triggers (runtime-weight Conv template-match per extracted shape;
+  bounded flood if Loop ever legal); or a public net with lower measured fresh-fail.
+falsification history: heuristic-plateau verdict previously recorded pre-redesign; this
+  re-measures it at 3.0% on the current deployed net.
