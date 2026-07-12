@@ -46,3 +46,8 @@ kills the entire half = (L - L%2)/2 Mod/Sub/Mul chain. Per-column total L is a
 ReduceSum(axes=[2]) that broadcasts over rows (no ones-matrix). In-grid row mask
 for a data-dependent height recovers from the run itself (rowhasred OR row0)
 instead of a 10-channel slice.
+
+## ADOPTED 20260712T055735Z
+- cost: 770 -> 709 (points 18.4361)
+- source: /Users/minseong/.codex/worktrees/c56e/neurogolf/candidates/poly_transfer_round2/task320/candidate.onnx
+- note: signed interval free-output fold; fresh 2000/2000 div0

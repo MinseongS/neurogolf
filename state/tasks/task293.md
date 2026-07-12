@@ -62,3 +62,8 @@ k3(cost 1288): 3.6k pos viols; k5 gain negative. 상세: reports/train_to_golf_r
 - New grader cost = 1043 (mem 994 + params 49), fail=0 bundled.
 - Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
 - Mechanism: Add/Expand x3 -> Concat fusion; fewer counted planes.
+
+## ADOPTED 20260712T060615Z
+- cost: 1043 -> 1040 (points 18.0530)
+- source: candidates/signed_poly_wave/task293/candidate.onnx
+- note: scalar Squeeze initializer trim; fresh 2000/2000 div0

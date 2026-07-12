@@ -34,3 +34,8 @@ minimal: indices int32 floor, updates dtype-BOUND to fp32 data (⭐ScatterElemen
 can never be recast when data is the free input), 5-ch/2-slot/21-col spans forced,
 data-dependent updates (invalid-col masking) can't become initializer. dtype_overpay_scan's
 084 entry (+0.458 U8 updates) = false positive by the same dtype-binding rule.
+
+## ADOPTED 20260712T055712Z
+- cost: 1895 -> 833 (points 18.2750)
+- source: /Users/minseong/.codex/worktrees/c56e/neurogolf/candidates/poly_transfer_000_199/task084/candidate.onnx
+- note: signed-polynomial free-output overlay; fresh 2000/2000 div0

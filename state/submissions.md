@@ -701,3 +701,5 @@ built from submission/merged_nets/.
 | 2026-07-12 04:19Z | MAIN v7 7315.01 | 374 thermometer +0.69, 348 pyramid +0.28, 018 lean +0.35, absorbed codex 074 D4 +1.24 | sub 54594647 COMPLETE |
 | 2026-07-12 04:39Z | MAIN v8 7315.72 | 050 interval-fill single-einsum +0.71 (mem=0, bg=input-ch0-minus-fill) | sub 54595106 COMPLETE |
 | 2026-07-12 05:12Z | MAIN v9 7316.30 | 202 einsum-fusion +0.137, 156 safe-golf +0.015, absorbed codex 348 refinement +0.425 | sub 54596069 COMPLETE, NEW RECORD, +10.55 vs v5 |
+
+| 2026-07-12 06:15Z | MAIN v10 signed-polynomial propagation +1.815 local |

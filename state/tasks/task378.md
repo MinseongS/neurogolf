@@ -117,3 +117,8 @@ falsification history: this entry supersedes/corrects the stale 8938-era floor a
 - cost: 3091 -> 3090 (points 16.9641)
 - source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task378.onnx
 - note: min-merge from overfit_nets
+
+## ADOPTED 20260712T061328Z
+- cost: 3090 -> 3086 (points 16.9654)
+- source: candidates/signed_poly_wave/final/task378/attr_axes.onnx
+- note: attribute-axes initializer trim; fresh 2000/2000 div0

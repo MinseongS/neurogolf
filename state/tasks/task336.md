@@ -77,3 +77,8 @@ lookup (~40 configs × 52 = ~2080). Triage floor ~800 (gap 0.82) UNREACHABLE wit
 decoder; no mechanism-level build was dispatched (retraining the int8 MLP for a smaller hidden dim is a
 tuning lane, not a mechanism win, and risky). Reopen: a separable/rank-structured decoder for the
 config→52-cell map. FLOOR ≈ 1820.
+
+## ADOPTED 20260712T061328Z
+- cost: 1820 -> 1770 (points 17.5213)
+- source: candidates/signed_poly_wave/final/task336/candidate.onnx
+- note: signed sparse-update Mul fold; fresh 2000/2000 div0

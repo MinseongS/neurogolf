@@ -47,3 +47,8 @@ which broadcast straight to the 30×30 bool mask — NEVER materialise an int32
 `Equal` accepts ONLY int/bool — both float16 AND float32 Equal raise
 INVALID_GRAPH under ORT_DISABLE_ALL, so diagonal-membership arithmetic must run
 in int32 (pixel counts and coords are exact integers anyway).
+
+## ADOPTED 20260712T055725Z
+- cost: 958 -> 840 (points 18.2666)
+- source: /Users/minseong/.codex/worktrees/c56e/neurogolf/candidates/task288/agent_opt/task288_scalar_identity.onnx
+- note: signed-polynomial diagonal free-output fold; fresh 2000/2000 div0

@@ -1,8 +1,9 @@
-# STATE - NeuroGolf live handoff (updated 2026-07-12; rank-machine build session + dual-session merge)
+# STATE - NeuroGolf live handoff (updated 2026-07-12; signed-polynomial propagation wave)
 > Replace this file at session end; do not append. History lives in git and state/submissions.md.
 
 ## Confirmed State
-- Confirmed BEST LB: **7316.30** (sub **54596069**, MAIN v9, pure-max, NEW RECORD). Local 7316.18, offset +0.12, no zeros.
+- Confirmed BEST LB before this wave: **7316.30** (sub **54596069**, MAIN v9). New local MAIN is
+  **7317.9914** after ten fresh-gated adoptions; pack/submit is the immediate next action.
 - Session arc: MAIN v5 7305.75 → v9 **7316.30 (+10.55 LB)** across v6/v7/v8/v9. All wins fresh-gated (n≥1500–2500 A/B div0) or bit-identical.
 - **🚫 NO HEDGE — the submission score IS the final score (USER-DIRECTED, 2026-07-12, from the actual rules).**
   The competition rules describe a SINGLE evaluation (ARC-AGI benchmarks + a fixed small private benchmark suite,
@@ -14,6 +15,19 @@
   a net that already shows full LB points as if it were at risk.** The old "07-15 = another hidden draw" / k-calibration
   / portfolio-doctrine machinery is RETRACTED (it rested on an unverified assumption the rules don't support).
 - Deadline 2026-07-15. USER ACTION at deadline: confirm MAIN (54596069 or its successor) is the selected submission.
+
+## Signed-polynomial propagation wave (2026-07-12, +1.8150 local)
+- Core mechanism: replace global-state sparse coordinates or full-canvas masks with a low-degree signed predicate,
+  then fold background suppression, dynamic colour routing, and identity copy into the free final Einsum.
+- Adopted direct wins: 078 1293->900 (+0.3623), 084 1895->833 (+0.8219), 288 958->840 (+0.1314),
+  297 1389->965 (+0.3642), 320 770->709 (+0.0825).
+- Adopted fanout trims: 293 1043->1040, 336 1820->1770, 371 467->465, 378 3090->3086,
+  387 3984->3920. Every adoption passed `ng gate`; all passed fresh 2000/2000 div0 except 297, which
+  passed fresh 1600/1600 in isolated batches due long-run process memory accumulation.
+- Measured non-wins: 012 dynamic colour/spatial bridge; 037 many-colour union degree explosion; 090 router
+  exceeds mask saving; 119 exact sign predicate still +81 cost; 353 ties incumbent sparse floor.
+- Registry: `state/insights.yaml::signed_polynomial_sparse_edit_einsum`. Artifacts under
+  `candidates/signed_poly_wave/` and fresh adapters under `candidates/signed_poly_adopt/`.
 
 ## 🏗️ THIS SESSION'S BIG LEVER — rank-machine / free-output sign-decode einsum family (9 wins)
 Generalized yesterday's task010 guard-row win (1002→379) across the board via the rule-wiki×cost-mismatch lens.

@@ -30,3 +30,8 @@ full-canvas label-map path.
 **Blocker class:** interval-fill-band. Each column is filled to a data-dependent height with blue then red — a per-column vertical interval fill. The ReduceL1 column heights → Less thresholds → banded masks is the interval-fill signature. Output height per column is data-dependent so the 3-channel compact pad is already cheaper than a full-canvas label (log-confirmed).
 
 **Lever:** `red_bottom`/`blue_top` are fp32 input slices (immovable dtype); the [1,1,10,10] band masks are bool already. fp16 recast of the fp32 slices is blocked (fp32-input invariant). No strong lever visible.
+
+## ADOPTED 20260712T060609Z
+- cost: 1293 -> 900 (points 18.1976)
+- source: candidates/signed_poly_wave/task078/candidate.onnx
+- note: signed interval free-output fold; fresh 2000/2000 div0

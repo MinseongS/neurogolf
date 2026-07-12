@@ -58,3 +58,8 @@ the radius-1 L1 ball `(|r−mr|+|c−mc|)<1.5` built as ONE fp16 outer-sum plane
 into the FREE Where output — no per-cell colour plane, no xpose branch. Crop the
 input slice to the generator's true active region (here 14×14) to keep the entry
 plane cheap while the cond stays full 30×30.
+
+## ADOPTED 20260712T060620Z
+- cost: 467 -> 465 (points 18.8580)
+- source: candidates/signed_poly_wave/task371/int8_scatter.onnx
+- note: int8 sparse-index staging trim; fresh 2000/2000 div0

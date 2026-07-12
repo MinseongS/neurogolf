@@ -17,3 +17,8 @@ route: a [1,1,30,30] uint8 label alone would cost 900 B before the final `Equal`
 No rewrite adopted.  This is a useful counterexample to the usual label-map rule:
 when the active footprint is very small and only non-black colour channels are
 needed, compact one-hot + final Pad can be cheaper than full-canvas label + Equal.
+
+## ADOPTED 20260712T060946Z
+- cost: 1389 -> 965 (points 18.1279)
+- source: candidates/signed_poly_wave/global_scan/task297/candidate.onnx
+- note: signed header-band free-output predicate; fresh 1600/1600 div0 in isolated batches

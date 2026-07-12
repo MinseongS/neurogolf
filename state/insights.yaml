@@ -1463,6 +1463,36 @@
     verification: build branch-index final output op, sweep subtract scale, compare bundled fail=0 and cost; inspect
       multi-hot failures
   transformer: reports/candidates/task077/branch_einsum_fold.py
+- id: signed_polynomial_sparse_edit_einsum
+  title: Compile global-state sparse edits into signed predicates inside the free output Einsum
+  status: active
+  source_tasks: [78, 84, 288, 297, 320]
+  rationale: 'A target set defined by global size/count/interval/line state can be represented by a low-degree
+    score that is positive exactly on edited cells. Folding that score with input-background occupancy and
+    copy/edit colour routing into the final free-output Einsum removes Scatter indices and 30x30 masks. Adopted
+    wins: 078 1293->900, 084 1895->833, 288 958->840, 297 1389->965, 320 770->709. Related representation trims
+    found during fanout: 293 1043->1040, 336 1820->1770, 371 467->465, 378 3090->3086, 387 3984->3920.
+    Total local gain from the wave: +1.8150 points, all adopted after bundled gate and fresh/exhaustive verification.'
+  applies_when:
+    any_ops: [ScatterND, ScatterElements, Where, Equal, Einsum]
+    any_tags: [sparse_edit, diagonal_rays, interval_fill, border, global_state, dynamic_color]
+    min_memory: 300
+  reject_when:
+    any_tags: [positioned_content, arbitrary_coordinates, many_independent_coloured_unions, non_polynomial_geometry]
+  expected:
+    gain_type: memory_by_replacing_spatial_indices_or_masks_with_free_output_sign_geometry
+    risk: 'medium: exact sign margins, background suppression, and channel routing must be checked over the full canvas;
+      a dense 10-channel identity router can cost more than the removed mask'
+    verification: 'bundled ng gate plus >=1500 fresh A/B div0, or exhaustive finite generator domain; compare total
+      memory+params against the current deployed graph'
+  measured_boundaries_2026_07_12:
+    task012: 'dynamic colour equality plus 12x12-to-30x30 routing exceeds removable 900B canvas'
+    task037: 'up to six independently coloured segments require max/union or degree-12 product'
+    task090: 'exact rectangle fold cost 3153 vs incumbent 3053 because channel routing exceeds mask saving'
+    task119: 'exact bounced-ray sign predicate has structural cost >=1444 vs incumbent 1363'
+    task353: 'four-write int8 sparse representation already ties the best rebuilt control at cost 244'
+    task378: 'signed ray payload lower bound exceeds incumbent predicate chain; only attribute-axis trim won'
+  transformer: candidates/signed_poly_wave/global_scan/task297/build.py
 - id: residual_spatialop_to_free_einsum_collapse
   title: Collapse residual spatial ops (Conv/GridSample/TopK/MaxPool/wide index planes) into free-input Einsum contractions
   status: active

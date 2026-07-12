@@ -78,3 +78,8 @@ identical. mem 4954→3842, params 105→142, cost 5059→3984, pts 16.471→16.
 Einsum 'bchw,c->b{h|w}' (off-grid one-hot zero-pads for free — no crop plane). (2) a ScatterElements/base
 that is just an in-grid rectangle mask is reconstructible from W/H scalars via arange-compare, never a
 spatial fp32 plane. Finder = reports/scripts/fold_finder.py.
+
+## ADOPTED 20260712T061329Z
+- cost: 3984 -> 3920 (points 16.7262)
+- source: candidates/signed_poly_wave/final/task387/candidate.onnx
+- note: int16 sparse-index transport; fresh 2000/2000 div0
