@@ -176,3 +176,8 @@ Counted outputs 264B total; params 5547 (A_stack dominates). Gates: stored 266/2
 fresh 2500+1500 div=0 vs incumbent AND 800 fresh div=0 vs real networks/task110.onnx.
 TRANSFERABLE: period/tiling tasks with small selection vectors → gates-as-einsum-operands
 (selection one-hot multiplies INSIDE the einsum; heterogeneous fallback stays stacked).
+
+## ADOPTED 20260712T025947Z
+- cost: 5811 -> 2751 (points 17.0803)
+- source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task110.onnx
+- note: min-merge from overfit_nets

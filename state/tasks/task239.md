@@ -25,3 +25,8 @@ Candidate:
 Bundled gate after adoption: fail=0, cost `947 -> 945`
 (memory `897`, params `50 -> 48`).  Adopted into
 `submission/overfit_nets/task239.onnx`.
+
+## ADOPTED 20260712T031946Z
+- cost: 945 -> 697 (points 18.4532)
+- source: candidates/task239/rankeinsum.onnx
+- note: rank-machine + free-output sign-decode einsum: TopK(k=5,float feed) rank space replaces two output-welded 300B u8 profile planes; single [6,5] fp32 carrier G; coupling-tensor einsum Phib*C*rp*G*J; BAR=-30(d-k)^2 penalty expansion, BG=(v(r+1)-q)(mx-r); 945->697 (+0.304); fresh 2500/2500 div 0 vs deployed

@@ -59,3 +59,20 @@ diagonal fill, but cheaper because the at-most-one guarantee removes the whole b
 Direction = colour×side-of-barrier; a single gray barrier row splits the column into two regions
 whose prefix/suffix ORs can't leak once each is masked to its own region (blue: source-mask,
 red: result-mask).
+
+## 2026-07-12 — rank/interval free-output-einsum rebuild → NO-BUILD (kill bar +0.1, cost floor)
+ran: full mechanism solve (ref_mechanism_validated.py 4003/4003 bit-exact vs generator task_8d510a79) +
+measured einsum rebuild (build_cand.py = mem4118+params520 = 4638, 2x deployed) + leanest task374-style
+input-folded variant honest floor ~2291. Grader decode reconfirmed strict per-channel out>0 (scoring.py:231).
+verdict: mechanism CLEAN (all slot coeffs linear in 8 base features {aib,air,bib,bir,ABr,ARr,BBr,BRr}, no
+quadratics, h only in gates) — NOT blocked by expressiveness. Blocked by COST: grader input is fp32,
+reading 2 source channels' [10,10] data costs ~840-960B fp32 irreducibly + ~400B one-hot-decode carrier
+= structural floor ~2000-2300. Deployed public MaxPool net (Slice/Cast/MaxPool + ArgMax horizon +
+ConvInteger decode) already sits on that floor at 2249; golf saves <250B (straddles 2035 bar, no margin).
+Target 950 needs ~4x compression of genuine per-column fp32 info — physically unreachable.
+Deployed re-confirmed fresh-clean 0/3000. tool+date: opus agent + ng gate, onnx 1.21/ort 1.26, 2026-07-12.
+reopen: cheaper fp32-input extraction primitive; int8/fp16 input path; grader change; any mechanism
+avoiding BOTH the ~900B fp32 source read AND the ~400B decode carrier. ref_mechanism_validated.py is
+the ready spec if that floor ever breaks.
+falsification history: first free-output-einsum attempt on 212; the mechanism solve REFUTES any "rule too
+hard" concern — the wall is purely the fp32-read byte floor, same class as the conv_fp32_arsenal DETECTION floor.

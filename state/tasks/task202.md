@@ -146,3 +146,8 @@ TRICK for registry: Cauchy uniformity test (Σx²==(Σx)² ⟺ ≤1 nonzero) as 
 - cost: 3055 -> 2817 (points 17.0566)
 - source: candidates/task202/task202_profile_u8.onnx
 - note: dtype-island: cast final band-profile equality island to uint8 (A/Am/B/Bm), bundled pass and 2581/2581 fresh diff=0
+
+## ADOPTED 20260712T051221Z
+- cost: 2817 -> 2457 (points 17.1933)
+- source: candidates/task202/cand.onnx
+- note: einsum-fusion golf 2817->2457 (+0.137): direct hbH/hbV ch0-selector einsums replace S_h/E1/Sub + S_c/E2/Sub (-248B), fused orientation sumsq einsum 'bchw,bchv,cy->b' (-120B sq_r plane), pruned c99/c100, purged stale value_info (grader counts phantom bytes). fresh 2560 valid div0 bit-identical vs deployed. NOTE: big regime-crack fold was ALREADY deployed (recon premise falsified — 202 md shows Where(mark,onehot0,input)->free output already folded)

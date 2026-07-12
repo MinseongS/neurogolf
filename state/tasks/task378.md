@@ -112,3 +112,8 @@ reopen: renderer emitting 30x30 output WITHOUT a full-canvas label carrier (free
   assembling 4 rays + 3 rings from separable row/col operands directly into output); OR proof
   <=2 output colors collapses the two color-map Where planes to one.
 falsification history: this entry supersedes/corrects the stale 8938-era floor analysis above.
+
+## ADOPTED 20260712T030140Z
+- cost: 3091 -> 3090 (points 16.9641)
+- source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task378.onnx
+- note: min-merge from overfit_nets

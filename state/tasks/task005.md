@@ -227,3 +227,20 @@ reopen: phase-free origins construction (cheap S mod 4 normalization proof, or s
   kernel or 8-ch intermediate.
 falsification history: consistent with 2026-07-01 FLOOR verdict; adds quantified 368-class
   pricing (the worklist's suggested mechanism is now priced OUT, not just doubted).
+
+## ADOPTED 20260712T030137Z
+- cost: 6421 -> 6413 (points 16.2339)
+- source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task005.onnx
+- note: min-merge from overfit_nets
+
+## 2026-07-12 — codex-worktree min-merge REVERTED (fresh regression)
+ran: margin-0 min-merge from codex worktree adopted 6421->6413 (+0.0012); post-adoption fresh A/B
+400 draws (scratchpad fresh_ab.py, full-plane >0 semantics) found fail_new=7/400 (1.75%) vs
+fail_old=0/400, diverge=7.
+verdict: codex task005 net is FRESH-DIRTY — reverted to backup task005_20260712T030137Z.onnx
+(6421, fail=0). +0.0012pt does not buy a ~2.6% private-zero risk (k~=1.5). Do NOT re-merge this
+net from any codex/public source without a fresh gate.
+tool+date: fresh_ab.py 400 draws, onnx 1.21/ort 1.26, 2026-07-12.
+reopen: a task005 candidate that is fresh-clean (>=1500 draws fail=0) AND cheaper than 6421.
+falsification history: none for this task; first fresh-regression catch in the codex merge wave
+(12 substantive merges were all clean — this was the only dirty net of 19).

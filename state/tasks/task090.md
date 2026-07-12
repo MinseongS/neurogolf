@@ -98,3 +98,22 @@ policy-gated cost trim pending LB verification.
 - cost: 3054 -> 3053 (points 16.9761)
 - source: candidates/public_dumps/20260709_pm/yusuketogashi_2026-neurogolf-baseline/task090.onnx
 - note: min-merge from yusuketogashi_2026-neurogolf-baseline
+
+## 2026-07-12 — max-rect exact rebuild → NOT ADOPTABLE (cost) + fresh-dirty premise CORRECTED
+ran: exact rule solve (arc-gen task_3eda0437: unique largest all-black rect H>=2 AND W>=2 -> pink;
+generator find_most uses strict r1<r2,c1<c2 so width-1/height-1 rects EXCLUDED) + numpy ref (ref.py 0/3000)
++ ONNX build (cand.py, gate PASS 267/267 fail=0, cost 41715) + head-to-head fresh N=30000.
+verdict: NOT ADOPTABLE — correct-mechanism net costs 41715 (mem 41272: [10,30] fp32 band×column batching
+is the wall; already cut 76371->41715 via 2D-doubling prefix-max + [2,30] assembly factorization; fp16/u8
+gives ~4x, still >>3053) vs deployed 3053. Deployed wins via ~400-node unrolled uint8-SCALAR paradigm
+(512x [1,1,1,1]=512B) that the batched-tensor rebuild can't match without a full uint8-scalar rewrite.
+⚠️ PREMISE CORRECTION: recon claimed deployed fresh-dirty 0.85% (17/2000) — DOES NOT REPRODUCE. Measured
+deployed = 7/30000 = 0.023% (and 4/20000). Bug class: deployed counts width-1 (h x 1, area-4) all-black
+columns the generator excludes -> paints thin 4x1 instead of true 2x2. With k~=1-2 the private-zero
+liability is ~0.035%, negligible. NOT a de-risk priority.
+tool+date: opus agent + ref.py/cand.onnx + 30000-draw fresh, onnx 1.21/ort 1.26, 2026-07-12.
+reopen (DORMANT lever): a deployed-style compact uint8-scalar solver WITH the width>=2 exclusion fix would
+be both cheaper-adoptable AND eliminate the 0.023% tail — sizeable ~400-node build for marginal gain;
+dispatch only if idle builder budget + a compact-scalar recipe. cand.py is the correctness oracle.
+falsification history: recon's 0.85% fresh-dirty figure was WRONG (off by 37x); corrected here to 0.023%.
+The exact-rule mechanism is PROVEN (0/30000) — it's purely a cost-paradigm mismatch, not a rule gap.

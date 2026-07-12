@@ -138,3 +138,23 @@ tail.  Re-ran active dedupe and adopted
 - Memory unchanged `3284`; params `121 -> 120`.
 - Local points `16.8669998 -> 16.8672935` (`+0.000294`).
 - Active backup: `submission/overfit_nets/.dedupe_public_optimizer_backup/task340.onnx`.
+
+## 2026-07-12 — separable-projection free-output-einsum rebuild → NO-BUILD (kill bar +0.1, plane-count floor)
+ran: full projection/emission mechanism as single free-output einsum Einsum('bad,bar,bac->bdrc')
+(cand.py/cand.onnx). Correctness PROVEN: bundled 266/266 fail=0 (incl held-out test), fresh 2000/2000
+draws 0 divergence (generator d687bc17). Geometry verified: 4 full-edge walls, interior dist>=2, distinct
+cols/rows per wall => no collision, garbage colors vanish. ec0(top)->(1,c) ec1(right)->(r,W-2)
+ec2(bottom)->(H-2,c) ec3(left)->(r,1). bg ch0 = ingrid(+1) - each colorcell(-1) via HOT[wall]-e0.
+verdict: mechanism CLEAN but PRICED OUT. Two working variants: stacked 9-term = 8698, const-routing =
+9778, both >> deployed 3404. Floor: stacked einsum forces Row[1,9,30]+Col[1,9,30]+Chan[1,9,10]=2520B fp32;
+collapsed variant still needs ~12 fp32 [1,30] source planes (per-wall presence + position deltas + line
+indicators) + hots + shift transients ~2784B before combine + params -> ~3500 > 3080 bar. fp16 FAILS:
+every plane produced by Einsum(fp32 input) is emitted fp32; casting derived plane keeps fp32 producer +
+adds cast (net worse); only fp16 path casts whole [1,10,30,30]=18000B. Deployed index-plane wins because
+its 2 count planes (2400B) do DOUBLE DUTY (wall colors AND count>1 presence) + Equal->free bool output =
+~3 planes; projection lens needs ~12 distinct planes.
+tool+date: opus agent + ng gate, onnx 1.21/ort 1.26, 2026-07-12.
+reopen: a count op emitting narrow dtype without quantizing fp32 input; int8-early detection recast (same
+wall as tasklog's 2400B count floor). cand.py ready as spec if that breaks.
+falsification history: first free-output-einsum attempt on 340; REFUTES "rule too hard" (2000/2000 fresh
+proven) — wall is purely plane-count economics vs the incumbent's double-duty index plane, NOT correctness.

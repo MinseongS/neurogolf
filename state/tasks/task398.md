@@ -61,3 +61,8 @@ only full plane.
 - 2813→1510 (+0.62, mem 49B). Base-5 digit/carry factorization of anti-diagonal [r+j==f]; δwv−δv0 WMAP folds background branch; 16-operand Einsum.
 - Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task398/regime.onnx. Backup: reports/candidates/fatmid_adopt_backup/task398.onnx.bak.
 - ⭐ Memory neurogolf-regime-crack-freeoutput-einsum. ⚠️ Concurrent-session collision risk on candidate dirs — always re-measure on-disk before adopt.
+
+## ADOPTED 20260712T030136Z
+- cost: 1510 -> 1252 (points 17.8675)
+- source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task398.onnx
+- note: min-merge from overfit_nets

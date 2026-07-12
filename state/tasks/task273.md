@@ -65,3 +65,8 @@ cond (900B) = free-output-axis welded (un-croppable, S10 crop class). FLOOR at 2
 ## 2026-07-09 — ⭐ REGIME CRACK ADOPTED (batch 4, 900B mask → free-output Einsum)
 - 2158→1300 (+0.51, mem 0). rect interior = 4 diagonal-QUADRANT counts multilinear; staircase pair reused 8x. Runtime: operand order matters (99ms→3ms).
 - Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task273/regime.onnx. See memory neurogolf-regime-crack-freeoutput-einsum.
+
+## ADOPTED 20260712T025955Z
+- cost: 1300 -> 693 (points 18.4590)
+- source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task273.onnx
+- note: min-merge from overfit_nets

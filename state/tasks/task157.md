@@ -120,3 +120,8 @@ reopen: the ledger's own triggers (runtime-weight Conv template-match per extrac
   bounded flood if Loop ever legal); or a public net with lower measured fresh-fail.
 falsification history: heuristic-plateau verdict previously recorded pre-redesign; this
   re-measures it at 3.0% on the current deployed net.
+
+## ADOPTED 20260712T030142Z
+- cost: 6819 -> 6818 (points 16.1727)
+- source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task157.onnx
+- note: min-merge from overfit_nets

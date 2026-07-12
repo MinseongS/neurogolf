@@ -59,3 +59,8 @@ Two intermediates dominate: `idxmap` (f32 [1,1,30,30] = 3600 B) and `Lp` (uint8 
 
 ## INSIGHT (transferable)
 For a one-hot FOLD/overlay task, the label-map route (1x1 Conv colour-index plane -> slice the regions -> Where-fold -> Pad -> Equal) is far leaner than the literal "slice N colour channels + Max + rebuild ch0" idiom: the latter forces two wide f32 channel-slices (~2k B each) whereas the Conv collapses the 10-way one-hot to a single 3600 B index plane up front and all per-cell folding happens on tiny [1,1,H,W] tensors. Use Conv-collapse-then-fold whenever the output colour is a copy/overlay of input colours (no remap). ⭐
+
+## ADOPTED 20260712T025955Z
+- cost: 710 -> 400 (points 19.0085)
+- source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task372.onnx
+- note: min-merge from overfit_nets

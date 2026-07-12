@@ -56,3 +56,8 @@ mem 2262/17.26; output5 [1,5,10,10] bool 500B beats 900B pad-then-Equal; gray_cr
 - cost: 2283 -> 2217 (points 17.2961)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task374.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260712T034146Z
+- cost: 2217 -> 1113 (points 17.9852)
+- source: candidates/task374/rankeinsum.onnx
+- note: rank-machine transfer (010 template, wave2): 2L-2 neighbor-sum lengths via free-input einsums (no planes), thermometer-predicate affine color (Q=-18g1+12g2+12 — no s-polynomials), single 27-operand free-output einsum with t-axis term folding (H/V/bg); 2217->1113 (+0.689); fresh 2500/2500 div 0

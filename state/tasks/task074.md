@@ -154,3 +154,8 @@ Reopen (falsification-ledger):
 4. falsification-history: this net's "floor" has already fallen 9050->8398->6236 (+0.30
    today); claim here is the SPECIFIC "max-reduction blocks linear fold + fp32 colour-index
    3600B floor", re-confirmed not novel-asserted.
+
+## ADOPTED 20260712T035418Z
+- cost: 6236 -> 1814 (points 17.4967)
+- source: candidates/task074_codex/cand.onnx
+- note: codex-worktree absorb: D4 branch factorization 6236->1814 (+1.235); fresh 2500 draws fail=0, divergence vs prior deployed=0; gate 267/267 fail=0

@@ -56,3 +56,8 @@ active canvas (here 8×8) and Pad the uint8 one-hot to 30×30 as the FREE output
 slice is the only real cost. Casting the input slice to fp16 BACKFIRES (extra plane + ORT
 PrecisionFreeCast upcast), but casting the post-Conv 1-ch colf to fp16 is free and shrinks
 all downstream work planes.
+
+## ADOPTED 20260712T030007Z
+- cost: 135 -> 102 (points 20.3750)
+- source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task298.onnx
+- note: min-merge from overfit_nets

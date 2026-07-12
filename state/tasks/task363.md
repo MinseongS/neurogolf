@@ -83,3 +83,8 @@ input lever.
 - cost: 3754 -> 3580 (points 16.8169)
 - source: candidates/task363/deadtap.onnx
 - note: dead-tap dilated Conv entry (2 fp32 channel Slices -> ONE Conv[1,10,2,2] dil=20 + 2 Equals; 245/107 mechanism); bit-identical fresh 3500/0; 3754->3580 (+0.048). Gotcha: stale value_info of removed tensors phantom-bills (+800B) — must strip
+
+## ADOPTED 20260712T023331Z
+- cost: 3580 -> 3550 (points 16.8253)
+- source: candidates/task363/kcollapse.onnx
+- note: kernel-collapse rescan 2026-07-12: single-position Conv kernel -> 1x1+pad, bit-identical (300 random A/B div 0 + bundled fail=0); 3580->3550 (+0.0084)

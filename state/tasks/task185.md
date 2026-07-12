@@ -52,3 +52,8 @@ static-stride 단일-탭 컬러 읽기 (sample+reduce 융합, 각 ~200B 출력) 
 bit-identical(2500 fresh 발산 0)이지만 비용 실격. 산물: reports/candidates/task185_rts.py.
 ⭐경계 조건: mech-16은 "기존 평면 위 same-shape 커널 뱅크"에만 성립 — 뱅크가
 free-input strided 탭 읽기면 통합이 오히려 평면을 구체화시킴. 재탐사 금지.
+
+## ADOPTED 20260712T030136Z
+- cost: 1955 -> 1755 (points 17.5298)
+- source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task185.onnx
+- note: min-merge from overfit_nets

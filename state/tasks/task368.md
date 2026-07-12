@@ -199,3 +199,8 @@ Follow-up pruning removed dead initializer `topk_i8_zero_368`. Cost: 5042 -> 504
 - cost: 3337 -> 3307 (points 16.8962)
 - source: candidates/task368/kcollapse.onnx
 - note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays
+
+## ADOPTED 20260712T030138Z
+- cost: 3307 -> 3305 (points 16.8968)
+- source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task368.onnx
+- note: min-merge from overfit_nets

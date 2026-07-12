@@ -71,3 +71,25 @@ that generates packed row codes from scalar/vector logic without materializing
 - cost: 6631 -> 6304 (points 16.2511)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task328.onnx
 - note: min-merge from nets
+
+## 2026-07-12 — Manhattan-nearest-corner free-output-einsum rebuild → NO-BUILD (kill bar +0.1)
+⚠️ STALE-MD CORRECTION: prior entries describing a "1717-entry int64 template bank" are STALE (pre-6304).
+The 20260709 min-merge replaced it — current deployed = compact 69-node semantic distance-decomposition
+net (matches src/custom/task328.py): params only 123 elements (ramps aH/aW, scalars, colorIdx); cost is
+node-output MEMORY, not a param bank. Read the net, not this md, for future 328 work.
+ran: full rule verify (arc-gen task_d22278a0) + grader ORT trace cost breakdown + leaner argmin/mask-product
+variants byte-priced. Rule: each cell -> color of unique Manhattan-nearest ACTIVE corner (data-dependent
+2-4 subset), bg on ties or winner Chebyshev odd, grid 6-18, ch0=1 for in-grid bg (dynamic boundary masked).
+verdict: 6304 = mem6181+params123. Breakdown: 900B labelPad [1,1,30,30]u8 (Pad->Equal channel expansion,
+already optimal — one-hot-first = 3240B worse) + 4536B = fourteen [1,1,18,18] decision planes (dbestT/dbestB,
+tie masks, colorField, cheb parity, inside, label) + ~640B 1D vectors + corner reads. The ~14 genuinely-2D
+planes are non-linear (argmin/tie/parity) AND non-separable (nested-square parity rings, diagonal
+boundaries) => cannot fold into free-output einsum (348 M-expand trick fails) nor rank-decode. Size<=18
+forces 18x18. Architectural hard core = 14*324+900 = 5436B; realistic best ~5600-5900 > 5700 bar. From-scratch
+materialized variants floor ~8kB (worse). The 6304 net is near-optimal.
+tool+date: opus agent + grader trace, onnx 1.21/ort 1.26, 2026-07-12.
+reopen: a separable/linear reformulation of the argmin+parity core (none found); an op that emits Chebyshev
+parity rings cheaply; a leaked <5000 net.
+falsification history: recon audit's "fp32-field-floor is conditional, ramps avoid it" premise was CORRECT
+about the ramps but the net ALREADY uses them — residual is the 14 non-foldable 2D decision planes, a
+different (real) floor than the stale fp32-field one.

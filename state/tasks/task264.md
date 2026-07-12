@@ -179,3 +179,8 @@ ArgMax rank (not into arithmetic that must stay float-exact). Sibling hit this s
 - Tool+date: opus agent, onnx 1.21.0 static analysis + ng gate, 2026-07-10.
 - Reopen: params-free small-template placement primitive; incumbent tail turning fp32; label16/
   color_indices carrier fold making the whole stamp a genuine carrier.
+
+## ADOPTED 20260712T030133Z
+- cost: 2329 -> 1853 (points 17.4754)
+- source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task264.onnx
+- note: min-merge from overfit_nets

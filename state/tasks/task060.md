@@ -18,3 +18,8 @@ width-10 single-Conv form appears necessary if the graph remains mem0.
 The usual sparse-kernel escape does not help under this scorer: params count dense
 initializer elements, and replacing the Conv by sliced/sparse semantic planes would
 pay at least one full-canvas intermediate, usually more than the 1010 params saved.
+
+## ADOPTED 20260712T025828Z
+- cost: 1010 -> 362 (points 19.1084)
+- source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task060.onnx
+- note: min-merge from overfit_nets

@@ -101,3 +101,8 @@ already routed: the 10-channel expansion is the FREE BOOL `output = Equal(L, ara
 - cost: 1356 -> 837 (points 18.2702)
 - source: candidates/task275/task275_kron_einsum.onnx
 - note: kron_fractal_einsum: two-subgrid Kronecker; layout never detected (mod-s fold + channel disjointness); s in {3,4} exact via ReduceSum(input)=2s^2; folds public net's source/mask planes into final einsum
+
+## ADOPTED 20260712T030133Z
+- cost: 837 -> 677 (points 18.4823)
+- source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task275.onnx
+- note: min-merge from overfit_nets

@@ -197,3 +197,17 @@ targeting <20K — candidate artifacts are ready as the semantic spec; (2) any l
 falsification history: REFUTES this file's 2026-07-11 "association ambiguity obstruction" (measured
 counterexample-free threshold via marker-to-body); CONFIRMS its 17-19K cost reprice against the parent
 session's 4850-target hypothesis.
+
+## ADOPTED 20260712T041856Z
+- cost: 24358 -> 16687 (points 15.2776)
+- source: candidates/task018/lean.onnx
+- note: lean enumeration rewrite 24358->16687 (+0.354): 3-lane sel3[3,10] compression (kills all [10]/[8,10] planes), bool+u8 pipeline (cast to f32 only at input-einsums), fp16 coord math, fused residual einsums, ScatterND(reduction=add) +-1 const updates + (0,0,29,29) dust-cancel; TopK feed FLOAT16; all dynamic indices Clip-clamped [0,29]; fresh 68/12000=0.567% (BETTER than incumbent ~2.0% tail) + 3500-draw div0 vs validated oracle
+
+## 2026-07-12 — lean floor CONFIRMED (post-adoption diet round)
+Deployed at 16687 (adopted this session). Flagged OneHot-fp16 recast (~+0.09) now VERIFIED BLOCKED:
+ORT Einsum rejects mixed-dtype operands and the two OneHot [2,6,30] patch-extraction mats contract
+with the free fp32 input in the `chp` einsum (fp32-co-bind, same physics as the regime-crack tail).
+Combined with mandatory int64 ScatterND index (3072B) and the fp32-input-coupled [2,30]/[3,10] tail,
+16687 is the honest architecture floor. Further cut needs a fundamentally different patch-extraction
+representation (not dtype/fusion). reopen: a 0-param 10<->30 scatter, an fp16-tolerant Einsum path, or
+a leaked <10K net. Community 4850 remains not-general-exact under this representation.

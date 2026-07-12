@@ -126,6 +126,11 @@ levers:
         ran: "task377/205/355 수작업 (final-Einsum 직전 fp16 Cast 삽입 패턴)"
         verdict: "3승 채택 (+0.34 LB 합); 스캐너 파일은 유실 — 문서의 input-weld/co-bind 필터로 재작성해야 함"
         reopen: "모든 채택/오버레이 후 재실행; free-output rewrite 후 상류 tail 재검사"
+      - date: 2026-07-12
+        ran: "dtype_overpay 재스캔(배포 400넷) 상위 3건 199/070/177 opus 에이전트 공격 (ort 1.26 실측 co-bind 프로브 포함)"
+        verdict: "3/3 DEAD — 전부 regime-crack free-output Einsum 형태 넷: 스캐너의 main_tensor(A/P/Rt)가 정확히 terminal Einsum에서 fp32 free input과 single-T co-bind된 operand들 (Einsum 혼합 dtype REJECT, ort 1.26 재확인). headline +0.42~0.62는 false positive; producer_bound 180B조차 co-bind로 실현 불가. 부정판정은 각 tasklog(199/070/177)에 4-field로 기록됨. 스캐너에 'free fp32 input과 같은 Einsum 노드를 공유하는 operand 제외' 필터 필요."
+        reopen: "스캐너에 co-bind 필터 추가 후 재스캔; ORT가 mixed-dtype Einsum을 수용하는 버전으로 그레이더가 이동; 새 non-regime-crack 넷 채택 유입 시 그 넷들만 재검사"
+        falsification_history: "이 co-bind 물리는 2026-07-09 residual_lever 프로브와 일치(2회 독립 확인) — false positive는 스캐너 모델 결함이지 물리 반전 아님"
 
   - name: kernel-collapse
     status: live
@@ -172,6 +177,10 @@ levers:
         ran: "public frontier refresh scout: checked the Kaggle dateRun-sorted recent notebook list; downloaded latest outputs for evgendvorkin/neurobaseline-eda, yusuketogashi/2026-neurogolf-baseline, lucifer19/neurogolf-agi-compression-core, biohack44/neurogolf-2026-championship-best-solution, and anasriaz/the-2026-neurogolf-championship into candidates/public_dumps/20260709_latest (only yusuketogashi/lucifer19/anasriaz exposed submission.zip); ran `uv run ng mine-public --margin 0 $(find candidates/public_dumps -type f -name 'submission.zip' | sort)` across 29 submission.zip artifacts"
         verdict: "0 wins — TOTAL adoptable +0.0 across 0 tasks; no strictly-cheaper bundled-fail=0 overlay was found by this dated run versus the current deployed nets. This is a point-in-time public cache/frontier result, not exhaustion; prior public-minmerge 0-win verdicts were falsified by later biohack44 output."
         reopen: "new public frontier/uploader/notebook output, a changed submission.zip in a recent notebook, or any local adoption/rewrite that materially changes deployed per-task baselines"
+      - date: 2026-07-12
+        ran: "tools/poll_public_dumps.py (session-start kernel poll) → 2 new/updated kernels (hanifnoerrofiq/the-epic-sax-ensembler, nikitagajbhiye30/neurogolf-00), auto-mined then re-mined explicitly with `uv run ng mine-public --margin 0`; both zips inspected = ~1.52MB/400-file identical-lineage baseline forks"
+        verdict: "0 wins — TOTAL adoptable +0.0 across 0 tasks at margin 0 vs deployed MAIN v5 (local 7305.6311). Point-in-time result on two low-tier baseline forks, not exhaustion; prior 0-win verdicts in this ledger were falsified by later frontier uploads."
+        reopen: "next poll finding a zip that differs from the known baseline lineage, any new uploader above ~7250, or a changed submission.zip in an existing frontier notebook"
 
   - name: public-insight-generalize
     status: live

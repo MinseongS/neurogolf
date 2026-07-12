@@ -55,6 +55,11 @@ it doubles as the value plane you already need, for free. A horizontal mirror of
 is just a flipped column-index ramp `min_col + (W-1) - arange(WORK)` fed to the col Gather — no
 reflection matrix needed when you're already gathering a fixed window (task036 crop idiom + flip).
 
+## 2026-07-12 — fp16-recast DEAD (Einsum co-bind floor)
+- Ran: deployed-fp16-recast on submission/overfit_nets/task177.onnx. Scanner flagged `Rt`/`Gt` [8,30] fp32 max=1.0, headline +0.48.
+- Verdict: NO WIN. Terminal Einsum `input,Rt,Gt,P,P,w->output` co-binds Rt, Gt, P, w to the free fp32 `input` (ORT single-T rule, verified 2026-07-12). Rt/Gt=OneHot(idx,depth,vals) fp32 (vals fp32); even making vals fp16 → Rt fp16 would fail the final Einsum dtype match. The only other fp32 intermediates rrow/rcol are `Einsum(input,w)` (input-welded) consumed solely by ArgMax — casting them adds a 60B tensor while the fp32 producer stays (PRODUCER_BOUND), net loss. This is the S8-port free-output einsum tail (adopted 2026-07-10), which co-binds by construction.
+- Reopen-trigger: split terminal Einsum, or new mixed-dtype fp32-input op. Floored under current graph.
+
 ## S10 (2026-07-03) — bobmyers7186 teacher ADOPTED (+0.054)
 **Mechanism (real diff):** the incumbent ran **3 Convs**: after cropping the
 one-hot window it collapsed 10-ch → a colour-index plane `crop_f` [1,1,8,8] (via

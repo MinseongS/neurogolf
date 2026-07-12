@@ -96,3 +96,8 @@ the 40 B counts vector — no extra planes.
 - cost: 1872 -> 1124 (points 17.9754)
 - source: candidates/task088/cand.onnx
 - note: regime vein batch7: generator-proven 10x10 canvas cap + tri-level u8 code + terminal ConvInteger (runtime u8 weight, x_zp=1) doing one-hot expansion AND compact->30x30 placement in the free output; 900B class_pad + 600B crop chain deleted. 500 fresh 0-fail. TRANSFERABLE: task036 crop+shift family + any generator-bounded lost-Pad:900B window; ORT buffer-reuse gotcha (unique declared size for shape-changing Pad)
+
+## ADOPTED 20260712T030136Z
+- cost: 1124 -> 1122 (points 17.9771)
+- source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task088.onnx
+- note: min-merge from overfit_nets

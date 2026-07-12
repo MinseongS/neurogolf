@@ -50,3 +50,19 @@ comparison r+c≥H-1 (NOT a separable rectangle, but still one Less op). Combine
 guide's H/W-from-1-D-occupancy lever and a bounded 12×9 active canvas, the whole task is a tiny
 label-map + one Pad-to-30×30 uint8 carrier → 16.9, ~+1pt above the naive 30×30-plane formulation
 purely by shrinking every full plane to the generator's bounded grid size.
+
+## 2026-07-12 — rank-machine/free-output-einsum regime enumeration → NO-BUILD (kill bar +0.1)
+ran: full final-op regime enumeration (Greater/And/Or/Xor/Where/Mul/BitwiseAnd-u8/sign-decode-einsum/
+ConvInteger-placement/ScatterElements/MatMulInteger) + brute-force (K,S) u8-wrap constant search +
+deployed byte walk reconciled to 1077+64=1141 exactly (zero fat in its regime).
+verdict: deployed outer-threshold design Greater(a[d,r],b[d,c]) is regime-optimal. Structural fact:
+bg channel = 9-level staircase [c<=H-2-r], boolean rank min(W,H-1)=9 — only threshold comparison
+renders 9-level staircases at 1B/element; u8 bit-planes give 8<9 (fails 10.7% draws), einsum operands
+fp32-co-bind >=4B/el => >=~1350. Best honest alternative = u8-wrap row-gating 1065 (+0.069, below bar;
+constants verified K=10,S=246, b-side off-column patch +28B included — build fully specified if bar drops).
+tool+date: fable agent regime enumeration + ng gate re-measure, onnx 1.21/ort 1.26, 2026-07-12.
+reopen: (1) mixed-dtype/fp16 ORT Einsum support (sign-decode revives at 2B/el); (2) public task301 <1141;
+(3) final op with >=9-level nesting <1B/element; (4) grader decode relaxes from strict >0; (5) kill bar
+drops to +0.05 (1065 wrap variant ready).
+falsification history: first regime-enumeration pass on this task; prior "900B label carrier floor"
+claim was superseded (deployed is NOT label-carrier — it is already the cheaper outer-threshold form).

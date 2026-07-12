@@ -53,6 +53,12 @@ reduction can locate the colour pixel. Cost ~600 params but saves ~2160B memory 
 Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent). Minor cost drop
 (dead-initializer / redundant-node removal), private-LB safe. Manifest updated. Backup in scratchpad.
 
+## 2026-07-12 — fp16-recast DEAD (Einsum co-bind floor)
+- Ran: deployed-fp16-recast lever on submission/overfit_nets/task199.onnx. Scanner (dtype_overpay 2026-07-12) flagged main tensor `A` [1,3,30] fp32 FP16_SAFE max=1.0, headline +0.42.
+- Verdict: NO WIN. Every fp32 intermediate is either (a) INPUT-WELDED — rowvec/colvec/ccvec are `Einsum(input,m)` so dtype pinned to fp32 input; le/sh/pmsign/ccm derive from them — or (b) CO-BOUND to the terminal N-ary Einsum `input,K,A,B->output`. A, B, K all feed that final Einsum alongside the free fp32 `input`.
+- Physics: ORT Einsum binds ALL operands to one type param T (verified 2026-07-12: mixed fp32/fp16 Einsum → `Type parameter (T) ... bound to different types`). Recasting A/B/K to fp16 would force casting `input` to fp16 = 18000B full-plane cast → catastrophic. This is the regime-crack form's cost: folding masks into the free Einsum co-binds the small routing tensors to the fp32 input.
+- Reopen-trigger: only if the terminal Einsum is split so a routing tensor no longer shares an op with `input`, OR a new op-type that consumes fp32 input + fp16 operands appears. Not a durable "no lever", just floored under current graph + onnx 1.21 Einsum single-T rule.
+
 ## 2026-07-09 — ⭐ REGIME CRACK ADOPTED (batch 4, 900B mask → free-output Einsum)
 - 1829→1613 (+0.13). parity via alt-vector reuse pmsign=Σcolvec·alt·alt; δ-shift = 1-tap Conv; [h<=row] = reverse CumSum.
 - Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task199/regime.onnx. See memory neurogolf-regime-crack-freeoutput-einsum.

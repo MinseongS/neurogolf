@@ -367,3 +367,8 @@ falsification history: first fresh-tail diagnosis of task366. Consistent with th
   probe_then_build (Scatter histogram → free-input Einsum rank-1 indicators) count-to-indicator fold.
   Verdict: 366's expense is irreducible-detection + structural-replication, so it does not itself open a
   new offense lens beyond these already-known primitives.
+
+## ADOPTED 20260712T030139Z
+- cost: 22219 -> 22211 (points 14.9917)
+- source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task366.onnx
+- note: min-merge from overfit_nets

@@ -37,3 +37,13 @@ initializer `pad_val->u8_250`.  Bundled gate fail=0.  Cost: 1896 -> 1895
 - cost: 1895 -> 1706 (points 17.5581)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task348.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260712T041155Z
+- cost: 1706 -> 1288 (points 17.8392)
+- source: candidates/task348/rankeinsum.onnx
+- note: Manhattan pyramid scalar-emission rebuild: single sign condition t(c)-r>0 (t=length-|c-col|, no A*B product so no false corner); 10-wide geometry space via identity-embed M[30,10] shared compress/expand (no 30-wide runtime plane); separable occ=ingrow*ingcol; one free-output einsum ed,pm,epg,gk,rm,ck,b->bdrc, d=7/8 parity + d=0 bg; 1706->1288 (+0.28); fresh 2500 div 0
+
+## ADOPTED 20260712T051838Z
+- cost: 1288 -> 842 (points 18.2642)
+- source: candidates/task348_codex/cand.onnx
+- note: codex-worktree absorb: scalar-moment sign-decode refinement of my 1288 pyramid net 1288->842 (+0.425); fresh 2500 fail=0, divergence vs my deployed 348=0; gate 265/265 fail=0

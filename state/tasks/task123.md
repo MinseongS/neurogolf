@@ -62,3 +62,8 @@ channel-0-on (a pad-0 silently lights background and fails every fresh instance)
 - cost: 1342 -> 1289 (points 17.8384)
 - source: candidates/task123/cand.onnx
 - note: free-input palette-read fold: 3-operand Einsum('bcij,c,ki->bkj') reads row-0 colour line off free input, kills 200B fp32 Slice intermediate; fresh 2500 cand=inc=0
+
+## ADOPTED 20260712T025947Z
+- cost: 1289 -> 631 (points 18.5527)
+- source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task123.onnx
+- note: min-merge from overfit_nets

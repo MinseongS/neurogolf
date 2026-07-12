@@ -34,3 +34,8 @@ border yellow from interior recolour cells.
 **Lever:** fp16 recast candidate — `c4_f` [1,1,10,10] (400B) is a 0/1 yellow mask cast to fp32 → fp16 is exact, halving to 200B; `avg3` (256B) AveragePool output feeds only a Greater threshold, fp16-safe. Potential ~330B if ORT AveragePool/Gather accept fp16. Worth a bit-identical probe.
 
 - S12 추가: 위 fp16 recast 레버는 측정 반증(KILL) — 대상 평면이 fp32 input 직생산(Slice/Einsum)이라 producer-측 fp16 불가, Cast 경계비용이 절감을 초과 (384: +17804B, 126: +56B, 156: +44B). dtype 레버 재탐사 금지.
+
+## ADOPTED 20260712T051056Z
+- cost: 1562 -> 1539 (points 17.6611)
+- source: candidates/task156/lean.onnx
+- note: safe-golf lean rebuild 1562->1539 (+0.015): u8/bool plane pipeline, padded 3x3 QLinearConv plus-erosion interior, fixed-row size-rank, 5-ch Equal+Pad one-hot (5->10ch + 10->30 spatial in one free Pad); fresh 2000/2000 divergence vs deployed 0 (bit-identical decode). NO-BUILD for the +0.1 regime-crack goal (byte floor pinned: fp32 slice 400 + one-hot 500 irreducible, fp32-co-bind blocks einsum fold) but this micro-golf is free+zero-risk
