@@ -619,3 +619,28 @@ residual Kaggle-semantics risk (local mirror clean, LB-unproven combos): opset 1
 - cost: 28033 -> 24703 (points 14.8853)
 - source: candidates/task233/cand_v3S.onnx
 - note: structural rebuild 28033->24703 (+0.126, fresh 3.00%->2.38% strict-subset regress 0/2400): packed 1x1 Conv 32*key+color + u8 MaxPool sprite detector (deletes 2nd fp32 Conv 3136B), profile-bbox via free-input einsum + fp32 ScatterElements(add) (deletes MaxPool-dilate parade ~3500B), OOG window guard, clean crop/hash -> 2 override lanes (was 5); repr floor ~22.3k ledgered; opset16+reduction-add combo LB-oracle = this submission
+
+## 2026-07-12 — dynamic signed-correlation lookup BUILT + VERIFIED, NOT ADOPTED
+
+- Candidate: `candidates/task233/cand_dynamic_corr.onnx`, source builder
+  `candidates/task233/build_dynamic_corr.py`.
+- Replaced the fp16 9-bit hole-hash Conv, `[1,324]` int32 hash plane,
+  512-entry inverse table, and scatter/gather lookup with one runtime-weight
+  uint8 QLinearConv. The outside sprite mask is encoded as a signed predicate:
+  effective weight `+15` on sprite cells and `-1` elsewhere, with output
+  zero-point 128. Exact matches score `128 + 15*popcount`; missing or extra
+  black cells score lower.
+- To reproduce the inverse table's last-write-wins tie behavior, both the
+  20x20 hole plane and 3x3 runtime kernels are reversed before correlation.
+  MaxPool therefore selects the last original row-major match; `323-index`
+  restores the 18x18 flat position.
+- Official-style gate: bundled `266/266`, fail=0, memory `21379`, params `437`,
+  cost `21816`, points `15.009601` versus deployed cost `24703`, points
+  `14.885320`: **+0.124281 points**, cost `-2887`. `ng gate` PASS.
+- Isolated fresh A/B, ORT_DISABLE_ALL, seeds 111/222/333 x1200 = 3600 draws:
+  baseline fail `77`, candidate fail `77`, divergence `0`, candidate-only
+  regressions `0`, recoveries `0`. Candidate exactly reproduces v3S fresh
+  behavior on this sample.
+- Status: verified candidate only. This Codex worktree lacks the deployed
+  `submission/overfit_nets` tree; do not mutate the main checkout implicitly.
+  Adoption must still run through `ng adopt` in the authoritative checkout.

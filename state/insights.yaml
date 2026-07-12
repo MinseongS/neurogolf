@@ -2826,3 +2826,32 @@
   expected:
     per_task: "+0.4~1.1 where the fractal/tiling structure exists; rescan on any new tiling-rule task or materialized-stamp net"
   transformer: null
+- id: dynamic_signed_qlinearconv_exact_match_last_wins
+  title: Replace dense pattern hash + inverse table with runtime-weight signed QLinearConv correlation and reversed MaxPool last-wins selection
+  status: active
+  source_tasks: [233]
+  rationale: 'Task233 replaced a fp16 9-bit 3x3 hole hash, [1,324] int32 hash
+    plane, [1,512] inverse table, ScatterElements, and Gather with one dynamic
+    uint8 QLinearConv. Encode runtime template cells as uint8 16 with weight
+    zero-point 1 (effective +15) and non-template cells as uint8 0 (effective
+    -1); use output zero-point 128. An exact binary match has score
+    128+15*popcount, while every missing or extra active cell lowers the score,
+    avoiding the subset false positives of plain overlap correlation. Reverse
+    both the binary search plane and runtime kernel before correlation so
+    MaxPool first-tie selection reproduces a row-major inverse table''s
+    last-write-wins semantics; map the result back with 323-index. Under pinned
+    ORT, runtime QLinearConv weights and MaxPool indices are supported. Task233
+    measured 24703->21816 (+0.124281), bundled 266/266, and fresh A/B divergence
+    0/3600.'
+  applies_when:
+    - binary KxK runtime templates are matched against a binary search plane
+    - the current net materializes per-window hashes and an inverse position table
+    - exact match, not subset overlap, is required
+    - duplicate matches must reproduce deterministic last-row-major selection
+  reject_when:
+    - signed score range exceeds uint8 after output-zero-point offset
+    - matching requires rotations/scales not already represented as runtime template channels
+    - the response bank K*H*W costs more than the hash/index/table tensors it replaces
+  expected:
+    per_task: "+0.1~0.5 when a multi-KB hash/index/table lookup is replaced by a compact uint8 response bank"
+  transformer: null
