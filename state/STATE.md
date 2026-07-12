@@ -3,7 +3,8 @@
 
 ## Confirmed State
 - Confirmed BEST LB before this wave: **7316.30** (sub **54596069**, MAIN v9). New local MAIN is
-  **7317.9914** after ten fresh-gated adoptions; pack/submit is the immediate next action.
+  **7317.9914** after ten fresh-gated adoptions. MAIN v10 submission **54597601** was uploaded at 06:15 UTC
+  and is pending Kaggle scoring.
 - Session arc: MAIN v5 7305.75 → v9 **7316.30 (+10.55 LB)** across v6/v7/v8/v9. All wins fresh-gated (n≥1500–2500 A/B div0) or bit-identical.
 - **🚫 NO HEDGE — the submission score IS the final score (USER-DIRECTED, 2026-07-12, from the actual rules).**
   The competition rules describe a SINGLE evaluation (ARC-AGI benchmarks + a fixed small private benchmark suite,
