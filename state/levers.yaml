@@ -181,6 +181,10 @@ levers:
         ran: "tools/poll_public_dumps.py (session-start kernel poll) → 2 new/updated kernels (hanifnoerrofiq/the-epic-sax-ensembler, nikitagajbhiye30/neurogolf-00), auto-mined then re-mined explicitly with `uv run ng mine-public --margin 0`; both zips inspected = ~1.52MB/400-file identical-lineage baseline forks"
         verdict: "0 wins — TOTAL adoptable +0.0 across 0 tasks at margin 0 vs deployed MAIN v5 (local 7305.6311). Point-in-time result on two low-tier baseline forks, not exhaustion; prior 0-win verdicts in this ledger were falsified by later frontier uploads."
         reopen: "next poll finding a zip that differs from the known baseline lineage, any new uploader above ~7250, or a changed submission.zip in an existing frontier notebook"
+      - date: 2026-07-12
+        ran: "tools/poll_public_dumps.py against the authoritative checkout; Kaggle dateRun scan covered the latest 75 public kernels."
+        verdict: "No new or updated kernels since the prior seen-list, so there was no new artifact to download or mine in this point-in-time poll."
+        reopen: "Any new/updated public kernel, changed submission.zip, new uploader, or disclosed per-task score/model artifact."
 
   - name: public-insight-generalize
     status: live
@@ -646,3 +650,31 @@ levers:
           <=1-byte scalar intermediate chain."
         falsification_history: "First systematic hunt. Related: the '만점 물리 exactly 9 tasks' claim
           (memory competition-setup 2026-07-11) is CONFIRMED by Jan Vorel (1st) verbatim '9 25s'."
+      - date: 2026-07-12
+        ran: "Exhaustive attribute-only rectangular Pool support sweep over all 400 tasks and every
+          official bundled example: kernel H/W 1..30; every dilation whose effective kernel fits
+          the 30x30 canvas; every asymmetric top/bottom and left/right padding split preserving a
+          30x30 output. Projection-filtered row/column enumeration followed by exact 2-D channel and
+          zero-hot-padding comparison. AveragePool/LpPool covered by the same positive-support result
+          under the scorer's final output>0 decode. Synthetic identity, asymmetric, dilated, recolor
+          rejection, and ONNX-vs-numpy tests all passed."
+        verdict: "0/400 hits. No task, including the three existing 25s, is exactly a single
+          parameter-free rectangular MaxPool/AveragePool/LpPool support transform in the searched
+          dense/dilated/directional/asymmetric family. This closes this attr-only morphology family,
+          not attr-only ops generally."
+        reopen: "A non-rectangular attribute-only spatial op family; an operator whose internal
+          channel routing/recolouring exceeds positive-support pooling; post-deadline disclosure that
+          one of the hidden 25 task IDs has pure morphology semantics; scorer semantics changing away
+          from per-channel output>0."
+      - date: 2026-07-12
+        ran: "Exhaustive cost<=1 single-node scalar-spatial sweep over all 400 tasks and every
+          official bundled example: CumSum on H/W with reverse x exclusive = 8 modes;
+          ReverseSequence full H/W reversal = 2 modes; Trilu upper/lower with k=-29..29 = 118
+          modes. Each ONNX form uses exactly one scalar/length initializer, hence scorer cost 1
+          and 25 points if exact. Synthetic numpy semantics and one-node ONNX construction tests passed."
+        verdict: "0/400 hits. No task is exactly a single CumSum directional fill, full-axis
+          ReverseSequence flip, or Trilu triangular mask under the searched cost-1 family. Combined
+          with the rectangular Pool run, no new 25-point task was found by these attr/scalar-op families."
+        reopen: "A different cost<=1 operator with nontrivial spatial AND channel semantics; dynamic
+          scalar derived from input while remaining uncounted; a disclosed hidden-25 task ID/rule that
+          points to one of these families with a missing mode; scorer/operator-set change."
