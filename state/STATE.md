@@ -4,12 +4,16 @@
 ## Confirmed State
 - Confirmed BEST LB: **7316.30** (sub **54596069**, MAIN v9, pure-max, NEW RECORD). Local 7316.18, offset +0.12, no zeros.
 - Session arc: MAIN v5 7305.75 → v9 **7316.30 (+10.55 LB)** across v6/v7/v8/v9. All wins fresh-gated (n≥1500–2500 A/B div0) or bit-identical.
-- **⚠️ HEDGE IS STALE.** HEDGE v4 (sub 54580652 = 7298.51) is built on the OLD MAIN v4 base and is missing ALL v6–v9
-  wins (~+10.7 pt of adoptions). It still carries the 9 silent-zero protections but is now ~18 pt behind MAIN.
-  **A best-of-two with stale HEDGE is currently pointless** (HEDGE can only win if MAIN takes a catastrophic
-  multi-zero hit larger than 18 pt — implausible under k≈1–2). **NEXT-SESSION TOP PRIORITY: rebuild HEDGE on the
-  MAIN v9 base + re-apply the 9 protections (manifest below), then final selection = MAIN v9 + HEDGE-v5-on-v9-base.**
-- Deadline 2026-07-15 (private decides). USER ACTION at deadline: set the two final-selection slots on the website.
+- **🚫 NO HEDGE — the submission score IS the final score (USER-DIRECTED, 2026-07-12, from the actual rules).**
+  The competition rules describe a SINGLE evaluation (ARC-AGI benchmarks + a fixed small private benchmark suite,
+  "to prevent overfitting") that produces the score you see. There is NO deadline rescore on fresh/different draws
+  (the only "rescore" the rules mention is for metric/operator changes). So a net showing full points now keeps them
+  at the deadline. **Consequence: DO NOT build or maintain a hedge board. Final selection = MAIN (best pure-max) on
+  both slots, or MAIN + next-best MAIN. Fresh-gating is STILL required — but only to pass the private suite so a net
+  scores AT ALL (silent-zero = failing that suite NOW), NOT to insure a nonexistent deadline redraw. Do not fresh-gate
+  a net that already shows full LB points as if it were at risk.** The old "07-15 = another hidden draw" / k-calibration
+  / portfolio-doctrine machinery is RETRACTED (it rested on an unverified assumption the rules don't support).
+- Deadline 2026-07-15. USER ACTION at deadline: confirm MAIN (54596069 or its successor) is the selected submission.
 
 ## 🏗️ THIS SESSION'S BIG LEVER — rank-machine / free-output sign-decode einsum family (9 wins)
 Generalized yesterday's task010 guard-row win (1002→379) across the board via the rule-wiki×cost-mismatch lens.
@@ -51,26 +55,27 @@ codex task005 (fresh-dirty 7/400) — their "fresh audited" is NOT a substitute 
   after node surgery or phantom bytes persist (task202 build).
 - opset16 + ScatterElements(reduction='add') + u8 Div/Mod grader-proven (sub 54581845, still holds).
 
-## HEDGE v4 protection manifest (9 nets — re-apply to v9 base next session)
-219 exact_v1 (43%→0.30%) | 319 exact_matcher (6.9%→0.18%) | 002 rect_walk (4.8%→2.83%) | 118 varm_peel (6.8%→3.33%)
-| 205 hcov_vcov_2d (1.58%→0.01%) | 233 cand_clamped_C (3.0%→0.73%) | 188 fixB (0.67%→0.057%) | 191 exact_8orient
-(1.0%→0) | 048 src_rebuild (1.42%→0). Artifacts in candidates/. Rebuild: swap over overfit_nets → ng score each
-isolated → pack → submit → restore from scratchpad backup → verify --hash. NOTE new MAIN-side risk carrier: **018 at
-16687 is fresh 0.567%** (< prior incumbent 2.0%, so risk DROPPED, but it is the one non-clean net among the new wins —
-consider a HEDGE protection port if 018 gets budget; k≈1-2 makes 0.567% ≈ 0.85% private-zero, low).
+## HEDGE — DEPRECATED (do not rebuild; kept only as historical note)
+The HEDGE v4 protection artifacts (219/319/002/118/205/233/188/191/048 exact-rule ports in candidates/) still exist
+but are NO LONGER PART OF THE STRATEGY (submission score = final score, user 2026-07-12). They remain useful as
+fresh-CLEAN exact-rule rebuilds if any of those tasks is ever re-golfed on MAIN — but there is no separate hedge board
+to maintain. Nets like 219 (43% fresh-fail) currently show full LB points, which per the rules means they PASS the
+fixed private suite and keep those points at the deadline — no action needed.
 
 ## Next Session Start
-1. `uv run ng status`; confirm 54596069 = 7316.30 unchanged (changed ⇒ recompute). Re-check codex manifest for
-   absorbable wins (fresh-gate 2500 before adopt). Kernel poll `uv run python tools/poll_public_dumps.py`.
-2. **HEDGE rebuild on v9 base** (top priority — see stale warning above) if planning a best-of-two at deadline.
-3. **Wave3 rank-machine recon**: remaining shortlist from this session's wave2 audit = **297** (header→stacked bars,
-   compact-label vs 756B one-hot, contested), **377** (concentric rings, high-variance detection risk). Then a fresh
-   rule-wiki×cost audit excluding all resolved tasks. Dispatch opus builders (Fable quota exhausted this session).
-4. Post-deadline: validate k≈1-2 vs private zeros; writeups (six hidden 25s, 018-4850, fat-middle idiom).
+1. `uv run ng status`; confirm 54596069 = 7316.30 unchanged. Re-check codex manifest for absorbable wins (fresh-gate
+   2500 before adopt — fresh-gate still required so the net PASSES the private suite and scores). Kernel poll
+   `uv run python tools/poll_public_dumps.py`.
+2. **Push MAIN pure-max score — that is the whole game (submission score = final, no hedge).** Wave3 rank-machine recon:
+   remaining wave2 shortlist = **297** (header→stacked bars, compact-label vs 756B one-hot, contested), **377**
+   (concentric rings, high-variance detection risk). Then a fresh rule-wiki×cost audit excluding all resolved tasks.
+   Dispatch opus builders (Fable quota exhausted this session).
+3. At deadline: confirm MAIN (54596069 or successor) is a selected final submission. No hedge to build.
+4. Post-deadline: writeups (six hidden 25s, 018-4850, fat-middle idiom).
 
 ## Operational Guardrails
 - Fresh-gate every adoption (n≥1500 A/B; scratchpad/fresh_ab.py does file-based A/B vs backup); bit-identical exempt.
-  ng gate → ng adopt only; price exceptions HEDGE-only. Source regen + src↔live reconcile after each adopt (some
+  ng gate → ng adopt only (no price exceptions — no hedge lane exists). Source regen + src↔live reconcile after each adopt (some
   candidate .py builders write cand.onnx under different names — check `ls candidates/taskNNN/` before adopt).
 - onnx==1.21.0 + onnxruntime==1.26.0 pins. TopK float/fp16/int64. submission.zip. 100/day. NO sparse initializers EVER
   (grader-ERROR). Clamp all dynamic Gather/Scatter indices. Isolated eval for knife-edge nets (220/230/294/233).
