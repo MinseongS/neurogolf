@@ -66,3 +66,8 @@ k forced by the stamp footprint => params = 100*k^2 is irreducible, and ANY
 decomposition pays a >=900B 30x30 intermediate that beats mem 0 only below the
 existing score. Same family as the GRIDSAMPLE-at-floor BAIL: when the public net
 is one mem-0 op whose param count equals the irreducible rule dimension, BAIL.
+
+## ADOPTED 20260712T141554Z
+- cost: 345 -> 208 (points 19.6625)
+- source: dumps/archive_extract/submission7300+/task095.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

@@ -63,3 +63,8 @@ initializer `ax1->s1`.  Bundled gate fail=0.  Cost: 2215 -> 2214
 - cost: 1681 -> 1380 (points 17.7702)
 - source: candidates/public_dumps/20260709/neurogolf-7266-48-github-com-qurore-kaggloop/nets/task335.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260712T140217Z
+- cost: 1380 -> 1010 (points 18.0823)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task335.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

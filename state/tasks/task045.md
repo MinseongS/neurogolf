@@ -46,3 +46,8 @@ Three [1,10,30,1] fp32 tensors dominate (leftcol/rightcol/both, 1200B each = 360
 
 ## INSIGHT (transferable)
 ⭐ When a "fill" colour VARIES per row/region but is exactly a one-hot already present in the input, use that one-hot directly as the Where VALUE in [1,10,30,1] form — it broadcasts to the free [1,10,30,30] output, so you never need a colour-index plane or per-region Equal. Endpoint-match = elementwise product of the two boundary column slices; ReduceMax over channels gives the per-row qualify flag.
+
+## ADOPTED 20260712T140036Z
+- cost: 1673 -> 90 (points 20.5002)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task045.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

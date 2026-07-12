@@ -29,3 +29,8 @@ Dominant intermediates: oneh6 [1,6,3,3] uint8 = 54B (needed to place gray at col
 
 ## INSIGHT (transferable)
 ⭐ When output content is a fixed small pattern keyed on a recovered scalar index, a Gather of a tiny uint8 [K,h,w] table by that scalar beats a one-hot⊗MatMul-table: it skips the f32 one-hot, the f32 MatMul result, AND the Reshape (two ~36B planes), and the gathered uint8 plane doubles as the indicator directly. Combine with the COUNT→FIXED-PATTERN free-Pad route. Position-robust colour recovery: ReduceSum(input,[2,3]) → Slice to the candidate colour channels → ArgMax (excludes background ch0 by slicing, exact when exactly one colour is present).
+
+## ADOPTED 20260712T140136Z
+- cost: 194 -> 85 (points 20.5573)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task334.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

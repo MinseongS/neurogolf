@@ -59,3 +59,8 @@ Recover the dynamic color as a [1,10,1,1] one-hot by slicing input at a position
 - 1639→787 (+0.73). Identity-augmented Einsum: all-ones column + delta-slice on a term axis folds Where(cond,X,input) into the Einsum; largest node output 128B (4x4).
 - Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task033/regime.onnx (builder build_regime.py). Backup: reports/candidates/fatmid_adopt_backup/task033.onnx.bak.
 - ⭐ TRANSFERABLE: the 900B [30,30] Where-mask is NOT a floor — fold routing into one N-ary Einsum to the FREE output (output>0 sign-decode). See memory neurogolf-regime-crack-freeoutput-einsum + the 60-task vein in reports/candidates/fresh_sweep/mask_dominance.json.
+
+## ADOPTED 20260712T140122Z
+- cost: 787 -> 268 (points 19.4090)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task033.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

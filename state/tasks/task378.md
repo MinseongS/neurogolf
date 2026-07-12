@@ -122,3 +122,8 @@ falsification history: this entry supersedes/corrects the stale 8938-era floor a
 - cost: 3090 -> 3086 (points 16.9654)
 - source: candidates/signed_poly_wave/final/task378/attr_axes.onnx
 - note: attribute-axes initializer trim; fresh 2000/2000 div0
+
+## ADOPTED 20260712T140205Z
+- cost: 3086 -> 1980 (points 17.4091)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task378.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

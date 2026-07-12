@@ -49,3 +49,8 @@ discrete scalar, skip all geometry: recover a one-hot selector vector qvec (here
 the output mask straight out of a const lookup table via `qvec @ Mflat[K, H*W]` —
 a tiny [1,H*W] intermediate, no per-cell colour plane. The only 30x30 cost is the
 canonical uint8 label-map for the free-bool Equal.
+
+## ADOPTED 20260712T140146Z
+- cost: 238 -> 118 (points 20.2293)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task104.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

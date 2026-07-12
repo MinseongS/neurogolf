@@ -55,3 +55,8 @@ carrier entirely. Declare the graph output as UINT8 so the final Pad emits `outp
 - cost: 2071 -> 676 (points 18.4838)
 - source: candidates/public_dumps/20260709/neurogolf-7266-48-github-com-qurore-kaggloop/nets/task394.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260712T140232Z
+- cost: 676 -> 519 (points 18.7481)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task394.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

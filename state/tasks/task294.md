@@ -55,3 +55,8 @@ structurally identical pairs (candidate inherits incumbent's packed weights).
 - cost: 642 -> 612 (points 18.5833)
 - source: candidates/task294/kcollapse.onnx
 - note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays
+
+## ADOPTED 20260712T140252Z
+- cost: 612 -> 601 (points 18.6014)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task294.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

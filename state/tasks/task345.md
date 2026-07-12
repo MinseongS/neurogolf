@@ -67,3 +67,8 @@ Verified generator bound = 10 (fixed size). Flagged `red_mask` [30,30] bool 900B
 - 1495→1128 (+0.28). WAS FLOOR earlier same day (peel recurrence). Threshold-run mask = signed linear-in-h + one dyadic scaling for own+shifted column; A[c,c]=-1 self-flip.
 - Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task345/regime.onnx (builder build_regime.py). Backup: reports/candidates/fatmid_adopt_backup/task345.onnx.bak.
 - ⭐ See memory neurogolf-regime-crack-freeoutput-einsum (vein taxonomy + sub-recipes). Vein list: reports/candidates/fresh_sweep/mask_dominance.json.
+
+## ADOPTED 20260712T140252Z
+- cost: 1128 -> 1110 (points 17.9879)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task345.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

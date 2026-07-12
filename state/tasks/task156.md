@@ -39,3 +39,8 @@ border yellow from interior recolour cells.
 - cost: 1562 -> 1539 (points 17.6611)
 - source: candidates/task156/lean.onnx
 - note: safe-golf lean rebuild 1562->1539 (+0.015): u8/bool plane pipeline, padded 3x3 QLinearConv plus-erosion interior, fixed-row size-rank, 5-ch Equal+Pad one-hot (5->10ch + 10->30 spatial in one free Pad); fresh 2000/2000 divergence vs deployed 0 (bit-identical decode). NO-BUILD for the +0.1 regime-crack goal (byte floor pinned: fp32 slice 400 + one-hot 500 irreducible, fp32-co-bind blocks einsum fold) but this micro-golf is free+zero-risk
+
+## ADOPTED 20260712T140248Z
+- cost: 1539 -> 1367 (points 17.7796)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task156.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

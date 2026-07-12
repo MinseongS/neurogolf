@@ -31,3 +31,8 @@ Dominant intermediates: (a) **900B fp32** ch0 slice `input[:,0:1,:15,:15]` — t
 
 ## INSIGHT (transferable)
 A pointwise recolor that ONLY changes a sparse set of in-grid cells = `Where(cond30, color_onehot[1,10,1,1], input)` routed into the FREE output; build `cond` on the small ACTIVE patch (generator size bound, here 15×15) then expand to 30×30 by **zero-Concat of bool blocks** (Pad rejects bool, and opset-10 Pad rejects uint8; fp16 Pad doubles the plane). ⭐ Fold a per-column predicate (odd-column) straight into the 1-D column-occupancy bool vector before the row⊗col And, killing a whole 15×15 intermediate plane. NOTE: a 10-channel Conv decode that lands in the free fp32 `output` CANNOT be made fp16 — the output must be fp32, so any fp16 Conv forces a counted ~18KB intermediate; prefer the Where-into-free-output idiom over Conv-into-free-output whenever only a sparse recolor is needed.
+
+## ADOPTED 20260712T140200Z
+- cost: 180 -> 96 (points 20.4357)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task252.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

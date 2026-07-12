@@ -49,3 +49,8 @@ set, and the odd block's value is recovered by a MAGNITUDE-BAND test on the coun
 (here cnt in {1,4}). Because the test is per-channel, it reconstructs the full
 one-hot of the odd block directly, routed into the FREE Pad output. Generalises to
 any "majority vs minority over a fixed candidate count" reconstruction.
+
+## ADOPTED 20260712T140142Z
+- cost: 236 -> 114 (points 20.2638)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task207.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

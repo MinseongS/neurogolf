@@ -245,3 +245,8 @@ reopen: adopt into HEDGE bundle if max-protection portfolio selected; find a che
   2-D encoding (e.g. fuse the 4 conv counts into 2 via cumsum-diff, or bool-pack the coverage
   chain) to cut below ~26k before considering MAIN-board adoption; re-measure if a public dump
   ships a lower-fail task205 net.
+
+## ADOPTED 20260712T141557Z
+- cost: 3760 -> 2084 (points 17.3580)
+- source: dumps/archive_extract/submission7300+/task205.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

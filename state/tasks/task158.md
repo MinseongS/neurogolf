@@ -177,3 +177,8 @@ backup at `reports/candidates/task158/task158_pre_dynamic_cse.onnx`.
 - Tool+date: opus triage agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
 - Reopen triggers: new public net < 20329; mixed-dtype Conv halving lab_f 2600B; a cheaper stamping primitive avoiding 12 full-grid filter planes (none known).
 - Falsification history: this is the systematic 233-lens sweep prescribed by STATE.md Active Vein 1 after the 2026-07-10 task233 win falsified its own 07-09 CLOSED verdict; lens applied and did not fire here.
+
+## ADOPTED 20260712T141556Z
+- cost: 20329 -> 18560 (points 15.1712)
+- source: dumps/archive_extract/submission7300+/task158.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

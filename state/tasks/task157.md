@@ -125,3 +125,8 @@ falsification history: heuristic-plateau verdict previously recorded pre-redesig
 - cost: 6819 -> 6818 (points 16.1727)
 - source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task157.onnx
 - note: min-merge from overfit_nets
+
+## ADOPTED 20260712T141556Z
+- cost: 6818 -> 4039 (points 16.6962)
+- source: dumps/archive_extract/submission7300+/task157.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

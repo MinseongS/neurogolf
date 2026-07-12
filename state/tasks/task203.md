@@ -28,3 +28,8 @@ Candidate:
 Bundled gate after adoption: fail=0, cost `355 -> 353`
 (memory `352`, params `3 -> 1`).  Adopted into
 `submission/overfit_nets/task203.onnx`.
+
+## ADOPTED 20260712T140204Z
+- cost: 353 -> 216 (points 19.6247)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task203.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

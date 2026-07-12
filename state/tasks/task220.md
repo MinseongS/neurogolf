@@ -73,3 +73,8 @@ Gates: fresh-process bundled 0-fail, dirty-process (pollutants 230,294) 0-fail v
 267-fail positive control, fresh-2000 0/0. Backup task220_pre_s10_knifeedge.onnx.
 ⭐ TRANSFERABLE: any mem=0 single-Conv net — screen max off-cell logit == 0.0 on a clean
 run; fix via center-tap (no-bias) or bias epsilon shift. task193 screened healthy (gap 1.0).
+
+## ADOPTED 20260712T140144Z
+- cost: 900 -> 437 (points 18.9201)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task220.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

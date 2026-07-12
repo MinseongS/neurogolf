@@ -30,3 +30,8 @@ The Conv weight W is [10,10,1,1] and MUST be fp32 (ORT Conv requires the weight 
 
 ## INSIGHT (transferable)
 ⭐ For a "recolour mask→colour on black canvas" task where output channel assignment is a fixed permutation of input channels parameterised by ONE recovered scalar colour, the entire net is a single 1×1 Conv whose runtime weight is a tiny [10,10,1,1] permutation matrix — the 10-channel output expansion lands in the FREE output for zero mem. Build the (rank-2, two-nonzero) weight as fp16 outer-products and pay ONE fp32 Cast at the end (Conv forces fp32 weight to match fp32 input); the fp16 construction halves every [10,10] working tensor. This is a clean Tier-S floor (~1156B); the 400B fp32 weight cast is the irreducible item.
+
+## ADOPTED 20260712T140129Z
+- cost: 130 -> 55 (points 20.9927)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task389.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

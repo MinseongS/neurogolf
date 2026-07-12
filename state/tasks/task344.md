@@ -22,3 +22,8 @@ slices/counts would introduce full-canvas intermediate planes and loses the mem0
 advantage.
 
 No adoption candidate.
+
+## ADOPTED 20260712T140232Z
+- cost: 910 -> 692 (points 18.4604)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task344.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

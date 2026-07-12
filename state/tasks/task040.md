@@ -45,3 +45,8 @@ Everything else is tiny 10x10 / 1-D planes on the size-10 active canvas.
 orientation flag, require BOTH border lines full (row0 AND row9), not one — a single full
 line can be faked by enough markers, but faking two needs more markers than the generator
 ever places, making the discriminator bulletproof under fresh generalization.
+
+## ADOPTED 20260712T140129Z
+- cost: 190 -> 80 (points 20.6180)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task040.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

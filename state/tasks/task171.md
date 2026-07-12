@@ -43,3 +43,8 @@ our own nets — naive Relu-drop gated on the two direct Conv-Relu-Conv twins FA
 task042 fail=196); systematic ablation of all 15 deployed Relu/Clip nets = 0 dead nodes. The win is a
 per-net decode-invariance accident specific to the borrowed weights, reproducible only by ablating
 freshly-borrowed public nets. Reopen: ablate each NEW min-merge net's pointwise nodes before trusting tight.
+
+## ADOPTED 20260712T140251Z
+- cost: 435 -> 414 (points 18.9741)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task171.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

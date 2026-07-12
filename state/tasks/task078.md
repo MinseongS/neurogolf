@@ -35,3 +35,8 @@ full-canvas label-map path.
 - cost: 1293 -> 900 (points 18.1976)
 - source: candidates/signed_poly_wave/task078/candidate.onnx
 - note: signed interval free-output fold; fresh 2000/2000 div0
+
+## ADOPTED 20260712T140053Z
+- cost: 900 -> 82 (points 20.5933)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task078.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

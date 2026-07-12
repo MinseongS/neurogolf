@@ -47,3 +47,8 @@ tensor IS the FREE output. This beats both (a) a full-canvas int32 label+Equal (
 and (b) scatter via two placement MatMuls (1800B [1,10,30,k] intermediate). Net: only the input
 slice survives as a real intermediate. Also: a constant separable gather factors into two {0,1}
 selector matrices Rsel[k,H]/Csel[k,W] (presence = Rsel@occ@Csel^T > 0), no data-dependent matrix.
+
+## ADOPTED 20260712T140115Z
+- cost: 314 -> 90 (points 20.5002)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task296.onnx
+- note: archive.zip submission7300+ net; fresh 1999/0 fail; mechanism-graft

@@ -47,3 +47,8 @@ pattern only fakes period-2 when each row is constant, in which case period-2 ti
 reproduces the identical grid -> the mis-detection is harmless.
 2W extent recovered offset-free: keep[c]=colocc[floor(c/2)] (Gather by const
 [0,0,1,1,...]) since c<2W iff floor(c/2)<W.
+
+## ADOPTED 20260712T140232Z
+- cost: 219 -> 168 (points 19.8760)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task231.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

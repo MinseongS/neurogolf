@@ -90,3 +90,8 @@ rows/cols ≥ canvas, not the short-grid interior rows 5–9).
 - cost: 2144 -> 1803 (points 17.5028)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task030.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260712T140235Z
+- cost: 1803 -> 1460 (points 17.7138)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task030.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

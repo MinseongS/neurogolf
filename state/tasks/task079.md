@@ -62,3 +62,8 @@ fp16 Conv is NOT cheaper — ORT always emits an fp32 PrecisionFreeCast conv pla
 ## S16 (2026-07-06) — public bit-identical golf (franksunp) ADOPTED
 Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent). Minor cost drop
 (dead-initializer / redundant-node removal), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## ADOPTED 20260712T141554Z
+- cost: 3103 -> 758 (points 18.3693)
+- source: dumps/archive_extract/submission7300+/task079.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

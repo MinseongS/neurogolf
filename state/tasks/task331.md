@@ -63,3 +63,8 @@ wasn't a mem-0 conv and the stamp colour was a constant routed via Where. Here t
 already buys mem 0 + params 910; ANY intermediate plane (label carrier 900B + fp32 conv
 plane) pushes mem above the 672B budget needed to beat +0.3. Also: ORT rejects an fp16
 Conv under ORT_DISABLE_ALL (T-binding float16/float error) — keep Conv in fp32.
+
+## ADOPTED 20260712T140201Z
+- cost: 910 -> 500 (points 18.7854)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task331.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

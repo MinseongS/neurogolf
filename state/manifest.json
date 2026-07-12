@@ -1,12 +1,12 @@
 {
  "001": {
-  "cost": 240,
+  "cost": 190,
   "fail": 0,
   "ok": true,
-  "points": 19.519361076658008,
-  "sha256": "04a88f45a39ace88078e25894aae81244e07ee32bb3ffdba80aafa7c2b0d8502",
+  "points": 19.752975927839515,
+  "sha256": "3b216bf603d1bf6bacdaa9bff5078321266904b8c4d94cd251c63df79ea109d8",
   "task": 1,
-  "updated": "verify"
+  "updated": "20260712T140234Z"
  },
  "002": {
   "cost": 5889,
@@ -36,22 +36,22 @@
   "updated": "verify"
  },
  "005": {
-  "cost": 6421,
+  "cost": 4157,
   "fail": 0,
   "ok": true,
-  "points": 16.23267085220595,
-  "sha256": "09cda1f4cd077b7fb8faf1159ee296f418f7b12610eea59a46bbfbb2029c6a7a",
+  "points": 16.66745106074736,
+  "sha256": "0911bcaf522e6044ed7924331e0ccf1cfd7a3adecbc12b7fd04532a7997b4dee",
   "task": 5,
-  "updated": "revert-20260712T0340Z-fresh-regression"
+  "updated": "20260712T141553Z"
  },
  "006": {
-  "cost": 153,
+  "cost": 66,
   "fail": 0,
   "ok": true,
-  "points": 19.969562078607566,
-  "sha256": "27adc62e63574d42025958cc392c4d83f66ea19f96826bb7b713fe9a3280201e",
+  "points": 20.810345257973573,
+  "sha256": "f7530ce4c633666fc0e3bebbba341bac2b36b9eaa0a34ad1083de9a9ea96098d",
   "task": 6,
-  "updated": "verify"
+  "updated": "20260712T140130Z"
  },
  "007": {
   "cost": 127,
@@ -144,13 +144,13 @@
   "updated": "verify"
  },
  "017": {
-  "cost": 6273,
+  "cost": 10,
   "fail": 0,
   "ok": true,
-  "points": 16.255990011903258,
-  "sha256": "5575ec0b89240101d000ece9fc815f2dbdc6f6a0fbb06cbc67a0a2f03ae3d7e0",
+  "points": 22.697414907005953,
+  "sha256": "140c27ec27075ff3b6913c81a307dd101aa0d28a74b36cd2f410ef2621cf6e32",
   "task": 17,
-  "updated": "verify"
+  "updated": "20260712T122220Z"
  },
  "018": {
   "cost": 16687,
@@ -171,22 +171,22 @@
   "updated": "verify"
  },
  "020": {
-  "cost": 1256,
+  "cost": 1019,
   "fail": 0,
   "ok": true,
-  "points": 17.864312652971854,
-  "sha256": "f7db49fb30f6b2eff78ce6c117efd540906d9d1a5fe12062ca9dcf9bbb6ee009",
+  "points": 18.073422966777276,
+  "sha256": "d3c6ee8b7b082f80d94dd463de68edf8a4bda5a89715ea824d497ccd14a19e67",
   "task": 20,
-  "updated": "verify"
+  "updated": "20260712T140235Z"
  },
  "021": {
-  "cost": 324,
+  "cost": 177,
   "fail": 0,
   "ok": true,
-  "points": 19.21925648420767,
-  "sha256": "014d964ed0937b3da52fef113d01f3dc5bc74432d55441883773265ce5a0530e",
+  "points": 19.82385026742617,
+  "sha256": "b7ab595016c0fd22c0ca70fbee7f7703c6d634f8e0b4e9c0d432a88cbc7efe24",
   "task": 21,
-  "updated": "verify"
+  "updated": "20260712T140200Z"
  },
  "022": {
   "cost": 900,
@@ -204,16 +204,16 @@
   "points": 16.2441049183537,
   "sha256": "137c3046a8213bbf95adbd3d366bb2c0c1cb9ff935008479f3b51771f7664ce4",
   "task": 23,
-  "updated": "verify"
+  "updated": "revert-tail-kaggle-regression-7394"
  },
  "024": {
-  "cost": 110,
+  "cost": 56,
   "fail": 0,
   "ok": true,
-  "points": 20.299519634207584,
-  "sha256": "4c4ce2b238c9b9b5202816ce372fe3560842c800b768a978dd5fcb5e3dfc322b",
+  "points": 20.97464830926485,
+  "sha256": "9090d7fc66fcf617eb83597d5b2020a5bfb9affae3720e3e34eb0391a8abca35",
   "task": 24,
-  "updated": "verify"
+  "updated": "20260712T140157Z"
  },
  "025": {
   "cost": 9817,
@@ -234,22 +234,22 @@
   "updated": "verify"
  },
  "027": {
-  "cost": 1308,
+  "cost": 962,
   "fail": 0,
   "ok": true,
-  "points": 17.823745467982857,
-  "sha256": "30e7fa87454ff24fca70334e11d75c801f4803ddeecd59dde50802169e6b27ff",
+  "points": 18.130985549334294,
+  "sha256": "b9abd14be1b433b96639e7251b9050ad07e57403af51858517cab601ab751b3e",
   "task": 27,
-  "updated": "verify"
+  "updated": "20260712T141553Z"
  },
  "028": {
-  "cost": 168,
+  "cost": 99,
   "fail": 0,
   "ok": true,
-  "points": 19.876036020596743,
-  "sha256": "86fd87984a4ec0466af7248fd16c4acafc9baec9bc3edbf473af557027e62b74",
+  "points": 20.40488014986541,
+  "sha256": "3a9df8ceb7069f91d2d26f9296eff2ab67806300d24acd522211f3a804aed65c",
   "task": 28,
-  "updated": "verify"
+  "updated": "20260712T140202Z"
  },
  "029": {
   "cost": 5288,
@@ -261,13 +261,13 @@
   "updated": "verify"
  },
  "030": {
-  "cost": 1803,
+  "cost": 1460,
   "fail": 0,
   "ok": true,
-  "points": 17.50279277679668,
-  "sha256": "2cca72f3f7f65f4c2319beeeae8bc2b49d6bb9652e787824f6d3ca722542b1d5",
+  "points": 17.713808285297617,
+  "sha256": "de6d82827b7068be75f5fc0212570b094e090b2fc7edb01a5a1773293028df3b",
   "task": 30,
-  "updated": "verify"
+  "updated": "20260712T140235Z"
  },
  "031": {
   "cost": 637,
@@ -288,22 +288,22 @@
   "updated": "verify"
  },
  "033": {
-  "cost": 787,
+  "cost": 268,
   "fail": 0,
   "ok": true,
-  "points": 18.331771751582597,
-  "sha256": "3f535659db9928d020da2ca9793ef1b08807476fbbd3c25c847664d71640c3df",
+  "points": 19.409013019489144,
+  "sha256": "c13e3c334a9eec2943a0bbcd3ee8f106ef26ab34fc5abc8dedddedce13a12db2",
   "task": 33,
-  "updated": "verify"
+  "updated": "20260712T140122Z"
  },
  "034": {
-  "cost": 2261,
+  "cost": 1294,
   "fail": 0,
   "ok": true,
-  "points": 17.27643752772203,
-  "sha256": "2bf0e3e9c15d0149cb996c64142eda65a49ae5daef0f85c948eac10504ba6846",
+  "points": 17.834506524939155,
+  "sha256": "5551a37bdb0d83b04d8de7a5fe217571757e1aff4216f14d263fcfa42cdc2cce",
   "task": 34,
-  "updated": "verify"
+  "updated": "20260712T140202Z"
  },
  "035": {
   "cost": 1891,
@@ -315,22 +315,22 @@
   "updated": "verify"
  },
  "036": {
-  "cost": 1589,
+  "cost": 1051,
   "fail": 0,
   "ok": true,
-  "points": 17.629139833463285,
-  "sha256": "408e601d6479f3a1f652112888e52c78699d7731f3412d5488a5909c2ea53ae5",
+  "points": 18.04250262912305,
+  "sha256": "737fc8388cfe8f40c28548b59f0954e8b3c2f8284cf85a208efc7cdb45525726",
   "task": 36,
-  "updated": "verify"
+  "updated": "20260712T140205Z"
  },
  "037": {
-  "cost": 2465,
+  "cost": 2414,
   "fail": 0,
   "ok": true,
-  "points": 17.19005291352321,
-  "sha256": "3674a3fc6b29cf8c91e8d50d8a5acf0ae0520053291e7362532f8ab443ec11fa",
+  "points": 17.210959598342523,
+  "sha256": "90b0928ee21597693346b08a994b41aec795b85d084d5c7726870087a68fdaf6",
   "task": 37,
-  "updated": "verify"
+  "updated": "20260712T140252Z"
  },
  "038": {
   "cost": 213,
@@ -351,22 +351,22 @@
   "updated": "verify"
  },
  "040": {
-  "cost": 190,
+  "cost": 80,
   "fail": 0,
   "ok": true,
-  "points": 19.752975927839515,
-  "sha256": "34c4840699dcbf379a0ad49f934c18f96525056b6771c7f3b81347d1becf3f30",
+  "points": 20.61797336532612,
+  "sha256": "01ba84e2bca7236e35b1b674ebe44e86b809ffb65de9c8e29e2f3c6d39f44127",
   "task": 40,
-  "updated": "verify"
+  "updated": "20260712T140129Z"
  },
  "041": {
-  "cost": 1000,
+  "cost": 460,
   "fail": 0,
   "ok": true,
-  "points": 18.092244721017863,
-  "sha256": "cf77893afe04a45d2d18859565008c69d921452961a1b6e729d704265b320522",
+  "points": 18.86877351051686,
+  "sha256": "169a7fd692c6e4f5f99772e34f59ab31d1d8adbb3629bc2d962dfb96683609bc",
   "task": 41,
-  "updated": "verify"
+  "updated": "20260712T140140Z"
  },
  "042": {
   "cost": 3110,
@@ -378,13 +378,13 @@
   "updated": "verify"
  },
  "043": {
-  "cost": 793,
+  "cost": 58,
   "fail": 0,
   "ok": true,
-  "points": 18.324176778365153,
-  "sha256": "f779cd25faf94b2cb7aba327fd656159c8993ea8751767ae384105af8f1dc153",
+  "points": 20.939556989453582,
+  "sha256": "e770aa014557dd2e05c610a51aa46a97f6aa42e52348a2f39bd4dd338ab08d03",
   "task": 43,
-  "updated": "verify"
+  "updated": "20260712T140051Z"
  },
  "044": {
   "cost": 3139,
@@ -396,13 +396,13 @@
   "updated": "verify"
  },
  "045": {
-  "cost": 1673,
+  "cost": 90,
   "fail": 0,
   "ok": true,
-  "points": 17.577626299013176,
-  "sha256": "4461a0e73d4fc10739f800b546dfb2051ce2e84e8a47c0a5c5cdabad25d13fca",
+  "points": 20.500190329669735,
+  "sha256": "151314a926f7a39e4ab3bef82481b135f2e5382cef065996d7d59c1a6115db84",
   "task": 45,
-  "updated": "verify"
+  "updated": "20260712T140036Z"
  },
  "046": {
   "cost": 2075,
@@ -432,13 +432,13 @@
   "updated": "verify"
  },
  "049": {
-  "cost": 345,
+  "cost": 344,
   "fail": 0,
   "ok": true,
-  "points": 19.15645558296864,
-  "sha256": "90f67e98b88dc7cf18827011f97c5e3e7ffd2cb811ad3edb0e6b8268a26e011b",
+  "points": 19.159358342626604,
+  "sha256": "a30c36ed850510547e68b580a998d22e17dab81e1568c1cfcf910684fc922640",
   "task": 49,
-  "updated": "verify"
+  "updated": "20260712T140253Z"
  },
  "050": {
   "cost": 1896,
@@ -459,13 +459,13 @@
   "updated": "verify"
  },
  "052": {
-  "cost": 194,
+  "cost": 30,
   "fail": 0,
   "ok": true,
-  "points": 19.73214184093667,
-  "sha256": "73403eca9b7eb65b36de58f28661463a4aa693005b6614a9706299a74877cb58",
+  "points": 21.598802618337846,
+  "sha256": "299b9dccde06d89ecc0568cb74051282810f9debde90b3fa71efc6faa6879067",
   "task": 52,
-  "updated": "verify"
+  "updated": "20260712T140055Z"
  },
  "053": {
   "cost": 30,
@@ -495,13 +495,13 @@
   "updated": "verify"
  },
  "056": {
-  "cost": 34,
+  "cost": 30,
   "fail": 0,
   "ok": true,
-  "points": 21.473639475383838,
-  "sha256": "8809a9afcca258ec88e14e4cf78a9567d5b19b42ae4eb101df6cda60f0ae97e3",
+  "points": 21.598802618337846,
+  "sha256": "d70de9643f16b33533ad46534a3852dc81a5db5017320c2c9733882de9ef600c",
   "task": 56,
-  "updated": "verify"
+  "updated": "20260712T140248Z"
  },
  "057": {
   "cost": 668,
@@ -513,13 +513,13 @@
   "updated": "verify"
  },
  "058": {
-  "cost": 1033,
+  "cost": 213,
   "fail": 0,
   "ok": true,
-  "points": 18.05977753088036,
-  "sha256": "a84154ad71bd2d36f4517fb6b177978f473d38a0e908a86c2a789fb9f6d8be7a",
+  "points": 19.638707834290575,
+  "sha256": "8bf294b6d0f7157c902cc88a09bb647b7553cadf9c211da1f1982a8dc61c8461",
   "task": 58,
-  "updated": "verify"
+  "updated": "20260712T140109Z"
  },
  "059": {
   "cost": 510,
@@ -531,13 +531,13 @@
   "updated": "verify"
  },
  "060": {
-  "cost": 362,
+  "cost": 129,
   "fail": 0,
   "ok": true,
-  "points": 19.10835578817423,
-  "sha256": "a0a71eefab8b892d2d3dc360dfcee40620fb32d762b827159f1c0af5cdb9b49a",
+  "points": 20.140187595638327,
+  "sha256": "0a68d150f2eb578e63cabb7e9e741bfdbf68ae40b15cbc3a94d244d15d58f842",
   "task": 60,
-  "updated": "20260712T025828Z"
+  "updated": "20260712T140127Z"
  },
  "061": {
   "cost": 1617,
@@ -576,22 +576,22 @@
   "updated": "verify"
  },
  "065": {
-  "cost": 638,
+  "cost": 598,
   "fail": 0,
   "ok": true,
-  "points": 18.54166171665521,
-  "sha256": "b8b434ac832a270191b343a343693a2fb0e3863c40778cabaf753110e319bb51",
+  "points": 18.606409246049367,
+  "sha256": "042d4e0dd24cca8031aea65dfed802be18dff7d8c377ba5ccb6d3d67be507f39",
   "task": 65,
-  "updated": "verify"
+  "updated": "20260712T140250Z"
  },
  "066": {
-  "cost": 10121,
+  "cost": 5254,
   "fail": 0,
   "ok": true,
-  "points": 15.777632247811098,
-  "sha256": "6d79db7311e5ae3f3d4a444ba9b423341d167d8c6cd6a4dee100f92e71cffeaf",
+  "points": 16.433255029754513,
+  "sha256": "bf9a311d8daedd38be73d63ddc25622e0699db0b793abdf5db5011fdc1cc010c",
   "task": 66,
-  "updated": "verify"
+  "updated": "20260712T141554Z"
  },
  "067": {
   "cost": 0,
@@ -639,22 +639,22 @@
   "updated": "verify"
  },
  "072": {
-  "cost": 367,
+  "cost": 180,
   "fail": 0,
   "ok": true,
-  "points": 19.09463815194543,
-  "sha256": "16f61918fc5946be87414d1beacc175ed38426fb448d7bcefda7aaf0ad14275f",
+  "points": 19.807043149109788,
+  "sha256": "670043c6db8c102a8a6f74eef540c9535c32115f710a13f38ca0e43b019f3189",
   "task": 72,
-  "updated": "20260711T140351Z"
+  "updated": "20260712T140144Z"
  },
  "073": {
-  "cost": 40,
+  "cost": 24,
   "fail": 0,
   "ok": true,
-  "points": 21.311120545886062,
-  "sha256": "81896f6e119ec944101a24d82133eed0b4642e88bf9e25e110ce15f3130a0e88",
+  "points": 21.821946169652055,
+  "sha256": "ac704419012fdb4ad9b3d016b19131dc20aad28cf8867e4d0121fee4f26f6102",
   "task": 73,
-  "updated": "verify"
+  "updated": "20260712T140202Z"
  },
  "074": {
   "cost": 1814,
@@ -666,13 +666,13 @@
   "updated": "20260712T035418Z"
  },
  "075": {
-  "cost": 766,
+  "cost": 559,
   "fail": 0,
   "ok": true,
-  "points": 18.358817830259408,
-  "sha256": "3abec89772b563bee8ad23a1d57a120cf9f1ac54ceb5ecf04d09fd189933bdb5",
+  "points": 18.6738505268449,
+  "sha256": "095323a361a64eb2266036f1cd6af64e65a253c021c8cca727dceab40e491e94",
   "task": 75,
-  "updated": "verify"
+  "updated": "20260712T140216Z"
  },
  "076": {
   "cost": 12795,
@@ -693,22 +693,22 @@
   "updated": "verify"
  },
  "078": {
-  "cost": 900,
+  "cost": 82,
   "fail": 0,
   "ok": true,
-  "points": 18.197605236675688,
-  "sha256": "d4319eb672a4170d4e0bea250d395c0f61c083e6a30fccf96c111451fc841a39",
+  "points": 20.593280752735748,
+  "sha256": "54db7a9ffcc7777a96dc05b7d3a9d2f0dc81c7eb53dd57eeba37688fd03b287f",
   "task": 78,
-  "updated": "20260712T060609Z"
+  "updated": "20260712T140053Z"
  },
  "079": {
-  "cost": 3103,
+  "cost": 758,
   "fail": 0,
   "ok": true,
-  "points": 16.959875335551622,
-  "sha256": "d3f5fad0d0e9caa3109c5cfa6fbfdc4bac5e63298d260ae973a5f9e2fb6ee65a",
+  "points": 18.36931661435763,
+  "sha256": "834fe149b126376ade77a246b1ebcebf8e6abc31472d84d4881c07eaa630ad31",
   "task": 79,
-  "updated": "verify"
+  "updated": "20260712T141554Z"
  },
  "080": {
   "cost": 6686,
@@ -747,13 +747,13 @@
   "updated": "verify"
  },
  "084": {
-  "cost": 833,
+  "cost": 419,
   "fail": 0,
   "ok": true,
-  "points": 18.274966357833158,
-  "sha256": "a0a97f8ef6159285e03f7d83e753595a71a496d7c3a329306cc1331ee08b6d8c",
+  "points": 18.96212908007786,
+  "sha256": "fbcbf92e71bb9e0a9e46d9b392dadb472a8d79b9fe45400b5df490dda1250232",
   "task": 84,
-  "updated": "20260712T055712Z"
+  "updated": "20260712T141554Z"
  },
  "085": {
   "cost": 2234,
@@ -792,13 +792,13 @@
   "updated": "20260712T030136Z"
  },
  "089": {
-  "cost": 6715,
+  "cost": 3517,
   "fail": 0,
   "ok": true,
-  "points": 16.187900891042663,
-  "sha256": "10f9cad2991ac34554ad8f2f7ee9645f186cd18b15e6096f5f4b423dd32395e4",
+  "points": 16.834636367526016,
+  "sha256": "c1061a80819e8b6d8085da714e88ac10ad70b54015ca2f45607014be1d230bc7",
   "task": 89,
-  "updated": "verify"
+  "updated": "20260712T140158Z"
  },
  "090": {
   "cost": 3053,
@@ -810,13 +810,13 @@
   "updated": "verify"
  },
  "091": {
-  "cost": 2764,
+  "cost": 2355,
   "fail": 0,
   "ok": true,
-  "points": 17.07556581511244,
-  "sha256": "99f1ee6645ba95d504fd3bb7b55252f8b536a2b231aa398afc4024020354cb63",
+  "points": 17.235703993549482,
+  "sha256": "a23853b8be371895f6525cc1465195d4241acd3bf6e3f09ba068254932bb4a13",
   "task": 91,
-  "updated": "verify"
+  "updated": "20260712T140248Z"
  },
  "092": {
   "cost": 956,
@@ -828,13 +828,13 @@
   "updated": "20260712T030001Z"
  },
  "093": {
-  "cost": 3332,
+  "cost": 1656,
   "fail": 0,
   "ok": true,
-  "points": 16.888671996713267,
-  "sha256": "00fd749bfb24956d282e71249073fdfddaf6477ee28c11d41074dfe416af46c4",
+  "points": 17.587839665054794,
+  "sha256": "f6912b5fd5b4f7bf104a821965844d543f4f3375485644ffc2c35cdfad230a6b",
   "task": 93,
-  "updated": "verify"
+  "updated": "20260712T140146Z"
  },
  "094": {
   "cost": 1128,
@@ -846,13 +846,13 @@
   "updated": "verify"
  },
  "095": {
-  "cost": 345,
+  "cost": 208,
   "fail": 0,
   "ok": true,
-  "points": 19.15645558296864,
-  "sha256": "fe61fee3b9c399e63e65e4acb22dde54bf9dda8c6e2a23e11f110130dfd49a63",
+  "points": 19.662461920298682,
+  "sha256": "05651c20d66acf86fd6952b5887f6e9aed7f0de06a2a12ba19bedb4792f3fd73",
   "task": 95,
-  "updated": "verify"
+  "updated": "20260712T141554Z"
  },
  "096": {
   "cost": 7678,
@@ -882,22 +882,22 @@
   "updated": "verify"
  },
  "099": {
-  "cost": 1899,
+  "cost": 504,
   "fail": 0,
   "ok": true,
-  "points": 17.450917289187714,
-  "sha256": "ab94772539ef0dbfdc58037072177708007665f218165e04cac7062f626749df",
+  "points": 18.777423731928632,
+  "sha256": "6c419ff35ddc8651209c1ac5f32b0f2aecce69501cd274348e10c97a469bcfed",
   "task": 99,
-  "updated": "verify"
+  "updated": "20260712T140112Z"
  },
  "100": {
-  "cost": 343,
+  "cost": 183,
   "fail": 0,
   "ok": true,
-  "points": 19.16226955283406,
-  "sha256": "d5fc8bcb730a3d00a25ba7e55d842596bdc72e5239d1fc22083e741e4b49fc8b",
+  "points": 19.79051384715858,
+  "sha256": "ca221eee6f25754161b6d2d14f91d15def8fc33898f32e4babd189bb766cd56f",
   "task": 100,
-  "updated": "verify"
+  "updated": "20260712T141555Z"
  },
  "101": {
   "cost": 12973,
@@ -927,22 +927,22 @@
   "updated": "verify"
  },
  "104": {
-  "cost": 238,
+  "cost": 118,
   "fail": 0,
   "ok": true,
-  "points": 19.527729326328526,
-  "sha256": "595cfba158a07e3ef2ad7265617d3368d61db512ca7b262d4ce3faf39fca50cc",
+  "points": 20.229315375534334,
+  "sha256": "34571a7d5ea37c04e7562fe7ab21d293de3197cf9746aa02dec81bacda25d84c",
   "task": 104,
-  "updated": "verify"
+  "updated": "20260712T140146Z"
  },
  "105": {
-  "cost": 2849,
+  "cost": 1467,
   "fail": 0,
   "ok": true,
-  "points": 17.045276665502094,
-  "sha256": "a29ca6b3f63d41f8fb02f71ab7ad8899e3767c5e5c31979a1866856d44fd8a9d",
+  "points": 17.70902522185702,
+  "sha256": "0bfd8e36dea78bf5007156c7822749131a60d8f6bc5d8a5451ea2e0d4ced06be",
   "task": 105,
-  "updated": "verify"
+  "updated": "20260712T141555Z"
  },
  "106": {
   "cost": 626,
@@ -963,13 +963,13 @@
   "updated": "verify"
  },
  "108": {
-  "cost": 300,
+  "cost": 150,
   "fail": 0,
   "ok": true,
-  "points": 19.2962175253438,
-  "sha256": "4d857e771a6685c81102d5df031017eb54270e27be36ee3bf5387a6b9f375eb1",
+  "points": 19.989364705903746,
+  "sha256": "8dfa6aeacd8d07fa91a5ea79895e7246064d03a81ddf591b1c455b068b85a82c",
   "task": 108,
-  "updated": "verify"
+  "updated": "20260712T140155Z"
  },
  "109": {
   "cost": 1280,
@@ -1017,13 +1017,13 @@
   "updated": "verify"
  },
  "114": {
-  "cost": 516,
+  "cost": 251,
   "fail": 0,
   "ok": true,
-  "points": 18.753893234518436,
-  "sha256": "5ba418cee503066c4ca3062dd7be3fc1ed4f09e7044a379195d571386209818e",
+  "points": 19.47454706086822,
+  "sha256": "03c90fe4b741434e2004400ec23e6f7e9d9052d1046e6c662d33e7d0f06c44bd",
   "task": 114,
-  "updated": "20260712T030001Z"
+  "updated": "20260712T140144Z"
  },
  "115": {
   "cost": 1014,
@@ -1053,13 +1053,13 @@
   "updated": "verify"
  },
  "118": {
-  "cost": 12282,
+  "cost": 8699,
   "fail": 0,
   "ok": true,
-  "points": 15.584109945110656,
-  "sha256": "853d7e92044414765ace7f061ffca8a59da1e8f4876c0750e7760beeb91584f8",
+  "points": 15.92903664449246,
+  "sha256": "f3b7cfd77d55353ff522b7d172b7dd38a46ac5f3df585dcc1a837c8e96c37247",
   "task": 118,
-  "updated": "verify"
+  "updated": "20260712T141555Z"
  },
  "119": {
   "cost": 1363,
@@ -1089,13 +1089,13 @@
   "updated": "verify"
  },
  "122": {
-  "cost": 810,
+  "cost": 803,
   "fail": 0,
   "ok": true,
-  "points": 18.302965752333517,
-  "sha256": "9051f8398be34a6aed760ae16f17c724288178aa77495b14c8cb4f8764309023",
+  "points": 18.31164528605324,
+  "sha256": "fb7d6bec9264605bf20d1c55db2c54c4c7e9c791d00e243876a08b14de372276",
   "task": 122,
-  "updated": "verify"
+  "updated": "20260712T140252Z"
  },
  "123": {
   "cost": 631,
@@ -1161,13 +1161,13 @@
   "updated": "verify"
  },
  "130": {
-  "cost": 30,
+  "cost": 20,
   "fail": 0,
   "ok": true,
-  "points": 21.598802618337846,
-  "sha256": "7ddd773493bf2587be0e83ea9e7fda5c3e443b05a960094b8d40c09962622c9b",
+  "points": 22.00426772644601,
+  "sha256": "762e3c85180c7c15ce85f0d0c06fa77cc2f107de6901dfa4ddd08eb3889e99a0",
   "task": 130,
-  "updated": "verify"
+  "updated": "20260712T141555Z"
  },
  "131": {
   "cost": 3874,
@@ -1179,13 +1179,13 @@
   "updated": "verify"
  },
  "132": {
-  "cost": 2437,
+  "cost": 1260,
   "fail": 0,
   "ok": true,
-  "points": 17.201476946374793,
-  "sha256": "e7647fb858948c909329dd5f5616b9fa54b9930c0c05e9f25c282d026b0efc7c",
+  "points": 17.861133000054476,
+  "sha256": "a8b6a771c3b1b30dfd0ff9d884ecb5fe8de188009f0f476279f3ef7ef68a9fa2",
   "task": 132,
-  "updated": "verify"
+  "updated": "20260712T140157Z"
  },
  "133": {
   "cost": 19800,
@@ -1242,13 +1242,13 @@
   "updated": "verify"
  },
  "139": {
-  "cost": 904,
+  "cost": 389,
   "fail": 0,
   "ok": true,
-  "points": 18.193170639607825,
-  "sha256": "476627b23abdbe5d2960135fdfb519fc099b8918eeb257323a777cc99fd209ed",
+  "points": 19.036420656381555,
+  "sha256": "91725ddf78a35b874457f16c14b2a51738da36067a69ce5d43a5ef12def23d8e",
   "task": 139,
-  "updated": "verify"
+  "updated": "20260712T140130Z"
  },
  "140": {
   "cost": 5,
@@ -1278,22 +1278,22 @@
   "updated": "verify"
  },
  "143": {
-  "cost": 837,
+  "cost": 776,
   "fail": 0,
   "ok": true,
-  "points": 18.270175929510525,
-  "sha256": "c1d1531b12372e17f7fec8ff19b05b78fcd32061efb7dce318a3cd7fc0d1e221",
+  "points": 18.345847479816783,
+  "sha256": "7d0b7a81cebfe4ca62b676f4e099573d3ecddaabc5bdcb81e62c662cba46bd7e",
   "task": 143,
-  "updated": "verify"
+  "updated": "20260712T140250Z"
  },
  "144": {
-  "cost": 104,
+  "cost": 100,
   "fail": 0,
   "ok": true,
-  "points": 20.35560910085863,
-  "sha256": "4dcb2a2bfa3e7220f12863a4768cff115a957a78fc85fde9c159a9547088f809",
+  "points": 20.394829814011906,
+  "sha256": "462fd3f5d0b79a6ad38365ef1feb3b31535ed5412d0ffa61aa5ff2e835be28f0",
   "task": 144,
-  "updated": "verify"
+  "updated": "20260712T140251Z"
  },
  "145": {
   "cost": 10492,
@@ -1341,13 +1341,13 @@
   "updated": "verify"
  },
  "150": {
-  "cost": 138,
+  "cost": 135,
   "fail": 0,
   "ok": true,
-  "points": 20.072746314842796,
-  "sha256": "b28ff85cfe8d7667bebd83ac11f5ec934a75054b4d7f06ca43e4f0e98ebf0ffb",
+  "points": 20.09472522156157,
+  "sha256": "e399c6d31e3ba25c4562a6c87e71e032986bf13b6dbd5088e0fba03f04c11add",
   "task": 150,
-  "updated": "verify"
+  "updated": "20260712T140251Z"
  },
  "151": {
   "cost": 900,
@@ -1359,13 +1359,13 @@
   "updated": "verify"
  },
  "152": {
-  "cost": 90,
+  "cost": 60,
   "fail": 0,
   "ok": true,
-  "points": 20.500190329669735,
-  "sha256": "54bc32a1ef4228ed1c17147afe1ca1a698e8ea140f79fd1373e3ad25e4518858",
+  "points": 20.9056554377779,
+  "sha256": "4f3a8da74d042fc39dfb17b8ae9d4c2ec629ff1aa50b1f7c2f9ce280c3d0e88f",
   "task": 152,
-  "updated": "verify"
+  "updated": "20260712T140208Z"
  },
  "153": {
   "cost": 778,
@@ -1386,40 +1386,40 @@
   "updated": "verify"
  },
  "155": {
-  "cost": 142,
+  "cost": 138,
   "fail": 0,
   "ok": true,
-  "points": 20.04417294239874,
-  "sha256": "b38282884870cf44bd64adcf32643189614bdb617a954cc2a2522c60281ec663",
+  "points": 20.072746314842796,
+  "sha256": "0faf6dbc5525fca74bf5f2e0335d3a0691b1edcd44f0463c4c8148d20e1fd979",
   "task": 155,
-  "updated": "verify"
+  "updated": "20260712T140251Z"
  },
  "156": {
-  "cost": 1539,
+  "cost": 1367,
   "fail": 0,
   "ok": true,
-  "points": 17.66111186616112,
-  "sha256": "92adabae5edca08b0a768d5354a9c2322deee4fe222ccd3cb9c4828500dd1801",
+  "points": 17.77962616327605,
+  "sha256": "7bd0ac76d90e45d6a55c512278b7acc63ce8081d538b02c5bc9f4246edcd9e14",
   "task": 156,
-  "updated": "20260712T051056Z"
+  "updated": "20260712T140248Z"
  },
  "157": {
-  "cost": 6818,
+  "cost": 4039,
   "fail": 0,
   "ok": true,
-  "points": 16.17267854730215,
-  "sha256": "b0094062d29d7ee7e26b8daf1a976efaac9e853ddb22da22fc5fa526a750be4a",
+  "points": 16.696247584436588,
+  "sha256": "14f7ecf0fa38c088cdaeed1d5f142bcf04082d4d54600159f2e7e05fa3a7cc6a",
   "task": 157,
-  "updated": "20260712T030142Z"
+  "updated": "20260712T141556Z"
  },
  "158": {
-  "cost": 20329,
+  "cost": 18560,
   "fail": 0,
   "ok": true,
-  "points": 15.080196282978935,
-  "sha256": "698e35d6b8b225afcaae718798acb805f88a1a943b2a5009cfb1b2c26e8e7435",
+  "points": 15.171235993659808,
+  "sha256": "b3be1ca261dfb2a6c499594461c0036280f0e05e0c233ba9e7126874bad8f32b",
   "task": 158,
-  "updated": "verify"
+  "updated": "20260712T141556Z"
  },
  "159": {
   "cost": 1006,
@@ -1440,13 +1440,13 @@
   "updated": "verify"
  },
  "161": {
-  "cost": 1340,
+  "cost": 275,
   "fail": 0,
   "ok": true,
-  "points": 17.79957510705504,
-  "sha256": "c836fb9bdcd749678cfaa212eebce4ebd5a0373460c2b3621c17e1bd4c521589",
+  "points": 19.38322890233343,
+  "sha256": "f091c4b4b8f20e71d23b1ec2f5dd94a9b2637359bcc3414f826f1c13d8f2cea8",
   "task": 161,
-  "updated": "verify"
+  "updated": "20260712T141556Z"
  },
  "162": {
   "cost": 3500,
@@ -1458,13 +1458,13 @@
   "updated": "verify"
  },
  "163": {
-  "cost": 1797,
+  "cost": 310,
   "fail": 0,
   "ok": true,
-  "points": 17.50612611321644,
-  "sha256": "bd13d8ccaa501c005fdc553b06e8fbe827612dc6689d8917f1551365e5f75cb2",
+  "points": 19.263427702520808,
+  "sha256": "d784d1c2166c70d4255aa51164f685d47b12b3f17a075424b740d7bfcd5bf64a",
   "task": 163,
-  "updated": "verify"
+  "updated": "20260712T140059Z"
  },
  "164": {
   "cost": 30,
@@ -1494,13 +1494,13 @@
   "updated": "verify"
  },
  "167": {
-  "cost": 146,
+  "cost": 75,
   "fail": 0,
   "ok": true,
-  "points": 20.016393378291664,
-  "sha256": "e9b26cbc8bf2c2bf3a198186c75383cb3cc1b6aa3710c7c0e91eae7c49784a4d",
+  "points": 20.68251188646369,
+  "sha256": "8eed41c53ef36cb09a52800dcefd1993c6d73394314b4262bd06b20740b1faa2",
   "task": 167,
-  "updated": "verify"
+  "updated": "20260712T140157Z"
  },
  "168": {
   "cost": 2237,
@@ -1530,13 +1530,13 @@
   "updated": "verify"
  },
  "171": {
-  "cost": 435,
+  "cost": 414,
   "fail": 0,
   "ok": true,
-  "points": 18.924653968911315,
-  "sha256": "92fc2a7657ebe197967ba5109cfbfe6329ed0bb5b5a03d225e16880e09f9b862",
+  "points": 18.974134026174685,
+  "sha256": "287686e01d941b40761423ff9aec462d662fd465ec8df8207d055529b19332fa",
   "task": 171,
-  "updated": "verify"
+  "updated": "20260712T140251Z"
  },
  "172": {
   "cost": 30,
@@ -1638,13 +1638,13 @@
   "updated": "verify"
  },
  "183": {
-  "cost": 1024,
+  "cost": 800,
   "fail": 0,
   "ok": true,
-  "points": 18.068528194400546,
-  "sha256": "bb4cfc4ace6bfd71dfecbf1fea89d780d74f15e5759e562d5661352f0701b936",
+  "points": 18.315388272332072,
+  "sha256": "5980404bc12b0311e166edc94d0384f6141ead2990d6a9182d0d52f88197d929",
   "task": 183,
-  "updated": "verify"
+  "updated": "20260712T140232Z"
  },
  "184": {
   "cost": 1860,
@@ -1683,13 +1683,13 @@
   "updated": "verify"
  },
  "188": {
-  "cost": 764,
+  "cost": 113,
   "fail": 0,
   "ok": true,
-  "points": 18.361432210833478,
-  "sha256": "efce94591d90d91b418f893866e91a4c42e684031389dfd328731d679412cbfe",
+  "points": 20.27261218128766,
+  "sha256": "2e1b539d0a0ee2347b478ef89676386b8300170cc3a2d8a006beb27f99450b09",
   "task": 188,
-  "updated": "20260711T152157Z"
+  "updated": "20260712T141557Z"
  },
  "189": {
   "cost": 892,
@@ -1701,13 +1701,13 @@
   "updated": "verify"
  },
  "190": {
-  "cost": 2355,
+  "cost": 1656,
   "fail": 0,
   "ok": true,
-  "points": 17.235703993549482,
-  "sha256": "86bb87092fa008d9af2f5d9381bd79f70fdb5578dad4d7bebd7ab9cce9c65cc4",
+  "points": 17.587839665054794,
+  "sha256": "4f8517b2904e99d8523a7d70fd608d1a78b709a00b1cb40b52198f151dcdd6bc",
   "task": 190,
-  "updated": "verify"
+  "updated": "20260712T140209Z"
  },
  "191": {
   "cost": 11044,
@@ -1746,13 +1746,13 @@
   "updated": "verify"
  },
  "195": {
-  "cost": 921,
+  "cost": 338,
   "fail": 0,
   "ok": true,
-  "points": 18.174539963744692,
-  "sha256": "c0dfb9d0d286adb136519283db45d4f35b9329ec5b0bdef9f690bc6c0d507b64",
+  "points": 19.17695410451698,
+  "sha256": "643dcc7504dee348d8475d0fb46318406822c65c2cb85b392fcf01f53db682ed",
   "task": 195,
-  "updated": "verify"
+  "updated": "20260712T140127Z"
  },
  "196": {
   "cost": 4536,
@@ -1773,22 +1773,22 @@
   "updated": "verify"
  },
  "198": {
-  "cost": 11410,
+  "cost": 7922,
   "fail": 0,
   "ok": true,
-  "points": 15.657754557143878,
-  "sha256": "e216b70b4262379c312ade1ad325dbc24244c2ad96881238dd70bc0e9db673fe",
+  "points": 16.02260102181814,
+  "sha256": "f91d74e1e9ed867584bfb477ee8c84532b0876cbc954c616500f2597f8d5a2ec",
   "task": 198,
-  "updated": "verify"
+  "updated": "20260712T140209Z"
  },
  "199": {
-  "cost": 1613,
+  "cost": 906,
   "fail": 0,
   "ok": true,
-  "points": 17.61414892187479,
-  "sha256": "c80a2095a7df27d1208a4c22589b5d6cc15fc21048222fe557fd580dfcbc2541",
+  "points": 18.19096069395702,
+  "sha256": "70c45c7fe6a3ca13189e0d9c9c82839668b0ce07b21f4cfbad68b11ba039fbbf",
   "task": 199,
-  "updated": "verify"
+  "updated": "20260712T140201Z"
  },
  "200": {
   "cost": 623,
@@ -1809,22 +1809,22 @@
   "updated": "verify"
  },
  "202": {
-  "cost": 2457,
+  "cost": 2023,
   "fail": 0,
   "ok": true,
-  "points": 17.19330362747882,
-  "sha256": "60b5602c07c659fbee76172a356d6b7955a8f12bed72baa76c1bb8264bc422f8",
+  "points": 17.387663162832254,
+  "sha256": "f88b273a4f17da68fec200b8c3666dd48e3d20668043d7b7fb6f22497d1f094e",
   "task": 202,
-  "updated": "20260712T051221Z"
+  "updated": "20260712T140236Z"
  },
  "203": {
-  "cost": 353,
+  "cost": 216,
   "fail": 0,
   "ok": true,
-  "points": 19.133531943066703,
-  "sha256": "235adb8f7be38f47a416a90a05c4225d5a18d299e1905d7d164999df9769c486",
+  "points": 19.624721592315836,
+  "sha256": "45f547e4ec9b55f592b273d418dfa6304c0efea40015d1964ded0b64e60957a8",
   "task": 203,
-  "updated": "verify"
+  "updated": "20260712T140204Z"
  },
  "204": {
   "cost": 10232,
@@ -1836,31 +1836,31 @@
   "updated": "verify"
  },
  "205": {
-  "cost": 3760,
+  "cost": 2084,
   "fail": 0,
   "ok": true,
-  "points": 16.76782576361606,
-  "sha256": "01cd89c619c3f2535f16d1c2ae773ec37dcb785e2fddcd14c2e26ba5320712ef",
+  "points": 17.357955597126743,
+  "sha256": "a695b2481d6664c45e950ba07ba13c5fca443bc45e88c38a91c67ed92dc26fd8",
   "task": 205,
-  "updated": "verify"
+  "updated": "20260712T141557Z"
  },
  "206": {
-  "cost": 1795,
+  "cost": 1783,
   "fail": 0,
   "ok": true,
-  "points": 17.507239699077623,
-  "sha256": "89758cf1c05c121ede922ee1d582855f15a04c91af36c6269bfaba5db7eb3e4c",
+  "points": 17.51394738213686,
+  "sha256": "a7c394dda9677b3f96368649b1aa9fef61188a297617ad85cd040714f4fadcd0",
   "task": 206,
-  "updated": "verify"
+  "updated": "20260712T140253Z"
  },
  "207": {
-  "cost": 236,
+  "cost": 114,
   "fail": 0,
   "ok": true,
-  "points": 19.53616819497439,
-  "sha256": "6fc9334a1ef11aa477e7d36866689101711a61905993040b632a8ec5c3163cce",
+  "points": 20.263801551605503,
+  "sha256": "9e0a7637b2d2f2df565e935d65e29691bf75e5e9531b1e7d411245e804f02a0e",
   "task": 207,
-  "updated": "verify"
+  "updated": "20260712T140142Z"
  },
  "208": {
   "cost": 4172,
@@ -1872,13 +1872,13 @@
   "updated": "verify"
  },
  "209": {
-  "cost": 7775,
+  "cost": 7609,
   "fail": 0,
   "ok": true,
-  "points": 16.041331262952568,
-  "sha256": "8bc1a4aaa947232cac23526b9371644644e7c20b4c0f81789413e2de64a907db",
+  "points": 16.06291296382348,
+  "sha256": "8e0693495c92bc40c7a4f87b75577694e75a283e6bbda170f02291c5d7475c6e",
   "task": 209,
-  "updated": "verify"
+  "updated": "20260712T141558Z"
  },
  "210": {
   "cost": 30,
@@ -1890,22 +1890,22 @@
   "updated": "verify"
  },
  "211": {
-  "cost": 270,
+  "cost": 126,
   "fail": 0,
   "ok": true,
-  "points": 19.401578041001624,
-  "sha256": "f8becd26db4c6d2f4068d22a7924733976063adfb56c458cb3189e93ef9a99e2",
+  "points": 20.163718093048523,
+  "sha256": "dfe0e43453303ebda17a7787355d151ff2bcc3fa5d027d97c06833400a626c05",
   "task": 211,
-  "updated": "verify"
+  "updated": "20260712T140142Z"
  },
  "212": {
-  "cost": 2249,
+  "cost": 412,
   "fail": 0,
   "ok": true,
-  "points": 17.281759048040684,
-  "sha256": "14a35d55317bd16388d4b9fe5a0cc2f77ce954fa82c0efa1145b5fa4e020657f",
+  "points": 18.978976650650473,
+  "sha256": "f5303effda475011070aa0ce6c0db01a4b934d2d788cc012c7b520a0069a6529",
   "task": 212,
-  "updated": "verify"
+  "updated": "20260712T140107Z"
  },
  "213": {
   "cost": 1850,
@@ -1971,13 +1971,13 @@
   "updated": "verify"
  },
  "220": {
-  "cost": 900,
+  "cost": 437,
   "fail": 0,
   "ok": true,
-  "points": 18.197605236675688,
-  "sha256": "b6b33c6a4477a7301bc4c211f98c967b37b155847ce8f6cbccf875a45aea36a7",
+  "points": 18.92006680490441,
+  "sha256": "b6dfd2919336138dfcae4c4b65ffbbe2d9b37cc9ed31722ba4f335a6c28772d9",
   "task": 220,
-  "updated": "verify"
+  "updated": "20260712T140144Z"
  },
  "221": {
   "cost": 805,
@@ -2007,22 +2007,22 @@
   "updated": "verify"
  },
  "224": {
-  "cost": 1737,
+  "cost": 1552,
   "fail": 0,
   "ok": true,
-  "points": 17.540085233758894,
-  "sha256": "359052523060c6536ed0dc235ad97c9cb37f185ea88c4a465ae3620504c48f14",
+  "points": 17.652700299256836,
+  "sha256": "19dc5eb3d8d60488e06a9eb8077fe28def5570ed6db2af3524f283a5e3053894",
   "task": 224,
-  "updated": "verify"
+  "updated": "20260712T140249Z"
  },
  "225": {
-  "cost": 1031,
+  "cost": 363,
   "fail": 0,
   "ok": true,
-  "points": 18.06171551598304,
-  "sha256": "3a79af740af49d322484607191c5af888b47836cacfb9b32dc11bb59335b099e",
+  "points": 19.105597165735148,
+  "sha256": "682e08ff319c04ab4d5b8b7e89294895559525a24f8a29f4167afc3e4754e610",
   "task": 225,
-  "updated": "verify"
+  "updated": "20260712T140126Z"
  },
  "226": {
   "cost": 1534,
@@ -2052,13 +2052,13 @@
   "updated": "verify"
  },
  "229": {
-  "cost": 200,
+  "cost": 180,
   "fail": 0,
   "ok": true,
-  "points": 19.701682633451963,
-  "sha256": "4e56449b9c745647452dac693c2c5e05ac04a738c3178e6b3f5af0e88001f80c",
+  "points": 19.807043149109788,
+  "sha256": "1bf0d1ce0adb7faed67a410fb441cbb55ec04af37f8edd9742a43a8257f08938",
   "task": 229,
-  "updated": "verify"
+  "updated": "20260712T140249Z"
  },
  "230": {
   "cost": 900,
@@ -2070,13 +2070,13 @@
   "updated": "verify"
  },
  "231": {
-  "cost": 219,
+  "cost": 168,
   "fail": 0,
   "ok": true,
-  "points": 19.6109282701835,
-  "sha256": "4949c61285db2ed92f428438ed56d6492f1bdbbee979548b8ec59b0c30a76996",
+  "points": 19.876036020596743,
+  "sha256": "467a0931c6aebf9800e570cf741cfed56e55136807e177fe6a4418a74104fd80",
   "task": 231,
-  "updated": "verify"
+  "updated": "20260712T140232Z"
  },
  "232": {
   "cost": 1410,
@@ -2094,7 +2094,7 @@
   "points": 14.885320027269417,
   "sha256": "865d9310c2b7a20cad0af0b29e0af67e442b90808444cfd016385b88f63b6034",
   "task": 233,
-  "updated": "20260711T182314Z"
+  "updated": "revert-tail-kaggle-regression-7394"
  },
  "234": {
   "cost": 2780,
@@ -2124,13 +2124,13 @@
   "updated": "verify"
  },
  "237": {
-  "cost": 1836,
+  "cost": 725,
   "fail": 0,
   "ok": true,
-  "points": 17.484655428819565,
-  "sha256": "81836fa92e05e9e0353de5e4d5964e41c736761f31c3d892ca252fe44b886852",
+  "points": 18.413828345145326,
+  "sha256": "6f7bfabe83cacf536476b367457edbbbb4cadac685377c305153018e9f030d9c",
   "task": 237,
-  "updated": "verify"
+  "updated": "20260712T140128Z"
  },
  "238": {
   "cost": 1935,
@@ -2169,13 +2169,13 @@
   "updated": "verify"
  },
  "242": {
-  "cost": 431,
+  "cost": 422,
   "fail": 0,
   "ok": true,
-  "points": 18.933891909896253,
-  "sha256": "6b8777811f0f4add74c097e5c18023d40c68ffa1b9519f06aa1ebf07dd671230",
+  "points": 18.95499468596399,
+  "sha256": "18963c9bb81868c1787bee15757387cd2e370259f6bff9f5a9f844b7eb4c48d6",
   "task": 242,
-  "updated": "verify"
+  "updated": "20260712T140252Z"
  },
  "243": {
   "cost": 4020,
@@ -2187,22 +2187,22 @@
   "updated": "verify"
  },
  "244": {
-  "cost": 1179,
+  "cost": 452,
   "fail": 0,
   "ok": true,
-  "points": 17.92757809946263,
-  "sha256": "8b398d9dc6482f5434637ae9f5d79135001c39d8dc9847fdb469328796ddafbd",
+  "points": 18.88631782016777,
+  "sha256": "4bea2c30df43eb74f5a389d785af7b7abfde6348dd687c36962199eb6988cb24",
   "task": 244,
-  "updated": "verify"
+  "updated": "20260712T140128Z"
  },
  "245": {
-  "cost": 2117,
+  "cost": 1297,
   "fail": 0,
   "ok": true,
-  "points": 17.342244728865133,
-  "sha256": "e489ae40fb379f61cc144ffaecf4df1d7e3430ead76c0551a5464d45a8b480aa",
+  "points": 17.832190815683557,
+  "sha256": "038b2fbe88c98810271ab655b1ff318169fc8b41e25006acf22cde6fc5c2b6b0",
   "task": 245,
-  "updated": "verify"
+  "updated": "20260712T140204Z"
  },
  "246": {
   "cost": 1128,
@@ -2232,13 +2232,13 @@
   "updated": "verify"
  },
  "249": {
-  "cost": 261,
+  "cost": 206,
   "fail": 0,
   "ok": true,
-  "points": 19.435479592677307,
-  "sha256": "402c1c8b60d27dcad03bb2270b92fc42f4f8677588bd32ef179c9306aa5ef0f6",
+  "points": 19.67212383121042,
+  "sha256": "305fe49540df24d10c50fd73f7407e0c62f35c1daec42d6661b8d3b9e2cc6e81",
   "task": 249,
-  "updated": "verify"
+  "updated": "20260712T140233Z"
  },
  "250": {
   "cost": 2123,
@@ -2259,40 +2259,40 @@
   "updated": "verify"
  },
  "252": {
-  "cost": 180,
+  "cost": 96,
   "fail": 0,
   "ok": true,
-  "points": 19.807043149109788,
-  "sha256": "62fd80cbff2e6fc88c76d8b647e96f0bd350ca79c5a5ca4c4f89277638fa3fca",
+  "points": 20.435651808532164,
+  "sha256": "a1f3f79dbaaedf0d166898641b3b0d641b2376fce8bab3ac088b5c39667c2e57",
   "task": 252,
-  "updated": "verify"
+  "updated": "20260712T140200Z"
  },
  "253": {
-  "cost": 500,
+  "cost": 395,
   "fail": 0,
   "ok": true,
-  "points": 18.78539190157781,
-  "sha256": "0491f16c4a6eb11d4f0ceb4d71ba78eef6fb2981a3c7b1b7cc2a2d748205ae74",
+  "points": 19.021114235098878,
+  "sha256": "86bf66b01c294ee76f96bb6596725a89c477ca96e2f6aed489f0ac52a2375132",
   "task": 253,
-  "updated": "verify"
+  "updated": "20260712T140233Z"
  },
  "254": {
-  "cost": 351,
+  "cost": 254,
   "fail": 0,
   "ok": true,
-  "points": 19.139213776534135,
-  "sha256": "a5d797e6373e48040c6020aae9bd9fbe085e12abb6c89f145645ea3a2b764bb1",
+  "points": 19.462665732981463,
+  "sha256": "d71b4cb3ec548150846dbf5b14a8c50d2356dd300882cbb118e02ec52f77f5e1",
   "task": 254,
-  "updated": "20260712T030152Z"
+  "updated": "20260712T140216Z"
  },
  "255": {
-  "cost": 7597,
+  "cost": 5976,
   "fail": 0,
   "ok": true,
-  "points": 16.06449128849678,
-  "sha256": "303a1b2582ff2320158b507c1d22982ab03cd6364ec302ac04bc2fff9ab6ebac",
+  "points": 16.304493273187347,
+  "sha256": "d5e491ad0f517d08ac23ed2c6d984319fa1db09ab237b5d1ed5ad1a2675d224c",
   "task": 255,
-  "updated": "verify"
+  "updated": "20260712T141558Z"
  },
  "256": {
   "cost": 2063,
@@ -2304,22 +2304,22 @@
   "updated": "verify"
  },
  "257": {
-  "cost": 400,
+  "cost": 114,
   "fail": 0,
   "ok": true,
-  "points": 19.00853545289202,
-  "sha256": "e3d95820cb38f2cd7698dae782c40fa4baebd21a2a830e141eec99aebf177566",
+  "points": 20.263801551605503,
+  "sha256": "32e5452b9089ab217e13dc4aac064b7807f9397603a66e5a5a945ffa3b0f5ef6",
   "task": 257,
-  "updated": "verify"
+  "updated": "20260712T140115Z"
  },
  "258": {
-  "cost": 160,
+  "cost": 150,
   "fail": 0,
   "ok": true,
-  "points": 19.924826184766175,
-  "sha256": "738171d54ac6fc7d6556d58aed18dd9824a66d946947eabf3cea15c4b94daa40",
+  "points": 19.989364705903746,
+  "sha256": "66f01abc7c629250bbfcdec2238603f4e6fa651d9cc9bfd06b9930e692b326ba",
   "task": 258,
-  "updated": "verify"
+  "updated": "20260712T140251Z"
  },
  "259": {
   "cost": 892,
@@ -2349,22 +2349,22 @@
   "updated": "verify"
  },
  "262": {
-  "cost": 106,
+  "cost": 74,
   "fail": 0,
   "ok": true,
-  "points": 20.336560905887932,
-  "sha256": "b869bdad5131a5984bd3abceac4fda3bcc9d5c40f0f53e3d64bd65c3e2e46952",
+  "points": 20.69593490679583,
+  "sha256": "0092601f6f6318517ba191547b677110d540870a0f16b6ee0f542f3c4b6bdc0e",
   "task": 262,
-  "updated": "verify"
+  "updated": "20260712T140209Z"
  },
  "263": {
-  "cost": 670,
+  "cost": 539,
   "fail": 0,
   "ok": true,
-  "points": 18.49272228761499,
-  "sha256": "d6ab17ba68580d5d6013ace673e487b630880281ff5fd0fe0117150763c5e0ac",
+  "points": 18.710284429091004,
+  "sha256": "ac809d749f6ae7d011d398e0f014b1a9abb0e459a5d3763ca1989110d0116b7f",
   "task": 263,
-  "updated": "verify"
+  "updated": "20260712T140234Z"
  },
  "264": {
   "cost": 1853,
@@ -2385,13 +2385,13 @@
   "updated": "verify"
  },
  "266": {
-  "cost": 311,
+  "cost": 175,
   "fail": 0,
   "ok": true,
-  "points": 19.260207087820767,
-  "sha256": "ccf8d8d5a847456696fda2699cab5171356fee1256c98ecf973ca3e1bb60bc9d",
+  "points": 19.835214026076486,
+  "sha256": "4c22e719d487685a497cb5bf4c54952a85f33be37dda111e2ef86818e3b5e3e3",
   "task": 266,
-  "updated": "verify"
+  "updated": "20260712T140201Z"
  },
  "267": {
   "cost": 358,
@@ -2439,22 +2439,22 @@
   "updated": "verify"
  },
  "272": {
-  "cost": 402,
+  "cost": 148,
   "fail": 0,
   "ok": true,
-  "points": 19.003547911380977,
-  "sha256": "45e161f4b8f305f8af41ecdd93e8a8d1448978b7145b9065294fb804b88ea8bf",
+  "points": 20.002787726235887,
+  "sha256": "7dec9a3acc9fe49a7aa493e027a894192cb626ba18b927095d953e98299de7c3",
   "task": 272,
-  "updated": "verify"
+  "updated": "20260712T140127Z"
  },
  "273": {
-  "cost": 693,
+  "cost": 580,
   "fail": 0,
   "ok": true,
-  "points": 18.458970000810098,
-  "sha256": "8f6d9cdf24dcd80b348b1e20de6ebe4d489573953bfa249a60eeaed3b2032600",
+  "points": 18.636971896459535,
+  "sha256": "c39dacb005981d5f5ddd98561f782c298008218294a45a313cf67d92504cb181",
   "task": 273,
-  "updated": "20260712T025955Z"
+  "updated": "20260712T140248Z"
  },
  "274": {
   "cost": 175,
@@ -2484,13 +2484,13 @@
   "updated": "verify"
  },
  "277": {
-  "cost": 3540,
+  "cost": 3331,
   "fail": 0,
   "ok": true,
-  "points": 16.82811799387218,
-  "sha256": "fbfca4d3aa2fd587f98dd5c1c0251d7c41d84af1335ab6955424d6c25e05c383",
+  "points": 16.888972161806322,
+  "sha256": "13e2259fa3b5e12463caf06e200d50aed016423c2631d88535965cc2ab4562f7",
   "task": 277,
-  "updated": "verify"
+  "updated": "20260712T141558Z"
  },
  "278": {
   "cost": 4505,
@@ -2547,13 +2547,13 @@
   "updated": "verify"
  },
  "284": {
-  "cost": 3089,
+  "cost": 2501,
   "fail": 0,
   "ok": true,
-  "points": 16.96439730708142,
-  "sha256": "ea3df25a706b8a67c43b8c42388dd3d6a19fc331b774e2bfa6c2fe3d96543a7e",
+  "points": 17.17555406912238,
+  "sha256": "f56d4cd53f0e4dc9ef579a1917b0855a1e50164583152c1718980e46b6f26a19",
   "task": 284,
-  "updated": "verify"
+  "updated": "20260712T140235Z"
  },
  "285": {
   "cost": 18674,
@@ -2574,22 +2574,22 @@
   "updated": "verify"
  },
  "287": {
-  "cost": 250,
+  "cost": 190,
   "fail": 0,
   "ok": true,
-  "points": 19.478539082137754,
-  "sha256": "f1f07d18b2c47886fb39cfa67c7350961d90ca07b2a1f3f70a43b73346d6c631",
+  "points": 19.752975927839515,
+  "sha256": "4d6d4d5aa45eccda3d1b31ee747cb6c7f862598eb3138401c41ef1055c64bd9b",
   "task": 287,
-  "updated": "verify"
+  "updated": "20260712T140231Z"
  },
  "288": {
-  "cost": 840,
+  "cost": 629,
   "fail": 0,
   "ok": true,
-  "points": 18.26659810816264,
-  "sha256": "cf9039aea68310374d8f46d0d45b4825b3c1a76a9ddc3eaeb7c9aeacc39a0449",
+  "points": 18.55586874329956,
+  "sha256": "67ea2e69007546355690381c1f9f2e48d183de62ed4fb6b6537ffa1cd0de2685",
   "task": 288,
-  "updated": "20260712T055725Z"
+  "updated": "20260712T140231Z"
  },
  "289": {
   "cost": 742,
@@ -2601,22 +2601,22 @@
   "updated": "verify"
  },
  "290": {
-  "cost": 355,
+  "cost": 283,
   "fail": 0,
   "ok": true,
-  "points": 19.127882210524582,
-  "sha256": "fe4571879d12667982f029cb6c5900e2747be1f16c85394c0363b108d98d7de4",
+  "points": 19.35455310235676,
+  "sha256": "963d74c814b2e1c774fd760bf74d8c4caf4ac4a54548fcc3856f081217afc462",
   "task": 290,
-  "updated": "verify"
+  "updated": "20260712T140234Z"
  },
  "291": {
-  "cost": 66,
+  "cost": 40,
   "fail": 0,
   "ok": true,
-  "points": 20.810345257973573,
-  "sha256": "68d63dc94d5e21076170e7e1196de034b8734bf11c122e26ec4636b79427b78f",
+  "points": 21.311120545886062,
+  "sha256": "de6ac36491ea45809210b1ad4e9cb26728d800b7b6cf69c2e3c6fe27184e89fa",
   "task": 291,
-  "updated": "verify"
+  "updated": "20260712T140204Z"
  },
  "292": {
   "cost": 80,
@@ -2628,22 +2628,22 @@
   "updated": "verify"
  },
  "293": {
-  "cost": 1040,
+  "cost": 40,
   "fail": 0,
   "ok": true,
-  "points": 18.053024007864583,
-  "sha256": "01ad7227785d33fc23493d9aa899ba21f404ad5f9955101fd0c7264b290917e1",
+  "points": 21.311120545886062,
+  "sha256": "9deeee9123af21f30d994cdaa2d3d75043178ba73f6e37f7487b24fb1391d39a",
   "task": 293,
-  "updated": "20260712T060615Z"
+  "updated": "20260712T140019Z"
  },
  "294": {
-  "cost": 612,
+  "cost": 601,
   "fail": 0,
   "ok": true,
-  "points": 18.583267717487672,
-  "sha256": "e6c02739d485734cb943bc3b08da23293f4be588d17fc70486f2bef5146fa98d",
+  "points": 18.601405065464792,
+  "sha256": "d54c717eade7afa6f3830590d1aa6ba498c7bec264f5425bca3fab105b967924",
   "task": 294,
-  "updated": "verify"
+  "updated": "20260712T140252Z"
  },
  "295": {
   "cost": 393,
@@ -2655,13 +2655,13 @@
   "updated": "verify"
  },
  "296": {
-  "cost": 314,
+  "cost": 90,
   "fail": 0,
   "ok": true,
-  "points": 19.25060701409175,
-  "sha256": "2031a61ecc1ef337743204429274378413d76864774ecfcc6716ae89d72e91d1",
+  "points": 20.500190329669735,
+  "sha256": "693013dcc574bbb81a7f85bba6da0389decacd5544f12162ba4c6858bc5a703e",
   "task": 296,
-  "updated": "verify"
+  "updated": "20260712T140115Z"
  },
  "297": {
   "cost": 965,
@@ -2673,13 +2673,13 @@
   "updated": "20260712T060946Z"
  },
  "298": {
-  "cost": 102,
+  "cost": 60,
   "fail": 0,
   "ok": true,
-  "points": 20.37502718671573,
-  "sha256": "ab076862e75ba6a0b86eb65518a88b33e7c41277d157dac1823a9ca1a372181d",
+  "points": 20.9056554377779,
+  "sha256": "b57713b38953acb04fb1b577a09f66058f9a2059252f89287fc175b31a28689b",
   "task": 298,
-  "updated": "20260712T030007Z"
+  "updated": "20260712T140202Z"
  },
  "299": {
   "cost": 50,
@@ -2727,13 +2727,13 @@
   "updated": "verify"
  },
  "304": {
-  "cost": 564,
+  "cost": 300,
   "fail": 0,
   "ok": true,
-  "points": 18.664945748501943,
-  "sha256": "44d7398502f8a64ecc87fadda2f25f598fe816e4ca7352249db50b70c2d8fd95",
+  "points": 19.2962175253438,
+  "sha256": "33276d90fabe23c8b107ab4823b515e1f6f91e010712549c99ce85e44fd87807",
   "task": 304,
-  "updated": "20260711T141618Z"
+  "updated": "20260712T140200Z"
  },
  "305": {
   "cost": 636,
@@ -2745,13 +2745,13 @@
   "updated": "verify"
  },
  "306": {
-  "cost": 300,
+  "cost": 220,
   "fail": 0,
   "ok": true,
-  "points": 19.2962175253438,
-  "sha256": "7e2d5154a5fd7d3ee9e1978e5653f19ff240f1ed7295525e3dbd8b447505799d",
+  "points": 19.606372453647637,
+  "sha256": "c935fce45d093602ea4b8e4a1cbf9d611539d14bc88000cc76384795c57689a1",
   "task": 306,
-  "updated": "verify"
+  "updated": "20260712T140230Z"
  },
  "307": {
   "cost": 5,
@@ -2781,13 +2781,13 @@
   "updated": "verify"
  },
  "310": {
-  "cost": 3184,
+  "cost": 593,
   "fail": 0,
   "ok": true,
-  "points": 16.934106453035724,
-  "sha256": "e8f6c2df5abd02691df06c120b9dd2e767e4152e3d955f953e4fdba6ecf8f96b",
+  "points": 18.614805601002274,
+  "sha256": "f89855549b3691e025e10ae28ef916114e84934af62f7624f8ba5fccd17dbb03",
   "task": 310,
-  "updated": "verify"
+  "updated": "20260712T140109Z"
  },
  "311": {
   "cost": 30,
@@ -2808,13 +2808,13 @@
   "updated": "verify"
  },
  "313": {
-  "cost": 188,
+  "cost": 174,
   "fail": 0,
   "ok": true,
-  "points": 19.76355803717005,
-  "sha256": "15fe921feca62a48beab0c8812f6a7f9f2bf043698651a4d41dfda912f12b21c",
+  "points": 19.84094470078547,
+  "sha256": "6f3c3b265e9049e3abf0f0d7866caebd3c42148ece0852b98cd61486dbf736fc",
   "task": 313,
-  "updated": "verify"
+  "updated": "20260712T140250Z"
  },
  "314": {
   "cost": 100,
@@ -2835,13 +2835,13 @@
   "updated": "verify"
  },
  "316": {
-  "cost": 426,
+  "cost": 406,
   "fail": 0,
   "ok": true,
-  "points": 18.94556065373063,
-  "sha256": "6de7443bad8c82d27674e8048c14d23186673951b9f96d55ab65a7748b106f89",
+  "points": 18.993646840398267,
+  "sha256": "8a59610ef415c6981a8a9d7125e3907a5de7586b40bb02c461d1fa481282c795",
   "task": 316,
-  "updated": "verify"
+  "updated": "20260712T140251Z"
  },
  "317": {
   "cost": 146,
@@ -2880,22 +2880,22 @@
   "updated": "20260712T055735Z"
  },
  "321": {
-  "cost": 300,
+  "cost": 180,
   "fail": 0,
   "ok": true,
-  "points": 19.2962175253438,
-  "sha256": "1b716b674d3e6c83874a8d9b1b7e1b16e516689ce89d92ae48474def04ea2726",
+  "points": 19.807043149109788,
+  "sha256": "5ce4cbdc653f2339cbdf91853e67c2f4f9dec1d83a993c730da26fe9ec148e68",
   "task": 321,
-  "updated": "verify"
+  "updated": "20260712T140202Z"
  },
  "322": {
-  "cost": 170,
+  "cost": 74,
   "fail": 0,
   "ok": true,
-  "points": 19.864201562949738,
-  "sha256": "4a183a15a49111ceb8e99940446d29dbc2c89c2f74e1efadb2813348a23c688e",
+  "points": 20.69593490679583,
+  "sha256": "5f9a8513d653a8fd3ea5c74440eb587bce7e2e25e3ae5b96907e99fab8d0fddc",
   "task": 322,
-  "updated": "verify"
+  "updated": "20260712T140135Z"
  },
  "323": {
   "cost": 1630,
@@ -2961,31 +2961,31 @@
   "updated": "verify"
  },
  "330": {
-  "cost": 2825,
+  "cost": 2121,
   "fail": 0,
   "ok": true,
-  "points": 17.05373635641946,
-  "sha256": "52b1dbfed9812c7d61802191ad36e5134ccdd4b0f5294056bbedc1d90e1fe677",
+  "points": 17.34035704543532,
+  "sha256": "b9e27000233af9777ab5b300fd967c78cc5bc24214c7b31eb3c2656f5157308e",
   "task": 330,
-  "updated": "verify"
+  "updated": "20260712T141558Z"
  },
  "331": {
-  "cost": 910,
+  "cost": 500,
   "fail": 0,
   "ok": true,
-  "points": 18.186555400489105,
-  "sha256": "26cae802617a30009863801a715055238fb5620f90b2a2cbd15a8fe90bf8f8ef",
+  "points": 18.78539190157781,
+  "sha256": "e923bcdc1ae6e86a044c3ca12ddf751a169c701f66820a5937a203b109fe2d80",
   "task": 331,
-  "updated": "verify"
+  "updated": "20260712T140201Z"
  },
  "332": {
-  "cost": 561,
+  "cost": 80,
   "fail": 0,
   "ok": true,
-  "points": 18.670279094477305,
-  "sha256": "a606cb8a41ec54844c2679e02af93498672686c44bf87f181f5a36330de169d5",
+  "points": 20.61797336532612,
+  "sha256": "9cc8f43825d9d730411e64532258029c695b5f5a6ff06bb543aca67424c81bf4",
   "task": 332,
-  "updated": "verify"
+  "updated": "20260712T140055Z"
  },
  "333": {
   "cost": 2371,
@@ -2997,31 +2997,31 @@
   "updated": "verify"
  },
  "334": {
-  "cost": 194,
+  "cost": 85,
   "fail": 0,
   "ok": true,
-  "points": 19.73214184093667,
-  "sha256": "3aed754b3b13af23e3649151957654ce3394467526edec8540c2299563d18d8f",
+  "points": 20.557348743509685,
+  "sha256": "8565289b4041939a61144a35cdfe36f4061b6b3cd31a47665a5bd368e4e33168",
   "task": 334,
-  "updated": "verify"
+  "updated": "20260712T140136Z"
  },
  "335": {
-  "cost": 1380,
+  "cost": 1010,
   "fail": 0,
   "ok": true,
-  "points": 17.77016122184875,
-  "sha256": "2b5f2b72577f6f760623197bfb2ab9bc4762afae945564d0bfe7ebc01cfdcc56",
+  "points": 18.082294390164694,
+  "sha256": "7ab1753a6d6407e1bd3f20115005d1a4bed20d0c51b4a00aa595cdd4bc0ad55c",
   "task": 335,
-  "updated": "verify"
+  "updated": "20260712T140217Z"
  },
  "336": {
-  "cost": 1770,
+  "cost": 1619,
   "fail": 0,
   "ok": true,
-  "points": 17.521265174432124,
-  "sha256": "7c16b8f9f66f4ac40d816c2f11e1a4183055d16568ea9f0982c5b690c48ee75e",
+  "points": 17.610436046322363,
+  "sha256": "12c05e4953dd40fa94505b89dfe70a6cc94dabd7872dc038dadc622a5676888f",
   "task": 336,
-  "updated": "20260712T061328Z"
+  "updated": "20260712T140249Z"
  },
  "337": {
   "cost": 10,
@@ -3069,13 +3069,13 @@
   "updated": "verify"
  },
  "342": {
-  "cost": 1072,
+  "cost": 611,
   "fail": 0,
   "ok": true,
-  "points": 18.022718658369254,
-  "sha256": "29162826fc46cd0fb54bdd0ac5339dce3489ffb44b35a38d4fba33e005f5523a",
+  "points": 18.584903040828404,
+  "sha256": "87f1bf4fd165b26ca667f1c5f66a9afecdff3665e1def92f4fe28da40f0efebb",
   "task": 342,
-  "updated": "verify"
+  "updated": "20260712T140201Z"
  },
  "343": {
   "cost": 756,
@@ -3087,22 +3087,22 @@
   "updated": "verify"
  },
  "344": {
-  "cost": 910,
+  "cost": 692,
   "fail": 0,
   "ok": true,
-  "points": 18.186555400489105,
-  "sha256": "ab771de30df51bdf923b28c375d49a64c1104f256e42d323f7bc824ae09457c7",
+  "points": 18.460414044382333,
+  "sha256": "1675e6f496e5f83b0c59d8d7131ca1100b8c5dc17466f22a530eca1e88774541",
   "task": 344,
-  "updated": "verify"
+  "updated": "20260712T140232Z"
  },
  "345": {
-  "cost": 1128,
+  "cost": 1110,
   "fail": 0,
   "ok": true,
-  "points": 17.971798567941995,
-  "sha256": "3453dad9acbdafe9b2f150e7c45d8c3caa0f1b7d57c4c1929653e8f2f702b8dd",
+  "points": 17.98788470569362,
+  "sha256": "7359b9e38e2f4d3c2152c34295451888b4608ff803eaf877f645835d3b86006c",
   "task": 345,
-  "updated": "verify"
+  "updated": "20260712T140252Z"
  },
  "346": {
   "cost": 1254,
@@ -3123,13 +3123,13 @@
   "updated": "verify"
  },
  "348": {
-  "cost": 842,
+  "cost": 650,
   "fail": 0,
   "ok": true,
-  "points": 18.264219985757673,
-  "sha256": "2f15b03deeac7f0398769fd8e0522ed753abcab244d05346678e560565bf55bd",
+  "points": 18.523027637110317,
+  "sha256": "3a58f237574cf4e97d8099842d24e889bbdb18a8fe49e97cf6003fae4feabae5",
   "task": 348,
-  "updated": "20260712T051838Z"
+  "updated": "20260712T140232Z"
  },
  "349": {
   "cost": 14892,
@@ -3141,22 +3141,22 @@
   "updated": "verify"
  },
  "350": {
-  "cost": 9036,
+  "cost": 428,
   "fail": 0,
   "ok": true,
-  "points": 15.891028122412106,
-  "sha256": "4fc1f47414a1dbf9bd9b89c6becc37189e1913658e09133b2f485d6dcf2ab2b9",
+  "points": 18.940876804418203,
+  "sha256": "36347083a3e94eeb3aee50bfc307b5171afa56c691e6d0bbf642399025b546e6",
   "task": 350,
-  "updated": "verify"
+  "updated": "20260712T140032Z"
  },
  "351": {
-  "cost": 1014,
+  "cost": 995,
   "fail": 0,
   "ok": true,
-  "points": 18.078341815848873,
-  "sha256": "8a0433c1268cc73fb04b445e7bbf69380fa689d364c60680a4492c0863310a3e",
+  "points": 18.097257262841406,
+  "sha256": "c657e08a27228c68249ab34f4197ff9b3b7b27601b05a0a51c415384ded11a8c",
   "task": 351,
-  "updated": "verify"
+  "updated": "20260712T140252Z"
  },
  "352": {
   "cost": 460,
@@ -3177,49 +3177,49 @@
   "updated": "verify"
  },
  "354": {
-  "cost": 2218,
+  "cost": 2064,
   "fail": 0,
   "ok": true,
-  "points": 17.295638832089686,
-  "sha256": "8a6e96a689942265d4274b33622b292fc5f56d3e36e8a525dc2fad9c803cc154",
+  "points": 17.367598873398546,
+  "sha256": "051af87bad4927423d8d962c8cc0fe0cd645b5abd69e89a4f6105d9d0191e11e",
   "task": 354,
-  "updated": "verify"
+  "updated": "20260712T140250Z"
  },
  "355": {
-  "cost": 518,
+  "cost": 274,
   "fail": 0,
   "ok": true,
-  "points": 18.75002475774052,
-  "sha256": "7442b16d350367c7ba087dd8b75f257f76ce9482e2fc68f32665be30a855b293",
+  "points": 19.38687189361193,
+  "sha256": "caabdaae57238c64eb65c1bbc8fc090bd2c127f6d9b850fa9580178d82ea3909",
   "task": 355,
-  "updated": "verify"
+  "updated": "20260712T141559Z"
  },
  "356": {
-  "cost": 1319,
+  "cost": 1220,
   "fail": 0,
   "ok": true,
-  "points": 17.815370847282686,
-  "sha256": "d363f5013096c75275c1e6f59df48295df44416510e44ad98b3f8c832c1233cf",
+  "points": 17.893393862272696,
+  "sha256": "1292065051659c4c459876e2cb867d33b078633dc5b70777947a25006f3a98c7",
   "task": 356,
-  "updated": "verify"
+  "updated": "20260712T140249Z"
  },
  "357": {
-  "cost": 291,
+  "cost": 279,
   "fail": 0,
   "ok": true,
-  "points": 19.326676732828506,
-  "sha256": "952ab4fb364629442b93bda05624d529ad2b5464efd7ed16c7c19fdf56622812",
+  "points": 19.368788218178636,
+  "sha256": "42ebe5e0ea08962858f8bd082f711a22b5996eea1510d58386b7f0e5e5f19d5c",
   "task": 357,
-  "updated": "verify"
+  "updated": "20260712T140251Z"
  },
  "358": {
-  "cost": 3798,
+  "cost": 2584,
   "fail": 0,
   "ok": true,
-  "points": 16.757770108627767,
-  "sha256": "f5fd5ba0f5d9b4520f86ea93fc857886a3d3b9dd621e6e1761a8a5d1e29e57c8",
+  "points": 17.14290613509751,
+  "sha256": "284473aaa644ef5d3a1453d6785e4b2c55b0c31b4ce9fead320ce2559419a0b9",
   "task": 358,
-  "updated": "verify"
+  "updated": "20260712T140209Z"
  },
  "359": {
   "cost": 3806,
@@ -3249,13 +3249,13 @@
   "updated": "verify"
  },
  "362": {
-  "cost": 521,
+  "cost": 121,
   "fail": 0,
   "ok": true,
-  "points": 18.744249958246634,
-  "sha256": "8c60889940a9a9bba3ae42179bea39424a771f5f78db04f10642eeb82903e23a",
+  "points": 20.20420945440326,
+  "sha256": "628facede3892e075158ac83c8f3d09092565d7120bee9204861e18d35e0916d",
   "task": 362,
-  "updated": "verify"
+  "updated": "20260712T140112Z"
  },
  "363": {
   "cost": 3550,
@@ -3276,13 +3276,13 @@
   "updated": "verify"
  },
  "365": {
-  "cost": 3091,
+  "cost": 2088,
   "fail": 0,
   "ok": true,
-  "points": 16.963750057867884,
-  "sha256": "d8d484d5de78275404b304b930b1be924a1e311c9b5395bf5134b084f52afd9f",
+  "points": 17.35603805099747,
+  "sha256": "8b8bef101b579b7b44e6c8678875c1b81ebeb204d11c054e16cb419ea78a306d",
   "task": 365,
-  "updated": "20260712T030140Z"
+  "updated": "20260712T141559Z"
  },
  "366": {
   "cost": 22211,
@@ -3294,40 +3294,40 @@
   "updated": "20260712T030139Z"
  },
  "367": {
-  "cost": 13926,
+  "cost": 13126,
   "fail": 0,
   "ok": true,
-  "points": 15.458487124497507,
-  "sha256": "f719b3a457e6aec132af040e5b898329010e991e1bdb86a5b10d56bf762ecfde",
+  "points": 15.517649724966333,
+  "sha256": "baa0bf83037552258cb394b734cd6d70a774dc23328fe4a85cd047586ece720d",
   "task": 367,
-  "updated": "verify"
+  "updated": "20260712T081102Z"
  },
  "368": {
-  "cost": 3305,
+  "cost": 1611,
   "fail": 0,
   "ok": true,
-  "points": 16.896808247714212,
-  "sha256": "bacafad9b8a011e33e22c9c1ba79ad280f96b76537447aceb7ffa4ad15862713",
+  "points": 17.615389616823027,
+  "sha256": "9051eaff449b27cf2e92207f66bbc2c60e100922844cef47d865a67cb370bbab",
   "task": 368,
-  "updated": "20260712T030138Z"
+  "updated": "20260712T140144Z"
  },
  "369": {
-  "cost": 1393,
+  "cost": 872,
   "fail": 0,
   "ok": true,
-  "points": 17.760785026220194,
-  "sha256": "15d15fcf6d0a2f8ea9c864a618fa2f79d2f343c39ba89c051a6c39429ddd0b7c",
+  "points": 18.22921057609102,
+  "sha256": "643e3357efd5d89d3d667f214c52b757cb1a5064c9d528b2ca8de70147a21f8f",
   "task": 369,
-  "updated": "verify"
+  "updated": "20260712T140204Z"
  },
  "370": {
-  "cost": 6598,
+  "cost": 3607,
   "fail": 0,
   "ok": true,
-  "points": 16.205478148211473,
-  "sha256": "b4dbd494c29ebb047e7f3247dc904f772eda5aa3531054fbd0f21d05e4ef4c0e",
+  "points": 16.80936831909646,
+  "sha256": "c5a03117601f462483d58aa02b9006f792e53b9c77502fd501481d1ad84d89c0",
   "task": 370,
-  "updated": "verify"
+  "updated": "20260712T141600Z"
  },
  "371": {
   "cost": 465,
@@ -3348,13 +3348,13 @@
   "updated": "20260712T025955Z"
  },
  "373": {
-  "cost": 60,
+  "cost": 30,
   "fail": 0,
   "ok": true,
-  "points": 20.9056554377779,
-  "sha256": "a539d7451301e6cee582a2099169ffb9a3a9e13751a3bf674b7f1fd1a3f2746f",
+  "points": 21.598802618337846,
+  "sha256": "2ab8f9622549f3016e1e6f21d2f3f83639880877ef89aef2695f9c202b967d0e",
   "task": 373,
-  "updated": "verify"
+  "updated": "20260712T140155Z"
  },
  "374": {
   "cost": 1113,
@@ -3384,31 +3384,31 @@
   "updated": "verify"
  },
  "377": {
-  "cost": 3967,
+  "cost": 1731,
   "fail": 0,
   "ok": true,
-  "points": 16.71423457948567,
-  "sha256": "c2cf84ad872ab7b3b6c84c9721b372beae52f0eec5fac1c0a4d1197d2855a600",
+  "points": 17.543545444823792,
+  "sha256": "eafb76abe8657f492f0574175e32276770df9347b2ab10141dc74b564f493cc8",
   "task": 377,
-  "updated": "verify"
+  "updated": "20260712T141600Z"
  },
  "378": {
-  "cost": 3086,
+  "cost": 1980,
   "fail": 0,
   "ok": true,
-  "points": 16.96536896707689,
-  "sha256": "40fa0cd3527deb75b04e2f56cd50d28a94f2bd0bc98fe61396c9803d5ca304dc",
+  "points": 17.40914787631142,
+  "sha256": "d9534edbbde94b6e0916add9f3488a6a7e13b27198b44a7d0a2ca501086a92e9",
   "task": 378,
-  "updated": "20260712T061328Z"
+  "updated": "20260712T140205Z"
  },
  "379": {
-  "cost": 7599,
+  "cost": 6813,
   "fail": 0,
   "ok": true,
-  "points": 16.064228061330216,
-  "sha256": "a904908933eb88fbacde05ac6648abe2cca09248d5585800fe1789cd8dfc7151",
+  "points": 16.17341216922633,
+  "sha256": "141d7af77cef0e3b226f145c95ffbf4b09460498bbcaa6317bf59758f282273c",
   "task": 379,
-  "updated": "verify"
+  "updated": "20260712T140249Z"
  },
  "380": {
   "cost": 99,
@@ -3429,13 +3429,13 @@
   "updated": "verify"
  },
  "382": {
-  "cost": 5626,
+  "cost": 4206,
   "fail": 0,
   "ok": true,
-  "points": 16.364846010950195,
-  "sha256": "7349940130cfda2dacdc91cc16f59090f6e60e18edb11a56bcdc3b0786b2c7dc",
+  "points": 16.655732643737355,
+  "sha256": "6eab7bda304bfba156351009e38cadee5e8a9d12b74f511cb89e42ecb6c44a02",
   "task": 382,
-  "updated": "verify"
+  "updated": "20260712T141600Z"
  },
  "383": {
   "cost": 2593,
@@ -3483,22 +3483,22 @@
   "updated": "20260712T061329Z"
  },
  "388": {
-  "cost": 1829,
+  "cost": 1102,
   "fail": 0,
   "ok": true,
-  "points": 17.488475351609132,
-  "sha256": "264886aa4d1050c4a2810dbe074abd7dd7882a56b49681ec63a3a0276a18ab61",
+  "points": 17.99511801028714,
+  "sha256": "f9cded9e549cdcb6682ddc1d5af37e7d7c6b25020f58ce8801537009e0c4e46b",
   "task": 388,
-  "updated": "verify"
+  "updated": "20260712T140203Z"
  },
  "389": {
-  "cost": 130,
+  "cost": 55,
   "fail": 0,
   "ok": true,
-  "points": 20.132465549544417,
-  "sha256": "0681ea20328fc88312ade626895809eb611fcc858e7114f824a58dc9254dc16a",
+  "points": 20.992666814767528,
+  "sha256": "9538f819dc1c99a64c58c63e6d0c86a6ee01c09ad7602e5e8bc10f6fffcabaa1",
   "task": 389,
-  "updated": "verify"
+  "updated": "20260712T140129Z"
  },
  "390": {
   "cost": 2699,
@@ -3519,31 +3519,31 @@
   "updated": "verify"
  },
  "392": {
-  "cost": 1310,
+  "cost": 1169,
   "fail": 0,
   "ok": true,
-  "points": 17.822217583804804,
-  "sha256": "bb5fde17be992bbe9d6305c5919b97a5e31ed0c57b537528635559c2382adb33",
+  "points": 17.936096038527932,
+  "sha256": "6414c2eda9be72073ded28a5b986a93f408c6e64505840ecdca95250d1f350c0",
   "task": 392,
-  "updated": "verify"
+  "updated": "20260712T140248Z"
  },
  "393": {
-  "cost": 144,
+  "cost": 117,
   "fail": 0,
   "ok": true,
-  "points": 20.030186700424,
-  "sha256": "3227ff5557046125c5714de1588b8aae9247b3d9730b9f0b471c80819fd50cfc",
+  "points": 20.237826065202242,
+  "sha256": "aa66a4bb3a58837d5a769b13ddd85dcfceed7dd0de4e9ae711d3e4f064b93ce6",
   "task": 393,
-  "updated": "verify"
+  "updated": "20260712T140235Z"
  },
  "394": {
-  "cost": 676,
+  "cost": 519,
   "fail": 0,
   "ok": true,
-  "points": 18.483806923957037,
-  "sha256": "e740504fef18b6ca71dccaa3da65c520751bf5ce0779606afe70ac926da15c40",
+  "points": 18.748096116834112,
+  "sha256": "56cb92840dcb831df0e040ea5db63137708fd98cf404ed180bfa2fada0817f02",
   "task": 394,
-  "updated": "verify"
+  "updated": "20260712T140232Z"
  },
  "395": {
   "cost": 165,

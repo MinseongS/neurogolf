@@ -47,3 +47,8 @@ initializer `pad_val->u8_250`.  Bundled gate fail=0.  Cost: 1896 -> 1895
 - cost: 1288 -> 842 (points 18.2642)
 - source: candidates/task348_codex/cand.onnx
 - note: codex-worktree absorb: scalar-moment sign-decode refinement of my 1288 pyramid net 1288->842 (+0.425); fresh 2500 fail=0, divergence vs my deployed 348=0; gate 265/265 fail=0
+
+## ADOPTED 20260712T140232Z
+- cost: 842 -> 650 (points 18.5230)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task348.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

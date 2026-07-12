@@ -119,3 +119,8 @@ verdict: NO cheaper build. The interval-fill half (a) is ALREADY what the deploy
 reopen: identical to the full-audit reopen triggers above (public dump < 3332; mixed-dtype Einsum;
   integer-typed input channel killing the 784 fp32 crop; sub-900B 10-ch output-expansion primitive).
 falsification history: consistent with the 2026-07-11 full-arsenal FLOOR verdict; no prior claim falsified.
+
+## ADOPTED 20260712T140146Z
+- cost: 3332 -> 1656 (points 17.5878)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task093.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

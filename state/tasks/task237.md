@@ -85,3 +85,7 @@ each plateau and `values` (nonzero only at each segment's seed) selects it. Exac
 
 ## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (sub 54367833): 1901 -> 1838 (+0.034)
 Mechanism: Einsum. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). Source-owned via live_to_exact_source --write-src, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
+## ADOPTED 20260712T140128Z
+- cost: 1836 -> 725 (points 18.4138)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task237.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

@@ -72,3 +72,8 @@ fp32 (<2^24).
 (And(chsel[1,10,1,1], colsel[1,1,1,30], rowsel[1,1,30,1])) instead of
 Pad-a-scalar→Equal — kills the [1,1,30,30] carrier entirely (largest intermediate
 becomes a [1,10,1,30] 300B bool). +0.16 here vs a uint8 Pad carrier.
+
+## ADOPTED 20260712T140204Z
+- cost: 66 -> 40 (points 21.3111)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task291.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

@@ -78,3 +78,8 @@ secondarily from uint8 downcasting.
 product — the outer product cross-talks whenever two marked cells share neither row nor col.
 ⭐ Crop offset trick: if the active region is a sub-window (rows/cols 1..7), crop to [.,.,7,7] at offset
 (1,1) and add the offset back into the index `arange` const — saves vs cropping the full grid.
+
+## ADOPTED 20260712T140202Z
+- cost: 2261 -> 1294 (points 17.8345)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task034.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

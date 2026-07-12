@@ -15,3 +15,8 @@ migrated: 2026-07-09
 **Blocker class:** full-output-carrier (tiny). The 81B `output_small` 9-channel one-hot over 3×3 is the emission; everything else is a channel-vector/3×3 read. Near floor for a 3×3 recolour.
 
 **Lever:** the output only ever uses TWO colours (the mode + grey 5), so a [1,2,3,3] one-hot (18B) plus a channel-scatter could replace the [1,9,3,3] plane (81B) — but the mode channel is data-dependent, so routing the mode one-hot to its dynamic output channel needs a scatter/Einsum that likely costs back the saving. Marginal; probe only if a cheap channel-route exists.
+
+## ADOPTED 20260712T140249Z
+- cost: 200 -> 180 (points 19.8070)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task229.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

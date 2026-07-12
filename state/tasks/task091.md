@@ -88,3 +88,8 @@ Backup before this tail: `submission/overfit_nets/.dynamic_cse_tail_backup_20260
 - cost: 2894 -> 2764 (points 17.0756)
 - source: candidates/public_dumps/20260709/neurogolf-7266-48-github-com-qurore-kaggloop/nets/task091.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260712T140248Z
+- cost: 2764 -> 2355 (points 17.2357)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task091.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

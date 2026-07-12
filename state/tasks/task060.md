@@ -23,3 +23,8 @@ pay at least one full-canvas intermediate, usually more than the 1010 params sav
 - cost: 1010 -> 362 (points 19.1084)
 - source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task060.onnx
 - note: min-merge from overfit_nets
+
+## ADOPTED 20260712T140127Z
+- cost: 362 -> 129 (points 20.1402)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task060.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

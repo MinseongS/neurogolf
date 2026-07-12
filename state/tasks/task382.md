@@ -63,3 +63,7 @@ contain a background cell, the channel-0 background slice alone gives exact W/H 
 
 
 ## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 5741 -> 5732 (+0.002); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].
+## ADOPTED 20260712T141600Z
+- cost: 5626 -> 4206 (points 16.6557)
+- source: dumps/archive_extract/submission7300+/task382.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

@@ -27,3 +27,8 @@ Dominant intermediate = padded label map Lp [1,1,30,30] uint8 = 900 B, irreducib
 
 ## INSIGHT (transferable)
 xpose (inverted-transpose) layout flag is recoverable as a SINGLE scalar from where signal can ONLY appear under one orientation (here: yellow in rows7-8 ⇔ xpose=1). Combined with FIXED per-layout window label maps, the whole task is `Where(xp_scalar, M1, M0)` then a yellow overlay — no per-cell transpose/reflection matrices, no 2-D detection. When windows are fixed-grid-aligned per a finite set of orientations, precompute one label-mask per orientation and select with a scalar.
+
+## ADOPTED 20260712T140130Z
+- cost: 904 -> 389 (points 19.0364)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task139.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

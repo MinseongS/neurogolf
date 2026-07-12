@@ -76,3 +76,8 @@ the FREE input (40B), no grid slice.
 - 1937→1310 (+0.39). ConvInteger-as-free-output: 1x1 ConvInteger pad does 10→30 placement inside free op; runtime u8 weight + w_zero_point=1 signed channel routing; constant-1 bias channel.
 - Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task392/regime.onnx. Backup: reports/candidates/fatmid_adopt_backup/task392.onnx.bak.
 - ⭐ Memory neurogolf-regime-crack-freeoutput-einsum. ⚠️ Concurrent-session collision risk on candidate dirs — always re-measure on-disk before adopt.
+
+## ADOPTED 20260712T140248Z
+- cost: 1310 -> 1169 (points 17.9361)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task392.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

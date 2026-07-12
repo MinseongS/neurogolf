@@ -150,3 +150,42 @@ Gate fresh_verify 1500: inc=25/25 (cand<=inc, safe rule). prvsiyan bundle = min-
 - cost: 6453 -> 6273 (points 16.2560)
 - source: candidates/task017/batchdims.onnx
 - note: GatherND batch_dims=2: sample_nd_idx [10,9,4]->[1,10,9,2] (-180 params; S1 lever dropped by the S10 kojimar graft, restored); bit-identical fresh 3000/0; 6453->6273 (+0.028)
+
+## ADOPTED 20260712T122220Z
+- cost: 6273 -> 10 (points 22.6974)
+- source: candidates/task017/selfeinsum.onnx
+- note: cost-10 self-einsum: degree-5 one-hot identity-vote fill (narx,napx,nbyc,nbyq,nkpq,a,b,k->nkrc + [10] channel-0 mask). Same-phase cells share exact colour; row/col identity via exact self-contraction S>0 (different-phase => S=0 exactly, no threshold). mem0 params10. 6273->10, 16.256->22.697 (+6.44). Fresh 5000/5000 numpy + ORT 300/300 exact, bundled 266/0.
+
+## ⭐⭐⭐ 2026-07-12 — COST-10 SELF-EINSUM (6273->10, 16.256->22.697, +6.44 LB) — BIGGEST SINGLE-TASK WIN
+Retires the entire template-match floor analysis above (that floor assumed the 106-tuple
+match mechanism; a one-hot self-einsum bypasses it completely). Source-owned in `src/custom/task017.py`.
+
+**Net = ONE Einsum node, zero intermediates, one [10] initializer:**
+```
+equation = "narx,napx,nbyc,nbyq,nkpq,a,b,k->nkrc"   # input reused 5x + mask reused 3x
+mask = [0,1,1,1,1,1,1,1,1,1]                          # [10], 10 params, excludes cut channel 0
+```
+mem=0 (single node output is the FREE graph output), params=10 -> cost 10, 22.697 pts.
+
+**Why it works (the mechanism, transferable):**
+1. One-hot I/O is FREE; output decoded as (out>0) so we only need correct-channel>0, rest<=0.
+2. Same-phase cells (r'==r,c'==c mod length) hold the SAME colour -> summing their one-hots
+   piles all mass on the correct channel, zero colour contamination. No period/formula recovery.
+3. Row-identity is an EXACT self-contraction: S[r,r']=sum_{k>=1,x} I[k,r,x]I[k,r',x]. Different-phase
+   rows disagree at EVERY column (a_r != a_r' mod mod => P differs everywhere) => S=0 EXACTLY.
+   Clean nonneg gate, no threshold. Transposed contraction = column gate Sc.
+4. 2D vote O[k,r,c]=sum_{p,q} S[r,p]Sc[c,q]I[k,p,q]; substitute S,Sc=einsum(I,I) => degree-5
+   variadic Einsum, all internal contractions are op-internal (uncounted).
+5. [10] mask on the a/b/k channel indices kills cut-channel-0 (both as spurious identity and as
+   output). Reused 3x but counted once = 10 params.
+
+**Gate:** bundled 266/266 fail=0. Fresh: numpy 5000/5000 exact, ORT 300/300 exact (0.000%). Slow
+(~190ms/infer, 8-operand einsum) but gate passed; per user, runtime decided at real submit, not pre-gated.
+Adopted 20260712T122220Z (candidates/task017/selfeinsum.onnx, sha 140c27ec...).
+
+⭐ TRANSFERABLE LEVER — "one-hot self-einsum identity-vote fill". Applies to ANY completion/denoise/
+fill task where (a) output is a structured grid, (b) cells that must share a value are identifiable
+by an EXACT self-contraction gate that is 0 for non-matching pairs (identical rows/cols, same phase,
+same label, same block), and (c) the >0 decode tolerates additive votes. The whole solver collapses
+to one variadic Einsum: cost = size of any channel/label mask needed (often <=10). Prime rescan
+targets: periodic/tiling/symmetry-completion, occlusion fill, consensus denoise, copy-from-matching-line.

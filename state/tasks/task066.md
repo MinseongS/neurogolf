@@ -172,3 +172,8 @@ projection form for task066.
 - cost: 10121 -> 7836 (points 16.0335)
 - source: candidates/task066/hs_pos.onnx
 - note: hash-scatter variant: position-only table (all edits 0->3; 9-bit r*20+c, 7/int64 -> packT[266,5]) + ScatterND(reduction=add) constant -1ch0/+1ch3 updates, dup-pad slots; kills nclearT/mask/update storage; 10121->7836 (+0.256)
+
+## ADOPTED 20260712T141554Z
+- cost: 10121 -> 5254 (points 16.4333)
+- source: dumps/archive_extract/submission7300+/task066.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

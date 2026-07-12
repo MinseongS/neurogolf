@@ -55,3 +55,8 @@ whole channel-reduction convs, not just downcast them. → promote to project me
   `17.86351679140975 -> 17.864312652971854`.
 - Applied to `submission/overfit_nets/task020.onnx`; backup in
   `submission/overfit_nets/.minmerge_backup/task020.onnx`. Included in submission **54461084**.
+
+## ADOPTED 20260712T140235Z
+- cost: 1256 -> 1019 (points 18.0734)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task020.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

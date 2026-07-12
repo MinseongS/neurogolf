@@ -92,3 +92,8 @@ centered half-size C=15 (= generator 최대 스탬프 오프셋; C=14는 fresh 2
 - cost: 8099 -> 6598 (points 16.2055)
 - source: candidates/public_dumps/20260709/neurogolf-7266-72-w-visualizations/nets/task370.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260712T141600Z
+- cost: 6598 -> 3607 (points 16.8094)
+- source: dumps/archive_extract/submission7300+/task370.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

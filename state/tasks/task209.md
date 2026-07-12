@@ -139,3 +139,7 @@ falsification history: SUPERSEDES the pre-redesign S8/S9 "13.357 stored unbeatab
   plateau). Wall-1 (collinear-shown offset under-determination) CONFIRMED with a concrete 2-output
   instance; Wall-2 (no cheap exact form) CONFIRMED (best-known oracle also plateaus, exact needs
   detection-floor enumeration).
+## ADOPTED 20260712T141558Z
+- cost: 7775 -> 7609 (points 16.0629)
+- source: dumps/archive_extract/submission7300+/task209.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

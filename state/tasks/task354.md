@@ -174,3 +174,8 @@ Mechanism: Einsum + value_info Slice. Gate fresh_verify 1500: inc=0/cand=0 (CLEA
 - cost: 2644 -> 2218 (points 17.2956)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task354.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260712T140250Z
+- cost: 2218 -> 2064 (points 17.3676)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task354.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

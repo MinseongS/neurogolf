@@ -51,3 +51,8 @@ Dominant intermediate = the 3600B fp32 channel slice `ch [1,9,10,10]` — the si
 - cost: 1759 -> 1000 (points 18.0922)
 - source: candidates/task041/cand.onnx
 - note: regime vein batch7: single free-output Einsum ku,bura,ac,burp,cp->bkrc — interval-fill = prefix*suffix counts vs ONE shared triangular T (double subscript reference), bg repair via mixer row F_0 - 1024*sum(F_k); mem 0. 600 fresh 0-fail. Falsifies '3600B entry / 900B carrier' floor. TRANSFERABLE: shared-triangular double-reference halves position-operand cost of interval predicates
+
+## ADOPTED 20260712T140140Z
+- cost: 1000 -> 460 (points 18.8688)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task041.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

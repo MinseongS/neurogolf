@@ -56,3 +56,8 @@ Selection criterion: any net whose output is a solid-colour rect / separable box
 30×30 bool mask or a Pad-placed fill (grep nets for a [1,1,30,30] BOOL intermediate feeding Where/Pad).
 Direct sibling of the signed-Einsum-routing lever (neurogolf-signed-einsum-routing) — this is that pattern
 realised for the unsigned single-rect case; feed the separable-rect output scanner these criteria.
+
+## ADOPTED 20260712T140200Z
+- cost: 324 -> 177 (points 19.8239)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task021.onnx
+- note: archive.zip submission7300+ net; fresh 620/0 fail; mechanism-graft

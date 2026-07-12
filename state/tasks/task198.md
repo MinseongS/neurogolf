@@ -111,3 +111,8 @@ requires another full mask/replay plane, which erases the `G_u8` deletion.
 
 Do not retry scalar line-colour replay unless a free-output construction can
 distinguish off-grid `G=0` from line pixels without a counted full plane.
+
+## ADOPTED 20260712T140209Z
+- cost: 11410 -> 7922 (points 16.0226)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task198.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

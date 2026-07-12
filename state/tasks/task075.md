@@ -59,3 +59,8 @@ Verified generator bound = 13 (in/out 9×13). Flagged `scalar30` uint8 [30,30] 9
 - 1487→766 (+0.66). WAS FLOOR earlier same day (pre-lever). Block-structured copy via mixed-radix digit tables shared source/output; extends lever to Gather/DepthToSpace assembly.
 - Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task075/regime.onnx (builder build_regime.py). Backup: reports/candidates/fatmid_adopt_backup/task075.onnx.bak.
 - ⭐ See memory neurogolf-regime-crack-freeoutput-einsum (vein taxonomy + sub-recipes). Vein list: reports/candidates/fresh_sweep/mask_dominance.json.
+
+## ADOPTED 20260712T140216Z
+- cost: 766 -> 559 (points 18.6739)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task075.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

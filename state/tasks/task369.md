@@ -60,3 +60,8 @@ spread (second plus-conv on a BLACK-GATED deg≥2 mask). The black-gate on `heav
 the spread conv is essential — a gray cell with deg≥2 otherwise leaks size-3 onto adjacent
 dominoes. Collapse the whole is1/is2/is3 select into ONE algebraic label
 `5 − 3·black + single − is3`, run fp16, and use a uint8 (not int32) Pad-routed label plane.
+
+## ADOPTED 20260712T140204Z
+- cost: 1393 -> 872 (points 18.2292)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task369.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

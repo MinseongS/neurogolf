@@ -61,3 +61,8 @@ must be all-zero one-hot (convert_to_numpy leaves them blank), NOT background ch
 
 ## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
 mem 1300/17.82; crop_f 400B min fp32 entry, 4 MaxPool span planes irreducible (Mul not Add), ConvInteger needs {0,2} symmetric zp. No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).
+
+## ADOPTED 20260712T140249Z
+- cost: 1319 -> 1220 (points 17.8934)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task356.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

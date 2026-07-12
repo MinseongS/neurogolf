@@ -52,3 +52,8 @@ in int32 (pixel counts and coords are exact integers anyway).
 - cost: 958 -> 840 (points 18.2666)
 - source: /Users/minseong/.codex/worktrees/c56e/neurogolf/candidates/task288/agent_opt/task288_scalar_identity.onnx
 - note: signed-polynomial diagonal free-output fold; fresh 2000/2000 div0
+
+## ADOPTED 20260712T140231Z
+- cost: 840 -> 629 (points 18.5559)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task288.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

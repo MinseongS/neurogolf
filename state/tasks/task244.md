@@ -63,3 +63,8 @@ scalars (lookup table keyed on the easily-detected `actual_size`, with a one-bit
 disambiguator only where the table is ambiguous), then build gather index vectors
 arithmetically and double-Gather the FREE one-hot input. Out-of-range / negative gather
 indices for the unused tail cells are harmless when masked before the final Pad-to-output.
+
+## ADOPTED 20260712T140128Z
+- cost: 1179 -> 452 (points 18.8863)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task244.onnx
+- note: archive.zip submission7300+ net; fresh 1997/0 fail; mechanism-graft

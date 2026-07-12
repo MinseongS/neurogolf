@@ -74,3 +74,8 @@ verdict: NO-FIX at smallest-change scale — exact repair = full-task rebuild of
 reopen: a dedicated rebuild session; or a public task255 net with a lower fresh-fail rate
   (fresh-A/B any future min-merge candidate before adopting).
 falsification history: none (first diagnosis of the fresh tail).
+
+## ADOPTED 20260712T141558Z
+- cost: 7597 -> 5976 (points 16.3045)
+- source: dumps/archive_extract/submission7300+/task255.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

@@ -66,3 +66,8 @@ ISOLATED fresh 200/200 and 500/500.
 ## 2026-07-09 — ⭐ REGIME CRACK ADOPTED (batch 4, 900B mask → free-output Einsum)
 - 1994→250 (+2.08, largest single regime win, mem 0). count-replaces-recovered-value: emit per-channel group-membership count, sign decode makes count the one-hot (orbit-SUM w/ noise-gate).
 - Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task287/regime.onnx. See memory neurogolf-regime-crack-freeoutput-einsum.
+
+## ADOPTED 20260712T140231Z
+- cost: 250 -> 190 (points 19.7530)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task287.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

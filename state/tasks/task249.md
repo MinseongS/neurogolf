@@ -75,3 +75,8 @@ index element costs 4 mem-bytes but a table element costs 1 param, so enlarging 
 intermediate always loses. **min_stat's headroom +1.5 (floor 64) is an over-optimistic bound** that
 ignores the mandatory int32-Gather index (120B) and the mandatory ≥80B detection read; the true
 achievable floor ≈ 287, which the incumbent already hits. **VERDICT: FLOOR. No change. Left as-is.**
+
+## ADOPTED 20260712T140233Z
+- cost: 261 -> 206 (points 19.6721)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task249.onnx
+- note: archive.zip submission7300+ net; fresh 1999/0 fail; mechanism-graft

@@ -57,3 +57,8 @@ mem 2800/16.99; root_idx int32 400B=min index buffer, ch5_f 400B forced-fp32 cro
 
 ## 20260709 — NO-WIN 재개 레저 (free-output-einsum fanout)
 092-fanout(opus 딥, 20260709): NO-WIN. per-connected-component pixel counting(connectivity closure) — separable/low-rank 아님; task295 color-count sibling도 불일치(component-count ≠ color-count). flood mask load-bearing(trim variant 게이트=28 fail, not cheaper로 실증). fp32 gray read 400B + int32 scatter idx 400B가 floor. Reopen: grader-ORT가 int16 scatter idx 허용 / free fp32 input→≤100B uint8 mask 단일 fused op.
+
+## ADOPTED 20260712T141558Z
+- cost: 2825 -> 2121 (points 17.3404)
+- source: dumps/archive_extract/submission7300+/task330.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

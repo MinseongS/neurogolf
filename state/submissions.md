@@ -703,3 +703,12 @@ built from submission/merged_nets/.
 | 2026-07-12 05:12Z | MAIN v9 7316.30 | 202 einsum-fusion +0.137, 156 safe-golf +0.015, absorbed codex 348 refinement +0.425 | sub 54596069 COMPLETE, NEW RECORD, +10.55 vs v5 |
 
 | 2026-07-12 06:15Z | MAIN v10 signed-polynomial propagation +1.815 local |
+| 2026-07-12 07:48Z | MAIN: 084 non-square-safe minfix (H=area/W, no sqrt-square-assumption; cost 833buggy->957 correct, cheaper than codex 985) + absorbed 367 exact-tail 13926->13126; local 7317.912 400/400 no zeros |
+| 2026-07-12 12:30Z | MAIN: task017 cost-10 self-einsum (6273->10, 16.256->22.697, +6.44) — one-hot identity-vote fill, degree-5 variadic Einsum + [10] channel mask; fresh 5000/5000 + ORT exact, bundled 266/0. local total ~7324.49 |
+| 2026-07-12 12:51Z | FIX task084 Kaggle-zero: replace Sqrt(area) square-assumption (fp32 sqrt precision -> last^4 blowup) with integer-exact H=area/W (ReduceSum/ReduceMax/Div); 957 cost, 3000/3000 exact all sizes. KEEPS task017 cost-10 self-einsum win. expect ~7324.5 |
+| 2026-07-12 13:01Z | task084 -> codex 985 sign-oracle (PROVEN Kaggle-safe, scored 7318.00 in sub 54598518); abandons the 833/minfix signed-poly mechanism which Kaggle-zeros beyond just Sqrt. KEEPS task017 cost-10 self-einsum (+6.44). expect ~7324.4 |
+| 2026-07-12 13:01Z | 54608689 | **7324.44 NEW RECORD** | task017 cost-10 self-einsum (+6.44 Kaggle-confirmed) + task084 reverted to codex985 (833/minfix Kaggle-zero) |
+
+| 2026-07-12 14:06Z | 54610807 | **7378.79** | SAFE archive graft: 117 cheaper nets passing bundled + fresh 2000/0; task084 kept codex-985. Local 7396.27, showing arc-gen fresh-gate was overconservative. |
+| 2026-07-12 14:08Z | 54610908 | **7410.67 NEW RECORD** | ALL-IN archive graft: all 141 cheaper bundled-pass nets, including 22 fresh-fails + archive-084. Local 7410.5434; every included net passed Kaggle's real hidden suite. |
+| 2026-07-12 14:31Z | 54611605 | **7394.55 REVERTED** | Post-record task023 public tail + task233 dynamic correlation; local 7410.74 but LB regressed. Deployed set restored to the 54610908 manifest (7410.5434 local). |

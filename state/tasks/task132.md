@@ -81,3 +81,8 @@ per-channel spatial reductions (~2400B) + the 900B uint8 label plane ⇒ ~15.8 p
 - cost: 2469 -> 2437 (points 17.2015)
 - source: candidates/task132/constfold.onnx
 - note: const-fold: cv2r Reshape(init,init) -> initializer (-40B mem +10 params) + 2 dead Cast nodes removed; bit-identical 267/267; 2469->2437
+
+## ADOPTED 20260712T140157Z
+- cost: 2437 -> 1260 (points 17.8611)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task132.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

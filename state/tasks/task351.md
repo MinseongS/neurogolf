@@ -47,3 +47,8 @@ second 225B bool/uint8 patch while keeping the 900B entry tensor, so it is
 worse.  Slicing/casting the input before coordinate recovery would materialize a
 large input plane.  No new candidate built; this is a direct input-copy floor
 unless a primitive can sample fp32 input into a smaller dtype.
+
+## ADOPTED 20260712T140252Z
+- cost: 1014 -> 995 (points 18.0973)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task351.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

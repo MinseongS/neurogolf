@@ -99,3 +99,8 @@ is NOT variadic (max 2 inputs), Min/Max/Sum are.
 (4) Falsifies triage row 058 "~300B constructor, gap ~1.2". Bitpack is at STRUCTURAL floor: cropping the
     tables forces a billed pre-pad intermediate (≥48000B), and the 10-ch column table can't shrink below
     10 (output channel dim). 058 = FLOOR at 1033.
+
+## ADOPTED 20260712T140109Z
+- cost: 1033 -> 213 (points 19.6387)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task058.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

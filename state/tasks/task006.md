@@ -65,3 +65,8 @@ Reconsidered the remaining 5-cost gap with task001-style direct-output thinking:
 Conclusion unchanged: no adoptable improvement found.  Current cost is
 `memory=126, params=27` and the blocker is ONNX representation overhead, not the
 semantic rule.
+
+## ADOPTED 20260712T140130Z
+- cost: 153 -> 66 (points 20.8103)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task006.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

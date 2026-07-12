@@ -55,3 +55,8 @@ Mechanism note: the S9 "einsum angle floor" was too broad for the deployed graph
 The detector read may still be structural, but output-coupled fp32 masks feeding
 the final free `output` can be recast when all values are fp16-exact and homogeneous
 operands are adjusted.
+
+## ADOPTED 20260712T141600Z
+- cost: 3967 -> 1731 (points 17.5435)
+- source: dumps/archive_extract/submission7300+/task377.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

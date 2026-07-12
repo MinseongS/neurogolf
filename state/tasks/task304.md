@@ -43,3 +43,8 @@ one-hot (mod-3 fold ≡ crop since input empty beyond 3×3), read2×wm2 gives
 - cost: 1320 -> 564 (points 18.6649)
 - source: candidates/task304/task304_kron_einsum.onnx
 - note: kron_fractal_einsum: fractal stamp at mode-color cells; mode one-hot only nonlinearity, wm2 runtime-stacked mask operand
+
+## ADOPTED 20260712T140200Z
+- cost: 564 -> 300 (points 19.2962)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task304.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

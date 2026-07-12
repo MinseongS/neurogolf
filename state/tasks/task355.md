@@ -119,3 +119,8 @@ Adopted into `submission/overfit_nets/task355.onnx`; backup:
 Packed and submitted as Kaggle **54463756**, completed at displayed publicScore
 **7274.89**, with message
 `active 7274.768491 task355 fp16 final output cost 538->518 after task205 fail=0 topk clean`.
+
+## ADOPTED 20260712T141559Z
+- cost: 518 -> 274 (points 19.3869)
+- source: dumps/archive_extract/submission7300+/task355.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

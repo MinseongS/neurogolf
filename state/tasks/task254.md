@@ -46,3 +46,8 @@ its active grid (escape 3) cut every working plane 11x and moved 10298→1736.
 - cost: 683 -> 351 (points 19.1392)
 - source: candidates/task254/rankeinsum.onnx
 - note: rank-machine transfer from task010 template: pair-slot summing (Sel5 [30,5] shared between free-input height einsum + free-output emission einsum), Where(nz,h,ReduceMax) constant-free min-over-nonzero, GE(mx,h5) all-ones guard row, 6-operand sign-decode einsum; 683->351 (+0.666); fresh 2500/2500 div 0 vs incumbent
+
+## ADOPTED 20260712T140216Z
+- cost: 351 -> 254 (points 19.4627)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task254.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

@@ -74,3 +74,8 @@ to 1. But this is a per-net inspection, not a fan-out lever; do not build a scan
 - cost: 3741 -> 3540 (points 16.8281)
 - source: candidates/public_dumps/20260709/neurogolf-7266-48-github-com-qurore-kaggloop/nets/task277.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260712T141558Z
+- cost: 3540 -> 3331 (points 16.8890)
+- source: dumps/archive_extract/submission7300+/task277.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

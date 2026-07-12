@@ -44,3 +44,8 @@ memory because GridSample forces fp32 on its full sampled block, whereas the
 constant-per-row structure lets you carry only one column in fp32 then go uint8.
 A small fp32 GridSample block is NOT at floor when the source is constant along the
 sampled axis — slice the one informative column instead of sampling the whole region.
+
+## ADOPTED 20260712T140155Z
+- cost: 60 -> 30 (points 21.5988)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task373.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

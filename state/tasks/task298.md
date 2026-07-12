@@ -61,3 +61,8 @@ all downstream work planes.
 - cost: 135 -> 102 (points 20.3750)
 - source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task298.onnx
 - note: min-merge from overfit_nets
+
+## ADOPTED 20260712T140202Z
+- cost: 102 -> 60 (points 20.9057)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task298.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

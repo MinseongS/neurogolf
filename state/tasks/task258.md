@@ -30,3 +30,8 @@ W = 10·5·1·3 = 150 + bias 10 = 160 → score 25−ln(160) = 19.92. Any decomp
 
 ## INSIGHT (transferable)
 ⭐ MEM-0 SINGLE-CONV-AT-FLOOR generalizes beyond cross-channel neighbourhood ops to **gap-fill / between-neighbours stamp** rules: when (a) the bg channel is a required subtractive channel (scored out>0), (b) one output colour reads a DIFFERENT input colour (forcing group≤2, in-dim=5), and (c) the footprint forces k≥3, the params floor is 10·5·k = 150(+bias). Decomposition always pays a ≥2700B intermediate that scores below the mem-0 net. BAIL INFEASIBLE. Quick discriminator before attempting: is the output expressible as ONE Conv over the 10-ch input whose output IS the graph output? If yes and group can't drop below 2, it's at floor.
+
+## ADOPTED 20260712T140251Z
+- cost: 160 -> 150 (points 19.9894)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task258.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

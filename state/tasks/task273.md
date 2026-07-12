@@ -70,3 +70,8 @@ cond (900B) = free-output-axis welded (un-croppable, S10 crop class). FLOOR at 2
 - cost: 1300 -> 693 (points 18.4590)
 - source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task273.onnx
 - note: min-merge from overfit_nets
+
+## ADOPTED 20260712T140248Z
+- cost: 693 -> 580 (points 18.6370)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task273.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

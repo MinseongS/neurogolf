@@ -54,3 +54,8 @@ axis mirrors (vflip and hflip) over the K×K window; a hole never makes both rea
 cell, so max() recovers every cell. fp16 Max crashes under ORT_DISABLE_ALL on full planes but is
 fine cast to fp32 on the tiny K×K window. Reuses the task036 recover-(r0,c0)-then-Gather-shift
 crop-to-origin idiom with a sentinel-10 Pad + final Equal into the free BOOL output.
+
+## ADOPTED 20260712T140252Z
+- cost: 431 -> 422 (points 18.9550)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task242.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

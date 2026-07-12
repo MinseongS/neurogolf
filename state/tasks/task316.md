@@ -68,3 +68,8 @@ TopK feed to signed INT8.  Bundled gate fail=0.  Cost: 426 -> 408 (memory 388
 -> 369, params 38 -> 39).
 
 Follow-up pruning removed dead initializer `topk_i8_zero_316`. Cost: 408 -> 407.
+
+## ADOPTED 20260712T140251Z
+- cost: 426 -> 406 (points 18.9936)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task316.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

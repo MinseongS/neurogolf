@@ -83,3 +83,8 @@ dual-orientation working set (~1260B) keeps it at 16.33 (+0.22, MARGINAL).
 ## S16 (2026-07-06) — public bit-identical golf (llccqq624) ADOPTED
 Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent). Minor cost drop
 (dead-initializer / redundant-node removal), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## ADOPTED 20260712T140234Z
+- cost: 670 -> 539 (points 18.7103)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task263.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
