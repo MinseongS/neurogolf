@@ -134,3 +134,30 @@ deployed nets for dynamic-shape value_info slack.
 - cost: 8660 -> 8386 (points 15.9657)
 - source: candidates/task216/cand.onnx
 - note: public-insight generalize: valueinfo_legalized_dynamic_crop self-applied — dynamic crop tensor declared [1,2,18,18] but traced max 11x17; re-declare shrinks charge 648B->374B, graph bit-identical, 500 fresh 0-fail. TRANSFERABLE: sweep all deployed nets for declared-vs-traced-max value_info slack
+
+---
+## 2026-07-13 — REGIME-CRACK (conv_fp32_arsenal) re-attack on c12_f32 3200B → FLOOR (4th confirm)
+**Ran:** dumped deployed graph, profiled per-tensor declared bytes (c12_f32=3200 fp32, c12=800 u8,
+tl/tl_flat/tl_flat_mid=400 ea, crop=374, rm/cm=320 ea, all scan tensors ≤80B; params 76). Re-examined
+whether the dominant `c12_f32` [1,2,20,20] fp32 (38% of cost) is a foldable CARRIER or an irreducible bridge.
+**Tool+date:** onnx 1.21.0 / ort 1.26.0, manual graph dump + per-tensor byte accounting, 2026-07-13, opus.
+**Verdict: FLOOR.** `c12_f32` is NOT a foldable carrier — it is the entry-crop intermediate whose sole purpose
+is to be `Cast→c12` (uint8, the tensor that actually feeds QLinearConv corner-detect + Gathers + final crop
+Slice). It does double duty: the red-count Einsum (`c12_f32,sel_red,rm_f32,cm_f32->counts`) already free-rides
+it (S9). There is no counted carrier left to fold; the fold was done in S9.
+- **Entry-bridge floor = 3200 (fp32 crop) + 800 (u8 cast) = 4000B, irreducible under onnx 1.21:** reading the
+  free fp32 input's 20×20 blue+red region needs one counted node output; `Slice` preserves input dtype (fp32)
+  ⇒ 3200B minimal crop; downstream integer work (QLinearConv/Gather/Slice) needs uint8 ⇒ `Cast` to 800B.
+  **No op crops-and-casts in one node** (verified: Slice/Gather/Conv/Pad keep dtype fp32; Cast/QuantizeLinear/
+  DynamicQuantizeLinear change dtype but do NOT crop ⇒ cast-first processes full input = 9000B+800 = 9800B,
+  worse than crop-first 4000B). fp16 bridge worse (3200+1600=4800>4000; QLinearConv needs u8 not fp16).
+- **Whole-net free-output reformulation stays ≥9046B** (re-confirms 2026-07-09 byte math): building the output
+  box directly via placement Einsum from the free input forces 30-wide row/col selector one-hots fp32-welded to
+  the input (ORT uniform-T) = 2×[30,30] fp32 = 7200B just for selectors, vs current crop→Pad epilogue 374B.
+  fp32-co-bind trap: no fp16 carrier escape (uniform-T). Structurally exceeds deployed 8386.
+**Reopen-trigger:** (1) a single onnx op that crops AND casts fp32→u8 (would collapse 3200→800 bridge to ~800);
+(2) grader change away from counting the fp32 Slice intermediate (e.g., dtype-view escape); (3) an exact
+winner-selection rule NOT needing per-box extents (red counts forced exact by unique-counts ⇒ density/blur
+proxies stay dead). No candidate built (all reformulations cost > 8386).
+**Falsification history:** 2026-07-08 fold-batch (c12_f32 floor) held; S11 mech-15 KILL held; 2026-07-09 task394
+generalization NO-TRANSFER (~9046B) held; 2026-07-13 conv_fp32_arsenal re-attack — FLOOR held (4th).

@@ -127,3 +127,28 @@ falsification history: this entry supersedes/corrects the stale 8938-era floor a
 - cost: 3086 -> 1980 (points 17.4091)
 - source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task378.onnx
 - note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
+
+## 2026-07-13 — FREE-OUTPUT-EINSUM REGIME-CRACK on `ray30`: FLOOR (fp32-co-bind economics)
+Deployed 1980-net final op = `Where(ray30[30,30] bool = 900B, inner, input)`. Verified
+`ray30` IS a Where ROUTING mask (not an Equal decode discriminator) and IS global-state
+routing (≤5 corner scalars fr0/fr1/fc0/fc1 + size), 900/1934 ≈ 47% of mem — crack conds 1&2
+and mask-fraction PASS. Mechanism fully decoded: `ray30[y,x] = (R[y]==C[x])`, R=|rhs30|,
+C=|lhs30| int8 separable Chebyshev diagonal-distance profiles; the union of the 4 clipped
+45° rays is exactly {R==C}. Recolor = black(ch0)->colour0 (rank-1 channel edit).
+**Built the fold** (`candidates/task378/build_regime.py` -> `regime.onnx`): sign-safe gate
+`A[y,x]=1-(R[y]-C[x])²` (=1 on ray, ≤0 off, exact over integers), free-output Einsum
+`bdyx,dcs,sk,ky,kx->bcyx` with `output = Σ_d input·(ID[d,c] + ED[d,c]·A)`, ED=δ_{d0}(e0-blk).
+**Gate: fail=0 (267/267 CORRECT) but cost 5515 (mem 5314) >> 1980 — REJECT.**
+verdict: **FLOOR**. Crack cond-3 part-2 FAILS. The 45° ray is NON-SEPARABLE in (h,w) so the
+fold needs a full fp32 channel-remap `CH2[10,10,2]`=800B + rank-4 fp32 `RY`/`CX`=480B each
+(≈1760B tail min) — all forced to fp32 because the free `input` co-binds fp32 and **ORT in
+this build REJECTS mixed fp16/fp32 Einsum** (verified: "Type parameter (T)... bound to
+different types"). fp32-fold tail ≥1760B > the 900B bool Where-mask (1B/cell, 0 co-bind).
+This is the documented fp32-co-bind deep-floor class (034/168/381/063): a bool [30,30]
+Where-mask is strictly cheaper than any exact free-output Einsum for a non-separable diagonal
+routing over a fp32 one-hot input.
+tool+date: onnx builder + `ng gate` measured cost, ORT mixed-dtype Einsum probe, 2026-07-13 (opus fork).
+reopen: (1) mixed-dtype Einsum becomes legal (fp16 carrier + fp32 input) — would make CH2/RY/CX
+fp16 (~880B tail) ≈ break-even, re-test; (2) grader input dtype ever becomes fp16/int (removes
+co-bind); (3) a separable (rank-≤2) reformulation of the ray routing not requiring a per-channel
+fp32 placement matrix. Not adopted (build-only evidence retained).
