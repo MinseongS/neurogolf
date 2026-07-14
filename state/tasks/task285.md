@@ -200,3 +200,19 @@ so any future TopK dtype or K shrink must be isolated before adoption.
 - cost: 19623 -> 18674 (points 15.1651)
 - source: dumps/poby7722_7263/nets/task285.onnx
 - note: min-merge from nets
+
+## 2026-07-14 — affine-reflection compiler: exact formula, current contraction ERROR
+
+- Derived a pivot-relative affine reflection formula and built
+  `candidates/task285/affine_reflection.onnx`: two variadic Einsums, 5625 params,
+  predicted scorer cost `9225` versus deployed `18674` (potential `+0.7052`).
+- The mathematical compiler matched the generator rule on `5000/5000` numpy cases.
+- Pinned ORT could not finish the first inference with graph optimizations disabled;
+  the original single-Einsum contraction requested an estimated 291.6 TB temporary,
+  and the staged two-Einsum pivot contraction also timed out locally.
+- Authoritative single-task submission `54688350` (candidate SHA256
+  `0098d582534fdc634474f37815c2cabb2a00f9ddc14de0050714369f52fe1276`)
+  returned `ERROR`. No deployment change.
+
+This rejects only the present contraction plan. The affine-reflection identity remains
+a live mechanism if the pivot score can be computed by a bounded-memory staged graph.

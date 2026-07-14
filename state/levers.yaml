@@ -278,6 +278,10 @@ levers:
         ran: "fold 스캐너 — top4 후보"
         verdict: "top4 4/4 floor (현 넷 기준)"
         reopen: "새 공개 teacher / monster(233/366/285) 재정식화 후"
+      - date: 2026-07-14
+        ran: "task285 affine-reflection compiler — numpy 5000/5000 exact, two-Einsum cost 9225 candidate; isolated Kaggle probe 54688350"
+        verdict: "Current variadic contraction plan is not deployable: pinned ORT did not finish and the single-task Kaggle probe returned ERROR. This is an execution-plan failure, not a semantic/family floor."
+        reopen: "Stage the pivot-score contraction into bounded-rank/bounded-temporary operators while keeping total cost below 18674, then require local completion or another isolated positive probe."
 
   - name: topk-width-refit
     status: dormant
