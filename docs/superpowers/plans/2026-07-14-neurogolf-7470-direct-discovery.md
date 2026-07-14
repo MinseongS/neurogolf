@@ -18,6 +18,8 @@
 - Fresh evaluation is diagnostic; the mandatory local adoption gate is bundled fail=0 plus lower deployed cost.
 - The direct-discovery allocation is 60% global mechanism search, 35% high-yield task deep dives, and 5% opportunistic public polling.
 - Before every submission, inspect `kaggle competitions submissions -c neurogolf-2026`; batch changes and respect the 100/day limit.
+- For a high-upside candidate whose Kaggle validity is locally ambiguous, the user explicitly authorizes a one-file zip containing only `taskNNN.onnx`; the primary agent submits that isolated probe and treats its returned task score, `0`, or `ERROR` as authoritative. Workers never submit directly.
+- Existing floor verdicts are method-relative, not task impossibility claims: scan all 400 tasks, including ledgered floors, whenever a genuinely new primitive or representation appears, while never repeating the same exhausted method.
 - A negative verdict is recorded only in `state/levers.yaml` with date, concrete run, scoped verdict, and reopen trigger. A lever becomes dormant, never dead.
 - At session close, replace `state/STATE.md`; do not append to it.
 
@@ -165,12 +167,16 @@ git commit -m "feat: add typed self-einsum query core" -m "Co-Authored-By: Claud
 - Produces: `expand_query(query: Query) -> set[Query]` adding one connected typed input atom.
 - Produces: `query_loss(query: Query, examples: list[tuple[np.ndarray, np.ndarray]]) -> int`.
 - Produces: `search_task(task_num: int, max_atoms: int = 8, beam: int = 3000) -> list[dict]`.
+- Produces: `Correction` with optional channel mask `[10]`, row/column gates `[30]`, and channel mixer `[10,10]`, all embedded as small operands in the final output Einsum.
+- Produces: `fit_small_corrections(raw, target, max_params: int = 150) -> list[Correction]` for task017-style near-hit completion.
 - CLI: `uv run python tools/self_einsum_search.py --tasks 1-400 --max-atoms 8 --beam 3000 --output candidates/direct_discovery/self_einsum_hits.json`.
 
 - [ ] **Step 1: Write expansion and search regression tests**
 
 ```python
-from tools.self_einsum_search import expand_query, search_task
+import numpy as np
+
+from tools.self_einsum_search import expand_query, fit_small_corrections, search_task
 
 
 def test_expansion_is_connected_and_deduplicated():
@@ -186,6 +192,14 @@ def test_expansion_is_connected_and_deduplicated():
 def test_search_rediscovers_task067_with_two_atoms():
     hits = search_task(67, max_atoms=2, beam=500)
     assert any(hit["fail"] == 0 and hit["cost"] == 0 for hit in hits)
+
+
+def test_channel_mask_completes_a_low_cost_near_hit():
+    raw = np.ones((1, 10, 2, 2), dtype=bool)
+    target = raw.copy()
+    target[:, 1] = False
+    corrections = fit_small_corrections(raw, target, max_params=10)
+    assert any(c.channel_mask == (1, 0, 1, 1, 1, 1, 1, 1, 1, 1) for c in corrections)
 ```
 
 - [ ] **Step 2: Run the new tests and verify failure on missing interfaces**
@@ -203,6 +217,9 @@ The implementation must:
 - introduce at most one new color variable and at most one new spatial variable per expansion;
 - canonicalize before deduplication;
 - evaluate all bundled examples, rank by total wrong output cells, and retain exact hits plus the best `beam` candidates at every depth;
+- test structured near-hits with channel keep/drop masks, channel permutation or signed mixers, and separable row/column gates;
+- accept a correction only when every bundled example is exact, its initializers contain at most 150 total elements, and it creates no counted intermediate tensor;
+- compile each correction as extra operands of the same graph-output Einsum, following task017's cost-10 precedent rather than assuming that only cost-0 hits matter;
 - reject equations longer than 52 distinct labels or models that fail ONNX checker/ORT construction;
 - evaluate suspicious mem-0 hits in a fresh Python process before writing them to the report.
 
@@ -217,8 +234,13 @@ The report row is exact and stable:
     "pass": passed_examples,
     "fail": failed_examples,
     "wrong_cells": wrong_cells,
-    "cost": 0,
-    "projected_gain": round(25.0 - incumbent_points, 6),
+    "correction": correction.as_json() if correction else None,
+    "cost": correction.param_count if correction else 0,
+    "projected_gain": round(
+        max(1.0, 25.0 - math.log(max(1, correction.param_count if correction else 0)))
+        - incumbent_points,
+        6,
+    ),
 }
 ```
 
@@ -245,7 +267,7 @@ git add tools/self_einsum_search.py tests/test_self_einsum_search.py
 git commit -m "feat: search high-degree self-einsum programs" -m "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ```
 
-### Task 3: Validate and adopt exact self-Einsum discoveries
+### Task 3: Validate and adopt exact or cheaply corrected self-Einsum discoveries
 
 **Files:**
 - Create per hit: `candidates/taskNNN/build_self_einsum.py`
@@ -255,12 +277,12 @@ git commit -m "feat: search high-degree self-einsum programs" -m "Co-Authored-By
 - Modified automatically by adoption: `state/manifest.json`, `state/tasks/taskNNN.md`, `submission/overfit_nets/taskNNN.onnx`
 
 **Interfaces:**
-- Consumes: exact `query` rows from `candidates/direct_discovery/self_einsum_hits.json`.
-- Produces: source-owned one-node ONNX candidates and, for every official PASS, an adopted deployment.
+- Consumes: exact or at-most-150-parameter corrected `query` rows from `candidates/direct_discovery/self_einsum_hits.json`.
+- Produces: source-owned graph-output Einsum ONNX candidates and, for every official PASS, an adopted deployment.
 
 - [ ] **Step 1: Rebuild each exact hit in its task candidate directory**
 
-The builder imports `build_model` and serializes the exact query from the report:
+The builder imports `build_model` and serializes the exact query plus any reported low-cost correction; do not hand-edit the ONNX. A zero-cost example is:
 
 ```python
 from pathlib import Path
@@ -271,7 +293,7 @@ QUERY = (("k", "r", "c"), ("u", "c", "x"))
 onnx.save(build_model(QUERY), Path(__file__).with_name("self_einsum.onnx"))
 ```
 
-Replace `QUERY` with the concrete report value for that task; do not hand-edit the ONNX.
+Replace `QUERY` with the concrete report value for that task. For a corrected hit, also pass the exact report `Correction` to the builder.
 
 - [ ] **Step 2: Verify each hit in an isolated process**
 
@@ -279,11 +301,11 @@ Run: `uv run ng score NNN`
 
 Run: `uv run ng gate candidates/taskNNN/self_einsum.onnx --task NNN`
 
-Expected for an adoptable hit: bundled `fail=0`, candidate cost `0`, and `PASS`.
+Expected for an adoptable hit: bundled `fail=0`, candidate cost exactly equal to the report row, cheaper than deployed, and `PASS`.
 
 - [ ] **Step 3: Adopt every official PASS**
 
-Run: `uv run ng adopt candidates/taskNNN/self_einsum.onnx --task NNN --note "direct discovery: zero-cost high-degree self-Einsum conjunctive query"`
+Run: `uv run ng adopt candidates/taskNNN/self_einsum.onnx --task NNN --note "direct discovery: high-degree self-Einsum with minimal output correction"`
 
 Expected: `state/manifest.json` gains the candidate row and `state/tasks/taskNNN.md` receives an `## ADOPTED` block.
 
@@ -372,7 +394,7 @@ Expected: exact hits include task179/task241 Transpose controls; new hits are re
 
 Append a `fourth-25pt-hunt` ledger entry containing the exact operator registry, 400-task scope, date, no-new-hit result, prior false-floor history, and reopen trigger `new legal standard-domain operator or scored public disclosure of a missing 25-point task`.
 
-### Task 6: Verify, compose, and submit provenance-isolated batches
+### Task 6: Verify, probe ambiguous tasks, compose, and submit provenance-isolated batches
 
 **Files:**
 - Modify: `state/submissions.md`
@@ -380,8 +402,8 @@ Append a `fourth-25pt-hunt` ledger entry containing the exact operator registry,
 - Generated: `submission.zip`
 
 **Interfaces:**
-- Consumes: only adopted candidates from Tasks 3-5.
-- Produces: a completed Kaggle submission and confirmed public score, repeating discovery waves until score >=7470.00.
+- Consumes: high-upside locally ambiguous candidates for one-task probes, and only adopted candidates for composed 400-task submissions.
+- Produces: authoritative isolated Kaggle verdicts for ambiguous high-upside candidates, then a completed composed submission and confirmed public score, repeating discovery waves until score >=7470.00.
 
 - [ ] **Step 1: Run repository verification**
 
@@ -397,7 +419,21 @@ Run: `kaggle competitions submissions -c neurogolf-2026`
 
 Expected: no newer overlapping submission from another session that would change the baseline or duplicate the batch.
 
-- [ ] **Step 3: Pack and submit one mechanism-provenance batch**
+- [ ] **Step 3: Submit a one-task probe when local validity remains ambiguous**
+
+Only the primary agent may perform this user-authorized exception. Put the candidate in an otherwise empty directory, name it exactly `taskNNN.onnx`, and create a zip containing only that file:
+
+```bash
+mkdir -p candidates/taskNNN/lb_probe
+cp candidates/taskNNN/<candidate>.onnx candidates/taskNNN/lb_probe/taskNNN.onnx
+(cd candidates/taskNNN/lb_probe && zip -q -j taskNNN_probe.zip taskNNN.onnx)
+kaggle competitions submissions -c neurogolf-2026
+kaggle competitions submit -c neurogolf-2026 -f candidates/taskNNN/lb_probe/taskNNN_probe.zip -m "PARTIAL PROBE taskNNN only: <hypothesis>"
+```
+
+Poll until `COMPLETE` or `ERROR`. A completed score is the direct score of that task; `0` or `ERROR` rejects the candidate unless it creates a new, concrete hypothesis. Record the submission id, exact artifact hash, result, and interpretation in `state/submissions.md` and the task ledger. Immediately run `uv run ng pack` afterward to restore the canonical 400-file `submission.zip`. The normal adopted batch still uses `ng pack` followed by `ng submit`.
+
+- [ ] **Step 4: Pack and submit one mechanism-provenance batch**
 
 Run: `uv run ng pack`
 
@@ -405,16 +441,16 @@ Expected: `submission.zip` contains exactly 400 task ONNX files.
 
 Run: `uv run ng submit -m "7424.42 base + <mechanism> direct-discovery batch; local <points>; 400/400 HASH-OK"`
 
-- [ ] **Step 4: Poll until the submission reaches COMPLETE or ERROR**
+- [ ] **Step 5: Poll until the submission reaches COMPLETE or ERROR**
 
 Run: `kaggle competitions submissions -c neurogolf-2026`
 
 If COMPLETE and higher, make it the new baseline. If a provenance-isolated batch zeros/errors, restore the prior deployed task through `ng adopt` on its saved backup, verify 400/400, and record the exact attribution in the task ledger and `state/submissions.md`.
 
-- [ ] **Step 5: Continue waves until the leaderboard target is confirmed**
+- [ ] **Step 6: Continue waves until the leaderboard target is confirmed**
 
 If score is below 7470, return to Task 2 with either a larger self-Einsum grammar justified by the prior report or to Task 4 with the next mechanism cluster from `state/insights.yaml`. Do not spend a wave on sub-0.1 tails unless they are free byproducts of a larger rewrite.
 
-- [ ] **Step 6: Close the successful session**
+- [ ] **Step 7: Close the successful session**
 
 Replace `state/STATE.md` with the confirmed score, submission id, exact adopted mechanisms, active veins, invariants, and next-session start procedure. Update `state/submissions.md`, run `uv run ng verify --hash` again, stage only the tracked state/source files touched, and commit with the required co-author trailer.
