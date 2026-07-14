@@ -733,3 +733,7 @@ built from submission/merged_nets/.
 | 2026-07-14 10:51Z | 54682796 | **0.00** | PARTIAL task110 only: cost340 `pair_support_first`; public train+test 4/4 but hidden zero after a long scoring run; not adopted |
 | 2026-07-14 11:06Z | 54683163 | **ERROR** | PARTIAL task061 only: cost130 bundled-fit self-Einsum; grader rejected immediately; not adopted |
 | 2026-07-14 14:03Z | 54688350 | **ERROR** | PARTIAL task285 only: two-Einsum affine-reflection compiler, predicted cost 9225 vs 18674; exact numpy invariant but local ORT contraction did not finish and Kaggle also rejected/failed execution; not adopted |
+
+| 2026-07-14 14:24Z | 54689058 | **ERROR** | PARTIAL task001 only: sparse-initializer Einsum cost37; grader rejected; not adopted |
+| 2026-07-14 14:35Z | 54689446 | **ERROR** | PARTIAL task001 only: sparse-initializer sanitize-name workaround; grader rejected; not adopted |
+| 2026-07-14 14:50Z | 54689861 | **15.60** | PARTIAL task054 only: relational renderer cost12034; Kaggle-valid and subsequently adopted after bundled 266/266 gate |

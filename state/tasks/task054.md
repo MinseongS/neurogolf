@@ -1,19 +1,20 @@
 ---
-deployed_cost: 20131
-logged_costs_match: stale-likely
+deployed_cost: 12034
+logged_costs_match: exact
 migrated: 2026-07-09
 ---
 
 # task054 — 264363fd
 
-## Current live/source-owned exact
+## Current live exact
 
-`memory=26877`, `params=238`, `points=14.792158`.
+`memory=6772`, `params=5262`, `cost=12034`, `points=15.604509`.
 
-The graph is exact-preserve/source-owned.  It detects a reference star motif,
-removes the reference motif, finds up to four seed stars inside large boxes,
-draws horizontal/vertical guide lines through each seed across its containing
-box, stamps the motif at each seed, and emits final one-hot with `Equal`.
+The deployed graph is the 2026-07-14 bounded relational renderer. It detects the
+reference motif and box/seed relations, renders all required lines and motif stamps in
+one signed relation, preserves arbitrary source pixels, and resolves the fixed three-box
+case by exact cancellation. Isolated Kaggle submission 54689861 scored 15.60 before
+adoption; the official gate then passed 266/266 with fail=0.
 
 ## Dominant memory
 
@@ -120,3 +121,10 @@ params 282 -> 280).
 
 ## 20260709 — NO-WIN 재개 레저 (free-output-einsum fanout)
 092-fanout(opus 딥 2-pass, 20260709): NO-WIN(단 룰 완전 크랙). oracle4.py = 검증된 정답 룰(266/266 bundled + 3000/3000 fresh, einsum-foldable primitive만; candidates/task054/에 보존). 배포넷(20131)은 이미 optimal compact-coordinate sparse-edit(ArgMax box-bounds→Gather/Scatter, full mask 미생성). 어떤 full-canvas einsum도 fp32 detection plane(label+box+seed+motif+segmented lines ≥18000B) 때문에 26k~37k > 20131. priority-fold는 anti-optimal(carrier는 이미 900B uint8 Equal tail). Reopen(공통): mixed-dtype Einsum escape(fp16 carrier + fp32 free-input co-bind) — ORT uniform-T가 현재 차단; 이게 풀리면 이 클래스 fp32-detection floor가 fp16으로 반토막. 또는 새 공개 덤프. public <19852 / generator가 box row/col 비공유 증명 시. ⭐재사용 primitive: 2-level(col-then-row) cumsum segmentation이 Loop/Scan 없이 stacked/transposed/overlapping 축정렬 rect 재구성. ⭐HEURISTIC: free-output/signed einsum fold는 counted mass가 avoidable label/priority CARRIER일 때만 이득 — fp32 spatial DETECTION이면 fold가 더 나쁨. 시도 전 detection-vs-carrier split을 측정하라.
+
+## ADOPTED 20260714T151024Z
+- cost: 20131 -> 12034 (points 15.6045)
+- source: candidates/task054/relational_renderer.onnx
+- note: LB probe 54689861 confirmed 15.60; relational renderer bundled 266/266; replaces cost20131 with cost12034
+- sha256: a90259a9050599856df3bd714f3eff8758aa0ad1061af973379e857ca439956f
+- validation: official bundled 266/266, fresh 40/40, pinned ORT execution complete
