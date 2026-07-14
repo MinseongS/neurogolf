@@ -28,3 +28,8 @@ Dominant intermediate: `Lp` (uint8 [1,1,30,30] = 900 B) — the padded label pla
 
 ## INSIGHT (transferable)
 ⭐ For a FOLD/overlay task whose panel/band colours are FIXED constants, skip the 1x1 colour-index Conv entirely: each panel's presence mask is a SINGLE input channel sliced to its region straight from the FREE one-hot input (no colour recovery needed), and the fixed output colour is just a [1,1,1,1] constant in a priority Where chain. This avoids the 3600 B [1,1,30,30] idxmap plane that the Conv-collapse idiom (task372) forces — here it cut mem 4804->1188 (+1.37 pts). Use Conv-collapse only when output colours COPY arbitrary input colours; when they're a known fixed set, channel-slice + constant Where is far leaner.
+
+## ADOPTED 20260712T140202Z
+- cost: 300 -> 180 (points 19.8070)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task321.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

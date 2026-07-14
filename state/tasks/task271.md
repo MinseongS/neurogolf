@@ -53,3 +53,18 @@ recovers as scalar (minrow,mincol) = ReduceMax(iswin·rowramp) / ReduceMax(iswin
 colramp) — no NonZero/argmax-op needed; (d) data-dependent crop = Add scalar
 offset to a [0,1,2] index const, chained Gather(axis=2)·Gather(axis=3). Whole
 select-and-crop pipeline stays at ~9x9/7x7 fp16, well under the 30x30 label floor.
+
+## ADOPTED 20260713T143829Z
+- cost: 1187 -> 1074 (points 18.0209)
+- source: candidates/public_dumps/20260713_7281/extracted/task271.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T150957Z
+- cost: 1187 -> 1074 (points 18.0209)
+- source: candidates/public_dumps/20260713_7281/extracted/task271.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151939Z
+- cost: 1187 -> 1074 (points 18.0209)
+- source: candidates/public_dumps/20260713_7281/extracted/task271.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

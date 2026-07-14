@@ -43,3 +43,8 @@ Gates: stored fail=0 (my re-check too); fresh 2500 uncached: teacher 0, incumben
 div 0 (bit-identical). No TopK. Source: overrides/task108.onnx (base_submission was
 our own mechanism). Backup reports/retired_networks/task108_pre_s9.onnx.
 ⭐ TRANSFERABLE: fixed separable spatial remap/upscale = one 5-operand einsum, mem 0.
+
+## ADOPTED 20260712T140155Z
+- cost: 300 -> 150 (points 19.9894)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task108.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

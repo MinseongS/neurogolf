@@ -105,3 +105,8 @@ the two triangular-matrix initializers of the task070 bbox-as-mask idiom (saved 
 ~0.1 pt) — but CumSum rejects fp16, so feed it the fp32 occupancy vector. ⭐ Per-row/col
 interior counts come from MatMul(plane, vec) (contract one axis) — no interior WxW product
 plane needed; orientation of a unique full line = compare max-row-count vs max-col-count.
+
+## ADOPTED 20260712T141555Z
+- cost: 2849 -> 1467 (points 17.7090)
+- source: dumps/archive_extract/submission7300+/task105.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

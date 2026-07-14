@@ -54,3 +54,8 @@ colour-sum kernel (w[k]=k) with a count kernel (w[k]=1), masking unwanted colour
 by Pad-ing a tiny [1,10,K,K] uint8 one-hot (Pad accepts uint8, rejects bool) — kills the last
 full-size plane. This beats the task184 separator-detection MatMul idiom whenever block boundaries
 are generator-fixed rather than data-dependent.
+
+## ADOPTED 20260712T141555Z
+- cost: 30 -> 20 (points 22.0043)
+- source: dumps/archive_extract/submission7300+/task130.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

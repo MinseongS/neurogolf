@@ -62,3 +62,8 @@ Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent).
 ## 2026-07-09 — ⭐ REGIME CRACK ADOPTED (batch 4, 900B mask → free-output Einsum)
 - 1829→1613 (+0.13). parity via alt-vector reuse pmsign=Σcolvec·alt·alt; δ-shift = 1-tap Conv; [h<=row] = reverse CumSum.
 - Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task199/regime.onnx. See memory neurogolf-regime-crack-freeoutput-einsum.
+
+## ADOPTED 20260712T140201Z
+- cost: 1613 -> 906 (points 18.1910)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task199.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

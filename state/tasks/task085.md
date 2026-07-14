@@ -136,3 +136,18 @@ min-merge net for duplicated detector branches before trusting the byte-adoption
 - cost: 2519 -> 2234 (points 17.2885)
 - source: /tmp/task085_cand.onnx
 - note: runtime-spend S8-port fanout: Where(punch,bg,input) tail (punch 900B Equal-parity plane + t/colcnt/q ~1170B) folded into ONE free-output einsum 'njhw,sjk,sh,sw->nkhw' — punch factorized rank-2 (me⊗co + mo⊗ce parity outer products), stack s=0 identity passthrough, KM K[j,k]=δ(k,0)−δ(j,k) erases to bg via Σ_j input[j]=1 contraction; plus Bpos occupancy chain dropped (empty-row false-middles harmless: K·e0=0). 2519->2234 (+0.120), bundled 265/0. TRANSFERABLE: parity/interval punch masks factorize as rank-K outer products into the free-output einsum; false-positives that erase already-bg cells are self-neutralizing under signed decode.
+
+## ADOPTED 20260713T143838Z
+- cost: 2234 -> 2224 (points 17.2929)
+- source: candidates/public_dumps/20260713_7281/extracted/task085.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T151006Z
+- cost: 2234 -> 2224 (points 17.2929)
+- source: candidates/public_dumps/20260713_7281/extracted/task085.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151948Z
+- cost: 2234 -> 2224 (points 17.2929)
+- source: candidates/public_dumps/20260713_7281/extracted/task085.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

@@ -36,3 +36,8 @@ Two chained ScatterElements (reduction=max, disjoint writes) → ONE scatter ove
 ## S16 (2026-07-06) — public bit-identical golf (franksunp) ADOPTED
 Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent). Minor cost drop
 (dead-initializer / redundant-node removal), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## ADOPTED 20260712T140158Z
+- cost: 6715 -> 3517 (points 16.8346)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task089.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

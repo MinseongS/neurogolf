@@ -128,3 +128,8 @@ See memory [[neurogolf-urad-7225-bundle-vein]].
 - cost: 1620 -> 1340 (points 17.7996)
 - source: candidates/task161/fp16_tail.onnx
 - note: fp16-only free-output einsum tail: retype S_r/S_c/S_k inits + bool->fp16 Casts + fp16 graph output; ORT fp16 einsum kernel verified (all-fp16 legal, uniform-T only blocks mixing); 1620->1340 (+0.190)
+
+## ADOPTED 20260712T141556Z
+- cost: 1340 -> 275 (points 19.3832)
+- source: dumps/archive_extract/submission7300+/task161.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

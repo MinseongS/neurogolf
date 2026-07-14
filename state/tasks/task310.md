@@ -112,3 +112,8 @@ reopen: unchanged from 1st verdict — (1) ORT uniform-T fp16 carrier escape; (2
   one-hot → windowed colour-INDEX with no full-canvas intermediate; (3) public dump < 3184; (4) scoring
   change dropping the max(declared,traced) charge (would revive VI-crop only if bundled box < 8×8, which
   it is not).
+
+## ADOPTED 20260712T140109Z
+- cost: 3184 -> 593 (points 18.6148)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task310.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

@@ -97,3 +97,8 @@ No transferable mechanism — minor trim.
 - falsification history: 이 태스크 "confirmed-infeasible" 라벨 자체가 과거 오판(룰은 closed-form);
   "u8 MaxPool ORT 거부" 반증됨(현행 넷이 그것); "3600B 엔트리 불가축" 부분 반증(per-axis 코드는
   free 추출 가능) — 남은 벽은 blue read + OR-wall.
+
+## ADOPTED 20260712T140032Z
+- cost: 9036 -> 428 (points 18.9409)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task350.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

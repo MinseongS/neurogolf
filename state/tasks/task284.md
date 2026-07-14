@@ -127,3 +127,8 @@ point-writes into fp32 output. mem 2912 / params 177 / cost 3089.
   help a sparse-glyph task. Also: rebuilt graphs that KEEP deployed runtime-Slice nodes MUST
   carry the deployed `value_info` (pins Slice output shapes) or strict shape-infer emits
   dim_param → calculate_memory returns None ("performance could not be measured").
+
+## ADOPTED 20260712T140235Z
+- cost: 3089 -> 2501 (points 17.1756)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task284.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

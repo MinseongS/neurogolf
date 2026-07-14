@@ -44,3 +44,18 @@ No transferable mechanism — minor trim.
 ## S16 (2026-07-06) — public bit-identical golf (llccqq624) ADOPTED
 Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent). Minor cost drop
 (dead-initializer / redundant-node removal), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## ADOPTED 20260713T143839Z
+- cost: 1850 -> 1847 (points 17.4787)
+- source: candidates/public_dumps/20260713_7281/extracted/task213.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T151007Z
+- cost: 1850 -> 1847 (points 17.4787)
+- source: candidates/public_dumps/20260713_7281/extracted/task213.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151949Z
+- cost: 1850 -> 1847 (points 17.4787)
+- source: candidates/public_dumps/20260713_7281/extracted/task213.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

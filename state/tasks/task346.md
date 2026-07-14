@@ -78,3 +78,18 @@ per-channel Slices → QLinearConv 3×3 ring predicate → ScatterElements → 1
 (18000B). Triage floor ~500 (gap 0.92) UNREACHABLE; no sub-656 mem exists under grader physics, so no
 build was dispatched. Reopen: an opset-≤16 op that emits a non-fp32 plane directly from the fp32 input
 (none known). FLOOR ≈ 1254.
+
+## ADOPTED 20260713T143826Z
+- cost: 1254 -> 935 (points 18.1595)
+- source: candidates/public_dumps/20260713_7281/extracted/task346.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T150954Z
+- cost: 1254 -> 935 (points 18.1595)
+- source: candidates/public_dumps/20260713_7281/extracted/task346.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151936Z
+- cost: 1254 -> 935 (points 18.1595)
+- source: candidates/public_dumps/20260713_7281/extracted/task346.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

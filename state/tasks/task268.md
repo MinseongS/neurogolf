@@ -100,3 +100,18 @@ Backup before this tail: `submission/overfit_nets/.dynamic_cse_tail_backup_20260
 - ⭐ TRANSFERABLE: distribute an AND-gate column/row mask into the compared Equals to drop the separate
   gated-bool plane. Floor after: `cond`[1,1,30,30] bool 900B (output-welded) + `bgcropf`[1,1,10,10] fp32 400B.
   Candidate: reports/candidates/task268/fatmid_attack.onnx.
+
+## ADOPTED 20260713T143831Z
+- cost: 2930 -> 2809 (points 17.0594)
+- source: candidates/public_dumps/20260713_7281/extracted/task268.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T150959Z
+- cost: 2930 -> 2809 (points 17.0594)
+- source: candidates/public_dumps/20260713_7281/extracted/task268.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151941Z
+- cost: 2930 -> 2809 (points 17.0594)
+- source: candidates/public_dumps/20260713_7281/extracted/task268.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

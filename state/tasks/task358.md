@@ -83,3 +83,8 @@ See memory [[neurogolf-urad-7225-bundle-vein]].
 - cost: 4027 -> 3798 (points 16.7578)
 - source: candidates/public_dumps/20260709/neurogolf-7266-48-github-com-qurore-kaggloop/nets/task358.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260712T140209Z
+- cost: 3798 -> 2584 (points 17.1429)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task358.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

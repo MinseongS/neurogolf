@@ -67,3 +67,8 @@ Single 5-operand Einsum 'ra,ai,zcij,bj,sb->zcrs', mem=0: mirror-stack 3x2->9x4, 
 Gates: stored fail=0; uncached fresh 2000+600: 0/0/0 (bit-identical). No TopK.
 NOTE: scan projection was ~8x optimistic — output axis must span the FULL 30 (grading
 tensor [1,10,30,30]), so U tables are [30,K] not [out,K]. Backup task211_pre_s9.onnx.
+
+## ADOPTED 20260712T140142Z
+- cost: 270 -> 126 (points 20.1637)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task211.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

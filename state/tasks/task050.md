@@ -64,3 +64,8 @@ in-grid rectangle for free from `ReduceMax(input, axes=[1,3])`/`[1,2]` occupancy
 - cost: 3849 -> 1896 (points 17.4525)
 - source: candidates/task050/cand.onnx
 - note: axis-separable interval-fill as single free-output einsum (mem=0, zero counted intermediates): 4 additive deg-2 terms {X0,X8,BR,BC}; bg=X0-BR-BC (uses input ch0 as bg base -> input reads FACTOR, no ingrid-sum), green=BR+BC, cyan=X8; BR/BC=strict-between counts via one strict-lower-tri T reused transposed; 3849->1896 (+0.707); fresh 2200 div0 bit-identical. TRANSFERABLE: bg=input-ch0-minus-fill
+
+## ADOPTED 20260713T133635Z
+- cost: 1896 -> 448 (points 18.8952)
+- source: candidates/task050/from_task350.onnx
+- note: task350 endpoint-fill formula port with cyan source and green strict interior; bundled 271/0

@@ -67,3 +67,8 @@ k3(cost 1288): 3.6k pos viols; k5 gain negative. 상세: reports/train_to_golf_r
 - cost: 1043 -> 1040 (points 18.0530)
 - source: candidates/signed_poly_wave/task293/candidate.onnx
 - note: scalar Squeeze initializer trim; fresh 2000/2000 div0
+
+## ADOPTED 20260712T140019Z
+- cost: 1040 -> 40 (points 21.3111)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task293.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

@@ -54,3 +54,18 @@ identify the largest sprite EXACTLY (no flood-fill/connectivity). Compute the bb
 from the SINGLE gathered channel plane (cheaper 1-D reductions than a 10-channel
 profile), and never cast the full input — the public net's 18000B fp16 input cast
 was pure waste.
+
+## ADOPTED 20260713T143836Z
+- cost: 526 -> 515 (points 18.7558)
+- source: candidates/public_dumps/20260713_7281/extracted/task300.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T151004Z
+- cost: 526 -> 515 (points 18.7558)
+- source: candidates/public_dumps/20260713_7281/extracted/task300.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151945Z
+- cost: 526 -> 515 (points 18.7558)
+- source: candidates/public_dumps/20260713_7281/extracted/task300.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

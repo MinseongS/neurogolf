@@ -2855,3 +2855,30 @@
   expected:
     per_task: "+0.1~0.5 when a multi-KB hash/index/table lookup is replaced by a compact uint8 response bank"
   transformer: null
+
+- id: onehot_selfeinsum_identity_vote
+  title: Collapse exact one-hot equivalence voting into one free-output self-Einsum
+  status: active
+  source_tasks: [17, 197]
+  rationale: >
+    Task017 proved the base mechanism: one-hot I/O is free and output is decoded by >0, so an exact
+    self-contraction gate can identify same-phase rows and columns and vote intact cells into cutouts.
+    The single variadic Einsum narx,napx,nbyc,nbyq,nkpq,a,b,k->nkrc uses the input five times and a
+    reused [0,1..1] channel mask; cost 6273->10, points 16.256->22.697 (+6.44), bundled 266/266,
+    fresh numpy 5000/5000 and ORT 300/300. Task197 proves a second variant: a complete reference line
+    defines a colour-equivalence kernel for partial lines, while a signed 10x10 channel mixer makes
+    channel 0 positive on blank rows and negative after both template classes are observed. Its candidate
+    folds template inference, per-row colour recovery, completion, and background repair into one Einsum;
+    cost 753->130, points 18.376->20.132 (+1.757), bundled 267/267, fresh numpy 50000/50000 and ORT
+    500/500. The task017 8-operand form is slow (~190ms/infer), so runtime remains a submission concern.
+  applies_when:
+    - cells that must share a value are identifiable by an exact self-contraction that is zero for nonmatches
+    - additive votes put positive mass only on the correct one-hot channel, or a small signed channel mixer separates the winner
+    - periodic/tiling/symmetry completion, occlusion fill, consensus denoise, copy-from-matching-line, or full-reference-plus-partial-copies
+  reject_when:
+    - different equivalence classes have nonzero one-hot overlap and no bounded signed separator is available
+    - corruption can erase every witness for an equivalence class
+    - output requires argmax or tie-breaking that cannot be represented by the >0 sign decode
+  expected:
+    per_task: "+1~6 when a multi-stage recover-then-rebuild graph collapses to a parameter-only final Einsum"
+  transformer: null

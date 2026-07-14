@@ -82,3 +82,13 @@ Gate: evaluate bundled fail=0 + **bit-identical outputs** over all train/test/ar
 ## 2026-07-09 — ⭐ REGIME CRACK ADOPTED (batch 4, 900B mask → free-output Einsum)
 - 2712→1737 (+0.45). frame = R1⊗C1 - R2⊗C2 nested rects; 2nd input occurrence = per-channel counts free; detection Conv → Einsum(bchw,c->bh).
 - Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task224/regime.onnx. See memory neurogolf-regime-crack-freeoutput-einsum.
+
+## ADOPTED 20260712T140249Z
+- cost: 1737 -> 1552 (points 17.6527)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task224.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
+
+## ADOPTED 20260713T112920Z
+- cost: 1552 -> 1436 (points 17.7304)
+- source: candidates/task224/archive_hybrid.onnx
+- note: 7410 archive hybrid: encode row_code>col_code border as sign and fuse border branch + channel paint into FREE-output Einsum; bundled 266/266, cost 1552->1436

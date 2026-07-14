@@ -26,3 +26,8 @@ nc recovery requires the [1,10,1,1] per-channel ReduceSum entry plane (40B fp32 
 
 ## INSIGHT (transferable)
 Under ORT_DISABLE_ALL, `Where` with BOOL branches and `Where` with uint8 branches + a scalar-broadcast bool condition both FAIL (NOT_IMPLEMENTED / INVALID_GRAPH type error). The reliable pattern: do the 1-of-N constant select with **fp32 branches**, then threshold to bool with one Greater, then Cast to uint8 only for the final Pad-into-output one-hot. Distinct-colour COUNT = `ReduceSum(input,[2,3]) -> Greater(0) -> Slice off ch0 -> Cast fp32 -> ReduceSum over channels` (offset-agnostic, generalises).
+
+## ADOPTED 20260712T140157Z
+- cost: 146 -> 75 (points 20.6825)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task167.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

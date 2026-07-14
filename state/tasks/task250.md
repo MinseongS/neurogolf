@@ -91,3 +91,40 @@ in-grid mask.
   needs a [10,30] embed (+330 params); einsum forces an fp16 basis that re-spends the dying bytes.
 - Tool+date: opus agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
 - Reopen: uint8/bool Einsum kernel; public task250 < 1920 tail.
+
+## 2026-07-13 REGIME-CRACK re-probe (onehot6 indicator_fold, opus) — NO BUILD, FLOOR CONFIRMED
+- Target: deepfold `onehot6` [1,6,10,10] bool = **600B** (top tensor, dpts 0.3321),
+  produced by Concat (node40), consumed by output Pad (node41). Incumbent grader cost 2123.
+- **Byte-math floor (two hard constraints):**
+  1. **bg channel 0 is REQUIRED.** scoring.convert_to_numpy encodes color 0 as channel-0=1;
+     run_network = `(output>0)` compared with `np.array_equal` on the FULL [1,10,30,30] one-hot.
+     In-grid background cells (color 0) MUST have channel 0 set → bg cannot be dropped/argmax-defaulted.
+  2. **Pad is edge-only → interior channel spacers 1,3,4 unavoidable.** Active output channels are
+     {0=bg, 2=red, 5=gray}; span 0..5 = 6 channels. Channels 1,3,4 (never-present colors) sit INTERIOR
+     to the span and cannot be created by an edge Pad → must be materialized as false in the compact concat.
+  - ⇒ compact one-hot span = 6 channels × 10×10 = **600B is the mechanism floor.** Spatial 10×10 fixed
+     (bg spans full grid, grays read full grid — no crop). bool already minimal dtype (no fp32 to reclaim).
+- **Alt mechanisms ruled out by byte math:** label-pad ordering = padded [1,1,30,30]=900B > 600 (onehot-pad
+  already the cheaper side of the task308/382 break-even: 6×100 < 900). free_final_onehot_equal/Where-over-input
+  fails — grays RELOCATE (removed at source, added at ring) so input isn't a valid base (differs in ch0 AND ch5,
+  not a pure overlay). direct-Gather (task343) needs axis-aligned column select — N/A for scatter. Einsum-fold
+  hits fp32-co-bind wall: per-cell placement routing matrix co-bound to free fp32 input ≥4B/cell > 600B bool.
+- Tool+date: opus agent, onnx 1.21.0 / ort 1.26.0, 2026-07-13. Independently re-derives the 2026-07-10 s8port
+  BLOCKED verdict via the grader-decode proof (bg-required) rather than tail-map inspection.
+- Reopen-trigger: uint8/bool Einsum CPU kernel lands in ORT (would allow a bool-basis free-output fold); OR a
+  public task250 dump measures < 2050 (foreign mechanism we haven't found).
+
+## ADOPTED 20260713T143837Z
+- cost: 2123 -> 2098 (points 17.3513)
+- source: candidates/public_dumps/20260713_7281/extracted/task250.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T151005Z
+- cost: 2123 -> 2098 (points 17.3513)
+- source: candidates/public_dumps/20260713_7281/extracted/task250.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151947Z
+- cost: 2123 -> 2098 (points 17.3513)
+- source: candidates/public_dumps/20260713_7281/extracted/task250.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

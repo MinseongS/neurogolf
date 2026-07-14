@@ -159,3 +159,13 @@ cost 14567 (vs deployed 5832, -0.914pt); fresh 11/6000 (0.183%) vs incumbent 423
 38x; bundled 267/267; decision-identical to numpy reference across 3 seeds. Gate REJECT price-only.
 DISPOSITION: HEDGE bundle (EV +0.21 at k=1 raw hidden draw, negative if fully curated).
 ~1-2KB further golf possible (u8 compare planes, Identity elision) if promoted to main later.
+
+## ADOPTED 20260713T144125Z
+- cost: 5832 -> 5745 (points 16.3439)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task319.onnx
+- note: Lucifer public-LB core min-merge; bundled fail=0
+
+## ADOPTED 20260713T150908Z
+- cost: 5832 -> 5745 (points 16.3439)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task319.onnx
+- note: isolated residual-public LB probe; bundled fail=0

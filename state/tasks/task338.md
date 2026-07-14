@@ -90,4 +90,28 @@ signed-einsum N/A (variable #rects). DO NOT re-probe without new mechanism.
 Mechanism: value_info Slice crop + CumSum/Mod.
 Gate (fresh_verify, inc/cand fail on 1500-2000): 0/0 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
 Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
-See memory [[neurogolf-urad-7225-bundle-vein]]. 
+See memory [[neurogolf-urad-7225-bundle-vein]].
+## ADOPTED 20260713T144122Z
+- cost: 8848 -> 7215 (points 16.1161)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task338.onnx
+- note: Lucifer public-LB core min-merge; bundled fail=0
+
+## ADOPTED 20260713T150904Z
+- cost: 8848 -> 7215 (points 16.1161)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task338.onnx
+- note: isolated residual-public LB probe; bundled fail=0
+
+## ADOPTED 20260713T152924Z
+- cost: 8848 -> 7215 (points 16.1161)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task338.onnx
+- note: residual top-5 isolated probe
+
+## ADOPTED 20260713T155237Z
+- cost: 8848 -> 7215 (points 16.1161)
+- source: /Users/minseong/project/neurogolf/candidates/public_dumps/poll_latest/lucifer19_neurogolf-agi-compression-core/submission_extract/task338.onnx
+- note: residual isolation G1: lucifer latest, group 338/127/048 only, +0.4626 local
+
+## ADOPTED 20260714T101611Z
+- cost: 8848 -> 7215 (points 16.1161)
+- source: /Users/minseong/project/neurogolf/candidates/public_dumps/poll_latest/lucifer19_neurogolf-agi-compression-core/submission_extract/task338.onnx
+- note: LB-CONFIRMED sub54654166: task047+G1 score7424.42; G1 delta exact +0.47

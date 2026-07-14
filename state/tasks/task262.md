@@ -40,3 +40,8 @@ output via And(Equal(rowval_full,cvals)[1,10,H,1], colmask[1,1,1,W]). Use a CHAN
 in the compare values (cvals[0]=-1) so the background channel never matches off-grid/empty
 rows — this is what lets a pure And replace a Where(bg) and keeps off-grid all-false to match
 the harness one-hot (which leaves off-grid cells all-zero, NOT ch0=1).
+
+## ADOPTED 20260712T140209Z
+- cost: 106 -> 74 (points 20.6959)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task262.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

@@ -41,3 +41,8 @@ uint8 Pad + uint8 Equal(arange) is exact and halves the dominant plane vs fp16 (
 1800B). Use an off-grid sentinel > 9 so off-grid matches no channel and stays all-zero,
 while on-grid bg stays 0 -> ch0. Recover per-position colours from single-row Slice +
 ReduceMax over cols (ch0 weight 0 in the k-ramp neutralises the all-bg cells).
+
+## ADOPTED 20260712T140202Z
+- cost: 168 -> 99 (points 20.4049)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task028.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

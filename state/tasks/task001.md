@@ -1989,3 +1989,8 @@ Interpretation:
   selector", but a final formulation that combines row and column relation by
   an additive/threshold-like AND or otherwise avoids both-negative leakage
   while still exposing only the graph `output`.
+
+## ADOPTED 20260712T140234Z
+- cost: 240 -> 190 (points 19.7530)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task001.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

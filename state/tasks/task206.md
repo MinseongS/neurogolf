@@ -90,3 +90,18 @@ matrix. See [[neurogolf-urad-7225-bundle-vein]] (mechs 1-3), [[neurogolf-bilinea
 
 ## 20260709 — NO-WIN 재개 레저 (free-output-einsum fanout)
 092-fanout(opus 딥, 20260709): NO-WIN. data-dependent translation/sprite-stamp; 배포넷은 이미 RoiAlign+ScatterND가 FREE output에 incremental write(small int64 idx만 과금). 어떤 non-output [1,10,30,30] 중간텐서도 36000B(=전체 넷 20×). profile-einsum은 단일 contraction이라 sum-of-distinct-arity-products 표현 불가. Reopen: 새 공개 덤프 / narrower(int32)-index gather-scatter op / channel-subset RoiAlign. ⭐translation-stamp은 einsum이 아니라 ScatterND(data=input)로 free output에 써라.
+
+## ADOPTED 20260712T140253Z
+- cost: 1795 -> 1783 (points 17.5139)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task206.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
+
+## ADOPTED 20260713T144128Z
+- cost: 1783 -> 1779 (points 17.5162)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task206/task206.onnx
+- note: Udit22 public-LB min-merge; bundled fail=0
+
+## ADOPTED 20260713T150910Z
+- cost: 1783 -> 1779 (points 17.5162)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task206/task206.onnx
+- note: isolated residual-public LB probe; bundled fail=0

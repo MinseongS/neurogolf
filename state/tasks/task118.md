@@ -183,3 +183,8 @@ reopen: if private-LB evidence shows fresh-style hidden draws (memorization nets
   dominated unless hidden is fresh-drawn AND uncurated.
 falsification history: "parallel detectors top out ~85%" (attempt #1) — falsified for the NMS+peel class:
   2-round ONNX peel reaches 96.7-97.2% fresh with bundled fail=0.
+
+## ADOPTED 20260712T141555Z
+- cost: 12282 -> 8699 (points 15.9290)
+- source: dumps/archive_extract/submission7300+/task118.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

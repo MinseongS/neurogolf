@@ -27,3 +27,8 @@ Two dominant items: (1) the four fp32 quadrant Slices [1,1,4,4] = 64B each = 256
 
 ## INSIGHT (transferable)
 ⭐ Priority-overlay of K fixed-colour one-hot quadrants = pure BOOL logic (no Sub/Mul). out_hi = mask_hi; out_lo = mask_lo AND NOT(OR of all higher masks); ch0 background = NOT(OR of all masks). And/Or/Not all run on bool under ORT_DISABLE_ALL (1B), beating the public fp16 Sub/Mul net (2B) — but the LOAD-BEARING catch: ORT Pad REJECTS bool, so Cast the per-channel results to uint8 before Concat+Pad. Also: a one-hot overlay MUST emit channel-0 for background cells (= NOT-any-quadrant) or the padded-region-vs-in-grid background distinction fails silently (here the 4x4 block is fully covered, every cell sets exactly one channel).
+
+## ADOPTED 20260712T140115Z
+- cost: 400 -> 114 (points 20.2638)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task257.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

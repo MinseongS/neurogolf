@@ -84,3 +84,8 @@ ENABLE_ALL-specific. Backup task150_pre_s9.onnx.
 Verified generator bound = 9. Flagged `mirror_indices` int32 [30] = 120B is already a floor Gather index; its length must equal the 30-wide free output, so it can't shrink to 9. Cropping forces a counted [1,10,30,9] 10800B re-embed. FLOOR.
 
 ⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).
+
+## ADOPTED 20260712T140251Z
+- cost: 138 -> 135 (points 20.0947)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task150.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

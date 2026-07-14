@@ -82,3 +82,8 @@ config→52-cell map. FLOOR ≈ 1820.
 - cost: 1820 -> 1770 (points 17.5213)
 - source: candidates/signed_poly_wave/final/task336/candidate.onnx
 - note: signed sparse-update Mul fold; fresh 2000/2000 div0
+
+## ADOPTED 20260712T140249Z
+- cost: 1770 -> 1619 (points 17.6104)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task336.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

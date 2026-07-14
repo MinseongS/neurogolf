@@ -198,3 +198,13 @@ entry plane (900B) is already minimal. Net: mem floor ~20KB -> ~15.05, ~0.1 shor
 - cost: 2975 -> 2858 (points 17.0421)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task270.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260713T144126Z
+- cost: 2858 -> 2828 (points 17.0527)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task270/task270.onnx
+- note: Udit22 public-LB min-merge; bundled fail=0
+
+## ADOPTED 20260713T150908Z
+- cost: 2858 -> 2828 (points 17.0527)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task270/task270.onnx
+- note: isolated residual-public LB probe; bundled fail=0

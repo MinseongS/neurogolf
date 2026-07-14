@@ -201,3 +201,8 @@ Mechanism detail: the pure 6-channel prune (`016789`) was already priced at the 
 - cost: 14082 -> 13926 (points 15.4585)
 - source: dumps/poby7722_7263/nets/task367.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260712T081102Z
+- cost: 13926 -> 13126 (points 15.5176)
+- source: candidates/task367_codex/cand.onnx
+- note: absorb codex highscore net: 13926->13126 (-800B), gate 266/266 fail=0, fresh 2500 div0 vs deployed (both 4/2500 irreducible generator tail), cand_fail<=inc_fail

@@ -111,3 +111,37 @@ requires another full mask/replay plane, which erases the `G_u8` deletion.
 
 Do not retry scalar line-colour replay unless a free-output construction can
 distinguish off-grid `G=0` from line pixels without a counted full plane.
+
+## ADOPTED 20260712T140209Z
+- cost: 11410 -> 7922 (points 16.0226)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task198.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
+
+## 2026-07-13 REGIME-CRACK attempt on `labf` (Conv fp32 3600B) — VERDICT: FLOOR (fp32-co-bind)
+- **Ran:** graph dump + semantics decode; built free-output base-recolour einsum
+  (`candidates/task198/build_regime.py` -> `regime.onnx`); gated both; ORT mixed-dtype probe.
+- **Tool+date:** `uv run ng gate` (onnx 1.21/ort 1.26) + ORT session-build probe, 2026-07-13, opus.
+- **Structure:** `labf = Conv1x1(input)` fp32 3600B (~45%) -> `lab` u8 900B = per-pixel base
+  colour-index READ of the one-hot fp32 input (black->green, line passthrough, ch0 merges ch3);
+  `out_label = Max(lab, room_u8, doors)` u8 900B; `output = Equal(out_label, colors)` = FREE.
+- **Why floor (both routes >=3600B fp32):**
+  1. Scalar-index route (current): any linear reduction of the *fp32* one-hot input to a
+     per-pixel index inherits fp32 by co-bind => [1,1,30,30] fp32 = 3600B (=labf), then Cast u8.
+     No 1-byte einsum/conv (harness feeds input fp32 always -> no u8-input escape; ORT has no u8 Einsum).
+  2. Free-output-einsum route: **FACT A (verified)** base recolour alone folds to the FREE output
+     via `einsum('bkrc,kj->bjrc', input, M)` — measured **memory=0, cost=100**, but bundled
+     **fail=266/266** (gap pixels stay green): the data-dependent overlay (bg AND gap -> yellow)
+     is essential and is an ADDITIVE second einsum term with an incompatible contraction skeleton.
+     Merging base+overlay into one free-output node needs an augmentation gate operand
+     `G[t>=2,30,30]`; **FACT B (verified)** ORT REJECTS an fp16 gate co-bound with fp32 input
+     (uniform-T rule) so G is forced fp32 = 7200B > the 3600B it replaces. Overlay's
+     separable(doors)+block(room 7x7) structure only shrinks G's upstream build, not the
+     materialized [2,30,30] fp32 operand. Net cost ~= 9722 > 7922 => LOSE.
+- **Taxonomy:** fp32-co-bind economics deep floor (playbook free-output-einsum.md); CONV-FP32
+  arsenal member where the counted plane is a genuine per-pixel fp32 colour READ, not a bool
+  Where routing mask. Consistent with the prior "scalar-line-colour" KILL (off-grid 0 disambiguation).
+- **Reopen trigger:** ORT gains a mixed-T Einsum/Conv kernel emitting a 1-byte carrier from an
+  fp32 operand, OR harness begins feeding `input` as a 1-byte dtype, OR a new public dump ships a
+  cheaper task198 net. Falsification history: none yet for this specific fp32-co-bind claim.
+- **Evidence:** `candidates/task198/build_regime.py` (FACT A/B reproducible); base-only
+  `regime.onnx` gates fail=266 cost=100. NOT adopted (deployed 7922 unchanged).

@@ -58,3 +58,8 @@ own channel-0 is the free in-grid mask, but the dense conv already exploits it
 ⭐ PROCESS: always RE-VERIFY a tasklog's "does-not-generalize / real 0" claim
 against the CURRENTLY stored net before chasing a gap-closer — slots get replaced
 and stale fresh-rate claims invent phantom +17 gains. Here the stored net is 200/200.
+
+## ADOPTED 20260713T143346Z
+- cost: 146 -> 136 (points 20.0873)
+- source: candidates/task317/compact_deconv.onnx
+- note: compact signed-center Conv + ConvTranspose block painter; bundled 265/0, fresh 2000/0, cost 900->136

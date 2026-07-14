@@ -130,3 +130,8 @@ TopK/ArgMax, currently fp16/fp32. Confirmed twice this session (264, 365) on the
 - cost: 3092 -> 3091 (points 16.9638)
 - source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task365.onnx
 - note: min-merge from overfit_nets
+
+## ADOPTED 20260712T141559Z
+- cost: 3091 -> 2088 (points 17.3560)
+- source: dumps/archive_extract/submission7300+/task365.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

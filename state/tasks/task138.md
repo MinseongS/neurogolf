@@ -101,3 +101,13 @@ Candidate from `reports/candidates/dedupe_initializers_sweep.py`.
 One byte-identical initializer alias was rewired.  Bundled gate remained fail=0.
 Cost `12267 -> 12266` (`memory 12215`, `params 52->51` equivalent active count);
 active overlay updated in `submission/overfit_nets/task138.onnx`.
+
+## ADOPTED 20260713T144127Z
+- cost: 11716 -> 11656 (points 15.6364)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task008/task138.onnx
+- note: Udit22 public-LB min-merge; bundled fail=0
+
+## ADOPTED 20260713T150909Z
+- cost: 11716 -> 11656 (points 15.6364)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task008/task138.onnx
+- note: isolated residual-public LB probe; bundled fail=0

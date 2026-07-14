@@ -46,3 +46,8 @@ as a scalar, do NOT build masked-copy marginals (Mul by a [1,10,1,1] one-hot the
 channels = two full [1,10,30,1] tensors). Instead reduce the free input over the spatial axis ONCE
 ([1,10,30,1]) and `Gather(marginal, chan_idx, axis=1)` -> [1,1,30,1] (120B). This halved the marginal
 cost here (4x1200B -> 2x1200B) for +0.43 pts. Generalises to any "select-then-profile-one-channel".
+
+## ADOPTED 20260712T140250Z
+- cost: 638 -> 598 (points 18.6064)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task065.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

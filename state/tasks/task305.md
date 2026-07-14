@@ -36,3 +36,8 @@ as max-colour-present (ReduceMax channel-weighted), recompute arithmetically wit
 fp16 Mod (exact <2048), Pad to 30x30 with a no-match sentinel, route into free BOOL
 output via Equal against chan-1 (folds the +1). Direct sibling of task061 (r*c). Any
 "clean table from corrupted table" task collapses to one scalar + one Mod plane.
+
+## ADOPTED 20260713T133621Z
+- cost: 636 -> 10 (points 22.6974)
+- source: candidates/task305/selfeinsum_from017.onnx
+- note: cost-10 self-Einsum periodic inpainting transfer from task017; bundled 266/0

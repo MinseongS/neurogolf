@@ -78,3 +78,8 @@ two scalar einsums 'bchw,c,h->' locate the single yellow; yellow11 plane dropped
   drop the [1,10,11,11] intermediate (~968B fp16) — small, uncertain vs an already-lean net.
 - reopen-trigger: if a general data-dependent-selection einsum fold is proven elsewhere (merge
   Srow @ x @ Scol into one node) with a measured >0.1 saving, port it here first.
+
+## ADOPTED 20260712T140059Z
+- cost: 1797 -> 310 (points 19.2634)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task163.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

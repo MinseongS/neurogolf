@@ -79,3 +79,13 @@ k5(cost 4068): val gate fail (bundled train#2가 generator guarantee 위반 — 
 - cost: 4068 -> 3500 (points 16.8395)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task162.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260713T144129Z
+- cost: 3500 -> 3499 (points 16.8398)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task162.onnx
+- note: Lucifer public-LB core min-merge; bundled fail=0
+
+## ADOPTED 20260713T150911Z
+- cost: 3500 -> 3499 (points 16.8398)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task162.onnx
+- note: isolated residual-public LB probe; bundled fail=0

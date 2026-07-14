@@ -57,3 +57,8 @@ table, a learned/verified integer conv BEATS every closed-form label-map (which
 must pay >=1 full-canvas fp32 plane). params = element count of [out,in,kh,kw], so
 channel/tap sparsity is worthless for scoring — the kernel reach (here +2 -> 5x5)
 and the fixed 10-channel I/O set the irreducible floor.
+
+## ADOPTED 20260712T140252Z
+- cost: 810 -> 803 (points 18.3116)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task122.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

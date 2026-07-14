@@ -65,3 +65,15 @@ must exceed every channel value, never 0).
 - 1668→1617 (+0.03). Periodic (r·c)%m = ((r%m)(c%m))%m separable via residue one-hots; k-indicator = 1-(t-(k-1))^2; ORT OneHot has no CPU kernel → use Gather(eye).
 - Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task061/regime.onnx. Backup: reports/candidates/fatmid_adopt_backup/task061.onnx.bak.
 - ⭐ Memory neurogolf-regime-crack-freeoutput-einsum. ⚠️ Concurrent-session collision risk on candidate dirs — always re-measure on-disk before adopt.
+
+## ADOPTED 20260713T141429Z
+- cost: 1617 -> 636 (points 18.5448)
+- source: candidates/task061/bitset.onnx
+- note: uint64 bitset multiplication-table renderer; bundled 267/0
+
+## 2026-07-14 — cost-130 self-Einsum leaderboard probe
+
+- Submitted only `candidates/task061/selfeinsum.onnx` as task061 in submission
+  54683163 to test the theoretical 636→130 (+1.5876) route without changing deployment.
+- Kaggle returned **SubmissionStatus.ERROR**. The deployed cost-636 bitset model remains active
+  and its SHA256 remains `c87efbf6386e8502a73023d62fef2515c2acffc9999fe71cc45c39ced9dcfc1d`.

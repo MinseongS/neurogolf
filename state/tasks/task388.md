@@ -87,3 +87,8 @@ Bundled gate after adoption: fail=0, cost `2190 -> 2188`
   275 s in {3,4} = 2 cases OK).
 - reopen-trigger: a same-rule task with <=2 tile-sizes, OR a proof the cyan+tile decode collapses
   into one <=800-param table (would flip the budget).
+
+## ADOPTED 20260712T140203Z
+- cost: 1829 -> 1102 (points 17.9951)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task388.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

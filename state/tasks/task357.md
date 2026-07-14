@@ -51,3 +51,8 @@ built with fp16 Mod+Abs on [1,1,30,1] (30-elem, exact) — only the final `c==pc
 comparison need ever be a full plane. Folding the cyan/sentinel background into a
 tiny [1,1,1,30] colcyan base (then one row-gated Where) keeps the whole net at
 just 3 full [1,1,30,30] planes.
+
+## ADOPTED 20260712T140251Z
+- cost: 291 -> 279 (points 19.3688)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task357.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

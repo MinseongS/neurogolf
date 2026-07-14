@@ -62,3 +62,8 @@ even at "gridok 1.0" on the cropped eval.
 ## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
 Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
 Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## ADOPTED 20260712T140112Z
+- cost: 1899 -> 504 (points 18.7774)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task099.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

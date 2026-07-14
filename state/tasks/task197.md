@@ -30,3 +30,8 @@ No rewrite adopted.  A float Conv variant would make the runtime colour kernel
 - cost: 852 -> 753 (points 18.3759)
 - source: candidates/task197/task197_self_einsum.onnx
 - note: self-einsum template row: compute match/active directly from free input, deleting counted T/g Slice outputs; trades 360 selector params for -440B memory
+
+## ADOPTED 20260713T141429Z
+- cost: 753 -> 130 (points 20.1325)
+- source: candidates/task197/identity_vote.onnx
+- note: onehot self-Einsum identity vote; bundled 267/0, fresh 50000/0

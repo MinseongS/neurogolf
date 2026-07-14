@@ -58,3 +58,7 @@ apparent shape-correspondence task into closed-form tier-B.
 
 ## S15 (2026-07-06) — ADOPTED from urad public bundle 7225.82 (sub 54367833): 511 -> 500 (+0.022)
 Mechanism: single Einsum + Gather. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). Source-owned via live_to_exact_source --write-src, re-measured fail=0. See [[neurogolf-urad-7225-bundle-vein]].
+## ADOPTED 20260712T140233Z
+- cost: 500 -> 395 (points 19.0211)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task253.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

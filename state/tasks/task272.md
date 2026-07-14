@@ -55,3 +55,8 @@ the full canvas (so any decomposition pays a ≥900B full plane) AND (c) the act
 numerically: Where-route 15.80, 5×5-active+bool-pad route 16.97 — both far below the 18.87 mem-0
 baseline. ⭐ Verified scorer fact: a bool [1,1,30,30] intermediate counts as 900B (itemsize from
 declared dtype), NOT 3600B — but 900B still busts any "+0.3" budget that needs <340.
+
+## ADOPTED 20260712T140127Z
+- cost: 402 -> 148 (points 20.0028)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task272.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

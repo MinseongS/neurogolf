@@ -101,3 +101,18 @@ chains + scalars.
   self-built 686-param form via 2026-07-09 min-merge (3883->3389). 137 was NEVER in any
   free-output-einsum floor list (floor_tasks/batch6_floored/pending_unconfirmed) — this
   is its first honest crack attempt, verdict FLOOR by data-dependent-coupling economics.
+
+## ADOPTED 20260713T143829Z
+- cost: 3389 -> 3017 (points 16.9880)
+- source: candidates/public_dumps/20260713_7281/extracted/task137.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T150957Z
+- cost: 3389 -> 3017 (points 16.9880)
+- source: candidates/public_dumps/20260713_7281/extracted/task137.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151938Z
+- cost: 3389 -> 3017 (points 16.9880)
+- source: candidates/public_dumps/20260713_7281/extracted/task137.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

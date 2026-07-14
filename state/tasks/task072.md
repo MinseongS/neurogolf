@@ -62,3 +62,8 @@ as the bg(ch0) mask (1 where neither/both → not green), so no extra `1-green` 
 - cost: 421 -> 367 (points 19.0946)
 - source: candidates/task072/conv_xor.onnx
 - note: two-panel XOR fold: both fp32 red-channel slices folded into one negative-pad Conv W[1,10,8,1] (taps ch2@kh0+kh7), s=TR+BR on [1,1,6,5]; XOR=Equal(s,1); fresh A/B 2500 cand=inc identical
+
+## ADOPTED 20260712T140144Z
+- cost: 367 -> 180 (points 19.8070)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task072.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

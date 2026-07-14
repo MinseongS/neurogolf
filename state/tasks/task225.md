@@ -54,3 +54,8 @@ rank-1 (rowmask ⊗ colvec) terms — group regions by their row band so only ~4
 [1,1,6,6] planes are materialised instead of one per region. mem_profile.py
 mis-reports shapes for opset-11 broadcast graphs (showed a phantom 36000 Mul / 3600
 Conv); trust harness.evaluate's number, which uses the real ORT trace.
+
+## ADOPTED 20260712T140126Z
+- cost: 1031 -> 363 (points 19.1056)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task225.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

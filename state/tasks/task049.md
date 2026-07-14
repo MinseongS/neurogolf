@@ -51,3 +51,8 @@ ReduceMax occupancy ([1,10,30,1] = 1200B ×2) plus a rare-gating Mul (another 12
 4800B total). Use this whenever you've recovered a per-channel selector one-hot and need
 its spatial plane. The "smallest box + rarest colour → solid origin-anchored block" rule is
 fully separable (rare one-hot ⊗ (r<tall) ⊗ (c<wide)) and beats the public scan floor.
+
+## ADOPTED 20260712T140253Z
+- cost: 345 -> 344 (points 19.1594)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task049.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

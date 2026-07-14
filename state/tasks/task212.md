@@ -76,3 +76,8 @@ avoiding BOTH the ~900B fp32 source read AND the ~400B decode carrier. ref_mecha
 the ready spec if that floor ever breaks.
 falsification history: first free-output-einsum attempt on 212; the mechanism solve REFUTES any "rule too
 hard" concern — the wall is purely the fp32-read byte floor, same class as the conv_fp32_arsenal DETECTION floor.
+
+## ADOPTED 20260712T140107Z
+- cost: 2249 -> 412 (points 18.9790)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task212.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

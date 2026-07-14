@@ -46,3 +46,8 @@ candidate for the same swap.
 Verified generator bound = 8. Same structure as task150 (row flip, axis=2): 120B Gather index is a floor, must match the 30-wide free output. Cropping forces a 9600B counted re-embed. FLOOR.
 
 ⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).
+
+## ADOPTED 20260712T140251Z
+- cost: 142 -> 138 (points 20.0727)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task155.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

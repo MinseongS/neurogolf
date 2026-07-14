@@ -57,3 +57,18 @@ free-input strided 탭 읽기면 통합이 오히려 평면을 구체화시킴. 
 - cost: 1955 -> 1755 (points 17.5298)
 - source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task185.onnx
 - note: min-merge from overfit_nets
+
+## ADOPTED 20260713T143828Z
+- cost: 1755 -> 1509 (points 17.6808)
+- source: candidates/public_dumps/20260713_7281/extracted/task185.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T150955Z
+- cost: 1755 -> 1509 (points 17.6808)
+- source: candidates/public_dumps/20260713_7281/extracted/task185.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151937Z
+- cost: 1755 -> 1509 (points 17.6808)
+- source: candidates/public_dumps/20260713_7281/extracted/task185.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

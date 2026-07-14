@@ -35,3 +35,8 @@ The dense [10,10,3,3]=910-param public Conv had mem 0 but its 910 params capped 
 - New grader cost = 311 (mem 120 + params 191), fail=0 bundled.
 - Fresh-gate 1500: incumbent fail = 0 | candidate fail = 0 | candidate != incumbent = 0  -> cand_fail <= incumbent_fail (safe rule PASS).
 - Mechanism: op-chain (Pad x5/BitwiseXor/Max, 11 nodes) -> 2-layer Conv+Relu MLP (3 nodes); algorithm redesign.
+
+## ADOPTED 20260712T140201Z
+- cost: 311 -> 175 (points 19.8352)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task266.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

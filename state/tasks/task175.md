@@ -54,3 +54,17 @@ to drop a full-canvas Add plane.
 
 
 ## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 1267 -> 1255 (+0.010); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].
+## ADOPTED 20260713T143836Z
+- cost: 1255 -> 1234 (points 17.8820)
+- source: candidates/public_dumps/20260713_7281/extracted/task175.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T151004Z
+- cost: 1255 -> 1234 (points 17.8820)
+- source: candidates/public_dumps/20260713_7281/extracted/task175.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151946Z
+- cost: 1255 -> 1234 (points 17.8820)
+- source: candidates/public_dumps/20260713_7281/extracted/task175.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

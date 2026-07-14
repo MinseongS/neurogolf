@@ -52,3 +52,8 @@ MINIMAL per-channel offset set that reproduces (out>0), then set the conv height
 combined offset span + 1 with an asymmetric pad. Here 9→4 cut params 90→40 (+0.81)
 with mem still 0. Always check tap span before assuming a depthwise kernel height is
 irreducible.
+
+## ADOPTED 20260712T140202Z
+- cost: 40 -> 24 (points 21.8219)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task073.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

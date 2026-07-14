@@ -207,3 +207,8 @@ Bundled gate after adoption: fail=0, cost `3464 -> 3462`
 - cost: 3462 -> 2465 (points 17.1901)
 - source: candidates/public_dumps/20260709/neurogolf-7266-48-github-com-qurore-kaggloop/nets/task037.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260712T140252Z
+- cost: 2465 -> 2414 (points 17.2110)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task037.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

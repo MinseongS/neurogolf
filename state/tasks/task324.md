@@ -94,3 +94,13 @@ Bundled gate after adoption: fail=0, cost `8864 -> 8862`
 - cost: 8639 -> 8609 (points 15.9394)
 - source: candidates/task324/kcollapse.onnx
 - note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays
+
+## ADOPTED 20260713T144127Z
+- cost: 8609 -> 8555 (points 15.9457)
+- source: candidates/public_dumps/archive1_20260713_ab6515/task324.onnx
+- note: V9 public-LB min-merge; bundled fail=0
+
+## ADOPTED 20260713T150909Z
+- cost: 8609 -> 8555 (points 15.9457)
+- source: candidates/public_dumps/archive1_20260713_ab6515/task324.onnx
+- note: isolated residual-public LB probe; bundled fail=0

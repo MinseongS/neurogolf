@@ -146,3 +146,18 @@ reopen: (1) a u8/fp16-producing op reading the free fp32 one-hot into a windowed
   max(declared,traced) charge; (4) public dump < 5288.
 falsification history: OLD "MARGINAL floor ~9600" (2026-06-19/S8) was REFUTED by S9 GridSample
   (5436). This 2026-07-11 audit confirms the post-S9 GridSample net (5288) has no VI-crop slack.
+
+## ADOPTED 20260713T143838Z
+- cost: 5288 -> 5242 (points 16.4355)
+- source: candidates/public_dumps/20260713_7281/extracted/task029.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T151005Z
+- cost: 5288 -> 5242 (points 16.4355)
+- source: candidates/public_dumps/20260713_7281/extracted/task029.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151947Z
+- cost: 5288 -> 5242 (points 16.4355)
+- source: candidates/public_dumps/20260713_7281/extracted/task029.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

@@ -29,3 +29,8 @@ Dominant intermediate: the two full-30 fp32 occupancy profiles `rowocc[1,10,30,1
 
 ## INSIGHT (transferable)
 ⭐ For a SOLID/OUTLINE bbox whose edges reach every side, bbox dimensions = pixel COUNT of the 0/1 occupancy profile: `tall = ReduceSum(rowocc, axis=row)`, `wide = ReduceSum(colocc, axis=col)` — strictly cheaper than the ramp-Where + ReduceMin/ReduceMax(min/max-coord) idiom (drops 4 fp16 ramp planes + 4 reductions). area = tall*wide; argmax over channels with ch0 forced to −1.
+
+## ADOPTED 20260712T141555Z
+- cost: 343 -> 183 (points 19.7905)
+- source: dumps/archive_extract/submission7300+/task100.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

@@ -58,3 +58,7 @@ This re-triages a "confirmed-infeasible (blank note)" task to +0.50.
 
 
 ## S15b (2026-07-06) — ADOPTED from prvsiyan 7235.05 min-merge: 838 -> 837 (+0.001); gate inc/cand=0/0 (safe). See [[neurogolf-urad-7225-bundle-vein]].
+## ADOPTED 20260712T140250Z
+- cost: 837 -> 776 (points 18.3458)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task143.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

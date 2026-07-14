@@ -53,3 +53,18 @@ ReduceSum-of-occupancy beats Mul(occ,ramp)+ReduceMax. Also: bbox MIN-index = Arg
 directly (first-True, fp32 only — ArgMax rejects bool), no where-source plane needed. And once scalars
 are recovered, run the whole small (≤7x7) value-assembly canvas in fp16 (half mem, values 0-10 exact;
 use range tests not Equal since ORT fp16 Equal is unsupported).
+
+## ADOPTED 20260713T143830Z
+- cost: 1935 -> 1766 (points 17.5235)
+- source: candidates/public_dumps/20260713_7281/extracted/task238.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T150958Z
+- cost: 1935 -> 1766 (points 17.5235)
+- source: candidates/public_dumps/20260713_7281/extracted/task238.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151939Z
+- cost: 1935 -> 1766 (points 17.5235)
+- source: candidates/public_dumps/20260713_7281/extracted/task238.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

@@ -30,3 +30,8 @@ Bundled gate after adoption: fail=0, cost `947 -> 945`
 - cost: 945 -> 697 (points 18.4532)
 - source: candidates/task239/rankeinsum.onnx
 - note: rank-machine + free-output sign-decode einsum: TopK(k=5,float feed) rank space replaces two output-welded 300B u8 profile planes; single [6,5] fp32 carrier G; coupling-tensor einsum Phib*C*rp*G*J; BAR=-30(d-k)^2 penalty expansion, BG=(v(r+1)-q)(mx-r); 945->697 (+0.304); fresh 2500/2500 div 0 vs deployed
+
+## ADOPTED 20260713T122040Z
+- cost: 697 -> 585 (points 18.6284)
+- source: candidates/task239/dtype.onnx
+- note: fp16 recast: TopK-tail Einsum operands all fp16-exact, output-coupled (bit-identical 267/267)

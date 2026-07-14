@@ -30,3 +30,8 @@ The v1 net's 1185B came from three full fp32 [1,10,3,3] planes (two Mul + one Su
 
 ## INSIGHT (transferable)
 For tiny fixed-size grids (3x3), the v1-style net often materializes multiple full 10-ch planes (Mul/Sum to combine colour one-hots). Replace with: compute the per-row/per-cell selector as a narrow [1,K,h,1] one-hot via Where, broadcast the remaining axis with Concat (Mul/Add reject uint8 but Concat and Where accept it), then Pad uint8 to 30x30 (Pad output is FREE). uint8 whole-pipeline + Concat-broadcast avoids the fp32 Mul/Sum 10-ch plane army. ORT still upcasts the fp16/uint8 ENTRY slice to fp32 in the trace, so the active-block slice (elems×4B) is the residual floor.
+
+## ADOPTED 20260712T140055Z
+- cost: 194 -> 30 (points 21.5988)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task052.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

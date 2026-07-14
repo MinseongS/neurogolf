@@ -113,3 +113,8 @@ the unique marker per column" to avoid a full coord×mask product plane.
 **result:** NO win found >= gate (cost<7599). Deployed net is the smallest known: all 20+ public dumps are >=8108 static (ours 8016 static / 7599 grader). Net is at its mechanism floor for the ray+stamp closed-form family.
 **reopen trigger:** (1) new public dump for task379 with mem<7446; (2) a separable/linear reformulation of the per-column ray range that escapes AND-of-halfplanes (would unlock free-output einsum, ~-2000..-2900B); (3) a mechanism that supports the 2 vertical bundled cases without a full 20x20 transpose pair; (4) cost-model change making params byte-weighted (would reopen dtype/param levers).
 **falsification history:** none yet — first full-arsenal audit of this net. Prior June "irreducible-floor analysis" (self-referential) is superseded but its DURABLE physics (fp32 detection floor from free-input einsum, 900B pad optimal for 20x20 via label-pad<onehot-pad) re-confirmed here.
+
+## ADOPTED 20260712T140249Z
+- cost: 7599 -> 6813 (points 16.1734)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task379.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

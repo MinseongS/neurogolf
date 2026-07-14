@@ -59,3 +59,8 @@ fixed fill color into the FREE Where output. Confirm the fill never overlaps the
 Verified generator bound = 10. Flagged `row_basis`/`col_basis` f16 [1,3,30,1]/[1,3,1,30] 180B each carry einsum free-output dims; the input is not an einsum operand axis, so there's no task187-style re-embed carrier. P[10,30]×2 adds +600 params > the 240B saved. FLOOR.
 
 ⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).
+
+## ADOPTED 20260712T140051Z
+- cost: 793 -> 58 (points 20.9396)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task043.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

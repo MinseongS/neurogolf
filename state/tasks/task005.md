@@ -244,3 +244,8 @@ tool+date: fresh_ab.py 400 draws, onnx 1.21/ort 1.26, 2026-07-12.
 reopen: a task005 candidate that is fresh-clean (>=1500 draws fail=0) AND cheaper than 6421.
 falsification history: none for this task; first fresh-regression catch in the codex merge wave
 (12 substantive merges were all clean — this was the only dirty net of 19).
+
+## ADOPTED 20260712T141553Z
+- cost: 6421 -> 4157 (points 16.6675)
+- source: dumps/archive_extract/submission7300+/task005.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

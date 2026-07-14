@@ -211,3 +211,8 @@ falsification history: FIX-B's first block-compare form (Mul+ReduceMax product) 
   selected slot — MAIN-side insurance changes the best-of-two in NO world and costs
   its price in the lenient world. DOCTRINE: insurance belongs exclusively on HEDGE;
   MAIN carries only strict wins. (005-scale ~0.001pt repairs remain fine on MAIN.)
+
+## ADOPTED 20260712T141557Z
+- cost: 764 -> 113 (points 20.2726)
+- source: dumps/archive_extract/submission7300+/task188.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

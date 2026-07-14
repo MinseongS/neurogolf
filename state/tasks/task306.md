@@ -76,3 +76,8 @@ no 30×30 value plane, no separate collapse Conv. Then a tiny K×K→(K+2)×(K+2
 (sentinel lanes for separators + off-grid) + a separable 2-D const-index Gather reconstructs
 the full canvas into the FREE output. This took the prior fold-value-plane net 8818→2512
 (15.84→17.09, +1.25). Generalises any "tile one block on a periodic separator lattice".
+
+## ADOPTED 20260712T140230Z
+- cost: 300 -> 220 (points 19.6064)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task306.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

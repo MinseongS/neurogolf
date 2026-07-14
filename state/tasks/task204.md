@@ -122,3 +122,18 @@ this rejects ONLY the bitpack mechanism for the current detection-dominated grap
 - Tool+date: opus triage agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
 - Reopen triggers: ledger OPEN ANGLE #1 (size-independent corner+parity detector); mixed-dtype fp16 blue_f (halves 1600B); new public net < 10232.
 - Falsification history: this is the systematic 233-lens sweep prescribed by STATE.md Active Vein 1 after the 2026-07-10 task233 win falsified its own 07-09 CLOSED verdict; lens applied and did not fire here.
+
+## ADOPTED 20260713T144123Z
+- cost: 10232 -> 8966 (points 15.8988)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task008/task204.onnx
+- note: Udit22 public-LB min-merge; bundled fail=0
+
+## ADOPTED 20260713T150905Z
+- cost: 10232 -> 8966 (points 15.8988)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task008/task204.onnx
+- note: isolated residual-public LB probe; bundled fail=0
+
+## ADOPTED 20260713T152925Z
+- cost: 10232 -> 8966 (points 15.8988)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task008/task204.onnx
+- note: residual top-5 isolated probe

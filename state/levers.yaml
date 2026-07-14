@@ -678,3 +678,24 @@ levers:
         reopen: "A different cost<=1 operator with nontrivial spatial AND channel semantics; dynamic
           scalar derived from input while remaining uncounted; a disclosed hidden-25 task ID/rule that
           points to one of these families with a missing mode; scorer/operator-set change."
+
+  - name: variadic-self-einsum-contraction-order
+    status: dormant
+    scanner: null
+    scanner_archive: null
+    recipe: null
+    agent_class: opus
+    expected_yield: "task110 +2.09, task061 +1.59 if a fast hidden-valid contraction exists"
+    ledger:
+      - date: 2026-07-14
+        ran: "Built five algebra-preserving task110 operand/equation permutations; structural-tested
+          all five; isolated 10s-benchmarked them; locally gated the fastest; submitted the two
+          public-4/4 runnable task110 variants as single-file Kaggle probes; also submitted the
+          related task061 cost-130 self-Einsum as a single-file probe."
+        verdict: "This run found no deployable win: task110 col_then_row cost340 gated 59/266 and
+          scored 0.00 in submission 54682630; pair_support_first also completed at 0.00 in submission
+          54682796 after a long scoring run; task061 cost130 returned Kaggle ERROR in submission
+          54683163. No deployed ONNX changed."
+        reopen: "A newly derived contraction order that completes a single hidden probe promptly
+          with positive score; an ORT Einsum kernel/planner change under a newly approved grader pin;
+          or a different factorization whose exact staged cost is below the incumbent."

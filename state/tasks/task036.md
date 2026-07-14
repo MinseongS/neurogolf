@@ -106,3 +106,8 @@ This is a direct 8000-mode ONNX overlay (constant dataset => permanent). Source 
 - cost: 1610 -> 1589 (points 17.6291)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task036.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260712T140205Z
+- cost: 1589 -> 1051 (points 18.0425)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task036.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

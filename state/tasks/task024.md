@@ -54,3 +54,8 @@ bool vectors and `And` them into the FREE bool output: zero full-canvas intermed
 cells in this benchmark are left ALL-ZERO (convert_to_numpy only iterates the grid extent), so a
 label-map approach MUST sentinel off-grid — but the separable form handles it automatically via the
 `colany`/`rowany` in-grid factors.
+
+## ADOPTED 20260712T140157Z
+- cost: 110 -> 56 (points 20.9746)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task024.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

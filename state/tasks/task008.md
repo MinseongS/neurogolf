@@ -139,3 +139,47 @@ Engine public-mine loop. fresh_verify 1500 = 0/0/0 (bit-identical to incumbent).
 - cost: 2683 -> 2127 (points 17.3375)
 - source: candidates/task008/trim2_cand.onnx
 - note: trim rebuild 2683->2127 (+0.232, bit-identical): selectors folded into extraction einsums, Floor-free log-decode, label re-encode -> direct Cast(crop) red stamp, cyan path -> 4-cell clamped ScatterND + rank-2 canvas; community '148' = sparse mirage, dense floor accounting in tasklog
+
+## 2026-07-12 — "148 via self-einsum" claim RE-INVESTIGATED → REFUTED with hard measurement (ledger)
+User relayed a scorer's claim: task008 정리 가능 @ cost 148 (=20pt), self-einsum만으로.
+Per epistemic rule, re-opened the S15 "task-number confusion" verdict (that verdict was
+assertion-only; this pass backs it with data + a physics floor proof).
+
+**(1) What was run:**
+- Measured counted-cost of EVERY task008.onnx we hold (28 public dumps + ours) via
+  neurogolf.scoring grader path. Result: **ours leads at 2127 (17.34pt)**; best public =
+  2711 (biohack/nikita/yusuke), typical public 2743. **ZERO artifacts near 148** — the
+  claimed net does not exist in any dump.
+- Verified the rule on 400 fresh gen: output IS a single-axis permutation of input PER
+  EXAMPLE (row-perm for V, col-perm for H), 400/400, both-axis-ambiguous=0. Confirmed
+  "magnets": red(2) object rigid-translates one axis to become edge-adjacent to fixed
+  cyan(8) 2×2; flip/xpose randomize which of {up,down,left,right} the network sees.
+- Confirmed 150/155 (the real 20pt class) = 138/142 cost, single-axis static-ish Gather.
+
+**(2) Tool+date:** cost measurement + arc-gen 05f2a901 separability probe, 2026-07-12,
+opus. (`tools/per_tensor_cost.py` scoring path.)
+
+**(3) FLOOR PROOF (why 148 is physically impossible here):** 148 = one [30]-ish int index
+(120B) + scalars — the signature of a SINGLE Gather with NO plane. task008 is genuinely
+TWO-axis (mixed V/H across examples) and cyan-fixed (not a uniform grid shift). A static
+graph must therefore realize BOTH a row-reindex and a col-reindex; per example one is
+identity but WHICH one is data-dependent, so both Gathers must exist → ≥1 [30,30]-class
+intermediate is unavoidable. Cheapest such plane = int8 900B (fp32 input forces a Cast→900
++ Gather→900 ≈ 1800B) or fp32 3600B. **self-einsum does NOT escape this:** einsum applies
+a data-dependent permutation only via permutation MATRICES P@input@Q; P,Q are [30,30],
+data-dependent → cannot be free init params → they count as fp32/bool planes (≥900B each).
+Einsum's free equation-attr buys nothing when the permutation DATA must live in a counted
+tensor. 148 is reachable only when the "matrix" is itself free (input/output-derived, e.g.
+067 input², 179/241 transpose) — task008's reindex is neither.
+
+**True floor ≈ 1800B (~17.9pt), NOT 148/20pt.** Our 2127 is ~300B above that floor
+(possible ~+0.15 via a leaner cast/gather route), but that is a 0.0X dtype-tail win, below
+the 0.X-mechanism bar — deprioritized. No change adopted.
+
+**(4) Falsification history / reopen-trigger:** prior "floor 4809/4913" was falsified 4×
+(→3241→2683→2127), so this floor is stated as an INDEPENDENT physics minimum (mixed-axis
+⇒ ≥1 counted plane), not self-referential. REOPEN if: (a) a public artifact measuring
+≤~1500 for task008 actually appears in a dump (none as of 2026-07-12), or (b) an onnx-1.21
+primitive is found that applies a data-dependent 2-axis separable reindex with no ≥900B
+intermediate (GatherElements/GatherND indices are themselves ≥900B planes — checked), or
+(c) the generator is confirmed to always expose one axis (it does not — flip/xpose random).

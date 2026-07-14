@@ -98,3 +98,8 @@ needed, no full-resolution image.
 channel to the 16x18 active region; fp16 on the same plane would have ADDED bytes).
 Compute the exact active extent from the generator (30k fresh: last row<=15,
 col<=17) and Slice straight to a small fp32 canvas instead of a full 30x30 Conv.
+
+## ADOPTED 20260712T140127Z
+- cost: 921 -> 338 (points 19.1770)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task195.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

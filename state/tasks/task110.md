@@ -181,3 +181,18 @@ TRANSFERABLE: period/tiling tasks with small selection vectors → gates-as-eins
 - cost: 5811 -> 2751 (points 17.0803)
 - source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task110.onnx
 - note: min-merge from overfit_nets
+
+## 2026-07-14 — variadic self-Einsum contraction-order probe
+
+- Source candidate `bundled_selfeinsum.onnx` is one 30-operand Einsum, cost 340 versus
+  deployed cost 2751 (theoretical +2.0908). Operand/equation pairs were permuted together;
+  structural tests prove every variant is a full permutation and preserves the exact pair multiset.
+- Isolated first-inference benchmark: `col_then_row` 2.49s, `pair_support_first` 6.19s;
+  `pair_input_first` and `reverse` exceeded 10s, `support_first` errored.
+- Official local gate on `col_then_row`: pass 59 / fail 207, cost 340, REJECT. Direct
+  public train+test diagnostic: both runnable variants are 4/4 exact.
+- Leaderboard single-file probes 54682630 (`col_then_row`) and 54682796
+  (`pair_support_first`) both completed **0.00**. The latter also required a long scoring
+  run, so neither ordering is a practical deployment candidate.
+- Deployed task110 was never modified; record-base SHA256 remains
+  `935e66d9b13d4bcb6c8f27924ca41fdcca2c2b149b60035d0825c67200e8dc40`.

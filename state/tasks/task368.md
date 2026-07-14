@@ -204,3 +204,8 @@ Follow-up pruning removed dead initializer `topk_i8_zero_368`. Cost: 5042 -> 504
 - cost: 3307 -> 3305 (points 16.8968)
 - source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task368.onnx
 - note: min-merge from overfit_nets
+
+## ADOPTED 20260712T140144Z
+- cost: 3305 -> 1611 (points 17.6154)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task368.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

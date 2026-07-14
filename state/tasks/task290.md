@@ -69,3 +69,8 @@ via `Where(cnt==min,chidx,-1)` + ReduceMax.
 — the offset is a closed-form scalar. The data-dependent TRANSLATION (square at (row,col)
 -> output at (0,0)) likewise vanishes because the output is built directly in its own
 frame from scalars; no Gather/shift required.
+
+## ADOPTED 20260712T140234Z
+- cost: 355 -> 283 (points 19.3546)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task290.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

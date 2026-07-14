@@ -57,3 +57,8 @@ rot180-candsize pick is NOT exact and silently fails genverify). Also: a 90° ro
 matrix — `rot90 = transpose(reverse_rows(x))` via a negative-step Slice + Transpose (0 params),
 and the neighbouring-centre rotation is just a 1-column shift (Pad-left + Slice), avoiding a
 second MatMul. Route the colour insert through `Where(cond30, color_onehot[1,10,1,1], input)`.
+
+## ADOPTED 20260712T141553Z
+- cost: 1308 -> 962 (points 18.1310)
+- source: dumps/archive_extract/submission7300+/task027.onnx
+- note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite

@@ -52,3 +52,8 @@ small/contiguous.
 **Blocker class:** already-at-floor. Everything counted is a channel-vector or scalar (≤12B); a 4-way fingerprint classifier has no spatial working plane. The rich log's build-agent reached mem 60; the LANDED net is even leaner at 34B.
 
 **Lever:** no lever visible. Near the mem-0/scalar floor; no plane to narrow.
+
+## ADOPTED 20260712T140248Z
+- cost: 34 -> 30 (points 21.5988)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task056.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

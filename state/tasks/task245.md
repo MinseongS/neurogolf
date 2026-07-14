@@ -91,3 +91,8 @@ scalar.
 - cost: 2147 -> 2117 (points 17.3422)
 - source: candidates/task245/kcollapse.onnx
 - note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays
+
+## ADOPTED 20260712T140204Z
+- cost: 2117 -> 1297 (points 17.8322)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task245.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft

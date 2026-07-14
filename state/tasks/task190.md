@@ -60,3 +60,8 @@ fp16 `dval=rr−cc` / `aval=rr+cc` full planes (−400B here).
 ⭐ **`Where(mask, occf, 0)` and `Where(mask, k, 0)` replace cast+Mul** (drops the bool→f16 cast
 plane each time); reduce a detection plane to 1-D row/col profiles BEFORE the index-weighted
 ReduceSum to recover (row,col) scalars without two full product planes.
+
+## ADOPTED 20260712T140209Z
+- cost: 2355 -> 1656 (points 17.5878)
+- source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task190.onnx
+- note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
