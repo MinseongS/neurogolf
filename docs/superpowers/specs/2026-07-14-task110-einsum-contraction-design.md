@@ -19,7 +19,7 @@ This work is successful only after:
 
 In scope:
 
-- Reorder the operands and matching equation terms of the existing 31-operand task110
+- Reorder the operands and matching equation terms of the existing 30-operand task110
   Einsum without changing its mathematical expression.
 - If reordering alone is still too slow, split the expression into small comparison-profile
   Einsums followed by one free-output renderer.
@@ -60,7 +60,7 @@ Kill criterion:
 
 ### B. Staged comparison profiles plus free-output renderer (fallback)
 
-Split the 31-operand product into the eight logical row/column comparison factors already
+Split the 30-operand product into the eight logical row/column comparison factors already
 visible in the equation. Each factor emits only the indices required by the final render;
 the builder rejects any proposed factor whose materialized output is larger than a
 length-30 fp32 profile. A final Einsum multiplies those profiles with the free input and

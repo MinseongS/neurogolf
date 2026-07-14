@@ -46,8 +46,9 @@ def signature(model):
     return Counter(zip(node.input, lhs, strict=True))
 
 def test_every_order_is_a_full_permutation():
+    operand_count = len(onnx.load(SOURCE).graph.node[0].input)
     for name, order in VARIANT_ORDERS.items():
-        assert tuple(sorted(order)) == tuple(range(31)), name
+        assert tuple(sorted(order)) == tuple(range(operand_count)), name
 
 def test_reordering_preserves_operand_term_pairs():
     original = onnx.load(SOURCE)
@@ -80,18 +81,19 @@ PAIR_SUPPORT_FIRST = (15,23,0,1, 16,24,2,3, 17,25,4,5, 18,26,6,7,
 COL_THEN_ROW = (18,26,6,7, 19,27,8,9, 20,28,10,11, 21,29,12,13,
                 15,23,0,1, 16,24,2,3, 17,25,4,5, 22,14)
 VARIANT_ORDERS = {
-    "support_first": tuple(range(15,31)) + tuple(range(15)),
+    "support_first": tuple(range(15,30)) + tuple(range(15)),
     "pair_input_first": PAIR_INPUT_FIRST,
     "pair_support_first": PAIR_SUPPORT_FIRST,
     "col_then_row": COL_THEN_ROW,
-    "reverse": tuple(reversed(range(31))),
+    "reverse": tuple(reversed(range(30))),
 }
 
 def reorder_model(source: Path, order: tuple[int, ...]) -> onnx.ModelProto:
-    if tuple(sorted(order)) != tuple(range(31)):
-        raise ValueError("order must permute range(31)")
     model = onnx.load(source)
     node = model.graph.node[0]
+    operand_count = len(node.input)
+    if tuple(sorted(order)) != tuple(range(operand_count)):
+        raise ValueError(f"order must permute range({operand_count})")
     attr = next(a for a in node.attribute if a.name == "equation")
     lhs, rhs = onnx.helper.get_attribute_value(attr).decode().split("->", 1)
     terms, inputs = lhs.split(","), list(node.input)
@@ -279,7 +281,7 @@ Expected: adoption succeeds through the mandatory gate and replaces only task110
 .venv/bin/ng verify --hash
 ```
 
-Expected: 400/400 and HASH-OK; manifest total improves by about 2.411 points from 7424.2851 to about 7426.696.
+Expected: 400/400 and HASH-OK; manifest total improves by about 2.091 points from 7424.2851 to about 7426.376.
 
 - [ ] **Step 5: Preserve dirty-worktree ownership**
 
@@ -315,7 +317,7 @@ Expected: one new submission ID. Record the ID immediately in `state/submissions
 
 Run: `.venv/bin/kaggle competitions submissions -c neuro-golf`
 
-Expected if the local model generalizes to the leaderboard contract: approximately 7426.5 to 7426.9. Treat the actual leaderboard result as authoritative.
+Expected if the local model generalizes to the leaderboard contract: approximately 7426.3 to 7426.7. Treat the actual leaderboard result as authoritative.
 
 - [ ] **Step 4: Keep or rollback based on the isolated result**
 
