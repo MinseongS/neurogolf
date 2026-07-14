@@ -201,3 +201,28 @@ ran: recompile audit (fable fork): Design A single runtime-kernel Conv is SEMANT
 tool+date: fable fork + hand byte-accounting vs generator, 2026-07-11.
 reopen: k>=24 refit if hidden-set size is ever established >2; computed-kernel assembly op; public net <11320.
 falsification history: the bound audit (2026-07-11) over-estimated this task's gap; its premise is corrected by this entry.
+
+## 2026-07-14 — exact full-prototype relational rule (compiler target)
+
+Direct generator analysis removed the need for global hash lookup.  Colours are
+unique across sprite types, and every type has one complete 3x3 prototype.  An
+exact solver is:
+
+1. find a non-background centre colour `b` with 2 or 4 equal-colour `a`
+   neighbours in one of X/plus/horizontal/vertical layouts;
+2. for every visible `b` centre, write `a` at the prototype offsets;
+3. wherever every prototype offset already contains `a`, write `b` at the
+   centre;
+4. retain the input elsewhere.
+
+This rule matched `266/266` bundled examples and `10000/10000` fresh generator
+examples.  Requiring every prototype offset in step 3 is essential: a mere
+two-neighbour vote creates shifted false centres for four-arm X/plus sprites.
+
+The natural free-output self-Einsum compiler is estimated around 4.9K static
+parameters, but its straightforward factorization needs roughly 50 repeated
+operands (four source offsets, four target offsets, identity, branch routing,
+and factored shifts).  Given the task285 contraction failure, that graph was
+not submitted or adopted without a bounded-rank contraction plan.  Reopen with
+a compact shape-role contraction or an operator that evaluates the four local
+offset reads without materializing full shifted input planes.
