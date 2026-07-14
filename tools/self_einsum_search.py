@@ -48,9 +48,6 @@ def _validate_query(query: Query) -> Query:
 
     internal_colors = colors - {"k"}
     internal_spaces = spaces - {"r", "c"}
-    # Raw internal names are remapped; only k/r/c carry anchored axis semantics.
-    if colors & {"r", "c"} or "k" in spaces or internal_colors & internal_spaces:
-        raise ValueError("query labels cannot be reserved or shared across types")
     if "k" not in colors or not {"r", "c"} <= spaces:
         raise ValueError("query operands must supply output labels k, r, and c")
     if (

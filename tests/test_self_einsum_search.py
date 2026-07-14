@@ -76,15 +76,17 @@ def test_every_atom_must_have_arity_three(query):
 @pytest.mark.parametrize(
     "query",
     [
-        (("k", "r", "c"), ("r", "r", "c")),
-        (("k", "r", "k"),),
-        (("k", "r", "c"), ("c", "r", "c")),
-        (("k", "r", "c"), ("u", "u", "c")),
+        (("k", "r", "c"), ("r", "c", "x")),
+        (("k", "r", "c"), ("b", "c", "x")),
+        (("k", "r", "c"), ("u", "c", "k")),
+        (("k", "r", "c"), ("u", "c", "b")),
+        (("k", "r", "c"), ("u", "c", "u")),
     ],
 )
-def test_reserved_and_cross_type_labels_are_rejected(query):
-    with pytest.raises(ValueError, match="reserved or shared across types"):
-        canonicalize(query)
+def test_raw_label_spelling_is_independent_between_types(query):
+    ordinary = (("k", "r", "c"), ("v", "c", "y"))
+    assert canonicalize(query) == canonicalize(ordinary)
+    assert to_equation(query) == "bkrc,bucx->bkrc"
 
 
 @pytest.mark.parametrize(
