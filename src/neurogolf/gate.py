@@ -11,7 +11,10 @@ eval_isolated runs scoring in an isolated subprocess because ORT
 weight-aliasing means only isolated per-task processes give true scores.
 """
 
-import json, subprocess, sys
+import json
+import os
+import subprocess
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from neurogolf.paths import ROOT, OVERFIT_NETS, STATE
@@ -27,9 +30,18 @@ row['cost'] = None if row['memory'] is None or row['params'] is None else int(ro
 print(json.dumps(row))
 """
 
+
+def _eval_timeout_seconds() -> int:
+    raw = os.environ.get("NG_EVAL_TIMEOUT_SECONDS", "600")
+    try:
+        return max(1, int(raw))
+    except ValueError:
+        return 600
+
 def eval_isolated(model_path: Path, task_num: int) -> dict:
     proc = subprocess.run([sys.executable, "-c", _EVAL_CODE, str(task_num), str(model_path)],
-                          cwd=str(ROOT), text=True, capture_output=True, timeout=600)
+                          cwd=str(ROOT), text=True, capture_output=True,
+                          timeout=_eval_timeout_seconds())
     if proc.returncode != 0 or not proc.stdout.strip():
         return {"ok": False, "fail": None, "cost": None, "error": (proc.stderr or "no output")[-500:]}
     return json.loads(proc.stdout.strip().splitlines()[-1])

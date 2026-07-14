@@ -1,4 +1,6 @@
-from pathlib import Path
+import json
+import subprocess
+
 from neurogolf import gate
 
 def _fake_eval(fail, cost):
@@ -30,3 +32,24 @@ def test_gate_passes_clean_cheaper(monkeypatch, tmp_path):
     monkeypatch.setattr(gate, "find_unsigned_topk", lambda p: [])
     r = gate.gate(tmp_path / "c.onnx", 1)
     assert r.ok and r.candidate["cost"] == 100 and r.incumbent_cost == 500
+
+
+def test_eval_isolated_honors_configurable_timeout(monkeypatch, tmp_path):
+    seen = {}
+
+    def fake_run(*args, **kwargs):
+        seen["timeout"] = kwargs["timeout"]
+        return subprocess.CompletedProcess(
+            args=args[0],
+            returncode=0,
+            stdout=json.dumps(_fake_eval(fail=0, cost=100)),
+            stderr="",
+        )
+
+    monkeypatch.setenv("NG_EVAL_TIMEOUT_SECONDS", "900")
+    monkeypatch.setattr(gate.subprocess, "run", fake_run)
+
+    result = gate.eval_isolated(tmp_path / "candidate.onnx", 54)
+
+    assert result["cost"] == 100
+    assert seen["timeout"] == 900
