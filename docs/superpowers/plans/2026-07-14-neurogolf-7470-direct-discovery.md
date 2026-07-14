@@ -91,15 +91,14 @@ import onnx
 from onnx import TensorProto, helper
 
 Query: TypeAlias = tuple[tuple[str, str, str], ...]
-_COLOR_INTERNAL = iter("uvwxyz")
-_SPACE_INTERNAL = iter("xyaefghijlmnopqstvwz")
 
 
 def canonicalize(query: Query) -> Query:
     color_map: dict[str, str] = {"k": "k"}
     space_map: dict[str, str] = {"r": "r", "c": "c"}
-    color_names = iter("uvwxyz")
-    space_names = iter("xyaefghijlmnopqstvwz")
+    # Keep typed label pools disjoint and reserve b/k/r/c for batch/output axes.
+    color_names = iter("uvwlmnopqst")
+    space_names = iter("xyzadefghij")
     out = []
     for color, row, col in query:
         if color not in color_map:
