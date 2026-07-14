@@ -167,8 +167,8 @@ git commit -m "feat: add typed self-einsum query core" -m "Co-Authored-By: Claud
 - Produces: `expand_query(query: Query) -> set[Query]` adding one connected typed input atom.
 - Produces: `query_loss(query: Query, examples: list[tuple[np.ndarray, np.ndarray]]) -> int`.
 - Produces: `search_task(task_num: int, max_atoms: int = 8, beam: int = 3000) -> list[dict]`.
-- Produces: `Correction` with optional channel mask `[10]`, row/column gates `[30]`, and channel mixer `[10,10]`, all embedded as small operands in the final output Einsum.
-- Produces: `fit_small_corrections(raw, target, max_params: int = 150) -> list[Correction]` for task017-style near-hit completion.
+- Produces: `Correction` with optional per-query-label channel mask `[10]`, internal row/column gates `[30]`, and source-to-output channel mixer `[10,10]`, all embedded as small operands in the final output Einsum.
+- Produces: `fit_small_corrections(query, examples, max_params: int = 150) -> list[Correction]` for task017/task197-style completion. It inserts candidate operands on the query's internal labels before contraction; it must not try to infer internal gates from an already-contracted raw output.
 - CLI: `uv run python tools/self_einsum_search.py --tasks 1-400 --max-atoms 8 --beam 3000 --output candidates/direct_discovery/self_einsum_hits.json`.
 
 - [ ] **Step 1: Write expansion and search regression tests**
@@ -195,12 +195,15 @@ def test_search_rediscovers_task067_with_two_atoms():
 
 
 def test_channel_mask_completes_a_low_cost_near_hit():
-    raw = np.ones((1, 10, 2, 2), dtype=bool)
-    target = raw.copy()
+    raw_input = np.ones((1, 10, 2, 2), dtype=bool)
+    target = raw_input.copy()
     target[:, 1] = False
-    corrections = fit_small_corrections(raw, target, max_params=10)
+    query = (("k", "r", "c"),)
+    corrections = fit_small_corrections(query, [(raw_input, target)], max_params=10)
     assert any(c.channel_mask == (1, 0, 1, 1, 1, 1, 1, 1, 1, 1) for c in corrections)
 ```
+
+Also add two deployed-mechanism controls: rebuild task017's five-input query plus one reused `[10]` mask at cost 10, and task197's three-input raw query plus one reused `[30]` internal gate and `[10,10]` channel mixer at cost 130. Each rebuilt model must contain one graph-output `Einsum`, match every bundled example, and have exactly the expected initializer element count. These are regression oracles for the correction compiler, not claims that the search beam must rediscover both immediately.
 
 - [ ] **Step 2: Run the new tests and verify failure on missing interfaces**
 
@@ -218,6 +221,8 @@ The implementation must:
 - canonicalize before deduplication;
 - evaluate all bundled examples, rank by total wrong output cells, and retain exact hits plus the best `beam` candidates at every depth;
 - test structured near-hits with channel keep/drop masks, channel permutation or signed mixers, and separable row/column gates;
+- fit masks and gates against the uncontracted query variables across all bundled examples; in particular, a gate on internal label `x` changes the contraction and cannot be reconstructed from the final raw `[B,K,R,C]` tensor alone;
+- when a channel mixer is present, alpha-rename the query's anchored source channel `k` to a fresh internal color label `u`, append mixer operand `ku`, and still emit final output `bkrc`; this lets the valid raw query `nkrj,naxc,nayj` compile to task197's deployed form `nurj,naxc,nayj,x,y,ku->nkrc` without weakening Task 1's query validation;
 - accept a correction only when every bundled example is exact, its initializers contain at most 150 total elements, and it creates no counted intermediate tensor;
 - compile each correction as extra operands of the same graph-output Einsum, following task017's cost-10 precedent rather than assuming that only cost-0 hits matter;
 - reject equations longer than 52 distinct labels or models that fail ONNX checker/ORT construction;
