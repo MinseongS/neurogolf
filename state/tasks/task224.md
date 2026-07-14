@@ -87,3 +87,8 @@ Gate: evaluate bundled fail=0 + **bit-identical outputs** over all train/test/ar
 - cost: 1737 -> 1552 (points 17.6527)
 - source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task224.onnx
 - note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
+
+## ADOPTED 20260713T112920Z
+- cost: 1552 -> 1436 (points 17.7304)
+- source: candidates/task224/archive_hybrid.onnx
+- note: 7410 archive hybrid: encode row_code>col_code border as sign and fuse border branch + channel paint into FREE-output Einsum; bundled 266/266, cost 1552->1436

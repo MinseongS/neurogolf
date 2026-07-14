@@ -95,3 +95,13 @@ matrix. See [[neurogolf-urad-7225-bundle-vein]] (mechs 1-3), [[neurogolf-bilinea
 - cost: 1795 -> 1783 (points 17.5139)
 - source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task206.onnx
 - note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
+
+## ADOPTED 20260713T144128Z
+- cost: 1783 -> 1779 (points 17.5162)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task206/task206.onnx
+- note: Udit22 public-LB min-merge; bundled fail=0
+
+## ADOPTED 20260713T150910Z
+- cost: 1783 -> 1779 (points 17.5162)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task206/task206.onnx
+- note: isolated residual-public LB probe; bundled fail=0

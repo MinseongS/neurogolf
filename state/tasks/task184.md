@@ -105,3 +105,13 @@ Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup 
 - cost: 2039 -> 1860 (points 17.4717)
 - source: candidates/task184/task184_nonempty_greater.onnx
 - note: dtype-island: replace Sign(count)->Cast(uint8) with Greater(count,0)->Cast(uint8), dropping two fp32 nonempty vectors; fresh-equivalent pattern
+
+## ADOPTED 20260713T144129Z
+- cost: 1860 -> 1859 (points 17.4722)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task184/task184.onnx
+- note: Udit22 public-LB min-merge; bundled fail=0
+
+## ADOPTED 20260713T150911Z
+- cost: 1860 -> 1859 (points 17.4722)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task184/task184.onnx
+- note: isolated residual-public LB probe; bundled fail=0

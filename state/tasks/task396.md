@@ -119,3 +119,13 @@ Bundled gate after adoption: fail=0, cost `4928 -> 4926`
 - cost: 3566 -> 3562 (points 16.8219)
 - source: dumps/poby7722_7263/nets/task396.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260713T144129Z
+- cost: 3562 -> 3561 (points 16.8222)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task396.onnx
+- note: Lucifer public-LB core min-merge; bundled fail=0
+
+## ADOPTED 20260713T150911Z
+- cost: 3562 -> 3561 (points 16.8222)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task396.onnx
+- note: isolated residual-public LB probe; bundled fail=0

@@ -143,3 +143,25 @@ falsification history: SUPERSEDES the pre-redesign S8/S9 "13.357 stored unbeatab
 - cost: 7775 -> 7609 (points 16.0629)
 - source: dumps/archive_extract/submission7300+/task209.onnx
 - note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite
+
+## ADOPTED 20260713T112224Z
+- cost: 7609 -> 7579 (points 16.0669)
+- source: candidates/task209/kcollapse.onnx
+- note: kernel-collapse: sparse Conv single tap -> 1x1+pad; bit-identical params -30
+
+## 2026-07-13 — byte-golf axis floor CONFIRMED (QLinearConv color-decode recast = measured net-NEGATIVE)
+ran: per-tensor cost audit of the DEPLOYED archive net (7579) — never plane-audited before (S8/S9
+  audits were vs our OLD net). Top counted intermediates: color_f 1600B f32 (Conv color-decode ->Cast u8),
+  Oidx30 900B u8, BmCell 576B bool, color_u8 400B u8; everything else <=400B, ALL already min-dtype.
+  Only overpay candidate = color_f fp32 1600B. Built QLinearConv recast (Cast input->u8 + QLinearConv,
+  bit-identical 4/4 stored) to kill the fp32 plane.
+tool+date: tools/per_tensor_cost.py-style static audit + ng gate isolated measure, 2026-07-13.
+verdict: REJECT — measured cost 7579 -> 14981 (memory 6895 -> 14295). The integer path must materialize a
+  COUNTED u8 copy of the full [1,10,30,30] input = 9000B; that dwarfs the 1600B fp32 Conv output it removes.
+  fp32 Conv is OPTIMAL for color-decode because it reads the FREE fp32 input directly. Confirms our own
+  cost-rule ([[neurogolf-detection-floor-costmodel-proof]] Cin_read=10 >= 3*Cout=3 => net-negative) by
+  direct measurement. All other planes already at minimal dtype/size. NO endogenous byte-golf win remains;
+  kernel-collapse (params -30, same day) was the last bit-identical lever.
+reopen: external (public/archive) net with measured fresh-fail <2.3% & cheaper (S15 routine) ONLY.
+  Do NOT re-attempt QLinearConv/integer color-decode recast on 209 (or any 1x1 color-decode reading >=3
+  input channels) — the free->counted input flip makes it strictly worse.

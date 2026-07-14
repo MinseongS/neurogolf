@@ -644,3 +644,8 @@ residual Kaggle-semantics risk (local mirror clean, LB-unproven combos): opset 1
 - Status: verified candidate only. This Codex worktree lacks the deployed
   `submission/overfit_nets` tree; do not mutate the main checkout implicitly.
   Adoption must still run through `ng adopt` in the authoritative checkout.
+
+## ADOPTED 20260712T143136Z
+- cost: 24703 -> 21816 (points 15.0096)
+- source: candidates/task233/cand_dynamic_corr.onnx
+- note: validated dynamic signed-correlation candidate (was merge-only); ng gate 266/0 fresh 3600/0

@@ -15,7 +15,8 @@ beyond the marker unchanged); (b) the aligned DEST row rd=rs+delta in the OTHER 
 cyan beam across all in-grid cols, dest cap stays red. flip mirrors columns so the source portal can
 be on either side; detected from which red run contains the marker rows.
 
-**Current:** 15.00 pts, ext:kojimar6275, mem 21676, params 353
+**Current (DEPLOYED):** 16.535 pts, cost 4744 (mem 4635 + params 109) — yuu111111111 net + S3 false_mid dedup.
+(The old "15.00 / ext:kojimar6275 / mem 21676" header was STALE — that external net was replaced long ago.)
 **Target tier:** B (label-map on a small WORK canvas) — output COPIES input colours + closed-form
 overrides; the only long-range coupling (dest = source-marker rows shifted by data-dependent delta)
 collapses to ONE Gather(axis=row) on a [1,1,24,1] vector, so no full coupling plane is needed.
@@ -38,6 +39,25 @@ the 24×12 region so it can't shrink), the final Pad carrier L [1,1,30,30] uint8
 carrier, required), `cyancol_idx` fp16 576B (marker-col detection), `redwin` 480B (red last-col
 window cols 7..11), and ~17 working bool masks at 288B each. These 288B masks are the bulk; further
 merging is possible but yields <0.1 pts.
+
+## S(2026-07-13) Einsum-collapse attempt — NO SAFE WIN (source reconciled instead)
+Attempted the "free-output Einsum collapse" lever on the deployed 4744 net. Full node-level analysis:
+- **900B carrier proven minimal**: Pad-on-label (label30 900B) < Pad-on-onehot (10×24×12 = 2880B). Floor for
+  the label-map→Equal→one-hot formulation.
+- **f32 entry slices are one-hot CHANNEL slices** (ch2=red left[24,1]/right[24,5], ch8=cyan[10,12], ch0=black
+  for W/H profile), values ∈{0,1}. Slice inherits input f32 → fp16 recast needs an added Cast plane
+  (480→720B, LOSS); region-cast is break-even. Slice-dtype wall confirmed, matches prior insight.
+- **Algorithmic core is non-multilinear** → not Einsum/walk-einsum collapsible: marker detect = ArgMax,
+  data-dependent row delta-shift = ScatterElements, beam fill = Less/Greater threshold. The "+1.2 pts if the
+  core vanishes" was a false premise; the core cannot vanish into free ops.
+- Remaining bool/u8 intermediates are all load-bearing distinct values; no bit-identical drop of size.
+- VERDICT (ledger): 4744 is the floor of THIS formulation. Ran: full deployed-graph dump + per-tensor cost +
+  per-node semantic trace (2026-07-13, onnx 1.21). Reopen trigger: a dynamic-width Slice primitive beating the
+  break-even, a genuinely multilinear reformulation of the beam geometry, or a cheaper external 148 dump.
+  A non-bit-identical rebuild is the SAME risk class that Kaggle-zeroed task233/023 (−16) — not worth <0.1.
+- **Side fix landed**: `src/custom/task148.py` was stale (params 254 / cost 4889 — missing the S3 false_mid
+  dedup). Reconciled to the deployed 109-param net (Concat false_mid → 6×zero_rows_b; drop false_mid, zeroL_u8).
+  Rebuild now reproduces mem 4635 / params 109 / 16.535 / fail=0 exactly.
 
 ## OPEN ANGLES (re-attack backlog)
 - Merge several 288B bool masks into the nested Where chain (defer row⊗col ANDs) — ~2-3 planes

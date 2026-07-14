@@ -68,3 +68,18 @@ DATA-DEPENDENT scale factor — the const-index Gather becomes a `floor(u/K)` Ga
 Verified generator bound = 15 (in 3×3, out ≤15). Flagged `mask_float` [30,3] 360B: its 30 IS the einsum free-output row dim. Cropping → Pad → counted 9000B fp32; the P[15,30] re-embed adds +450 params, which exceeds the 180B saved. FLOOR.
 
 ⭐ TRANSFERABLE: crop lever requires a counted ENTRY-read plane; a plane whose oversized dim is the free-output axis is un-croppable (S10 11/11 FLOOR — check output-weldedness before probing).
+
+## ADOPTED 20260713T143828Z
+- cost: 742 -> 650 (points 18.5230)
+- source: candidates/public_dumps/20260713_7281/extracted/task289.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T150956Z
+- cost: 742 -> 650 (points 18.5230)
+- source: candidates/public_dumps/20260713_7281/extracted/task289.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151937Z
+- cost: 742 -> 650 (points 18.5230)
+- source: candidates/public_dumps/20260713_7281/extracted/task289.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

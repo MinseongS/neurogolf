@@ -712,3 +712,16 @@ built from submission/merged_nets/.
 | 2026-07-12 14:06Z | 54610807 | **7378.79** | SAFE archive graft: 117 cheaper nets passing bundled + fresh 2000/0; task084 kept codex-985. Local 7396.27, showing arc-gen fresh-gate was overconservative. |
 | 2026-07-12 14:08Z | 54610908 | **7410.67 NEW RECORD** | ALL-IN archive graft: all 141 cheaper bundled-pass nets, including 22 fresh-fails + archive-084. Local 7410.5434; every included net passed Kaggle's real hidden suite. |
 | 2026-07-12 14:31Z | 54611605 | **7394.55 REVERTED** | Post-record task023 public tail + task233 dynamic correlation; local 7410.74 but LB regressed. Deployed set restored to the 54610908 manifest (7410.5434 local). |
+
+| 2026-07-13 12:47Z | safe sweep: task239 fp16 TopK-tail recast 697->585 (+0.175, bit-identical 267/267); local 7410.80 |
+| 2026-07-13 13:37Z | high-yield formula transfer: task305 periodic self-Einsum 636->10, task050/356 endpoint-fill 1896/1220->448; local 7417.3989, bundled 400/400 |
+| 2026-07-13 14:14Z | 7417.53 base + task197 identity-vote self-Einsum 753->130 (+1.756, fresh 50k/0) + task061 uint64 bitset 1617->636 (+0.933); local 7420.0886 |
+| 2026-07-13 14:42Z | 7420.22 confirmed base + Ryosuke 7281 per-task min-merge (+3.663, led by task047 single-Einsum +1.612) + public confirmed residual merge (+0.748); local 7424.5701, bundled 400/400 |
+| 2026-07-13 15:04Z | RESTORED confirmed 7420.22 configuration after rejecting unsafe public 7281 wave; keeps only task317 exact 146->136 (+0.071) and task032 exact rank-3 Einsum 910->588 (+0.437); local 7420.5963, bundled 400/400 |
+| 2026-07-13 15:09Z | ISOLATION A: confirmed 7420.22 base + exact task317/task032 (+0.508) + residual public min-merge only 18 tasks (+0.748); EXCLUDES all Ryosuke-7281 candidates including task047; local 7421.3440, bundled 400/400 |
+| 2026-07-13 15:10Z | ISOLATION B: residual-public 18 + Ryosuke-7281 31, but EXCLUDES task047 single-Einsum suspected hidden-zero; includes exact task317/task032; local 7423.7322 approx, bundled 400/400 |
+| 2026-07-13 15:16Z | CLEAN RECOVERY: exact confirmed 7420.22 configuration, all unsafe public wave and Kaggle-zero task032 Einsum removed; only task317 Conv+ConvTranspose 146->136 (+0.071) remains; local 7420.1596, bundled 400/400 |
+| 2026-07-13 15:18Z | TASK032 RETEST isolated: confirmed 7420.22 base + task317 +0.071 + task032 rank-3 Einsum 910->588 with -0.01 valid-cell safety margin; fixes prior zero-logit numerical knife edge; fresh 20k/0 div0; local 7420.5963 |
+| 2026-07-13 15:25Z | ADOPT LB-ISOLATED SAFE GROUP: confirmed 7420.22 base + task317 +0.071 + Ryosuke-7281 31 tasks excluding task047 +2.051; effect proven by sub54651291-sub54651270 = +2.05. task032 and residual-public 18 removed. local 7422.2107, bundled 400/400 |
+| 2026-07-13 15:29Z | COMPOSE LB-CONFIRMED wins: 7420.22 base + task317 +0.071 (sub54651464) + task032 safety-margin rank3 +0.437 (sub54651555 delta +0.44) + Ryosuke safe31 +2.051 (isolation delta). local 7422.6474, expected LB ~7422.78, bundled 400/400 |
+| 2026-07-13 15:29Z | RESIDUAL TOP5 PROBE on expected 7422.78 composed base: tasks338/127/204/048/023 only, local gain +0.6635; lower 13 residual candidates excluded. local 7423.3109, bundled 400/400 |

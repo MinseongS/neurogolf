@@ -82,3 +82,23 @@ showed `resid` and `Draw` are identical with matching static shape/dtype, so
 Bundled gate: fail=0.  Cost: 6412 -> 6348 (memory 6163 -> 6099, params 249
 unchanged).  Active overlay updated in `submission/overfit_nets/task023.onnx`;
 backup at `reports/candidates/task023/task023_pre_dynamic_cse.onnx`.
+
+## ADOPTED 20260712T143135Z
+- cost: 6348 -> 5926 (points 16.3129)
+- source: candidates/public_dumps/20260712_poll/evgendvorkin/task023.onnx
+- note: min-merge across local public dumps (evgendvorkin); bundle fail=0 cheaper
+
+## ADOPTED 20260713T144124Z
+- cost: 6348 -> 5926 (points 16.3129)
+- source: candidates/public_dumps/extracted_evgen_c115d5/task023.onnx
+- note: Evgen public-LB min-merge; bundled fail=0
+
+## ADOPTED 20260713T150906Z
+- cost: 6348 -> 5926 (points 16.3129)
+- source: candidates/public_dumps/extracted_evgen_c115d5/task023.onnx
+- note: isolated residual-public LB probe; bundled fail=0
+
+## ADOPTED 20260713T152926Z
+- cost: 6348 -> 5926 (points 16.3129)
+- source: candidates/public_dumps/extracted_evgen_c115d5/task023.onnx
+- note: residual top-5 isolated probe

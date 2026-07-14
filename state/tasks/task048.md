@@ -83,3 +83,18 @@ Artifact: candidates/task048/src_rebuild.onnx (gated numbers above).
 DECISION 2026-07-12: keep deployed on MAIN (swap EV ≈ +0.39 risk-removal − 0.356 cost ≈ break-even,
 portfolio doctrine says MAIN carries strict wins only); src_rebuild is a PRICED HEDGE-protection
 candidate (−0.356pt buys 1.53%→0) — include in any HEDGE v4 rebuild alongside the existing 8.
+
+## ADOPTED 20260713T144123Z
+- cost: 803 -> 744 (points 18.3880)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task048.onnx
+- note: Lucifer public-LB core min-merge; bundled fail=0
+
+## ADOPTED 20260713T150905Z
+- cost: 803 -> 744 (points 18.3880)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task048.onnx
+- note: isolated residual-public LB probe; bundled fail=0
+
+## ADOPTED 20260713T152926Z
+- cost: 803 -> 744 (points 18.3880)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task048.onnx
+- note: residual top-5 isolated probe

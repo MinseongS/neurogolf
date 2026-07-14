@@ -311,3 +311,13 @@ NOTE ON FORK STATE: this fork did NOT produce any `exact_v4_fused.onnx` / `build
   selected slot — MAIN-side insurance changes the best-of-two in NO world and costs
   its price in the lenient world. DOCTRINE: insurance belongs exclusively on HEDGE;
   MAIN carries only strict wins. (005-scale ~0.001pt repairs remain fine on MAIN.)
+
+## ADOPTED 20260713T144124Z
+- cost: 11044 -> 10811 (points 15.7117)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task008/task191.onnx
+- note: Udit22 public-LB min-merge; bundled fail=0
+
+## ADOPTED 20260713T150906Z
+- cost: 11044 -> 10811 (points 15.7117)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task008/task191.onnx
+- note: isolated residual-public LB probe; bundled fail=0

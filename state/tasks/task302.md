@@ -53,3 +53,18 @@ palette is just {bg, marker}.
 
 ## 2026-07-01 (S7 re-run) — FLOOR re-confirmed
 mem 1216/17.52; ch5 576B fp32 gray slice=min entry, features concat + ch5_u8 feed final QLinearConv (both needed). No safe reduction; all dominant intermediates structurally forced (fp32 entry crop / int32-64 index buffer / full-canvas routing mask).
+
+## ADOPTED 20260713T143839Z
+- cost: 1774 -> 1773 (points 17.5196)
+- source: candidates/public_dumps/20260713_7281/extracted/task302.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T151007Z
+- cost: 1774 -> 1773 (points 17.5196)
+- source: candidates/public_dumps/20260713_7281/extracted/task302.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151949Z
+- cost: 1774 -> 1773 (points 17.5196)
+- source: candidates/public_dumps/20260713_7281/extracted/task302.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

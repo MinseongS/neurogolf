@@ -81,3 +81,13 @@ params `140` unchanged).  Active backup:
 - Applied to `submission/overfit_nets/task281.onnx`; backups in
   `reports/candidates/public_mine_20260708/jackelysia_7250_25_1139/adopt_backup_726828/`
   and `submission/overfit_nets/.minmerge_backup/task281.onnx`. Included in submission **54461084**.
+
+## ADOPTED 20260713T144125Z
+- cost: 1329 -> 1304 (points 17.8268)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task281/task281.onnx
+- note: Udit22 public-LB min-merge; bundled fail=0
+
+## ADOPTED 20260713T150907Z
+- cost: 1329 -> 1304 (points 17.8268)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task281/task281.onnx
+- note: isolated residual-public LB probe; bundled fail=0

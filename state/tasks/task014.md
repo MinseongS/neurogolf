@@ -153,3 +153,18 @@ Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup 
 - cost: 4117 -> 4097 (points 16.6820)
 - source: candidates/public_dumps/20260709/neurogolf-merged91-workbench/nets/task014.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260713T143827Z
+- cost: 4097 -> 3284 (points 16.9032)
+- source: candidates/public_dumps/20260713_7281/extracted/task014.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T150955Z
+- cost: 4097 -> 3284 (points 16.9032)
+- source: candidates/public_dumps/20260713_7281/extracted/task014.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151936Z
+- cost: 4097 -> 3284 (points 16.9032)
+- source: candidates/public_dumps/20260713_7281/extracted/task014.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

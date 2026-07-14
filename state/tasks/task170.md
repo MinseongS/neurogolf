@@ -51,3 +51,13 @@ unclipped axis. Off-grid gather reads land on bg=0 (≠sc) so clipped bottom blo
 - cost: 2537 -> 2125 (points 17.3385)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task170.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260713T144128Z
+- cost: 2125 -> 2124 (points 17.3389)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task170.onnx
+- note: Lucifer public-LB core min-merge; bundled fail=0
+
+## ADOPTED 20260713T150910Z
+- cost: 2125 -> 2124 (points 17.3389)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task170.onnx
+- note: isolated residual-public LB probe; bundled fail=0

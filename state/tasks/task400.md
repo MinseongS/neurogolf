@@ -64,3 +64,18 @@ plane + Less(<0)+ArgMax, instead of casting a fresh mask plane.
 ## S16 (2026-07-06) — public bit-identical golf (franksunp, unfiltered re-mine) ADOPTED
 Engine public-mine loop (byte-prefilter relaxed → found this). fresh_verify 1500 = 0/0/0 (bit-identical).
 Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup in scratchpad.
+
+## ADOPTED 20260713T143830Z
+- cost: 1181 -> 1094 (points 18.0024)
+- source: candidates/public_dumps/20260713_7281/extracted/task400.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T150958Z
+- cost: 1181 -> 1094 (points 18.0024)
+- source: candidates/public_dumps/20260713_7281/extracted/task400.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151940Z
+- cost: 1181 -> 1094 (points 18.0024)
+- source: candidates/public_dumps/20260713_7281/extracted/task400.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

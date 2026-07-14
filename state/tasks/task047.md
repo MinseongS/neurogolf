@@ -29,3 +29,8 @@ Dominant intermediate is the [1,10,9,9] bool one-hot pre-pad = 810B (the 10-chan
 
 ## INSIGHT (transferable)
 ⭐ Crosshair/intersection tasks where two lines cross are a PURE FUNCTION OF s = rowval + colval (line-colour ramps summed): distinct line colours make every (single-line / crossing) case map to a unique sum, so one small Gather table replaces the entire cross-mask + equal-test + Where army. ⭐ Pad on a BOOL tensor REQUIRES opset 13 (Pad-11 rejects bool) — use opset 13 to keep the 10-ch one-hot bool all the way to the free 30x30 output instead of paying a 3600B uint8 30x30 plane (Equal-before-Pad in the small active region, not Pad-before-Equal). ⭐ ORT rejects uint8 Gather indices; int32 is the index floor.
+
+## ADOPTED 20260713T143826Z
+- cost: 862 -> 172 (points 19.8525)
+- source: candidates/public_dumps/20260713_7281/extracted/task047.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0

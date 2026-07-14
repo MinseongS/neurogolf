@@ -33,3 +33,18 @@ This is the prompt's ⛔ MEM-0 SINGLE-CONV-AT-FLOOR case, confirmed irreducible:
 
 ## INSIGHT (transferable)
 A mem-0 single dense Conv that performs BOTH a small spatial dilation AND a cross-channel relabel (color k → channel k+5) is at hard floor: the relabel forbids grouping (forcing dense in×out), the dilation forbids 1×1 (forcing the footprint), and splitting the two steps always pays a ≥1.5KB multi-channel intermediate that beats mem-0 only BELOW the existing score. Discriminator vs golfable conv tasks: if removing the dilation leaves a pure channel permutation that a Gather could do for free, it's still blocked because the Gather needs a materialized dilated plane. ⭐ "dilate + channel-shift in one conv" = confirmed MEM-0 floor sibling of task120/task095.
+
+## ADOPTED 20260713T144122Z
+- cost: 396 -> 330 (points 19.2009)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task127.onnx
+- note: Lucifer public-LB core min-merge; bundled fail=0
+
+## ADOPTED 20260713T150904Z
+- cost: 396 -> 330 (points 19.2009)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task127.onnx
+- note: isolated residual-public LB probe; bundled fail=0
+
+## ADOPTED 20260713T152925Z
+- cost: 396 -> 330 (points 19.2009)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task127.onnx
+- note: residual top-5 isolated probe

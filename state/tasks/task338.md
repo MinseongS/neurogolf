@@ -91,3 +91,17 @@ Mechanism: value_info Slice crop + CumSum/Mod.
 Gate (fresh_verify, inc/cand fail on 1500-2000): 0/0 -> adopted under safe rule (cand fail <= inc fail AND cheaper).
 Source-owned via live_to_exact_source --write-src; re-measured grader-side fail=0. Backup in scratchpad/backup_networks.
 See memory [[neurogolf-urad-7225-bundle-vein]]. 
+## ADOPTED 20260713T144122Z
+- cost: 8848 -> 7215 (points 16.1161)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task338.onnx
+- note: Lucifer public-LB core min-merge; bundled fail=0
+
+## ADOPTED 20260713T150904Z
+- cost: 8848 -> 7215 (points 16.1161)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task338.onnx
+- note: isolated residual-public LB probe; bundled fail=0
+
+## ADOPTED 20260713T152924Z
+- cost: 8848 -> 7215 (points 16.1161)
+- source: candidates/public_dumps/extracted_lucifer_core_36d912/task338.onnx
+- note: residual top-5 isolated probe

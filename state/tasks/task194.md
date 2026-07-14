@@ -67,3 +67,18 @@ geometry (rotation couples r,c) that two axis-Gathers cannot. This RETIRES the
 "GridSample small-block = at floor" verdict for any fixed-geometry single-source
 scatter. Prior tasklog "at-floor" claim was a stale assumption that GridSample was
 the only realisation.
+
+## ADOPTED 20260713T143834Z
+- cost: 949 -> 919 (points 18.1767)
+- source: candidates/public_dumps/20260713_7281/extracted/task194.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T151001Z
+- cost: 949 -> 919 (points 18.1767)
+- source: candidates/public_dumps/20260713_7281/extracted/task194.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151943Z
+- cost: 949 -> 919 (points 18.1767)
+- source: candidates/public_dumps/20260713_7281/extracted/task194.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

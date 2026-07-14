@@ -96,3 +96,18 @@ cnt=BIG and colidx=99 (sentinel, both VECTOR ops), and resolve in-grid-bg vs off
 with a [1,1,30,1] `elsevec` (0 if r<s else 99) — so the whole label is ONE Where over two
 vector branches. Net floor = exactly 2 full planes (coloured bool + label u8). But when the
 public net is already at the 2-plane floor (~16.76 here), there's no +0.3 to take.
+
+## ADOPTED 20260713T145358Z
+- cost: 910 -> 588 (points 18.6233)
+- source: candidates/task032/rank3_einsum.onnx
+- note: exact rank-3 compact-axis Einsum factorization of 9x1 Conv; cost 910->588, bundled 266/0, mem0
+
+## ADOPTED 20260713T151837Z
+- cost: 910 -> 588 (points 18.6233)
+- source: candidates/task032/rank3_einsum.onnx
+- note: rank-3 vertical Conv factorization with -0.01 valid-cell safety margin; fixes Kaggle-zero numerical knife-edge; fresh 20k/0 div0
+
+## ADOPTED 20260713T152854Z
+- cost: 910 -> 588 (points 18.6233)
+- source: candidates/task032/rank3_einsum.onnx
+- note: Kaggle-confirmed safety-margin rank-3 Einsum: sub54651555 7420.73 vs clean54651464 7420.29, exact +0.44

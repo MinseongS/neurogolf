@@ -99,3 +99,18 @@ mem 4322/16.55; completed_scalar30 900B=min 30x30 carrier, sampled_colors 600B G
 - cost: 4688 -> 4606 (points 16.5649)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task361.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260713T143838Z
+- cost: 4606 -> 4577 (points 16.5712)
+- source: candidates/public_dumps/20260713_7281/extracted/task361.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T151006Z
+- cost: 4606 -> 4577 (points 16.5712)
+- source: candidates/public_dumps/20260713_7281/extracted/task361.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151948Z
+- cost: 4606 -> 4577 (points 16.5712)
+- source: candidates/public_dumps/20260713_7281/extracted/task361.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

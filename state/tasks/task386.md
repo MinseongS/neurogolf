@@ -56,3 +56,18 @@ LABEL to 30x30 before Equal costs a 900B plane (task attempt 2); doing Equal on 
 exactly the all-channel-zero one-hot target, and channel 0 falls out for free as
 the L==0 match (every non-fg output cell is background). Opset-13 bool Pad removes
 the uint8 Cast entirely (saves the duplicate block). 18.24 -> 19.26 (+1.02).
+
+## ADOPTED 20260713T143836Z
+- cost: 211 -> 207 (points 19.6673)
+- source: candidates/public_dumps/20260713_7281/extracted/task386.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T151004Z
+- cost: 211 -> 207 (points 19.6673)
+- source: candidates/public_dumps/20260713_7281/extracted/task386.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151946Z
+- cost: 211 -> 207 (points 19.6673)
+- source: candidates/public_dumps/20260713_7281/extracted/task386.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

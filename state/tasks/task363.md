@@ -88,3 +88,33 @@ input lever.
 - cost: 3580 -> 3550 (points 16.8253)
 - source: candidates/task363/kcollapse.onnx
 - note: kernel-collapse rescan 2026-07-12: single-position Conv kernel -> 1x1+pad, bit-identical (300 random A/B div 0 + bundled fail=0); 3580->3550 (+0.0084)
+
+## 2026-07-13 REGIME-CRACK attempt on paint_mask30 (900B) — FLOOR (byte-math, no build)
+- **What was run:** deepfold indicator_fold target = `paint_mask30 [1,1,30,30] bool = 900B`
+  (Pad->Where routing mask, biggest single counted plane = 23% of cost 3550/3839). Classified
+  against free-output-einsum crack test (playbook/free-output-einsum.md) + sharpened batch6
+  conditions. Static byte-math, no candidate built.
+- **Verdict: FLOOR (positioned-content routing).** paint_mask30 = Pad(paint2[1,1,10,10]) where
+  paint2 is a data-dependent 10x10 PLACEMENT matrix from Conv(data-dependent 4x4 red-sprite
+  kernel, black plane) -> score -> Equal(seed_count) + disambig. This is textbook
+  POSITIONED-CONTENT: (data-dependent motif CONTENT) (X) (data-dependent 2-D POSITION). NO
+  <=16-scalar global state, NO low-rank/polynomial position predicate. Same class as floored
+  112/163/099.
+- **Crack-test scoring:** cond1 GLOBAL-STATE routing = FAIL (positioned template-match, not
+  scalar-predicate). cond2 Where-ROUTING not Equal-DECODE = PASS (it is a Where mask). cond3
+  mask-fraction >=45% AND fold-operand < 900B = FAIL (fraction 23%; embedding 10x10 paint2 into
+  30x30 output positions has no cheaper carrier — static [10,10,30,30] selector init = 90000
+  params (catastrophic), Pad reproduces the 900B, ScatterND NonZero indices int64 >=900B and
+  data-dependent). A 30x30 routing plane at bool 1B/element = 900B is the irreducible minimum
+  and the fp32-co-bind escape (mixed-dtype/low-rank) does not apply to positioned content.
+- **Why not foldable:** the final Where MUST see the full [1,10,30,30] input to preserve the
+  gray/black background outside the 10x10 region, so the condition must be 30x30-broadcastable
+  = 900 elements min. Only a low-rank/polynomial predicate could dissolve it into a free-output
+  Einsum; the placement set spans the full shift-space (rows 1-17, cols 0-18) with no such
+  structure (per prior irreducible-floor analysis above).
+- **Reopen-trigger:** a mixed-dtype uniform-T Einsum path (would let a fp16 carrier co-bind the
+  fp32 input — the vein-wide top residual lever), OR a new external dump that collapses this
+  specific template-match family (archive-graft rescan). Tool: byte-math + onnx graph inspect,
+  2026-07-13. Falsification history: none prior on paint_mask30 fold specifically; consistent
+  with the "irreducible-floor analysis" and OPEN ANGLES sections above (shift-space cannot
+  shrink, disambig is a required false-positive tradeoff). No adopt, no other tasks touched.

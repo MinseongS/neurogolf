@@ -101,6 +101,24 @@
   "kind": "linear_fold"
  },
  {
+  "task": 202,
+  "floored": false,
+  "cost": 2023,
+  "bytes": 900,
+  "dpts": 0.5886,
+  "shape": [
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Equal",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "selected",
+  "kind": "indicator_fold"
+ },
+ {
   "task": 168,
   "floored": false,
   "cost": 2237,
@@ -121,26 +139,6 @@
   "kind": "indicator_fold"
  },
  {
-  "task": 34,
-  "floored": false,
-  "cost": 2261,
-  "bytes": 900,
-  "dpts": 0.5076,
-  "shape": [
-   1,
-   1,
-   30,
-   30
-  ],
-  "dtype": 9,
-  "producer": "Pad",
-  "consumers": [
-   "Where"
-  ],
-  "tensor": "mask30",
-  "kind": "indicator_fold"
- },
- {
   "task": 102,
   "floored": false,
   "cost": 2527,
@@ -158,26 +156,6 @@
    "Where"
   ],
   "tensor": "fill30_bool",
-  "kind": "indicator_fold"
- },
- {
-  "task": 264,
-  "floored": false,
-  "cost": 2329,
-  "bytes": 810,
-  "dpts": 0.4274,
-  "shape": [
-   1,
-   10,
-   9,
-   9
-  ],
-  "dtype": 9,
-  "producer": "Equal",
-  "consumers": [
-   "Pad"
-  ],
-  "tensor": "oh",
   "kind": "indicator_fold"
  },
  {
@@ -218,25 +196,6 @@
    "Where"
   ],
   "tensor": "cond30",
-  "kind": "indicator_fold"
- },
- {
-  "task": 202,
-  "floored": false,
-  "cost": 2817,
-  "bytes": 900,
-  "dpts": 0.3849,
-  "shape": [
-   1,
-   30,
-   30
-  ],
-  "dtype": 9,
-  "producer": "Equal",
-  "consumers": [
-   "Where"
-  ],
-  "tensor": "mark",
   "kind": "indicator_fold"
  },
  {
@@ -362,9 +321,9 @@
  {
   "task": 363,
   "floored": false,
-  "cost": 3580,
+  "cost": 3550,
   "bytes": 900,
-  "dpts": 0.2895,
+  "dpts": 0.2924,
   "shape": [
    1,
    1,
@@ -377,6 +336,24 @@
    "Where"
   ],
   "tensor": "paint_mask30",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 370,
+  "floored": false,
+  "cost": 3607,
+  "bytes": 900,
+  "dpts": 0.287,
+  "shape": [
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "fill30",
   "kind": "indicator_fold"
  },
  {
@@ -397,26 +374,6 @@
    "Where"
   ],
   "tensor": "cond",
-  "kind": "indicator_fold"
- },
- {
-  "task": 50,
-  "floored": false,
-  "cost": 3849,
-  "bytes": 900,
-  "dpts": 0.2663,
-  "shape": [
-   1,
-   1,
-   30,
-   30
-  ],
-  "dtype": 9,
-  "producer": "Pad",
-  "consumers": [
-   "Where"
-  ],
-  "tensor": "fill",
   "kind": "indicator_fold"
  },
  {
@@ -457,6 +414,24 @@
    "Where"
   ],
   "tensor": "mask",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 382,
+  "floored": false,
+  "cost": 4206,
+  "bytes": 900,
+  "dpts": 0.2408,
+  "shape": [
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "mask30",
   "kind": "indicator_fold"
  },
  {
@@ -539,6 +514,25 @@
   "kind": "linear_fold"
  },
  {
+  "task": 66,
+  "floored": true,
+  "cost": 5254,
+  "bytes": 900,
+  "dpts": 0.1879,
+  "shape": [
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "path30",
+  "kind": "indicator_fold"
+ },
+ {
   "task": 279,
   "floored": false,
   "cost": 5546,
@@ -596,6 +590,66 @@
    "Where"
   ],
   "tensor": "mask30",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 255,
+  "floored": false,
+  "cost": 5976,
+  "bytes": 900,
+  "dpts": 0.1632,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Gather",
+  "consumers": [
+   "Or"
+  ],
+  "tensor": "mv",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 255,
+  "floored": false,
+  "cost": 5976,
+  "bytes": 900,
+  "dpts": 0.1632,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Gather",
+  "consumers": [
+   "Or"
+  ],
+  "tensor": "mh",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 255,
+  "floored": false,
+  "cost": 5976,
+  "bytes": 900,
+  "dpts": 0.1632,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Or",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "fill",
   "kind": "indicator_fold"
  },
  {
@@ -791,11 +845,11 @@
   "kind": "linear_fold"
  },
  {
-  "task": 370,
+  "task": 118,
   "floored": false,
-  "cost": 6598,
+  "cost": 8699,
   "bytes": 900,
-  "dpts": 0.1467,
+  "dpts": 0.1092,
   "shape": [
    1,
    1,
@@ -807,66 +861,7 @@
   "consumers": [
    "Where"
   ],
-  "tensor": "mask30",
-  "kind": "indicator_fold"
- },
- {
-  "task": 255,
-  "floored": false,
-  "cost": 7597,
-  "bytes": 900,
-  "dpts": 0.1261,
-  "shape": [
-   1,
-   1,
-   30,
-   30
-  ],
-  "dtype": 9,
-  "producer": "Greater",
-  "consumers": [
-   "Where"
-  ],
-  "tensor": "safe_name_155",
-  "kind": "indicator_fold"
- },
- {
-  "task": 350,
-  "floored": false,
-  "cost": 9036,
-  "bytes": 900,
-  "dpts": 0.1049,
-  "shape": [
-   1,
-   1,
-   30,
-   30
-  ],
-  "dtype": 9,
-  "producer": "Pad",
-  "consumers": [
-   "Where"
-  ],
-  "tensor": "gp",
-  "kind": "indicator_fold"
- },
- {
-  "task": 66,
-  "floored": true,
-  "cost": 10121,
-  "bytes": 900,
-  "dpts": 0.0931,
-  "shape": [
-   1,
-   30,
-   30
-  ],
-  "dtype": 9,
-  "producer": "Pad",
-  "consumers": [
-   "Where"
-  ],
-  "tensor": "hidden30",
+  "tensor": "mask_b",
   "kind": "indicator_fold"
  },
  {
@@ -906,6 +901,26 @@
   ],
   "tensor": "col_feat",
   "kind": "linear_fold"
+ },
+ {
+  "task": 118,
+  "floored": false,
+  "cost": 8699,
+  "bytes": 675,
+  "dpts": 0.0808,
+  "shape": [
+   1,
+   1,
+   25,
+   27
+  ],
+  "dtype": 9,
+  "producer": "Less",
+  "consumers": [
+   "Pad"
+  ],
+  "tensor": "mask_crop",
+  "kind": "indicator_fold"
  },
  {
   "task": 145,
@@ -986,26 +1001,6 @@
   "kind": "linear_fold"
  },
  {
-  "task": 118,
-  "floored": false,
-  "cost": 12282,
-  "bytes": 900,
-  "dpts": 0.0761,
-  "shape": [
-   1,
-   1,
-   30,
-   30
-  ],
-  "dtype": 9,
-  "producer": "Pad",
-  "consumers": [
-   "Where"
-  ],
-  "tensor": "Spad",
-  "kind": "indicator_fold"
- },
- {
   "task": 101,
   "floored": false,
   "cost": 12973,
@@ -1026,31 +1021,11 @@
   "kind": "indicator_fold"
  },
  {
-  "task": 350,
-  "floored": false,
-  "cost": 9036,
-  "bytes": 624,
-  "dpts": 0.0716,
-  "shape": [
-   1,
-   1,
-   26,
-   24
-  ],
-  "dtype": 9,
-  "producer": "Greater",
-  "consumers": [
-   "Pad"
-  ],
-  "tensor": "g",
-  "kind": "indicator_fold"
- },
- {
   "task": 367,
   "floored": false,
-  "cost": 13926,
+  "cost": 13126,
   "bytes": 900,
-  "dpts": 0.0668,
+  "dpts": 0.071,
   "shape": [
    1,
    1,
@@ -1066,31 +1041,111 @@
   "kind": "indicator_fold"
  },
  {
-  "task": 118,
-  "floored": false,
-  "cost": 12282,
-  "bytes": 700,
-  "dpts": 0.0587,
+  "task": 158,
+  "floored": true,
+  "cost": 18530,
+  "bytes": 900,
+  "dpts": 0.0498,
+  "shape": [
+   1,
+   1,
+   30,
+   30
+  ],
+  "dtype": 9,
+  "producer": "Pad",
+  "consumers": [
+   "Where"
+  ],
+  "tensor": "stamp30",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 158,
+  "floored": true,
+  "cost": 18530,
+  "bytes": 600,
+  "dpts": 0.0329,
   "shape": [
    1,
    1,
    25,
-   28
+   24
   ],
-  "dtype": 9,
-  "producer": "And",
+  "dtype": 2,
+  "producer": "QLinearConv",
   "consumers": [
-   "Pad"
+   "Max"
   ],
-  "tensor": "S",
+  "tensor": "code1",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 158,
+  "floored": true,
+  "cost": 18530,
+  "bytes": 600,
+  "dpts": 0.0329,
+  "shape": [
+   1,
+   1,
+   25,
+   24
+  ],
+  "dtype": 2,
+  "producer": "QLinearConv",
+  "consumers": [
+   "Max"
+  ],
+  "tensor": "code2",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 158,
+  "floored": true,
+  "cost": 18530,
+  "bytes": 600,
+  "dpts": 0.0329,
+  "shape": [
+   1,
+   1,
+   25,
+   24
+  ],
+  "dtype": 2,
+  "producer": "QLinearConv",
+  "consumers": [
+   "Max"
+  ],
+  "tensor": "code3",
+  "kind": "indicator_fold"
+ },
+ {
+  "task": 158,
+  "floored": true,
+  "cost": 18530,
+  "bytes": 600,
+  "dpts": 0.0329,
+  "shape": [
+   1,
+   1,
+   25,
+   24
+  ],
+  "dtype": 2,
+  "producer": "Max",
+  "consumers": [
+   "Cast"
+  ],
+  "tensor": "CODE",
   "kind": "indicator_fold"
  },
  {
   "task": 233,
   "floored": true,
-  "cost": 28033,
+  "cost": 24703,
   "bytes": 800,
-  "dpts": 0.029,
+  "dpts": 0.0329,
   "shape": [
    1,
    1,
@@ -1102,7 +1157,7 @@
   "consumers": [
    "Conv"
   ],
-  "tensor": "safe_name_102",
+  "tensor": "holf",
   "kind": "linear_fold"
  }
 ]

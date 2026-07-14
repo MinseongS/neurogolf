@@ -60,3 +60,18 @@ channel plane first). uint8/fp16 casts only ADD planes here because the crop
 itself is the free output. For K=3 the floor is ~700 ⇒ ~18.4-18.5 pts; if the
 public net is already doing slice-locate→two-axis-Slice→Pad it is AT FLOOR — BAIL
 MARGINAL fast rather than chasing dtype tricks on a region that is the output.
+
+## ADOPTED 20260713T143835Z
+- cost: 309 -> 301 (points 19.2929)
+- source: candidates/public_dumps/20260713_7281/extracted/task111.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T151002Z
+- cost: 309 -> 301 (points 19.2929)
+- source: candidates/public_dumps/20260713_7281/extracted/task111.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151944Z
+- cost: 309 -> 301 (points 19.2929)
+- source: candidates/public_dumps/20260713_7281/extracted/task111.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

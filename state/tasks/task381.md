@@ -128,3 +128,13 @@ radius 1.
 - cost: 1963 -> 1753 (points 17.5309)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task381.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260713T144128Z
+- cost: 1753 -> 1752 (points 17.5315)
+- source: candidates/public_dumps/archive1_20260713_ab6515/task381.onnx
+- note: V9 public-LB min-merge; bundled fail=0
+
+## ADOPTED 20260713T150910Z
+- cost: 1753 -> 1752 (points 17.5315)
+- source: candidates/public_dumps/archive1_20260713_ab6515/task381.onnx
+- note: isolated residual-public LB probe; bundled fail=0

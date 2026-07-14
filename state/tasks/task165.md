@@ -87,3 +87,18 @@ No transferable mechanism — minor trim.
 - cost: 4544 -> 4532 (points 16.5811)
 - source: candidates/public_dumps/20260709_pm2/franksunp_compact-onnx-artifact-starter/task165.onnx
 - note: min-merge from franksunp_compact-onnx-artifact-starter
+
+## ADOPTED 20260713T143834Z
+- cost: 4532 -> 4391 (points 16.6127)
+- source: candidates/public_dumps/20260713_7281/extracted/task165.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T151002Z
+- cost: 4532 -> 4391 (points 16.6127)
+- source: candidates/public_dumps/20260713_7281/extracted/task165.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151944Z
+- cost: 4532 -> 4391 (points 16.6127)
+- source: candidates/public_dumps/20260713_7281/extracted/task165.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

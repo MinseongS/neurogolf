@@ -74,3 +74,18 @@ work under ORT_DISABLE_ALL (only fp16 Min/Max crash).
 task153 presence_nonzero {0,1} → uint8 via Cast(pool_max_all→uint8) before Slice; ArgMax order-preserving. 795→778 (−17).
 Gate: evaluate bundled fail=0 + **bit-identical outputs** over all train/test/arc-gen (verified). Safe for both tracks + private LB.
 ⭐ TRANSFERABLE: only ACTIVATION (node-output) dtype narrowing saves grader bytes — params counted by element-count (dtype-independent). Narrow the PRODUCER (upstream Cast/init dtype), never a post-Cast. Blocked when the plane is derived from / contracted with the free fp32 `input` (Einsum-vs-input, Slice/Conv of input, ScatterND updates vs fp32 data) → those force fp32. See [[neurogolf-fp16-count-plane-recast]].
+
+## ADOPTED 20260713T143828Z
+- cost: 778 -> 685 (points 18.4706)
+- source: candidates/public_dumps/20260713_7281/extracted/task153.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T150956Z
+- cost: 778 -> 685 (points 18.4706)
+- source: candidates/public_dumps/20260713_7281/extracted/task153.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151938Z
+- cost: 778 -> 685 (points 18.4706)
+- source: candidates/public_dumps/20260713_7281/extracted/task153.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

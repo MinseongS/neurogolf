@@ -64,3 +64,18 @@ full colour plane: take per-channel ReduceMax over one axis ([1,10,30,1]), Slice
 channel to a 1-D [1,1,30,1] profile, derive min-index scalar, then rebuild the 2x2 box as a
 separable rowmask⊗colmask from the scalar — kills the 3600 B fp32 colour slice. The same
 [1,10,30,1] profile, ReduceMax'd over channels, doubles as the in-grid row occupancy.
+
+## ADOPTED 20260713T143835Z
+- cost: 1750 -> 1712 (points 17.5546)
+- source: candidates/public_dumps/20260713_7281/extracted/task112.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T151003Z
+- cost: 1750 -> 1712 (points 17.5546)
+- source: candidates/public_dumps/20260713_7281/extracted/task112.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151945Z
+- cost: 1750 -> 1712 (points 17.5546)
+- source: candidates/public_dumps/20260713_7281/extracted/task112.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

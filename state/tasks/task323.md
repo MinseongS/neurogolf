@@ -70,3 +70,13 @@ reopen: sub-byte conv-weight dtype in ORT; OR proof grid ever <13 (shrinks +-12 
   +277B mem penalty).
 falsification history: consistent with the 2026-07 "point-symmetric kernel / closed-form
   predicate cost more" negatives above; this adds the measured two-conv price (1681).
+
+## ADOPTED 20260713T144127Z
+- cost: 1630 -> 1626 (points 17.6061)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task323/task323.onnx
+- note: Udit22 public-LB min-merge; bundled fail=0
+
+## ADOPTED 20260713T150909Z
+- cost: 1630 -> 1626 (points 17.6061)
+- source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task323/task323.onnx
+- note: isolated residual-public LB probe; bundled fail=0

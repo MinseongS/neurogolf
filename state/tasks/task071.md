@@ -86,3 +86,18 @@ Occlusion-robust axis = the unique axis where every visible cell's mirror lands 
 - cost: 2682 -> 2663 (points 17.1128)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task071.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260713T143837Z
+- cost: 2663 -> 2629 (points 17.1256)
+- source: candidates/public_dumps/20260713_7281/extracted/task071.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T151005Z
+- cost: 2663 -> 2629 (points 17.1256)
+- source: candidates/public_dumps/20260713_7281/extracted/task071.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151946Z
+- cost: 2663 -> 2629 (points 17.1256)
+- source: candidates/public_dumps/20260713_7281/extracted/task071.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded

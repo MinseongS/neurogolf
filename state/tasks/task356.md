@@ -66,3 +66,8 @@ mem 1300/17.82; crop_f 400B min fp32 entry, 4 MaxPool span planes irreducible (M
 - cost: 1319 -> 1220 (points 17.8934)
 - source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task356.onnx
 - note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
+
+## ADOPTED 20260713T133648Z
+- cost: 1220 -> 448 (points 18.8952)
+- source: candidates/task356/from_task350_alpha_1.onnx
+- note: task350 endpoint-fill formula port with cyan source/output; bundled 266/0

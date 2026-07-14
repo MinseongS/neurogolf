@@ -182,3 +182,8 @@ backup at `reports/candidates/task158/task158_pre_dynamic_cse.onnx`.
 - cost: 20329 -> 18560 (points 15.1712)
 - source: dumps/archive_extract/submission7300+/task158.onnx
 - note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite
+
+## ADOPTED 20260713T112224Z
+- cost: 18560 -> 18530 (points 15.1729)
+- source: candidates/task158/kcollapse.onnx
+- note: kernel-collapse: sparse Conv single tap -> 1x1+pad; bit-identical params -30

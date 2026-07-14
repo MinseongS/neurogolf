@@ -50,3 +50,18 @@ Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup 
 - Tool+date: opus agent, onnx 1.21.0, 2026-07-10.
 - Reopen: an incumbent paying fp32 on the fill planes; a primitive linearizing intersection-of-halfplanes
   under >0 decode (would also unblock 084/233); smaller public task256.
+
+## ADOPTED 20260713T143834Z
+- cost: 2063 -> 2001 (points 17.3986)
+- source: candidates/public_dumps/20260713_7281/extracted/task256.onnx
+- note: Ryosuke 7281.18 public-LB confirmed per-task min-merge; bundled fail=0
+
+## ADOPTED 20260713T151002Z
+- cost: 2063 -> 2001 (points 17.3986)
+- source: candidates/public_dumps/20260713_7281/extracted/task256.onnx
+- note: Ryosuke-7281 isolation B; task047 explicitly excluded; bundled fail=0
+
+## ADOPTED 20260713T151944Z
+- cost: 2063 -> 2001 (points 17.3986)
+- source: candidates/public_dumps/20260713_7281/extracted/task256.onnx
+- note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded
