@@ -4,6 +4,7 @@ import argparse
 from collections import Counter
 from dataclasses import dataclass
 from functools import lru_cache
+import hashlib
 from itertools import combinations, permutations
 import json
 import math
@@ -17,7 +18,6 @@ from typing import Iterable, Sequence, TypeAlias
 
 import numpy as np
 import onnx
-import onnxruntime as ort
 from onnx import TensorProto, helper, numpy_helper
 
 from neurogolf.scoring import convert_to_numpy, load_task
@@ -378,7 +378,7 @@ def _evaluate_search_query(query: Query, input_onehot: np.ndarray) -> np.ndarray
     return result > 0
 
 
-def build_model(query: Query, correction: Correction | None = None) -> onnx.ModelProto:
+def _make_model(query: Query, correction: Correction | None = None) -> onnx.ModelProto:
     compiled = _compile_query(query, correction)
     node = helper.make_node(
         "Einsum",
@@ -400,12 +400,17 @@ def build_model(query: Query, correction: Correction | None = None) -> onnx.Mode
     )
     model = helper.make_model(graph, opset_imports=[helper.make_opsetid("", 12)])
     model.ir_version = 10
+    return model
+
+
+def build_model(query: Query, correction: Correction | None = None) -> onnx.ModelProto:
+    model = _make_model(query, correction)
     onnx.checker.check_model(model, full_check=True)
     return model
 
 
-@lru_cache(maxsize=65_536)
-def expand_query(query: Query) -> set[Query]:
+@lru_cache(maxsize=8_192)
+def expand_query(query: Query) -> frozenset[Query]:
     """Add every connected typed atom introducing at most one label per type."""
     canonical = _canonicalize_partial(query)
     existing_labels = {label for atom in canonical for label in atom}
@@ -438,7 +443,7 @@ def expand_query(query: Query) -> set[Query]:
                 if len({row, col} - set(spaces)) > 1:
                     continue
                 expanded.add(_canonicalize_partial((*canonical, atom)))
-    return expanded
+    return frozenset(expanded)
 
 
 @lru_cache(maxsize=1)
@@ -530,14 +535,6 @@ def query_loss(
     return _loss_stats(canonicalize(query), _normalize_examples(examples))[0]
 
 
-def _is_exact(
-    query: Query,
-    examples: list[tuple[np.ndarray, np.ndarray]],
-    correction: Correction,
-) -> bool:
-    return _loss_stats(query, examples, correction)[0] == 0
-
-
 def _fit_mixer(
     raw_outputs: list[np.ndarray], targets: list[np.ndarray]
 ) -> tuple[tuple[float, ...], ...] | None:
@@ -549,7 +546,8 @@ def _fit_mixer(
     ).astype(bool)
     rows = []
     for output_channel in range(10):
-        choices: list[np.ndarray] = []
+        expected = y[:, output_channel]
+        choices: list[np.ndarray] = [np.zeros(10, dtype=np.float32)]
         for source_channel in range(10):
             unit = np.zeros(10, dtype=np.float32)
             unit[source_channel] = 1
@@ -558,10 +556,40 @@ def _fit_mixer(
                 signed = np.full(10, -penalty, dtype=np.float32)
                 signed[source_channel] = 1
                 choices.append(signed)
+
+        # Least squares and a deterministic homogeneous perceptron cover general
+        # signed separators, while the explicit rows above preserve exact zero and
+        # permutation solutions without numerical fitting. Fit on a bounded,
+        # deterministic slice and always validate the result on the full corpus.
+        if x.size:
+            if len(x) > 20_000:
+                indices = np.linspace(0, len(x) - 1, 20_000, dtype=np.int64)
+                train_x = x[indices]
+                train_y = expected[indices]
+            else:
+                train_x = x
+                train_y = expected
+            least_squares, *_ = np.linalg.lstsq(
+                train_x.astype(np.float64), train_y.astype(np.float64), rcond=None
+            )
+            choices.append(least_squares.astype(np.float32))
+
+            weights = np.zeros(10, dtype=np.float32)
+            for _ in range(200):
+                scores = train_x @ weights
+                mistakes = np.flatnonzero(
+                    (train_y & (scores <= 0)) | (~train_y & (scores > 0))
+                )
+                if not len(mistakes):
+                    break
+                for index in mistakes:
+                    weights += train_x[index] if train_y[index] else -train_x[index]
+            choices.append(weights)
+
         exact = [
             weights
             for weights in choices
-            if np.array_equal(x @ weights > 0, y[:, output_channel])
+            if np.array_equal(x @ weights > 0, expected)
         ]
         if not exact:
             return None
@@ -577,26 +605,86 @@ def _fit_mixer(
     return tuple(rows)
 
 
+def _nonempty_subsets(labels: Sequence[str]) -> list[tuple[str, ...]]:
+    return [
+        subset
+        for size in range(1, len(labels) + 1)
+        for subset in combinations(labels, size)
+    ]
+
+
+def _merge_corrections(left: Correction, right: Correction) -> Correction | None:
+    left_channels = {label for label, _ in left.channel_masks}
+    right_channels = {label for label, _ in right.channel_masks}
+    left_spaces = {label for label, _ in left.spatial_gates}
+    right_spaces = {label for label, _ in right.spatial_gates}
+    if left_channels & right_channels or left_spaces & right_spaces:
+        return None
+    if left.channel_mixer is not None and right.channel_mixer is not None:
+        return None
+    return Correction(
+        channel_masks=tuple(
+            sorted(
+                (*left.channel_masks, *right.channel_masks),
+                key=lambda item: _COLOR_RANK[item[0]],
+            )
+        ),
+        spatial_gates=tuple(
+            sorted(
+                (*left.spatial_gates, *right.spatial_gates),
+                key=lambda item: _SPACE_RANK[item[0]],
+            )
+        ),
+        channel_mixer=left.channel_mixer or right.channel_mixer,
+    )
+
+
 def fit_small_corrections(
     query: Query,
     examples: list[tuple[np.ndarray, np.ndarray]],
     max_params: int = 150,
 ) -> list[Correction]:
-    """Fit exact masks/gates/mixers as operands of the uncontracted query."""
+    """Fit bounded combinations of masks, separable gates, and signed mixers.
+
+    Every ranking and acceptance check uses every supplied example. Channel
+    masks are data-derived arbitrary keep/drop vectors applied to every
+    non-empty label subset. Spatial primitives cover arbitrary target-support
+    gates plus every one-hot/complement gate, and the bounded beam combines
+    distinct gates, masks, and mixers without exceeding ``max_params``.
+    """
     canonical = canonicalize(query)
     normalized = _normalize_examples(examples)
     targets = [target for _, target in normalized]
     accepted: list[Correction] = []
-    seen: set[Correction] = set()
+    loss_cache: dict[Correction, int] = {}
 
-    def consider(correction: Correction) -> None:
-        if (
-            correction not in seen
-            and correction.param_count <= max_params
-            and _is_exact(canonical, normalized, correction)
-        ):
-            seen.add(correction)
-            accepted.append(correction)
+    def loss(correction: Correction) -> int:
+        if correction.param_count > max_params:
+            return sys.maxsize
+        if correction not in loss_cache:
+            loss_cache[correction] = _loss_stats(
+                canonical, normalized, correction
+            )[0]
+            if loss_cache[correction] == 0:
+                accepted.append(correction)
+        return loss_cache[correction]
+
+    def rank(
+        corrections: Iterable[Correction], limit: int
+    ) -> list[Correction]:
+        unique = {
+            correction
+            for correction in corrections
+            if correction.param_count <= max_params
+        }
+        return sorted(
+            unique,
+            key=lambda correction: (
+                loss(correction),
+                correction.param_count,
+                repr(correction),
+            ),
+        )[:limit]
 
     raw_outputs = [evaluate_query(canonical, raw_input) for raw_input, _ in normalized]
     direct_mask = []
@@ -615,58 +703,208 @@ def fit_small_corrections(
             direct_possible = False
             break
     if direct_possible:
-        consider(Correction(channel_masks=(("k", tuple(direct_mask)),)))
+        direct_mask_value = tuple(direct_mask)
+    else:
+        direct_mask_value = None
 
     color_labels = sorted({atom[0] for atom in canonical}, key=_COLOR_RANK.__getitem__)
-    masks = [(0, 1, 1, 1, 1, 1, 1, 1, 1, 1)]
-    masks.extend(
-        tuple(int(index == selected) for index in range(10)) for selected in range(10)
+    channel_groups = _nonempty_subsets(color_labels)
+    target_support = tuple(
+        int(any(target[:, channel].any() for target in targets))
+        for channel in range(10)
     )
-    label_groups: list[tuple[str, ...]] = [(label,) for label in color_labels]
-    if len(color_labels) > 1:
-        label_groups.append(tuple(color_labels))
-        label_groups.extend(combinations(color_labels, 2))
-    for labels in label_groups:
-        for mask in masks:
-            consider(Correction(channel_masks=tuple((label, mask) for label in labels)))
+    masks = {
+        (0,) * 10,
+        (1,) * 10,
+        target_support,
+        (0, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+        *(tuple(int(index == selected) for index in range(10)) for selected in range(10)),
+        *(
+            tuple(int(index != selected) for index in range(10))
+            for selected in range(10)
+        ),
+    }
+    if direct_mask_value is not None:
+        masks.add(direct_mask_value)
+
+    mask_pool: set[Correction] = {
+        Correction(channel_masks=tuple((label, mask) for label in labels))
+        for labels in channel_groups
+        for mask in masks
+    }
+
+    # Coordinate descent can synthesize arbitrary keep/drop patterns beyond the
+    # seeded masks, without multiplying the expensive contraction by all 2^10
+    # masks at every label subset.
+    for labels in channel_groups:
+        for start in ((0,) * 10, (1,) * 10, target_support):
+            current = Correction(
+                channel_masks=tuple((label, start) for label in labels)
+            )
+            current_loss = loss(current)
+            mask_pool.add(current)
+            for _ in range(10):
+                values = current.channel_masks[0][1]
+                neighbors = []
+                for index in range(10):
+                    toggled = tuple(
+                        1 - value if offset == index else value
+                        for offset, value in enumerate(values)
+                    )
+                    neighbors.append(
+                        Correction(
+                            channel_masks=tuple(
+                                (label, toggled) for label in labels
+                            )
+                        )
+                    )
+                best = min(
+                    neighbors,
+                    key=lambda correction: (loss(correction), repr(correction)),
+                )
+                best_loss = loss(best)
+                if best_loss >= current_loss:
+                    break
+                mask_pool.add(best)
+                current, current_loss = best, best_loss
+    mask_ranked = rank(mask_pool, 48)
+    mask_structured = {
+        correction
+        for labels in channel_groups
+        for correction in rank(
+            (
+                candidate
+                for candidate in mask_pool
+                if tuple(label for label, _ in candidate.channel_masks) == labels
+            ),
+            2,
+        )
+    }
+    protected_masks = {
+        Correction(channel_masks=tuple((label, mask) for label in labels))
+        for labels in channel_groups
+        for mask in (target_support, direct_mask_value)
+        if mask is not None
+    }
+    mask_ranked = rank([*mask_ranked, *mask_structured], 96)
+    mask_ranked = list(
+        dict.fromkeys([*sorted(protected_masks, key=repr), *mask_ranked])
+    )
 
     spatial_labels = sorted(
-        {label for _, row, col in canonical for label in (row, col)} - {"r", "c"},
+        {label for _, row, col in canonical for label in (row, col)},
         key=_SPACE_RANK.__getitem__,
     )
-    gate_groups: list[tuple[str, ...]] = [(label,) for label in spatial_labels]
-    gate_groups.extend(combinations(spatial_labels, 2))
-    if len(spatial_labels) > 2:
-        gate_groups.append(tuple(spatial_labels))
+    spatial_groups = _nonempty_subsets(spatial_labels)
+    row_support = tuple(
+        int(
+            any(
+                index < target.shape[2] and target[:, :, index, :].any()
+                for target in targets
+            )
+        )
+        for index in range(30)
+    )
+    column_support = tuple(
+        int(
+            any(
+                index < target.shape[3] and target[:, :, :, index].any()
+                for target in targets
+            )
+        )
+        for index in range(30)
+    )
+    one_hot_gates = {
+        tuple(int(index == selected) for index in range(30))
+        for selected in range(30)
+    }
+    gates = {
+        (0,) * 30,
+        (1,) * 30,
+        row_support,
+        column_support,
+        *one_hot_gates,
+        *(
+            tuple(int(index != selected) for index in range(30))
+            for selected in range(30)
+        ),
+    }
+    gate_pool: set[Correction] = {
+        Correction(spatial_gates=tuple((label, gate) for label in labels))
+        for labels in spatial_groups
+        for gate in gates
+        if 30 <= max_params
+    }
 
-    bases = [Correction()]
-    bases.extend(accepted)
-    for labels in gate_groups:
-        for selected in range(30):
-            gate = tuple(int(index == selected) for index in range(30))
-            base = Correction(spatial_gates=tuple((label, gate) for label in labels))
-            if base.param_count <= max_params:
-                bases.append(base)
-                consider(base)
+    # Add bounded distinct-gate combinations. Keep the best six primitives for
+    # each label, then combine disjoint labels; shared-gate subsets above remain
+    # available at their cheaper deduplicated cost.
+    best_single_gates: dict[str, list[Correction]] = {}
+    for label in spatial_labels:
+        best_single_gates[label] = rank(
+            (
+                Correction(spatial_gates=((label, gate),))
+                for gate in one_hot_gates
+            ),
+            6,
+        )
+    for left_label, right_label in combinations(spatial_labels, 2):
+        for left in best_single_gates[left_label]:
+            for right in best_single_gates[right_label]:
+                merged = _merge_corrections(left, right)
+                if merged is not None and merged.param_count <= max_params:
+                    gate_pool.add(merged)
+    gate_ranked = rank(gate_pool, 64)
+    gate_label_sets = {
+        tuple(label for label, _ in correction.spatial_gates)
+        for correction in gate_pool
+    }
+    gate_structured = {
+        correction
+        for labels in gate_label_sets
+        for correction in rank(
+            (
+                candidate
+                for candidate in gate_pool
+                if tuple(label for label, _ in candidate.spatial_gates) == labels
+            ),
+            3,
+        )
+    }
+    gate_ranked = rank([*gate_ranked, *gate_structured], 128)
 
+    combined_pool = []
+    for channel_base in mask_ranked:
+        for spatial_base in gate_ranked:
+            merged = _merge_corrections(channel_base, spatial_base)
+            if merged is not None and merged.param_count <= max_params:
+                combined_pool.append(merged)
+    combined_ranked = rank(combined_pool, 96)
+
+    bases = rank(
+        [Correction(), *mask_ranked, *gate_ranked, *combined_ranked], 128
+    )
     for base in bases:
         if base.param_count + 100 > max_params:
             continue
-        gated_outputs = [
-            _evaluate_query_values(canonical, raw_input, base)
-            for raw_input, _ in normalized
-        ]
+        try:
+            gated_outputs = [
+                _evaluate_query_values(canonical, raw_input, base)
+                for raw_input, _ in normalized
+            ]
+        except (MemoryError, ValueError, RuntimeError):
+            continue
         mixer = _fit_mixer(gated_outputs, targets)
         if mixer is None:
             continue
-        consider(
+        loss(
             Correction(
                 channel_masks=base.channel_masks,
                 spatial_gates=base.spatial_gates,
                 channel_mixer=mixer,
             )
         )
-    return sorted(accepted, key=lambda item: (item.param_count, repr(item)))
+    return sorted(set(accepted), key=lambda item: (item.param_count, repr(item)))
 
 
 def select_diagnostic_examples(
@@ -760,15 +998,20 @@ def _report_row(
     wrong_cells, passed_examples, failed_examples = stats
     cost = correction.param_count if correction else 0
     incumbent = _manifest().get(f"{task_num:03d}", {}).get("points", 0.0)
+    correction_json = correction.as_json() if correction else None
+    if correction_json is not None:
+        correction_json["compiled_equation"] = _compile_query(
+            query, correction
+        ).equation
     return {
         "task": task_num,
         "atoms": len(query),
         "query": query,
-        "equation": _compile_query(query, correction).equation,
+        "equation": to_equation(query),
         "pass": passed_examples,
         "fail": failed_examples,
         "wrong_cells": wrong_cells,
-        "correction": correction.as_json() if correction else None,
+        "correction": correction_json,
         "cost": cost,
         "projected_gain": round(max(1.0, 25.0 - math.log(max(1, cost))) - incumbent, 6),
     }
@@ -779,48 +1022,66 @@ def _runtime_validate(
     correction: Correction | None,
     examples: list[tuple[np.ndarray, np.ndarray]],
     *,
-    fresh: bool,
+    timeout_seconds: float,
 ) -> bool:
-    model = build_model(query, correction)
-    options = ort.SessionOptions()
-    options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_DISABLE_ALL
-    session = ort.InferenceSession(
-        model.SerializeToString(), options, providers=["CPUExecutionProvider"]
-    )
-    for raw_input, target in examples:
-        if not np.array_equal(session.run(None, {"input": raw_input})[0] > 0, target):
-            return False
-    if not fresh:
-        return True
-
-    with tempfile.TemporaryDirectory(prefix="self_einsum_fresh_") as temp_dir:
+    if timeout_seconds <= 0:
+        raise ValueError("runtime timeout must be positive")
+    # Checker, session construction, and every inference live in the bounded
+    # child. The parent deliberately uses the unchecked constructor so a bad or
+    # pathological candidate cannot hang the whole search before the timeout.
+    try:
+        model = _make_model(query, correction)
+    except (MemoryError, ValueError, RuntimeError, onnx.checker.ValidationError):
+        return False
+    with tempfile.TemporaryDirectory(prefix="self_einsum_runtime_") as temp_dir:
         model_path = Path(temp_dir) / "candidate.onnx"
         examples_path = Path(temp_dir) / "examples.npz"
         onnx.save(model, model_path)
-        np.savez(
-            examples_path,
-            inputs=np.concatenate([item[0] for item in examples]),
-            targets=np.concatenate([item[1] for item in examples]),
-        )
+        payload = {"count": np.asarray(len(examples), dtype=np.int64)}
+        for index, (raw_input, target) in enumerate(examples):
+            payload[f"input_{index}"] = np.asarray(raw_input, dtype=np.float32)
+            payload[f"target_{index}"] = np.asarray(target, dtype=bool)
+        np.savez(examples_path, **payload)
         code = """
 import sys
 import numpy as np
+import onnx
 import onnxruntime as ort
+model=onnx.load(sys.argv[1]); onnx.checker.check_model(model,full_check=True)
 so=ort.SessionOptions(); so.graph_optimization_level=ort.GraphOptimizationLevel.ORT_DISABLE_ALL
+so.intra_op_num_threads=1; so.inter_op_num_threads=1
 s=ort.InferenceSession(sys.argv[1], so, providers=['CPUExecutionProvider'])
 d=np.load(sys.argv[2])
-for raw,target in zip(d['inputs'],d['targets'],strict=True):
-    actual=s.run(None,{'input':raw[None].astype(np.float32)})[0]>0
-    if not np.array_equal(actual,target[None]): raise SystemExit(2)
+for i in range(int(d['count'])):
+    actual=s.run(None,{'input':d[f'input_{i}'].astype(np.float32)})[0]>0
+    if not np.array_equal(actual,d[f'target_{i}']): raise SystemExit(2)
 """
-        result = subprocess.run(
-            [sys.executable, "-c", code, str(model_path), str(examples_path)],
-            check=False,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-        )
+        try:
+            result = subprocess.run(
+                [sys.executable, "-c", code, str(model_path), str(examples_path)],
+                check=False,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                timeout=timeout_seconds,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            return False
         return result.returncode == 0
+
+
+def _rank_frontier(
+    frontier: Iterable[Query],
+    examples: list[tuple[np.ndarray, np.ndarray]],
+) -> list[tuple[int, tuple, Query, tuple[int, int, int]]]:
+    """Query-major ranking hook; callers must pass the full bundled corpus."""
+    ranked = []
+    for query in sorted(frontier, key=_query_key):
+        stats = _loss_stats(query, examples)
+        if stats[0] != sys.maxsize:
+            ranked.append((stats[0], _query_key(query), query, stats))
+    ranked.sort(key=lambda item: (item[0], item[1]))
+    return ranked
 
 
 def search_task(
@@ -829,64 +1090,68 @@ def search_task(
     beam: int = 3000,
     correction_beam: int = 8,
     ranking_arc_limit: int = 3,
+    runtime_timeout_seconds: float = 30.0,
 ) -> list[dict]:
-    """Beam-search connected typed self-Einsum queries for one task."""
+    """Beam-search one task, ranking every query on every bundled example.
+
+    ``ranking_arc_limit`` remains as a compatibility-only CLI argument; no
+    diagnostic subset is used. Query-major multi-task drivers can reuse
+    :func:`_rank_frontier` while maintaining their own per-task beams.
+    """
     if not 1 <= task_num <= 400:
         raise ValueError("task number must be in 1..400")
-    if max_atoms < 1 or beam < 1 or correction_beam < 0 or ranking_arc_limit < 0:
+    if (
+        max_atoms < 1
+        or beam < 1
+        or correction_beam < 0
+        or ranking_arc_limit < 0
+        or runtime_timeout_seconds <= 0
+    ):
         raise ValueError("search limits must be positive")
-    examples, official_count = _task_examples_with_official_count(task_num)
-    ranking_examples = select_diagnostic_examples(
-        examples, official_count=official_count, arc_limit=ranking_arc_limit
-    )
+    examples, _ = _task_examples_with_official_count(task_num)
     frontier = set(_seed_queries())
     rows: list[dict] = []
     emitted: set[tuple[Query, Correction | None]] = set()
     correction_pool: list[tuple[int, tuple, Query, tuple[int, int, int]]] = []
-    found_raw_exact = False
 
     for depth in range(1, max_atoms + 1):
-        ranked = []
-        for query in sorted(frontier, key=_query_key):
-            stats = _loss_stats(query, ranking_examples)
-            if stats[0] != sys.maxsize:
-                ranked.append((stats[0], _query_key(query), query, stats))
-        ranked.sort(key=lambda item: (item[0], item[1]))
+        ranked = _rank_frontier(frontier, examples)
         if not ranked:
             break
 
         complete_ranked = [item for item in ranked if _is_complete(item[2])]
-        correction_pool.extend(complete_ranked[:correction_beam])
-        if complete_ranked and complete_ranked[0][0] != 0:
-            best = complete_ranked[0]
+        near_hits = [item for item in complete_ranked if item[0] != 0]
+        correction_pool.extend(near_hits[:correction_beam])
+        if near_hits:
+            best = near_hits[0]
             if (best[2], None) not in emitted:
-                full_stats = _loss_stats(best[2], examples)
-                rows.append(_report_row(task_num, best[2], full_stats, None))
+                rows.append(_report_row(task_num, best[2], best[3], None))
                 emitted.add((best[2], None))
         for _, _, query, stats in ranked:
             if stats[0] != 0 or not _is_complete(query):
                 continue
             if (query, None) in emitted:
                 continue
-            full_stats = _loss_stats(query, examples)
-            if full_stats[0] == 0 and _runtime_validate(
-                query, None, examples, fresh=True
+            if stats[0] == 0 and _runtime_validate(
+                query,
+                None,
+                examples,
+                timeout_seconds=runtime_timeout_seconds,
             ):
-                rows.append(_report_row(task_num, query, full_stats, None))
+                rows.append(_report_row(task_num, query, stats, None))
                 emitted.add((query, None))
-                found_raw_exact = True
 
         retained_items = ranked[:beam]
         retained_queries = {item[2] for item in retained_items}
         retained_queries.update(item[2] for item in ranked if item[0] == 0)
-        if found_raw_exact or depth == max_atoms:
+        if depth == max_atoms:
             break
         next_frontier: set[Query] = set()
         for query in retained_queries:
             next_frontier.update(expand_query(query))
         frontier = next_frontier
 
-    if not found_raw_exact and correction_beam:
+    if correction_beam:
         correction_pool.sort(key=lambda item: (item[0], item[1]))
         correction_queries = []
         seen_queries: set[Query] = set()
@@ -897,13 +1162,16 @@ def search_task(
             if len(correction_queries) == correction_beam:
                 break
         for query in correction_queries:
-            for correction in fit_small_corrections(query, ranking_examples):
+            for correction in fit_small_corrections(query, examples):
                 key = (query, correction)
                 if key in emitted:
                     continue
                 stats = _loss_stats(query, examples, correction)
                 if stats[0] == 0 and _runtime_validate(
-                    query, correction, examples, fresh=False
+                    query,
+                    correction,
+                    examples,
+                    timeout_seconds=runtime_timeout_seconds,
                 ):
                     rows.append(_report_row(task_num, query, stats, correction))
                     emitted.add(key)
@@ -923,11 +1191,19 @@ def _parse_tasks(tokens: Sequence[str]) -> list[int]:
     return sorted(tasks)
 
 
-def _write_json_atomic(path: Path, rows: list[dict]) -> None:
+def _write_json_atomic(path: Path, document: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(rows, indent=2, sort_keys=True) + "\n")
+    temporary.write_text(json.dumps(document, indent=2, sort_keys=True) + "\n")
     os.replace(temporary, path)
+
+
+_OUTPUT_SCHEMA_VERSION = 1
+
+
+def _config_hash(config: dict) -> str:
+    encoded = json.dumps(config, sort_keys=True, separators=(",", ":")).encode()
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -937,6 +1213,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--beam", type=int, default=3000)
     parser.add_argument("--correction-beam", type=int, default=8)
     parser.add_argument("--ranking-arc-limit", type=int, default=3)
+    parser.add_argument("--runtime-timeout-seconds", type=float, default=30.0)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--shard-index", type=int, default=0)
     parser.add_argument("--shard-count", type=int, default=1)
@@ -944,16 +1221,61 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if not 0 <= args.shard_index < args.shard_count:
         parser.error("shard-index must be in [0, shard-count)")
+    requested_tasks = _parse_tasks(args.tasks)
     tasks = [
         task
-        for index, task in enumerate(_parse_tasks(args.tasks))
+        for index, task in enumerate(requested_tasks)
         if index % args.shard_count == args.shard_index
     ]
-    rows: list[dict] = []
+    config = {
+        "tasks": requested_tasks,
+        "max_atoms": args.max_atoms,
+        "beam": args.beam,
+        "correction_beam": args.correction_beam,
+        "ranking_arc_limit_ignored": args.ranking_arc_limit,
+        "ranking_semantics": "all_bundled",
+        "runtime_timeout_seconds": args.runtime_timeout_seconds,
+        "shard_index": args.shard_index,
+        "shard_count": args.shard_count,
+    }
+    expected_hash = _config_hash(config)
+    document = {
+        "schema_version": _OUTPUT_SCHEMA_VERSION,
+        "config": config,
+        "config_hash": expected_hash,
+        "completed_tasks": [],
+        "rows": [],
+    }
     if args.output.exists() and not args.no_resume:
-        rows = json.loads(args.output.read_text())
-    completed = {int(row["task"]) for row in rows}
+        loaded = json.loads(args.output.read_text())
+        completed_tasks = loaded.get("completed_tasks") if isinstance(loaded, dict) else None
+        loaded_rows = loaded.get("rows") if isinstance(loaded, dict) else None
+        if (
+            not isinstance(loaded, dict)
+            or loaded.get("schema_version") != _OUTPUT_SCHEMA_VERSION
+            or loaded.get("config") != config
+            or loaded.get("config_hash") != expected_hash
+            or not isinstance(completed_tasks, list)
+            or not all(isinstance(task, int) for task in completed_tasks)
+            or completed_tasks != sorted(set(completed_tasks))
+            or not isinstance(loaded_rows, list)
+            or not all(
+                isinstance(row, dict)
+                and isinstance(row.get("task"), int)
+                and row["task"] in completed_tasks
+                for row in loaded_rows
+            )
+        ):
+            raise ValueError(
+                "incompatible resume file: schema/config/shard differs; "
+                "use --no-resume or a new output path"
+            )
+        document = loaded
+    completed = {int(task) for task in document["completed_tasks"]}
+    if not completed <= set(tasks):
+        raise ValueError("incompatible resume file: completed task outside shard")
     pending = [task for task in tasks if task not in completed]
+    _write_json_atomic(args.output, document)
     started = time.monotonic()
     for index, task in enumerate(pending, start=1):
         task_started = time.monotonic()
@@ -963,9 +1285,10 @@ def main(argv: Sequence[str] | None = None) -> int:
             beam=args.beam,
             correction_beam=args.correction_beam,
             ranking_arc_limit=args.ranking_arc_limit,
+            runtime_timeout_seconds=args.runtime_timeout_seconds,
         )
-        rows.extend(task_rows)
-        rows.sort(
+        document["rows"].extend(task_rows)
+        document["rows"].sort(
             key=lambda row: (
                 row["task"],
                 row["atoms"],
@@ -973,7 +1296,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                 row["equation"],
             )
         )
-        _write_json_atomic(args.output, rows)
+        document["completed_tasks"].append(task)
+        document["completed_tasks"] = sorted(set(document["completed_tasks"]))
+        _write_json_atomic(args.output, document)
         elapsed = time.monotonic() - started
         rate = index / elapsed if elapsed else 0.0
         eta = (len(pending) - index) / rate if rate else None
@@ -989,7 +1314,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                     "max_atoms": args.max_atoms,
                     "beam": args.beam,
                     "correction_beam": args.correction_beam,
-                    "ranking_arc_limit": args.ranking_arc_limit,
+                    "ranking_semantics": "all_bundled",
+                    "runtime_timeout_seconds": args.runtime_timeout_seconds,
                 },
                 sort_keys=True,
             ),
