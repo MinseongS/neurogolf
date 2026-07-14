@@ -15,6 +15,54 @@
 # see free-output-einsum-regime-crack, which folds in the full regime vein worklist.
 
 levers:
+  - name: concat-max-collapse
+    status: live
+    scanner: null
+    scanner_archive: null
+    recipe: state/tasks/task302.md
+    agent_class: opus
+    expected_yield: "+0.2~0.4/task on any net ending in Concat(A,B) -> QLinearConv[10,2,k,k]"
+    ledger:
+      - date: 2026-07-14
+        ran: "task302 rebuild (opus): full LP/MILP single-plane separability sweep over every
+          3-state and 4-state encoding direction (5x5 + 3x3 final kernels), window set saturated
+          with 40k arc-gen instances; cutting-plane integer fit; fresh-gate 6000."
+        verdict: "WIN +0.2469 (cost 1773 -> 1385, adopted). Concat(gray, fill-count) -> Max()
+          folds two channels into ONE u8 plane; final QLinearConv [10,2,5,5] -> [10,1,5,5]
+          halves params (500->250) and the Concat's 288B vanishes. The conv's x_zero_point
+          supplies a 4th (off-grid) state for zero bytes/params. Also FALSIFIES task302's
+          2026-07-01 'FLOOR re-confirmed / all dominant intermediates structurally forced'.
+          3-state planes are LP-PROVED impossible here (ch8 needs black==offgrid, ch0 needs
+          them distinct) — the 3x3 spread of the detection is what supplies the 4th state."
+        reopen: "already live — scan every deployed net for the `Concat -> QLinearConv`
+          signature (the grafted public-dump nets are the prime pool, they were fitted by
+          gradient descent and never param-golfed). Gate = LP single-plane separability over
+          state-value directions BEFORE building; it is a cheap 2-param scale-invariant search."
+      - date: 2026-07-14
+        ran: "method audit of the first (failed) task302 fit"
+        verdict: "Fitting the final hyperplanes on the BUNDLED 266 examples' windows overfits:
+          bundled 266/266 but 127/2500 fresh FAIL. The window set does not saturate by sampling
+          (2972 @266 ex -> 8555 @40k, still rising), and 32 'feasible' directions @266 ex went to
+          0 once the true distribution was added. Same family as
+          arcgen-distribution-blindspot-silentzero, but the reverse direction: here the BUNDLED
+          set was the blind one."
+        reopen: "n/a — this is a binding method rule for any fitted-kernel rebuild: cutting-plane
+          loop (fit -> harvest violated fresh windows -> refit) + require candidate!=incumbent==0
+          on >=6000 fresh."
+      - date: 2026-07-14
+        ran: "board-wide scan of all 400 submission/overfit_nets for the
+          `Concat -> QLinearConv[M, C>=2, k, k]` signature, ranked by the params-only gain
+          ln(cost/(cost-save)) with save = params*(1 - 1/C)."
+        verdict: "this run found only 3 further carriers (160, 169, 204) beyond task302, and all
+          three are [10,4,1,1] finals holding just 40 params -> max gains 0.023/0.018/0.003,
+          ~0.04 total. task302 ([10,2,5,5], 500 params) was the sole fat instance on the current
+          board. The lever is CORRECT but its remaining board yield is a byte-tail, below the
+          0.X bar — do not fan agents out on 160/169/204."
+        reopen: "a new public dump / graft lands nets with a Concat -> QLinearConv whose final
+          weight is >=200 params (re-run the scan after every graft — the foreign nets are
+          gradient-fitted and never param-golfed, which is exactly how task302 arrived), or the
+          collapse generalises past Concat to another multi-channel final-conv feeder."
+
   - name: free-output-einsum-regime-crack
     status: live
     scanner: mask_dominance

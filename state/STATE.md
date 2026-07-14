@@ -1,12 +1,18 @@
-# STATE - NeuroGolf live handoff (updated 2026-07-14; LB 7424.42)
+# STATE - NeuroGolf live handoff (updated 2026-07-14; LB 7424.42, local +0.247 unsubmitted)
 > Replace this file at session end; do not append. History lives in git, `state/tasks/`,
 > `state/submissions.md`, and `state/levers.yaml`.
 
 ## Confirmed State
 - 🏆 **RECORD LB 7424.42 — submission 54654166.** This is +13.75 over the
   7410.67 starting record and leaves **+5.58 to the 7430 target**.
-- Worktree deploy still exactly matches that record: local manifest **7424.2851**,
-  `400/400`, and `ng verify --hash` = **HASH-OK**.
+- ⚠️ **Local manifest is now 7424.5321 (`400/400`, `ng verify --hash` = HASH-OK) —
+  +0.2469 AHEAD of the submitted record and NOT yet submitted.** The delta is task302
+  alone (cost 1773 -> 1385, 17.5196 -> 17.7665), adopted 20260714T143609Z. Next submit
+  should pick this up; it is a pure per-task cost cut, no other net changed.
+- task302 = `Concat -> Max` single-plane collapse; mechanism + transferable rule in
+  `state/tasks/task302.md`, lever `concat-max-collapse` in `state/levers.yaml`.
+  A board-wide rescan found only 3 further carriers worth ~0.04 total, so that lever is
+  spent until a new graft lands — do NOT fan out on tasks 160/169/204.
 - Record delta: task047 +1.6118 and task338/127/048 +0.4626 on the confirmed
   7422.34 base. Preserve those four LB-isolated ONNX files.
 
