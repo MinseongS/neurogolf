@@ -47,3 +47,7 @@ scratch_mine_keep/
 state/seen_kernels.json
 state/poll_dumps.log
 reference/
+
+# Public-dump mining scratch: extracted archives, fresh shards, scan JSONs — all regenerable.
+/dumps/
+/archive*.zip
