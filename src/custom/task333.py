@@ -5,40 +5,37 @@ This owns the live ONNX graph in Python source; it is a control baseline,
 not a semantic optimization.
 """
 from onnx import TensorProto, helper
-from ._exact import arr_b64, model, tensor
+from ._exact import arr_b64, model, node, tensor
 
 
 def build(task):
     inits = [
         tensor('cw', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AACAQAAA8EEAAPBCAAAUQgAAaEIAAJhCAAC6QgAA6EIAAO5C')),
         tensor('c99', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAp3')),
-        tensor('z', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
-        tensor('bitmask27', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAob')),
         tensor('hull_w', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAyLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIArzDwHb5zkDDQH3AT8PsQEfC9UC/w==')),
         tensor('hull_bias', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAOD///+k/f///P///3z5//8k/v//oPz//xT+//8o////')),
         tensor('q_scale', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/')),
         tensor('q_zero_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
         tensor('q_zero_i8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
+        tensor('hull_masks', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDIsIDEsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAr/Gw==')),
     ]
     nodes = [
-        helper.make_node('Conv', ['input', 'cw'], ['bar_f'], kernel_shape=[1, 1], pads=[0, 0, -20, -20], dilations=[1, 1]),
-        helper.make_node('Cast', ['bar_f'], ['bar'], to=2),
-        helper.make_node('MaxPool', ['bar'], ['cmL'], kernel_shape=[1, 10], pads=[0, 9, 0, 0], strides=[1, 1]),
-        helper.make_node('MaxPool', ['bar'], ['cmR'], kernel_shape=[1, 10], pads=[0, 0, 0, 9], strides=[1, 1]),
-        helper.make_node('MaxPool', ['bar'], ['cmU'], kernel_shape=[10, 1], pads=[9, 0, 0, 0], strides=[1, 1]),
-        helper.make_node('MaxPool', ['bar'], ['cmD'], kernel_shape=[10, 1], pads=[0, 0, 9, 0], strides=[1, 1]),
-        helper.make_node('MaxPool', ['bar'], ['rmax'], kernel_shape=[1, 10], strides=[1, 1]),
-        helper.make_node('MaxPool', ['bar'], ['cmax'], kernel_shape=[10, 1], strides=[1, 1]),
-        helper.make_node('Greater', ['rmax', 'c99'], ['rbox']),
-        helper.make_node('Greater', ['cmax', 'c99'], ['cbox']),
-        helper.make_node('Min', ['cmL', 'cmR'], ['Hmin']),
-        helper.make_node('Min', ['cmU', 'cmD'], ['Vmin']),
-        helper.make_node('Where', ['rbox', 'Hmin', 'z'], ['Hf']),
-        helper.make_node('Where', ['cbox', 'Vmin', 'z'], ['Vf']),
-        helper.make_node('Max', ['bar', 'Hf', 'Vf'], ['merged']),
-        helper.make_node('BitwiseAnd', ['merged', 'bitmask27'], ['merged_bits']),
-        helper.make_node('Concat', ['merged', 'merged_bits'], ['hull_features'], axis=1),
-        helper.make_node('QLinearConv', ['hull_features', 'q_scale', 'q_zero_u8', 'hull_w', 'q_scale', 'q_zero_i8', 'q_scale', 'q_zero_u8', 'hull_bias'], ['output'], kernel_shape=[1, 1], pads=[0, 0, 20, 20]),
+        node('Conv', ['input', 'cw'], ['bar_f'], attrs=[('kernel_shape', [1, 1]), ('pads', [0, 0, -20, -20]), ('dilations', [1, 1])]),
+        node('Cast', ['bar_f'], ['bar'], attrs=[('to', 2)]),
+        node('MaxPool', ['bar'], ['cmL'], attrs=[('kernel_shape', [1, 10]), ('pads', [0, 9, 0, 0]), ('strides', [1, 1])]),
+        node('MaxPool', ['bar'], ['cmR'], attrs=[('kernel_shape', [1, 10]), ('pads', [0, 0, 0, 9]), ('strides', [1, 1])]),
+        node('MaxPool', ['bar'], ['cmU'], attrs=[('kernel_shape', [10, 1]), ('pads', [9, 0, 0, 0]), ('strides', [1, 1])]),
+        node('MaxPool', ['bar'], ['cmD'], attrs=[('kernel_shape', [10, 1]), ('pads', [0, 0, 9, 0]), ('strides', [1, 1])]),
+        node('MaxPool', ['bar'], ['rmax'], attrs=[('kernel_shape', [1, 10]), ('strides', [1, 1])]),
+        node('MaxPool', ['bar'], ['cmax'], attrs=[('kernel_shape', [10, 1]), ('strides', [1, 1])]),
+        node('Greater', ['rmax', 'c99'], ['rbox']),
+        node('Greater', ['cmax', 'c99'], ['cbox']),
+        node('Min', ['cmL', 'cmR'], ['Hmin']),
+        node('Min', ['cmU', 'cmD'], ['Vmin']),
+        node('Where', ['rbox', 'Hmin', 'bar'], ['hmerge']),
+        node('Where', ['cbox', 'Vmin', 'hmerge'], ['merged']),
+        node('BitwiseAnd', ['merged', 'hull_masks'], ['hull_features']),
+        node('QLinearConv', ['hull_features', 'q_scale', 'q_zero_u8', 'hull_w', 'q_scale', 'q_zero_i8', 'q_scale', 'q_zero_u8', 'hull_bias'], ['output'], attrs=[('kernel_shape', [1, 1]), ('pads', [0, 0, 20, 20])]),
     ]
     value_infos = [
         helper.make_tensor_value_info('bar_f', 1, [1, 1, 10, 10]),
@@ -53,10 +50,8 @@ def build(task):
         helper.make_tensor_value_info('cbox', 9, [1, 1, 1, 10]),
         helper.make_tensor_value_info('Hmin', 2, [1, 1, 10, 10]),
         helper.make_tensor_value_info('Vmin', 2, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('Hf', 2, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('Vf', 2, [1, 1, 10, 10]),
+        helper.make_tensor_value_info('hmerge', 2, [1, 1, 10, 10]),
         helper.make_tensor_value_info('merged', 2, [1, 1, 10, 10]),
-        helper.make_tensor_value_info('merged_bits', 2, [1, 1, 10, 10]),
         helper.make_tensor_value_info('hull_features', 2, [1, 2, 10, 10]),
     ]
-    return model('task333_live_exact', nodes, inits, output_dtype=2, opset=18, value_infos=value_infos)
+    return model('t333', nodes, inits, output_dtype=2, opset=18, value_infos=value_infos, ir_version=10)

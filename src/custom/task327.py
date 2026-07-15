@@ -11,22 +11,21 @@ from ._exact import arr_b64, model, node, tensor
 def build(task):
     inits = [
         tensor('diag_w', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDYsIDYpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAPAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAAAADw=')),
-        tensor('bitmask27', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAob')),
-        tensor('support6', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDYsIDYpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=')),
-        tensor('hull_w', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAzLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAr//wHzDwAB2wDnOQAB9wABPwAPsQABHwAL1QAC/wA=')),
-        tensor('hull_bias', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAADg/////P///3z5//8k/v//oPz//xT+//8o////')),
         tensor('q_scale', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/')),
         tensor('q_zero_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
         tensor('q_zero_i8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
-        tensor('code_w', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAgEAAAPBBAAAUQgAAaEIAAJhCAAC6QgAA6EIAAO5C')),
+        tensor('code_w', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAAEAAAEBAAACAQAAAoEAAAMBAAADgQAAAAEEAABBB')),
+        tensor('diag_bias', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAPA==')),
+        tensor('hull_w', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAyLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoC/wT/Bv8I/wr/DP8O/xD/Ev8U/w==')),
+        tensor('hull_bias', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAA/f////j////x////6P///93////Q////wf///7D///+d////')),
     ]
     nodes = [
         node('Conv', ['input', 'code_w'], ['cg'], name='channel_recode_top_left_3x3', attrs=[('kernel_shape', [1, 1]), ('pads', [0, 0, -27, -27])]),
         node('Cast', ['cg'], ['cg16'], attrs=[('to', 10)]),
-        node('ConvTranspose', ['cg16', 'diag_w'], ['painted'], attrs=[('pads', [0, 0, 2, 2])]),
+        node('ConvTranspose', ['cg16', 'diag_w', 'diag_bias'], ['painted'], attrs=[('pads', [0, 0, 2, 2])]),
         node('Cast', ['painted'], ['painted_u8'], attrs=[('to', 2)]),
-        node('BitwiseAnd', ['painted_u8', 'bitmask27'], ['painted_bits']),
-        node('Concat', ['painted_u8', 'painted_bits', 'support6'], ['hull_features'], attrs=[('axis', 1)]),
+        node('Mul', ['painted_u8', 'painted_u8'], ['painted_sq']),
+        node('Concat', ['painted_u8', 'painted_sq'], ['hull_features'], attrs=[('axis', 1)]),
         node('QLinearConv', ['hull_features', 'q_scale', 'q_zero_u8', 'hull_w', 'q_scale', 'q_zero_i8', 'q_scale', 'q_zero_u8', 'hull_bias'], ['output'], attrs=[('kernel_shape', [1, 1]), ('pads', [0, 0, 24, 24])]),
     ]
     value_infos = [
@@ -34,7 +33,7 @@ def build(task):
         helper.make_tensor_value_info('cg16', 10, [1, 1, 3, 3]),
         helper.make_tensor_value_info('painted', 10, [1, 1, 6, 6]),
         helper.make_tensor_value_info('painted_u8', 2, [1, 1, 6, 6]),
-        helper.make_tensor_value_info('painted_bits', 2, [1, 1, 6, 6]),
-        helper.make_tensor_value_info('hull_features', 2, [1, 3, 6, 6]),
+        helper.make_tensor_value_info('painted_sq', 2, [1, 1, 6, 6]),
+        helper.make_tensor_value_info('hull_features', 2, [1, 2, 6, 6]),
     ]
     return model('t327', nodes, inits, output_dtype=2, opset=18, value_infos=value_infos, ir_version=8)
