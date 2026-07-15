@@ -1,5 +1,5 @@
 ---
-deployed_cost: 366
+deployed_cost: 350
 logged_costs_match: true
 migrated: 2026-07-09
 ---
@@ -14,7 +14,7 @@ has the MOST. The output is the 3x3 content of the box with the most blue pixels
 output[r][c] = blue(1) where that box has a blue pixel, else cyan(8). Winner is
 unique (0 ties over 2000 fresh samples). Grid is always 9x9.
 
-**Current:** 19.0973667 pts at cost366, memory247, params119; bundled267/267.
+**Current:** 19.1420668 pts at cost350, memory238, params112; bundled267/267.
 **Target tier:** A/B — argmax-select-among-4-boxes then crop a separable 3x3
 window. Output color is per-cell deterministic given the winning box, so it lands
 in the label-map family but with a tiny working canvas (9x9/7x7), beating B.
@@ -25,9 +25,9 @@ in the label-map family but with a tiny working canvas (9x9/7x7), beating B.
 | 1 | 3x3 sum-convs (blue/occ) over 9x9 → score=blue·isbox → ReduceMax argmax → Gather 3x3 window → label-map Equal | A/B | 2880 | 70 | 17.01 | 500/500 | WIN |
 
 ## Best achieved
-19.0973667 @ cost366, mem247, params119 — adopted through `ng adopt` at
-20260715T142423Z. The 2026-07-15 task-local sequence improved cost1074 ->366
-(+1.076512 points) with bundled267/267.
+19.1420668 @ cost350, mem238, params112 — adopted through `ng adopt` at
+20260715T145416Z. The 2026-07-15 task-local sequence improved cost1074 ->350
+(+1.121212 points) with bundled267/267.
 
 ## Historical irreducibility claim — falsified 2026-07-15
 Dominant intermediates at that time: `L` = the 30x30 uint8 label plane (900B) — then treated as unavoidable
@@ -95,3 +95,8 @@ select-and-crop pipeline stays at ~9x9/7x7 fp16, below the old 900B 30x30 label-
 - cost: 411 -> 366 (points 19.0974)
 - source: candidates/task271/encoded_score_payload.onnx
 - note: encode winning 3x3 payload in score low bits; remove MaxPool indices and dynamic Slice
+
+## ADOPTED 20260715T145416Z
+- cost: 366 -> 350 (points 19.1421)
+- source: candidates/task271/bitwise_where_decoder.onnx
+- note: decode score payload with UINT16 BitwiseAnd and centered UINT8 Where
