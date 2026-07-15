@@ -30,6 +30,7 @@
 - `candidates/task285/selected_index_fold_candidate.onnx`: persistent final gate artifact.
 - `candidates/task285/scratch/tests/test_selected_index_fold.py`: stage-2 structure, cost, and bundled contract.
 - `candidates/task285/rescan_redundant_target_sentinel.py`: structural 400-graph transfer scan.
+- `candidates/task285/scratch/tests/test_rescan_redundant_target_sentinel.py`: historical-hit and post-adopt no-hit scan contract.
 - `candidates/task285/DISCOVERY.md`: measured implementation and residual-lane handoff.
 - `src/custom/task285.py`: exact final deployed source, regenerated only after adoption.
 - `candidates/source_sync_285_295/test_task285_295_source_sync.py`: final cost and source/deployment fixed-point contract.
@@ -509,6 +510,7 @@ session's manifest changes in this commit.
 
 **Files:**
 - Create: `candidates/task285/rescan_redundant_target_sentinel.py`
+- Create: `candidates/task285/scratch/tests/test_rescan_redundant_target_sentinel.py`
 - Modify: `candidates/task285/DISCOVERY.md`
 - Modify: `state/insights.yaml`
 - Modify: `state/levers.yaml`
@@ -518,7 +520,49 @@ session's manifest changes in this commit.
 - Consumes: final cost 15,648 and the old/final structural delta.
 - Produces: a 400-graph structural candidate list, reusable insight, four-field scoped decision, and current handoff.
 
-- [ ] **Step 1: Add a structural scan**
+- [ ] **Step 1: Write and run the failing scanner test**
+
+```python
+from __future__ import annotations
+
+import importlib.util
+import pathlib
+
+ROOT = pathlib.Path(__file__).resolve().parents[4]
+SCANNER = ROOT / "candidates/task285/rescan_redundant_target_sentinel.py"
+
+
+def load_scanner():
+    spec = importlib.util.spec_from_file_location("task285_target_sentinel_scan", SCANNER)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_scanner_finds_historical_task285_and_clears_after_adoption():
+    assert SCANNER.exists(), "target-sentinel scanner is not implemented"
+    scanner = load_scanner()
+    historical = ROOT / "candidates/task285/connectivity_fold_candidate.onnx"
+    current = ROOT / "submission/overfit_nets/task285.onnx"
+    assert scanner.scan_model(historical) == [{
+        "task": 285,
+        "scatter": "newg",
+        "update": "v81_safe",
+        "target_gather": "target_base",
+    }]
+    assert scanner.scan_model(current) == []
+```
+
+Run:
+
+```bash
+PYTHONPATH=. uv run pytest -q candidates/task285/scratch/tests/test_rescan_redundant_target_sentinel.py
+```
+
+Expected: FAIL with `target-sentinel scanner is not implemented`.
+
+- [ ] **Step 2: Add the structural scan**
 
 Create this scanner. It reports a candidate when a `ScatterElements` update
 comes from `Min(raw, Add(Mul(Gather(label, index), scalar), scalar))`:
@@ -529,6 +573,7 @@ from __future__ import annotations
 
 import json
 import pathlib
+import re
 
 import onnx
 
@@ -538,6 +583,10 @@ NETS = ROOT / "submission/overfit_nets"
 
 def scan_model(path: pathlib.Path) -> list[dict[str, object]]:
     model = onnx.load(path)
+    match = re.search(r"task(\d{3})", str(path))
+    if match is None:
+        raise ValueError(f"task id missing from path: {path}")
+    task = int(match.group(1))
     producers = {output: node for node in model.graph.node for output in node.output}
     hits = []
     for scatter in model.graph.node:
@@ -558,7 +607,7 @@ def scan_model(path: pathlib.Path) -> list[dict[str, object]]:
                     gather = producers.get(gather_name)
                     if gather is not None and gather.op_type == "Gather":
                         hits.append({
-                            "task": int(path.stem[-3:]),
+                            "task": task,
                             "scatter": scatter.output[0],
                             "update": update.output[0],
                             "target_gather": gather.output[0],
@@ -585,9 +634,10 @@ if __name__ == "__main__":
     main()
 ```
 
-- [ ] **Step 2: Run the 400-graph scan**
+- [ ] **Step 3: Run GREEN scanner tests and the 400-graph scan**
 
 ```bash
+PYTHONPATH=. uv run pytest -q candidates/task285/scratch/tests/test_rescan_redundant_target_sentinel.py
 uv run python candidates/task285/rescan_redundant_target_sentinel.py
 ```
 
@@ -595,7 +645,7 @@ Expected after final adoption: `scanned` is 400, `errors` is empty, and
 `candidates` is empty. The pre-adoption self-check found task285 as the sole
 board hit.
 
-- [ ] **Step 3: Reprice the large lane**
+- [ ] **Step 4: Reprice the large lane**
 
 Run:
 
@@ -621,7 +671,7 @@ PY
 Expected: the existing control is 257 above the new +0.1 threshold before its
 known margin and 2.503682-second runtime failures. Do not rebuild or rotate it.
 
-- [ ] **Step 4: Update durable records**
+- [ ] **Step 5: Update durable records**
 
 Append this measured handoff to `candidates/task285/DISCOVERY.md`:
 
@@ -676,10 +726,11 @@ one four-field `runtime-timeout-spend` ledger entry:
   reopen: "A different margin-correct colour basis and bounded contraction with static cost<=14158, strict wrong-class negative margin, FLOAT-only TopK, and first inference<1s; or another exact sparse fold that is independently strictly cheaper."
 ```
 
-- [ ] **Step 5: Commit source-controlled scan and discovery**
+- [ ] **Step 6: Commit source-controlled scan and discovery**
 
 ```bash
-git add -f candidates/task285/rescan_redundant_target_sentinel.py
+git add -f candidates/task285/rescan_redundant_target_sentinel.py \
+  candidates/task285/scratch/tests/test_rescan_redundant_target_sentinel.py
 git add candidates/task285/DISCOVERY.md
 git commit -m "docs: record task285 residual optimization" \
   -m "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
