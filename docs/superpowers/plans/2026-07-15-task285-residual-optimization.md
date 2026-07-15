@@ -108,7 +108,7 @@ def test_target_sentinel_fold_passes_bundled():
 Run:
 
 ```bash
-uv run pytest -q candidates/task285/scratch/tests/test_target_sentinel_fold.py::test_target_sentinel_builder_exists
+PYTHONPATH=. uv run pytest -q candidates/task285/scratch/tests/test_target_sentinel_fold.py::test_target_sentinel_builder_exists
 ```
 
 Expected: FAIL with `target-sentinel fold builder is not implemented`.
@@ -200,7 +200,7 @@ Run:
 
 ```bash
 uv run python candidates/task285/build_target_sentinel_fold.py
-uv run pytest -q candidates/task285/scratch/tests/test_target_sentinel_fold.py
+PYTHONPATH=. uv run pytest -q candidates/task285/scratch/tests/test_target_sentinel_fold.py
 ```
 
 Expected: builder prints `memory=15424 params=233 cost=15657`; all 3 tests PASS.
@@ -317,7 +317,7 @@ def test_selected_index_fold_structure_cost_and_bundled():
 - [ ] **Step 2: Run the RED test**
 
 ```bash
-uv run pytest -q candidates/task285/scratch/tests/test_selected_index_fold.py::test_selected_index_builder_exists
+PYTHONPATH=. uv run pytest -q candidates/task285/scratch/tests/test_selected_index_fold.py::test_selected_index_builder_exists
 ```
 
 Expected: FAIL with `selected-index fold builder is not implemented`.
@@ -403,7 +403,7 @@ if __name__ == "__main__":
 
 ```bash
 uv run python candidates/task285/build_selected_index_fold.py
-uv run pytest -q candidates/task285/scratch/tests/test_selected_index_fold.py
+PYTHONPATH=. uv run pytest -q candidates/task285/scratch/tests/test_selected_index_fold.py
 ```
 
 Expected: `memory=15415 params=233 cost=15648`; both tests PASS.
@@ -461,7 +461,7 @@ CASES = ((285, 15648, 265), (295, 343, 268))
 - [ ] **Step 3: Verify byte identity and focused behavior**
 
 ```bash
-uv run pytest -q \
+PYTHONPATH=. uv run pytest -q \
   candidates/task285/scratch/tests/test_target_sentinel_fold.py \
   candidates/task285/scratch/tests/test_selected_index_fold.py \
   candidates/task285/scratch/tests/test_connectivity_fold_candidate.py \
@@ -703,7 +703,7 @@ changes that cannot be staged independently.
 
 ```bash
 uv run ng score 285
-uv run pytest -q \
+PYTHONPATH=. uv run pytest -q \
   candidates/task285/scratch/tests/test_target_sentinel_fold.py \
   candidates/task285/scratch/tests/test_selected_index_fold.py \
   candidates/task285/scratch/tests/test_connectivity_fold_candidate.py \
