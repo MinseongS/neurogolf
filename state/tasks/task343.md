@@ -114,3 +114,16 @@ point at an already-zero padded input column to avoid Pad entirely.
 - cost: 756 -> 683 (points 18.4735)
 - source: candidates/task343/joint_basis_min.onnx
 - note: shared 30x6 coordinate basis plus singleton-q fold; bundled 266/266; fresh 1500/1500 exact; manifest 684->683, actual artifact 756->683
+
+## ADOPTED 20260715T140016Z
+- cost: 683 -> 252 (points 19.4706)
+- source: candidates/task343/exact_signature_min.onnx
+- note: exact base10 three-row signatures via shared negative-pad Conv probes; uint8 period decision; single fmod final-index carrier
+
+## ADOPTED 20260715T145956Z
+- cost: 252 -> 224 (points 19.5884)
+- source: candidates/task343/joint_period_min.onnx
+- note: removed the 31B p3 comparison subsystem by sharing `col4==col0` with a
+  second scalar `col5==col1` equality; folded visibility zero tests into bool Cast
+  and replaced parameterized Squeeze with attribute-axes ReduceMax; bundled266/266,
+  fresh1500/1500 fail0/divergence0; exact-source/deployed SHA `48f92513614d...`
