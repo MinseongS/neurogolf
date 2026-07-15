@@ -66,3 +66,8 @@ dormant only for task019's current tail form.
 - cost: 1952 -> 1934 (points 17.4327)
 - source: candidates/task019/two_feature_qconv.onnx
 - note: Collapse M/R into categorical E and classify with two u8 planes; padding-safe non-positive biases
+
+## ADOPTED 20260715T132219Z
+- cost: 1934 -> 1653 (points 17.5897)
+- source: candidates/task019/min_basis_whole_renderer.onnx
+- note: Min-basis H/W whole renderer: fused point, diagonal halo, and channel mixer
