@@ -50,3 +50,13 @@ the sum reproduce the colour exactly (no double-count), so it runs on the collap
 1-channel colour-index plane and routes straight into the free bool output via
 Pad(sentinel)+Equal. Slice to the SOURCE region (3x3) not the output region (6x6)
 before the colour Conv, then Pad the colour-index plane up — quarters the entry slice.
+
+## ADOPTED 20260715T112022Z
+- cost: 638 -> 528 (points 18.7309)
+- source: candidates/task327/bitwise_hull_output.onnx
+- note: bitwise convex codebook + 6x6 support + free QLinearConv output fold
+
+## ADOPTED 20260715T112139Z
+- cost: 528 -> 522 (points 18.7423)
+- source: candidates/task327/bitwise_hull_output.onnx
+- note: strip obsolete Pad metadata from bitwise convex free-output renderer

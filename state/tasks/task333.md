@@ -102,3 +102,13 @@ mem 2792/16.92; full_idx 900B uint8 30x30 label carrier for free Equal->output, 
 - cost: 2401 -> 2371 (points 17.2289)
 - source: candidates/task333/kcollapse.onnx
 - note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays
+
+## ADOPTED 20260715T105341Z
+- cost: 2371 -> 2093 (points 17.3536)
+- source: candidates/task333/quadratic_output.onnx
+- note: convex-code Mod feature + free ConvInteger output fold
+
+## ADOPTED 20260715T110206Z
+- cost: 2093 -> 1786 (points 17.5123)
+- source: candidates/task333/bitwise_hull_output.onnx
+- note: bitwise convex codebook + free QLinearConv output fold
