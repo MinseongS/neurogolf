@@ -61,3 +61,8 @@ dormant only for task019's current tail form.
 - cost: 2503 -> 1952 (points 17.4234)
 - source: candidates/task019/dynamic_qconv.onnx
 - note: dynamic QLinearConv output folding: remove final idx/Pad carrier; bundled+fresh exact
+
+## ADOPTED 20260715T123423Z
+- cost: 1952 -> 1934 (points 17.4327)
+- source: candidates/task019/two_feature_qconv.onnx
+- note: Collapse M/R into categorical E and classify with two u8 planes; padding-safe non-positive biases

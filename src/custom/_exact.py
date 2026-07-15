@@ -29,7 +29,31 @@ def tensor(name: str, arr: np.ndarray):
     return numpy_helper.from_array(arr, name)
 
 
-def model(name: str, nodes, inits, output_dtype=TensorProto.FLOAT, opset=11, value_infos=None):
+def node(op_type, inputs, outputs, *, name="", domain="", attrs=()):
+    """Build a node while preserving the source artifact's attribute order."""
+
+    kwargs = dict(attrs)
+    if name:
+        kwargs["name"] = name
+    if domain:
+        kwargs["domain"] = domain
+    result = helper.make_node(op_type, inputs, outputs, **kwargs)
+    attributes = {attribute.name: attribute for attribute in result.attribute}
+    del result.attribute[:]
+    result.attribute.extend(attributes[attr_name] for attr_name, _ in attrs)
+    return result
+
+
+def model(
+    name: str,
+    nodes,
+    inits,
+    output_dtype=TensorProto.FLOAT,
+    opset=11,
+    value_infos=None,
+    ir_version=IR_VERSION,
+    producer_name="",
+):
     graph = helper.make_graph(
         nodes,
         name,
@@ -39,4 +63,11 @@ def model(name: str, nodes, inits, output_dtype=TensorProto.FLOAT, opset=11, val
     )
     for vi in value_infos or []:
         graph.value_info.append(vi)
-    return helper.make_model(graph, ir_version=IR_VERSION, opset_imports=[helper.make_opsetid("", opset)])
+    result = helper.make_model(
+        graph,
+        ir_version=ir_version,
+        opset_imports=[helper.make_opsetid("", opset)],
+    )
+    if producer_name:
+        result.producer_name = producer_name
+    return result

@@ -180,3 +180,8 @@ so this is strictly a private-LB-risk trade, not a free win.
 - cost: 9817 -> 8663 (points 15.9332)
 - source: candidates/task025/tail_where_sharedaxis.onnx
 - note: orientation-first Where routing shares line and adjacency axes; exact tail carrier collapse
+
+## ADOPTED 20260715T121741Z
+- cost: 8663 -> 8604 (points 15.9400)
+- source: candidates/task025/line_position_fusion.onnx
+- note: Fuse mutually exclusive line-position masks before one fp16 cast; reduce orientation in uint8
