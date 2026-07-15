@@ -66,7 +66,7 @@ winners, rather than preserving every intermediate four-color score.
 
 ### Data extraction
 
-A source-controlled analysis tool under `candidates/task209/` will record, for
+A source-owned analysis tool under `candidates/task209/` will record, for
 each example:
 
 - the four per-color correlation components for every legal scale and phase
@@ -159,11 +159,12 @@ adopted under the strict fresh-divergence requirement.
    implementation and the price gate passes.
 7. Run bundled validation and compare against the incumbent on the untouched
    fresh 5000 holdout in fresh processes.
-8. Run `uv run ng gate candidates/task209/<candidate>.onnx --task 209` only when
+8. Run `uv run ng gate candidates/task209/selector_compressed.onnx --task 209` only when
    bundled failures are zero, fresh divergence is zero, and measured cost is at
    most 5509.
-9. Run `uv run ng adopt candidates/task209/<candidate>.onnx --task 209 ...`
-   only after a gate PASS. Never copy the candidate into the deployed directory
+9. Run `uv run ng adopt candidates/task209/selector_compressed.onnx --task 209
+   --note "replace four-color selector planes with a compact exact basis"` only
+   after a gate PASS. Never copy the candidate into the deployed directory
    directly.
 
 If Approach A is infeasible, retain its scripts and results as evidence and
@@ -181,7 +182,7 @@ A successful candidate must pass all of the following in fresh processes:
 - zero output divergence from the adopted incumbent on the untouched 5000-case
   holdout;
 - measured cost at most 5509;
-- `uv run ng gate ... --task 209` PASS.
+- `uv run ng gate candidates/task209/selector_compressed.onnx --task 209` PASS.
 
 Only then may `ng adopt` run. After adoption, rebuild the exact source artifact,
 verify its SHA matches the deployed model, update `DISCOVERY.md` and the insight
