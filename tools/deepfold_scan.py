@@ -23,7 +23,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from neurogolf.manifest import load as load_manifest  # noqa: E402
 
 NETS = ROOT / "submission" / "overfit_nets"
-OUT = Path(__file__).parent / "deepfold_scan_20260711.json"
+OUT = ROOT / "candidates" / "runtime_timeout" / "deepfold_scan_latest.json"
 
 ITEMSIZE = {TensorProto.FLOAT: 4, TensorProto.FLOAT16: 2, TensorProto.DOUBLE: 8,
             TensorProto.INT64: 8, TensorProto.INT32: 4, TensorProto.INT16: 2,
@@ -131,6 +131,7 @@ for t in range(1, 401):
                      "kind": kind})
 
 rows.sort(key=lambda r: -r["dpts"])
+OUT.parent.mkdir(parents=True, exist_ok=True)
 OUT.write_text(json.dumps(rows, indent=1))
 print(f"{len(rows)} candidate planes; top 40 by dpts:")
 print(f"{'task':>5} {'flr':>3} {'kind':>15} {'dpts':>7} {'bytes':>6} {'cost':>6}  producer->consumers  shape")

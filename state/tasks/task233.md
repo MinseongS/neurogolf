@@ -649,3 +649,38 @@ residual Kaggle-semantics risk (local mirror clean, LB-unproven combos): opset 1
 - cost: 24703 -> 21816 (points 15.0096)
 - source: candidates/task233/cand_dynamic_corr.onnx
 - note: validated dynamic signed-correlation candidate (was merge-only); ng gate 266/0 fresh 3600/0
+
+## ADOPTED 20260715T012521Z
+- cost: 24703 -> 21816 (points 15.0096)
+- source: candidates/task233/cand_dynamic_corr.onnx
+- note: dynamic 3x3 correlation: replace hash lookup/match table with runtime QLinearConv kernel and MaxPool index
+
+## ADOPTED 20260715T071224Z
+- cost: 21816 -> 21027 (points 15.0464)
+- source: candidates/task233/signed_topk_cast.onnx
+- note: signed int8 TopK carrier: replace bool/u8->fp16 feed without changing indices/presence
+
+## REPAIRED 20260715T073652Z
+- cost: 21027 -> 21816 (points 15.0096)
+- source: candidates/task233/kaggle_safe_fp16_topk.onnx
+- note: Kaggle safety repair after ref54716353 ERROR: INT8 TopK -> FLOAT16; keep dynamic QLinear correlation
+
+## ADOPTED 20260715T074800Z
+- cost: 21816 -> 20425 (points 15.0755)
+- source: candidates/task233/cand_oogbias.onnx
+- note: collapse: canvas packed as v=32*key+color by Conv(input,Wpk); out-of-grid cells decoded to 0 (same band as red), false-positiving windows hanging off the real HxW next to a border sprite, which the net repaired with an explicit geometric guard (Einsum in-grid profiles -> gH/gW -> Less(IOTA28) -> 255/0 masks -> [1,1,28,28] Min plane). Replaced by giving the Conv a bias of +96 and pre-subtracting 96 from every weight: in-grid cells bit-exact (exactly one channel is 1; integers round-trip exactly in fp32), out-of-grid decodes to bias -> key 3 -> dk!=1. Identical predicate for ZERO counted bytes: deletes 15 nodes + 67 params. cost 21816->20425, 146->131 nodes. TopK scan clean. Differential 0/5596 (1596 real draws re-emitted at 6 grid sizes with border pulled tight against sprites + 4000 random-content grids).
+## CORRECTION 2026-07-15 — the `signed_topk_cast` ADOPTED entry above is NOT the live state
+- ran: board-wide `neurogolf.topk.find_unsigned_topk` over all 400 deployed nets, plus a
+  direct check of this task's `submission/.backups/` chain.
+- verdict: the `signed_topk_cast.onnx` adoption recorded above fed **signed INT8 into TopK**
+  (elem_type=3). `src/neurogolf/topk.py` classes this as a Kaggle GRADER-KILLER: the grader
+  errors the WHOLE submission, it is invisible to local ORT/onnx.checker, and `ng pack`
+  refuses to zip such a net. It was established for unsigned ints on 2026-07-02, for signed
+  INT8 by task233 submission 54418836, and RE-CONFIRMED by full submission 54716353 on
+  2026-07-15 (today). The net was reverted on disk the same day; the ADOPTED block above was
+  left behind and reads as live. It is not. Board scan now: **0/400 violations, packable.**
+- reopen: none — do not re-adopt any `signed_topk_cast` family member. If a cost win is
+  wanted from this direction, the feed must be fp16/fp32 (verified acceptable), never int8
+  or any unsigned int. Re-run the board scan before every `ng pack`:
+  `uv run python -c "from neurogolf.topk import find_unsigned_topk; ..."` over
+  `submission/overfit_nets/*.onnx`.

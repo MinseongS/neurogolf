@@ -126,3 +126,13 @@ Backup: reports/retired_networks/task174_pre_s11_cross.onnx.
 - cost: 4027 -> 3348 (points 16.8839)
 - source: candidates/task174/cand.onnx
 - note: fold-scan(opus): symmetry-detector compaction — replace [N,W,W] reflection matrix + triple-product overlap Einsum with row column-bitmask palindrome test (rb=sum 2^s*M, rbrev=sum 2^(W-1-s)*M; palindrome iff rbrev==rb*2^(W-1-a) via power-table Gather); fp16-exact bounded. 4027->3348, bit-identical 2000/2000.
+
+## ADOPTED 20260715T071500Z
+- cost: 3348 -> 3316 (points 16.8935)
+- source: candidates/task174/signed_reduce.onnx
+- note: binary ReduceMin carrier fp16->int8
+
+## ADOPTED 20260715T071611Z
+- cost: 3316 -> 2788 (points 17.0669)
+- source: candidates/task174/golf2.onnx
+- note: collapse: bboxes via ArgMax(select_last_index) replaces index-weighting chain; geometry chain in fp16 not int32 (TopK indices are colours directly); 1-D Less row/col vectors broadcast into window mask + two-Where fuse. 73->63 nodes, cost 3348->2788. Differential-tested 1596 fresh randomized placements vs incumbent: 0 divergence.

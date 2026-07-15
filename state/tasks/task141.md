@@ -73,3 +73,8 @@ output (input itself supplies in-grid bg + off-grid zeros).
 - cost: 568 -> 454 (points 18.8819)
 - source: candidates/task141/task141_fp16_tail_scalar_chain.onnx
 - note: fp16 output-coupled scalar/einsum tail recast cost 568->454
+
+## ADOPTED 20260715T032434Z
+- cost: 454 -> 436 (points 18.9224)
+- source: candidates/task141/factor_tensors_exact.onnx
+- note: direct exact duplicate-column factors for TUp/TVp

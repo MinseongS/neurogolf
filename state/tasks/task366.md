@@ -372,3 +372,33 @@ falsification history: first fresh-tail diagnosis of task366. Consistent with th
 - cost: 22219 -> 22211 (points 14.9917)
 - source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task366.onnx
 - note: min-merge from overfit_nets
+
+## ADOPTED 20260715T031324Z
+- cost: 22211 -> 22194 (points 14.9924)
+- source: candidates/task366/u8_implication.onnx
+- note: stencil implication factor: reuse existing assigned-u8 vector; Cast(match)+Sub(1,assigned)+Max replaces Reshape+Not+Or+Cast in 3 stamp blocks; -18 memory +1 param
+
+## ADOPTED 20260715T070855Z
+- cost: 22194 -> 22191 (points 14.9926)
+- source: candidates/task366/signed_corner_topk.onnx
+- note: generalized signed-QLinearConv TopK: remove fp16 corner carrier
+
+## ADOPTED 20260715T071034Z
+- cost: 22191 -> 21681 (points 15.0158)
+- source: candidates/task366/pruned_orphan_vi.onnx
+- note: prune orphan cfH value_info left by signed TopK rewrite
+
+## ADOPTED 20260715T071312Z
+- cost: 21681 -> 21159 (points 15.0402)
+- source: candidates/task366/signed_more_topk.onnx
+- note: signed int8 TopK carrier on two remaining binary presence feeds
+
+## REPAIRED 20260715T073659Z
+- cost: 21159 -> 22194 (points 14.9924)
+- source: submission/.backups/task366_20260715T070855Z.onnx
+- note: Kaggle safety repair after ref54716353 ERROR: restore all three TopK feeds to previously LB-valid float path
+
+## ADOPTED 20260715T084741Z
+- cost: 22194 -> 21729 (points 15.0136)
+- source: candidates/task366/split_crop.onnx
+- note: FALSIFIES the 2026-07-09 'colf 3600 = structural DETECTION floor' verdict. That verdict enumerated 6 alternatives but every one assumed the label plane must be a SINGLE full 30x30 rectangle; it missed that the generator makes the layouts mutually exclusive (horiz => grid subset rows 0:15 x cols 0:30; stacked => rows 0:30 x cols 0:17) so the union of REACHABLE cells is only 705/900 and is NON-RECTANGULAR — coverable by two static crops. Replaced the single colf=Conv(input,W01=[0..9]) full [1,1,30,30] fp32 plane (3600B) + its u8 copy gU (900B) with two negative-crop Convs SHARING the same W01 initializer (params unchanged 222): D1=[1,1,30,17] + D2=[1,1,15,13] = 2820B fp32 + 705B u8, reassembled into the two gather sources (D1u for the stacked row-gather, P15=Concat(A4,D2u) for the horiz col-gather) plus a mux. cost 22194->21729. EQUIVALENCE PROVEN not just gated: nodes 23-27 give radd=ar15+Where(horiz,0,Hh) and cidxg=Clip(ar17+Where(horiz,Wh,0),0,29), so radd is exactly [0..14] when horiz and cidxg exactly [0..16] when stacked — B4=gU[radd][:,cidxg] collapses to exactly these two lanes; index domains unchanged (radd<=29 since Hh<=15). A and Bp are bit-identical for EVERY input, so all 400+ downstream nodes are untouched. Differential: 4000 realistic instances 0 disagreements (1985 horiz / 2015 stacked, 108 grid shapes, 4000 DISTINCT deployed outputs so non-vacuous) + 400 unconstrained random grids 0 DIFF (295 ok/ok + 105 err/err identical — the incumbent's own Gather OOB lane reproduced rather than silently changed). All 4 TopK feeds fp16. The ledger's durable physics (Conv output dtype == input fp32) still holds — this cuts the NUMBER of fp32 cells, not the dtype. POSSIBLE BOARD-WIDE LEVER: applies to any decode-first net whose panels/grid cannot occupy all 900 cells in both orientations; colf 3600 is shared with task205/task187.

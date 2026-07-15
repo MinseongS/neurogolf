@@ -79,3 +79,8 @@ Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup 
 - cost: 1181 -> 1094 (points 18.0024)
 - source: candidates/public_dumps/20260713_7281/extracted/task400.onnx
 - note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded
+
+## ADOPTED 20260715T025145Z
+- cost: 1094 -> 1085 (points 18.0107)
+- source: candidates/task400/fold_div.onnx
+- note: fold exact blue-block divide-by-25 into coordinate weights; preserve cast with positive fp margin

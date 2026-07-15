@@ -116,3 +116,13 @@ existing counted tensor.
 - Tool+date: opus agent, onnx 1.21.0 / ort 1.26.0, 2026-07-10.
 - Reopen: mixed-dtype Einsum acceptance (ng_S→300-600B, +0.10~0.15); a free low-dtype input alias; or
   a public task080 net avoiding the one-hot selector.
+
+## ADOPTED 20260715T084829Z
+- cost: 6686 -> 5099 (points 16.4632)
+- source: candidates/task080/strided.onnx
+- note: strided compact rewrite from current candidate work; bundled fail=0
+
+## ADOPTED 20260715T091648Z
+- cost: 5099 -> 4973 (points 16.4882)
+- source: candidates/task080/strided.onnx
+- note: strided compact rewrite tail cleanup against current deployed baseline

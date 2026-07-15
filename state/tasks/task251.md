@@ -94,3 +94,8 @@ Whole net floors near 7101 → 16.04.
 - cost: 2756 -> 1531 (points 17.6663)
 - source: /tmp/task251_cand.onnx
 - note: runtime-spend S8-port fanout (187-batch7 epsilon-J single-channel variant): Einsum(W)->Greater->Pad->Where(mask,BLUE,input) tail collapsed into ONE free-output einsum. Sole counted plane = t2 Conv [1,1,12,12] 576B (neg-pad 30->12 crop in-op, non-red traversability). Stack a∈{0,1} with t2 SHARED not stacked (halves vs 243): a=1 real 8-conn border flood (ring seed 2 rank-1 terms), a=0 J/12 rank-collapse constant K; signed T decode: out[1]=K−W (enclosed->BLUE), out[0]=W, out[2]=K. 14 transitions. 2756->1531 (+0.588). bundled 266/0, bit-identical, fresh 4000/4000. TRANSFERABLE: epsilon-J single-channel avoids the stacked-plane doubling whenever the Where paints the W=0 (unreached) side; border-flood/enclosure nets are the class.
+
+## ADOPTED 20260715T021900Z
+- cost: 1531 -> 1475 (points 17.7036)
+- source: candidates/task251/factor_seeds.onnx
+- note: exact shared rank-2 factorization of G/H seed routes in final free-output Einsum

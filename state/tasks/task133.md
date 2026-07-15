@@ -250,3 +250,13 @@ negative for the current public-autopsy free-Einsum signature.
 - cost: 21278 -> 19800 (points 15.1066)
 - source: candidates/task133/gather_slots_s4.onnx
 - note: 4-slot dynamic-magnify (S=4 = generator structural max, randint(2,4) proven; slot3 = insurance, functionally inert on 20000+ fresh draws); fresh A/B 6000: S4==S3==deployed 20 shared generator-pathology fails, 0 regressions; 21278->19800 (+0.072)
+
+## ADOPTED 20260715T013912Z
+- cost: 19800 -> 17862 (points 15.2096)
+- source: candidates/task133/gather_slots_recovered.onnx
+- note: restore direct 3-slot dynamic-magnify compiler: bundled 267/267 exact; remove fresh-only fourth-slot insurance under bundled-overfit gate
+
+## ADOPTED 20260715T081523Z
+- cost: 17862 -> 17049 (points 15.2562)
+- source: candidates/task133/golf_c_safe.onnx
+- note: algebraic golf of the plumbing around the 3-slot double-Gather magnify compiler (architecture unchanged, its floor re-confirmed): 6 no-op Reshapes deleted by squeezing the magnify-table index to a scalar so Gather returns [16]/[24] directly (-456B); i_row/i_col stored ascending instead of descending-then-flipped-by-two-Gathers (-48B); re-associated (topf+syl*H)+h2 -> (topf+h2)+syl*H to move an add off the x4 probe broadcast (-120B); two Mul+ReduceSum pairs folded into one MatMul[4,2]+Split (-140B); count redundant with ReduceMax(rowany) (-30B); pattern padded once not per-slot (-37B); cols gathered before rows (-36B); nz(1-shp0)(1-mf) -> nz(1-max(shp0,mf)) (-20B). EVERY edit is an exact algebraic identity. cost 17862->17049, 195->183 nodes. Differential 0/4000 vs deployed; harness proven sensitive (detects 28 diffs on the rejected golf_c variant). CHOSE SAFE VARIANT: golf_c (+0.065) additionally narrowed ctab [4,24]->[4,20], which bets that offset+3 never co-occurs with m=4; arc-gen shows 0/262 but the 5 ARC originals DO use offset+3 — not worth risking 15.27 pts for 0.019.

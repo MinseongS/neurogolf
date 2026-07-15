@@ -38,3 +38,8 @@ verdict above is FALSIFIED (self-referential floor, −0.96 nats off).
 - cost: 1470 -> 510 (points 18.7656)
 - source: candidates/task217/task217_kron_einsum.onnx
 - note: kron_fractal_einsum: sprite-kron-sprite x color as ONE free-output einsum (memory 0); div/mod placement tables + mod-s fold free-input reads; falsifies 06-29 'semantic floor'
+
+## ADOPTED 20260715T032548Z
+- cost: 510 -> 506 (points 18.7735)
+- source: candidates/task217/factor_w2_duplicates.onnx
+- note: direct exact duplicate-column initializer factorization

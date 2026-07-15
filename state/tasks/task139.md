@@ -32,3 +32,8 @@ xpose (inverted-transpose) layout flag is recoverable as a SINGLE scalar from wh
 - cost: 904 -> 389 (points 19.0364)
 - source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task139.onnx
 - note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
+
+## ADOPTED 20260715T063417Z
+- cost: 389 -> 375 (points 19.0731)
+- source: candidates/task139/derive_src.onnx
+- note: derive source color vectors from existing output-vector basis inside final Einsum

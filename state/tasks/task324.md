@@ -62,12 +62,27 @@ lands 14216 and even maximal fusion only ties kojimar, never −2300B below it.
   predicate.
 
 ## INSIGHT (transferable)
-⭐ A full-grid 45° diagonal SPREAD (dot → its whole X) is forced to a (2·side−1)²
+❌ **FALSIFIED 2026-07-15 by the dilated_x3 adoption (8555 → 8094, params 1586 → 325).**
+~~⭐ A full-grid 45° diagonal SPREAD (dot → its whole X) is forced to a (2·side−1)²
 Conv kernel = O(side²) PARAMS regardless of sparsity (params count zeros) + two
 float full planes. On a 20-canvas ~1521 params + 1600B that no banned-Loop op can
-undercut ⇒ such tasks have a hard ~5.6KB (mem+params) floor BEFORE any colour logic.
-Distinct from task037/119 where the generator BOUNDS diagonal length (≤7) →
-collapses to a tiny K×K conv; here length is the full grid so no collapse.
+undercut ⇒ such tasks have a hard ~5.6KB (mem+params) floor BEFORE any colour logic.~~
+The O(side²) claim holds only for a **single** conv. A full-grid diagonal spread
+decomposes into TWO chained convs — coarse `[2,1,9,9]` at **dilation 4** (diagonal and
+anti-diagonal taps kept in separate channels so they cannot cross-contaminate) then a fine
+`[1,2,7,7]` merging them — for **260 params**, a 5.8× cut. The "no banned-Loop op can
+undercut" premise was never tested against a dilated decomposition.
+**Dilation 4 is load-bearing and the reason naive attempts failed** (a textbook dilated split
+gates at the predicted cost but fail=191): the outer pass reads the intermediate up to ±21
+outside the 20×20 plane, where zero-padding destroys the coarse spread. At dilation 4 every
+offset δ∈[−19,19] has a representation δ = k + 4m with k∈[−3,3] **of the same sign as δ**, so
+the intermediate read (r+k, c+k) always lies between the target cell and the dot — both
+in-grid. No halo, plain "same" padding, provably exact.
+Also note the ledger's framing here was **inverted**: it said "the param lever is the only
+hope", but memory was 82% of cost. After this adoption params are 325/8094 and further param
+work is worth ≤0.04 total — the remaining cost is memory.
+Still true: task037/119 differ in that the generator BOUNDS diagonal length (≤7) → collapses
+to a tiny K×K conv directly, with no dilated decomposition needed.
 ⭐ Reusable entry lever: a DILATED (dil=10) 2×2 Conv whose only nonzero tap is
 [.,.,0,0]=arange yields the colour-index plane ALREADY cropped to 20×20
 (30−(2−1)·10=20) in ONE op, so every downstream plane counts at 20×20 not 30×30.
@@ -104,3 +119,18 @@ Bundled gate after adoption: fail=0, cost `8864 -> 8862`
 - cost: 8609 -> 8555 (points 15.9457)
 - source: candidates/public_dumps/archive1_20260713_ab6515/task324.onnx
 - note: isolated residual-public LB probe; bundled fail=0
+
+## ADOPTED 20260715T033307Z
+- cost: 8609 -> 8607 (points 15.9397)
+- source: candidates/task324/count_einsum.onnx
+- note: restore exact spatial-count Einsum after public overlay reintroduced ReduceSum axes initializer; -2 params
+
+## ADOPTED 20260715T081654Z
+- cost: 8607 -> 8555 (points 15.9457)
+- source: candidates/public_dumps/20260715_refresh/lucifer19_chimera-safe-boost-caddies/submission_black_cat_bbi_v3/task324.onnx
+- note: lucifer19 black-cat BBI v3 public min-merge; bundled fail=0
+
+## ADOPTED 20260715T082616Z
+- cost: 8555 -> 8094 (points 16.0011)
+- source: candidates/task324/dilated_x3.onnx
+- note: FALSIFIES the ledger's 'priced FLOOR - do not re-attempt' verdict and its star INSIGHT that full-grid diagonal spread forces O(side^2) params (it forces that only for a SINGLE conv). The dot->full-X spread was one QLinearConv with a 39x39 X-kernel = 1521 params (97.6% of all params). Replaced by two chained QLinearConvs on the same dot_u8->line_score interface: a coarse [2,1,9,9] DILATION-4 kernel (ch0 = diagonal taps, ch1 = anti-diagonal, kept separate so they cannot cross-contaminate), then a fine [1,2,7,7] merging both channels into one plane. 1521 -> 260 params. Dilation 4 is load-bearing: the textbook dilated decomposition gates at the predicted cost but fail=191 because the outer pass reads the intermediate up to +/-21 outside the 20x20 plane where zero-padding destroys the coarse spread; at dilation 4 every offset d in [-19,19] has d = k + 4m with k in [-3,3] of the SAME SIGN as d, so the intermediate read (r+k, c+k) always lies between the target cell and the dot, both in-grid — no halo, plain same-padding, provably exact. cost 8555->8094, params 1586->325. Differential: changed subgraph 22000 cases 0 disagreements (all 3600 exhaustive single-dot placements + random multi-dot up to 12 dots, 2.24M lit cells); full net 4000 instances 0 disagreements across 121 grid shapes, max diagonal row-span 19 = full grid extent. Rebased onto the 8555 net after a parallel session changed it from 8607 mid-run.

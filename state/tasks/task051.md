@@ -110,3 +110,8 @@ neighbour inspection, no per-cell direction logic. (Verified 8000/0 fresh.)
 - 1744→943 (+0.32). Beam/ray And-separable mask → additive free-output Einsum; k-stacked fp32 carriers via single Where(bool,pair11,pair10); bg-gate δ_d0 in mixer removes in-grid gates.
 - Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task051/regime.onnx. Backup: reports/candidates/fatmid_adopt_backup/task051.onnx.bak.
 - ⭐ Memory neurogolf-regime-crack-freeoutput-einsum. ⚠️ Concurrent-session collision risk on candidate dirs — always re-measure on-disk before adopt.
+
+## ADOPTED 20260715T091505Z
+- cost: 1270 -> 1240 (points 17.8771)
+- source: candidates/task051/share_coord.onnx
+- note: exact factorization: share identical row/column coordinate initializer

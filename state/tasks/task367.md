@@ -206,3 +206,8 @@ Mechanism detail: the pure 6-channel prune (`016789`) was already priced at the 
 - cost: 13926 -> 13126 (points 15.5176)
 - source: candidates/task367_codex/cand.onnx
 - note: absorb codex highscore net: 13926->13126 (-800B), gate 266/266 fail=0, fresh 2500 div0 vs deployed (both 4/2500 irreducible generator tail), cand_fail<=inc_fail
+
+## ADOPTED 20260715T073822Z
+- cost: 13126 -> 11082 (points 15.6869)
+- source: candidates/task367/cand.onnx
+- note: collapse: replaced 3200B f32 Slice entry (2 one-hot channels at 20x20) + 800B Cast with negative-crop prologue Conv(input, W[1,10,1,1], pads=[0,0,-10,-10]) -> single code plane (offgrid 0, gray 1, black 2); rebuilt the 2-ch conv basis downstream in u8 as [black, code] where black=clip(code-1) falls out of QLinearConv u8 saturation. Old (black,gray) weights map exactly via W_black'=W_black-2*W_gray, W_code'=W_gray so int32 accumulators are bit-identical (-1200B). Top/bottom border seed channels merged via 3*black(r,c)-2*ingrid(r-1,c)-2*ingrid(r+1,c) (-400B); Add+Add seed union -> one variadic Max (-400B, valid since only >0 survives the Min gate). cost 13126->11082, 21 nodes. Differential vs incumbent 16000 fresh (4 seeds, half arc-gen-shaped + half adversarial noise): 0 disagreements.

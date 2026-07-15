@@ -102,3 +102,13 @@ No transferable mechanism — minor trim.
 - cost: 9036 -> 428 (points 18.9409)
 - source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task350.onnx
 - note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
+
+## ADOPTED 20260715T032342Z
+- cost: 428 -> 418 (points 18.9645)
+- source: candidates/task350/factor_r2_exact.onnx
+- note: direct exact shared rank-2 R2 factorization
+
+## ADOPTED 20260715T085550Z
+- cost: 418 -> 410 (points 18.9838)
+- source: candidates/task350/fast_shared_relations.onnx
+- note: fast shared relation factorization; bundled 267/267; 418->410

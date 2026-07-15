@@ -34,6 +34,44 @@ def test_gate_passes_clean_cheaper(monkeypatch, tmp_path):
     assert r.ok and r.candidate["cost"] == 100 and r.incumbent_cost == 500
 
 
+def test_gate_allows_explicit_repair_of_invalid_incumbent(monkeypatch, tmp_path):
+    candidate = tmp_path / "candidate.onnx"
+    candidate.write_bytes(b"candidate")
+    incumbent = tmp_path / "task001.onnx"
+    incumbent.write_bytes(b"incumbent")
+    monkeypatch.setattr(gate, "OVERFIT_NETS", tmp_path)
+    monkeypatch.setattr(gate, "eval_isolated", lambda p, t: _fake_eval(fail=0, cost=600))
+    monkeypatch.setattr(gate, "deployed_cost", lambda t: 500)
+    monkeypatch.setattr(
+        gate,
+        "find_unsigned_topk",
+        lambda p: ["TopK int8"] if p == incumbent else [],
+    )
+
+    rejected = gate.gate(candidate, 1)
+    repaired = gate.gate(candidate, 1, repair_invalid=True)
+
+    assert not rejected.ok
+    assert repaired.ok
+    assert repaired.repairing_invalid_topk
+
+
+def test_gate_repair_requires_invalid_incumbent(monkeypatch, tmp_path):
+    candidate = tmp_path / "candidate.onnx"
+    candidate.write_bytes(b"candidate")
+    incumbent = tmp_path / "task001.onnx"
+    incumbent.write_bytes(b"incumbent")
+    monkeypatch.setattr(gate, "OVERFIT_NETS", tmp_path)
+    monkeypatch.setattr(gate, "eval_isolated", lambda p, t: _fake_eval(fail=0, cost=600))
+    monkeypatch.setattr(gate, "deployed_cost", lambda t: 500)
+    monkeypatch.setattr(gate, "find_unsigned_topk", lambda p: [])
+
+    repaired = gate.gate(candidate, 1, repair_invalid=True)
+
+    assert not repaired.ok
+    assert any("incumbent has no" in reason for reason in repaired.reasons)
+
+
 def test_eval_isolated_honors_configurable_timeout(monkeypatch, tmp_path):
     seen = {}
 

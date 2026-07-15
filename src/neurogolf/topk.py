@@ -1,9 +1,10 @@
-"""Unsigned-int TopK scan: the Kaggle grader-killer check.
+"""Unsupported integer TopK scan: the Kaggle grader-killer check.
 
-The Kaggle grader errors the WHOLE submission if any net feeds an unsigned
-dtype (uint8/16/32/64) into TopK — invisible to local ORT/checker gates.
-See memory neurogolf-uint8-topk-grader-killer + reports/submission_log.md
-(submissions 54255339, 2026-07-02).
+The Kaggle grader errors the WHOLE submission if a net feeds an unsupported
+integer dtype into TopK — invisible to local ORT/checker gates.  Unsigned
+integer TopK was established on 2026-07-02; signed INT8 was independently
+established by task233 submission 54418836 and again by full submission
+54716353 on 2026-07-15.
 
 Ported (function wrapper, logic unchanged) from
 reports/scripts/scan_unsigned_topk.py.
@@ -21,12 +22,18 @@ UNSIGNED = {
     onnx.TensorProto.UINT64,
 }
 
+# Keep the public function name for compatibility with the existing gate/pack
+# callers, but include signed INT8: pinned local ORT accepts it while Kaggle's
+# grader rejects the package.  Do not broaden this to every signed integer
+# without an oracle; INT32/INT64 may have different grader support.
+UNSUPPORTED_INTEGER_TOPK = UNSIGNED | {onnx.TensorProto.INT8}
+
 
 def find_unsigned_topk(model_path: Path) -> list[str]:
     """Return a list of violation descriptions (empty list = clean).
 
     A TopK node is a violation if its input[0] elem_type is unsigned
-    (UINT8/16/32/64) OR the type is unresolved (UNKNOWN also counts as a
+    (UINT8/16/32/64), signed INT8, OR unresolved (UNKNOWN also counts as a
     violation).
     """
     model = onnx.load(str(model_path))
@@ -50,7 +57,7 @@ def find_unsigned_topk(model_path: Path) -> list[str]:
     for node in g.node:
         if node.op_type == "TopK":
             t = types.get(node.input[0])
-            if t in UNSIGNED:
+            if t in UNSUPPORTED_INTEGER_TOPK:
                 offenders.append(
                     f"TopK {node.name or node.output[0]} input elem_type={t}"
                 )

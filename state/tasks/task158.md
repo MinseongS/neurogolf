@@ -187,3 +187,8 @@ backup at `reports/candidates/task158/task158_pre_dynamic_cse.onnx`.
 - cost: 18560 -> 18530 (points 15.1729)
 - source: candidates/task158/kcollapse.onnx
 - note: kernel-collapse: sparse Conv single tap -> 1x1+pad; bit-identical params -30
+
+## ADOPTED 20260715T075617Z
+- cost: 18530 -> 18029 (points 15.2003)
+- source: candidates/task158/anchor_merge.onnx
+- note: collapse: reference-sprite anchor was 5 planes of 506B (keyo,keyr two 3x3 QLinearConv diagonal detectors on isbg -> Max -> keyany, minus nbfull all-non-bg rejector). Folded the three 3x3 convs into ONE per-output-channel conv key3[1,3,23,22] (nbfull's all-zero weight with w_zp=2 re-expressed as raw-6 weight under the shared w_zp=8, so one scalar zero-point serves all three), then replaced Max+Sub with a 1x1 QLinearConv computing sat(round(0.667*(keyo+keyr-3*nbfull))) — that single linear form reproduces the OR AND the AND-NOT exactly because nbfull=1 provably implies keyo=keyr=1. Five planes -> two. cost 18530->18029, 57->54 nodes. EXHAUSTIVE equivalence: all 512 possible 3x3 isbg windows bit-identical (proof, not sampling); full net 0/4266 vs deployed.

@@ -106,3 +106,8 @@ Backup before this tail: `submission/overfit_nets/.dynamic_cse_tail_backup_20260
 - cost: 1895 -> 1891 (points 17.4551)
 - source: candidates/public_dumps/20260709_pm/biohack44_neurogolf-2026-championship-best-solution/_src_A/task035.onnx
 - note: min-merge from biohack44_neurogolf-2026-championship-best-solution
+
+## ADOPTED 20260715T063431Z
+- cost: 1891 -> 1855 (points 17.4744)
+- source: candidates/task035/joint_axis_basis.onnx
+- note: shared exact six-row basis across four axis projection Einsums

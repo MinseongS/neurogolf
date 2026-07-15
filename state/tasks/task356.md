@@ -71,3 +71,18 @@ mem 1300/17.82; crop_f 400B min fp32 entry, 4 MaxPool span planes irreducible (M
 - cost: 1220 -> 448 (points 18.8952)
 - source: candidates/task356/from_task350_alpha_1.onnx
 - note: task350 endpoint-fill formula port with cyan source/output; bundled 266/0
+
+## ADOPTED 20260715T032342Z
+- cost: 448 -> 438 (points 18.9178)
+- source: candidates/task356/factor_r2_exact.onnx
+- note: direct exact shared rank-2 R2 factorization
+
+## ADOPTED 20260715T053528Z
+- cost: 438 -> 436 (points 18.9224)
+- source: candidates/task356/fold_endpoint_sign.onnx
+- note: runtime-safe exact fold: absorb G[x] sign into distinct Fout[x,o], removes one operand and 2 params
+
+## ADOPTED 20260715T085753Z
+- cost: 436 -> 420 (points 18.9597)
+- source: candidates/task356/derive_fout.onnx
+- note: derive final output factor inside exact relation; bundled 266/266; 436->420

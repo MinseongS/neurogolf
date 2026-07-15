@@ -121,3 +121,8 @@ Mechanism: Einsum vs FREE input. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN). S
 - cost: 3445 -> 3415 (points 16.8641)
 - source: candidates/task107/kcollapse.onnx
 - note: kernel-collapse: single-position Conv kernel -> 1x1+pad on top of dead-tap fold, bit-identical. 3445->3415.
+
+## ADOPTED 20260715T073101Z
+- cost: 3415 -> 3092 (points 16.9634)
+- source: candidates/task107/kron2.onnx
+- note: collapse: deployed spent ~30 nodes reconstructing the 5x5 grid, but the grid IS the input — single Conv(input, W=colour+1, pads=[0,0,-25,-25]) reads it and makes 0 a free off-grid sentinel (final Equal vs [1..10] zeroes off-grid for free), deleting the L6base+2x ScatterND reconstruction and the hand-built sentinel. Ray algebra collapses on R_TL_d==C_TL_d and R_BL_d==C_TR_d; ray vectors kept [6,1] so Concat goes straight to [24,1], deleting Rall/Call. 86->55 nodes, cost 3415->3092. Independent oracle from the rule reproduces 266/266; differential over 4000 fresh: deployed_vs_oracle=0, candidate_vs_oracle=0, DISAGREE=0.

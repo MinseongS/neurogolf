@@ -102,3 +102,8 @@ backup at `reports/candidates/task023/task023_pre_dynamic_cse.onnx`.
 - cost: 6348 -> 5926 (points 16.3129)
 - source: candidates/public_dumps/extracted_evgen_c115d5/task023.onnx
 - note: residual top-5 isolated probe
+
+## ADOPTED 20260715T070728Z
+- cost: 6348 -> 4814 (points 16.5207)
+- source: candidates/task023/u5.onnx
+- note: collapse: negative-crop Conv prologue folds one-hot->code plane; 3-plane stack + single 1x1 QLinearConv epilogue writes free output via pads; peel-round bias/scale folding. 56->47 nodes, cost 6348->4814. Differential-tested 4000 fresh vs incumbent: 0 disagreements.

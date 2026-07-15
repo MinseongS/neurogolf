@@ -63,3 +63,13 @@ float, so use Less/Greater range tests on integer-valued counts.
 ## 2026-07-09 — ⭐ REGIME CRACK ADOPTED (batch 4, 900B mask → free-output Einsum)
 - 1706→1521 (+0.12). 3-state row/col classification; signed-multiplicity relaxation drops Boolean-algebra nodes; residual = fp32 input co-bind on carrier 600B (mixed-dtype Einsum = next vein lever).
 - Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task063/regime.onnx. See memory neurogolf-regime-crack-freeoutput-einsum.
+
+## ADOPTED 20260715T032548Z
+- cost: 1521 -> 1516 (points 17.6762)
+- source: candidates/task063/factor_a_duplicates.onnx
+- note: direct exact duplicate-column initializer factorization
+
+## ADOPTED 20260715T091524Z
+- cost: 1516 -> 1507 (points 17.6821)
+- source: candidates/task063/factor_a_cp.onnx
+- note: exact CP factorization of duplicated selector tensor

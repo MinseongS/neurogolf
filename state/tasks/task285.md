@@ -216,3 +216,38 @@ so any future TopK dtype or K shrink must be isolated before adoption.
 
 This rejects only the present contraction plan. The affine-reflection identity remains
 a live mechanism if the pivot score can be computed by a bounded-memory staged graph.
+
+## ADOPTED 20260715T034324Z
+- cost: 18674 -> 18512 (points 15.1738)
+- source: candidates/task285/bounded_sum_renderer.onnx
+- note: bounded compact affine renderer: fuse coordinate tA+tB+ga with variadic Sum; removes [3,9,3] fp16 temporary
+
+## ADOPTED 20260715T071357Z
+- cost: 18512 -> 17386 (points 15.2366)
+- source: candidates/task285/signed_topk_cast.onnx
+- note: three nonnegative TopK feeds fp16->signed int8; indices/presence exact
+
+## REPAIRED 20260715T073653Z
+- cost: 17386 -> 18512 (points 15.1738)
+- source: submission/.backups/task285_20260715T071357Z.onnx
+- note: Kaggle safety repair after ref54716353 ERROR: restore pre-INT8-TopK bounded renderer
+## CORRECTION 2026-07-15 — the `signed_topk_cast` ADOPTED entry above is NOT the live state
+- ran: board-wide `neurogolf.topk.find_unsigned_topk` over all 400 deployed nets, plus a
+  direct check of this task's `submission/.backups/` chain.
+- verdict: the `signed_topk_cast.onnx` adoption recorded above fed **signed INT8 into TopK**
+  (elem_type=3). `src/neurogolf/topk.py` classes this as a Kaggle GRADER-KILLER: the grader
+  errors the WHOLE submission, it is invisible to local ORT/onnx.checker, and `ng pack`
+  refuses to zip such a net. It was established for unsigned ints on 2026-07-02, for signed
+  INT8 by task233 submission 54418836, and RE-CONFIRMED by full submission 54716353 on
+  2026-07-15 (today). The net was reverted on disk the same day; the ADOPTED block above was
+  left behind and reads as live. It is not. Board scan now: **0/400 violations, packable.**
+- reopen: none — do not re-adopt any `signed_topk_cast` family member. If a cost win is
+  wanted from this direction, the feed must be fp16/fp32 (verified acceptable), never int8
+  or any unsigned int. Re-run the board scan before every `ng pack`:
+  `uv run python -c "from neurogolf.topk import find_unsigned_topk; ..."` over
+  `submission/overfit_nets/*.onnx`.
+
+## ADOPTED 20260715T075904Z
+- cost: 18512 -> 17798 (points 15.2132)
+- source: candidates/task285/conv_bias_sentinel.onnx
+- note: collapse + CORRECTNESS FIX: net spent 1140B (sl/slb/slT/w1/w2 + a full 900B fin plane) reconstructing an off-grid mask it gets for free — off-grid cells are the all-zero one-hot, so the entry Conv returns exactly its bias there: weights=colour+1, bias=-1 leaves in-grid codes 0..9 unchanged while off-grid becomes -1, a code no real cell can take. Carrying the grid as int8 lets the sentinel survive to the free output where Equal(out2d,[0..9]) is all-false off-grid with no mask. Forced repairs: no Where(int8) kernel in ORT so invalid-slot fill became Min(vals, cond*10-1); scatter gated with Min(v81, g[tidx]*10+9) in the sparse 81-elem domain (+324B) not on a 900B plane. cost 18512->17798, 107 nodes. TopK feeds all fp16 (int8/uint8 TopK is Kaggle-ERROR-falsified twice on this task). FIXES TWO LATENT INCUMBENT BUGS: in-grid test was input[ch0,row0,col c] ('cell is colour 0'), false for a COLOURED cell in row 0 -> blanked that row/column; and it assumed H==W. 0/265 bundled inputs have a coloured cell in row0/col0 so it never fires locally, but a hidden seed placing a sprite in row 0 scores the incumbent 0. Differential 11887 fresh: 0 disagreements wherever the incumbent is sound; every disagreement elsewhere is the candidate CORRECT and incumbent WRONG (strict refinement). Harness proven non-vacuous (fires 1049 diffs in the unsound partition). Also fixes 3 runtime errors/4000.

@@ -165,3 +165,18 @@ verdict: REJECT — measured cost 7579 -> 14981 (memory 6895 -> 14295). The inte
 reopen: external (public/archive) net with measured fresh-fail <2.3% & cheaper (S15 routine) ONLY.
   Do NOT re-attempt QLinearConv/integer color-decode recast on 209 (or any 1x1 color-decode reading >=3
   input channels) — the free->counted input flip makes it strictly worse.
+
+## ADOPTED 20260715T021526Z
+- cost: 7579 -> 7495 (points 16.0780)
+- source: candidates/task209/factor_qc_rank8.onnx
+- note: exact Qc axis-2 rank8 factorization: shared one-hot selector [12,8] + prototype [3,3,8,5] in both row/col Einsums; no added nodes
+
+## ADOPTED 20260715T031437Z
+- cost: 7495 -> 7330 (points 16.1003)
+- source: candidates/task209/factor_qcb_second_stage.onnx
+- note: direct exact second-stage QcB rank-5 factorization across (s,r)|(k,p)
+
+## ADOPTED 20260715T084402Z
+- cost: 7330 -> 6821 (points 16.1722)
+- source: candidates/task209/u8idx_qsplit.onnx
+- note: collapse: (1) uint8 recast of every geometry/index chain (-473B) — all placement arithmetic is ring-ops mod 256 so intermediate sign is irrelevant; the only non-ring steps are Div/Clip, where a negative wraps to >=239 and Clip sends it to the HIGH clamp instead of the low one, but Lcpad row 0 == row 4 and col 0 == col 6 (both the zero pad-ring from Pad(Lc2,[1,1,1,1],0)) so both clamps gather IDENTICAL bytes. (2) Exact Qc refactorization (-36 params): Qc[s,k,m,p]=delta(p==k+m//(s+2)) was QcA[12,8]*QcC[3,8,5]*QcD[5,3,5]=291; the (s,m)|(k,p) rank-5 split gives QA[s,m,j]=delta(m//(s+2)==j) [3,12,5] + QS[k,j,p]=delta(p==k+j) [3,5,5] = 255, dropping an operand. cost 7330->6821. Differential: 13330 inputs, 0 disagreements (12000 fresh over 3 seeds + 1064 colour permutations + 266 stored); risky wrap path verified live (rr0<0 in 19.0%, cc0d<0 in 22.4%, ~100% hit the low clamp); suite is harsher than real arc-gen (incumbent fresh-fail 10.25% vs ledger-measured 2.30%). u8 lever EXHAUSTIVELY proven: over a in [-120,120] x sval{2,3,4} x i, 5400/11568 row and 6630/14460 col combos differ between int32 and u8 paths and 0 land off the zero-pad set {0,4}/{0,6}; recast exact for a in [-242,240]/[-238,232] and the graph STRUCTURALLY bounds a_r2 in [-12,19] (>20x margin, not empirical).

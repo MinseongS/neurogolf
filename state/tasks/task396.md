@@ -129,3 +129,8 @@ Bundled gate after adoption: fail=0, cost `4928 -> 4926`
 - cost: 3562 -> 3561 (points 16.8222)
 - source: candidates/public_dumps/extracted_lucifer_core_36d912/task396.onnx
 - note: isolated residual-public LB probe; bundled fail=0
+
+## ADOPTED 20260715T071055Z
+- cost: 3562 -> 3561 (points 16.8222)
+- source: candidates/task396/pruned_orphan_vi.onnx
+- note: prune orphan 1-byte value_info declaration

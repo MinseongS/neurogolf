@@ -24,3 +24,13 @@ No source change.
 - cost: 758 -> 358 (points 19.1195)
 - source: candidates/task267/einsum_fold.onnx
 - note: 343-class free-input einsum fold: single free-output Einsum 'bjrc,tk,tr,tc,tj->bkrc' with t-axis merging bg-fill+recolor terms; separable inner-5x5 mask (60 params); fixed marker read (6,0) generator-proven; falsifies the old self-referential 490B carrier floor; fresh A/B 2000: cand=inc identical
+
+## ADOPTED 20260715T062803Z
+- cost: 358 -> 306 (points 19.2764)
+- source: candidates/task267/joint_rc_basis.onnx
+- note: shared exact spatial support basis across row/column masks
+
+## ADOPTED 20260715T063126Z
+- cost: 306 -> 298 (points 19.3029)
+- source: candidates/task267/joint_basis_min.onnx
+- note: remove two identity coefficients around shared row/column basis

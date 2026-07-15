@@ -219,3 +219,8 @@ falsification history: first fresh-tail diagnosis of task187. SHARPENS the 2026-
   distance-bound; all were sealed pockets, 1/3 of them provably irreducible. Durable physics: red =
   box interior is NOT a connectivity property, and a solid color rectangle ring is generator-ambiguous
   between box (red) and coincidental line-closure (green).
+
+## ADOPTED 20260715T021728Z
+- cost: 4911 -> 4777 (points 16.5284)
+- source: candidates/task187/factor_seeds.onnx
+- note: exact shared rank-2 G/H seed routing; spend one geodesic-margin walk step to free Einsum letters W/X

@@ -352,6 +352,21 @@ levers:
     agent_class: fable
     expected_yield: "deepfold 상위: 187(+≤0.71)/243(+0.17~0.56)/286(walk 3평면)/025(row+col 0.17)"
     ledger:
+      - date: 2026-07-15
+        ran: "Reconstructed full ref54710494 exactly (ZIP 356845B, local 7426.5630), Kaggle-probed
+          all 16 changed models (11 isolated plus tasks050/084/141/217/356 aggregate ref54712865),
+          and profiled immediate pre/post models with ORT_DISABLE_ALL over five inputs each,
+          extrapolated to every bundled example (candidates/runtime_timeout/profile_bad_wave_quick.py)."
+        verdict: "The earlier hidden-zero diagnosis is falsified: all 16 models are Kaggle-valid and
+          the five-model score 94.50 matches fixed-cost expectation 94.5057. The full-board loss
+          7426.5630 -> 7409.08 is aggregate timeout/execution-order. The 16-change wave increased
+          estimated bundled runtime 155.2s -> 175.7s (+20.5s); largest deltas were task297 +7.7s,
+          task350 +4.5s, task050 +3.2s, task356 +2.6s, task084 +2.3s. This also falsifies the
+          2026-07-10 claim that runtime had ~200x slack: that 4.26s measurement did not reproduce
+          official all-example profiling and predated the giant final-Einsum factors."
+        reopen: "Already live: make runtime an adoption/package gate; search algebraically equivalent
+          contraction orders/factorizations that preserve cost, and require a full-board Kaggle probe
+          after each runtime-heavy batch. Reprofile after every variadic final-Einsum adoption wave."
       - date: 2026-07-11
         ran: "post-adoption deepfold rescan (tools/deepfold_scan.py, opus agent) over all 400 deployed
           nets after the 07-11 adoptions (055/363/017/177/359/132/133/161/005 + poby min-merge);
@@ -629,6 +644,16 @@ levers:
           any adoption pipeline that generates runtime-computed constant planes."
         falsification_history: "First pass of this lane. The '+3.3 potential' from the buggy scan is
           retracted — do not re-cite it."
+      - date: 2026-07-15
+        ran: "Built task077 fold_m_axis.onnx by prefolding the isolated axis of the walk-Einsum;
+          bundled-facing algebra looked viable and the predicted isolated cost was 1960. Submitted
+          it alone as Kaggle submission 54708516 to test the grader-validity boundary."
+        verdict: "Rejected: the isolated task submission completed at 0.00. The prefold does not
+          preserve the hidden task semantics even though it fits the locally visible path; no deploy
+          artifact changed."
+        reopen: "A proof that the folded axis is independent on every generator branch, followed by
+          a new isolated probe that differs structurally from fold_m_axis; or recovery of an exact
+          hidden-valid contraction from the original unfactored equation."
 
   - name: hidden-draw-k-calibration
     status: dormant
@@ -751,3 +776,12 @@ levers:
         reopen: "A newly derived contraction order that completes a single hidden probe promptly
           with positive score; an ORT Einsum kernel/planner change under a newly approved grader pin;
           or a different factorization whose exact staged cost is below the incumbent."
+      - date: 2026-07-15
+        ran: "Directly removed task110's hand-written identity/no-period fallback while retaining the
+          normal-generator period branches. no_identity.onnx cost1581 passed 264/266 locally (only the
+          two fixed fallback examples failed) and was submitted alone as Kaggle submission 54709234."
+        verdict: "Rejected: the isolated submission completed at 0.00. Kaggle hidden evaluation needs
+          the identity fallback; normal generator-period coverage is insufficient. row_only.onnx also
+          remains 264/266 and is not a deploy candidate."
+        reopen: "An exact cheaper encoding of the identity fallback itself, or an isolated candidate
+          that retains all fixed fallback behavior while changing only the proven period branches."

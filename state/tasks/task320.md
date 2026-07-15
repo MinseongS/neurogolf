@@ -51,3 +51,18 @@ instead of a 10-channel slice.
 - cost: 770 -> 709 (points 18.4361)
 - source: /Users/minseong/.codex/worktrees/c56e/neurogolf/candidates/poly_transfer_round2/task320/candidate.onnx
 - note: signed interval free-output fold; fresh 2000/2000 div0
+
+## ADOPTED 20260715T031716Z
+- cost: 709 -> 669 (points 18.4942)
+- source: candidates/task320/factor_polynomial_exact.onnx
+- note: direct exact two-term polynomial tensor factorization
+
+## ADOPTED 20260715T062758Z
+- cost: 669 -> 633 (points 18.5495)
+- source: candidates/task320/joint_power_basis.onnx
+- note: shared exact polynomial coordinate basis across row/col powers
+
+## ADOPTED 20260715T063125Z
+- cost: 633 -> 617 (points 18.5751)
+- source: candidates/task320/joint_basis_min.onnx
+- note: absorb identity column-power coefficient into shared polynomial basis

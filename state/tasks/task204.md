@@ -137,3 +137,8 @@ this rejects ONLY the bitpack mechanism for the current detection-dominated grap
 - cost: 10232 -> 8966 (points 15.8988)
 - source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task008/task204.onnx
 - note: residual top-5 isolated probe
+
+## ADOPTED 20260715T072854Z
+- cost: 10232 -> 7838 (points 16.0333)
+- source: candidates/task204/parity_single_bank.onnx
+- note: collapse: replaced one whole parity class with a size-independent parity mask (hw = blue AND blue_left AND blue_right fires only on horizontal-wall cells between corners; parity of hw-count above a cell = interior mask of all boxes, via one 21x1 prefix conv + Mod 2). Kept only the 4-ch even ring bank; free 1x1 QLinearConv epilogue recovers orange/bg by uint8 clamping + canvas pad into free output. 30->16 nodes, cost 10232->7838. Differential vs incumbent 5000/5000 exact, 0 disagreements.

@@ -39,3 +39,8 @@ Verified generator bound = 9 (static + 5000 fresh + bundled all agree). The flag
 - 1050→468 (+0.81). Copy-edit Where collapsed to Einsum('bkhw,tkc,stw,s->bchw',input,P,Qall,sel): rank-2 route + 4-elt one-hot state; largest node output 16B.
 - Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task329/regime.onnx (builder build_regime.py). Backup: reports/candidates/fatmid_adopt_backup/task329.onnx.bak.
 - ⭐ TRANSFERABLE: the 900B [30,30] Where-mask is NOT a floor — fold routing into one N-ary Einsum to the FREE output (output>0 sign-decode). See memory neurogolf-regime-crack-freeoutput-einsum + the 60-task vein in reports/candidates/fresh_sweep/mask_dominance.json.
+
+## ADOPTED 20260715T033750Z
+- cost: 468 -> 418 (points 18.9645)
+- source: candidates/task329/factor_route_q.onnx
+- note: exact route_q rank-5 factor; Kaggle isolated 54710636 scored 18.96; local contraction slow

@@ -111,3 +111,23 @@ active overlay updated in `submission/overfit_nets/task138.onnx`.
 - cost: 11716 -> 11656 (points 15.6364)
 - source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task008/task138.onnx
 - note: isolated residual-public LB probe; bundled fail=0
+
+## ADOPTED 20260715T082749Z
+- cost: 11716 -> 11656 (points 15.6364)
+- source: candidates/public_dumps/20260715_refresh/prvsiyan_neurogolf-7268-10-reproducibility-audit/audit_models/task138.onnx
+- note: prvsiyan reproducibility-audit public min-merge; bundled fail=0
+
+## ADOPTED 20260715T084816Z
+- cost: 11656 -> 11647 (points 15.6372)
+- source: candidates/task138/c3_wide8.onnx
+- note: ROBUSTNESS WIN that is also strictly cheaper: cost 11656->11647. The incumbent finds box lines via 'count non-black in cols 0..3' + ArgMax over a 1x4 score window; a non-line row reaching 4 breaks it, and 34/266 BUNDLED examples already reach 3 — one cell short. It has not fired in 266 draws but is a live LB hazard (same family as insight entry_crop_fitted_to_bundled_max_not_rule_max). Widening the score window 4->8 makes a non-line row need 6 coincident decoys instead of 2; costs only params (216->274) and still gates strictly cheaper. Differential over 12000 fresh instances (48 grid sizes, box extents 6-24, all 4 ray directions ~3000 each): deployed fresh-fail 94 (0.78%), candidate 8 (0.067%) — a 12x cut — with 86 disagreements and 0 WORSE (never regresses vs incumbent). Expected value ~13.1 pts vs the incumbent's ~1.9. Also folded range25 into range24+scalar and dropped a no-op broadcast Unsqueeze. Entry crop verified RULE-EXACT (margins >=1 on all sides in 266/266), clearing the crop-risk flag for this task. CAVEAT: arc-gen absent from this checkout, so failure rates come from a reverse-engineered generator whose margins are uniform [1,7] where the real distribution declines — it likely UNDER-states the extent-24 risk; the 1x4 risk is independently corroborated by the bundle's own 34/266 at distance 1.
+
+## ADOPTED 20260715T084905Z
+- cost: 11647 -> 11567 (points 15.6441)
+- source: candidates/task138/c2.onnx
+- note: compact spatial-plane tail c2; bundled fail=0; 11647->11567
+
+## ADOPTED 20260715T091055Z
+- cost: 11567 -> 11537 (points 15.6467)
+- source: candidates/task138/kcollapse.onnx
+- note: kernel-collapse rescan: single-position Conv 1x6 -> 1x1, params -30

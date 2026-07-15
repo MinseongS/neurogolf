@@ -75,3 +75,13 @@ Kaggle-verified pass.
 - cost: 985 -> 419 (points 18.9621)
 - source: dumps/archive_extract/submission7300+/task084.onnx
 - note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite
+
+## ADOPTED 20260715T032551Z
+- cost: 419 -> 414 (points 18.9741)
+- source: candidates/task084/factor_r_duplicates.onnx
+- note: direct exact duplicate-column initializer factorization
+
+## ADOPTED 20260715T053104Z
+- cost: 414 -> 409 (points 18.9863)
+- source: candidates/task084/basis_only.onnx
+- note: runtime-safe exact basis shift: (side-1)^m coefficients -> side^m, removes Sub scalar carrier and constant

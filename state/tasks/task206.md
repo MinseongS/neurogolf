@@ -105,3 +105,8 @@ matrix. See [[neurogolf-urad-7225-bundle-vein]] (mechs 1-3), [[neurogolf-bilinea
 - cost: 1783 -> 1779 (points 17.5162)
 - source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task206/task206.onnx
 - note: isolated residual-public LB probe; bundled fail=0
+
+## ADOPTED 20260715T081656Z
+- cost: 1783 -> 1779 (points 17.5162)
+- source: candidates/public_dumps/20260715_refresh/lucifer19_chimera-safe-boost-caddies/submission_black_cat_bbi_v3/task206.onnx
+- note: lucifer19 black-cat BBI v3 public min-merge; bundled fail=0

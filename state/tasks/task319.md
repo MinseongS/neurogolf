@@ -169,3 +169,8 @@ DISPOSITION: HEDGE bundle (EV +0.21 at k=1 raw hidden draw, negative if fully cu
 - cost: 5832 -> 5745 (points 16.3439)
 - source: candidates/public_dumps/extracted_lucifer_core_36d912/task319.onnx
 - note: isolated residual-public LB probe; bundled fail=0
+
+## ADOPTED 20260715T034043Z
+- cost: 5832 -> 4330 (points 16.6267)
+- source: candidates/task319/selected_profiles.onnx
+- note: FREE input x three selected-color OneHot direct row/col profiles; removes two full 10x30 profiles

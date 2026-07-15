@@ -7,8 +7,14 @@ from neurogolf.paths import OVERFIT_NETS, ROOT, STATE
 
 BACKUPS = ROOT / "submission" / ".backups"
 
-def adopt(candidate: Path, task_num: int, note: str = "") -> dict:
-    res = gate_candidate(Path(candidate), task_num)
+def adopt(
+    candidate: Path,
+    task_num: int,
+    note: str = "",
+    *,
+    repair_invalid: bool = False,
+) -> dict:
+    res = gate_candidate(Path(candidate), task_num, repair_invalid=repair_invalid)
     if not res.ok:
         raise SystemExit("gate REJECT: " + " | ".join(res.reasons))
     target = OVERFIT_NETS / f"task{task_num:03d}.onnx"
@@ -20,7 +26,8 @@ def adopt(candidate: Path, task_num: int, note: str = "") -> dict:
            "ok": True, "fail": 0, "sha256": hashlib.sha256(target.read_bytes()).hexdigest(),
            "updated": ts}
     manifest.update_row(task_num, row)
-    stamp = (f"\n## ADOPTED {ts}\n- cost: {res.incumbent_cost} -> {res.candidate['cost']}"
+    action = "REPAIRED" if res.repairing_invalid_topk else "ADOPTED"
+    stamp = (f"\n## {action} {ts}\n- cost: {res.incumbent_cost} -> {res.candidate['cost']}"
              f" (points {res.candidate['points']:.4f})\n- source: {candidate}\n- note: {note}\n")
     log = STATE / "tasks" / f"task{task_num:03d}.md"
     log.parent.mkdir(parents=True, exist_ok=True)

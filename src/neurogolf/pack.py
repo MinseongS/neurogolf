@@ -11,7 +11,7 @@ def pack(nets_dir: Path | None = None, out: Path | None = None) -> Path:
         raise SystemExit(f"pack REFUSED: {len(files)} nets (400 필요)")
     offenders = [f"{f.name}: {o}" for f in files for o in find_unsigned_topk(f)]
     if offenders:
-        raise SystemExit("pack REFUSED, unsigned TopK:\n" + "\n".join(offenders))
+        raise SystemExit("pack REFUSED, unsupported integer TopK:\n" + "\n".join(offenders))
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         for f in files:
             z.write(f, arcname=f.name)

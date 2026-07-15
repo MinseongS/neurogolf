@@ -147,3 +147,8 @@ submissions: one cheap-risky board + one max-protected board = best-of-two on pr
 Raw-only variant (est. -5K cheaper, 4.26% fresh fail) rejected — dominated across hidden-set
 uncertainty. Anchor-alignment shortcut rejected (bundled train[1] uses out-of-distribution
 col=3 parameters).
+
+## ADOPTED 20260715T073303Z
+- cost: 7210 -> 5258 (points 16.4325)
+- source: candidates/task219/conv_topk.onnx
+- note: collapse: free epilogue folds 7 tensors (incl 900B [1,1,30,30] col30) into one 1x1 QLinearConv (w_zero_point=128 -> signed) over a [1,3,15,10] u8 stack doing colour map + canvas pad (pads=[0,0,15,20]) into free output; u8 saturation performs the old Max(8*cyan,blue) free. W5 fold: pf IS the row-gather one-hot so the score einsum reads cyh through it, deleting the [1,1,6,3,10] window. TopK(sorted,largest) index-stable on ties yields band tops in row order + exists-flags, replacing CumSum band-index + [6,15] one-hot + 2 ArgMax. 73->69 nodes, cost 7210->5258. Semantics preserved bit-exactly; differential vs incumbent 4000 in-distribution + 4000 OOD cyan + 4000 OOD multicolour = 0 disagreements.

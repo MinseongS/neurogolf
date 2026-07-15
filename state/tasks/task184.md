@@ -115,3 +115,8 @@ Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup 
 - cost: 1860 -> 1859 (points 17.4722)
 - source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task184/task184.onnx
 - note: isolated residual-public LB probe; bundled fail=0
+
+## ADOPTED 20260715T081657Z
+- cost: 1860 -> 1859 (points 17.4722)
+- source: candidates/public_dumps/20260715_refresh/lucifer19_chimera-safe-boost-caddies/submission_black_cat_bbi_v3/task184.onnx
+- note: lucifer19 black-cat BBI v3 public min-merge; bundled fail=0

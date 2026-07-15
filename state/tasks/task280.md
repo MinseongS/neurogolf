@@ -65,3 +65,8 @@ moment einsums (Σr,Σc,Σr²,Σc²,Σrc) + closed-form quadratic (Sqrt IEEE-exa
 `reports/candidates/task280/task280_dedupe_initializers.onnx` rewired duplicate
 initializer `not_left1_zero->zero_f`.  Bundled gate fail=0.  Cost: 4146 ->
 4145 (params 783 -> 782).
+
+## ADOPTED 20260715T032933Z
+- cost: 4145 -> 4142 (points 16.6711)
+- source: candidates/task280/factor_channel_tf_duplicates.onnx
+- note: direct exact repeated-task-axis channel factor

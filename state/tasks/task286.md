@@ -121,3 +121,68 @@ Pulled the best public min-merge (prvsiyan/neurogolf-7235-49-w-visualizations, t
 min-merge of ALL public sources). Its task286 = 26136 mem / 1170 params = **14.785**
 (different mechanism: lower params, +5000 mem). OURS = 21090/2881 = **14.915** — we beat
 it by +0.13. No public source has a cheaper 286. Confirmed global-best for this task.
+
+## ADOPTED 20260715T030618Z
+- cost: 18271 -> 18169 (points 15.1925)
+- source: candidates/task286/argmax_seed_colors.onnx
+- note: seed parity colour extraction: replace Greater-Cast-Einsum(arange)-Cast with exact ArgMax-Cast; -92 memory -10 params
+
+## UNRECORDED CAPACITY CUT + LIKELY LB ZERO — found 2026-07-15, NOT fixed
+- ran: full rule re-derivation (verified: reproduces all 265 bundled exactly, 0 mismatches);
+  slot-requirement census over the bundle; constructed 25x25 serpentine mazes as a capacity
+  ladder with ground truth from the verified rule; controlled Sign ablation.
+- rule: cyan(8) walls form a maze with black(0) corridors plus a seed plus-shape of two
+  non-{0,8} colours. Flood the 4-connected non-cyan component containing the seeds; every
+  reached cell is painted pair[(r+c) % 2] where pair[p] is the seed colour at checkerboard
+  parity p. Cyan stays cyan; unreached black stays black.
+- VERDICT: the deployed net is a walk-counting einsum chain whose capacity IS its slot count
+  (each slot = one +/-1 axis move + traversability mask, alternating row/col). It has **135
+  slots**, and the bundled required-slot maximum is **exactly 135**, second-highest 108 — the
+  capacity was fitted to a single outlier example. `src/custom/task286.py` line 14 still records
+  the design as "(189 total) vs measured max 171 slots over 80000 fresh" — a prior session WITH
+  arc-gen measured fresh instances needing up to 171. **The deployed net cannot serve those.**
+  The source builder still describes the 189-slot design; disk no longer matches it, and there is
+  no ledger entry for the 4->3 einsum link cut that did this.
+- MEASURED CLIFF (serpentine ladder, ground truth = verified rule):
+  required slots 134 -> deployed PASS; **135 -> PASS; 138 -> FAIL**; 180 -> FAIL; 226 -> both fail.
+  The cliff sits exactly at the bundled max.
+- RISK: bundled tail gives P(required>135) ~ 1/265 ~ 0.38%, so P(task286 scores 0) ~31% at 100
+  hidden examples, ~63% at 265. Any single failure zeroes the task (grader needs fail==0).
+  This is the same pathology as insight `entry_crop_fitted_to_bundled_max_not_rule_max`:
+  the net bets on a bundle invariant that is NOT part of the rule, and the local gate
+  (bundled fail==0) is structurally incapable of catching it.
+- CANDIDATES BUILT, NEITHER ADOPTABLE THROUGH THE GATE (both are "not strictly cheaper"):
+  * `candidates/task286/safe189.onnx` — CORRECT at the letter cap (45+48+48+48 = 189 slots) plus
+    the mid Sign re-binarizer, keeping the deployed ArgMax parity epilogue. Gate: pass 265,
+    fail 0, cost 23169 (14.9494). Delta vs deployed = exactly W4 (2500B) + Sign (2500B) = 5000B.
+    Beats the last LB-CONFIRMED-correct net (23971 / 14.9154, ledger 2026-07-06) by +0.034 and
+    the best public net (27306 / 14.7851) by +0.164. Trade: -0.243 local to remove a ~63% task zero.
+  * `candidates/task286/maxslots141.onnx` — identical cost 18169 / 15.1925, pass 265, fail 0,
+    with 141 slots (+6 free margin from unused einsum letters). Does NOT fix the bug (141 < 171);
+    only pushes the cliff out slightly. Free, but gate-rejected as not strictly cheaper.
+- FLOOR for the correct family = 23169, both halves forced:
+  * 4 einsum planes (10000B) forced: ONNX Einsum has a 52-letter alphabet and each slot consumes
+    one letter. Link1 = 7 fixed + 45 slots = 52; links 2-4 = 4 fixed + 48 = 52. Three links max
+    out at 45+48+48 = 141 < 171. The king-move alternative (one row + one col per slot) is 2.29x
+    more slot-efficient (bundled max 59 vs 135) but costs exactly 2 letters/slot — an exact wash;
+    3 king links reach only 70 slots vs ~75 needed. Either way, 4 links.
+  * mid Sign (2500B) forced, confirmed empirically: `candidates/task286/nosign189.onnx`
+    (20669 / 15.0636, gate pass 265) has identical 189 slots and differs only by the Sign. It
+    passes at req=164 and FAILS at req=180 — fp32 underflow (0.5^slot), not slot exhaustion,
+    since safe189 passes the same input. Its cliff straddles the documented fresh max of 171,
+    so that +0.11 is not available.
+  * t25 + label_f (2x2500B) forced: two f32 25x25 Conv planes; Conv is float-only and the input
+    is f32. Merge routes priced (2-channel Conv + einsum channel-selector, u8 cast/gather) all
+    >=5625B. The S9 fold stays refuted: the unreached branch is 3-state (cyan->8 / black->0 /
+    off-grid->10) and t25 gives cyan == 0 == off-grid.
+  * params 2171 near-floor: S(625) + P(750) + PARb(625) = 2000. PARb -> rank-1 Equal(rowpar,
+    colpar) saves 575 params but costs a 625B plane = +50 net. Replacing P with a Conv crop costs
+    +2500B for -760 params.
+- CAVEAT ON THE EVIDENCE: `arc-gen/` is absent from this checkout, so the serpentine mazes are
+  hand-constructed, not distribution-matched. The claim that the real generator reaches 171 rests
+  on the source docstring's recorded 80000-sample measurement, which could not be re-verified here.
+  Re-verify with arc-gen present before acting.
+- reopen: DECISION PENDING, needs a human call — adopting safe189 requires accepting -0.243 local
+  to remove a ~63% LB zero, and the gate refuses it (not strictly cheaper), so it needs an explicit
+  override. Do NOT let the next session "re-discover" the 135-slot net as a cheap win: it is cheap
+  precisely because it is broken.

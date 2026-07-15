@@ -138,3 +138,8 @@ radius 1.
 - cost: 1753 -> 1752 (points 17.5315)
 - source: candidates/public_dumps/archive1_20260713_ab6515/task381.onnx
 - note: isolated residual-public LB probe; bundled fail=0
+
+## ADOPTED 20260715T081656Z
+- cost: 1753 -> 1752 (points 17.5315)
+- source: candidates/public_dumps/20260715_refresh/lucifer19_chimera-safe-boost-caddies/submission_black_cat_bbi_v3/task381.onnx
+- note: lucifer19 black-cat BBI v3 public min-merge; bundled fail=0

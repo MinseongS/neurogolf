@@ -5,18 +5,40 @@ but instead of summing, dumps each named node-output tensor's counted bytes (max
 and runtime-traced) sorted descending, annotated with producer op + consumer ops. This localizes
 exactly which tensor(s) dominate a wall net's cost so we know where a fold/surrogate must bite.
 
+Reads `submission/overfit_nets/` — the DEPLOYED artifact, i.e. the bytes the grader actually scores
+and the one `ng gate`/`ng adopt` compare against. It used to read `networks/` (source-regenerated
+artifacts), which diverged from the deployment on 46/400 tasks on 2026-07-15 and silently reported a
+stale net's cost breakdown (caught while golfing task133, which it showed as an old 4-slot net).
+Pass `--networks` to inspect the source-regenerated artifact instead; the two are cross-checked and a
+divergence is reported on stderr.
+
 Usage: uv run python tools/per_tensor_cost.py 349 173 158 138
 """
-import json, math, sys, tempfile, pathlib, collections
+import hashlib, json, math, sys, tempfile, pathlib, collections
 import numpy as np, onnx, onnxruntime
 from neurogolf.scoring import sanitize_model, load_task, convert_to_numpy
 from neurogolf.paths import ROOT
 
-NETS = ROOT / "networks"
+DEPLOYED = ROOT / "submission" / "overfit_nets"
+SOURCE = ROOT / "networks"
+NETS = DEPLOYED
+
+
+def _digest(p):
+    return hashlib.sha256(p.read_bytes()).hexdigest()[:12] if p.exists() else None
 
 
 def per_tensor(task):
-    path = NETS / f"task{int(task):03d}.onnx"
+    name = f"task{int(task):03d}.onnx"
+    path = NETS / name
+    other = SOURCE / name if NETS is DEPLOYED else DEPLOYED / name
+    if path.exists() and other.exists() and _digest(path) != _digest(other):
+        print(
+            f"  ! note: {DEPLOYED.name}/{name} and {SOURCE.name}/{name} DIFFER "
+            f"(showing {NETS.parent.name}/{NETS.name}); costs below are for the "
+            f"{'deployed' if NETS is DEPLOYED else 'source-regenerated'} net",
+            file=sys.stderr,
+        )
     model = onnx.load(str(path))
     # producer/consumer map on ORIGINAL names (pre-sanitize) for readability
     prod = {}
@@ -78,7 +100,10 @@ def per_tensor(task):
 
 
 if __name__ == "__main__":
-    for t in sys.argv[1:]:
+    args = [a for a in sys.argv[1:] if a != "--networks"]
+    if "--networks" in sys.argv[1:]:
+        NETS = SOURCE
+    for t in args:
         try:
             per_tensor(t)
         except Exception as e:

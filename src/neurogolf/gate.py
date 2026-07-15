@@ -4,7 +4,7 @@ Everything the project adopts from now on passes through gate(): three
 checks encode hard-won catastrophe-prevention rules —
   1. isolated bundled fail == 0 (candidate actually works)
   2. strictly cheaper than the deployed net (cost = memory + params)
-  3. unsigned-TopK clean (a single uint8-TopK net errors the ENTIRE
+  3. unsupported-integer-TopK clean (a single uint8/int8-TopK net errors the ENTIRE
      Kaggle submission)
 
 eval_isolated runs scoring in an isolated subprocess because ORT
@@ -61,16 +61,38 @@ class GateResult:
     reasons: list[str] = field(default_factory=list)
     candidate: dict = field(default_factory=dict)
     incumbent_cost: int | None = None
+    repairing_invalid_topk: bool = False
 
-def gate(candidate: Path, task_num: int) -> GateResult:
+def gate(candidate: Path, task_num: int, *, repair_invalid: bool = False) -> GateResult:
     reasons: list[str] = []
     cand = eval_isolated(Path(candidate), task_num)
     if not cand.get("ok") or cand.get("fail") != 0:
         reasons.append(f"bundled fail != 0 (fail={cand.get('fail')}, error={cand.get('error')})")
     inc = deployed_cost(task_num)
-    if cand.get("cost") is None or inc is None or cand["cost"] >= inc:
-        reasons.append(f"not strictly cheaper (cand={cand.get('cost')}, deployed={inc})")
     offenders = find_unsigned_topk(Path(candidate))
+    incumbent_path = OVERFIT_NETS / f"task{task_num:03d}.onnx"
+    incumbent_offenders = (
+        find_unsigned_topk(incumbent_path)
+        if repair_invalid and incumbent_path.exists()
+        else []
+    )
+    repairing_invalid_topk = bool(
+        repair_invalid and incumbent_offenders and not offenders
+    )
+    if (
+        cand.get("cost") is None
+        or inc is None
+        or (cand["cost"] >= inc and not repairing_invalid_topk)
+    ):
+        reasons.append(f"not strictly cheaper (cand={cand.get('cost')}, deployed={inc})")
     if offenders:
-        reasons.append("unsigned TopK: " + "; ".join(offenders))
-    return GateResult(ok=not reasons, reasons=reasons, candidate=cand, incumbent_cost=inc)
+        reasons.append("unsupported integer TopK: " + "; ".join(offenders))
+    if repair_invalid and not incumbent_offenders:
+        reasons.append("repair requested but incumbent has no unsupported integer TopK")
+    return GateResult(
+        ok=not reasons,
+        reasons=reasons,
+        candidate=cand,
+        incumbent_cost=inc,
+        repairing_invalid_topk=repairing_invalid_topk,
+    )

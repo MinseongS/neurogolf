@@ -1074,7 +1074,7 @@ def _rank_frontier(
     frontier: Iterable[Query],
     examples: list[tuple[np.ndarray, np.ndarray]],
 ) -> list[tuple[int, tuple, Query, tuple[int, int, int]]]:
-    """Query-major ranking hook; callers must pass the full bundled corpus."""
+    """Query-major ranking hook; ranks each query on whichever corpus is passed."""
     ranked = []
     for query in sorted(frontier, key=_query_key):
         stats = _loss_stats(query, examples)
@@ -1092,11 +1092,12 @@ def search_task(
     ranking_arc_limit: int = 3,
     runtime_timeout_seconds: float = 30.0,
 ) -> list[dict]:
-    """Beam-search one task, ranking every query on every bundled example.
+    """Beam-search one task, screening on a diagnostic subset then confirming in full.
 
-    ``ranking_arc_limit`` remains as a compatibility-only CLI argument; no
-    diagnostic subset is used. Query-major multi-task drivers can reuse
-    :func:`_rank_frontier` while maintaining their own per-task beams.
+    ``ranking_arc_limit`` sets how many generated examples join the official ones in
+    the screening subset. Reported stats and beam retention always come from the full
+    bundled corpus. Query-major multi-task drivers can reuse :func:`_rank_frontier`
+    while maintaining their own per-task beams.
     """
     if not 1 <= task_num <= 400:
         raise ValueError("task number must be in 1..400")
@@ -1108,14 +1109,29 @@ def search_task(
         or runtime_timeout_seconds <= 0
     ):
         raise ValueError("search limits must be positive")
-    examples, _ = _task_examples_with_official_count(task_num)
+    examples, official_count = _task_examples_with_official_count(task_num)
+    # Two-stage ranking. The diagnostic subset is a subset of the bundled corpus, so
+    # subset_loss <= full_loss for every query: a query that is exact on all bundled
+    # examples is necessarily exact on the subset. Screening the (large) frontier on the
+    # subset therefore cannot prune a true hit, and only the survivors pay for a full
+    # 266-example rescore. Every emitted row carries full-corpus stats.
+    ranking_examples = select_diagnostic_examples(
+        examples, official_count=official_count, arc_limit=ranking_arc_limit
+    )
     frontier = set(_seed_queries())
     rows: list[dict] = []
     emitted: set[tuple[Query, Correction | None]] = set()
     correction_pool: list[tuple[int, tuple, Query, tuple[int, int, int]]] = []
 
     for depth in range(1, max_atoms + 1):
-        ranked = _rank_frontier(frontier, examples)
+        screened = _rank_frontier(frontier, ranking_examples)
+        if not screened:
+            break
+        # Rescore the beam plus every subset-exact query on the full corpus. Subset-exact
+        # queries are kept beyond the beam cut because they are the only possible hits.
+        rescore = {item[2] for item in screened[:beam]}
+        rescore.update(item[2] for item in screened if item[0] == 0)
+        ranked = _rank_frontier(rescore, examples)
         if not ranked:
             break
 
@@ -1274,8 +1290,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         "max_atoms": args.max_atoms,
         "beam": args.beam,
         "correction_beam": args.correction_beam,
-        "ranking_arc_limit_ignored": args.ranking_arc_limit,
-        "ranking_semantics": "all_bundled",
+        "ranking_arc_limit": args.ranking_arc_limit,
+        "ranking_semantics": "subset_screen_full_confirm",
         "runtime_timeout_seconds": args.runtime_timeout_seconds,
         "shard_index": args.shard_index,
         "shard_count": args.shard_count,
@@ -1351,7 +1367,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                     "max_atoms": args.max_atoms,
                     "beam": args.beam,
                     "correction_beam": args.correction_beam,
-                    "ranking_semantics": "all_bundled",
+                    "ranking_arc_limit": args.ranking_arc_limit,
+                    "ranking_semantics": "subset_screen_full_confirm",
                     "runtime_timeout_seconds": args.runtime_timeout_seconds,
                 },
                 sort_keys=True,

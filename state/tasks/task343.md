@@ -99,3 +99,13 @@ point at an already-zero padded input column to avoid Pad entirely.
 - cost: 1222 -> 756 (points 18.3720)
 - source: candidates/task343/task343_free_input_color.onnx
 - note: fixed Slice->Conv colour reads folded into free-input Einsums; deletes source_nonzero/source8_nonzero counted windows, buys static row/col selectors
+
+## ADOPTED 20260715T062900Z
+- cost: 756 -> 720 (points 18.4207)
+- source: candidates/task343/joint_free_basis.onnx
+- note: shared exact six-row coordinate basis across both free-input renderer Einsums
+
+## ADOPTED 20260715T063127Z
+- cost: 720 -> 684 (points 18.4720)
+- source: candidates/task343/joint_basis_min.onnx
+- note: absorb permutation coefficient into shared free-coordinate basis

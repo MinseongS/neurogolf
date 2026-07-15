@@ -69,3 +69,13 @@ in-grid rectangle for free from `ReduceMax(input, axes=[1,3])`/`[1,2]` occupancy
 - cost: 1896 -> 448 (points 18.8952)
 - source: candidates/task050/from_task350.onnx
 - note: task350 endpoint-fill formula port with cyan source and green strict interior; bundled 271/0
+
+## ADOPTED 20260715T032343Z
+- cost: 448 -> 438 (points 18.9178)
+- source: candidates/task050/factor_r2_exact.onnx
+- note: direct exact shared rank-2 R2 factorization
+
+## ADOPTED 20260715T053337Z
+- cost: 438 -> 436 (points 18.9224)
+- source: candidates/task050/fold_endpoint_sign.onnx
+- note: runtime-safe exact fold: absorb G[x] sign into distinct Fout[x,o], removes one operand and 2 params

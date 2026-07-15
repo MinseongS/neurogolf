@@ -66,3 +66,8 @@ only full plane.
 - cost: 1510 -> 1252 (points 17.8675)
 - source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task398.onnx
 - note: min-merge from overfit_nets
+
+## ADOPTED 20260715T031625Z
+- cost: 1252 -> 1219 (points 17.8942)
+- source: candidates/task398/factor_a2_exact.onnx
+- note: direct exact 0/1 rank-3 A2 factorization

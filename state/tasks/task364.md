@@ -137,3 +137,43 @@ fresh 1200/1200 fail=0. Source edit in src/custom/task364.py; params unchanged (
 - cost: 16157 -> 14642 (points 15.4084)
 - source: candidates/public_dumps/20260709/7261-53-lb-compact-onnx-artifact-starter/nets/task364.onnx
 - note: min-merge from nets
+
+## FLOOR RE-CONFIRMED 2026-07-15 (agent rebuild, no candidate beat 14642)
+- ran: full rule re-derivation from all 266 examples; numpy replica of the deployed graph
+  (reproduces its output on 266/266); byte census reproducing memory=14540 exactly;
+  exhaustive clamped-affine feature search to kill the one worthwhile lever.
+- rule: 3-8 disjoint green sprite skeletons, recoloured by shape class L->1, H->2, U->6.
+  H <=> component contains a degree-3 cell. L vs U separates by endpoint alignment.
+  157 distinct normalised component shapes, zero ambiguity.
+- verdict: FLOOR. Deployed min-merged net sits at the floor of a provably-necessary
+  architecture. Forced: F f32 [1,1,20,22] 1760B (f32 entry 4*A; max grid in data is
+  exactly 20x22 so the crop cannot shrink); Fu+Gu 880B (array_equal on the FULL
+  [1,10,30,30] means cells inside the 20x22 crop but outside the real grid must stay
+  all-zero while in-grid black fires channel 0); idx i32 + gA + gB 2640B; 2-step pre-flood
+  2640B (depth 1 verified insufficient — a 5-wide U's corners are 4 apart); 5-step flood
+  4400B (MEASURED minimal: 4 steps fails 21/266, 5 fails 0/266); v1+vp 1340B.
+- KILLED LEVER (new, closes the `idx` reopen path): replacing ConvInteger->int32 idx +
+  2 Gathers (2640B) with two QLinearConv u8 features (880B) would save 1760B (~+0.13).
+  IMPOSSIBLE two ways. Analytically: any linear score s over the 4 neighbour bits obeys
+  s(UR)+s(DL) == s(RD)+s(LU); forcing all four degree-3 patterns to share a value forces
+  w_r==w_l and w_u==w_d, making all four corner types equal and destroying L/U
+  discrimination. Exhaustively: 8263 distinct clamped-affine features (weights -6..6,
+  values 0..4) x both mul and add combines, verified over all 157 component shapes ->
+  0 valid pairs. Search harness validated: fed the deployed tables it reproduces
+  L=4, U=8, H=16 at reach 2 and correctly reports reach 1 insufficient.
+- geometric constraints underpinning all of it: min Chebyshev distance between components
+  is exactly 2, so MaxPool k=3 with a re-gate every step is mandatory (a 5x5 pool crosses
+  the gap in one step) and any conv stencil wider than 3x3 is contaminated by a neighbour.
+  Two features are necessary: the union of 4-neighbour pattern sets over L components is
+  identical to that over U components, so no single max-flood can separate them.
+- also rejected (costed): 3+ features (6600 > 6160); multi-layer ReLU feature nets (5 hidden
+  units needed = 3080 > 2640; 3-hidden proved contradictory); channel-merging into
+  [1,2,20,22] (saves nodes, not memory); Einsum walk-flood (ledger's own attempt reached
+  15860, worse).
+- reopen: only if (a) a u8-output op that emits a non-clamped-affine function of a 3x3
+  neighbourhood becomes available, or (b) the arc-gen distribution is shown to bound the
+  max grid below 20x22, or (c) a connectivity primitive cheaper than 5x MaxPool-and-regate
+  is found. The crude 5*A_in + min(900,10*A_out) floor estimate (~3202) is NOT reachable:
+  it assumes no connectivity flood, but a straight-arm cell is locally identical across
+  L/U/H so component-level aggregation is mandatory — that flood is the 7040B separating
+  14642 from the estimate.

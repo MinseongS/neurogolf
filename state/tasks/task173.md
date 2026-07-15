@@ -226,3 +226,33 @@ and factored shifts).  Given the task285 contraction failure, that graph was
 not submitted or adopted without a bounded-rank contraction plan.  Reopen with
 a compact shape-role contraction or an operator that evaluates the four local
 offset reads without materializing full shifted input planes.
+
+## ADOPTED 20260715T071223Z
+- cost: 11320 -> 10628 (points 15.7288)
+- source: candidates/task173/signed_topk_cast.onnx
+- note: signed int8 TopK carrier: replace bool/u8->fp16 feed without changing indices/presence
+
+## REPAIRED 20260715T073649Z
+- cost: 10628 -> 11320 (points 15.6657)
+- source: candidates/task173/kaggle_safe_fp16_topk.onnx
+- note: Kaggle safety repair after ref54716353 ERROR: INT8 TopK -> FLOAT16; preserves indices and all unrelated structure
+## CORRECTION 2026-07-15 — the `signed_topk_cast` ADOPTED entry above is NOT the live state
+- ran: board-wide `neurogolf.topk.find_unsigned_topk` over all 400 deployed nets, plus a
+  direct check of this task's `submission/.backups/` chain.
+- verdict: the `signed_topk_cast.onnx` adoption recorded above fed **signed INT8 into TopK**
+  (elem_type=3). `src/neurogolf/topk.py` classes this as a Kaggle GRADER-KILLER: the grader
+  errors the WHOLE submission, it is invisible to local ORT/onnx.checker, and `ng pack`
+  refuses to zip such a net. It was established for unsigned ints on 2026-07-02, for signed
+  INT8 by task233 submission 54418836, and RE-CONFIRMED by full submission 54716353 on
+  2026-07-15 (today). The net was reverted on disk the same day; the ADOPTED block above was
+  left behind and reads as live. It is not. Board scan now: **0/400 violations, packable.**
+- reopen: none — do not re-adopt any `signed_topk_cast` family member. If a cost win is
+  wanted from this direction, the feed must be fp16/fp32 (verified acceptable), never int8
+  or any unsigned int. Re-run the board scan before every `ng pack`:
+  `uv run python -c "from neurogolf.topk import find_unsigned_topk; ..."` over
+  `submission/overfit_nets/*.onnx`.
+
+## ADOPTED 20260715T083016Z
+- cost: 11320 -> 10298 (points 15.7603)
+- source: candidates/task173/code_shift_sentinel.onnx
+- note: collapse (mechanisms #1+#6): entry Conv used W=[0..9] so an off-grid cell (the all-zero one-hot) decoded to 0, indistinguishable from colour-0 background — the net therefore REBUILT an off-grid mask it could have had for free: ReduceMax(input)x2 -> Cast->bool x2 -> Where x2 -> Slice x2 -> Max = 1035 counted bytes over 9 nodes. Setting W=[1..10] makes in-grid codes 1..10 and off-grid a free 0 sentinel strictly below every in-grid code: TopK(largest) selects the identical real-cell set, 'is a real colour' stays ONE compare (Greater(x,1)), and Pad(value=0) + Equal(oidx30, cls=[1..10]) leaves off-grid all-zero for free. Since background is now code 1 not 0, a junk TopK slot could carry a nonzero code into the colour->colour LUT scatters, so added a 12-byte gate at the [3] prototype level (sv>1) forcing junk slots to write (index 0, value 0) — a max-reduction no-op. Net -1035 +12 +6 = -1019 memory, -3 params. cost 11320->10298. All 3 TopK feeds FLOAT16, find_unsigned_topk clean. Differential vs deployed: 12000 fresh, 20 disagreements, REGRESSIONS (deployed right & candidate wrong) = 0; independent 4000-seed run: 7 disagreements all (deployed_wrong, cand_wrong), fail counts identical 142/4000. Coverage non-vacuous: 256 grid sizes, 13985 cells corrected, 96.1% of instances solved correctly by deployed so the comparison population is live behaviour. Reconstructed generator is conservative (3.55% incumbent fail vs true-fresh ~0.4%).

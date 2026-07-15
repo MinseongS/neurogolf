@@ -321,3 +321,8 @@ NOTE ON FORK STATE: this fork did NOT produce any `exact_v4_fused.onnx` / `build
 - cost: 11044 -> 10811 (points 15.7117)
 - source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task008/task191.onnx
 - note: isolated residual-public LB probe; bundled fail=0
+
+## ADOPTED 20260715T073638Z
+- cost: 11044 -> 9438 (points 15.8475)
+- source: candidates/task191/slim.onnx
+- note: collapse (grader thresholds at >0 so only distinct codes matter, not magnitudes): carry yellow at code 2 via QuantizeLinear(scale=0.5) absorbed bit-exactly by conv1 x_scale=0.5 + doubled i32 bias, killing the Mul(yellow,4) plane; conv2 emits not-blue directly by negating its stamp kernel + i32 bias 1 so saturate_u8(1-2*paint) does the clamp, killing Min(paint,1); Pad(25x25)+Slice patch read replaced by row-clamped i32 double Gather + ArgMax(select_last_index=1) + 4-D rect_b, dropping reversed-profile and reshape planes. cost 11044->9438. Differential vs incumbent 13000 fresh in-domain (4 seeds): 0 divergences; test verified non-vacuous (all 529/529 anchors fire, 2753 at grid edges). Pure cost rewrite: inherits the MAIN net's known 0.83-0.89% fresh under-detection tail unchanged.

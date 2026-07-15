@@ -161,3 +161,23 @@ winner-selection rule NOT needing per-box extents (red counts forced exact by un
 proxies stay dead). No candidate built (all reformulations cost > 8386).
 **Falsification history:** 2026-07-08 fold-batch (c12_f32 floor) held; S11 mech-15 KILL held; 2026-07-09 task394
 generalization NO-TRANSFER (~9046B) held; 2026-07-13 conv_fp32_arsenal re-attack — FLOOR held (4th).
+
+## ADOPTED 20260715T070537Z
+- cost: 8386 -> 8357 (points 15.9691)
+- source: candidates/task216/topk_corners_signed_cast.onnx
+- note: exact corner enumeration: repeated ArgMax+Scatter -> safe signed TopK(k=4)
+
+## ADOPTED 20260715T070727Z
+- cost: 8357 -> 7956 (points 16.0183)
+- source: candidates/task216/topk_corners_all_i8.onnx
+- note: end-to-end int8 corner response enables safe TopK(k=4) without 400B cast
+
+## REPAIRED 20260715T073650Z
+- cost: 7956 -> 8386 (points 15.9657)
+- source: submission/.backups/task216_20260715T070537Z.onnx
+- note: Kaggle safety repair after ref54716353 ERROR: restore pre-INT8-TopK ArgMax/Scatter implementation
+
+## ADOPTED 20260715T081702Z
+- cost: 8386 -> 6445 (points 16.2289)
+- source: candidates/task216/codeplane.onnx
+- note: FALSIFIES the 2026-06-16 'confirmed-infeasible / public net at real floor' verdict AND the 4x-confirmed 4000B entry-bridge floor (now 2000B). Negative-crop prologue replaces Slice(input)->c12_f32[1,2,20,20] (3200B) with Conv(input, w[1,10,1,1], pads=[0,0,-10,-10]) -> ONE code plane [1,1,20,20] (1600B; blue->1 red->3), halving the u8 cast too. Two things made the single plane viable where prior attempts stalled: (a) the 2x2 corner stencil uses eff weights [[0,-3],[-3,1]] with y_scale=1/256 so every TL response saturates to a uniform 255 regardless of whether the corner cell is blue or red — what the ArgMax/Scatter top-4 enumeration requires; (b) the epilogue keeps its channel-resolved source via a signed zero-point: QLinearConv(crop, x_zero_point=2) maps blue->-1/red->+1 in dequantized space so eff weights [-1,+1] split the 1-ch crop into 2 u8 planes with NO bias (nothing to fire over the pad region), and Pad still writes the free output. The count Einsum keeps free-riding the counted code_f32 so masks stay [4,20] — exactly what the 2026-07-09/07-13 c12-free reformulations lost when they forced 30-wide input-welded selectors to ~9046B. cost 8386->6445, 79 nodes, params unchanged 76. Deliberately avoided TopK (ref54716353 Kaggle ERROR). Differential vs deployed: 0 disagreements over 4000 faithful + 7446 adversarial band-partition + 4000 tie-heavy; coverage incl. 586 touching-box pairs and 5778 red-at-winner-corner cases; the 33 rule-fails are tie-only and identical to the incumbent's.

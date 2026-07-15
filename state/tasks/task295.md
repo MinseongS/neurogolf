@@ -56,3 +56,8 @@ vectors, without materializing a counted 10-channel small one-hot.
 - 1604→393 (+1.41, batch best). One 9-operand Einsum with input itself as operand (bshw): per-channel counts read free, kills ArgMax/Equal color-extraction; bounded black run = rank-2 product of linears.
 - Bundled fail=0, fresh-gated, unsigned-TopK clean, deployed-gated. Candidate: reports/candidates/task295/regime.onnx. Backup: reports/candidates/fatmid_adopt_backup/task295.onnx.bak.
 - ⭐ Memory neurogolf-regime-crack-freeoutput-einsum. ⚠️ Concurrent-session collision risk on candidate dirs — always re-measure on-disk before adopt.
+
+## ADOPTED 20260715T021858Z
+- cost: 393 -> 377 (points 19.0678)
+- source: candidates/task295/factor_v_g_rank2.onnx
+- note: exact combined rank2 factorization of final-Einsum V[4,10] and G[4,2,3]; no added nodes, two latent operands

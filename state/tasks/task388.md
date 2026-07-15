@@ -92,3 +92,8 @@ Bundled gate after adoption: fail=0, cost `2190 -> 2188`
 - cost: 1829 -> 1102 (points 17.9951)
 - source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task388.onnx
 - note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
+
+## ADOPTED 20260715T090231Z
+- cost: 1102 -> 994 (points 18.0983)
+- source: candidates/task388/derive_in_sel.onnx
+- note: derive input selector inside exact factorization; bundled 266/266; 1102->994

@@ -737,3 +737,34 @@ built from submission/merged_nets/.
 | 2026-07-14 14:24Z | 54689058 | **ERROR** | PARTIAL task001 only: sparse-initializer Einsum cost37; grader rejected; not adopted |
 | 2026-07-14 14:35Z | 54689446 | **ERROR** | PARTIAL task001 only: sparse-initializer sanitize-name workaround; grader rejected; not adopted |
 | 2026-07-14 14:50Z | 54689861 | **15.60** | PARTIAL task054 only: relational renderer cost12034; Kaggle-valid and subsequently adopted after bundled 266/266 gate |
+
+| 2026-07-15 00:37Z | 54705903 | **7424.66 NEW RECORD** | FULL BOARD restore after fresh clone wiped all gitignored deploy artifacts. 7424.42 record base (398 nets, hash-matched vs manifest) + task302 Concat->Max rebuilt bit-exact from src/custom/task302.py (cost 1773->1385, +0.24697; sha b0556cec). task054 relational renderer (sha a90259a9, +0.51452) LOST — lived only in gitignored candidates/, no build source ever committed; reverted to cost20131 incumbent. local 7424.5321, 400/400 fail=0, HASH-OK. LB delta +0.24 matches local prediction. |
+| 2026-07-15 01:59Z | 54708143 | **18.02** | PARTIAL task074 first exact-rank factor probe; slow local contraction |
+| 2026-07-15 02:07Z | 54708387 | **18.67** | PARTIAL task074 shared-symmetric exact factor, cost558; subsequently adopted |
+| 2026-07-15 02:12Z | 54708516 | **0.00** | PARTIAL task077 isolated-axis prefold, predicted cost1960; hidden-invalid, not adopted |
+| 2026-07-15 02:22Z | 54708799 | **7426.39 NEW RECORD** | FULL BOARD direct exact factors for task074/133/187/209/215/233/251/295; local 7426.2544, hash verified |
+| 2026-07-15 02:40Z | 54709234 | **0.00** | PARTIAL task110 without the hand-written identity fallback; local 264/266 cost1581; hidden needs fallback, not adopted |
+
+| 2026-07-15 03:27Z | 54710494 | **7409.08 REJECTED — AGGREGATE TIMEOUT** | FULL BOARD 16-change exact-factor/micro-rewrite wave; reconstructed ZIP exactly matches uploaded size 356845 and local 7426.5630. All 16 changed models were subsequently Kaggle-positive (11 isolated + remaining-five aggregate 94.50 exactly matching fixed cost score). No hidden-zero candidate: the ~17.5 loss is package-level cumulative runtime/order. Best remains 54708799 / 7426.39. |
+| 2026-07-15 03:34Z | 54710636 | **18.96** | PARTIAL task329 exact route_q rank-5 factor; Kaggle-valid despite slow local contraction. |
+| 2026-07-15 03:44Z | 54710850 | **17.67** | PARTIAL task063 duplicate-column exact factor; valid. |
+| 2026-07-15 03:58Z | 54711176 | **17.89** | PARTIAL task398 exact base-5 digit/carry factor; valid. |
+| 2026-07-15 04:06Z | 54711353 | **17.04** | PARTIAL task270 exact coefficient duplicate factor; valid. |
+| 2026-07-15 04:18Z | 54711589 | **18.01** | PARTIAL task374 exact background-gated factor; valid. |
+| 2026-07-15 04:23Z | 54711716 | **18.01** | PARTIAL task400 exact folded-division rewrite; valid. |
+| 2026-07-15 04:29Z | 54711851 | **18.15** | PARTIAL task297 exact polynomial factor; valid. |
+| 2026-07-15 04:36Z | 54712023 | **18.49** | PARTIAL task320 exact polynomial factor; valid. |
+| 2026-07-15 04:42Z | 54712230 | **14.99** | PARTIAL task366 uint8 implication rewrite; valid. |
+| 2026-07-15 04:44Z | 54712280 | **16.10** | PARTIAL task209 two-stage exact factor; valid. |
+| 2026-07-15 04:50Z | 54712425 | **15.19** | PARTIAL task286 ArgMax seed-colour rewrite; valid. |
+| 2026-07-15 04:52Z | 54712478 | **18.96** | PARTIAL task350 shared rank-2 R factor; valid. |
+
+| 2026-07-15 05:08Z | 54712865 | **94.50** | PARTIAL aggregate of the five previously unprobed ref54710494 changes (050/084/141/217/356); fixed-cost expected 94.5057. Exact match proves all five valid and falsifies the hidden-zero hypothesis; combined with 11 positive isolated probes, all 16 changes are valid individually. |
+
+| 2026-07-15 05:29Z | FULL 7427.2298; all post54708799 models Kaggle-positive; task297 runtime-safe order 8x faster; aggregate-timeout retest |
+| 2026-07-15 07:18Z | FULL local7428.50; signed-int8 TopK carrier generalization + task023 collapse + exact basis wins; runtime-safe batch check |
+| 2026-07-15 07:37Z | FULL local7429.4066; repair all Kaggle-invalid INT8 TopK after ref54716353 ERROR; keep task023/076/174 plus new task204/107/219/191 structural wins; pack clean 400/400 |
+| 2026-07-15 08:24Z | FULL local7430.1516; post-54716872 gated structural wins plus lucifer19 BBI v3 min-merge tasks 281/324/323/206/381/184; 400/400 pack clean |
+| 2026-07-15 08:49Z | FULL local7430.7937; task080 strided compact rewrite 6686->5099 plus task138 compact tail and concurrent gated wins; 400/400 pack clean |
+| 2026-07-15 09:04Z | FULL local7430.9666; final adopted batch task350/356/374/388 after task080/138; verified and packed 400/400; note prior local7430.7937 LB7413.31 diagnostic risk |
+| 2026-07-15 09:04Z | 54719275 | **7431.10 NEW RECORD** | FULL local7430.9666; final batch completed successfully and did not repeat the prior aggregate loss. |

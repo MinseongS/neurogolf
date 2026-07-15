@@ -84,3 +84,8 @@ This turns multiple 30x30 override planes into small 1-D category vectors.
 - cost: 1856 -> 1739 (points 17.5389)
 - source: candidates/task055/where2.onnx
 - note: integer-category Where restructure (4-cat Equal/AND/Concat/Cast -> Where-chain cat + single Equal/Cast, -120B; off-grid guard +180B tax); behaviorally identical, fresh 3478/3478 A/B 0-diff; 1856->1739 (+0.065)
+
+## ADOPTED 20260715T091509Z
+- cost: 1739 -> 1723 (points 17.5482)
+- source: candidates/task055/factor_lut.onnx
+- note: exact CP factorization of sparse category LUT

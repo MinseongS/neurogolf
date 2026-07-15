@@ -80,3 +80,8 @@ falsification history: consistent with the 2026-07 "point-symmetric kernel / clo
 - cost: 1630 -> 1626 (points 17.6061)
 - source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task323/task323.onnx
 - note: isolated residual-public LB probe; bundled fail=0
+
+## ADOPTED 20260715T081655Z
+- cost: 1630 -> 1626 (points 17.6061)
+- source: candidates/public_dumps/20260715_refresh/lucifer19_chimera-safe-boost-caddies/submission_black_cat_bbi_v3/task323.onnx
+- note: lucifer19 black-cat BBI v3 public min-merge; bundled fail=0

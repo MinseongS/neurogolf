@@ -136,3 +136,8 @@ Backup reports/retired_networks/task096_pre_s9.onnx.
 - cost: 7682 -> 7678 (points 16.0539)
 - source: candidates/public_dumps/20260709_pm2/franksunp_compact-onnx-artifact-starter/task096.onnx
 - note: min-merge from franksunp_compact-onnx-artifact-starter
+
+## ADOPTED 20260715T033659Z
+- cost: 7678 -> 6080 (points 16.2872)
+- source: candidates/task096/selected_profiles.onnx
+- note: FREE input x TopK-color OneHot direct Einsum profiles; removes full 10x30 row/col reductions

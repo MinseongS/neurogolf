@@ -159,3 +159,8 @@ Reopen (falsification-ledger):
 - cost: 6236 -> 1814 (points 17.4967)
 - source: candidates/task074_codex/cand.onnx
 - note: codex-worktree absorb: D4 branch factorization 6236->1814 (+1.235); fresh 2500 draws fail=0, divergence vs prior deployed=0; gate 267/267 fail=0
+
+## ADOPTED 20260715T021751Z
+- cost: 1814 -> 558 (points 18.6756)
+- source: candidates/task074/factor_f_shared.onnx
+- note: LB-proven shared symmetric rank-17 factorization of D4 branch router inside FREE-output Einsum; 1814->558

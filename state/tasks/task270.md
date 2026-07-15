@@ -208,3 +208,8 @@ entry plane (900B) is already minimal. Net: mem floor ~20KB -> ~15.05, ~0.1 shor
 - cost: 2858 -> 2828 (points 17.0527)
 - source: candidates/public_dumps/20260713_highroi/king77578_neurogolf-udit22-single-zips-public/task270/task270.onnx
 - note: isolated residual-public LB probe; bundled fail=0
+
+## ADOPTED 20260715T032549Z
+- cost: 2858 -> 2853 (points 17.0439)
+- source: candidates/task270/factor_coef_duplicates.onnx
+- note: direct exact duplicate-column initializer factorization

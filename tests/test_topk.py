@@ -15,6 +15,10 @@ def test_uint8_topk_flagged(tmp_path):
     p = tmp_path / "bad.onnx"; onnx.save(_topk_model(TensorProto.UINT8), p)
     assert find_unsigned_topk(p)
 
+def test_int8_topk_flagged(tmp_path):
+    p = tmp_path / "bad_signed.onnx"; onnx.save(_topk_model(TensorProto.INT8), p)
+    assert find_unsigned_topk(p)
+
 def test_float_topk_clean(tmp_path):
     p = tmp_path / "ok.onnx"; onnx.save(_topk_model(TensorProto.FLOAT), p)
     assert find_unsigned_topk(p) == []

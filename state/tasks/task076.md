@@ -152,3 +152,28 @@ ran: bound-audit follow-up recompile (fable fork): full dump + consumer analysis
 tool+date: fable fork + hand byte-accounting vs generator, 2026-07-11.
 reopen: u8-index Gather or sub-4B index vectors; public net <12795; an op fusing flood-association.
 falsification history: the bound audit (2026-07-11) over-estimated this task's gap; its premise is corrected by this entry.
+
+## ADOPTED 20260715T071221Z
+- cost: 12795 -> 12106 (points 15.5985)
+- source: candidates/task076/signed_topk_cast.onnx
+- note: signed int8 TopK carrier: replace bool/u8->fp16 feed without changing indices/presence
+
+## ADOPTED 20260715T072057Z
+- cost: 12106 -> 10467 (points 15.7440)
+- source: candidates/task076/slim3.onnx
+- note: collapse: recoded Conv colour plane so every mask is one compare (Less/Div/Equal) instead of 4 Equal + 2 Or planes, permutation absorbed into iota; single 16x16 guard board (Pad w/ sentinel) replaces 226-elem pad/scatter/slice tail and serves as Gather source + scatter base + canvas; Equal-Cast-ReduceMin-ArgMax collapsed to Sub-ReduceMax-ArgMin. cost 12106->10467 measured like-for-like. Differential vs incumbent over 1800 rule-faithful instances: 0 regressions, 0 improvements (identical failure set).
+## CORRECTION 2026-07-15 — the `signed_topk_cast` ADOPTED entry above is NOT the live state
+- ran: board-wide `neurogolf.topk.find_unsigned_topk` over all 400 deployed nets, plus a
+  direct check of this task's `submission/.backups/` chain.
+- verdict: the `signed_topk_cast.onnx` adoption recorded above fed **signed INT8 into TopK**
+  (elem_type=3). `src/neurogolf/topk.py` classes this as a Kaggle GRADER-KILLER: the grader
+  errors the WHOLE submission, it is invisible to local ORT/onnx.checker, and `ng pack`
+  refuses to zip such a net. It was established for unsigned ints on 2026-07-02, for signed
+  INT8 by task233 submission 54418836, and RE-CONFIRMED by full submission 54716353 on
+  2026-07-15 (today). The net was reverted on disk the same day; the ADOPTED block above was
+  left behind and reads as live. It is not. Board scan now: **0/400 violations, packable.**
+- reopen: none — do not re-adopt any `signed_topk_cast` family member. If a cost win is
+  wanted from this direction, the feed must be fp16/fp32 (verified acceptable), never int8
+  or any unsigned int. Re-run the board scan before every `ng pack`:
+  `uv run python -c "from neurogolf.topk import find_unsigned_topk; ..."` over
+  `submission/overfit_nets/*.onnx`.

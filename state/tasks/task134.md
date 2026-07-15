@@ -101,3 +101,8 @@ clustered-noise or noise>mega instances.
   (≥0.33) from scatter (≤0.28) with 0/20000 overlap (worst gap 0.143).
 
 ## S8 (2026-07-02) — matrix-sweep verdict: priced FLOOR (block-1/2 opus agents; occupancy/max-semiring reductions or sub-400B u8 banks). Do not re-attempt without a new mechanism.
+
+## ADOPTED 20260715T071535Z
+- cost: 1472 -> 1382 (points 17.7687)
+- source: candidates/task134/signed_argmax.onnx
+- note: binary ArgMax carrier int32->int8

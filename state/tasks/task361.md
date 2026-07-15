@@ -114,3 +114,28 @@ mem 4322/16.55; completed_scalar30 900B=min 30x30 carrier, sampled_colors 600B G
 - cost: 4606 -> 4577 (points 16.5712)
 - source: candidates/public_dumps/20260713_7281/extracted/task361.onnx
 - note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded
+
+## ADOPTED 20260715T071226Z
+- cost: 4577 -> 4461 (points 16.5969)
+- source: candidates/task361/signed_topk_cast.onnx
+- note: signed int8 TopK carrier: replace bool/u8->fp16 feed without changing indices/presence
+
+## REPAIRED 20260715T073655Z
+- cost: 4461 -> 4577 (points 16.5712)
+- source: candidates/task361/kaggle_safe_fp16_topk.onnx
+- note: Kaggle safety repair after ref54716353 ERROR: INT8 TopK -> FLOAT16
+## CORRECTION 2026-07-15 — the `signed_topk_cast` ADOPTED entry above is NOT the live state
+- ran: board-wide `neurogolf.topk.find_unsigned_topk` over all 400 deployed nets, plus a
+  direct check of this task's `submission/.backups/` chain.
+- verdict: the `signed_topk_cast.onnx` adoption recorded above fed **signed INT8 into TopK**
+  (elem_type=3). `src/neurogolf/topk.py` classes this as a Kaggle GRADER-KILLER: the grader
+  errors the WHOLE submission, it is invisible to local ORT/onnx.checker, and `ng pack`
+  refuses to zip such a net. It was established for unsigned ints on 2026-07-02, for signed
+  INT8 by task233 submission 54418836, and RE-CONFIRMED by full submission 54716353 on
+  2026-07-15 (today). The net was reverted on disk the same day; the ADOPTED block above was
+  left behind and reads as live. It is not. Board scan now: **0/400 violations, packable.**
+- reopen: none — do not re-adopt any `signed_topk_cast` family member. If a cost win is
+  wanted from this direction, the feed must be fp16/fp32 (verified acceptable), never int8
+  or any unsigned int. Re-run the board scan before every `ng pack`:
+  `uv run python -c "from neurogolf.topk import find_unsigned_topk; ..."` over
+  `submission/overfit_nets/*.onnx`.

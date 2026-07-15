@@ -349,3 +349,13 @@ ran: runtime-kernel recompile re-audit (fable fork): the prescribed idiom was AL
 tool+date: fable fork + hand byte-accounting vs generator, 2026-07-11.
 reopen: mixed-dtype Einsum; scale-independent stamp primitive; public net <12973.
 falsification history: the bound audit (2026-07-11) over-estimated this task's gap; its premise is corrected by this entry.
+
+## ADOPTED 20260715T034205Z
+- cost: 12973 -> 12828 (points 15.5406)
+- source: candidates/task101/clamp_minmax.onnx
+- note: exact bounds legalization fold: four Less->Where clamps replaced by integer Min/Max, preserving clamped indices while deleting 145B condition carriers
+
+## ADOPTED 20260715T075022Z
+- cost: 12828 -> 11580 (points 15.6430)
+- source: candidates/task101/stampfold.onnx
+- note: collapse (rule untouched; 5 bit-exact rewrites): recolour blue to -1 in the Conv decode weight so blue is the unique minimum of the already-materialised fp32 code plane -> ReduceMin+ArgMin reads the bbox off it, killing the 340B u8 blue plane (-266B); one shared column-first gather extracts the 4x4 reference patch for both colours instead of two per-colour gathers, killing the second 340B mask plane (-164B); stamp paths' (row+off)*20 + Max(col+off,0) re-associated so arithmetic happens on narrow [3,8,1]/[1,8,1] tensors before the offsets broadcast wide (-816B); column Max clamps removed as unobservable (every entry they clamp is already flagged invalid and rewritten to the sink index by the existing final Where). All folded values are exact fp16 integers (|v|<1024) so re-associations are bit-exact. Deliberately avoided CSE-style tensor merging (ledger records that family, sub 54451532, as a task101 LB crash). 286->277 nodes, cost 12828->11580. Differential vs incumbent 14000 instances (8000 ORT_DISABLE_ALL + 6000 ORT_ENABLE_ALL, half rule re-implementation + half adversarial off-manifold noise): 0 disagreements. PRE-EXISTING OOB-Gather crash on 17x21 grids NOT introduced or masked: crash set identical to incumbent (0 mismatches over 4000 instances).

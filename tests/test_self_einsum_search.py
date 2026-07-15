@@ -276,6 +276,55 @@ def test_search_rediscovers_task067_with_two_atoms():
     assert any(hit["fail"] == 0 and hit["cost"] == 0 for hit in hits)
 
 
+def test_search_screens_on_subset_but_reports_full_corpus_stats(monkeypatch):
+    """Rows must carry full-corpus stats even though screening uses the subset.
+
+    A query that is exact on the screening subset but wrong on the rest of the
+    bundled corpus must not be reported as exact.
+    """
+    q1 = (("k", "r", "c"),)
+    q2 = (("k", "r", "c"), ("u", "r", "c"))
+    subset_only = (np.zeros((1, 10, 2, 2), dtype=np.float32), np.zeros((1, 10, 2, 2), dtype=bool))
+    extra = (np.ones((1, 10, 2, 2), dtype=np.float32), np.ones((1, 10, 2, 2), dtype=bool))
+    examples = [subset_only, extra]
+
+    monkeypatch.setattr(
+        self_einsum_search,
+        "_task_examples_with_official_count",
+        lambda task_num: (examples, 1),
+    )
+    monkeypatch.setattr(
+        self_einsum_search,
+        "select_diagnostic_examples",
+        lambda examples, *, official_count, arc_limit: [subset_only],
+    )
+    monkeypatch.setattr(self_einsum_search, "_seed_queries", lambda: frozenset({q1}))
+    monkeypatch.setattr(
+        self_einsum_search,
+        "expand_query",
+        lambda query: frozenset({q2}) if query == q1 else frozenset(),
+    )
+
+    def fake_stats(query, received_examples, correction=None):
+        # q1 looks exact on the 1-example subset but is wrong on the full corpus.
+        if len(received_examples) == 1:
+            return {q1: (0, 1, 0), q2: (4, 0, 1)}[query]
+        return {q1: (7, 1, 1), q2: (9, 0, 2)}[query]
+
+    monkeypatch.setattr(self_einsum_search, "_loss_stats", fake_stats)
+    monkeypatch.setattr(self_einsum_search, "_runtime_validate", lambda *a, **k: True)
+    monkeypatch.setattr(
+        self_einsum_search, "fit_small_corrections", lambda query, ex: []
+    )
+
+    rows = search_task(1, max_atoms=2, beam=1, correction_beam=1)
+
+    # q1 screened as exact on the subset, but the full corpus says 7 wrong cells, so it
+    # is reported with full stats and never as a hit. q2 is the depth-2 near-hit.
+    assert {(row["atoms"], row["wrong_cells"]) for row in rows} == {(1, 7), (2, 9)}
+    assert all(row["wrong_cells"] != 0 for row in rows)
+
+
 def test_search_ranks_every_bundled_example_and_continues_after_exact(monkeypatch):
     q1 = (("k", "r", "c"),)
     q2 = (("k", "r", "c"), ("u", "r", "c"))
@@ -290,6 +339,13 @@ def test_search_ranks_every_bundled_example_and_continues_after_exact(monkeypatc
         self_einsum_search,
         "_task_examples_with_official_count",
         lambda task_num: (examples, 1),
+    )
+    # Screening subset == full corpus here, so the exact-hit/continue contract is
+    # exercised independently of the two-stage split.
+    monkeypatch.setattr(
+        self_einsum_search,
+        "select_diagnostic_examples",
+        lambda examples, *, official_count, arc_limit: examples,
     )
     monkeypatch.setattr(self_einsum_search, "_seed_queries", lambda: frozenset({q1}))
     monkeypatch.setattr(

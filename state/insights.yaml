@@ -2882,3 +2882,199 @@
   expected:
     per_task: "+1~6 when a multi-stage recover-then-rebuild graph collapses to a parameter-only final Einsum"
   transformer: null
+- id: structural_cost_floor_law
+  title: Per-task cost floor is 5*A_in + min(900, 10*A_out) + params, set by the f32 input and the canvas broadcast
+  status: active
+  source_tasks:
+  - 368
+  - 091
+  - 333
+  - 076
+  rationale: 'Board-wide derivation (2026-07-15). points = max(1, 25 - ln(memory+params)); `input` and `output`
+    are the only free tensors (scoring.py skips them by name), and `params` is ELEMENT COUNT, not bytes, so
+    initializer dtype is irrelevant and only weight SHAPE cuts params. Three costs are then forced. (1) The graph
+    input is float32 [1,10,30,30], and every op that reduces the 10 one-hot channels to a label plane (Conv/Einsum/
+    MatMul/Reduce*) is dtype-preserving, while every dtype-narrowing op (Cast/QuantizeLinear/Equal/Greater) is
+    elementwise at full [1,10,30,30] = 9000B. So the cheapest entry is Conv(input, cmap[1,10,1,1], pads=negative-crop)
+    -> f32 [1,1,h,w] costing 4*A_in, plus A_in for the u8 working plane it is Cast to: 5*A_in total, unavoidable.
+    (2) Producing the [1,10,30,30] output by broadcasting a label plane against a [1,10,1,1] decode vector needs a
+    [1,1,30,30] tensor = 900B; the alternative (broadcast at working resolution, then Pad -> output for free, which
+    is CORRECT because outside the ARC grid all 10 output channels are zero, verified) costs 10*A_out. Hence
+    min(900, 10*A_out). (3) params. Measured against this floor the whole 400-task board holds only ~+75 points of
+    headroom, ~71% of it in the 14-17 band, and the deployed nets already sit at the floor almost everywhere.'
+  applies_when:
+    any_tags:
+    - onehot_final_equal
+    - mem0_single_op
+  reject_when: {}
+  expected:
+    gain_type: prioritization
+    risk: none — this is a pricing model, not a rewrite
+    verification: 'Price any rebuild BEFORE building it. A design materializing a full 10-channel canvas plane
+      ([1,10,30,30] u8 = 9000B) is capped near 15.9 points; one materializing a single [1,1,30,30] u8 plane (900B)
+      or carrying a dense Conv[10,10,3,3] (900 params) is capped at 18.20. Reaching >=20 points requires cost<=148,
+      i.e. NO full-grid intermediate at all AND a weight of <=148 elements. Empirically points ~= f(node count):
+      the 20-26 band averages 2.2 nodes/53 params, the 14-17 band 70.2 nodes. Node count is the currency at roughly
+      40-100B per node.'
+  transformer: null
+- id: static_shape_lies_price_on_runtime_trace
+  title: Never price a candidate or scan from declared static shapes — the grader counts max(static, runtime)
+  status: negative_filter
+  source_tasks:
+  - 91
+  - 31
+  rationale: 'calculate_memory takes tensor_memory[t] = max(static_declared_bytes, runtime_traced_bytes). Nets that
+    Slice to a data-dependent bounding box declare a placeholder static shape that is far smaller than reality:
+    task091 declares `cropped` as [1,1,1,1] (1B) while the traced bbox is ~13x13 (~169B), and task031/task091 are the
+    only two nets where a static-only cost model disagrees with the manifest. A pad-then-broadcast "flip" lever
+    (broadcast at working resolution, then Pad -> output for free) was scanned board-wide off static shapes and
+    reported task091 as a +0.47 carrier; on the true runtime shape the flip produces [1,10,13,13] = 1690B against a
+    900B incumbent and LOSES. Total real yield of that lever board-wide is ~0.'
+  applies_when:
+    any_ops:
+    - Slice
+    - Pad
+    - Reshape
+  reject_when: {}
+  expected:
+    gain_type: negative_filter
+    risk: silent overcount of a lever's yield; wasted agent fan-out on phantom carriers
+    verification: 'run `uv run python tools/per_tensor_cost.py <task>` (it traces through the real grader path) before
+      trusting any static per-tensor number, and cross-check the scan total against state/manifest.json cost.'
+  transformer: null
+- id: dynamic_shapes_are_unscoreable
+  title: Any dim_param / dynamic shape makes calculate_memory return None — the net scores nothing
+  status: negative_filter
+  source_tasks:
+  - 107
+  rationale: 'calculate_memory walks every tensor''s inferred shape and bails with `return None` on
+    `dim.HasField("dim_param")`, on a missing `dim_value`, and on `dim_value <= 0`. A None memory makes evaluate()
+    report "performance could not be measured" and the task scores nothing at all — this is not a cost penalty, it
+    is a total loss. Every shape in the graph must therefore be statically inferable to a positive integer.
+    Discovered while golfing task107, where `Resize` with dynamic scales was the natural expression of the kron(input, f)
+    upscale (f is data-dependent, 2..6) and had to be rejected outright. This is why data-dependent sizing on this
+    board is always done by computing at a fixed maximum extent and masking, never by resizing.'
+  applies_when:
+    any_ops:
+    - Resize
+    - Reshape
+    - Expand
+    - Tile
+    - Slice
+    - ConstantOfShape
+  reject_when: {}
+  expected:
+    gain_type: negative_filter
+    risk: total loss of the task's points (scores nothing), not a mere cost increase
+    verification: 'run `uv run ng gate <cand> --task N`; a dynamic-shape net reports error "performance could not be
+      measured" rather than a cost. Prefer fixed-max-extent + mask over any dynamic resize/reshape.'
+  transformer: null
+- id: free_epilogue_conv_bias_lights_the_pad
+  title: The free 1x1-QLinearConv epilogue fails whenever a colour channel needs a constant offset
+  status: active
+  source_tasks:
+  - 219
+  - 191
+  - 023
+  - 204
+  rationale: 'The "free epilogue" (stack a few small working planes -> ONE 1x1 QLinearConv doing the colour channel
+    map AND the canvas pad via `pads=[...]` straight into the free `output`) landed real wins on task023 (6348->4814),
+    task204 (10232->7838) and task219 (7210->5258), but it has a hard, twice-independently-rediscovered limit:
+    a conv BIAS fires uniformly, including over the `pads` region (pad contributions are always zero because
+    x - x_zero_point == 0 there). So any output channel whose value needs a constant additive term — typically the
+    black/background channel needing +1 — lights up OUTSIDE the real grid, and since the grader does
+    `np.array_equal` on the FULL [1,10,30,30] with all-zero expected off-grid, the net fails. task219 had to supply
+    the constant as a data plane (a ones initializer, 150 params) because the bias route is closed; task191 priced
+    every variant (ones initializer, extra conv output channel, Concat) and each cost >= what it saved, so
+    `Equal(Pad(color, sentinel))` stayed the cheaper primitive there.'
+  applies_when:
+    any_ops:
+    - QLinearConv
+    - Conv
+    - Pad
+    any_tags:
+    - onehot_final_equal
+  reject_when: {}
+  expected:
+    gain_type: mechanism + its boundary
+    risk: silent off-grid channel activation -> fail on every example, caught by the gate
+    verification: 'Before choosing the free-epilogue route, check whether every output channel is a PURE linear
+      combination of the stacked planes with NO constant term. If any channel needs a constant, price the data-plane
+      workaround (ones initializer / extra conv output channel / Concat) against simply keeping
+      `Equal(Pad(code_plane, sentinel), decode[1,10,1,1])` — the latter often wins. Choosing the colour codes so that
+      the needed constant vanishes (e.g. making the sentinel/off-grid value 0 and decoding against a non-zero
+      palette) is the way to keep the free epilogue.'
+  transformer: null
+- id: entry_crop_fitted_to_bundled_max_not_rule_max
+  title: Nets whose entry crop is 1-2 cells short of the max grid are fitted to the bundle, not the rule — a live local!=LB risk
+  status: active
+  source_tasks:
+  - 101
+  - 158
+  - 138
+  rationale: 'The standard prologue `Conv(input, cmap[1,10,1,1], pads=[0,0,-A,-B])` crops the 30x30 canvas to the
+    real grid. Several deployed nets crop to the largest grid that happens to appear in their BUNDLED data rather
+    than to the rule''s true maximum, so they pass 266/266 locally while being blind to cells a different generator
+    seed can populate. Because the grader needs fail==0 for ANY points, one such hidden example scores the whole
+    task 0 — this is a total loss, and it is a strong candidate for the long-standing "task101-class local!=LB
+    divergence" the ledger keeps hitting. Board scan 2026-07-15 (entry-Conv negative pads vs max INPUT grid over all
+    bundled examples): 9 nets crop below their max input, but most are legitimate (the rule only needs a strip —
+    e.g. task249 crop=(30,2), task200 crop=(1,10)). The suspicious signature is a crop 1-2 cells SHORT of the max:
+    task101 crop=(17,20) vs max (17,21) — an agent measured a hard ORT OOB-Gather crash on 14.6% of 17x21 grids,
+    and the single bundled 17x21 example passes only by luck (P(>=1 crash over 266 hidden draws) ~13.6%);
+    task158 crop=(25,24) vs max (26,25); task138 crop=(24,23) vs max (26,25). task101''s crop regression is
+    documented: S8 fixed this class on 2026-07-02 and the 20260709 public-dump min-merge reverted it.
+    THIRD INDEPENDENT INSTANCE (task285, same day, different shape — this generalises beyond crops):
+    its in-grid test was `input[channel 0, row 0, col c]`, i.e. "cell (0,c) is colour 0", which is FALSE for a
+    COLOURED cell in row 0 — so any sprite touching row 0 blanked that whole row/column. It also assumed H==W.
+    0/265 bundled inputs have a coloured cell in row 0 or col 0, so it never fires locally; a hidden seed placing a
+    sprite in row 0 scores task285 zero. Fixed 2026-07-15 by the conv_bias_sentinel rebuild (a true in-grid test via
+    an off-grid sentinel from the entry Conv bias), which also removed 3 runtime errors per 4000 fresh instances.
+    THE GENERAL PATHOLOGY: a net bets on an invariant that holds over the bundle but is not part of the RULE, and
+    the local gate (bundled fail==0) is structurally incapable of catching it. Crop extent is only one shape of this;
+    "colour 0 in row 0", "H==W", and "the generator never clips a reflection" are others.'
+  applies_when:
+    any_ops:
+    - Conv
+    - Slice
+    any_tags:
+    - onehot_final_equal
+  reject_when: {}
+  expected:
+    gain_type: risk register (expected-value, not a cost win)
+    risk: total loss of the task (scores 0) on any hidden draw that populates the cropped-away cells
+    verification: 'Scan: extract the entry op''s negative `pads` -> crop extent, compare against
+      max(len(e["input"]), len(e["input"][0])) over train+test+arc-gen. A crop 1-2 short of the max is the red flag;
+      a crop far below the max is usually a legitimate strip read — check the rule before calling it a bug.
+      Widening the crop costs bytes (task101: comb 1360->1428B plus downstream, ~-0.08 points), so it is an
+      expected-value call: -0.08 certain vs -15.6 at the measured hazard rate. Do NOT "fix" without first
+      establishing whether the LB hidden set is redrawn per submission or fixed — if fixed and the task currently
+      scores (LB ~= local), the fix buys nothing.'
+  transformer: null
+- id: public_bbi_v3_integer_narrowing_and_optional_input_tail
+  title: Narrow small integer coordinate/count carriers before shape arithmetic, and omit optional default-valued inputs
+  status: active
+  source_tasks:
+  - 281
+  - 323
+  - 206
+  - 381
+  - 184
+  rationale: 'The 2026-07-15 lucifer19 black-cat BBI v3 min-merge produced five small exact wins. Tasks 281/323/206 insert a narrow integer Cast before Reshape/Unsqueeze and subsequent coordinate arithmetic, shrinking the declared runtime carriers even though node count rises (25B, 4B, and 4B total cost reductions). Tasks 381/184 remove a one-element initializer by omitting an optional Pad constant_value or replacing Greater(x,0)+Cast with Cast+Sign on nonnegative counts. These are byte-tail transforms, not a new large representation collapse; public_autopsy found no additional fingerprint-matched rescan candidates on the current board.'
+  applies_when:
+    any_ops:
+    - Cast
+    - Reshape
+    - Unsqueeze
+    - Pad
+    - Greater
+    - Sign
+  reject_when:
+    any_tags:
+    - values_outside_target_integer_range
+    - negative_count_carrier
+  expected:
+    gain_type: byte_tail
+    risk: 'low only after bundled gate; narrowing is unsafe if coordinate/count values exceed the target dtype or Sign changes negative-value semantics'
+    verification: 'Compare scorer cost before/after and require `uv run ng gate`; for optional Pad inputs verify the omitted default is exactly zero. Re-run public_autopsy after any future borrowed-net adoption, because the current rescan returned no matches.'
+  transformer: null

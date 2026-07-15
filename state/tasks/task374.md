@@ -61,3 +61,13 @@ mem 2262/17.26; output5 [1,5,10,10] bool 500B beats 900B pad-then-Equal; gray_cr
 - cost: 2217 -> 1113 (points 17.9852)
 - source: candidates/task374/rankeinsum.onnx
 - note: rank-machine transfer (010 template, wave2): 2L-2 neighbor-sum lengths via free-input einsums (no planes), thermometer-predicate affine color (Q=-18g1+12g2+12 — no s-polynomials), single 27-operand free-output einsum with t-axis term folding (H/V/bg); 2217->1113 (+0.689); fresh 2500/2500 div 0
+
+## ADOPTED 20260715T022456Z
+- cost: 1113 -> 1085 (points 18.0107)
+- source: candidates/task374/factor_bg.onnx
+- note: exact shared affine rank-2 factorization of four BG uses in final Einsum
+
+## ADOPTED 20260715T090023Z
+- cost: 1085 -> 1071 (points 18.0237)
+- source: candidates/task374/derive_bp.onnx
+- note: derive bp relation in exact factorization; bundled 267/267; 1085->1071

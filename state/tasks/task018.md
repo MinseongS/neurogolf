@@ -211,3 +211,13 @@ Combined with mandatory int64 ScatterND index (3072B) and the fp32-input-coupled
 16687 is the honest architecture floor. Further cut needs a fundamentally different patch-extraction
 representation (not dtype/fusion). reopen: a 0-param 10<->30 scatter, an fp16-tolerant Einsum path, or
 a leaked <10K net. Community 4850 remains not-general-exact under this representation.
+
+## ADOPTED 20260715T032925Z
+- cost: 16687 -> 16676 (points 15.2783)
+- source: candidates/task018/rotation_onehot.onnx
+- note: dynamic rotation routing: replace two ArgMax->u8 Equal(arange4)->fp16 chains with direct rank-1 int64 OneHot(fp16); -10 memory -1 params
+
+## ADOPTED 20260715T091304Z
+- cost: 16676 -> 16666 (points 15.2789)
+- source: candidates/task018/micro.onnx
+- note: exact duplicate-node CSE: reuse four bit-identical And/Unsqueeze outputs, cost -10
