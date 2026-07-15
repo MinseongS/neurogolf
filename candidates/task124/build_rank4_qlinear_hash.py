@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 BASELINE_SHA256 = "49ececad3443d478c5f9b3e335f8ced4df82aa25648f89e85bacd985b8737632"
-ADOPTED_SHA256 = ""
+ADOPTED_SHA256 = "4e4bafbb3d65046a1ec08a211de6c9951705b613777a2a3ece9f4c73f6041b25"
 OUTPUT = Path(__file__).with_name("rank4_qlinear_hash.onnx")
 
 

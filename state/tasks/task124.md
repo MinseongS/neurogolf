@@ -1,5 +1,5 @@
 ---
-deployed_cost: 1953
+deployed_cost: 849
 logged_costs_match: match
 migrated: 2026-07-09
 ---
@@ -11,7 +11,7 @@ diagonally) periodic sprite tiling. A sprite of height `tall` (1..3) repeats ver
 period `tall`; if it repeats diagonally it also shifts right by `shift=(wide-1)*diag` (0..2) every
 period. The 10×10 OUTPUT extends the same pattern over all 10 rows:
 `out(r,c) = P[r%tall][c - shift*(r//tall)]` (0 if source col OOB), P = first `tall` input rows.
-**Current:** 15.71 pts (public CumSum/OneHot net), mem 10520, params 353
+**Current:** 18.255941 pts, memory779, params70, cost849; rank-4/hash centered QLinear renderer
 **Target tier:** B (closed-form periodic extension; pure index Gather of a recovered value plane)
 
 ## Attempts
@@ -23,32 +23,37 @@ period. The 10×10 OUTPUT extends the same pattern over all 10 rows:
 | 4 | **1-D occupancy-bitmask consistency** `bm[r]==(bm[r-t]·2^s) mod 1024` | B | 7694 | 119 | **16.04** | 200/200 | ADOPTED |
 
 ## Best achieved
-16.04 @ mem 7694 params 119 — beats prior 15.71 by **+0.33**. Fresh 200/200 (and 3000/3000 stress).
+18.255941 @ **memory779 params70 cost849**. The 2026-07-15 recursive chain lowered the live
+cost 1953->1409->1078->1057->945->939->849, with bundled267/267 at every adoption and final
+fresh2000 raw/sign divergence0/off-grid positives0. Final SHA:
+`4e4bafbb3d65046a1ec08a211de6c9951705b613777a2a3ece9f4c73f6041b25`.
 
 ## Irreducible-floor analysis
-Dominant intermediate is the 9-channel input crop `inHK [1,9,8,10]` fp32 = 2880B — the colour-index
-entry (channels 1..9 only, ch0 weight 0; cropped to the 8×10 active canvas, cheaper than a 30×30
-Conv plane + slice). Next is the uint8 30×30 carrier (900B) feeding the FREE one-hot `Equal`. The
-whole (tall,shift) DETECTION is 1-D (≤[8] vectors) and essentially free — the key win.
+This is not an absolute floor. The largest remaining counted tensor is the load-bearing FREE-input
+channel-0 `Slice [1,1,5,10]` at 200B. The final geometry has no per-cell INT32 index plane, and the
+renderer has no valid plane, scalar colour crop, full 30x30 label carrier, or terminal Equal.
+Rank preservation removed flat row carriers, and bounded scalar QLinear fingerprints removed the
+cellwise p3 reduction. At cost849 the next +0.1 requires cost<=768, so a new exact
+QLinear-preserving route must remove at least81 cost. A ConvInteger probe saved only one parameter
+and remains outside scope because direct uint8 QLinearConv output is an explicit task invariant.
 
 ## OPEN ANGLES (re-attack backlog)
-- The 2880B `inHK` slice is the floor; a single-channel occupancy/colour plane still needs either a
-  30×30 Conv output (3600) or a multi-channel spatial crop (2880). No escape found.
-- The diagonal output col-shift machinery (SCi 400 + Ap 380 + GatherElements) only matters when
-  shift>0 (~32% of instances); could special-case shift==0 to a pure axis-2 gather, but the branch
-  cost likely outweighs.
+- Fuse the 200B float channel-0 crop and foreground predicate into a counted<=119B exact producer
+  while preserving pinned ONNX/ORT legality.
+- Jointly remove at least81 cost from the remaining compact period detector/row-bank path; scalar
+  and initializer folds below this threshold are useful only when composable.
+- Re-run the centered-mask/row-Slice signatures if a new public teacher or legal fused crop op lands.
 
 ## INSIGHT (transferable)
-⭐ **A vertically-periodic (single-colour) tiling's period+diagonal-shift is recoverable with PURELY
-1-D arithmetic — no 2-D shifted comparison planes.** Encode each row's occupancy as a base-2 bitmask
-`bm[r]=Σ_c 2^c·occ[r,c]` (fp32-exact, ≤1023); a right-shift-by-s with grid clipping is EXACTLY
-`(bm[r-t]·2^s) mod 1024`. So self-consistency for candidate (t,s) is `bm[r]==(bm[r-t]·2^s) mod 1024`
-over rows gated by `bm[r-t]>0 AND bm[r]>0` (the predecessor-exists gate is load-bearing: it excludes
-the first t rows AND beyond-H rows, otherwise boundary mismatches corrupt the tie-break and a larger
-true `tall` loses to a spurious `tall=1`). The diagonal shift per candidate is just
-`clip(leftcol(row t) − leftcol(row 0), 0, 2)`. This collapses what looked like a 9× full-plane
-detection (~9KB) into a handful of [8]-length vectors. Pairs with the task231 idiom (output = index
-Gather of a recovered small value plane, expansion routed into the FREE bool `Equal` output).
+⭐ **A runtime-colour two-state mask can use quantized padding as a third zero-effective state.**
+Store background/foreground as uint8 0/2 with x_zero_point1, so they become -1/+1 while implicit
+QLinearConv padding is 0. Scatter a stored2 into a `[0,1,...,1]` weight base at w_zero_point1 to get
+background -1, selected +1, others0. This writes the FREE one-hot output directly. Upstream, when a
+small fixed number of fixed-length rows comes from a compact bank, split runtime starts and issue
+one Slice per row instead of broadcasting `start + columns` into a full INT32 Gather map; keep the
+bank rank-preserving when flattening is semantic-free. For bounded rows, a collision-free uint8
+QLinearMatMul fingerprint can replace cellwise equality/reduction when the full reachable domain
+and nonsaturating accumulator are proved.
 
 ## 2026-07-08 rescan — direct free-output label route rejected by measurement
 
@@ -74,3 +79,33 @@ reopen trigger = a cheaper dynamic channel placement primitive, a bool-Pad-compa
 opset/output path, or a way to avoid the 10x30 projection params; falsification history =
 the generic "900B label floor" was falsified by task295, so this rejection applies only
 to task124's 10x10 background-bearing label route, not the whole mechanism family.
+
+## ADOPTED 20260715T132706Z
+- cost: 1953 -> 1409 (points 17.7494)
+- source: candidates/task124/dynamic_qlinear_tail.onnx
+- note: [mask,valid] runtime-colour padded uint8 QLinearConv; wzp=1 signed rows; off-grid zero
+
+## ADOPTED 20260715T134753Z
+- cost: 1409 -> 1078 (points 18.0171)
+- source: candidates/task124/centered_qlinear_tail.onnx
+- note: centered mask 0/2 with shared x/w zero-point 1; valid plane removed; padding state 0
+
+## ADOPTED 20260715T135619Z
+- cost: 1078 -> 1057 (points 18.0368)
+- source: candidates/task124/scatter_weight.onnx
+- note: ScatterElements runtime-colour weight; remove Cast Equal Where and channel ids
+
+## ADOPTED 20260715T141226Z
+- cost: 1057 -> 945 (points 18.1488)
+- source: candidates/task124/centered_slice_geometry.onnx
+- note: reuse centered uint8 top plane; replace 200B Gather index plane with five dynamic row Slices
+
+## ADOPTED 20260715T141855Z
+- cost: 945 -> 939 (points 18.1552)
+- source: candidates/task124/shared_initializers.onnx
+- note: share QLinear scale threshold, Slice step row index, and crop ends reshape shape
+
+## ADOPTED 20260715T144530Z
+- cost: 939 -> 849 (points 18.2559)
+- source: candidates/task124/rank4_qlinear_hash.onnx
+- note: rank-4 row bank plus exact uint8 QLinear row hash

@@ -30,7 +30,7 @@
 - Consumes: deployed `submission/overfit_nets/task124.onnx`; generator rule in `arc-gen/tasks/task_53b68214.py`.
 - Produces: acceptance contract for `build_rank4_qlinear_hash.build(task=None) -> onnx.ModelProto` and `rank4_qlinear_hash.onnx`.
 
-- [ ] **Step 1: Write the failing import and structural/cost test**
+- [x] **Step 1: Write the failing import and structural/cost test**
 
 Create a real-model test that imports `build`, runs checker plus strict inference, and asserts:
 
@@ -54,7 +54,7 @@ assert result["memory"] + result["params"] == 849
 
 Also inspect inferred types/shapes for `p3_hash_a`, `p3_hash_b`, `is_p3`, `fg_pad4d`, all five bottom rows, `bottom_fg`, and `output`.
 
-- [ ] **Step 2: Add raw A/B, off-grid, quantized-tail, and exhaustive-hash tests**
+- [x] **Step 2: Add raw A/B, off-grid, quantized-tail, and exhaustive-hash tests**
 
 Use actual ORT sessions for incumbent and candidate. For every bundled example, require byte-identical raw outputs and zero nonzero logits outside rows/columns 0..9. Inspect initializers to assert centered states `0/2`, shared x/w zero point `1`, weight base `[0,1,...,1]`, and hash code `[1,2,4,8,16,32,0,0,0,0]^T`.
 
@@ -97,7 +97,7 @@ assert cases == 1_428
 
 Require 1,428 cases, zero mismatches, and every fingerprint <=126.
 
-- [ ] **Step 3: Run the focused test and verify RED**
+- [x] **Step 3: Run the focused test and verify RED**
 
 Run:
 
@@ -107,7 +107,7 @@ uv run pytest -q candidates/task124/test_rank4_qlinear_hash.py
 
 Expected: collection ERROR with `ModuleNotFoundError: No module named 'build_rank4_qlinear_hash'`. This proves the new regression is exercising a missing implementation.
 
-- [ ] **Step 4: Commit the RED test**
+- [x] **Step 4: Commit the RED test**
 
 Stage only the new ignored candidate test with `git add -f`, verify the cached diff contains no unrelated path, and commit:
 
@@ -126,7 +126,7 @@ git commit -m "test(task124): specify exact cost849 qlinear fold"
 - Consumes: exact current source-build SHA `49ececad3443d478c5f9b3e335f8ced4df82aa25648f89e85bacd985b8737632`.
 - Produces: `build(task=None) -> onnx.ModelProto` and serialized `rank4_qlinear_hash.onnx`.
 
-- [ ] **Step 1: Implement initializer rewrites**
+- [x] **Step 1: Implement initializer rewrites**
 
 Build the current semantic source graph, assert its SHA, and rewrite only:
 
@@ -140,7 +140,7 @@ hash_code = np.asarray([1, 2, 4, 8, 16, 32, 0, 0, 0, 0], dtype=np.uint8).reshape
 
 Preserve every other initializer byte/value and append `hash_code` in a deterministic position.
 
-- [ ] **Step 2: Implement p3 hash and rank-4 row-bank node rewrites**
+- [x] **Step 2: Implement p3 hash and rank-4 row-bank node rewrites**
 
 Replace the cellwise equality chain with two `QLinearMatMul` nodes reusing `ng_scale` and `ng_y_zero_point`, then scalar-element `Equal`. Keep `is_p3` rank 4, change the `source_offset` Split axis to 4, remove the three row Reshapes, concatenate the bank on axis 3, slice on axis 3, and concatenate bottom rows on axis 2:
 
@@ -155,7 +155,7 @@ Concat(bottom_row_0, ..., bottom_row_4, axis=2) -> bottom_fg
 
 Provide explicit uint8 value information for runtime Slice outputs and bottom tensors before strict inference.
 
-- [ ] **Step 3: Run GREEN focused verification**
+- [x] **Step 3: Run GREEN focused verification**
 
 Run:
 
@@ -165,7 +165,7 @@ uv run pytest -q candidates/task124/test_rank4_qlinear_hash.py
 
 Expected: all tests PASS; scorer reports exactly fail0, memory779, params70, cost849; raw bundled A/B and off-grid assertions pass.
 
-- [ ] **Step 4: Run the previous task124 regression suite**
+- [x] **Step 4: Run the previous task124 regression suite**
 
 Run all task124 tests:
 
@@ -175,7 +175,7 @@ uv run pytest -q candidates/task124/test_*.py
 
 Expected: all tests PASS. If historical builders intentionally pin previous stages, their old exact cost assertions must remain unchanged.
 
-- [ ] **Step 5: Commit builder and GREEN regression**
+- [x] **Step 5: Commit builder and GREEN regression**
 
 Force-add only the builder and updated test, exclude generated ONNX, inspect cached diff, then commit:
 
@@ -193,11 +193,11 @@ git commit -m "feat(task124): add exact cost849 qlinear fold"
 - Consumes: passing cost849 candidate.
 - Produces: officially adopted task124 deployment or leaves cost939 deployment unchanged.
 
-- [ ] **Step 1: Serialize and independently score the candidate**
+- [x] **Step 1: Serialize and independently score the candidate**
 
 Run the builder in a fresh process, checker/strict inference, `uv run ng score 124` for the incumbent, and isolated candidate evaluation. Confirm deployed SHA is still the expected cost939 baseline before gate.
 
-- [ ] **Step 2: Run the mandatory gate**
+- [x] **Step 2: Run the mandatory gate**
 
 ```bash
 uv run ng gate candidates/task124/rank4_qlinear_hash.onnx --task 124
@@ -205,7 +205,7 @@ uv run ng gate candidates/task124/rank4_qlinear_hash.onnx --task 124
 
 Expected: PASS, bundled 267/267, fail0, cost849 < 939. On any rejection, stop without adopt and record the dated four-field negative ledger entry.
 
-- [ ] **Step 3: Adopt only after PASS**
+- [x] **Step 3: Adopt only after PASS**
 
 ```bash
 uv run ng adopt candidates/task124/rank4_qlinear_hash.onnx --task 124 --note "rank-4 row bank plus exact uint8 QLinear row hash"
@@ -233,17 +233,17 @@ Expected: re-gate PASS and deployed cost849. Do not run pack or submit.
 - Consumes: adopted candidate SHA and measured cost.
 - Produces: byte-identical semantic source build and synchronized task124 knowledge records.
 
-- [ ] **Step 1: Update semantic source to construct the adopted graph directly**
+- [x] **Step 1: Update semantic source to construct the adopted graph directly**
 
 Apply the same initializer/node/value-info changes from Task 2 to `src/custom/task124.py`. Keep the direct QLinearConv output and explanatory zero-point docstring. Build in a fresh process and require source-built SHA equals deployed SHA.
 
-- [ ] **Step 2: Make the candidate builder a post-adoption fixed point**
+- [x] **Step 2: Make the candidate builder a post-adoption fixed point**
 
 Fill its adopted SHA constant. When the live deployed/source graph already has that SHA, return the source build unchanged and assert SHA equality; otherwise transform only the exact cost939 baseline.
 
 Update every historical task124 stage builder's `FINAL_SHA256` to the new adopted SHA so it continues to load its own pinned ONNX stage after deployment advances. Add the same pinned-artifact fallback to `build_shared_initializers.py`, whose current cost939 endpoint had not previously needed one. This keeps all earlier exact-cost regressions runnable without rebuilding old stages from the new incumbent.
 
-- [ ] **Step 3: Update discovery and state**
+- [x] **Step 3: Update discovery and state**
 
 Record cost `939 -> 849`, exact graph mechanism, generator-domain proof, gate/adopt evidence, fresh/off-grid evidence, final SHA, next `+0.1` boundary `cost<=768`, and no pack/submit. Extend the reusable insight with rank-preserving dynamic row banks and collision-free bounded QLinear fingerprints. Update the existing live lever entry with a new four-field ledger record rather than overwriting history. Replace the task124 section in `STATE.md`; do not append a second stale section.
 
@@ -257,23 +257,23 @@ Record cost `939 -> 849`, exact graph mechanism, generator-domain proof, gate/ad
 - Consumes: adopted/source-synchronized cost849 endpoint.
 - Produces: final evidence-backed task124 handoff and task-scoped commit.
 
-- [ ] **Step 1: Run fixed-point and focused regressions**
+- [x] **Step 1: Run fixed-point and focused regressions**
 
 In fresh processes, require candidate/deployed/source SHA equality, checker/strict inference, `uv run ng score 124` fail0/cost849, and all `candidates/task124/test_*.py` passing.
 
-- [ ] **Step 2: Run fresh2000 A/B and off-grid diagnostics**
+- [x] **Step 2: Run fresh2000 A/B and off-grid diagnostics**
 
 Generate 2,000 valid task124 instances. Compare candidate and pre-adoption incumbent raw outputs, targets, and off-grid logits. Require candidate fail0, incumbent fail0, divergence0, and off-grid positives0.
 
-- [ ] **Step 3: Run scoped post-insight scan**
+- [x] **Step 3: Run scoped post-insight scan**
 
 Scan all 400 deployed graphs read-only for the specific signatures: rank-flattened short row banks feeding fixed-length dynamic Slices, and cellwise `Equal -> Cast -> ReduceMin` over bounded uint8 rows. Record exact/broad hits and errors. Do not modify another task.
 
-- [ ] **Step 4: Run final verification-before-completion commands**
+- [x] **Step 4: Run final verification-before-completion commands**
 
 Re-read the design/plan requirements, run `git diff --check` on task124 paths, inspect exact diffs, confirm no pack/submit artifact was created by this session, and rerun the full focused verification command immediately before claiming success.
 
-- [ ] **Step 5: Commit exact task124 scope**
+- [x] **Step 5: Commit exact task124 scope**
 
 Stage only the semantic source, builder/test/design/plan/discovery, task ledger, insight, lever, and replaced STATE files. Inspect `git diff --cached --name-only` for unrelated paths, then commit with the project trailer:
 
