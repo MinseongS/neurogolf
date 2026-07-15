@@ -18,6 +18,7 @@ from neurogolf.scoring import calculate_params
 ROOT = pathlib.Path(__file__).resolve().parents[4]
 BUILDER = ROOT / "candidates/task285/build_bounded_free_output_renderer.py"
 MODEL = ROOT / "candidates/task285/bounded_free_output_renderer.onnx"
+RUNTIME_PROBE = ROOT / "candidates/task285/scratch/runtime_bounded_free_output.py"
 
 
 def load_builder():
@@ -93,6 +94,10 @@ def test_background_stamp_delta_replaces_only_the_destination_colour():
         assert np.array_equal(actual > 0, classes == colour)
 
 
+def test_clean_process_runtime_probe_exists():
+    assert RUNTIME_PROBE.exists(), "clean-process runtime probe is not implemented"
+
+
 @pytest.mark.skipif(not MODEL.exists(), reason="candidate has not been built yet")
 def test_bounded_model_has_bounded_two_stage_contractions():
     inferred = onnx.shape_inference.infer_shapes(onnx.load(MODEL), strict_mode=True)
@@ -120,3 +125,12 @@ def test_all_topk_inputs_are_float16_or_float32():
     for node in inferred.graph.node:
         if node.op_type == "TopK":
             assert types[node.input[0]] in {TensorProto.FLOAT16, TensorProto.FLOAT}
+
+
+@pytest.mark.skipif(not MODEL.exists(), reason="candidate has not been built yet")
+def test_all_onehot_indices_are_ort_supported_int64():
+    inferred = onnx.shape_inference.infer_shapes(onnx.load(MODEL), strict_mode=True)
+    types = value_types(inferred)
+    for node in inferred.graph.node:
+        if node.op_type == "OneHot":
+            assert types[node.input[0]] == TensorProto.INT64

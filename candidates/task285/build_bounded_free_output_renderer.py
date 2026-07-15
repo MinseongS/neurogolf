@@ -229,16 +229,19 @@ def build_model() -> onnx.ModelProto:
             helper.make_node("Mod", ["pivot_flat", "i30"], ["pivot_col"]),
             helper.make_node("Gather", ["e30", "pivot_row"], ["pivot_row_feature"]),
             helper.make_node("Gather", ["e30", "pivot_col"], ["pivot_col_feature"]),
+            helper.make_node("Cast", ["f_bit"], ["f_bit_i64"], to=TensorProto.INT64),
+            helper.make_node("Cast", ["e_bit"], ["e_bit_i64"], to=TensorProto.INT64),
             helper.make_node(
-                "OneHot", ["f_bit", "depth2", "onehot_values"], ["orientation_row"]
+                "OneHot", ["f_bit_i64", "depth2", "onehot_values"], ["orientation_row"]
             ),
             helper.make_node(
-                "OneHot", ["e_bit", "depth2", "onehot_values"], ["orientation_col"]
+                "OneHot", ["e_bit_i64", "depth2", "onehot_values"], ["orientation_col"]
             ),
             helper.make_node("Reshape", ["av3", "shape3"], ["valid_bool"]),
             helper.make_node("Cast", ["valid_bool"], ["valid"], to=TensorProto.FLOAT),
+            helper.make_node("Cast", ["acol"], ["acol_i64"], to=TensorProto.INT64),
             helper.make_node(
-                "OneHot", ["acol", "depth10", "onehot_values"], ["root_colour"]
+                "OneHot", ["acol_i64", "depth10", "onehot_values"], ["root_colour"]
             ),
             helper.make_node("Unsqueeze", ["pivot_flat", "axs1"], ["pivot_column"]),
             helper.make_node(
