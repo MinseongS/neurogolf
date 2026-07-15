@@ -89,3 +89,8 @@ Gate: evaluate bundled fail=0 + **bit-identical outputs** over all train/test/ar
 - cost: 778 -> 685 (points 18.4706)
 - source: candidates/public_dumps/20260713_7281/extracted/task153.onnx
 - note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded
+
+## ADOPTED 20260715T105207Z
+- cost: 685 -> 618 (points 18.5735)
+- source: candidates/task153/dtype_lowered.onnx
+- note: dtype_lowering + parameter_collapse: u8 pool presence/3x3 mask/color path; dedupe scalar inits; cost 685->618
