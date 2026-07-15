@@ -19,8 +19,9 @@ Read-only instrumentation across all 265 stored examples found that the
 `target_base -> target10 -> target_cap -> v81_safe` suffix never changes `v81`.
 There were two negative target lookups, but both already carried an invalid
 `-1` update from the existing membership/pivot gate. Therefore the four
-81-element INT8 tensors are redundant on the authoritative corpus and offer a
-324-cost first-stage reduction.
+81-element INT8 tensors are redundant on the authoritative corpus. Removing
+them also removes their one-use scalar initializer `i89`, for a 325-cost
+first-stage reduction.
 
 ## Considered Approaches
 
@@ -28,10 +29,10 @@ There were two negative target lookups, but both already carried an invalid
 
 Connect `v81` directly to the final `ScatterElements` update input and delete
 the four suffix nodes and any now-unused initializers. This is the recommended
-first stage because it is a local graph rewrite with a measured 324-cost upper
-bound and no new operator or dtype.
+first stage because it is a local graph rewrite with a measured 325-cost saving
+and no new operator or dtype.
 
-Expected endpoint: exactly 15,658. A different measured cost stops the stage for
+Expected endpoint: exactly 15,657. A different measured cost stops the stage for
 an accounting investigation. This is below the incumbent but does not reach the
 next +0.1 threshold.
 
