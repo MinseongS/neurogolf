@@ -251,3 +251,18 @@ a live mechanism if the pivot score can be computed by a bounded-memory staged g
 - cost: 18512 -> 17798 (points 15.2132)
 - source: candidates/task285/conv_bias_sentinel.onnx
 - note: collapse + CORRECTNESS FIX: net spent 1140B (sl/slb/slT/w1/w2 + a full 900B fin plane) reconstructing an off-grid mask it gets for free — off-grid cells are the all-zero one-hot, so the entry Conv returns exactly its bias there: weights=colour+1, bias=-1 leaves in-grid codes 0..9 unchanged while off-grid becomes -1, a code no real cell can take. Carrying the grid as int8 lets the sentinel survive to the free output where Equal(out2d,[0..9]) is all-false off-grid with no mask. Forced repairs: no Where(int8) kernel in ORT so invalid-slot fill became Min(vals, cond*10-1); scatter gated with Min(v81, g[tidx]*10+9) in the sparse 81-elem domain (+324B) not on a 900B plane. cost 18512->17798, 107 nodes. TopK feeds all fp16 (int8/uint8 TopK is Kaggle-ERROR-falsified twice on this task). FIXES TWO LATENT INCUMBENT BUGS: in-grid test was input[ch0,row0,col c] ('cell is colour 0'), false for a COLOURED cell in row 0 -> blanked that row/column; and it assumed H==W. 0/265 bundled inputs have a coloured cell in row0/col0 so it never fires locally, but a hidden seed placing a sprite in row 0 scores the incumbent 0. Differential 11887 fresh: 0 disagreements wherever the incumbent is sound; every disagreement elsewhere is the candidate CORRECT and incumbent WRONG (strict refinement). Harness proven non-vacuous (fires 1049 diffs in the unsound partition). Also fixes 3 runtime errors/4000.
+
+## ADOPTED 20260715T115626Z
+- cost: 17798 -> 17775 (points 15.2145)
+- source: candidates/task285/runtime_candidate.onnx
+- note: SHA-pinned sentinel renderer recovery; fuse tA+tB+ga Sum and drop unused mask constants
+
+## ADOPTED 20260715T132913Z
+- cost: 17775 -> 16038 (points 15.3173)
+- source: candidates/task285/sparse_renderer_candidate.onnx
+- note: quadrant-aware direct 5x5 sparse renderer: bounded int32 local Gather, compact affine destination Einsum, sparse pivot direction decode
+
+## ADOPTED 20260715T142055Z
+- cost: 16038 -> 15982 (points 15.3208)
+- source: candidates/task285/connectivity_fold_candidate.onnx
+- note: exact connectivity seed fold: replace root-mask MaxPool with Slice/Expand/Pad and fold 2-D reshapes to Transpose/Flatten
