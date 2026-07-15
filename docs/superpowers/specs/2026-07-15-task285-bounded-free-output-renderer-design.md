@@ -30,11 +30,13 @@ whose graph output is the task's BOOL NCHW tensor.
 
 The renderer reads the FREE input directly for the identity branch. The stamp branch
 uses at most 3 x 9 active shape slots and four reflected destinations per creature.
-Row and column spatial relations are contracted separately or factored into small
-static bases. No serialized Einsum may have more than ten operands, and the builder
-must reject any contraction whose prefix live-index estimate exceeds the configured
-bound. Every counted intermediate must be at most 3,600 bytes; the total new suffix
-must be at most 2,129 to retain the +0.1 path.
+Row and column spatial relations are factored into small static bases. Static cost
+accounting showed that a ten-operand ceiling forces counted row/column intermediates
+that miss the 14,511 target. The bounded lowering may therefore use one source-shape
+Einsum with at most 12 operands and one terminal Einsum with at most 20 operands,
+provided its contraction-path estimate never exceeds 1,000,000 elements and its clean
+first inference remains below one second. Every counted intermediate must be at most
+3,600 bytes; the total new suffix must retain the +0.1 path.
 
 This is selected because it attacks the only suffix large enough to pay the target
 saving while reusing the already-fast and exact sparse discovery front end.
@@ -94,7 +96,9 @@ to emit a candidate when any of these holds:
 
 - predicted total cost exceeds 14,511 for the primary candidate;
 - a new counted intermediate exceeds 3,600 bytes unexpectedly;
-- an Einsum has more than ten operands or an unbounded prefix product;
+- the source-shape Einsum has more than 12 operands, the terminal Einsum has more than
+  20 operands, or the estimated largest contraction intermediate exceeds 1,000,000
+  elements;
 - shape inference is incomplete or an integer TopK input appears.
 
 An emitted candidate is abandoned without retrying the same graph when a clean-process
