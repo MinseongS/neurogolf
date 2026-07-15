@@ -111,3 +111,13 @@ Backup before this tail: `submission/overfit_nets/.dynamic_cse_tail_backup_20260
 - cost: 1891 -> 1855 (points 17.4744)
 - source: candidates/task035/joint_axis_basis.onnx
 - note: shared exact six-row basis across four axis projection Einsums
+
+## ADOPTED 20260715T113743Z
+- cost: 1855 -> 1695 (points 17.5646)
+- source: candidates/task035/topk10_fp16.onnx
+- note: oracle_first graph_surgery: fp16 TopK packs bundled-active perimeter slots 14->10 and ScatterND writes 28->20; K9 control fails count10 cases; Kaggle-invalid integer TopK avoided
+
+## ADOPTED 20260715T121518Z
+- cost: 1695 -> 1659 (points 17.5860)
+- source: candidates/task035/joint_axis_topk10.onnx
+- note: parameter_collapse: exact shared six-row axis basis combined with fp16 TopK10 perimeter packing; bundled exact and fresh matches current K10 behavior

@@ -72,3 +72,8 @@ NOT a false positive).
 - cost: 2075 -> 1846 (points 17.4792)
 - source: candidates/task046/poly_convinteger.onnx
 - note: output_folding: preserve singleton axis and replace counted 10-way onehot+Pad with u8 polynomial features and padded ConvInteger
+
+## ADOPTED 20260715T120056Z
+- cost: 1846 -> 1752 (points 17.5315)
+- source: candidates/task046/qlinear_tail.onnx
+- note: output_folding: move polynomial constant plane into padding-safe QLinearConv bias with x_zero_point=1; remove third feature/ones, bundled exact and fresh3000 A/B identical

@@ -56,3 +56,8 @@ Dominant intermediate = the 3600B fp32 channel slice `ch [1,9,10,10]` — the si
 - cost: 1000 -> 460 (points 18.8688)
 - source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task041.onnx
 - note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
+
+## ADOPTED 20260715T121320Z
+- cost: 460 -> 443 (points 18.9064)
+- source: candidates/task041/shared_channel.onnx
+- note: parameter_collapse: replace P/Q channel factors with circle embedding E plus diagonal metric and source scales; bundled exact and fresh500 A/B identical

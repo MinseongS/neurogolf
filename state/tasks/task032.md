@@ -116,3 +116,8 @@ public net is already at the 2-plane floor (~16.76 here), there's no +0.3 to tak
 - cost: 910 -> 588 (points 18.6233)
 - source: candidates/task032/rank3_einsum.onnx
 - note: restore LB-confirmed safety-margin rank-3 vertical Conv factorization; deployment regression 910->588
+
+## ADOPTED 20260715T115258Z
+- cost: 588 -> 518 (points 18.7500)
+- source: candidates/task032/cp10_sign.onnx
+- note: parameter_collapse: CP-rank10 factorization of rank3 channel basis with sign-oracle margin tuning; 29,520 bundled constraints zero-error and fresh1000 A/B identical

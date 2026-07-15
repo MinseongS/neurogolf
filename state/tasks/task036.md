@@ -116,3 +116,13 @@ This is a direct 8000-mode ONNX overlay (constant dataset => permanent). Source 
 - cost: 1051 -> 940 (points 18.1541)
 - source: candidates/task036/poly_convinteger.onnx
 - note: output_folding: replace counted 5x5 onehot+Pad epilogue with three u8 features and padded ConvInteger writing FREE output
+
+## ADOPTED 20260715T113857Z
+- cost: 940 -> 718 (points 18.4235)
+- source: candidates/task036/scalar_power_base8.onnx
+- note: mathematical_rewrite: replace counted row/column score planes and ArgMax tails with FREE-input base-8 power-sum scalars plus Log coordinate decode; bundled exact and fresh 10k A/B identical
+
+## ADOPTED 20260715T121548Z
+- cost: 718 -> 670 (points 18.4927)
+- source: candidates/task036/scalar_qlinear_tail.onnx
+- note: output_folding: preserve scalar power coordinate decode and replace three-feature polynomial ConvInteger with shifted two-feature padding-safe QLinearConv bias; fresh1600 A/B identical
