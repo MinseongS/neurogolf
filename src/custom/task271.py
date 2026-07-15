@@ -11,8 +11,9 @@ from ._exact import arr_b64, model, node, tensor
 def build(task):
     inits = [
         tensor('score_payload_kernel', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAzLCAzKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIDFAACAxQAAgMUAAIDFAACAxQAAgMUAAIDFAACAxQAAgMUAQABEAIAARAAAAUQAAAJEAAAERAAACEQAABBEAAAgRAAAQEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
-        tensor('payload_moduli', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPHUyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDMsIDMpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAQACAAQACAAQACAAAABAAI=')),
-        tensor('payload_thresholds', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPHUyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDMsIDMpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAIABAAIABAAIABAAIAAAAE=')),
+        tensor('payload_masks', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPHUyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDMsIDMpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAIABAAIABAAIABAAIAAAAE=')),
+        tensor('two_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoC')),
+        tensor('zero_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
         tensor('one_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoB')),
         tensor('render_weight_signed', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAxLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAQAAAAAAAP8A')),
     ]
@@ -20,19 +21,17 @@ def build(task):
         node('Conv', ['input', 'score_payload_kernel'], ['scores'], attrs=[('kernel_shape', [3, 3]), ('pads', [0, 0, -21, -21])]),
         node('MaxPool', ['scores'], ['max_score'], attrs=[('kernel_shape', [7, 7])]),
         node('Cast', ['max_score'], ['encoded_u16'], attrs=[('to', 4)]),
-        node('Mod', ['encoded_u16', 'payload_moduli'], ['remainders_u16']),
-        node('GreaterOrEqual', ['remainders_u16', 'payload_thresholds'], ['payload_bits']),
-        node('Cast', ['payload_bits'], ['blue_patch'], attrs=[('to', 2)]),
-        node('BitShift', ['blue_patch', 'one_u8'], ['blue2'], attrs=[('direction', 'LEFT')]),
+        node('BitwiseAnd', ['encoded_u16', 'payload_masks'], ['masked_u16']),
+        node('Cast', ['masked_u16'], ['payload_bits'], attrs=[('to', 9)]),
+        node('Where', ['payload_bits', 'two_u8', 'zero_u8'], ['blue2']),
         node('ConvInteger', ['blue2', 'render_weight_signed', 'one_u8'], ['output'], attrs=[('kernel_shape', [1, 1]), ('pads', [0, 0, 27, 27])]),
     ]
     value_infos = [
         helper.make_tensor_value_info('scores', 1, [1, 1, 7, 7]),
         helper.make_tensor_value_info('max_score', 1, [1, 1, 1, 1]),
         helper.make_tensor_value_info('encoded_u16', 4, [1, 1, 1, 1]),
-        helper.make_tensor_value_info('remainders_u16', 4, [1, 1, 3, 3]),
+        helper.make_tensor_value_info('masked_u16', 4, [1, 1, 3, 3]),
         helper.make_tensor_value_info('payload_bits', 9, [1, 1, 3, 3]),
-        helper.make_tensor_value_info('blue_patch', 2, [1, 1, 3, 3]),
         helper.make_tensor_value_info('blue2', 2, [1, 1, 3, 3]),
     ]
-    return model('task271_encoded_score_payload', nodes, inits, output_dtype=6, opset=12, value_infos=value_infos, ir_version=10)
+    return model('task271_bitwise_where_decoder', nodes, inits, output_dtype=6, opset=18, value_infos=value_infos, ir_version=10)
