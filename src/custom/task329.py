@@ -1,10 +1,10 @@
-"""Task 329 — exact shared-parabola route at cost 190.
+"""Task 329 — exact shared colour/spatial core route at cost 105.
 
-The output score is ``E(k,c) + D(s,w) * P(c)`` with
-``E(k,c)=0.25-(k-c)^2`` and ``D(s,w)=(w-(s+1))^2``.  Input and output
-colours share the same feature ``[1,x,x^2]``; the two colour forms therefore
-need only a 2x3x3 bilinear core.  The spatial terms share the exact rank-three
-feature ``[1,w,w^2]``.
+The rational feature ``F(x)=[32*(x+0.5), 0.5-x]`` and swap matrix ``J``
+satisfy ``F(x)J=F(-x)``.  One shared ``2 x 2 x 2`` core therefore supplies
+both reflected colour factors and both dynamic spatial roots.  The same
+``J`` exchanges the preserve/background spatial branches inside the FREE
+output Einsum, leaving 93 parameters and 12 bytes of intermediates.
 """
 
 from __future__ import annotations
@@ -16,37 +16,52 @@ from ._exact import model, node, tensor
 
 
 def _arrays() -> dict[str, np.ndarray]:
-    epsilon = np.float32(0.25)
-    background_scale = np.float32(400.0)
-
+    counts = np.array([9.0, 25.0, 49.0, 81.0], dtype=np.float32)
     colours = np.arange(10, dtype=np.float32)
     colour_features = np.stack(
-        [np.ones(10, dtype=np.float32), colours, colours**2], axis=1
+        [
+            np.float32(32.0) * (colours + np.float32(0.5)),
+            np.float32(0.5) - colours,
+        ],
+        axis=1,
+    ).astype(np.float32)
+    shared_core = np.array(
+        [
+            [
+                [1.0 / 1024.0, -1.0 / 32.0],
+                [3.0 / 32.0, 1.0],
+            ],
+            [[0.0, 1.25], [0.0, 40.0]],
+        ],
+        dtype=np.float32,
     )
-
-    route_a = np.zeros((2, 3, 3), dtype=np.float32)
-    route_a[0, 0, 0] = epsilon
-    route_a[0, 0, 2] = -1.0
-    route_a[0, 1, 1] = 2.0
-    route_a[0, 2, 0] = -1.0
-    route_a[1, 0, 0] = background_scale * epsilon
-    route_a[1, 0, 2] = -background_scale
-
-    route_l = np.zeros((4, 2, 3), dtype=np.float32)
-    for size_state in range(4):
-        middle = np.float32(size_state + 1)
-        route_l[size_state, 0] = [1.0, 0.0, 0.0]
-        route_l[size_state, 1] = [middle**2, -2.0 * middle, 1.0]
-
-    columns = np.arange(30, dtype=np.float32)
-    route_r = np.stack(
-        [np.ones(30, dtype=np.float32), columns, columns**2], axis=0
+    swap = np.array(
+        [[0.0, 1.0 / 32.0], [32.0, 0.0]], dtype=np.float32
     )
+    route_r = np.empty((2, 30), dtype=np.float32)
+    for column in range(30):
+        if 1 <= column <= 4:
+            count = counts[column - 1]
+            z = (
+                np.float32(3.0) * count - np.float32(32.0)
+            ) / (
+                np.float32(-1280.0)
+                * (count - np.float32(32.0))
+            )
+        else:
+            z = np.float32(1.0) / np.float32(5.0)
+        route_r[0, column] = np.float32(1024.0) * z
+        route_r[1, column] = (
+            np.float32(-1.0) / np.float32(20.0)
+            - route_r[0, column] / np.float32(32.0)
+        )
     return {
-        "counts4_f": np.array([9.0, 25.0, 49.0, 81.0], dtype=np.float32),
         "colour_features": colour_features,
-        "route_a": route_a,
-        "route_l": route_l,
+        "shared_core": shared_core,
+        "swap": swap,
+        "one_state": -np.ones(
+            (1, 1, 1, 1), dtype=np.float32
+        ),
         "route_r": route_r,
     }
 
@@ -55,29 +70,54 @@ def build(task):
     arrays = _arrays()
     inits = [tensor(name, array) for name, array in arrays.items()]
     nodes = [
-        node("ReduceSum", ["input"], ["cell_count_f"], attrs=[("keepdims", 0)]),
-        node("Equal", ["cell_count_f", "counts4_f"], ["sel_b"]),
-        node("Cast", ["sel_b"], ["sel_f"], attrs=[("to", 1)]),
+        node(
+            "ReduceSum",
+            ["input"],
+            ["cell_count_keep"],
+            attrs=[("keepdims", 1)],
+        ),
+        node(
+            "Concat",
+            ["cell_count_keep", "one_state"],
+            ["state_vec"],
+            attrs=[("axis", 1)],
+        ),
         node(
             "Einsum",
             [
                 "input",
                 "colour_features",
-                "route_a",
+                "shared_core",
                 "colour_features",
-                "route_l",
+                "colour_features",
+                "swap",
+                "shared_core",
+                "colour_features",
+                "swap",
+                "swap",
+                "shared_core",
+                "state_vec",
                 "route_r",
-                "sel_f",
+                "shared_core",
+                "state_vec",
+                "route_r",
             ],
             ["output"],
-            name="shared_bilinear_colour_rank3_spatial_output",
-            attrs=[("equation", "bkhw,ka,tad,cd,str,rw,s->bchw")],
+            name="shared_colour_spatial_core_output",
+            attrs=[
+                (
+                    "equation",
+                    "bkhw,ka,tad,cd,ke,eg,tgi,cf,fi,tu,upq,bqmn,pw,"
+                    "urs,bsxy,rw->bchw",
+                )
+            ],
         ),
     ]
     value_infos = [
-        helper.make_tensor_value_info("cell_count_f", 1, []),
-        helper.make_tensor_value_info("sel_b", 9, [4]),
-        helper.make_tensor_value_info("sel_f", 1, [4]),
+        helper.make_tensor_value_info(
+            "cell_count_keep", 1, [1, 1, 1, 1]
+        ),
+        helper.make_tensor_value_info("state_vec", 1, [1, 2, 1, 1]),
     ]
     return model(
         "task329_regime",

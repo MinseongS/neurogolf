@@ -59,3 +59,28 @@ Verified generator bound = 9 (static + 5000 fresh + bundled all agree). The flag
 - cost: 270 -> 232 (points 19.5533)
 - source: candidates/task329/rank3_sign_route.onnx
 - note: joint rank-3 sign factor over all 4x30x10x10 logical states; fixed float margins desired>=0.009/wrong<=-0.020; bundled 266/266; fresh 1500/1500 exact; 270->232
+
+## ADOPTED 20260715T132516Z
+- cost: 232 -> 190 (points 19.7530)
+- source: candidates/task329/shared_bilinear_route.onnx
+- note: exact shared parabola F=[1,x,x^2] bilinear colour route plus D=(w-(s+1))^2 rank3 spatial construction; all 12000 logical states desired>=0.25/wrong<=-0.75; bundled266/266; fresh1500/1500 divergence0; 232->190
+
+## ADOPTED 20260715T133747Z
+- cost: 190 -> 152 (points 19.9761)
+- source: candidates/task329/repeated_root_route.onnx
+- note: exact repeated linear spatial root: [1,w] and root=[-middle,1] are each reused twice inside FREE-output Einsum to form D=(w-middle)^2 without [1,w,w^2]; all 12000 logical states desired>=0.25/wrong<=-0.75; bundled266/266; fresh1500/1500 divergence0; 190->152
+
+## ADOPTED 20260715T135001Z
+- cost: 152 -> 134 (points 20.1022)
+- source: candidates/task329/dynamic_count_code_route.onnx
+- note: exact dynamic cell-count width code: columns1..4 carry 9/25/49/81 and state_vec=[cell_count,1] forms roots [1,code-count] twice inside FREE-output Einsum, eliminating Equal/Cast/sel_f/root_l; all 12000 logical states desired>=0.25/wrong<=-0.75; bundled266/266; fresh1500/1500 divergence0; 152->134
+
+## ADOPTED 20260715T140912Z
+- cost: 134 -> 117 (points 20.2378)
+- source: candidates/task329/repeated_colour_root_route.onnx
+- note: exact repeated affine colour roots with shared [1,x] basis plus keepdims dynamic state; all 12000 logical states desired>=0.25/wrong<=-0.75/margin0.25; bundled266/266; fresh1500/1500 divergence0; 134->117
+
+## ADOPTED 20260715T143635Z
+- cost: 117 -> 105 (points 20.3460)
+- source: candidates/task329/shared_colour_spatial_core_route.onnx
+- note: exact shared colour/spatial core and shared swap; all 12000 logical states margin>=0.008; bundled gate and fresh1500 checked; 117->105
