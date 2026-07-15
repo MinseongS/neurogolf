@@ -112,3 +112,8 @@ mem 2792/16.92; full_idx 900B uint8 30x30 label carrier for free Equal->output, 
 - cost: 2093 -> 1786 (points 17.5123)
 - source: candidates/task333/bitwise_hull_output.onnx
 - note: bitwise convex codebook + free QLinearConv output fold
+
+## ADOPTED 20260715T133014Z
+- cost: 1786 -> 1586 (points 17.6310)
+- source: candidates/task333/fused_select_broadcast_hull.onnx
+- note: nested directional select + broadcast bitwise hull feature fold
