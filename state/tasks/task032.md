@@ -111,3 +111,8 @@ public net is already at the 2-plane floor (~16.76 here), there's no +0.3 to tak
 - cost: 910 -> 588 (points 18.6233)
 - source: candidates/task032/rank3_einsum.onnx
 - note: Kaggle-confirmed safety-margin rank-3 Einsum: sub54651555 7420.73 vs clean54651464 7420.29, exact +0.44
+
+## ADOPTED 20260715T104854Z
+- cost: 910 -> 588 (points 18.6233)
+- source: candidates/task032/rank3_einsum.onnx
+- note: restore LB-confirmed safety-margin rank-3 vertical Conv factorization; deployment regression 910->588

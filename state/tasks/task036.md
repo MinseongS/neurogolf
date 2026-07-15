@@ -111,3 +111,8 @@ This is a direct 8000-mode ONNX overlay (constant dataset => permanent). Source 
 - cost: 1589 -> 1051 (points 18.0425)
 - source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task036.onnx
 - note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
+
+## ADOPTED 20260715T110100Z
+- cost: 1051 -> 940 (points 18.1541)
+- source: candidates/task036/poly_convinteger.onnx
+- note: output_folding: replace counted 5x5 onehot+Pad epilogue with three u8 features and padded ConvInteger writing FREE output

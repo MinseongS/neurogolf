@@ -67,3 +67,8 @@ NOT a false positive).
 - cost: 2085 -> 2075 (points 17.3623)
 - source: candidates/task046/kcollapse.onnx
 - note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays
+
+## ADOPTED 20260715T110717Z
+- cost: 2075 -> 1846 (points 17.4792)
+- source: candidates/task046/poly_convinteger.onnx
+- note: output_folding: preserve singleton axis and replace counted 10-way onehot+Pad with u8 polynomial features and padded ConvInteger

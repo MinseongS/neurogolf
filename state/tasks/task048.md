@@ -108,3 +108,8 @@ candidate (−0.356pt buys 1.53%→0) — include in any HEDGE v4 rebuild alongs
 - cost: 803 -> 744 (points 18.3880)
 - source: /Users/minseong/project/neurogolf/candidates/public_dumps/poll_latest/lucifer19_neurogolf-agi-compression-core/submission_extract/task048.onnx
 - note: LB-CONFIRMED sub54654166: task047+G1 score7424.42; task048 delta +0.08
+
+## ADOPTED 20260715T104901Z
+- cost: 744 -> 622 (points 18.5671)
+- source: candidates/task048/negative_pad_slice_elision.onnx
+- note: graph_surgery: crop packed row Conv in-op with negative bottom pad and delete redundant Slice; deployed-output identical
