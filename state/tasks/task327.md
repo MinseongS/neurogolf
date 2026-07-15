@@ -60,3 +60,8 @@ before the colour Conv, then Pad the colour-index plane up — quarters the entr
 - cost: 528 -> 522 (points 18.7423)
 - source: candidates/task327/bitwise_hull_output.onnx
 - note: strip obsolete Pad metadata from bitwise convex free-output renderer
+
+## ADOPTED 20260715T121638Z
+- cost: 522 -> 432 (points 18.9316)
+- source: candidates/task327/negative_pad_crop.onnx
+- note: negative-pad 1x1 Conv folds fixed top-left crop; bundled 265/265; fresh 1500/1500 exact; 522->432

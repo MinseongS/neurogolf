@@ -5,13 +5,11 @@ This owns the live ONNX graph in Python source; it is a control baseline,
 not a semantic optimization.
 """
 from onnx import TensorProto, helper
-from ._exact import arr_b64, model, tensor
+from ._exact import arr_b64, model, node, tensor
 
 
 def build(task):
     inits = [
-        tensor('E', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDMsIDMwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
-        tensor('gb', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAgEAAAPBBAAAUQgAAaEIAAJhCAAC6QgAA6EIAAO5C')),
         tensor('diag_w', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGYyJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDYsIDYpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAPAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAAAADw=')),
         tensor('bitmask27', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAob')),
         tensor('support6', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDYsIDYpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=')),
@@ -20,15 +18,16 @@ def build(task):
         tensor('q_scale', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/')),
         tensor('q_zero_u8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
         tensor('q_zero_i8', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
+        tensor('code_w', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAgEAAAPBBAAAUQgAAaEIAAJhCAAC6QgAA6EIAAO5C')),
     ]
     nodes = [
-        helper.make_node('Einsum', ['input', 'gb', 'E', 'E'], ['cg'], equation='abcd,gb,ec,fd->agef'),
-        helper.make_node('Cast', ['cg'], ['cg16'], to=10),
-        helper.make_node('ConvTranspose', ['cg16', 'diag_w'], ['painted'], pads=[0, 0, 2, 2]),
-        helper.make_node('Cast', ['painted'], ['painted_u8'], to=2),
-        helper.make_node('BitwiseAnd', ['painted_u8', 'bitmask27'], ['painted_bits']),
-        helper.make_node('Concat', ['painted_u8', 'painted_bits', 'support6'], ['hull_features'], axis=1),
-        helper.make_node('QLinearConv', ['hull_features', 'q_scale', 'q_zero_u8', 'hull_w', 'q_scale', 'q_zero_i8', 'q_scale', 'q_zero_u8', 'hull_bias'], ['output'], kernel_shape=[1, 1], pads=[0, 0, 24, 24]),
+        node('Conv', ['input', 'code_w'], ['cg'], name='channel_recode_top_left_3x3', attrs=[('kernel_shape', [1, 1]), ('pads', [0, 0, -27, -27])]),
+        node('Cast', ['cg'], ['cg16'], attrs=[('to', 10)]),
+        node('ConvTranspose', ['cg16', 'diag_w'], ['painted'], attrs=[('pads', [0, 0, 2, 2])]),
+        node('Cast', ['painted'], ['painted_u8'], attrs=[('to', 2)]),
+        node('BitwiseAnd', ['painted_u8', 'bitmask27'], ['painted_bits']),
+        node('Concat', ['painted_u8', 'painted_bits', 'support6'], ['hull_features'], attrs=[('axis', 1)]),
+        node('QLinearConv', ['hull_features', 'q_scale', 'q_zero_u8', 'hull_w', 'q_scale', 'q_zero_i8', 'q_scale', 'q_zero_u8', 'hull_bias'], ['output'], attrs=[('kernel_shape', [1, 1]), ('pads', [0, 0, 24, 24])]),
     ]
     value_infos = [
         helper.make_tensor_value_info('cg', 1, [1, 1, 3, 3]),
@@ -38,4 +37,4 @@ def build(task):
         helper.make_tensor_value_info('painted_bits', 2, [1, 1, 6, 6]),
         helper.make_tensor_value_info('hull_features', 2, [1, 3, 6, 6]),
     ]
-    return model('task327_live_exact', nodes, inits, output_dtype=2, opset=18, value_infos=value_infos)
+    return model('t327', nodes, inits, output_dtype=2, opset=18, value_infos=value_infos, ir_version=8)

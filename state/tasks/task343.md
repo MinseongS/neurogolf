@@ -109,3 +109,8 @@ point at an already-zero padded input column to avoid Pad entirely.
 - cost: 720 -> 684 (points 18.4720)
 - source: candidates/task343/joint_basis_min.onnx
 - note: absorb permutation coefficient into shared free-coordinate basis
+
+## ADOPTED 20260715T121653Z
+- cost: 756 -> 683 (points 18.4735)
+- source: candidates/task343/joint_basis_min.onnx
+- note: shared 30x6 coordinate basis plus singleton-q fold; bundled 266/266; fresh 1500/1500 exact; manifest 684->683, actual artifact 756->683

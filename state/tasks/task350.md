@@ -112,3 +112,8 @@ No transferable mechanism — minor trim.
 - cost: 418 -> 410 (points 18.9838)
 - source: candidates/task350/fast_shared_relations.onnx
 - note: fast shared relation factorization; bundled 267/267; 418->410
+
+## ADOPTED 20260715T130008Z
+- cost: 428 -> 400 (points 19.0085)
+- source: candidates/task350/combined_relation_factor_400.onnx
+- note: compose logged R0sel reduction with exact mode-0 rank-2 R2 factor; bundled 267/267; fresh 1500/1500 exact; manifest 410->400, actual artifact 428->400

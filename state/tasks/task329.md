@@ -44,3 +44,18 @@ Verified generator bound = 9 (static + 5000 fresh + bundled all agree). The flag
 - cost: 468 -> 418 (points 18.9645)
 - source: candidates/task329/factor_route_q.onnx
 - note: exact route_q rank-5 factor; Kaggle isolated 54710636 scored 18.96; local contraction slow
+
+## ADOPTED 20260715T121648Z
+- cost: 468 -> 308 (points 19.2699)
+- source: candidates/task329/convex_route_factor.onnx
+- note: convex 3-feature colour routing plus exact rank-5 spatial factor inside FREE-output Einsum; bundled 266/266; fresh 1500/1500 exact; manifest 418->308, actual artifact 468->308
+
+## ADOPTED 20260715T124651Z
+- cost: 308 -> 270 (points 19.4016)
+- source: candidates/task329/rank4_sign_route.onnx
+- note: joint rank-4 sign factor over all 4x30x10x10 logical states; min margin +0.034/max wrong -0.026; bundled 266/266; fresh 1500/1500 exact; 308->270
+
+## ADOPTED 20260715T125117Z
+- cost: 270 -> 232 (points 19.5533)
+- source: candidates/task329/rank3_sign_route.onnx
+- note: joint rank-3 sign factor over all 4x30x10x10 logical states; fixed float margins desired>=0.009/wrong<=-0.020; bundled 266/266; fresh 1500/1500 exact; 270->232
