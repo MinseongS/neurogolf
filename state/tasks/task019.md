@@ -56,3 +56,8 @@ bool tensor directly into graph `output` without materializing a counted 10-chan
 Falsification history: this is a public-autopsy exact-fingerprint candidate, not a broad "pad
 optimization dry" verdict; public-tail dry states have been repeatedly falsified, so this remains
 dormant only for task019's current tail form.
+
+## ADOPTED 20260715T110320Z
+- cost: 2503 -> 1952 (points 17.4234)
+- source: candidates/task019/dynamic_qconv.onnx
+- note: dynamic QLinearConv output folding: remove final idx/Pad carrier; bundled+fresh exact

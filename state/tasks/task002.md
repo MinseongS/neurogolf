@@ -277,3 +277,8 @@ verdict: HEDGE-READY, NOT ADOPTED. gate: bundled fail=0 (268/268), cost 9675 (me
 reopen: adopt into HEDGE bundle only if hidden-set draw count is established >2/task or private-LB
   fresh-rate evidence appears; if 380-param A bothers, ConvTranspose spread alternative costs MORE
   (+800 mem for -376 params = net worse).
+
+## ADOPTED 20260715T110732Z
+- cost: 5889 -> 5408 (points 16.4044)
+- source: candidates/task002/equal_rank2.onnx
+- note: exact Equal(g,0) mask and rank-2 border factorization; bundled equivalent, cost -481

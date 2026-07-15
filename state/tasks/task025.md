@@ -175,3 +175,8 @@ so this is strictly a private-LB-risk trade, not a free win.
 - cost: 9817 -> 8935 (points 15.9023)
 - source: candidates/task025/hashscatter_flat3.onnx
 - note: hash-scatter variant: flat variable-length edit packing (Eflat 1337 words + base[N+1] offsets, span=base diff, 14-word window + sink mask) vs rectangular KMAX=56; 9817->8935 (+0.094)
+
+## ADOPTED 20260715T111514Z
+- cost: 9817 -> 8663 (points 15.9332)
+- source: candidates/task025/tail_where_sharedaxis.onnx
+- note: orientation-first Where routing shares line and adjacency axes; exact tail carrier collapse
