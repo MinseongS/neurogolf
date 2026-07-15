@@ -5,47 +5,53 @@ This owns the live ONNX graph in Python source; it is a control baseline,
 not a semantic optimization.
 """
 from onnx import TensorProto, helper
-from ._exact import arr_b64, model, tensor
+from ._exact import arr_b64, model, node, tensor
 
 
 def build(task):
     inits = [
-        tensor('s_starts', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAUAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA==')),
-        tensor('s_ends', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAAYAAAAAAAAACgAAAAAAAAAKAAAAAAAAAA==')),
-        tensor('key_w', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAAEAAAEBAAACAQAAAAAAAAMBAAADgQAAAAEEAABBB')),
-        tensor('c_starts', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAA==')),
-        tensor('c_ends', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoKAAAAAAAAAA==')),
-        tensor('c_axes', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoDAAAAAAAAAA==')),
-        tensor('zero_row', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEsIDEwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAA')),
-        tensor('gmask', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDMsIDgpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoEBAQAAAAAAAAAAAQEAAAAAAAAAAAEBAQ=')),
-        tensor('qzero', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
-        tensor('scales', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqrqipA')),
-        tensor('pads_hw', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAUAAAAAAAAAA==')),
-        tensor('axes_hw', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAAMAAAAAAAAA')),
-        tensor('padv', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoK')),
-        tensor('ar', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAQIDBAUGBwgJ')),
+        helper.make_tensor('s_starts', TensorProto.INT64, [4], [0, 5, 2, 0]),
+        helper.make_tensor('s_ends', TensorProto.INT64, [4], [1, 6, 10, 10]),
+        helper.make_tensor(
+            'key_w', TensorProto.FLOAT, [1, 10, 1, 1],
+            [0.0, 1.0, 2.0, 3.0, 4.0, 0.0, 6.0, 7.0, 8.0, 9.0],
+        ),
+        helper.make_tensor('c_starts', TensorProto.INT64, [1], [0]),
+        helper.make_tensor('c_ends', TensorProto.INT64, [1], [10]),
+        helper.make_tensor('c_axes', TensorProto.INT64, [1], [3]),
+        helper.make_tensor('zero_row', TensorProto.UINT8, [1, 1, 1, 10], [0] * 10),
+        helper.make_tensor(
+            'gmask', TensorProto.UINT8, [1, 1, 3, 8],
+            [4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4,
+             4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4],
+        ),
+        helper.make_tensor('qzero', TensorProto.UINT8, [], [0]),
+        helper.make_tensor('scales', TensorProto.FLOAT, [1], [2.6666667461395264]),
+        tensor('poly_ones', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEwLCAxMCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB')),
+        tensor('poly_weights', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEwLCAzLCAxLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA/wEC/wAE//0G//gI//EK/+gM/90O/9AQ/8ES/7A=')),
     ]
     nodes = [
-        helper.make_node('Slice', ['input', 's_starts', 's_ends'], ['Sraw']),
-        helper.make_node('Einsum', ['input', 'key_w'], ['Mfull_f'], equation='ncrs,qcxy->nqys'),
-        helper.make_node('Cast', ['Mfull_f'], ['Mfull'], to=2),
-        helper.make_node('Slice', ['Mfull', 'c_starts', 'c_ends', 'c_axes'], ['M']),
-        helper.make_node('Cast', ['Sraw'], ['S8'], to=2),
-        helper.make_node('QLinearMatMul', ['gmask', 'scales', 'qzero', 'S8', 'scales', 'qzero', 'scales', 'qzero'], ['Uraw']),
-        helper.make_node('Min', ['M', 'Uraw'], ['x0']),
-        helper.make_node('MaxPool', ['x0'], ['mp0'], kernel_shape=[1, 3], pads=[0, 1, 0, 1], strides=[1, 1]),
-        helper.make_node('Min', ['mp0', 'Uraw'], ['x1']),
-        helper.make_node('MaxPool', ['x1'], ['mp1'], kernel_shape=[1, 3], pads=[0, 1, 0, 1], strides=[1, 1]),
-        helper.make_node('Min', ['mp1', 'Uraw'], ['x2']),
-        helper.make_node('MaxPool', ['x2'], ['mp2'], kernel_shape=[1, 3], pads=[0, 1, 0, 1], strides=[1, 1]),
-        helper.make_node('Min', ['mp2', 'Uraw'], ['x3']),
-        helper.make_node('MaxPool', ['x3'], ['Fb'], kernel_shape=[1, 3], pads=[0, 1, 0, 1], strides=[1, 1]),
-        helper.make_node('Resize', ['Fb', '', 'scales'], ['Fb8'], axes=[2], coordinate_transformation_mode='half_pixel', mode='nearest', nearest_mode='round_prefer_floor'),
-        helper.make_node('Mul', ['S8', 'Fb8'], ['Gb']),
-        helper.make_node('Concat', ['M', 'zero_row', 'Gb'], ['G'], axis=2),
-        helper.make_node('Pad', ['G', 'pads_hw', 'padv', 'axes_hw'], ['Gp'], mode='constant'),
-        helper.make_node('Equal', ['Gp', 'ar'], ['output']),
+        node('Slice', ['input', 's_starts', 's_ends'], ['Sraw']),
+        node('Einsum', ['input', 'key_w'], ['Mfull_f'], attrs=[('equation', 'ncrs,qcxy->nqys')]),
+        node('Cast', ['Mfull_f'], ['Mfull'], attrs=[('to', 2)]),
+        node('Slice', ['Mfull', 'c_starts', 'c_ends', 'c_axes'], ['M']),
+        node('Cast', ['Sraw'], ['S8'], attrs=[('to', 2)]),
+        node('QLinearMatMul', ['gmask', 'scales', 'qzero', 'S8', 'scales', 'qzero', 'scales', 'qzero'], ['Uraw']),
+        node('Min', ['M', 'Uraw'], ['x0']),
+        node('MaxPool', ['x0'], ['mp0'], attrs=[('kernel_shape', [1, 3]), ('pads', [0, 1, 0, 1]), ('strides', [1, 1])]),
+        node('Min', ['mp0', 'Uraw'], ['x1']),
+        node('MaxPool', ['x1'], ['mp1'], attrs=[('kernel_shape', [1, 3]), ('pads', [0, 1, 0, 1]), ('strides', [1, 1])]),
+        node('Min', ['mp1', 'Uraw'], ['x2']),
+        node('MaxPool', ['x2'], ['mp2'], attrs=[('kernel_shape', [1, 3]), ('pads', [0, 1, 0, 1]), ('strides', [1, 1])]),
+        node('Min', ['mp2', 'Uraw'], ['x3']),
+        node('MaxPool', ['x3'], ['Fb'], attrs=[('kernel_shape', [1, 3]), ('pads', [0, 1, 0, 1]), ('strides', [1, 1])]),
+        node('Resize', ['Fb', '', 'scales'], ['Fb8'], attrs=[('axes', [2]), ('coordinate_transformation_mode', 'half_pixel'), ('mode', 'nearest'), ('nearest_mode', 'round_prefer_floor')]),
+        node('Mul', ['S8', 'Fb8'], ['Gb']),
+        node('Concat', ['M', 'zero_row', 'Gb'], ['G'], attrs=[('axis', 2)]),
+        node('Mul', ['G', 'G'], ['G_sq'], name='poly_square'),
+        node('Concat', ['G', 'G_sq', 'poly_ones'], ['poly_features'], name='poly_features', attrs=[('axis', 1)]),
+        node('ConvInteger', ['poly_features', 'poly_weights'], ['output'], name='poly_output', attrs=[('pads', [0, 0, 20, 20])]),
     ]
     value_infos = [
     ]
-    return model('task354_live_exact', nodes, inits, output_dtype=9, opset=18, value_infos=value_infos)
+    return model('min354', nodes, inits, output_dtype=6, opset=18, value_infos=value_infos, ir_version=9)

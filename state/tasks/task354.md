@@ -179,3 +179,8 @@ Mechanism: Einsum + value_info Slice. Gate fresh_verify 1500: inc=0/cand=0 (CLEA
 - cost: 2218 -> 2064 (points 17.3676)
 - source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task354.onnx
 - note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
+
+## ADOPTED 20260715T132252Z
+- cost: 2064 -> 1677 (points 17.5752)
+- source: candidates/task354/poly_convinteger.onnx
+- note: polynomial ConvInteger tail: [G,G^2,ones] with weights [2k,-1,1-k^2] writes padded FREE output
