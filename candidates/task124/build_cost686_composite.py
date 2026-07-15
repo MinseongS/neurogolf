@@ -17,7 +17,13 @@ if str(ROOT) not in sys.path:
 
 BASELINE_SHA256 = "4e4bafbb3d65046a1ec08a211de6c9951705b613777a2a3ece9f4c73f6041b25"
 STAGES = {"conservative", "routing_i32", "routing_mod", "primary", "primary_i32"}
-OUTPUT = Path(__file__).with_name("cost686_primary.onnx")
+OUTPUTS = {
+    "conservative": Path(__file__).with_name("cost728_conservative.onnx"),
+    "routing_i32": Path(__file__).with_name("cost712_routing_i32.onnx"),
+    "routing_mod": Path(__file__).with_name("cost707_routing_mod.onnx"),
+    "primary": Path(__file__).with_name("cost692_primary.onnx"),
+    "primary_i32": Path(__file__).with_name("cost697_primary_i32.onnx"),
+}
 
 
 def _tensor(name: str, value: np.ndarray) -> onnx.TensorProto:
@@ -483,11 +489,102 @@ def _build_mod_route(model: onnx.ModelProto) -> onnx.ModelProto:
     return model
 
 
+def _build_qlinear_hash(model: onnx.ModelProto) -> onnx.ModelProto:
+    graph = model.graph
+    initializers = [
+        onnx.TensorProto.FromString(source.SerializeToString())
+        for source in graph.initializer
+        if source.name not in {"p3b_idx", "hash_code"}
+    ]
+    initializers.append(
+        _tensor(
+            "hash6",
+            np.asarray([1, 2, 4, 8, 16, 32], dtype=np.uint8).reshape(
+                1, 1, 1, 6
+            ),
+        )
+    )
+    del graph.initializer[:]
+    graph.initializer.extend(initializers)
+
+    nodes: list[onnx.NodeProto] = []
+    for source in graph.node:
+        outputs = set(source.output)
+        if "p3_rows_b" in outputs:
+            continue
+        if "p3_hash_a" in outputs:
+            nodes.extend(
+                [
+                    helper.make_node(
+                        "QLinearConv",
+                        [
+                            "p3_rows_a",
+                            "ng_scale",
+                            "ng_y_zero_point",
+                            "hash6",
+                            "ng_scale",
+                            "ng_y_zero_point",
+                            "ng_scale",
+                            "ng_y_zero_point",
+                        ],
+                        ["p3_hash_a"],
+                        pads=[0, 0, 0, -4],
+                    ),
+                    helper.make_node(
+                        "QLinearConv",
+                        [
+                            "centered5",
+                            "ng_scale",
+                            "ng_y_zero_point",
+                            "hash6",
+                            "ng_scale",
+                            "ng_y_zero_point",
+                            "ng_scale",
+                            "ng_y_zero_point",
+                        ],
+                        ["p3_hash_b"],
+                        pads=[-4, 0, 0, -4],
+                    ),
+                    helper.make_node(
+                        "Equal",
+                        ["p3_hash_a", "p3_hash_b"],
+                        ["is_p3"],
+                    ),
+                ]
+            )
+            continue
+        if outputs.intersection({"p3_hash_b", "is_p3"}):
+            continue
+        nodes.append(onnx.NodeProto.FromString(source.SerializeToString()))
+
+    del graph.node[:]
+    graph.node.extend(nodes)
+    del graph.value_info[:]
+    for index in range(5):
+        graph.value_info.append(
+            helper.make_tensor_value_info(
+                f"bottom_row_{index}", TensorProto.UINT8, [1, 1, 1, 10]
+            )
+        )
+    graph.value_info.extend(
+        [
+            helper.make_tensor_value_info(
+                "fg_pad4d", TensorProto.UINT8, [1, 1, 1, 46]
+            ),
+            helper.make_tensor_value_info(
+                "p3_hash_a", TensorProto.UINT8, [1, 1, 1, 1]
+            ),
+            helper.make_tensor_value_info(
+                "p3_hash_b", TensorProto.UINT8, [1, 1, 1, 1]
+            ),
+        ]
+    )
+    return model
+
+
 def build(task=None, *, stage: str = "primary") -> onnx.ModelProto:
     if stage not in STAGES:
         raise ValueError(f"unknown task124 stage: {stage}")
-    if stage in {"primary", "primary_i32"}:
-        raise NotImplementedError(f"task124 stage is not implemented yet: {stage}")
 
     from src.custom.task124 import build as build_source
 
@@ -495,17 +592,20 @@ def build(task=None, *, stage: str = "primary") -> onnx.ModelProto:
     source_sha256 = hashlib.sha256(model.SerializeToString()).hexdigest()
     assert source_sha256 == BASELINE_SHA256, "task124 source baseline changed"
     model = _build_conservative(model)
-    if stage == "routing_i32":
+    if stage in {"routing_i32", "primary_i32"}:
         model = _build_scalar_route(
             model, use_uint8=False
         )
-    elif stage == "routing_mod":
+    elif stage in {"routing_mod", "primary"}:
         model = _build_mod_route(model)
+    if stage in {"primary", "primary_i32"}:
+        model = _build_qlinear_hash(model)
     model = onnx.shape_inference.infer_shapes(model, strict_mode=True)
     onnx.checker.check_model(model, full_check=True)
     return model
 
 
 if __name__ == "__main__":
-    onnx.save(build(), OUTPUT)
-    print(f"saved {OUTPUT}")
+    for stage, output in OUTPUTS.items():
+        onnx.save(build(stage=stage), output)
+        print(f"saved {output}")

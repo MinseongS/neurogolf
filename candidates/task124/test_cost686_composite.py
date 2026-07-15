@@ -120,7 +120,11 @@ def test_primary_deletes_all_priced_intermediates() -> None:
         initializer_names
     )
     assert sum(node.op_type == "QLinearConv" for node in candidate.graph.node) == 3
-    assert not any(node.op_type == "QLinearMatMul" for node in candidate.graph.node)
+    qlinear_matmuls = [
+        node for node in candidate.graph.node if node.op_type == "QLinearMatMul"
+    ]
+    assert len(qlinear_matmuls) == 1
+    assert list(qlinear_matmuls[0].output) == ["shift_rank3_u8"]
     assert not any(node.op_type == "Pad" for node in candidate.graph.node)
 
     assert nodes["p3_hash_a"].op_type == "QLinearConv"
@@ -130,12 +134,14 @@ def test_primary_deletes_all_priced_intermediates() -> None:
     assert _shape(candidate, "p3_hash_a") == [1, 1, 1, 1]
     assert _shape(candidate, "p3_hash_b") == [1, 1, 1, 1]
 
-    assert _shape(candidate, "shift_scalar") == []
-    assert _dtype(candidate, "shift_scalar") == TensorProto.UINT8
+    assert _shape(candidate, "shift_route_u8") == []
+    assert _dtype(candidate, "shift_route_u8") == TensorProto.UINT8
     assert _shape(candidate, "is_p3_scalar") == []
     assert _dtype(candidate, "is_p3_scalar") == TensorProto.BOOL
     assert _shape(candidate, "candidate_u8") == []
     assert _dtype(candidate, "candidate_u8") == TensorProto.UINT8
+    assert _shape(candidate, "candidate_mod_u8") == []
+    assert _dtype(candidate, "candidate_mod_u8") == TensorProto.UINT8
     assert _shape(candidate, "candidate_i32") == []
     assert _dtype(candidate, "candidate_i32") == TensorProto.INT32
     assert _shape(candidate, "source_offset") == [5]
