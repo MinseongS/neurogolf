@@ -180,3 +180,13 @@ reopen: external (public/archive) net with measured fresh-fail <2.3% & cheaper (
 - cost: 7330 -> 6821 (points 16.1722)
 - source: candidates/task209/u8idx_qsplit.onnx
 - note: collapse: (1) uint8 recast of every geometry/index chain (-473B) — all placement arithmetic is ring-ops mod 256 so intermediate sign is irrelevant; the only non-ring steps are Div/Clip, where a negative wraps to >=239 and Clip sends it to the HIGH clamp instead of the low one, but Lcpad row 0 == row 4 and col 0 == col 6 (both the zero pad-ring from Pad(Lc2,[1,1,1,1],0)) so both clamps gather IDENTICAL bytes. (2) Exact Qc refactorization (-36 params): Qc[s,k,m,p]=delta(p==k+m//(s+2)) was QcA[12,8]*QcC[3,8,5]*QcD[5,3,5]=291; the (s,m)|(k,p) rank-5 split gives QA[s,m,j]=delta(m//(s+2)==j) [3,12,5] + QS[k,j,p]=delta(p==k+j) [3,5,5] = 255, dropping an operand. cost 7330->6821. Differential: 13330 inputs, 0 disagreements (12000 fresh over 3 seeds + 1064 colour permutations + 266 stored); risky wrap path verified live (rr0<0 in 19.0%, cc0d<0 in 22.4%, ~100% hit the low clamp); suite is harsher than real arc-gen (incumbent fresh-fail 10.25% vs ledger-measured 2.30%). u8 lever EXHAUSTIVELY proven: over a in [-120,120] x sval{2,3,4} x i, 5400/11568 row and 6630/14460 col combos differ between int32 and u8 paths and 0 land off the zero-pad set {0,4}/{0,6}; recast exact for a in [-242,240]/[-238,232] and the graph STRUCTURALLY bounds a_r2 in [-12,19] (>20x margin, not empirical).
+
+## ADOPTED 20260715T123914Z
+- cost: 7579 -> 6817 (points 16.1728)
+- source: candidates/task209/u8_qsplit_rebuilt.onnx
+- note: exact QA/QS split plus end-to-end uint8 geometry/index chain; 1000 fresh exact vs incumbent
+
+## ADOPTED 20260715T141922Z
+- cost: 6817 -> 6089 (points 16.2858)
+- source: candidates/task209/output_fold.onnx
+- note: quotient-pooled exact selector plus 2D parabolic codebook and terminal 3x3 QLinearConv corner/output fold; fresh5000 divergence=0

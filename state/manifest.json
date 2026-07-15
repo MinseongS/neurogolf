@@ -1872,13 +1872,13 @@
   "updated": "verify"
  },
  "209": {
-  "cost": 6821,
+  "cost": 6089,
   "fail": 0,
   "ok": true,
-  "points": 16.17223863234528,
-  "sha256": "2c669b08e72bc60cf3c45aedc3e9b5ce5a65ffabdfd83339ef44e955641b808d",
+  "points": 16.285760856391427,
+  "sha256": "eae4bcd1fb864d2b22acaad721f48e6c4f04d13a29fa3a24ddc02021bd3c9a0d",
   "task": 209,
-  "updated": "20260715T084402Z"
+  "updated": "20260715T141922Z"
  },
  "210": {
   "cost": 30,
