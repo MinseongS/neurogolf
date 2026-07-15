@@ -1,6 +1,6 @@
 ---
-deployed_cost: 2329
-logged_costs_match: stale-likely
+deployed_cost: 1227
+logged_costs_match: true
 migrated: 2026-07-09
 ---
 
@@ -184,3 +184,18 @@ ArgMax rank (not into arithmetic that must stay float-exact). Sibling hit this s
 - cost: 2329 -> 1853 (points 17.4754)
 - source: /Users/minseong/.codex/worktrees/56ef/neurogolf/submission/overfit_nets/task264.onnx
 - note: min-merge from overfit_nets
+
+## ADOPTED 20260715T125358Z
+- cost: 1853 -> 1507 (points 17.6821)
+- source: candidates/task264/free_output_tail_fold.onnx
+- note: free-output quadratic glyph-tail fold; pinned baseline and byte-identical fixed point
+
+## ADOPTED 20260715T134334Z
+- cost: 1507 -> 1361 (points 17.7840)
+- source: candidates/task264/shared_rank_initializer_factor.onnx
+- note: exact shared-rank initializer factor: rank4 glyph pattern, block/local embed, rank3 channel core
+
+## ADOPTED 20260715T143430Z
+- cost: 1361 -> 1227 (points 17.8877)
+- source: candidates/task264/support_gated_renderer.onnx
+- note: support-gated shift interpolation, exact glyph CP rank5, raw detector carrier fold
