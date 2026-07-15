@@ -1,4 +1,4 @@
-# task124 cost685 exact composite design
+# task124 exact composite design — corrected cost686 target
 
 ## Status and objective
 
@@ -6,9 +6,15 @@ This design was approved on 2026-07-16. It continues only task124 from the deplo
 **memory779 + params70 = cost849** graph and seeks the largest already-priced exact joint
 reduction, rather than stopping at the next `+0.1` boundary.
 
-The primary target is **memory623 + params62 = cost685**, worth an estimated
-**18.470581 points**, or **+0.214640** from cost849. The official isolated scorer is
+The robust primary target is **memory623 + params63 = cost686**, worth an estimated
+**18.469122 points**, or **+0.213182** from cost849. The official isolated scorer is
 authoritative; these numbers are a pre-build tensor/initializer accounting contract.
+
+The initially approved pre-build accounting was cost685. Implementation-plan self-review found
+that opset12 makes every `QLinearConv`/`QLinearMatMul` zero-point input mandatory. A pinned local
+schema/ORT probe also rejected sharing the rank-4 Scatter update as a QLinear zero point and
+rejected a scalar Scatter update. Retaining the required scalar zero point adds one parameter to
+every stage; this correction changes no graph semantics or implementation scope.
 
 The following invariants remain mandatory:
 
@@ -58,12 +64,10 @@ intermediate. The compact bank's padding initializer changes from eight zeroes t
 twos because those cells represent in-grid background, not convolution padding.
 
 The former rank-4 stored-two initializer is repurposed as a rank-4 stored-zero Scatter update, and
-one scalar `0.5` initializer is added for `QuantizeLinear`. To keep the net parameter delta exact,
-the now-unused shared scalar zero-point initializer is removed: `QuantizeLinear` and every
-`QLinearConv` zero-point that is semantically zero use their schema-defined optional default by
-passing an omitted input. The nonzero final input/weight zero point remains explicitly stored 1.
-Pinned checker and ORT acceptance of these omitted optional inputs is part of the primary-path
-contract; retaining an explicit scalar zero point would raise a measured endpoint by one cost.
+one scalar `0.5` initializer is added for `QuantizeLinear`. `QuantizeLinear` may omit its optional
+output zero point, but opset12 QLinear operators retain the mandatory scalar zero point 0. The
+nonzero final input/weight zero point remains explicitly stored 1. The new half-scale therefore
+adds one parameter relative to the initial cost685 estimate.
 
 The runtime output weights invert in the same way:
 
@@ -113,7 +117,7 @@ are deleted. Relative to the separate-row graph, this fold is **memory -26, para
 
 The uint8 underflow branch must be tested under pinned ORT. If that operator path is unsupported,
 the exact fallback casts both coordinates to int32 before subtraction. The fallback is predicted
-to end at cost696 after all other folds and remains preferable to weakening correctness.
+to end at cost697 after all other folds and remains preferable to weakening correctness.
 
 ## Six-tap QLinear period hash
 
@@ -139,7 +143,7 @@ the already-proved foreground encoding.
 
 Pinned ONNX 1.21 shape inference and ORT 1.26 execution must accept both negative-pad
 `QLinearConv` forms. If they do not, retain the existing two `QLinearMatMul` hashes and row-4
-Gather. The uint8-routing graph is then predicted at cost700, still an exact improvement.
+Gather. The uint8-routing graph is then predicted at cost701, still an exact improvement.
 
 ## Direct final-mask concatenation
 
@@ -162,16 +166,16 @@ passing exact endpoint is the only candidate sent to final adoption.
 | stage | memory | params | cost | estimated gain | purpose |
 |---|---:|---:|---:|---:|---|
 | deployed baseline | 779 | 70 | 849 | - | immutable control |
-| inverse quantize + direct Concat + separate row reads | 659 | 68 | 727 | +0.155133 | conservative exact checkpoint |
-| uint8 scalar routing | 633 | 67 | 700 | +0.192979 | remove rank/reshape control bytes |
-| six-tap/direct-row4 QLinear hash | 623 | 62 | **685** | **+0.214640** | primary endpoint |
+| inverse quantize + direct Concat + separate row reads | 659 | 69 | 728 | +0.153758 | conservative exact checkpoint |
+| uint8 scalar routing | 633 | 68 | 701 | +0.191551 | remove rank/reshape control bytes |
+| six-tap/direct-row4 QLinear hash | 623 | 63 | **686** | **+0.213182** | robust primary endpoint |
 
 Fallbacks are explicit:
 
-- int32 scalar routing plus the QLinear hash: predicted cost696;
-- uint8 scalar routing with the existing QLinearMatMul hashes: predicted cost700;
-- int32 scalar routing with the existing hashes: predicted cost711;
-- conservative checkpoint only: predicted cost727.
+- int32 scalar routing plus the QLinear hash: predicted cost697;
+- uint8 scalar routing with the existing QLinearMatMul hashes: predicted cost701;
+- int32 scalar routing with the existing hashes: predicted cost712;
+- conservative checkpoint only: predicted cost728.
 
 The implementation must continue through the full ladder and must not stop merely because an
 earlier stage crosses `+0.1`. A fallback may be adopted only if every cheaper attempted endpoint
