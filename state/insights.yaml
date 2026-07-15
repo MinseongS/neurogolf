@@ -3078,3 +3078,91 @@
     risk: 'low only after bundled gate; narrowing is unsafe if coordinate/count values exceed the target dtype or Sign changes negative-value semantics'
     verification: 'Compare scorer cost before/after and require `uv run ng gate`; for optional Pad inputs verify the omitted default is exactly zero. Re-run public_autopsy after any future borrowed-net adoption, because the current rescan returned no matches.'
   transformer: null
+- id: skip_semantic_noop_stamps_before_topk
+  title: Exclude already-complete prototypes whose later stamp is a semantic no-op before sizing TopK
+  status: active
+  source_tasks:
+  - 173
+  rationale: 'Task173 ranked candidate stamp centres with TopK even when the matched prototype was
+    already complete and restamping it changed no output cell. A 19-element completeness predicate
+    zeroed those scores, reducing the required incomplete-stamp tail from k=7 to k=6. Combined with
+    shifted FREE off-grid sentinel coding, this moved the actual live cost 11320->10233 (+0.100953),
+    bundled 266/266. Fresh 4000 found one additional tail case (candidate fail13 vs incumbent fail12),
+    so this mechanism is explicitly overfit-safe rather than a generalization proof.'
+  applies_when:
+    all_ops:
+    - TopK
+    - Gather
+    any_ops:
+    - Expand
+    - ScatterElements
+    - ScatterND
+    - Where
+    any_tags:
+    - bounded_stamp_tail
+    - prototype_completion
+    - idempotent_update
+  reject_when:
+    any_tags:
+    - complete_stamp_changes_priority
+    - stamp_has_non_idempotent_side_effect
+    - required_incomplete_count_exceeds_new_k
+  expected:
+    gain_type: memory_by_shrinking_ranked_update_tail
+    risk: 'medium-high: completeness must prove the entire downstream stamp is a no-op; a smaller
+      TopK tail can create fresh-only failures when more incomplete copies occur'
+    verification: 'Prove idempotence on complete prototypes, run bundled gate, compare fresh tail-count
+      distributions, and keep TopK input floating under the pinned grader.'
+  rescan_2026_07_15:
+    scanned: '400 deployed graphs; 17 TopK-to-Expand/Scatter syntactic tails across 12 tasks'
+    immediate_candidates: []
+    reviewed: '012/018/035/076/096/101/131/233/285/308/361/397 route selected objects,
+      coordinates, colours, or shadows; no graph exposes task173-style already-complete idempotent stamps.'
+    reopen_trigger: 'A future graft creates a TopK-ranked repeated stamp family with a measurable
+      complete/no-op subset and a smaller proven bundled tail bound.'
+  transformer: candidates/task173/build_code_shift_plus.py
+- id: unique_selector_argmax_gather
+  title: Replace one-hot Mul+Reduce selectors with a scalar ArgMax followed by Gather
+  status: active
+  source_tasks:
+  - 174
+  rationale: 'Task174 had a unique symmetric box indicator and selected five tiny bbox/colour values
+    by Cast(selector)->Mul->ReduceMax. Reducing the singleton dimension with the palindrome verdict,
+    taking one scalar ArgMax, and Gathering all five values removed 31B of memory and one parameter.
+    In the same exact lowering, fp16 Pow(2,9-axis) replaced an int32 Cast/table-Gather chain and
+    Unsqueeze replaced a three-element Reshape shape. The reconstructed candidate beat the lost 2788
+    endpoint at cost2786, bundled 266/266 and fresh 4000/4000 divergence0.'
+  applies_when:
+    all_ops:
+    - Mul
+    - ReduceMax
+    any_ops:
+    - Equal
+    - ReduceMin
+    - ArgMax
+    - Gather
+    any_tags:
+    - unique_selector
+    - tiny_selected_values
+  reject_when:
+    any_tags:
+    - selector_can_be_empty
+    - selector_can_have_multiple_true_entries
+    - weighted_sum_not_selection
+    - argmax_tie_semantics_observable
+  expected:
+    gain_type: memory_by_scalarizing_onehot_selection
+    risk: 'low when uniqueness is a task invariant and the selected values are gathered along one axis;
+      otherwise ArgMax silently changes multi-hot or empty semantics'
+    verification: 'Prove exactly-one selection on bundled/oracle data, compare Gather shapes carefully,
+      run fresh differential verification, checker, mandatory gate, and source rebuild.'
+  rescan_2026_07_15:
+    scanned: '400 deployed graphs for two or more Mul->ReduceMax/ReduceSum branches sharing an input selector'
+    immediate_candidates: []
+    reviewed:
+      task054: 's1 is a colour vector reused arithmetically, not a one-hot selector'
+      task133: 'hitf/pbm coordinate carriers offer only a small local saving below +0.1'
+      task324: 'rowmax/colmax are 20-element profile gates, not unique selectors; saving is below +0.1'
+    reopen_trigger: 'Any new graph with at least three tiny value arrays selected by the same proven unique mask,
+      or a current task whose full selector branch exceeds its +0.1 cost threshold.'
+  transformer: candidates/task174/build_golf2_rebuilt.py

@@ -60,3 +60,36 @@
   diagnostic.
 - Adoption must use `ng adopt`; submission must use `ng pack` then `ng submit`.
 - Keep onnx==1.21.0 and onnxruntime==1.26.0 until a complete 400/400 revalidation authorizes change.
+
+## task151-175 execution result
+- All 25 live artifacts were independently scored and graph-audited. The three concrete wins in
+  this range, **task153, task173, and task174**, are now adopted for a combined **+0.387640**.
+  Full technical handoffs and execution evidence are
+  `candidates/task173/DISCOVERY.md` and `candidates/task174/DISCOVERY.md`; the complete disposition
+  is `candidates/range151_175/REVIEW.md` with reproducible `audit.py`/`audit.json` and
+  `live_scores.json`.
+- task153 completed a real adopted win: dtype lowering of presence/crop/color carriers plus
+  initializer dedupe changed **685 -> 618**, **+0.102930**, bundled **265/265**, fail=0. The
+  immutable-backup builder reproduces the deployed SHA, and `src/custom/task153.py` now rebuilds
+  the same 56 nodes/15 initializers and measured cost618.
+- task173 restored the shifted FREE off-grid code and removed complete-prototype no-op stamps from
+  the ranked tail, making k=6 exact on bundled data. It was gated/adopted **11320 -> 10233**
+  (**+0.100953**), bundled **266/266**. Fresh4000 is diagnostic-only and found one extra tail miss
+  (candidate fail13 vs incumbent fail12); the risk is recorded in the task discovery/log.
+- task174 reconstructed the lost bbox rewrite and improved it: first/last `ArgMax`, fp16 geometry,
+  1-D window masks, nested `Where`, int8 binary reduction, fp16 factor `Pow`, and scalar
+  selector `ArgMax->Gather` produced **3348 -> 2786** (**+0.183756**), bundled **266/266**, fresh
+  **4000/4000 divergence0**. Both task173/174 exact sources rebuild to semantically identical
+  topology and the same measured cost/fail as their adopted live graphs.
+- A tempting task160/task169 constant-feature-to-QLinearConv-bias fold was implemented and
+  falsified: task169 failed 266/266. The final Conv pads a 10x10 feature asymmetrically to 30x30,
+  so a bias incorrectly writes the padded region. Do not retry without an equally cheap spatial
+  support term.
+- Registered `skip_semantic_noop_stamps_before_topk` and `unique_selector_argmax_gather` in
+  `state/insights.yaml`. Full-400 rescans found no immediate additional +0.1 target: 12 non-task173
+  TopK-to-stamp tasks lacked an exposed complete/no-op subset, and task054/133/324 selector-shaped
+  hits were non-unique or too small.
+- No pack or submit was run. A full `uv run ng verify` was attempted after the adoptions, but the
+  existing task017 exceeded the project's default 600-second isolated timeout and the verifier
+  aborted before a 400/400 summary. This is not a task173/174 failure: both were freshly verified
+  individually at bundled fail0 and exact-source equivalence immediately before the full-board run.

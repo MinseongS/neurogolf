@@ -71,6 +71,10 @@ levers:
     agent_class: fable
     expected_yield: "+0.2~0.9/task, 잔여 ~45태스크 (16/18 crack 실적)"
     ledger:
+      - date: 2026-07-15
+        ran: "task151~175 deployed artifact 25개 전수 score/graph/tensor/parameter 감사 후 task153 dtype+initializer lowering, task173 shifted-sentinel+complete-noop-stamp tail shrink, task174 ArgMax bbox/fp16 geometry/unique-selector Gather 복원·개선; 두 신규 메커니즘 full-400 syntax rescan"
+        verdict: "3승 채택: task153 685->618 (+0.102930), task173 actual live11320->10233 (+0.100953), task174 actual live3348->2786 (+0.183756), 합 +0.387640, 모두 bundled fail0. task174 fresh4000 divergence0; task173 fresh4000은 incumbent fail12/candidate fail13으로 one-tail risk가 있으나 기본 8000-overfit gate를 통과했다. 나머지22개와 full-400 재스캔 hit는 이 실행에서 계산 가능한 +0.1 lowering이 없었다. 이는 절대 floor 판정이 아니다."
+        reopen: "task173은 7개 이상 incomplete-copy tail을 추가 carrier 없이 exact하게 처리하는 score bound 또는 4900급 relational compiler가 생길 때; task174은 scalar selector/bbox 이후 남은 600B M16을 int8/무료-output 수식으로 제거할 때; 나머지 범위는 REVIEW.md의 태스크별 지배 carrier를 지우는 새 public teacher/ONNX lowering이 생길 때"
       - date: 2026-07-08
         ran: "batch6 8태스크 (opus)"
         verdict: "7/8 floor — positioned-content mask는 크랙 불가, 1 broken(071)"

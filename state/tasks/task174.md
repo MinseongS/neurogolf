@@ -136,3 +136,8 @@ Backup: reports/retired_networks/task174_pre_s11_cross.onnx.
 - cost: 3316 -> 2788 (points 17.0669)
 - source: candidates/task174/golf2.onnx
 - note: collapse: bboxes via ArgMax(select_last_index) replaces index-weighting chain; geometry chain in fp16 not int32 (TopK indices are colours directly); 1-D Less row/col vectors broadcast into window mask + two-Where fuse. 73->63 nodes, cost 3348->2788. Differential-tested 1596 fresh randomized placements vs incumbent: 0 divergence.
+
+## ADOPTED 20260715T115254Z
+- cost: 2788 -> 2786 (points 17.0676)
+- source: candidates/task174/golf2_rebuilt.onnx
+- note: restore lost golf2 and beat stale gate: bbox first/last ArgMax, fp16 geometry, 1-D broadcast window, nested Where labels, int8 binary reduce; factor table->fp16 Pow and unique-box one-hot reductions->scalar ArgMax/Gather. 266/266, cost 3348->2786, fresh 4000 divergence0
