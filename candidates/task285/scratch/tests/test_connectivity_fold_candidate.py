@@ -10,7 +10,7 @@ import pytest
 from onnx import TensorProto
 
 from neurogolf.scans.public_autopsy import profile
-from neurogolf.scoring import calculate_params
+from neurogolf.scoring import calculate_params, evaluate, load_task
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[4]
@@ -64,3 +64,12 @@ def test_connectivity_fold_keeps_float_topk_inputs():
     for node in inferred.graph.node:
         if node.op_type == "TopK":
             assert types[node.input[0]] in {TensorProto.FLOAT16, TensorProto.FLOAT}
+
+
+@pytest.mark.skipif(not MODEL.exists(), reason="candidate has not been built yet")
+def test_connectivity_fold_passes_all_bundled_examples():
+    result = evaluate(MODEL, load_task(285), keep_failures=True)
+    assert result["ok"], result
+    assert result["pass"] == 265
+    assert result["fail"] == 0
+    assert result["memory"] + result["params"] == 15_982
