@@ -356,3 +356,25 @@
   No fresh-safety claim is made.  From cost15,982, the next +0.1 threshold is **14,461**, requiring
   another **1,521** saving.  Reopen the analytical suffix only with a different margin-correct
   colour basis and a runtime plan that is priced below this threshold before execution.
+
+## 2026-07-15 residual sparse exact folds — ADOPTED
+
+- The target-sentinel chain was redundant on all **265** stored examples: its two negative target
+  lookups already had invalid `-1` updates.  Removing four 81B tensors plus scalar `i89` changed
+  **15,982 -> 15,657**, score **15.3207816321 -> 15.3413266197**.  Focused tests passed **3/3**;
+  mandatory gate/adopt both passed **265/265**, fail=0.
+- Replacing `si2[3,1]` with direct `Gather(t,si)` / `Gather(c,si)` followed by compact rank
+  restoration changed **15,657 -> 15,648**, score **15.3413266197 -> 15.3419016077**.  Focused
+  tests passed **2/2**; mandatory gate/adopt again passed **265/265**, fail=0.  Final
+  memory/params are **15,415/233**.
+- Candidate, deployed graph, and self-contained source rebuild are byte-identical at SHA-256
+  `6ce989475ccd96a943a8c8676551a98448b74f0771c20f5e67607d6b4af66213`.  The post-adopt
+  structural regression passed and the 400-graph target-sentinel scan loaded every artifact with
+  errors0 and found no remaining hit; its historical control found task285 as expected.
+- The next +0.1 threshold is **14,158**.  The old cost14,415 FREE-output control is now **257**
+  above that threshold before its known sign failure (1,078 rather than 900 positives) and
+  2.503682-second first inference.  It was not rebuilt or rotated.  Reopen only with a different
+  margin-correct colour basis and bounded contraction satisfying cost<=14,158 and first
+  inference<1s.
+- The inherited reconstructed-fresh seed285/example80 neighbour-Gather OOB remains unchanged.
+  No fresh-safety claim is made, and no generator weakening was used.
