@@ -266,3 +266,13 @@ a live mechanism if the pivot score can be computed by a bounded-memory staged g
 - cost: 16038 -> 15982 (points 15.3208)
 - source: candidates/task285/connectivity_fold_candidate.onnx
 - note: exact connectivity seed fold: replace root-mask MaxPool with Slice/Expand/Pad and fold 2-D reshapes to Transpose/Flatten
+
+## ADOPTED 20260715T145458Z
+- cost: 15982 -> 15657 (points 15.3413)
+- source: candidates/task285/target_sentinel_fold_candidate.onnx
+- note: remove redundant target sentinel after invalid sparse update gate
+
+## ADOPTED 20260715T145633Z
+- cost: 15657 -> 15648 (points 15.3419)
+- source: candidates/task285/selected_index_fold_candidate.onnx
+- note: replace shared selected-index rank adapter with direct compact gathers

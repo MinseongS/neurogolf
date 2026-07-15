@@ -13,7 +13,7 @@ from neurogolf.scoring import evaluate, load_task
 
 
 ROOT = Path(__file__).resolve().parents[2]
-CASES = ((285, 15982, 265), (295, 343, 268))
+CASES = ((285, 15648, 265), (295, 343, 268))
 
 
 @pytest.mark.parametrize("task_num,expected_cost,expected_pass", CASES)
