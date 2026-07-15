@@ -16,7 +16,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 BASELINE_SHA256 = "4e4bafbb3d65046a1ec08a211de6c9951705b613777a2a3ece9f4c73f6041b25"
-STAGES = {"conservative", "routing_u8", "routing_i32", "primary", "primary_i32"}
+STAGES = {"conservative", "routing_i32", "routing_mod", "primary", "primary_i32"}
 OUTPUT = Path(__file__).with_name("cost686_primary.onnx")
 
 
@@ -175,10 +175,318 @@ def _build_conservative(model: onnx.ModelProto) -> onnx.ModelProto:
     return model
 
 
+def _build_scalar_route(
+    model: onnx.ModelProto, *, use_uint8: bool
+) -> onnx.ModelProto:
+    graph = model.graph
+    scalar_dtype = np.uint8 if use_uint8 else np.int32
+    scalar_tensor_type = TensorProto.UINT8 if use_uint8 else TensorProto.INT32
+    three_name = "three_u8" if use_uint8 else "three_i32"
+
+    initializers: list[onnx.TensorProto] = []
+    for source in graph.initializer:
+        if source.name == "three_i64":
+            initializers.append(
+                _tensor(three_name, np.asarray(3, dtype=scalar_dtype))
+            )
+        elif source.name == "source_offsets":
+            initializers.append(
+                _tensor(
+                    "source_offsets",
+                    numpy_helper.to_array(source).reshape(4, 5),
+                )
+            )
+        elif source.name == "slice_start_shape":
+            continue
+        else:
+            initializers.append(
+                onnx.TensorProto.FromString(source.SerializeToString())
+            )
+    del graph.initializer[:]
+    graph.initializer.extend(initializers)
+
+    nodes: list[onnx.NodeProto] = []
+    for source in graph.node:
+        outputs = set(source.output)
+        if "shift" in outputs:
+            nodes.extend(
+                [
+                    helper.make_node(
+                        "Cast",
+                        ["left0_i64"],
+                        ["left0_scalar"],
+                        to=scalar_tensor_type,
+                    ),
+                    helper.make_node(
+                        "Cast",
+                        ["left2_i64"],
+                        ["left2_scalar"],
+                        to=scalar_tensor_type,
+                    ),
+                    helper.make_node(
+                        "Sub",
+                        ["left2_scalar", "left0_scalar"],
+                        ["shift_rank3"],
+                    ),
+                    helper.make_node(
+                        "Squeeze",
+                        ["shift_rank3"],
+                        ["shift_scalar"],
+                        axes=[0, 1, 2],
+                    ),
+                ]
+            )
+            continue
+        if "is_p3" in outputs:
+            nodes.append(
+                onnx.NodeProto.FromString(source.SerializeToString())
+            )
+            nodes.append(
+                helper.make_node(
+                    "Squeeze",
+                    ["is_p3"],
+                    ["is_p3_scalar"],
+                    axes=[0, 1, 2, 3],
+                )
+            )
+            continue
+        if "candidate" in outputs:
+            route_output = "candidate_u8" if use_uint8 else "candidate_i32"
+            nodes.append(
+                helper.make_node(
+                    "Where",
+                    ["is_p3_scalar", three_name, "shift_scalar"],
+                    [route_output],
+                )
+            )
+            if use_uint8:
+                nodes.append(
+                    helper.make_node(
+                        "Cast",
+                        ["candidate_u8"],
+                        ["candidate_i32"],
+                        to=TensorProto.INT32,
+                    )
+                )
+            continue
+        if "source_offset" in outputs:
+            nodes.append(
+                helper.make_node(
+                    "Gather",
+                    ["source_offsets", "candidate_i32"],
+                    ["source_offset"],
+                    axis=0,
+                )
+            )
+            continue
+        if any(name.startswith("bottom_start4_") for name in outputs):
+            nodes.append(
+                helper.make_node(
+                    "Split",
+                    ["source_offset"],
+                    [f"bottom_start_vec_{index}" for index in range(5)],
+                    axis=0,
+                    split=[1] * 5,
+                )
+            )
+            continue
+        if any(name.startswith("bottom_start_") for name in outputs):
+            continue
+
+        node = onnx.NodeProto.FromString(source.SerializeToString())
+        for index, name in enumerate(node.input):
+            if name.startswith("bottom_start_"):
+                suffix = name.removeprefix("bottom_start_")
+                node.input[index] = f"bottom_start_vec_{suffix}"
+        nodes.append(node)
+
+    del graph.node[:]
+    graph.node.extend(nodes)
+    del graph.value_info[:]
+    for index in range(5):
+        graph.value_info.append(
+            helper.make_tensor_value_info(
+                f"bottom_row_{index}", TensorProto.UINT8, [1, 1, 1, 10]
+            )
+        )
+    graph.value_info.append(
+        helper.make_tensor_value_info(
+            "fg_pad4d", TensorProto.UINT8, [1, 1, 1, 46]
+        )
+    )
+    return model
+
+
+def _build_mod_route(model: onnx.ModelProto) -> onnx.ModelProto:
+    graph = model.graph
+    initializers: list[onnx.TensorProto] = []
+    for source in graph.initializer:
+        if source.name == "three_i64":
+            continue
+        if source.name == "source_offsets":
+            offsets = numpy_helper.to_array(source).reshape(4, 5)
+            initializers.append(
+                _tensor("source_offsets", offsets[[2, 3, 0, 1]])
+            )
+        elif source.name == "slice_start_shape":
+            continue
+        else:
+            initializers.append(
+                onnx.TensorProto.FromString(source.SerializeToString())
+            )
+    initializers.extend(
+        [
+            _tensor(
+                "ng_diff_weight",
+                np.asarray([0, 2], dtype=np.uint8).reshape(2, 1),
+            ),
+            _tensor(
+                "ng_diff_y_zero_point", np.asarray(2, dtype=np.uint8)
+            ),
+            _tensor("ng_four_u8", np.asarray(4, dtype=np.uint8)),
+        ]
+    )
+    del graph.initializer[:]
+    graph.initializer.extend(initializers)
+
+    nodes: list[onnx.NodeProto] = []
+    for source in graph.node:
+        outputs = set(source.output)
+        if "shift" in outputs:
+            nodes.extend(
+                [
+                    helper.make_node(
+                        "Cast",
+                        ["left0_i64"],
+                        ["left0_u8"],
+                        to=TensorProto.UINT8,
+                    ),
+                    helper.make_node(
+                        "Cast",
+                        ["left2_i64"],
+                        ["left2_u8"],
+                        to=TensorProto.UINT8,
+                    ),
+                    helper.make_node(
+                        "Concat",
+                        ["left0_u8", "left2_u8"],
+                        ["left02_u8"],
+                        axis=2,
+                    ),
+                    helper.make_node(
+                        "QLinearMatMul",
+                        [
+                            "left02_u8",
+                            "ng_scale",
+                            "ng_y_zero_point",
+                            "ng_diff_weight",
+                            "ng_scale",
+                            "ng_x_zero_point",
+                            "ng_scale",
+                            "ng_diff_y_zero_point",
+                        ],
+                        ["shift_rank3_u8"],
+                    ),
+                    helper.make_node(
+                        "Squeeze",
+                        ["shift_rank3_u8"],
+                        ["shift_route_u8"],
+                        axes=[0, 1, 2],
+                    ),
+                ]
+            )
+            continue
+        if "is_p3" in outputs:
+            nodes.append(
+                onnx.NodeProto.FromString(source.SerializeToString())
+            )
+            nodes.append(
+                helper.make_node(
+                    "Squeeze",
+                    ["is_p3"],
+                    ["is_p3_scalar"],
+                    axes=[0, 1, 2, 3],
+                )
+            )
+            continue
+        if "candidate" in outputs:
+            nodes.extend(
+                [
+                    helper.make_node(
+                        "Where",
+                        [
+                            "is_p3_scalar",
+                            "ng_x_zero_point",
+                            "shift_route_u8",
+                        ],
+                        ["candidate_u8"],
+                    ),
+                    helper.make_node(
+                        "Mod",
+                        ["candidate_u8", "ng_four_u8"],
+                        ["candidate_mod_u8"],
+                    ),
+                    helper.make_node(
+                        "Cast",
+                        ["candidate_mod_u8"],
+                        ["candidate_i32"],
+                        to=TensorProto.INT32,
+                    ),
+                ]
+            )
+            continue
+        if "source_offset" in outputs:
+            nodes.append(
+                helper.make_node(
+                    "Gather",
+                    ["source_offsets", "candidate_i32"],
+                    ["source_offset"],
+                    axis=0,
+                )
+            )
+            continue
+        if any(name.startswith("bottom_start4_") for name in outputs):
+            nodes.append(
+                helper.make_node(
+                    "Split",
+                    ["source_offset"],
+                    [f"bottom_start_vec_{index}" for index in range(5)],
+                    axis=0,
+                    split=[1] * 5,
+                )
+            )
+            continue
+        if any(name.startswith("bottom_start_") for name in outputs):
+            continue
+
+        node = onnx.NodeProto.FromString(source.SerializeToString())
+        for index, name in enumerate(node.input):
+            if name.startswith("bottom_start_"):
+                suffix = name.removeprefix("bottom_start_")
+                node.input[index] = f"bottom_start_vec_{suffix}"
+        nodes.append(node)
+
+    del graph.node[:]
+    graph.node.extend(nodes)
+    del graph.value_info[:]
+    for index in range(5):
+        graph.value_info.append(
+            helper.make_tensor_value_info(
+                f"bottom_row_{index}", TensorProto.UINT8, [1, 1, 1, 10]
+            )
+        )
+    graph.value_info.append(
+        helper.make_tensor_value_info(
+            "fg_pad4d", TensorProto.UINT8, [1, 1, 1, 46]
+        )
+    )
+    return model
+
+
 def build(task=None, *, stage: str = "primary") -> onnx.ModelProto:
     if stage not in STAGES:
         raise ValueError(f"unknown task124 stage: {stage}")
-    if stage != "conservative":
+    if stage in {"primary", "primary_i32"}:
         raise NotImplementedError(f"task124 stage is not implemented yet: {stage}")
 
     from src.custom.task124 import build as build_source
@@ -187,6 +495,12 @@ def build(task=None, *, stage: str = "primary") -> onnx.ModelProto:
     source_sha256 = hashlib.sha256(model.SerializeToString()).hexdigest()
     assert source_sha256 == BASELINE_SHA256, "task124 source baseline changed"
     model = _build_conservative(model)
+    if stage == "routing_i32":
+        model = _build_scalar_route(
+            model, use_uint8=False
+        )
+    elif stage == "routing_mod":
+        model = _build_mod_route(model)
     model = onnx.shape_inference.infer_shapes(model, strict_mode=True)
     onnx.checker.check_model(model, full_check=True)
     return model

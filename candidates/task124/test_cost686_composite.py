@@ -19,9 +19,9 @@ ROOT = Path(__file__).resolve().parents[2]
 INCUMBENT = ROOT / "submission/overfit_nets/task124.onnx"
 EXPECTED = {
     "conservative": (659, 69, 728),
-    "routing_u8": (633, 68, 701),
     "routing_i32": (644, 68, 712),
-    "primary": (623, 63, 686),
+    "routing_mod": (636, 71, 707),
+    "primary": (626, 66, 692),
     "primary_i32": (634, 63, 697),
 }
 
@@ -144,6 +144,63 @@ def test_primary_deletes_all_priced_intermediates() -> None:
         assert _dtype(candidate, f"bottom_start_vec_{index}") == TensorProto.INT32
 
 
+def test_i32_scalar_route_has_exact_shapes() -> None:
+    candidate = onnx.shape_inference.infer_shapes(
+        build(stage="routing_i32"), strict_mode=True
+    )
+    nodes = _producer_map(candidate)
+
+    assert _shape(candidate, "shift_scalar") == []
+    assert _dtype(candidate, "shift_scalar") == TensorProto.INT32
+    assert _shape(candidate, "is_p3_scalar") == []
+    assert _dtype(candidate, "is_p3_scalar") == TensorProto.BOOL
+    assert _shape(candidate, "candidate_i32") == []
+    assert _dtype(candidate, "candidate_i32") == TensorProto.INT32
+    assert _shape(candidate, "source_offset") == [5]
+    assert not {
+        "bottom_start_0",
+        "bottom_start_1",
+        "bottom_start_2",
+        "bottom_start_3",
+        "bottom_start_4",
+    }.intersection(nodes)
+    for index in range(5):
+        assert _shape(candidate, f"bottom_start_vec_{index}") == [1]
+        assert _dtype(candidate, f"bottom_start_vec_{index}") == TensorProto.INT32
+
+
+def test_mod_scalar_route_preserves_signed_gather_semantics() -> None:
+    candidate = onnx.shape_inference.infer_shapes(
+        build(stage="routing_mod"), strict_mode=True
+    )
+    nodes = _producer_map(candidate)
+
+    assert _shape(candidate, "shift_route_u8") == []
+    assert _dtype(candidate, "shift_route_u8") == TensorProto.UINT8
+    assert _shape(candidate, "candidate_mod_u8") == []
+    assert _dtype(candidate, "candidate_mod_u8") == TensorProto.UINT8
+    assert _shape(candidate, "candidate_i32") == []
+    assert _dtype(candidate, "candidate_i32") == TensorProto.INT32
+    assert nodes["shift_rank3_u8"].op_type == "QLinearMatMul"
+    assert not any(
+        node.op_type == "Sub"
+        and _dtype(candidate, node.output[0]) == TensorProto.UINT8
+        for node in candidate.graph.node
+    )
+    assert np.array_equal(
+        _initializer(candidate, "source_offsets"),
+        np.asarray(
+            [
+                [22, 2, 20, 0, 18],
+                [36, 8, 26, 36, 8],
+                [26, 8, 26, 8, 26],
+                [24, 5, 23, 4, 22],
+            ],
+            dtype=np.int32,
+        ),
+    )
+
+
 def test_primary_quantized_polarity_is_exact() -> None:
     candidate = build(stage="primary")
     assert float(_initializer(candidate, "ng_half_scale")) == 0.5
@@ -220,16 +277,26 @@ def test_six_column_hash_and_controller_match_all_generator_states() -> None:
                         inv0, inv1, inv2, inv4 = inverted
                         left0 = int(np.argmin(inv0))
                         left2 = int(np.argmin(inv2))
-                        shift_u8 = (left2 - left0) % 256
+                        shift = left2 - left0
                         full_equal = np.array_equal(row1, row4)
                         hash1 = int(inv1[:6].astype(np.int64) @ weights)
                         hash4 = int(inv4[:6].astype(np.int64) @ weights)
                         hash_equal = hash1 == hash4
-                        full_candidate = 3 if full_equal else shift_u8
-                        hash_candidate = 3 if hash_equal else shift_u8
+                        full_candidate = 3 if full_equal else shift
+                        hash_candidate = 3 if hash_equal else shift
+                        quantized_shift = shift + 2
+                        quantized_candidate = (
+                            1 if hash_equal else quantized_shift
+                        )
+                        mod_candidate = quantized_candidate % 4
+                        original_rows = [0, 1, 2, 3]
+                        reordered_rows = [2, 3, 0, 1]
 
                         assert full_equal == hash_equal
                         assert full_candidate == hash_candidate
+                        assert reordered_rows[mod_candidate] == original_rows[
+                            full_candidate
+                        ]
                         assert max(hash1, hash4) <= 126
                         cases += 1
 
