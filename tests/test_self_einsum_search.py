@@ -406,6 +406,63 @@ def test_resume_persists_zero_row_completion_and_rejects_config_drift(
         main(args)
 
 
+def test_resume_rejects_malformed_persisted_report_row(tmp_path, monkeypatch):
+    output = tmp_path / "hits.json"
+    monkeypatch.setattr(
+        self_einsum_search,
+        "search_task",
+        lambda task, **kwargs: [
+            self_einsum_search._report_row(
+                task, (("k", "r", "c"),), (0, 1, 0), None
+            )
+        ],
+    )
+    args = ["--tasks", "67", "--max-atoms", "1", "--beam", "1", "--output", str(output)]
+    assert main(args) == 0
+    document = json.loads(output.read_text())
+    document["rows"][0].pop("equation")
+    output.write_text(json.dumps(document))
+
+    with pytest.raises(ValueError, match="incompatible resume"):
+        main(args)
+
+
+@pytest.mark.parametrize(
+    "atom",
+    [
+        ["k", "r"],
+        ["k", "r", "c", "x"],
+        ["k"],
+    ],
+)
+def test_resume_rejects_report_row_whose_atom_arity_is_not_three(
+    tmp_path, monkeypatch, atom
+):
+    """A resumed row must carry the same arity-3 atoms the grammar enforces.
+
+    A row that survives validation is trusted verbatim: its task stays in
+    completed_tasks, so it is never re-searched and the malformed row is
+    re-emitted as that task's final result.
+    """
+    output = tmp_path / "hits.json"
+    monkeypatch.setattr(
+        self_einsum_search,
+        "search_task",
+        lambda task, **kwargs: [
+            self_einsum_search._report_row(task, (("k", "r", "c"),), (0, 1, 0), None)
+        ],
+    )
+    args = ["--tasks", "67", "--max-atoms", "1", "--beam", "1", "--output", str(output)]
+    assert main(args) == 0
+    document = json.loads(output.read_text())
+    document["rows"][0]["query"] = [atom]
+    document["rows"][0]["atoms"] = 1
+    output.write_text(json.dumps(document))
+
+    with pytest.raises(ValueError, match="incompatible resume"):
+        main(args)
+
+
 def test_channel_mask_completes_a_low_cost_near_hit():
     raw_input = np.ones((1, 10, 2, 2), dtype=bool)
     target = raw_input.copy()

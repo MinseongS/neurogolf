@@ -1,64 +1,36 @@
-# STATE - NeuroGolf live handoff (updated 2026-07-15; LB 7424.42, local 7425.0466)
+# STATE - NeuroGolf live handoff (updated 2026-07-15; LB 7424.66, local 7424.5321)
 > Replace this file at session end; do not append. History lives in git, `state/tasks/`,
 > `state/submissions.md`, and `state/levers.yaml`.
 
 ## Confirmed State
-- 🏆 **RECORD LB 7424.42 — submission 54654166.** The active goal is 7470.
-- ⚠️ **Local manifest is 7425.0466, nets 400/400, `ng verify --hash` = HASH-OK.**
-  It contains two adopted improvements not yet submitted as a full board:
-  task302 cost 1773 -> 1385 (**+0.24697**) and task054 cost 20131 -> 12034
-  (**+0.51452**), for **+0.76150 task-local points** over the record deployment.
-  The calibrated full-board expectation is roughly 7425.18, leaving about 44.82 to 7470.
-- task302 was committed in `7562afe`; its `Concat -> Max` mechanism and exhausted
-  board-wide transfer scan are recorded in `state/tasks/task302.md` and
-  `state/levers.yaml`.
+- Best leaderboard score is **7424.66**, submission **54705903**.
+- Local deployment is **7424.5321**, 400/400. It contains the adopted task302
+  Concat-to-Max improvement (cost 1773 -> 1385).
+- The task054 relational renderer previously scored 15.60 in isolated submission 54689861,
+  but its gitignored ONNX and reconstruction source were lost. The deployed task054 is the
+  cost-20131 incumbent. Git objects, reflog, stashes, local ZIPs/backups/caches, and temporary
+  directories contain no copy of expected SHA256 `a90259a...`. Do not count its +0.5145 gain.
 
-## Task054 — Leaderboard-Confirmed Win
-- Candidate `candidates/task054/relational_renderer.onnx`, SHA256
-  `a90259a9050599856df3bd714f3eff8758aa0ad1061af973379e857ca439956f`.
-- Isolated submission **54689861 = 15.60**, proving Kaggle execution and scoring.
-- Official `ng adopt` gate: **266/266, fail=0**, cost **20131 -> 12034**,
-  points **15.08998 -> 15.60451**. Adoption timestamp `20260714T151024Z`.
-- The successful mechanism replaces the old sparse-edit floor with a bounded relational
-  renderer and exact three-box cancellation. Details are in `state/tasks/task054.md` and
-  `.superpowers/sdd/task054-relational-report.md`.
-
-## Task285 — Correct Math, Non-Deployable Execution
-- The affine-reflection rule and low-degree pivot certificate are exact, but the two-Einsum
-  cost-9225 candidate did not finish locally and isolated submission **54688350 = ERROR**.
-- The pivot stage was reduced from 45 operands to a bounded 8-operand polynomial and runs
-  locally; the remaining 32-operand renderer is the blocker. Do not repeat the same probe.
-  Reopen only with a bounded-temporary renderer below incumbent cost 18674.
-
-## Direct-Discovery Status
-- Repaired self-Einsum search commit `0832952` passed its test suite, but independent review
-  found malformed resume rows are under-validated at `tools/self_einsum_search.py:1261`.
-  Task2 remains incomplete until that validation is fixed and the planned all-400
-  depth-8/beam-3000 run is executed.
-- Multi-task cohort search completed all 400 at depth5 and cohorts 0/1/2 at depth6.
-  It found no new exact or cost<=150 correction; only controls 067/179/241. Do not repeat
-  identical absolute-wrong-cell cohort settings. Reopen triggers are in
-  `.superpowers/sdd/cohort-multitask-einsum-report.md`.
-- Task349 analysis eliminated the incremental QConv route on cost grounds. The paused next
-  design is a three-gate bounded relational renderer: endpoint/radius detector -> relation
-  skeleton -> priority composition. Resume from
-  `.superpowers/sdd/task349-relational-report.md` and `candidates/task349/`.
-- Task173's exact generator rule is recorded in `state/tasks/task173.md`; the natural
-  free-output compiler still needs a bounded contraction plan.
+## Work Completed This Session
+- Hardened `tools/self_einsum_search.py` resume validation against malformed persisted rows;
+  `tests/test_self_einsum_search.py` passes **39/39**.
+- Fresh kernel-collapse scan found no candidates. Mask-dominance scan only returned previously
+  adjudicated carriers; no candidate was adopted. Public kernel poll found no new dump.
+- Task349 was re-audited: deployed cost 14892; reaching <9033 requires eliminating both the
+  3600B label plane and 4350B radius bank. The staged report was also lost, and no bounded
+  multi-object association contraction was recovered. No candidate was built.
 
 ## Next Session Order
-1. Check Kaggle submissions, `uv run ng pack`, verify 400 entries, then submit the full board
-   containing task302 + task054 and poll to completion.
-2. Fix the Task2 resume-row schema bug with a regression test, rerun independent review, then
-   launch the specified all-400 deep search with safe per-candidate child timeouts.
-3. Continue task349's staged relational renderer; reject immediately if any stage cannot keep
-   the total below cost 9033 or fails `ORT_DISABLE_ALL` runtime/memory checks.
-4. Preserve task285 as a transferable algebraic insight, not an active candidate, until its
-   renderer is fundamentally factorized.
+1. Run the planned all-400 self-Einsum search at depth 8 / beam 3000 using the now-validated
+   resume file and safe per-candidate child timeouts; gate any hits before adoption.
+2. Reconstruct task054's bounded relational renderer from the recorded endpoint/radius ->
+   relation -> fixed-three-box cancellation mechanism, or recover submission 54689861 after
+   signing into Kaggle in a browser that exposes submission-file download.
+3. Reopen task349 only with a bounded endpoint/radius association design that prices below
+   9033 before build and completes under `ORT_DISABLE_ALL`.
+4. Continue public frontier polling and mandatory public-insight generalization for any win.
 
 ## Operational Guardrails
-- Adoption only through `ng adopt`; submission flow is `ng pack` -> `ng submit`.
+- Adoption only through `ng gate` -> `ng adopt`; submission is `ng pack` -> `ng submit`.
 - Keep onnx==1.21.0 / onnxruntime==1.26.0 pinned. Candidates stay under `candidates/`.
-- Single-task probes are authoritative for ambiguous runtime viability; restore the canonical
-  400-file `submission.zip` immediately afterward.
-- Main checkout: `/Users/minseong/project/neurogolf`.
+- Check Kaggle submissions before submitting; current 54705903 already represents the local board.

@@ -1201,6 +1201,48 @@ def _write_json_atomic(path: Path, document: dict) -> None:
 _OUTPUT_SCHEMA_VERSION = 1
 
 
+def _valid_report_row(row: object, completed_tasks: list[int]) -> bool:
+    """Validate persisted rows before trusting them during resume."""
+    if not isinstance(row, dict):
+        return False
+    required = {
+        "task",
+        "atoms",
+        "query",
+        "equation",
+        "pass",
+        "fail",
+        "wrong_cells",
+        "correction",
+        "cost",
+        "projected_gain",
+    }
+    if set(row) != required:
+        return False
+    integer_fields = ("task", "atoms", "pass", "fail", "wrong_cells", "cost")
+    if any(type(row[field]) is not int or row[field] < 0 for field in integer_fields):
+        return False
+    # Mirror the grammar's own invariants: a query is non-empty and every atom is
+    # a (colour, row, col) triple. A row that passes here is trusted verbatim and
+    # its task is never re-searched.
+    if not isinstance(row["query"], list) or not row["query"]:
+        return False
+    if not all(
+        isinstance(atom, list)
+        and len(atom) == 3
+        and all(isinstance(label, str) and len(label) == 1 for label in atom)
+        for atom in row["query"]
+    ):
+        return False
+    if row["task"] not in completed_tasks or row["atoms"] != len(row["query"]):
+        return False
+    if not isinstance(row["equation"], str):
+        return False
+    if row["correction"] is not None and not isinstance(row["correction"], dict):
+        return False
+    return type(row["projected_gain"]) in (int, float)
+
+
 def _config_hash(config: dict) -> str:
     encoded = json.dumps(config, sort_keys=True, separators=(",", ":")).encode()
     return hashlib.sha256(encoded).hexdigest()
@@ -1259,12 +1301,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             or not all(isinstance(task, int) for task in completed_tasks)
             or completed_tasks != sorted(set(completed_tasks))
             or not isinstance(loaded_rows, list)
-            or not all(
-                isinstance(row, dict)
-                and isinstance(row.get("task"), int)
-                and row["task"] in completed_tasks
-                for row in loaded_rows
-            )
+            or not all(_valid_report_row(row, completed_tasks) for row in loaded_rows)
         ):
             raise ValueError(
                 "incompatible resume file: schema/config/shard differs; "
