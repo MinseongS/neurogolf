@@ -99,3 +99,28 @@ Whole net floors near 7101 → 16.04.
 - cost: 1531 -> 1475 (points 17.7036)
 - source: candidates/task251/factor_seeds.onnx
 - note: exact shared rank-2 factorization of G/H seed routes in final free-output Einsum
+
+## ADOPTED 20260715T120646Z
+- cost: 1475 -> 1335 (points 17.8033)
+- source: candidates/task251/channel_support_collapse.onnx
+- note: factor-seed plus generator-supported input-channel collapse T[2,10,10] -> E[2,10]*Tprime[2,10,2]
+
+## ADOPTED 20260715T133459Z
+- cost: 1335 -> 1191 (points 17.9175)
+- source: candidates/task251/walk_route_shared.onnx
+- note: share the 14-step adjacency transition across epsilon-K and enclosure-W routes; scale all-seed K by 2^-60
+
+## ADOPTED 20260715T141131Z
+- cost: 1191 -> 1159 (points 17.9447)
+- source: candidates/task251/channel_code_shared.onnx
+- note: shared rank-2 channel code on reachable input and output axes (E/Tprime 60 -> D/C 28)
+
+## ADOPTED 20260715T142736Z
+- cost: 1159 -> 1155 (points 17.9481)
+- source: candidates/task251/diagonal_channel_metric.onnx
+- note: diagonalize the shared rank-2 channel metric (2x2x2 core 8 -> route weights 4)
+
+## ADOPTED 20260715T144759Z
+- cost: 1155 -> 1147 (points 17.9551)
+- source: candidates/task251/seed_precontracted.onnx
+- note: exact initializer-only seed precontraction abK*abL -> aKL (16 -> 8 params)

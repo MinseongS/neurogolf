@@ -4,9 +4,9 @@ logged_costs_match: stale-likely
 migrated: 2026-07-09
 ---
 
-# task267 — FLOOR (2026-07-01)
+# task267 — 2026-07-01 historical claim, falsified 2026-07-11
 
-mem/params at structural floor. 490B Where=[1,10,7,7] one-hot carrier; ch0 bg must be 1 across in-grid 7x7 (background-channel carrier floor). Already documented FLOOR.
+A 2026-07-01 note incorrectly treated the 490B `Where[1,10,7,7]` one-hot carrier and channel-0 background fill as irreducible. The 2026-07-11 free-output Einsum adoption removed that carrier, so this is retained only as a falsified historical premise.
 
 No source change.
 
@@ -16,9 +16,9 @@ No source change.
 
 **Cost (grader mem 724, params 42):** ops Slice×2/Pad×2/Greater/Cast/Equal/Where. Counted intermediates: `block` [1,10,7,7] uint8 490B (the 10-channel one-hot carrier), `ch0in` [1,1,5,5] fp32 100B, `mask7` [1,1,7,7] bool 49B. Params dominated by two [8] int64 pad specs (64B each). Output [1,10,30,30] uint8 9000B is FREE.
 
-**Blocker class:** full-output-carrier. The 490B `block` one-hot is the emission floor: background channel-0 must be set to 1 across the whole in-grid 7×7 (per-channel carrier), so the plane cannot shrink below G²×10 for a colour-replacement whose output size = input size. Already logged FLOOR.
+**Historical blocker hypothesis (falsified):** the 490B `block` one-hot was assumed necessary to emit channel-0 background across the 7×7 grid. The later free-output Einsum showed that this carrier can be folded into the output expression.
 
-**Lever:** no lever visible (background-channel carrier is structural). fp16 recast blocked — one-hot is uint8 already, Pad needs uint8.
+**Historical lever assessment (falsified):** no lever was visible under the old carrier-based formulation; fp16 recast alone could not help because the one-hot and Pad were uint8. The later free-output reformulation changed the representation and removed the carrier.
 
 ## ADOPTED 20260711T135833Z
 - cost: 758 -> 358 (points 19.1195)
@@ -34,3 +34,33 @@ No source change.
 - cost: 306 -> 298 (points 19.3029)
 - source: candidates/task267/joint_basis_min.onnx
 - note: remove two identity coefficients around shared row/column basis
+
+## ADOPTED 20260715T105948Z
+- cost: 298 -> 270 (points 19.4016)
+- source: candidates/task267/gathernd_dedupe.onnx
+- note: fixed-marker GatherND removes Slice+Reshape; identical row/col spatial basis dedupe
+
+## ADOPTED 20260715T120655Z
+- cost: 270 -> 220 (points 19.6064)
+- source: candidates/task267/marker_mix_fold.onnx
+- note: fold marker-e0 subtraction into terminal Einsum with 2x2 channel mixing; remove GatherND/Sub carrier
+
+## ADOPTED 20260715T132939Z
+- cost: 220 -> 180 (points 19.8070)
+- source: candidates/task267/marker_affine_factor.onnx
+- note: factor marker+e0 through shared J basis; replace 80B Concat carrier with 40B affine marker vector
+
+## ADOPTED 20260715T134456Z
+- cost: 180 -> 86 (points 20.5457)
+- source: candidates/task267/free_input_corner_fold.onnx
+- note: read 3*background+marker directly from FREE input corners via shared R complement; remove Slice/Add and all marker metadata
+
+## ADOPTED 20260715T142013Z
+- cost: 86 -> 60 (points 20.9057)
+- source: candidates/task267/moment_sign_fold.onnx
+- note: replace spatial/channel bases with FREE-input boundary and row moments
+
+## ADOPTED 20260715T144211Z
+- cost: 60 -> 30 (points 21.5988)
+- source: candidates/task267/one_vector_underflow.onnx
+- note: share boundary and row moments through one binary phase vector with pinned float32 inner-support underflow

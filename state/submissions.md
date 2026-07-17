@@ -768,3 +768,82 @@ built from submission/merged_nets/.
 | 2026-07-15 08:49Z | FULL local7430.7937; task080 strided compact rewrite 6686->5099 plus task138 compact tail and concurrent gated wins; 400/400 pack clean |
 | 2026-07-15 09:04Z | FULL local7430.9666; final adopted batch task350/356/374/388 after task080/138; verified and packed 400/400; note prior local7430.7937 LB7413.31 diagnostic risk |
 | 2026-07-15 09:04Z | 54719275 | **7431.10 NEW RECORD** | FULL local7430.9666; final batch completed successfully and did not repeat the prior aggregate loss. |
+
+| 2026-07-15 14:26Z | FULL snapshot7448.0241; task131 K10 prune plus concurrent gated wins; immutable zip verified 400/400; task131 fresh risk 76/1500 |
+| 2026-07-15 14:43Z | 54728797 | **7414.54** | Submission COMPLETE; immutable local snapshot 7448.0241 passed 400/400, but public score was 16.56 below the 7431.10 record. Aggregate included many concurrent wins, so task131 impact is not isolated; its fresh 76/1500 risk remains material. |
+
+| 2026-07-15 15:13Z | FULL source-rebuild midflight; local 7423.2497; 400 ONNX smoke-scored; 398 full stored+arcgen pass; task054/074 long-eval source builds |
+| 2026-07-15 15:20Z | FULL current-deploy plus dirty-python overlay; local 7452.2068; source diffs 037/069/184/325/354/366; 400 smoke-scored and changed tasks full-pass |
+| 2026-07-15 15:13Z | 54730483 | **7337.68** | FULL 400-source rebuild, local 7423.2497. Public delta -85.5697 proves the complete Python source board is not hidden-equivalent to the active deployed artifacts. |
+| 2026-07-15 15:20Z | 54730755 | **7384.10** | FULL deploy-plus-dirty-source overlay, local 7452.2068. Only tasks037/069/184/325/354/366 differed by SHA; public delta -68.1068 shows at least one changed source rebuild is hidden-invalid or the live base carried additional aggregate-risk divergence. |
+
+| 2026-07-15 15:33Z | PARTIAL isolate ref54730755 task037 exact-overlay artifact |
+| 2026-07-15 15:33Z | PARTIAL isolate ref54730755 task069 exact-overlay artifact |
+| 2026-07-15 15:33Z | PARTIAL isolate ref54730755 task184 exact-overlay artifact |
+| 2026-07-15 15:33Z | PARTIAL isolate ref54730755 task325 exact-overlay artifact |
+| 2026-07-15 15:33Z | PARTIAL isolate ref54730755 task354 exact-overlay artifact |
+| 2026-07-15 15:33Z | PARTIAL isolate ref54730755 task366 exact-overlay artifact |
+| 2026-07-15 15:33Z | 54731203/54731206/54731210/54731213/54731214/54731215 | **17.60/17.97/18.05/17.91/17.85/15.12** | Exact ref54730755 overlay artifacts for tasks037/069/184/325/354/366 all scored their predicted fixed-cost points individually. This falsifies the changed-source hidden-zero hypothesis; the full-board 7384.10 loss is package-level aggregate runtime/order or another live-base divergence, not any of these six artifacts in isolation. |
+| 2026-07-15 15:46Z | 54731705 | **7404.69** | Exact ref54719275 base + half A of the 88 ref54730755 changes; expected 7438.31. The 33.62 deficit is exactly explained by isolated-zero tasks118 and 131. |
+| 2026-07-15 15:46Z | 54731713 | **7392.90** | Exact ref54719275 base + half B of the 88 ref54730755 changes; expected 7444.79. Isolated-zero task209 explains 16.29; the remaining ~35.60 is group-only aggregate runtime/order loss unless another unisolated task also zeroes. |
+| 2026-07-15 15:58Z | 54732112/54732114/54732161 | **0.00/0.00/0.00** | Hidden-zero root-cause isolation: exact ref54730755 artifacts task118/task131/task209 individually score zero. Local fixed-cost points were 16.845212/16.772892/16.285761, total 49.903865. All three were subsequently restored through the evidence-bound public-zero repair gate; task209's repair was individually confirmed at 16.17 by ref54732708. No repaired full-board submission has run yet. |
+| 2026-07-15 15:56Z | 54732033/54732042 | **7435.59/7382.59** | Half-A cross-check: A1 exactly matched expected 7435.59; A2 missed expected 7433.82 by 51.23. Yet combined A1+A2 ref54731705 misses only the 33.62 from zero tasks118+131, proving an additional non-monotonic package/runtime-order interaction rather than another stable per-task zero. |
+
+| 2026-07-15 15:41Z | FULL CONTROL reconstructed ref54719275 via first-postref adopt backups; smoke local7425.3906 |
+| 2026-07-15 15:46Z | FULL DD ref54719275 exact base + halfA of 88 changes; expected 7438.31 |
+| 2026-07-15 15:46Z | FULL DD ref54719275 exact base + halfB of 88 changes; expected 7444.79 |
+| 2026-07-15 15:56Z | FULL DD exact7431 + A1 of bad halfA; expected 7435.59 |
+| 2026-07-15 15:56Z | FULL DD exact7431 + A2 of bad halfA; expected 7433.82 |
+| 2026-07-15 15:58Z | PARTIAL DD risk-candidate task002 exact ref54730755 artifact |
+| 2026-07-15 15:58Z | PARTIAL DD risk-candidate task023 exact ref54730755 artifact |
+| 2026-07-15 15:58Z | PARTIAL DD risk-candidate task025 exact ref54730755 artifact |
+| 2026-07-15 15:58Z | PARTIAL DD risk-candidate task048 exact ref54730755 artifact |
+| 2026-07-15 15:58Z | PARTIAL DD risk-candidate task118 exact ref54730755 artifact |
+| 2026-07-15 15:58Z | PARTIAL DD risk-candidate task131 exact ref54730755 artifact |
+| 2026-07-15 15:58Z | PARTIAL DD risk-candidate task133 exact ref54730755 artifact |
+| 2026-07-15 15:58Z | PARTIAL DD risk-candidate task173 exact ref54730755 artifact |
+| 2026-07-15 15:58Z | PARTIAL DD risk-candidate task187 exact ref54730755 artifact |
+| 2026-07-15 15:59Z | 54732161 | **0.00** | PARTIAL task209 exact `eae4bcd1...` quotient-pool + terminal spatial output-fold artifact. Public-zero evidence triggered repair to exact ref54719275 artifact `2c669b08...`; bundled/fresh differential had missed this hidden-invalid state. |
+| 2026-07-15 15:59Z | PARTIAL DD risk-candidate task219 exact ref54730755 artifact |
+| 2026-07-15 15:59Z | PARTIAL DD risk-candidate task233 exact ref54730755 artifact |
+| 2026-07-15 15:59Z | PARTIAL DD risk-candidate task285 exact ref54730755 artifact |
+| 2026-07-15 16:02Z | PARTIAL DD pair-candidate task216 exact ref54730755 artifact |
+| 2026-07-15 16:02Z | PARTIAL DD pair-candidate task271 exact ref54730755 artifact |
+| 2026-07-15 16:02Z | PARTIAL DD pair-candidate task327 exact ref54730755 artifact |
+| 2026-07-15 16:02Z | PARTIAL DD pair-candidate task217 exact ref54730755 artifact |
+| 2026-07-15 16:02Z | PARTIAL DD pair-candidate task396 exact ref54730755 artifact |
+| 2026-07-15 16:02Z | PARTIAL DD pair-candidate task251 exact ref54730755 artifact |
+| 2026-07-15 16:02Z | PARTIAL DD pair-candidate task333 exact ref54730755 artifact |
+| 2026-07-15 16:02Z | PARTIAL DD pair-candidate task295 exact ref54730755 artifact |
+| 2026-07-15 16:02Z | PARTIAL DD pair-candidate task280 exact ref54730755 artifact |
+| 2026-07-15 16:02Z | PARTIAL DD pair-candidate task356 exact ref54730755 artifact |
+| 2026-07-15 16:03Z | PARTIAL DD pair-candidate task206 exact ref54730755 artifact |
+| 2026-07-15 16:03Z | PARTIAL DD pair-candidate task388 exact ref54730755 artifact |
+| 2026-07-15 16:04Z | PARTIAL DD final-pair task301 exact ref54730755 artifact |
+| 2026-07-15 16:04Z | PARTIAL DD final-pair task323 exact ref54730755 artifact |
+| 2026-07-15 16:06Z | PARTIAL DD residual-candidate task124 exact ref54730755 artifact |
+| 2026-07-15 16:06Z | PARTIAL DD residual-candidate task062 exact ref54730755 artifact |
+| 2026-07-15 16:15Z | 54732708 | **16.17** | PARTIAL task209 public-zero repair verification. ZIP contained only `task209.onnx`; embedded/deployed/source SHA `2c669b08e72bc60cf3c45aedc3e9b5ce5a65ffabdfd83339ef44e955641b808d`. Confirms recovery from ref54732161's 0.00. |
+
+| 2026-07-15 16:24Z | 54733024 | **15.92** | PARTIAL task118 public-zero repair verification. ZIP SHA `4206dd2dfb812cac40b90d89d349c3ba96048fcca76dee8de3bde681d133691e` contained only `task118.onnx`; deployed/source SHA `f3b7cfd77d55353ff522b7d172b7dd38a46ac5f3df585dcc1a837c8e96c37247`. Confirms recovery from ref54732112's 0.00. |
+| 2026-07-15 16:24Z | 54733036 | **16.73** | PARTIAL task131 public-zero repair verification. ZIP SHA `5405406f706651de42faae2427f4364d1357d8bcf654a3a627cd6763a2099fe3` contained only `task131.onnx`; deployed/source SHA `79ff05f1116e16a8f7198a96b75fb7b9e84664a2e376311b852f51f20c5da67f`. Confirms recovery from ref54732114's 0.00. |
+
+| 2026-07-15 16:32Z | FULL 7454.9756 after confirmed public-zero repairs task118 task131 task209; zip b7eb32f7 |
+| 2026-07-15 17:00Z | PARTIAL diagnose suspected hidden-zero tasks086 124 271 325 expected74.12 sha ee9bdf96 |
+| 2026-07-15 17:02Z | PARTIAL diagnose residual hidden-zero pair task184 task381 expected35.59 |
+| 2026-07-15 17:05Z | PARTIAL coded residual test task145 task153 task246 expected54.79 |
+| 2026-07-15 17:08Z | PARTIAL coded overlay suspects 085 134 141 178 264 281 320 329 398 |
+| 2026-07-15 17:14Z | FULL clean ref7435.59 plus 37 manifest gains excluding public-zero task271 task325; expected7451.78 sha7e6b5c57 |
+| 2026-07-15 17:27Z | FULL clean target7452.47; safe public task271 cost350 task325 cost1197; revert zero task365; sha336b4a39 |
+| 2026-07-15 17:50Z | FULL target7452.24 runtime-safe; baseline task037 saves14.65s to prevent task336 loss; sha27c8f18c |
+| 2026-07-15 18:05Z | FULL target7451.85 runtime-safe; baseline task037+190 saves17.93s before task336; sha runtime2 |
+| 2026-07-15 18:26Z | PARTIAL verify new safe gains task095 task243 expected37.18 sha23af2ca9 |
+| 2026-07-15 18:28Z | FULL runtime-safe 7452.00 anchor; proven task095 only; sha142d3352 |
+| 2026-07-15 18:37Z | PARTIAL verify task094 task383 runtime-safe gains expected35.39 sha347d6224 |
+| 2026-07-15 18:40Z | FULL diagnose package-zero repair task323 float-coordinate variant; expected7452.00 shabb1b8bba |
+| 2026-07-15 23:32Z | 54746380 | **34.72** | PARTIAL task187+task368 exact fast gains; expected 34.73, both public-positive. |
+| 2026-07-15 23:34Z | FULL public-validated runtime-safe final board expected7453.07; ZIP SHA c0e50bf3ce3f197feedc5646662b607ddd80fe9842270d7755ae01f2fc68ff8b. |
+| 2026-07-15 23:40Z | FULL final board plus task112 fresh2000 divergence0; expected7453.13; ZIP SHA 6fd73d3bf248a9077cd81817755d6d08bd36ce8469fbf5cbe8b3c0b91bca9222. |
+| 2026-07-15 23:35Z | 54746475 | **7453.08** public / **7453.08** private | FULL public-validated runtime-safe board; no package zero. |
+| 2026-07-15 23:40Z | 54746718 | **7453.14** public / **7453.14** private | FINAL+ task112 fresh-exact; final best score. |
+| 2026-07-15 19:12Z | PARTIAL verify rule-complete public-zero repairs task325 task365 expected35.47 |

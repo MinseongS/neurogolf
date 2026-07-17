@@ -684,3 +684,8 @@ residual Kaggle-semantics risk (local mirror clean, LB-unproven combos): opset 1
   or any unsigned int. Re-run the board scan before every `ng pack`:
   `uv run python -c "from neurogolf.topk import find_unsigned_topk; ..."` over
   `submission/overfit_nets/*.onnx`.
+
+## ADOPTED 20260715T105718Z
+- cost: 20425 -> 20421 (points 15.0757)
+- source: candidates/task233/cand_oogbias_rebuilt.onnx
+- note: restore lost OOG-bias dynamic-correlation live graph through gate; exact initializer dedupe (c0/c1/reverse [-1,-1]) saves 4 params

@@ -97,3 +97,13 @@ Bundled gate after adoption: fail=0, cost `2190 -> 2188`
 - cost: 1102 -> 994 (points 18.0983)
 - source: candidates/task388/derive_in_sel.onnx
 - note: derive input selector inside exact factorization; bundled 266/266; 1102->994
+
+## ADOPTED 20260715T114911Z
+- cost: 994 -> 978 (points 18.1145)
+- source: candidates/task388/shared_channel_basis.onnx
+- note: reuse rule_b to reconstruct reachable non-cyan input color basis; removes color_in (actual 1102->978)
+
+## ADOPTED 20260715T120443Z
+- cost: 978 -> 974 (points 18.1186)
+- source: candidates/task388/absorbed_channel_transform.onnx
+- note: absorb shared input-channel transform into rule_a (978->974); 4-example ORT runtime parity

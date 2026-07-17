@@ -119,3 +119,8 @@ K2 for leak-incident/fresh robustness).
 - cost: 4717 -> 4020 (points 16.7010)
 - source: /tmp/task243_cand.onnx
 - note: runtime-spend deepfold: task187-S8 stacked-chain free-output port. W1+mask18+mask(2520B)+Cast/Pad/Where tail -> ONE 92-operand free-output einsum; stacked gate plane P2[1,2,18,18](+1296B) rides s through 42-pair walk (S2[0]=id passthrough, S2[1]=tridiag reach); Cr reused as 18->30 in-einsum embed (0 new params); signed mixer T2 decode under free >0. 4717->4020 (+0.160). TRANSFERABLE: S8-port kills Where(Pad(Cast(walk)))-tails whenever tail bytes > stack increment; alphabet budget 52-8 reserved = max 42 walk pairs, check bundled step-distance first (here <=40).
+
+## ADOPTED 20260715T181140Z
+- cost: 4020 -> 2060 (points 17.3695)
+- source: candidates/task243/padded30_shared_black_walk.onnx
+- note: padded30 shared-black free-input walk: remove P2 and Cr; 90-operand terminal Einsum

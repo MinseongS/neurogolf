@@ -100,3 +100,8 @@ select-and-crop pipeline stays at ~9x9/7x7 fp16, below the old 900B 30x30 label-
 - cost: 366 -> 350 (points 19.1421)
 - source: candidates/task271/bitwise_where_decoder.onnx
 - note: decode score payload with UINT16 BitwiseAnd and centered UINT8 Where
+
+## ADOPTED 20260715T155323Z
+- cost: 350 -> 283 (points 19.3546)
+- source: candidates/task271/hash_chd_payload.onnx
+- note: bundled rank1 hash + CHD perfect lookup + seven-lane INT64 payload packing

@@ -1,5 +1,5 @@
 ---
-deployed_cost: 2226
+deployed_cost: 94
 logged_costs_match: match
 migrated: 2026-07-09
 ---
@@ -10,7 +10,7 @@ migrated: 2026-07-09
 black grid (size 10–20). Output keeps both dots and draws a cyan (8) L-path:
 horizontal along row r0 strictly between the two columns, then vertical along
 col c1 from r0 (inclusive) to r1 (exclusive). Corner (r0,c1) is cyan.
-**Current:** 16.29 pts, custom:task246 (`_hpwl` shared 10-ch double-MatMul), mem 5520, params 520
+**Current:** 20.456705 pts, custom:task246 (single 69-operand fp32 Einsum), mem 0, params 94
 **Target tier:** A (separable bilinear → free bool output) — path is a union of two
 rank-1 (row⊗col) regions plus two single-pixel dots, so a single colour-index
 plane suffices; the 10→1 reduction routes into the FREE output, no per-cell colour army.
@@ -76,3 +76,108 @@ Mechanism: Einsum/value_info crop. Gate fresh_verify 1500: inc=0/cand=0 (CLEAN).
 - cost: 2067 -> 1128 (points 17.9718)
 - source: candidates/task246/cand.onnx
 - note: regime vein batch7: 11-operand free-output Einsum — out[c]=input[c]+m(h,w)*D[c]; endpoint-protected direction-symmetric quadratic (x-a+s/2)(b-x) bands, coefficient-vs-basis [1,h,h^2] trick (interval predicates = 12B coefficients); 500 fresh 0-fail. TRANSFERABLE: inclusive-start/exclusive-end quadratic kills dot-overwrite sign hazard without Min/Max
+
+## ADOPTED 20260715T104647Z
+- cost: 1128 -> 1126 (points 17.9736)
+- source: candidates/task246/dtype.onnx
+- note: dtype tail: output-coupled scalar Cast removal/recast, cost 1128->1126
+
+## ADOPTED 20260715T112037Z
+- cost: 1126 -> 1003 (points 18.0892)
+- source: candidates/task246/free_input_gatefold.onnx
+- note: FREE-input gate fold: delete Q/R2/G3 carriers; stage row factor to preserve 11-operand ORT plan; collapse [1,x,x^2] basis via repeated [1,x] operands
+
+## ADOPTED 20260715T114534Z
+- cost: 1003 -> 734 (points 18.4015)
+- source: candidates/task246/direct13_permutations/perm_11.onnx
+- note: direct FREE-input row/col gate fold; operand-order tuned 13-way output Einsum (50-run 0.449s vs original 6.99s), removes staged 360B row carrier; bundled 266/266 fresh 500/500
+
+## ADOPTED 20260715T115013Z
+- cost: 734 -> 590 (points 18.6199)
+- source: candidates/task246/direct15_permutations/perm_13.onnx
+- note: inline 72B row/col coefficient cores into tuned 15-way FREE-output Einsum; operand-order perm13; bundled 266/266 fresh 500/500, profile50 0.513s
+
+## ADOPTED 20260715T115551Z
+- cost: 590 -> 476 (points 18.8346)
+- source: candidates/task246/channel_sign_cp.onnx
+- note: rank-4 sign CP collapses dense E/F channel router; bundled 266/266, fresh 500/500; cost 590->476
+
+## ADOPTED 20260715T115854Z
+- cost: 476 -> 416 (points 18.9693)
+- source: candidates/task246/axis_free_sum.onnx
+- note: remove 60-param axis selector via full-grid sums and positive term rescaling; bundled 266/266, fresh 500/500; cost 476->416
+
+## ADOPTED 20260715T121035Z
+- cost: 416 -> 375 (points 19.0731)
+- source: candidates/task246/rank3_flat_parabola.onnx
+- note: rank-3 flat-parabola sign code plus coordinate-selector reuse; bundled 266/266, fresh 500/500; cost 416->375
+
+## ADOPTED 20260715T121259Z
+- cost: 375 -> 351 (points 19.1392)
+- source: candidates/task246/coeff_rank2.onnx
+- note: factor Cr/Dc through shared rank-2 term selectors; bundled 266/266, fresh 500/500; memory 154->130 cost 375->351
+
+## ADOPTED 20260715T121447Z
+- cost: 351 -> 330 (points 19.2009)
+- source: candidates/task246/power_pair_basis.onnx
+- note: factor P[3,30] into repeated [1,x] plus 3x2x2 map and reuse coordinate selector; bundled 266/266, fresh 500/500; cost 351->330
+
+## ADOPTED 20260715T121836Z
+- cost: 330 -> 302 (points 19.2896)
+- source: candidates/task246/shared_color_basis.onnx
+- note: share rank-3 black/red/green channel basis across routing and marker selectors; bundled 266/266, fresh 500/500; cost 330->302
+
+## ADOPTED 20260715T121953Z
+- cost: 302 -> 272 (points 19.3942)
+- source: candidates/task246/symmetric_color_basis.onnx
+- note: reuse one symmetric D/Z/constant basis on input and output channels; bundled 266/266, fresh 500/500; cost 302->272
+
+## ADOPTED 20260715T122303Z
+- cost: 272 -> 263 (points 19.4278)
+- source: candidates/task246/marker_protected_quadratics.onnx
+- note: marker-zero channel basis permits strict vertical and inclusive horizontal quadratics without Sign; bundled 266/266, fresh 500/500; cost 272->263
+
+## ADOPTED 20260715T122433Z
+- cost: 263 -> 259 (points 19.4432)
+- source: candidates/task246/signed_power_map.onnx
+- note: fold quadratic signs into static power-pair map, removing two scalar Neg tensors; bundled 266/266, fresh 500/500; cost 263->259
+
+## ADOPTED 20260715T122637Z
+- cost: 259 -> 257 (points 19.4509)
+- source: candidates/task246/difference_selectors.onnx
+- note: difference selectors jointly encode marker, coordinate, and inclusive endpoint offsets; bundled 266/266, fresh 500/500; cost 259->257
+
+## ADOPTED 20260715T124650Z
+- cost: 257 -> 157 (points 19.9438)
+- source: candidates/task246/fully_direct_permutations/perm_02.onnx
+- note: inline all coordinate reads and root quadratics into operand-ordered FREE-output Einsum; memory 116->0, cost 257->157; bundled 266/266, fresh 500/500
+
+## ADOPTED 20260715T124851Z
+- cost: 157 -> 133 (points 20.1097)
+- source: candidates/task246/root_mux_factor.onnx
+- note: factor direct polynomial mux into reused 2x2 root-difference mux; memory0 params133 cost157->133; bundled266/266 fresh500/500
+
+## ADOPTED 20260715T125120Z
+- cost: 133 -> 130 (points 20.1325)
+- source: candidates/task246/flipped_green_map.onnx
+- note: reuse red channel map for green through 3-value basis sign flip; memory0 params130 cost133->130; bundled266/266 fresh500/500
+
+## ADOPTED 20260715T133957Z
+- cost: 130 -> 117 (points 20.2378)
+- source: candidates/task246/joint_term_permutations/perm_00.onnx
+- note: joint term/root/channel selector factor: collapse 3-state d13 maps into reused root mux + 2x3 channel term; cost130->117; 30 bounded orders; bundled266/266 fresh500/500
+
+## ADOPTED 20260715T141949Z
+- cost: 117 -> 104 (points 20.3556)
+- source: candidates/task246/quadratic_colour_permutations/perm_12.onnx
+- note: quadratic 2D reachable-colour basis with exact marker-zero determinant gate; 16 bounded operand orders; bundled266 fresh500
+
+## ADOPTED 20260715T150025Z
+- cost: 104 -> 94 (points 20.4567)
+- source: candidates/task246/joint_reused_colour_permutations/perm_00.onnx
+- note: cost104->94: reuse 2x2 quadratic gate as channel map; synthesize e0/e1/swap from direct_root_mux; bundled266 fresh500
+
+## ADOPTED 20260715T153719Z
+- cost: 94 -> 92 (points 20.4782)
+- source: candidates/task246/sign_free_root_permutations/perm_00.onnx
+- note: synthesize all joint_axis_sign factors as shared-Z direct_root_mux diagonals; cost94->92; 16 bounded orders; bundled266 fresh500

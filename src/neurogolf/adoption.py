@@ -13,8 +13,14 @@ def adopt(
     note: str = "",
     *,
     repair_invalid: bool = False,
+    public_zero_ref: int | None = None,
 ) -> dict:
-    res = gate_candidate(Path(candidate), task_num, repair_invalid=repair_invalid)
+    res = gate_candidate(
+        Path(candidate),
+        task_num,
+        repair_invalid=repair_invalid,
+        public_zero_ref=public_zero_ref,
+    )
     if not res.ok:
         raise SystemExit("gate REJECT: " + " | ".join(res.reasons))
     target = OVERFIT_NETS / f"task{task_num:03d}.onnx"
@@ -26,9 +32,20 @@ def adopt(
            "ok": True, "fail": 0, "sha256": hashlib.sha256(target.read_bytes()).hexdigest(),
            "updated": ts}
     manifest.update_row(task_num, row)
-    action = "REPAIRED" if res.repairing_invalid_topk else "ADOPTED"
+    action = (
+        "REPAIRED"
+        if res.repairing_invalid_topk or res.repairing_public_zero
+        else "ADOPTED"
+    )
+    evidence = (
+        f"\n- public-zero-ref: {public_zero_ref}"
+        if res.repairing_public_zero
+        else ""
+    )
     stamp = (f"\n## {action} {ts}\n- cost: {res.incumbent_cost} -> {res.candidate['cost']}"
              f" (points {res.candidate['points']:.4f})\n- source: {candidate}\n- note: {note}\n")
+    if evidence:
+        stamp = stamp.rstrip() + evidence + "\n"
     log = STATE / "tasks" / f"task{task_num:03d}.md"
     log.parent.mkdir(parents=True, exist_ok=True)
     log.touch(exist_ok=True)

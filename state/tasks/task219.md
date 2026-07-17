@@ -152,3 +152,28 @@ col=3 parameters).
 - cost: 7210 -> 5258 (points 16.4325)
 - source: candidates/task219/conv_topk.onnx
 - note: collapse: free epilogue folds 7 tensors (incl 900B [1,1,30,30] col30) into one 1x1 QLinearConv (w_zero_point=128 -> signed) over a [1,3,15,10] u8 stack doing colour map + canvas pad (pads=[0,0,15,20]) into free output; u8 saturation performs the old Max(8*cyan,blue) free. W5 fold: pf IS the row-gather one-hot so the score einsum reads cyh through it, deleting the [1,1,6,3,10] window. TopK(sorted,largest) index-stable on ties yields band tops in row order + exists-flags, replacing CumSum band-index + [6,15] one-hot + 2 ArgMax. 73->69 nodes, cost 7210->5258. Semantics preserved bit-exactly; differential vs incumbent 4000 in-distribution + 4000 OOD cyan + 4000 OOD multicolour = 0 disagreements.
+
+## ADOPTED 20260715T122827Z
+- cost: 7210 -> 5229 (points 16.4380)
+- source: candidates/task219/conv_topk_rebuilt.onnx
+- note: TopK/W5 restoration plus two-channel signed quantization-threshold FREE epilogue; 1000 fresh exact vs incumbent
+
+## ADOPTED 20260715T132733Z
+- cost: 5229 -> 4707 (points 16.5432)
+- source: candidates/task219/pf_row_gather_scatter.onnx
+- note: pf-free shared row-index lowering: UINT8 Gather+MatMulInteger score, halo-safe ScatterND placement, exists from btop/top5
+
+## ADOPTED 20260715T140834Z
+- cost: 4707 -> 4058 (points 16.6916)
+- source: candidates/task219/placement_conv_lowering.onnx
+- note: dynamic UINT8 QLinear score correlation shared with rank-shaped Gather/Scatter; fresh-safe halo retained
+
+## ADOPTED 20260715T143704Z
+- cost: 4058 -> 3666 (points 16.7931)
+- source: candidates/task219/rank6_halo_route.onnx
+- note: rank6 halo routing + shared scaled score/placement bank; bundled 265/265, fresh5000 divergence0, cost 4058->3666
+
+## ADOPTED 20260715T155414Z
+- cost: 3666 -> 3289 (points 16.9017)
+- source: candidates/task219/phase_anchor_projector.onnx
+- note: phase-anchor UINT8 QLinearConv placement projector; bundled score-max

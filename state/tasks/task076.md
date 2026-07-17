@@ -177,3 +177,8 @@ falsification history: the bound audit (2026-07-11) over-estimated this task's g
   or any unsigned int. Re-run the board scan before every `ng pack`:
   `uv run python -c "from neurogolf.topk import find_unsigned_topk; ..."` over
   `submission/overfit_nets/*.onnx`.
+
+## ADOPTED 20260715T114417Z
+- cost: 10467 -> 10022 (points 15.7875)
+- source: candidates/task076/joint_topk.onnx
+- note: Kaggle-safe grouped fp16 TopK: mod-4 colour selector plus 14-cell class compaction

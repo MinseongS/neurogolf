@@ -18,7 +18,7 @@ def test_adopt_replaces_backs_up_and_stamps(tmp_path, monkeypatch):
     nets, state = _setup(tmp_path, monkeypatch)
     cand = tmp_path / "cand.onnx"; cand.write_bytes(b"NEW")
     ok = gate.GateResult(ok=True, candidate={"cost": 100, "points": 20.0, "ok": True, "fail": 0}, incumbent_cost=500)
-    monkeypatch.setattr(adoption, "gate_candidate", lambda c, t: ok)
+    monkeypatch.setattr(adoption, "gate_candidate", lambda c, t, **kwargs: ok)
     row = adoption.adopt(cand, 1, note="test win")
     assert (nets / "task001.onnx").read_bytes() == b"NEW"
     assert list((tmp_path / "submission" / ".backups").glob("task001_*.onnx"))
@@ -29,8 +29,35 @@ def test_adopt_refuses_on_gate_failure(tmp_path, monkeypatch):
     nets, _ = _setup(tmp_path, monkeypatch)
     cand = tmp_path / "cand.onnx"; cand.write_bytes(b"NEW")
     bad = gate.GateResult(ok=False, reasons=["bundled fail != 0"])
-    monkeypatch.setattr(adoption, "gate_candidate", lambda c, t: bad)
+    monkeypatch.setattr(adoption, "gate_candidate", lambda c, t, **kwargs: bad)
     import pytest
     with pytest.raises(SystemExit):
         adoption.adopt(cand, 1)
     assert (nets / "task001.onnx").read_bytes() == b"OLD"
+
+
+def test_adopt_public_zero_repair_forwards_ref_and_stamps_evidence(tmp_path, monkeypatch):
+    nets, state = _setup(tmp_path, monkeypatch)
+    cand = tmp_path / "cand.onnx"
+    cand.write_bytes(b"SAFE")
+    seen = {}
+    ok = gate.GateResult(
+        ok=True,
+        candidate={"cost": 600, "points": 19.0, "ok": True, "fail": 0},
+        incumbent_cost=500,
+        repairing_public_zero=True,
+    )
+
+    def fake_gate(candidate, task_num, **kwargs):
+        seen.update(kwargs)
+        return ok
+
+    monkeypatch.setattr(adoption, "gate_candidate", fake_gate)
+
+    adoption.adopt(cand, 1, note="restore safe model", public_zero_ref=54732112)
+
+    assert seen["public_zero_ref"] == 54732112
+    assert (nets / "task001.onnx").read_bytes() == b"SAFE"
+    log = (state / "tasks" / "task001.md").read_text()
+    assert "## REPAIRED" in log
+    assert "public-zero-ref: 54732112" in log

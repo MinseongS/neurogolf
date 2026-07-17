@@ -402,3 +402,43 @@ falsification history: first fresh-tail diagnosis of task366. Consistent with th
 - cost: 22194 -> 21729 (points 15.0136)
 - source: candidates/task366/split_crop.onnx
 - note: FALSIFIES the 2026-07-09 'colf 3600 = structural DETECTION floor' verdict. That verdict enumerated 6 alternatives but every one assumed the label plane must be a SINGLE full 30x30 rectangle; it missed that the generator makes the layouts mutually exclusive (horiz => grid subset rows 0:15 x cols 0:30; stacked => rows 0:30 x cols 0:17) so the union of REACHABLE cells is only 705/900 and is NON-RECTANGULAR — coverable by two static crops. Replaced the single colf=Conv(input,W01=[0..9]) full [1,1,30,30] fp32 plane (3600B) + its u8 copy gU (900B) with two negative-crop Convs SHARING the same W01 initializer (params unchanged 222): D1=[1,1,30,17] + D2=[1,1,15,13] = 2820B fp32 + 705B u8, reassembled into the two gather sources (D1u for the stacked row-gather, P15=Concat(A4,D2u) for the horiz col-gather) plus a mux. cost 22194->21729. EQUIVALENCE PROVEN not just gated: nodes 23-27 give radd=ar15+Where(horiz,0,Hh) and cidxg=Clip(ar17+Where(horiz,Wh,0),0,29), so radd is exactly [0..14] when horiz and cidxg exactly [0..16] when stacked — B4=gU[radd][:,cidxg] collapses to exactly these two lanes; index domains unchanged (radd<=29 since Hh<=15). A and Bp are bit-identical for EVERY input, so all 400+ downstream nodes are untouched. Differential: 4000 realistic instances 0 disagreements (1985 horiz / 2015 stacked, 108 grid shapes, 4000 DISTINCT deployed outputs so non-vacuous) + 400 unconstrained random grids 0 DIFF (295 ok/ok + 105 err/err identical — the incumbent's own Gather OOB lane reproduced rather than silently changed). All 4 TopK feeds fp16. The ledger's durable physics (Conv output dtype == input fp32) still holds — this cuts the NUMBER of fp32 cells, not the dtype. POSSIBLE BOARD-WIDE LEVER: applies to any decode-first net whose panels/grid cannot occupy all 900 cells in both orientations; colf 3600 is shared with task205/task187.
+
+## ADOPTED 20260715T112838Z
+- cost: 21729 -> 19656 (points 15.1139)
+- source: candidates/task366/streamed_exact_cover.onnx
+- note: streamed exact-cover union + bounded witnesses + reachable split-crop + broadcast/shape folds; 255/255 exact
+
+## ADOPTED 20260715T123911Z
+- cost: 19656 -> 19636 (points 15.1149)
+- source: candidates/task366/histogram_scatter.onnx
+- note: rank-1 histogram Einsum + ScatterElements background fold (-20 cost)
+
+## ADOPTED 20260715T124756Z
+- cost: 19636 -> 19631 (points 15.1151)
+- source: candidates/task366/scalar_control.onnx
+- note: scalar H/W controls + scalar background decision (-5 memory)
+
+## ADOPTED 20260715T125208Z
+- cost: 19631 -> 19629 (points 15.1152)
+- source: candidates/task366/rank1_background.onnx
+- note: rank-1 corner colors remove bgA/bgB identity reshapes (-2 memory)
+
+## ADOPTED 20260715T125453Z
+- cost: 19629 -> 19620 (points 15.1157)
+- source: candidates/task366/presence_broadcast.onnx
+- note: broadcast cpres directly into TopK row (-9 memory)
+
+## ADOPTED 20260715T125816Z
+- cost: 19620 -> 19614 (points 15.1160)
+- source: candidates/task366/presence_rank.onnx
+- note: broadcast ndp TopK presence row through box masks (-6 memory)
+
+## ADOPTED 20260715T130125Z
+- cost: 19614 -> 19551 (points 15.1192)
+- source: candidates/task366/fs_gathernd.onnx
+- note: GatherND selected-panel colors removes FSflat carrier (-63 memory net)
+
+## ADOPTED 20260715T130352Z
+- cost: 19551 -> 19515 (points 15.1211)
+- source: candidates/task366/fs_gather_rows.onnx
+- note: INT32 row Gather + GatherElements replaces INT64 GatherND (-36 memory)

@@ -1,6 +1,6 @@
 ---
-deployed_cost: 3905
-logged_costs_match: stale-likely
+deployed_cost: 1089
+logged_costs_match: true
 migrated: 2026-07-09
 ---
 
@@ -77,3 +77,68 @@ instead of a [N,12] key one-hot (saves ~4.8 KB). The whole thing lands as a labe
 - cost: 2949 -> 2919 (points 17.0210)
 - source: candidates/task069/kcollapse.onnx
 - note: kernel-collapse: single-position Conv kernel collapse after public/regime overlays
+
+## ADOPTED 20260715T133248Z
+- cost: 2919 -> 2530 (points 17.1640)
+- source: candidates/task069/poly_convinteger.onnx
+- note: opset14 polynomial ConvInteger fold: outplane Pad Equal -> [x,x^2,1] logits
+
+## ADOPTED 20260715T135229Z
+- cost: 2530 -> 1827 (points 17.4896)
+- source: candidates/task069/compact_exact.onnx
+- note: exact compact composition: occupancy Sign profiles + colored peak Div + shifted 2-feature QLinear tail
+
+## ADOPTED 20260715T140107Z
+- cost: 1827 -> 1597 (points 17.6241)
+- source: candidates/task069/slice_dynamic_stamp.onnx
+- note: dynamic Slice crop/reverse plus runtime quadratic two-feature stamp
+
+## ADOPTED 20260715T141141Z
+- cost: 1597 -> 1432 (points 17.7332)
+- source: candidates/task069/packed_modular_crop.onnx
+- note: packed marker255 Div/Mod plus keepdims ArgMax and fixed modular Gather crop
+
+## ADOPTED 20260715T142003Z
+- cost: 1432 -> 1384 (points 17.7673)
+- source: candidates/task069/int32_crop.onnx
+- note: int32 modular crop indices after int64 ArgMax scalars
+
+## ADOPTED 20260715T142414Z
+- cost: 1384 -> 1297 (points 17.8322)
+- source: candidates/task069/packed_binary_corr.onnx
+- note: packed idx at 1/255 against binary runtime footprint; remove marker plane
+
+## ADOPTED 20260715T142847Z
+- cost: 1297 -> 1212 (points 17.9000)
+- source: candidates/task069/dynamic_anchor_bias.onnx
+- note: binary footprint self-count plus dynamic full-overlap QLinearConv bias
+
+## ADOPTED 20260715T143235Z
+- cost: 1212 -> 1210 (points 17.9016)
+- source: candidates/task069/bias4d.onnx
+- note: direct 4D singleton bias; remove scalar Reshape
+
+## ADOPTED 20260715T145249Z
+- cost: 1210 -> 1134 (points 17.9665)
+- source: candidates/task069/signed_shared_plane.onnx
+- note: signed shared colour/marker plane with all-INT8 zero-point anchor and output chain
+
+## ADOPTED 20260715T150258Z
+- cost: 1134 -> 1124 (points 17.9754)
+- source: candidates/task069/unit_marker_bias.onnx
+- note: unit signed marker with direct one-minus-N anchor bias
+
+## ADOPTED 20260715T151901Z
+- cost: 1124 -> 1104 (points 17.9933)
+- source: candidates/task069/u8_crop_indices.onnx
+- note: UINT8 modular crop arithmetic with final INT32 Gather indices
+
+## ADOPTED 20260715T152427Z
+- cost: 1104 -> 1102 (points 17.9951)
+- source: candidates/task069/slice_alias.onnx
+- note: alias identical reverse Slice starts and axes
+
+## ADOPTED 20260715T152726Z
+- cost: 1102 -> 1089 (points 18.0070)
+- source: candidates/task069/gap_coded_square.onnx
+- note: gap-coded colours with direct INT8 square feature and complete class0..9 decoder

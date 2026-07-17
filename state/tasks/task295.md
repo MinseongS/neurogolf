@@ -61,3 +61,8 @@ vectors, without materializing a counted 10-channel small one-hot.
 - cost: 393 -> 377 (points 19.0678)
 - source: candidates/task295/factor_v_g_rank2.onnx
 - note: exact combined rank2 factorization of final-Einsum V[4,10] and G[4,2,3]; no added nodes, two latent operands
+
+## ADOPTED 20260715T114710Z
+- cost: 377 -> 343 (points 19.1623)
+- source: candidates/task295/runtime_winner.onnx
+- note: B2 square + shared rank-2 factors; rotate terminal Einsum operands for 1.17x isolated runtime

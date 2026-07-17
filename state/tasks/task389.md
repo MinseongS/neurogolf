@@ -35,3 +35,13 @@ The Conv weight W is [10,10,1,1] and MUST be fp32 (ORT Conv requires the weight 
 - cost: 130 -> 55 (points 20.9927)
 - source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task389.onnx
 - note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
+
+## ADOPTED 20260715T111628Z
+- cost: 55 -> 42 (points 21.2623)
+- source: candidates/task389/radial_gray_basis.onnx
+- note: quadratic radial gray detector reuses palette basis; removes F/E (55->42, +0.2696)
+
+## ADOPTED 20260715T114115Z
+- cost: 42 -> 38 (points 21.3624)
+- source: candidates/task389/shared_rank2_metric.onnx
+- note: shared rank-2 U/e jointly reconstruct gray quadratic and signed palette metric (42->38, +0.1001)

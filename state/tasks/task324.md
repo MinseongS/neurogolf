@@ -1,5 +1,5 @@
 ---
-deployed_cost: 8862
+deployed_cost: 5818
 logged_costs_match: match
 migrated: 2026-07-09
 ---
@@ -13,7 +13,7 @@ stripe (generator guarantees ≥1 of each via len(seen)==2). OUTPUT: through eve
 dot draw BOTH 45° diagonals (r+c=const OR r−c=const); each diagonal cell becomes
 colors[0] over base, colors[1] over stripe; non-diagonal cells unchanged. Dots are
 fixed points of this rule.
-**Current:** 15.904 pts, ext:kojimar7113 (crowd net), mem 7330, params 1586.
+**Current:** 16.331288 pts, terminal polynomial renderer, mem 5294, params 524.
 **Target tier:** B (label map + Equal). Genuinely 4-colour multi-step.
 
 ## Attempts
@@ -134,3 +134,18 @@ Bundled gate after adoption: fail=0, cost `8864 -> 8862`
 - cost: 8555 -> 8094 (points 16.0011)
 - source: candidates/task324/dilated_x3.onnx
 - note: FALSIFIES the ledger's 'priced FLOOR - do not re-attempt' verdict and its star INSIGHT that full-grid diagonal spread forces O(side^2) params (it forces that only for a SINGLE conv). The dot->full-X spread was one QLinearConv with a 39x39 X-kernel = 1521 params (97.6% of all params). Replaced by two chained QLinearConvs on the same dot_u8->line_score interface: a coarse [2,1,9,9] DILATION-4 kernel (ch0 = diagonal taps, ch1 = anti-diagonal, kept separate so they cannot cross-contaminate), then a fine [1,2,7,7] merging both channels into one plane. 1521 -> 260 params. Dilation 4 is load-bearing: the textbook dilated decomposition gates at the predicted cost but fail=191 because the outer pass reads the intermediate up to +/-21 outside the 20x20 plane where zero-padding destroys the coarse spread; at dilation 4 every offset d in [-19,19] has d = k + 4m with k in [-3,3] of the SAME SIGN as d, so the intermediate read (r+k, c+k) always lies between the target cell and the dot, both in-grid — no halo, plain same-padding, provably exact. cost 8555->8094, params 1586->325. Differential: changed subgraph 22000 cases 0 disagreements (all 3600 exhaustive single-dot placements + random multi-dot up to 12 dots, 2.24M lit cells); full net 4000 instances 0 disagreements across 121 grid shapes, max diagonal row-span 19 = full grid extent. Rebased onto the 8555 net after a parallel session changed it from 8607 mid-run.
+
+## ADOPTED 20260715T121218Z
+- cost: 8609 -> 8094 (points 16.0011)
+- source: candidates/task324/dilated_x3.onnx
+- note: recover exact dilation-4 coarse/fine diagonal spread; stale-manifest-safe gate compares actual deployed artifact
+
+## ADOPTED 20260715T123602Z
+- cost: 8094 -> 8064 (points 16.0048)
+- source: candidates/task324/kcollapse.onnx
+- note: kernel-collapse after dilated-X recovery: crop Conv 2x2 single-position support -> 1x1 negative-pad equivalent; -30 params
+
+## ADOPTED 20260715T150029Z
+- cost: 8064 -> 5818 (points 16.3313)
+- source: candidates/task324/terminal_poly_candidate.onnx
+- note: terminal polynomial renderer: exact moment-derived diagonal output folding; incumbent 8064 -> candidate 5818, bundled 266/266

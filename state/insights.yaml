@@ -1,3 +1,110 @@
+- id: quotient_pool_dynamic_qlinear_correlation
+  title: Replace floor-quotient selector tensors with pooled bins and runtime QLinearConv correlation
+  status: candidate
+  source_tasks:
+  - 209
+  rescan_candidates:
+  - 159
+  - 297
+  - 131
+  - 80
+  - 238
+  - 37
+  - 18
+  rationale: 'Task209 replaced the exact selector relation p=k+floor(m/scale) and its QA/QS tensor bank
+    with divisor-2/3/4 depthwise uint8 quotient pooling followed by QLinearConv whose runtime sprite
+    histogram is the convolution weight. Exhaustive bilinear-basis comparison proved identical row/column
+    scores; reverse + ArgMax(select_last_index=1) preserved first-tie semantics. Combined with the output
+    fold reached cost6817->6089, bundled266/266, fresh5000 divergence0, but the combined artifact
+    scored 0.00 on isolated Kaggle ref54732161 and was repaired. The quotient identity remains
+    algebraically supported but is quarantined until isolated from the falsified terminal fold.'
+  applies_when:
+    any_ops:
+    - Einsum
+    - QLinearConv
+    any_tags:
+    - selector_bank
+    - quotient_basis
+    - dynamic_correlation
+    min_memory: 0
+  reject_when:
+    any_tags:
+    - non_integer_quotient_relation
+  expected:
+    gain_type: exact_parameter_collapse
+    risk: high until an isolated Kaggle-positive A/B exists; convolution reversal and ArgMax tie order must match the incumbent
+    verification: exhaustive bilinear basis and tie vectors, stored/fresh/gate, then isolated public A/B
+  transformer: null
+- id: parabolic_codebook_terminal_boundary_decode
+  title: Fold positioned labels and corner overrides into one terminal signed QLinearConv
+  status: falsified
+  source_tasks:
+  - 209
+  rescan_candidates:
+  - 8
+  - 12
+  - 76
+  - 96
+  - 101
+  - 107
+  - 118
+  - 148
+  - 173
+  - 208
+  rationale: 'Task209 removed the counted 30x30 label/index output plane by carrying a two-coordinate
+    uint8 parabolic codebook through placement and decoding directly in the FREE output QLinearConv.
+    A narrow y-support band separates 3-neighbour corners from 5-neighbour edges, while per-label centre
+    hyperplanes plus neighbour support suppress the original colour even when a sprite reaches a yellow
+    corner. The graph reached cost6817->6089 with bundled266/266 and fresh5000 divergence0, but the
+    exact artifact scored 0.00 on isolated Kaggle ref54732161. Its finite neighbour-topology proof
+    therefore omitted at least one public-evaluation state; the endpoint was repaired to ref54719275.'
+  applies_when:
+    any_ops:
+    - Equal
+    - ScatterElements
+    - Pad
+    - QLinearConv
+    any_tags:
+    - onehot_final_equal
+    - positioned_label_plane
+    - corner_override
+    min_memory: 800
+  reject_when:
+    any_tags:
+    - nonlocal_output_override
+    - variable_neighbour_topology
+  expected:
+    gain_type: memory_by_deleting_positioned_label_and_onehot_planes
+    risk: known public-zero; do not transfer the boundary inference without a new complete topology proof
+    verification: requires an independent hidden-safe representation and isolated public A/B; stored/fresh/gate alone is insufficient
+  transformer: null
+- id: axis_permuted_categorical_bank_sharing
+  title: Share small-axis initializer rows through exact category banks and row/column kind selectors
+  status: active
+  source_tasks:
+  - 54
+  rationale: 'Task054 replaced four 4x30 detection/exclusion matrices (480 params) with two shared 3x30
+    value banks and two 4x3 one-hot kind selectors (204 params). Row and column matrices contained the
+    same three row patterns in different orders. Three identical scalar initializers were also aliased;
+    the exact rewrite kept memory6772, reduced params5262->4983, passed bundled266/266, and adopted
+    cost12034->11755. A 2026-07-15 full-400 same-shape 2-D scan found only smaller raw opportunities:
+    task286 save52, task002 save32, task108 save18, task077 save12 before node/runtime overhead.'
+  applies_when:
+    any_ops:
+    - Einsum
+    - MatMul
+    any_tags:
+    - selector_bank
+    - initializer_dedupe
+    min_memory: 0
+  reject_when:
+    any_tags:
+    - dynamic_row_values
+  expected:
+    gain_type: exact_parameter_collapse
+    risk: low semantically; variadic Einsum operand order can materially change ORT runtime
+    verification: prove exact row reconstruction, bounded one-example operand-order search, then official gate/adopt
+  transformer: null
 - id: category_augmented_separable_lut
   title: Fold row/column-separable override planes into an augmented LUT
   status: active
@@ -863,7 +970,13 @@
     incumbent, and Kaggle grader accepts it (task313 = kojimar''s 10-operand einsum precedent; 187 A/B submitted).
     Same-arity constraint: one einsum sums only uniform operand-set products, so heterogeneous output composition
     (drawing-copy + flood colours) still needs the classic uint8 label epilogue (~11.7KB floor here: t 3600 + W
-    3600 + label 3600+900 + 4x900 bool/uint8 planes).'
+    3600 + label 3600+900 + 4x900 bool/uint8 planes). 2026-07-16 task243 then removed the
+    remaining counted P2[1,2,18,18] and Cr entirely: one 90-operand/50-label terminal Einsum
+    walks on the padded-30 FREE input, with s0 copying input, s1 seeded by blue, the first
+    destination selecting black-or-blue, and the remaining 41 destinations sharing one colour
+    letter pinned to black. Any valid path can start from its last blue cell, so forbidding later
+    blue destinations is exact. Official gate/adopt passed 265/265 at cost4020->2060
+    (memory2592->0, +0.668576); fresh500 matched the incumbent exactly.'
   applies_when:
     any_ops:
     - MaxPool
@@ -888,7 +1001,24 @@
       banks of sub-400B planes are einsum-proof (fp32 entry ticket 1600-3600B + step params loses)'
     verification: numpy walk-vs-BFS on 20000 fresh, stored eval, fresh_verify candidate<=incumbent, A/B submission
       for grader safety on first use
-  transformer: null
+  rescan_candidates:
+  - 2
+  - 145
+  - 187
+  - 251
+  - 286
+  rescan_2026_07_16:
+    scanned: 'All 400 deployed graphs; 9 matching nodes across 6 tasks, narrowed to five genuine
+      transfer candidates in candidates/task243/TRANSFER_SCAN_20260716.md.'
+    result: 'No second adoption-ready transfer. task002 has a measured +0.492 static candidate
+      but is 105.9x slower (338s bundled); task187 and task251 change off-grid traversability;
+      task145 loses its exact-count/fp16 crop economics; the direct task286 padded30 port adds
+      walk planes. A separately built task286 two-lane terminal candidate priced below the
+      incumbent at cost16405 but failed all 265 bundled examples: its copy lane accumulates many
+      self/diffusion paths while its continued reach lane is around 1e-6, and zero-margin signed
+      parity contractions leave positive residuals. Normalizing those lanes needs counted planes
+      that erase the transfer gain.'
+  transformer: candidates/task243/build_padded30_shared_black_walk.py
 - id: self_einsum_axis_activity_gate
   title: Use the input twice in one Einsum to gate final output by axis activity
   status: active
@@ -2798,6 +2928,26 @@
   expected:
     per_task: "+0.1~0.7 where it fires; vein harvested 2026-07-11 for all same-shape tasks (10 priced, 6 won, 2 blocked, 018 was prototype, 89/367 marginal-negative by calibrated model)"
   transformer: null
+- id: bundle_active_support_pruning_hidden_zero
+  title: Bundle-active probe or hash support is not a legal proxy for generator support
+  status: active
+  source_tasks: [118, 131]
+  rationale: 'Task118 replaced semantic detection with a fixed bundled-input hash/edit lookup and
+    improved local points 15.929037->16.845212; isolated Kaggle ref54732112 scored 0.00. Task131
+    pruned 155 legal probe positions to 119 bundle-active positions and improved local points
+    16.737957->16.772892; fresh1500 failed76 and isolated ref54732114 scored 0.00. Both deployments
+    were repaired on 2026-07-16 to their cost8699/cost3874 full-support predecessors. A bundled
+    fail=0 cost reduction is therefore not evidence that support pruning preserves public score.'
+  applies_when:
+    - candidate deletes legal generator positions, rows, slots, or hash keys because bundled data never uses them
+    - candidate output is selected by a fixed fingerprint of the entire bundled input
+  reject_when:
+    - support is proved unreachable from the generator rather than merely unseen in bundled samples
+    - a task-isolated Kaggle probe or rule-complete finite proof validates the reduced support
+  expected:
+    gain_type: workflow_guard_against_fictitious_local_points
+    verification: require rule-complete support proof, fresh differential, or isolated hidden-positive evidence
+  transformer: null
 - id: kron_fractal_einsum
   title: Compile Kronecker/fractal outputs to ONE free-output N-ary Einsum (div/mod placement tables + mod-s folded free-input reads)
   status: active
@@ -2977,6 +3127,7 @@
   - 191
   - 023
   - 204
+  - 019
   rationale: 'The "free epilogue" (stack a few small working planes -> ONE 1x1 QLinearConv doing the colour channel
     map AND the canvas pad via `pads=[...]` straight into the free `output`) landed real wins on task023 (6348->4814),
     task204 (10232->7838) and task219 (7210->5258), but it has a hard, twice-independently-rediscovered limit:
@@ -2986,7 +3137,12 @@
     `np.array_equal` on the FULL [1,10,30,30] with all-zero expected off-grid, the net fails. task219 had to supply
     the constant as a data plane (a ones initializer, 150 params) because the bias route is closed; task191 priced
     every variant (ones initializer, extra conv output channel, Concat) and each cost >= what it saved, so
-    `Equal(Pad(color, sentinel))` stayed the cheaper primitive there.'
+    `Equal(Pad(color, sentinel))` stayed the cheaper primitive there. task019 sharpens the boundary: the positive
+    background constant can be supplied as a compact runtime rectangle plane R instead of a bias, while a negative
+    cyan offset remains safe in bias because padded positions saturate to uint8 zero. A runtime channel-weight bank
+    built from the detected active colour then maps compact M=point, D=diagonal-count, R=in-grid planes straight into
+    the FREE padded output. This deleted the final 900B label Pad plus 288B routing carriers and improved
+    cost 2503->1952 (+0.248636), with bundled 267/267 and fresh 6000/6000 exact.'
   applies_when:
     any_ops:
     - QLinearConv
@@ -3003,7 +3159,9 @@
       workaround (ones initializer / extra conv output channel / Concat) against simply keeping
       `Equal(Pad(code_plane, sentinel), decode[1,10,1,1])` — the latter often wins. Choosing the colour codes so that
       the needed constant vanishes (e.g. making the sentinel/off-grid value 0 and decoding against a non-zero
-      palette) is the way to keep the free epilogue.'
+      palette), or supplying the constant as a compact data plane that is zero in the Conv padding (task019), is the
+      way to keep the free epilogue. Runtime QLinearConv weights are legal under pinned ORT 1.26 and can specialize
+      the channel map from a small detected-colour vector without materializing a spatial carrier.'
   transformer: null
 - id: entry_crop_fitted_to_bundled_max_not_rule_max
   title: Nets whose entry crop is 1-2 cells short of the max grid are fitted to the bundle, not the rule — a live local!=LB risk
@@ -3078,6 +3236,712 @@
     risk: 'low only after bundled gate; narrowing is unsafe if coordinate/count values exceed the target dtype or Sign changes negative-value semantics'
     verification: 'Compare scorer cost before/after and require `uv run ng gate`; for optional Pad inputs verify the omitted default is exactly zero. Re-run public_autopsy after any future borrowed-net adoption, because the current rescan returned no matches.'
   transformer: null
+- id: conv_fixed_slice_to_negative_pad
+  title: Fuse a fixed spatial Slice of a Conv result into the Conv's negative pads
+  status: active
+  source_tasks:
+  - 48
+  - 178
+  - 327
+  - 271
+  - 354
+  rationale: 'Task048 produced a fixed `[1,1,30,1]` fp32 packed-row Conv result (120B), then kept
+    rows 0:8 in a second `[1,1,8,1]` Slice (32B). Setting the Conv pads to
+    `[0,0,-22,0]` makes the Conv itself emit exactly those eight rows, so the Slice and its two
+    scalar start/end initializers disappear. The isolated gate measured cost 744->622 and
+    points 18.387959->18.567060 (+0.179101); direct deployed-vs-candidate comparison on 3000
+    fresh generator draws had zero output disagreements. This is graph surgery, not a semantic
+    approximation: a fixed prefix/suffix crop of a Conv output can be represented by cropping
+    the corresponding input boundary inside Conv when stride/dilation alignment is exact.
+    Task178 extends the signature through a shape-preserving Cast: each line-read Conv emitted
+    30 fp32 positions, Cast them to uint8, then Slice/Reshape kept 13. Negative end pads make the
+    Convs emit 13 directly, deleting 136B fp32 tail, 34B uint8 tail, two 13B Slice outputs, and
+    2 params. Bundled 268/268; cost 762->564 (+0.300893). The earlier direct-edge rescan missed
+    this graph, so scanners must traverse dtype Cast and shape-only Reshape between producer and crop.
+    Task327 generalizes the same lowering to a FREE-input fixed selector: `E[3,30]` on both
+    spatial axes plus a channel code vector is exactly a 1x1 Conv with
+    `pads=[0,0,-27,-27]`. It removed 90 selector params with no tensor-shape change,
+    cost522->432 (+0.189242), bundled265/265 and fresh1500/1500. Task271 compiles the
+    separable `window3[7,30]` score basis directly into a 3x3 FREE-input Conv with
+    `pads=[0,0,-21,-21]`: the fixed top-left 9x9 support makes the Conv emit exactly the
+    same 7x7 scores without a crop carrier. Scorer params changed 221->90 and total cost
+    586->455 (+0.253022), bundled267/267, fresh2000 divergence0, with pinned-ORT MaxPool
+    index equivalence at all 49 positions. Task354 uses the same negative-pad geometry without an
+    existing Conv: its header `Einsum->Cast->Slice` becomes a 1x1 FREE-input Conv with
+    `pads=[0,0,-29,-20]`, shrinking the counted header path 160B->50B and deleting three Slice
+    params. Combined with its division-code tail this changed cost1479->1269 at bundled266/266.'
+  applies_when:
+    all_ops:
+    - Conv
+    - Slice
+    all_tags:
+    - fixed_spatial_crop
+    - single_consumer_producer
+    - cast_transparent_crop
+    notes: 'The Slice bounds and steps must be constant, the kept region must align to Conv output
+      coordinates, and the pre-Slice Conv value must have no other consumer. Expected cost saving
+      is the entire old Conv output plus the Slice output minus the smaller fused Conv output.'
+  reject_when:
+    any_tags:
+    - dynamic_slice_bounds
+    - strided_slice_not_representable_by_conv_stride
+    - shared_pre_slice_output
+    - non_spatial_slice
+    notes: 'Negative-pad Conv is intentionally tied to the pinned onnx==1.21.0 / ORT==1.26.0
+      grader. Do not uplift ONNX: onnx 1.22 strict shape inference is known to reject this family.'
+  expected:
+    gain_type: memory_by_deleting_oversized_conv_output_and_redundant_slice
+    risk: 'low after exact A/B comparison; medium portability risk outside the pinned grader'
+    verification: 'onnx 1.21 strict shape inference + full checker, direct incumbent/candidate A/B,
+      isolated `uv run ng gate`, then source regeneration. Rescan through single-consumer Cast and
+      Reshape chains, not only direct Conv->Slice edges. The initial 2026-07-15 direct-edge scan found
+      task107 but missed task178; after task178 adoption, rescan both patterns and price every hit.'
+  rescan_candidates:
+  - 165
+  transformer: candidates/task048/build_negative_pad_slice_elision.py
+  additional_transformers:
+  - candidates/task271/build_direct_conv_score.py
+  - candidates/task354/build_header_conv_crop.py
+- id: qlinearconv_raw_zero_weight_is_not_dead
+  title: Never prune a QLinearConv channel from raw zero weights without subtracting the weight zero-point
+  status: negative_filter
+  source_tasks:
+  - 34
+  rationale: 'Task034 looked like an exact 261-cost channel-prune: all four detector kernels store
+    zeros in input channel 0. The attempted graph reached the predicted cost 1033, but passed only
+    3/267 bundled examples. The kernels use `w_zero_point=1`, so their effective weights are
+    `W_raw-1`; every stored zero is actually -1 and the background channel is load-bearing. Raw
+    initializer sparsity is therefore not semantic sparsity in QLinearConv.'
+  applies_when:
+    any_ops:
+    - QLinearConv
+    any_tags:
+    - zero_weight_channel_scan
+    - predicate_bank_prune
+  reject_when: {}
+  expected:
+    gain_type: negative_filter
+    risk: 'catastrophic false dead-channel classification and dense correctness failure'
+    verification: 'Dequantize every candidate kernel first: effective weight is
+      `(W_raw-w_zero_point)*w_scale`. A channel is dead only when every effective weight is exactly
+      zero (normally raw value equals the weight zero-point), and its bias/scale interactions are
+      also neutral. Then require bundled A/B and `ng gate`.'
+  transformer: null
+- id: terminal_onehot_pad_to_integer_polynomial
+  title: Replace a compact-label Equal one-hot followed by Pad with a direct padded ConvInteger polynomial
+  status: active
+  source_tasks:
+  - 36
+  - 37
+  - 46
+  - 62
+  - 69
+  - 327
+  - 354
+  rationale: 'Tasks036, 037, 046, 062, and 354 ended with a compact uint8 label grid, Equal against ten class
+    constants, and Pad into the FREE boolean output. Equality to class k is exactly the sign test
+    `1-(x-k)^2 > 0` for integer x. Keeping x, forming x^2 and a constant-one plane, and applying a
+    terminal ConvInteger with per-class weights `[2k,-1,1-k^2]` writes the padded logits directly
+    into the FREE output. Task036 replaced a counted 250B one-hot with 75B features and reduced
+    cost 1051->940 (+0.111618). Task046 preserved an existing singleton axis through the upstream
+    Gather/Squeeze path, avoiding a counted Unsqueeze; it replaced a 480B one-hot with 144B
+    features and reduced cost 2075->1846 (+0.116940). Task354 applied the same polynomial after a
+    data-dependent SameRun producer: its existing 10x10 label plane made the producer complexity
+    irrelevant to the terminal renderer, and replacing Pad(label)->Equal(classes) first reduced
+    cost 2064->1677 (+0.207639). It then reserved code1 for padding and moved the polynomial
+    constant into QLinearConv bias, reaching 1479 cumulatively (+0.333280). Task069 uplifted
+    opset13->14 to legalize uint8 Mul and folded its 10x10
+    outplane tail; augmented A/B kept both existing QLinearConv nodes and all 29 upstream outputs
+    exact, changing cost 2919->2530 (+0.143022). An exhaustive tail probe checked labels 0..9 and
+    all padded logits, while task037 independently proved ScatterElements emitted the full label set 0..9 and every
+    off-grid raw logit was zero; its exact-target fold reduced cost 2414->2027 (+0.174728).
+    Task062 derived rows from the intentional class vector `[0,1,0,3,4,5,6,7,8,9]`, preserving
+    both positive channels for label0 while changing cost 2524->2149 (+0.160842). Every listed
+    adoption passed its complete bundled gate.'
+  applies_when:
+    all_ops:
+    - Equal
+    - Pad
+    all_tags:
+    - compact_integer_label_grid
+    - terminal_onehot
+    - free_output
+    notes: 'The label range and class constants must keep x^2 and every coefficient inside the
+      selected integer dtype. Preserve or create the channel axis upstream when possible, because
+      a counted Unsqueeze can erase the 9.5% saving on small graphs.'
+  reject_when:
+    any_tags:
+    - noninteger_label
+    - unintended_class_collision
+    - polynomial_overflow
+    notes: 'This is a threshold/logit identity, not bytewise equality of the pre-threshold tensor.
+      Intentional duplicate class constants are valid and reproduce the same multi-hot collision;
+      build rows from the class vector rather than channel ordinals. Confirm the scorer threshold
+      convention and the outside-Pad sentinel. For uint8 labels, use int8 weights only when
+      1-k^2 remains in [-128,127] and x^2 cannot overflow uint8.'
+  expected:
+    gain_type: output_folding_by_deleting_counted_onehot
+    risk: 'low with exact integer arithmetic and bundled A/B; medium if hidden labels exceed the proven range'
+    verification: 'Run strict inference/full checker, compare thresholded incumbent and candidate
+      outputs on every bundled example, require isolated `ng gate`, and use fresh A/B as a
+      diagnostic. A 2026-07-15 full-400 signature rescan found the same terminal family on several
+      tasks; price each graph separately because a required counted axis-construction op can make
+      the transform miss the +0.1 threshold.'
+  rescan_2026_07_15_task069:
+    scanned: 'All 400 deployed graphs after task069 adoption for terminal Pad(label)->Equal(classes)
+      and Equal(label,classes)->Pad signatures.'
+    result: '63 broad structural hits remain; task069 is absent because the tail was consumed. This
+      is a review pool only: class vectors, label ranges, carrier order, existing opsets, and byte
+      economics differ, so no other task was modified in the task069-only session.'
+  transformer: candidates/task036/build_poly_convinteger.py
+- id: repeated_power_basis_inside_free_output_einsum
+  title: Replace a stored polynomial power row with repeated low-order basis operands inside a free-output Einsum
+  status: active
+  source_tasks:
+  - 295
+  - 246
+  rationale: 'Task295 stores B3=[1,x,x^2] as a 3x30 initializer shared by the row and column
+    factors of its terminal free-output Einsum. The row core has an identically zero x^2 slice,
+    while the column core can reconstruct x^2 exactly as x*x by consuming B2=[1,x] twice.
+    Combined with exact latent factors and reuse of VB[0]==mrest, this changes cost 393->343
+    (memory 174 unchanged, params 219->169), passes bundled 268/268 and fresh 1500/1500, and
+    improves points by +0.136079 against the actual artifact (+0.094515 against the stale
+    manifest endpoint 377). ORT 1.26 is strongly operand-order-sensitive: rotating the terminal
+    operands from [0..11] to [1..11,0] kept cost 343 and exact outputs while bringing the balanced
+    268-example fresh-process median to 1.17x the incumbent (the first independent run measured
+    1.44x), safely below the 2x gate. This rotated candidate was adopted on 2026-07-15. A full-400
+    deployed-graph scan for a [3,30] power basis used at least twice in one Einsum found task246 as
+    the only other strict signature. Task246 then replaced P[3,30]+ej[3] with a repeated
+    [1,x] basis and 3x2x2 pair map, changing 351->330; a later difference-selector rewrite used
+    [1,1+x] with the same cost. Both variants passed bundled266/266 and fresh500/500.'
+  applies_when:
+    all_ops:
+    - Einsum
+    all_tags:
+    - polynomial_basis
+    - repeated_initializer_operand
+    - free_output
+    notes: 'Let B=[1,x,x^2,...]. A high-order basis row may be removed only when every use can
+      either drop that row or recreate it by repeating lower-order B operands in the same
+      contraction. Price the enlarged coefficient core against the deleted basis row.'
+  reject_when:
+    any_tags:
+    - non_multiplicative_basis
+    - staged_intermediate_required
+    - runtime_budget_exceeded
+    notes: 'The algebra can lower scorer cost while making ORT contraction planning slower.
+      Do not batch-adopt without pinned-ORT fresh-process and full-board runtime checks.'
+  expected:
+    gain_type: parameter_collapse_without_counted_intermediate
+    risk: 'low semantic risk after exact equality; medium-high aggregate runtime risk for variadic Einsum'
+    verification: 'Require checker + bundled gate + direct fresh A/B. Benchmark operand-order
+      permutations because mathematically identical orders differ sharply under ORT 1.26.'
+  rescan_candidates:
+  - 246
+  transformer: candidates/task295/build_runtime_winner.py
+  task246_transformer: candidates/task246/build_power_pair_basis.py
+- id: orientation_exclusive_factor_mux_before_free_output
+  title: Mux orientation-exclusive factors before a separable free-output contraction
+  status: active
+  source_tasks:
+  - 25
+  rationale: 'Task025 built vertical and horizontal copies of the same line-position factor,
+    reduced each to a slot scalar, broadcast them across valid rows/columns, and added the two
+    branches before a final free-output Einsum. The orientations are mutually exclusive, so two
+    fp16 Where nodes can select line_row=Where(vertical,valid_row,line16) and
+    line_col=Where(vertical,line16,valid_col). The adjacent-position mask likewise needs only the
+    orientation-selected valid axis. This exact surgery removed 1154 counted cost
+    (9817->8663, +0.125054), passed bundled 266/266, and matched the incumbent threshold output
+    on 1000/1000 fresh draws. A 2026-07-15 full-400 strict syntactic rescan for Add(Mul(shared,x),
+    Mul(shared,y)) found no remaining equivalent deployed tail; task148 was the only raw hit and
+    is not this orientation-factor pattern.'
+  applies_when:
+    all_ops:
+    - Where
+    - Einsum
+    all_tags:
+    - mutually_exclusive_orientation
+    - separable_row_col_factors
+    - free_output
+    notes: 'Prove exactly one orientation is active before replacing additive branch construction.
+      Select the spatial valid axis as data, not just the branch scalar, so padded boundary cells
+      cannot leak.'
+  reject_when:
+    any_tags:
+    - simultaneous_orientations
+    - branch_specific_nonzero_terms
+    - unmasked_padded_adjacency
+    notes: 'The first task025 shared-adjacency probe omitted the selected valid-axis mask and failed
+      24/266 on padded boundaries. ORT 1.26 also lacks bool-data Where here; keep the condition bool
+      but cast data branches to fp16.'
+  expected:
+    gain_type: memory_by_precontraction_branch_mux
+    risk: 'low after exclusivity proof and bundled/fresh A/B; high if both branches may coexist'
+    verification: 'Inventory both branch tensors and their consumers, assert exclusivity from the
+      task rule, price the two Where carriers, run checker + isolated bundled A/B + ng gate, then
+      classify any failures by orientation and padded-boundary location.'
+  rescan_candidates: []
+  transformer: candidates/task025/build_tail_where_sharedaxis.py
+- id: padding_safe_categorical_recode_for_qlinear_tail
+  title: Recode semantic states so every stored QLinearConv bias is non-positive on implicit padding
+  status: active
+  source_tasks:
+  - 19
+  - 36
+  - 46
+  - 62
+  - 354
+  - 365
+  rationale: 'Task019 first collapsed point-mask M and rectangle R to the literal feature
+    E=R-5M with x_zero_point=5. Its valid-cell equations were exact, but the cyan channel required
+    stored bias +2, so the output-only QLinearConv lit every padded cell and failed 267/267.
+    Recode point/outside/inside as E=0/1/2 with common x_zero_point=1 instead. Then
+    background=E-2D-1, cyan=4E+D-8, active=1-E have stored biases -2/-3/0, and implicit padding
+    is non-positive in every channel. This exact two-feature tail changed task019 1952->1934
+    (memory 1848->1838, params 104->96), passed bundled267/267 and fresh6000/6000, and was adopted.
+    Tasks036/046 independently use the same principle for polynomial equality tails: the semantic
+    code and zero-point are degrees of freedom, while padding sign is a hard constraint. Task354
+    reserved missing code1 as the QLinearConv padding point, shifted nonzero labels to 2..10, and
+    used bias `2c-c^2` with `[G,G^2]`; this removed a 100B feature channel and 100-element ones
+    initializer, changing its polynomial incumbent 1677->1479. Task062 shifted the intentional
+    class vector `[0,1,0,3,4,5,6,7,8,9]` to `[1,2,1,4,5,6,7,8,9,10]`, so every implicit-pad
+    bias `1-k^2` is non-positive while both duplicate class-0 channels remain positive at the
+    same valid label. Its two-feature QLinear stage was part of the 2149->1691 adoption. Task365
+    extends it to a clipped-affine two-feature embedding over reachable labels {0,1,2,255}: searching
+    the two zero-points together with the integer separators removed the 288B Equal carrier and all
+    dedicated bias/zero-point initializers, changing 2088->1879 at bundled266/266.'
+  applies_when:
+    all_ops:
+    - QLinearConv
+    any_tags:
+    - categorical_feature
+    - terminal_padding
+    - free_output
+    notes: 'Solve valid-state sign inequalities jointly with the implicit padding sample. Search
+      integer state codes and x zero-point, not just weights for the obvious semantic encoding.'
+  reject_when:
+    any_tags:
+    - any_padded_channel_positive
+    - unreachable_state_assumption_unproved
+    - accumulator_overflow
+  expected:
+    gain_type: memory_and_parameters_by_feature_collapse
+    risk: 'low after exhaustive reachable-state and padding truth tables; catastrophic if one padded channel is positive'
+    verification: 'Enumerate every reachable feature tuple plus the implicit padding tuple through
+      the exact integer accumulator equation, run a real pinned-ORT padding micrograph, then checker,
+      strict inference, bundled A/B, gate, and fresh A/B.'
+  transformer: candidates/task019/price_residual_lowerings.py
+  task354_transformer: candidates/task354/build_shared_weight_zero_point.py
+  task365_transformer: candidates/task365/build_uint8_weights.py
+- id: exclusive_bool_union_before_shared_cast
+  title: OR mutually exclusive boolean position planes before one cast and reduce orientation in uint8
+  status: active
+  source_tasks:
+  - 25
+  rationale: 'After task025 muxed its vertical/horizontal factor tails, it still cast v_pos_b and
+    h_pos_b separately to fp16. Because the orientation branches are exclusive, line_pos_b =
+    Or(v_pos_b,h_pos_b) can be cast once. ORT 1.26 need not support bool ReduceMax: cast only the
+    30-element orientation vector to uint8, ReduceMax there, then cast the scalar to bool/fp16.
+    The exact surgery removed 120B of duplicate fp16 position planes, added 62B of shared carriers,
+    deleted one unused initializer, and changed task025 8663->8604. Both u8 and fp16 controls passed
+    bundled266/266 and fresh1000 A/B; u8 was 30 cost cheaper.'
+  applies_when:
+    any_ops:
+    - Cast
+    - Or
+    - ReduceMax
+    all_tags:
+    - mutually_exclusive_orientation
+    - duplicate_casted_position
+    notes: 'Prove disjointness before Or. Keep the large spatial/position plane bool and move only
+      the small reduction vector/scalar through uint8/fp16.'
+  reject_when:
+    any_tags:
+    - simultaneous_orientations
+    - branch_identity_needed_downstream
+    - bool_union_changes_multiplicity
+  expected:
+    gain_type: memory_by_cast_after_boolean_union
+    risk: 'low after exclusivity proof; medium ORT dtype-kernel risk'
+    verification: 'Price removed per-branch casts against the shared Or/Cast and orientation
+      reductions, exercise the exact pinned-ORT kernels, then bundled/fresh A/B and gate.'
+  transformer: candidates/task025/build_line_position_fusion.py
+- id: repeated_free_input_variadic_einsum_runtime_reject
+  title: Reject static-cost wins that repeat a full FREE input through a high-arity spatial Einsum
+  status: active
+  source_tasks:
+  - 2
+  rationale: 'Task002 proved a strong static rewrite: one 46-gate graph-output Einsum consumes the
+    FREE one-hot input repeatedly and deletes every counted 20x20 flood/mask plane, changing cost
+    5408->3306 with bundled268/268 and gate PASS. It is nevertheless unsafe to adopt. Fresh-process
+    inference measured 0.37243s versus incumbent 0.00352s (105.9x), and the bundled A/B took
+    338.23s. Shortening to G31 and sweeping three selector orders improved the best case only to
+    0.26080s (74.2x). The blocker is the repeated 30x30 input topology, not selector order or walk
+    depth. With an observed board estimate of 175.7s and a prior +20.5s wave causing about 17 lost
+    leaderboard points, the 0.492 local score gain has negative package value.'
+  applies_when:
+    all_ops:
+    - Einsum
+    all_tags:
+    - free_input
+    - free_output
+    - repeated_large_operand
+    - high_arity_spatial_chain
+  reject_when: {}
+  expected:
+    gain_type: runtime_negative_filter
+    risk: 'aggregate submission timeout can erase many unrelated task scores despite local gate PASS'
+    verification: 'Before a full bundled run, benchmark incumbent and candidate one-example
+      inference in separate fresh ORT_DISABLE_ALL processes with a hard timeout. Require candidate
+      below 2x incumbent or a non-regressive full-board projection. Operand permutations alone are
+      not a reopen trigger when the large repeated operand retains branch/channel/path labels.'
+  transformer: candidates/task002/build_free_output_fold.py
+  benchmark: candidates/task002/benchmark_runtime_pivots.py
+- id: fixed_point_gathernd_and_initializer_alias
+  title: Replace fixed spatial Slice-to-Reshape reads with batch-dimension GatherND and alias byte-identical initializers
+  status: active
+  source_tasks:
+  - 267
+  rationale: 'Task267 had two independent exact graph surgeries. Its final free-output Einsum
+    referenced byte-identical R/Cc [2,30] fp32 spatial bases; using R for both operands deleted
+    Cc (60 scorer params). Its fixed marker at (6,0) was read as Slice[1,10,1,1] (40B) followed
+    by Reshape[1,10] (40B) with 8 slice/shape params. GatherND(input, indices[1,10,2],
+    batch_dims=2) emits [1,10] directly for 40B with 20 params. Together they changed actual
+    cost 358->270 (+0.282111), passed 264/264, and were adopted through ng gate.'
+  applies_when:
+    any_ops:
+    - Slice
+    - Reshape
+    - Einsum
+    - GatherND
+    any_tags:
+    - fixed_spatial_point_read
+    - singleton_slice
+    - duplicate_initializer
+    - free_output
+    notes: 'For GatherND batch_dims=2 on [B,C,H,W], indices must have shape [B,C,2] and hold
+      (row,col) pairs. Alias only when dtype, shape, values, and intended consumer semantics are
+      identical.'
+  reject_when:
+    any_tags:
+    - data_dependent_point
+    - unequal_initializer_values
+    - dynamic_channel_subset
+  expected:
+    gain_type: memory_plus_parameter_collapse
+    risk: 'low after exact equality and pinned-ORT batch_dims verification'
+    verification: 'Builder assertions for dtype/shape/value/consumer count; checker, isolated
+      bundled A/B, ng gate, then exact-source regeneration. A 2026-07-15 full-400 deployed scan
+      after adoption found no remaining duplicate-initializer group >=10 params and no remaining
+      fixed-singleton Slice->Reshape signature; reopen on every new public graft.'
+  transformer: candidates/task267/build_gathernd_dedupe.py
+- id: free_input_separable_window_score
+  title: Replace a counted active crop plus quantized sliding-window Conv with a separable Einsum over the FREE input
+  status: active
+  source_tasks:
+  - 271
+  rationale: 'Task271 scored every 3x3 window as blue_count - 9*background_count via
+    Slice(input[:,0:2,:9,:9]) 648B -> Cast int8 162B -> QLinearConv 49B. A shared A[7,30]
+    window basis and channel weight w[0]=-9,w[1]=1 compute the same integer score directly as
+    Einsum("bcrs,c,ir,js,q->bqij") over the FREE fp32 input. The winning 3x3 patch is then read
+    directly from input (36B fp32 + 9B int8). Even after the two ReduceMax outputs widened by
+    42B, cost changed 1074->682 (+0.454116), passed 267/267, and was adopted.'
+  applies_when:
+    any_ops:
+    - Slice
+    - Cast
+    - QLinearConv
+    - Conv
+    - ReduceMax
+    - ArgMax
+    any_tags:
+    - small_fixed_active_canvas
+    - sliding_window_score
+    - separable_box_kernel
+    - free_input
+    notes: 'The Conv kernel must factor into channel weights times separable row/column window
+      bases, and only the reduced/selected score needs to survive. Re-read a tiny selected patch
+      from input instead of preserving the full quantized crop.'
+  reject_when:
+    any_tags:
+    - nonseparable_kernel
+    - sliced_tensor_has_many_nonreduction_consumers
+    - full_crop_needed_downstream
+    - score_overflow_or_saturation_semantics
+  expected:
+    gain_type: memory_by_deleting_crop_and_quantized_copy
+    risk: 'low for exact integer scores representable in fp32; medium when QLinear saturation,
+      tie order, or downstream dtype widening changes semantics/cost'
+    verification: 'Price downstream dtype propagation, checker, isolated bundled A/B, fresh
+      unique-winner diagnostic, ng gate. A 2026-07-15 full-400 syntactic rescan found 23 residual
+      Slice(input)->Cast->QLinearConv tasks, but most reuse the cast crop or need nonseparable
+      kernels; the promising single-consumer pool must be priced individually.'
+  rescan_candidates:
+  - 81
+  - 165
+  - 208
+  - 282
+  - 346
+  - 369
+  transformer: candidates/task271/build_free_input_window.py
+- id: terminal_small_linear_block_output_embed
+  title: Fold a counted small linear output block and terminal Pad into the free-output Einsum
+  status: active
+  source_tasks:
+  - 184
+  rationale: 'Task184 ended with counts_row_col [1,10,3,3] fp32 (360B) followed by Pad to
+    the free [1,10,30,30] graph output. Adding one top-left identity embed P[3,30] and reusing
+    it for both spatial axes changed the terminal equation from
+    nchw,ac,nahr,nakw->ncrk to nchw,ac,nahr,nakw,rf,kz->ncfz. The 3x3 block and Pad vanish;
+    the added embed costs 90 params. Actual isolated cost changed 1859->1584, bundled
+    169/169, for +0.160085 points, and was adopted through ng gate on 2026-07-15.'
+  applies_when:
+    all_ops:
+    - Einsum
+    - Pad
+    all_tags:
+    - terminal_small_block
+    - linear_or_onehot_score_block
+    - free_output
+    notes: 'The Pad input must be produced linearly by the terminal Einsum. Reuse one [K,30]
+      embed on both axes when the block is square; expected net saving is block_bytes plus
+      removed Pad params minus K*30 embed params.'
+  reject_when:
+    any_tags:
+    - nonlinear_decode_after_small_block
+    - equal_label_decode
+    - embed_params_exceed_block_bytes
+    - terminal_runtime_timeout
+    notes: 'Equal(label,colors)->Pad cannot be folded by this linear rewrite. Benchmark the
+      enlarged terminal Einsum because a cheap scorer graph can still violate runtime limits.'
+  expected:
+    gain_type: output_folding_memory_to_parameters
+    risk: 'low semantic risk for exact identity embeds; medium runtime risk from the wider free-output contraction'
+    verification: 'Checker, isolated bundled A/B, ng gate, source regeneration, then rescan
+      every deployed terminal Einsum->Pad graph after public grafts.'
+  rescan_candidates: []
+  transformer: candidates/task184/build_output_fold.py
+- id: bitwise_convex_codebook_free_output_renderer
+  title: Recode a finite scalar label alphabet onto a bitwise convex codebook and decode directly into the free output
+  status: active
+  source_tasks:
+  - 333
+  - 327
+  rationale: 'Task333 and task327 both carried arbitrary colour labels into a terminal
+    Equal/Pad renderer. Recode the finite labels so the points (code, code & mask) are exposed
+    vertices, generate the second uint8 feature with BitwiseAnd, and use integer separating
+    hyperplanes in a terminal QLinearConv. The graph output is free and the grader decodes >0,
+    so clipped positive class scores replace the counted one-hot Equal carrier. Task333 removed
+    a 900B equality route and changed cost 2371->1786 (+0.283333). Task327 additionally used a
+    6x6 support channel to distinguish in-grid background code 0 from the padded off-grid origin,
+    changing cost 638->522 (+0.200671). Both passed bundled gates and 1500/1500 direct fresh A/B.'
+  applies_when:
+    all_ops:
+    - Equal
+    any_tags:
+    - finite_scalar_label
+    - freely_recodeable_categories
+    - free_output
+    - counted_onehot_carrier
+    notes: 'The downstream computation may use category identity but not arithmetic meaning of the
+      original codes. Include a compact support feature whenever an in-grid category shares the
+      same code point as padding/off-grid zero. Price BitwiseAnd plus Concat and decoder parameters
+      against the whole deleted Equal/Pad carrier before building.'
+  reject_when:
+    any_tags:
+    - code_order_is_semantic_and_cannot_be_remapped
+    - overlapping_labels_sum
+    - output_not_threshold_decoded
+    - decoder_features_cost_more_than_equal_carrier
+    notes: 'Task333 preserved its green-threshold semantics by assigning green the unique maximum
+      code and changing the threshold. Do not use the rewrite where downstream sums or priorities
+      depend on the original numeric code, or where only a small 2-3 channel Equal carrier is being
+      removed and the feature Concat is already larger.'
+  expected:
+    gain_type: output_folding_plus_parameter_collapse
+    risk: 'low after finite-alphabet convexity proof; medium for ORT bitwise/quantized-kernel support and padding-origin handling'
+    verification: 'Construct integer separators including the off-grid point, run ONNX checker and
+      strict shape inference under opset 18, then bundled ng gate and direct fresh A/B. Require
+      standard ai.onnx domain; QLinearMul in com.microsoft is not scorer-legal.'
+  rescan_candidates: []
+  transformer: candidates/task333/build_bitwise_hull_output.py
+- id: threshold_color_route_sign_cp
+  title: Factor a dense route-by-output-colour-by-input-colour table by the final positive-threshold sign pattern
+  status: active
+  source_tasks:
+  - 215
+  - 251
+  - 320
+  - 329
+  rationale: 'Task215 used a dense C[a,f,k] with 200 float32 parameters inside a FREE-output
+    Einsum. The verifier thresholds every output channel at >0, and two spatial routes add into
+    the same output. For the foreground route, 2k*(0.5-(f-k)^2) is positive only at f=k for
+    nonzero k and is sufficiently negative at f=0 to cancel the background route; the background
+    route contributes exactly delta(f=0). Expanding the foreground polynomial plus the background
+    delta gives four separable CP terms A[a,j]F[f,j]K[k,j], only 88 params. Together with shared
+    spatial-basis reuse this moved task215 414->260 (+0.465184 from the session-start manifest),
+    bundled 265/265 and fresh 500/500, with zero counted intermediates. A follow-up jointly encoded
+    foreground and background multiplicity in three terms: for z=1000*k+1, foreground is
+    2*z*(0.5-(f-k)^2), while background uses only the first term with coefficient .001. This gives
+    a positive-margin rank-3 CP for every reachable colour and route. A unimodular spatial-basis
+    change simultaneously removed basis_pick, moving task215 260->234; bundled265/265 and
+    fresh2000/2000. A later generator-complete spatial sign proof removed the independent
+    background route and the fourth fixed-selector basis column, moving task215 234->171 with
+    minimum output margin30, bundled265/265, and fresh2000/2000. Task320 extended the same
+    sign-CP idea to a conditional recolour: suppress the identity route at red with (k-2)^2,
+    express 0.5-(k-o)^2 in three CP terms, and reserve one rank-1 route for red->red/cyan. Combined
+    with an exact rank-2 coordinate polynomial this moved the actual artifact 709->573 (and beat the
+    stale manifest617), bundled 266/266 and fresh 2000/2000 with zero divergence. Task329 used the
+    bitwise-convex features `(code,code&27,1)` to replace preserve/background
+    `route_p[2,10,10]` (200 params) by 90 params, then jointly refit colour/spatial factors against
+    all 4x30x10x10 threshold states to lower exact numeric rank5 through sign-rank4 to sign-rank3.
+    Actual cost468->232, bundled266/266, fresh1500/1500 with zero divergence; final fixed-factor
+    margins were desired>=0.009 and wrong<=-0.020. A rank2 follow-up (16 seeds x 8000 steps)
+    found no feasible full-state separation by this optimizer. Task251 then reused one
+    D[2,10] code bank on both input and output colour axes around C[2,2,2]. On reachable input
+    colours {0,2}, the signed K/W tables preserve the required channelwise-positive classes with
+    K_max<=0.002858 and W_min=1. This replaced E[2,10]+Tprime[2,10,2] (60 params) by D+C
+    (28 params), moving cost1191->1159. A diagonal-metric follow-up used
+    D[:,0:3]=[[1,-1,0],[0,-1,1]] and A=[[-1,1],[1,0]] so C[2,2,2] became A[2,2], moving
+    1159->1155. Both stages are bundled266/266 and fresh4000 divergence0.'
+  applies_when:
+    all_ops:
+    - Einsum
+    all_tags:
+    - dense_colour_route
+    - onehot_input_colour
+    - free_thresholded_output
+    - additive_route_mixture
+    notes: 'Derive the sign condition after summing every simultaneously active route. Exact
+      numeric equality of the dense table is unnecessary, but every desired channel must remain
+      positive and every other channel non-positive with margin.'
+  reject_when:
+    any_tags:
+    - requires_exact_numeric_output
+    - non_onehot_input_colour
+    - unknown_route_multiplicity
+    - negative_background_term_cancels_foreground
+    notes: 'Do not optimize only argmax. The official scorer is channelwise >0, and a negative
+      score from an always-active background branch can cancel the correct foreground channel.'
+  expected:
+    gain_type: parameters_by_sign_cp_factorization
+    risk: 'medium: sign-rank may equal the dense route rank, and floating contraction order can
+      erase a zero-margin boundary'
+    verification: 'Exhaust all route/input/output colour states algebraically, require a positive
+      margin, then run isolated bundled gate and fresh/differential checks. Count initializer
+      elements, not serialized float bytes.'
+  rescan_2026_07_15:
+    scanned: '400 deployed ONNX files for small dense [...,10,10] initializers and output Einsums'
+    immediate_candidates: []
+    reviewed:
+      task077: 'already covered by signed_polynomial_sparse_edit_einsum'
+      task099: '2x10x10 table is a learned dense coefficient route, not an exact one-hot colour rule'
+      task217: 'structured 3x10x10 route reviewed in task201-225 sweep; exact factors save <+0.1'
+      task251: 'landed shared input/output code, diagonal route metric, and exact initializer-only seed precontraction; cost1191->1147, bundled266/266, fresh4000 divergence0'
+      task320: 'landed: dense 2x10x10 route and 2x6x2x4 polynomial replaced by sign-rank3 and exact-rank2 factors; cost709->573'
+      task329: 'landed: preserve/background colour truth table replaced by 3-feature jointly fitted sign-rank3 spatial factors; cost468->232; rank2 search 16/16 infeasible by the current optimizer'
+    revisit_candidates: [51, 63, 70, 94, 143, 187, 224, 243, 246, 297, 320, 329, 374, 383, 398]
+  transformer: candidates/task215/build_rank3_sign.py
+  task251_transformer: candidates/task251/build_channel_code_sharing.py
+  task251_diagonal_transformer: candidates/task251/build_diagonal_channel_metric.py
+  task251_seed_transformer: candidates/task251/build_seed_precontraction.py
+- id: initializer_only_einsum_seed_precontraction
+  title: Precontract initializer-only seed factors before a free-output Einsum
+  status: active
+  source_tasks:
+  - 251
+  rationale: 'Task251 used seed_g[abK] and seed_h[abL] only inside one final Einsum, with b
+    absent from every runtime operand and the output. Computing seed_joint[aKL]=sum_b
+    seed_g[abK]*seed_h[abL] offline removed eight float32 parameters, one operand, and one
+    equation label without adding a node or counted tensor. The reconstructed a,e,f seed is
+    bit-exact in float32. Cost changed 1155->1147 at bundled266/266 and fresh4000 divergence0.'
+  applies_when:
+    all_ops:
+    - Einsum
+    all_tags:
+    - initializer_only_shared_index
+    - free_output_contraction
+    - no_runtime_consumer_of_contracted_index
+    notes: 'Contract only indices shared exclusively by constant operands. Compare the entire
+      downstream boundary tensor using the runtime dtype before changing the equation.'
+  reject_when:
+    any_tags:
+    - contracted_index_reaches_runtime_operand
+    - initializer_has_other_consumer
+    - dtype_order_changes_boundary_tensor
+    - precontraction_adds_counted_intermediate
+  expected:
+    gain_type: parameters_and_operand_count_by_constant_precontraction
+    risk: 'low after exact dtype-boundary equality; contraction order can otherwise change
+      threshold-zero behavior'
+    verification: 'Require exact float32 boundary equality, checker and strict inference,
+      byte-stable fixed point, isolated bundled gate, fresh differential, ng adopt, and exact-source
+      SHA equality.'
+  rescan_2026_07_15:
+    scanned: 'Deferred: the user explicitly restricted this run to task251, so no global graph
+      inventory or 400-task applicability scan was authorized.'
+    direct_candidates: []
+    reopen_trigger: 'Run a global search for final Einsums with two constant operands sharing an
+      index absent from runtime operands when work is no longer restricted to task251.'
+  transformer: candidates/task251/build_seed_precontraction.py
+- id: positive_ingrid_selector_and_background_route_elimination
+  title: Replace a fixed in-grid selector by a positive full-axis sum and let the foreground sign polynomial emit background
+  status: active
+  source_tasks:
+  - 215
+  rationale: 'Task215 used a shared four-column spatial basis: three exact modulo-3 residue
+    columns plus delta(column=3). The exact joint table has rank four, certified by the integer
+    minor [[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,1,0,0]] with determinant -1. Exact width three is
+    therefore impossible. Reachable one-hot grids provide a sign escape: every in-grid cell,
+    including background, has one active channel, so summing all columns produces positive
+    grid_width on every in-grid row and exact zero off-grid. The three residue columns sum to one
+    and can replace the fixed selector up to this harmless positive scalar. The existing colour
+    separator (1000k+1)*(1-2(f-k)^2) is positive only at f=0 for background k=0, so matching-residue
+    background cells already emit the background class; the independent spatial background route
+    is redundant. Removing that route and using basis[30,3], row/col_route[3,1,3], and
+    a_factor[1,3] changed task215 234->171 (+0.313658), with zero counted intermediates. An exact
+    integer search checked the no-correction case plus 729 {-1,0,1} rank-one residue corrections
+    over a 4,752-state generator-complete over-approximation and found minimum output margin30.
+    Bundled265/265, fresh2000/2000, gate PASS, and source/candidate/deployed SHA equality followed.'
+  applies_when:
+    all_ops:
+    - Einsum
+    all_tags:
+    - free_onehot_input
+    - free_thresholded_output
+    - repeated_spatial_basis
+    - fixed_in_grid_selector
+    - foreground_background_additive_routes
+    notes: 'Prove every selected in-grid cell has constant positive channel sum and every off-grid
+      cell has zero sum. Then enumerate the complete reachable spatial/colour multiplicities before
+      deleting a background route; exact rank failure does not preclude sign reconstruction.'
+  reject_when:
+    any_tags:
+    - input_channel_sum_can_be_zero_in_grid
+    - selector_scale_can_be_negative
+    - non_threshold_numeric_output
+    - multiple_foregrounds_per_residue_unbounded
+    - background_not_separated_by_foreground_polynomial
+    notes: 'Do not infer the collapse from bundled examples or SVD. Require an integer exact-rank
+      certificate or exact reconstruction, then a strict positive/non-target-negative margin on a
+      generator-complete reachable-state table.'
+  expected:
+    gain_type: parameter_collapse_by_spatial_sign_rank
+    risk: 'low after generator-complete integer proof; high if one-hot padding or multiplicity assumptions differ'
+    verification: 'Use exact integer minors for joint rank, exhaust small integer correction
+      coefficients with output margin>=1, run checker + bundled gate + fresh2000 differential,
+      and require normal ng adopt plus source/deployed SHA synchronization.'
+  rescan_2026_07_15:
+    scanned: '400 deployed ONNX files'
+    broad_signature_tasks: [33, 41, 50, 77, 92, 95, 104, 142, 163, 207, 215, 217, 243, 273, 304, 306, 310, 350, 356]
+    exact_signature_tasks: [215]
+    immediate_candidates: []
+    verdict: 'Only task215 has the full repeated-basis + paired-route + 10-colour-factor signature,
+      and it is already consumed. The other 18 broad repeated-spatial-basis output-Einsums lack the
+      paired route/colour structure; they are review hits, not inferred wins.'
+  transformer: candidates/task215/build_spatial_rank3.py
+  certificate: candidates/task215/search_spatial_rank3.py
+  scanner: candidates/task215/rescan_spatial_rank3.py
 - id: skip_semantic_noop_stamps_before_topk
   title: Exclude already-complete prototypes whose later stamp is a semantic no-op before sizing TopK
   status: active
@@ -3166,3 +4030,2446 @@
     reopen_trigger: 'Any new graph with at least three tiny value arrays selected by the same proven unique mask,
       or a current task whose full selector branch exceeds its +0.1 cost threshold.'
   transformer: candidates/task174/build_golf2_rebuilt.py
+- id: constant_precontract_then_einsum_order
+  title: Precontract constant-only Einsum axes offline, then benchmark algebraically identical operand orders
+  status: active
+  source_tasks:
+  - 190
+  rationale: 'Task190 had an exact FREE-output polynomial renderer at cost1377, but its
+    17-operand terminal Einsum took 8.8-29.2 seconds per example. Contracting
+    diff_coeff[2,2,2] with col_features[2,30] offline produced diff_col[2,2,30],
+    reducing 17 operands to 13. Three identical input/subscript reorderings then measured
+    about 1.52s dynamic, 0.62s paired, and 0.089s backbone median per one-example scorer.
+    Removing unused C_u8 yielded an adopted cost1419 graph, bundled 266/266. This proved
+    order was dominant, so the smaller original factorized banks were restored with the same
+    backbone order; that 17-operand graph measured ~0.389s median, passed 266/266, and was
+    adopted at cost1367. Final change is 1656->1367 (+0.191786). Thus ORT contraction order
+    was the failed implementation, not the mathematical representation.'
+  applies_when:
+    all_ops:
+    - Einsum
+    all_tags:
+    - variadic_terminal_contraction
+    - constant_only_contracted_axis
+    - free_output
+    notes: 'Find initializer pairs whose shared label is fully summed and absent from every
+      dynamic operand/output. Probe numpy.einsum precontraction, but also reorder the original
+      factorized input/subscript pairs together: the factorized version may retain fewer params
+      once order alone fixes runtime. Require both a byte target and a fresh-process runtime target.'
+  reject_when:
+    any_tags:
+    - precontracted_bank_erases_required_dynamic_axis
+    - parameter_growth_consumes_score_target
+    - numeric_margin_near_zero
+    - no_bounded_runtime_improvement
+  expected:
+    gain_type: runtime_unblock_for_free_output_parameter_trade
+    risk: 'medium: algebra is exact but fp32 contraction association can affect sign margins,
+      and operand order changes ORT planning by more than an order of magnitude'
+    verification: 'Strict shape inference/checker, one official example in a fresh process
+      with a hard timeout, three-run median for every reviewed order, then bundled ng gate.
+      Remove unused initializers revealed by ORT before adoption.'
+  rescan_2026_07_15:
+    scanned: '400 deployed ONNX files: 626 Einsum nodes across 244 tasks; multi-operand
+      terminal/runtime-heavy families remain common.'
+    followups: [54, 246, 285, 295]
+    notes: 'These are runtime-blocked factor graphs, not automatic wins. Each needs a real
+      constant-axis equation proof and byte calculation before a dedicated session.'
+  transformer: candidates/task190/build_archive_reordered.py
+  diagnostic_transformer: candidates/task190/build_archive_fast.py
+- id: finite_colour_identity_sign_factor
+  title: Replace an exact dense colour identity route with the quadratic sign matrix 1-(k-s)^2
+  status: active
+  source_tasks:
+  - 190
+  rationale: 'Task190 only needs channelwise >0 correctness and its reachable input colour is
+    either background or the paint colour. Replacing route[v=0,k,s]=delta(k=s) with
+    1-(k-s)^2 preserves every required sign; route[v=1] remains one. Shared
+    F[x]=[1,x,x^2] and C[v,3,3] use 48 params instead of dense route[2,10,10] 200.
+    The 19-operand candidate passed bundled 266/266 at cost1215 versus1367 and fresh-process
+    one-example median about0.200s, yielding +0.117874.'
+  applies_when:
+    all_ops:
+    - Einsum
+    all_tags:
+    - dense_colour_identity_route
+    - thresholded_output
+    - onehot_input_colour
+    notes: 'Prove the full reachable (route,input colour,output colour) sign table. Exact numeric
+      tensor reconstruction is unnecessary; wrong channels may be zero or negative.'
+  reject_when:
+    any_tags:
+    - exact_numeric_output_required
+    - downstream_route_values_reused
+    - multiple_active_input_colours
+    - additive_terms_can_flip_zero_margin
+  expected:
+    gain_type: parameter_collapse_by_sign_rank
+    risk: 'medium: adjacent wrong colours land exactly at zero, so integer-exact fp32 coefficients
+      and full bundled evaluation are mandatory'
+    verification: 'Exhaust all finite colour states and actual polynomial multiplier values,
+      then bounded fresh-process scorer, ng gate, and source regeneration.'
+  transformer: candidates/task190/build_route_sign_factor.py
+  rescan_2026_07_15:
+    scanned: 'Dense small [...,10,10] initializers consumed by Einsum across all 400 deployed graphs; 29 tensors in 25 tasks were inspected.'
+    direct_followups: [383]
+    notes: 'task383 J2[2,10,10] is the same identity/all-ones relation and is a concrete out-of-scope follow-up. task187 T[2,10,10] has a different signed structure and is not an automatic application.'
+- id: epsilon_scaled_dynamic_colour_sign_branch
+  title: Replace an exact dynamic one-hot colour branch by an epsilon-scaled quadratic sign classifier
+  status: active
+  source_tasks:
+  - 190
+  rationale: 'After task190 route collapse, exact colour one-hot values were still unnecessary.
+    With A(k,s)=0.5-(k-s)^2, B(k,c)=1/128*(0.5-(k-c)^2), and P=0 on paint cells/P>=1 elsewhere,
+    B+P*(A-B) has exactly the desired positive channel for every reachable s in {0,c}.
+    ArgMax(color_vec)->Gather(shared F) creates [1,c,c^2] in20B and replaces an80B
+    Concat plus10-param ones initializer. A new18-param colour core yields cost1215->1163,
+    bundled266/266, with fresh one-example median about0.306s. Sharing the E00/Q bank across
+    route and colour and moving epsilon into term coefficients then reached cost1149, also266/266.'
+  applies_when:
+    all_ops:
+    - Einsum
+    all_tags:
+    - dynamic_onehot_colour
+    - exact_colour_branch
+    - thresholded_output
+    - nonnegative_integer_gate
+    notes: 'The non-paint branch must have a proven multiplier P>=1 and reachable input colours
+      must be finitely enumerable. Choose a binary-exact epsilon small enough that B>=A on every
+      background wrong channel.'
+  reject_when:
+    any_tags:
+    - exact_numeric_output_required
+    - arbitrary_multi_colour_input_at_paint_site
+    - gate_can_lie_between_zero_and_one
+    - argmax_tie_possible
+  expected:
+    gain_type: memory_by_dynamic_onehot_sign_factor
+    risk: 'medium: proof depends on reachable-state restrictions and exact threshold semantics'
+    verification: 'Exhaust all reachable colours and actual P values, then bounded scorer,
+      bundled ng gate, and exact-source rebuild.'
+  transformer: candidates/task190/build_shared_branch_core.py
+  first_transformer: candidates/task190/build_color_sign_factor.py
+- id: symmetric_affine_root_product
+  title: Replace repeated affine root factors by one symmetric polynomial over root sum and product
+  status: active
+  source_tasks:
+  - 190
+  rationale: 'Task190 materialized two fp32 [10,2] Pow feature banks and reused each affine factor twice to form (w-d)^2(w-a)^2. The identity q=(w-d)(w-a)=w^2-(d+a)w+da permits one dynamic [1,d+a,da] carrier and one constant [1,w,w^2] bank, with q used twice. Capping roots at10 preserves the zero set on output columns0..9 and keeps d+a<=20, da<=100 exact in uint8. Memory fell690->620 while params rose459->507, so cost fell1149->1127; bundled266/266 and fresh-process median was about0.312s.'
+  applies_when:
+    all_tags:
+    - repeated_affine_root_factors
+    - finite_output_coordinate_domain
+    - free_output_polynomial
+    notes: 'Use elementary symmetric polynomials when two roots are interchangeable downstream. Prove that any root cap outside the finite coordinate domain preserves every required zero and sign.'
+  reject_when:
+    any_tags:
+    - roots_have_distinct_downstream_roles
+    - integer_sum_or_product_overflow
+    - exact_factor_values_needed_outside_product
+    - added_basis_parameters_consume_target
+  expected:
+    gain_type: memory_by_symmetric_polynomial_factor
+    risk: 'low-medium: algebra is exact, but bounded root capping and integer dtype arithmetic must be proven before ONNX lowering'
+    verification: 'Exhaust every reachable root pair and output coordinate, run strict shape inference/checker, then bounded scorer and full bundled gate.'
+  transformer: candidates/task190/build_symmetric_ray_factor.py
+- id: reachable_channel_basis_reuse_and_precontract
+  title: Reuse an existing channel bank in either orientation on the reachable palette, then absorb its transform when possible
+  status: active
+  source_tasks:
+  - 388
+  - 47
+  rationale: 'Task388 had color_in[2,10] even though foreground cyan(8) is unreachable. On
+    reachable channels {0,1..7,9}, existing rule_b[2,10] spans exactly the black/non-black
+    classifier, so a 2x2 transform replaced color_in. Precontracting that transform into
+    rule_a then removed the transform too. Together with the already-derived input selector,
+    this restored the stale artifact and moved actual cost 1102->974 (+0.123471), bundled
+    266/266. Task047 showed that the source bank may store colour on its first axis:
+    transposed ChSel[10,4] spans ChanPart[3,10] exactly on reachable {0,7,8}, so a shared
+    3x4 transform changed 172->154 (+0.110542), bundled265/265. The key is
+    reachability-restricted equality, not global 10-colour equality or matching storage order.'
+  applies_when:
+    all_ops:
+    - Einsum
+    any_tags:
+    - channel_basis
+    - reachable_palette
+    - variadic_terminal_contraction
+    notes: 'Orient every 2-D initializer with its length-10 colour axis last, regardless of
+      whether storage is [r,10] or [10,r]. For a target bank attached to a FREE-input colour
+      label, enumerate official reachable colours and solve target[:,R] = T @ source[:,R].
+      If exact, reuse the source with independent latent labels and contract T into the next
+      constant coefficient whenever its target axis is summed.'
+  reject_when:
+    any_tags:
+    - hidden_colour_can_reach_omitted_column
+    - target_bank_used_outside_reachable_input_contraction
+    - transform_growth_exceeds_removed_bank
+  expected:
+    gain_type: parameters_by_reusing_reachable_channel_span
+    risk: 'medium: equality is conditional on a palette invariant; an omitted hidden colour
+      invalidates it even when bundled algebra is exact'
+    verification: 'Prove the palette exclusion from task generation/rule, compare the effective
+      coefficient tensor on every reachable colour, run mandatory bundled gate, and benchmark
+      variadic-Einsum runtime before adoption.'
+  rescan_2026_07_15:
+    scanned: '400 deployed nets with exact reachable-colour enumeration and same-Einsum 2-D
+      initializer-bank span tests.'
+    immediate_candidates: []
+    reviewed: 'task050 save16/+0.0374; task139 save24/+0.0661; task246 save24/+0.0594;
+      task254 save16/+0.0651; task356 save16/+0.0388; task374 save24/+0.0227. All are
+      below the +0.1 standalone threshold at current manifest costs.'
+    reopen_trigger: 'Any listed task gains another independent saving that combines past +0.1,
+      or a future graph contains a removable channel bank whose span reuse alone clears its bar.'
+  oriented_rescan_2026_07_15:
+    scanned: '400 deployed nets after task047 adoption, accepting both [r,10] and [10,r]
+      initializer orientation and requiring the target colour axis to bind a FREE-input channel label.'
+    adopted: 'task047 ChanPart30 -> shared ChSel plus transform12, cost172->154,
+      +0.110542, bundled265/265.'
+    residual: 'No further standalone +0.1 hit. Strongest exact residuals are task254
+      save16/+0.065064, task220 save24/+0.056486, task010 save16/+0.043133,
+      task344 save24/+0.035298; task050/139/356/374 hits overlap known artifact drift or
+      already-recorded later source endpoints.'
+    reopen_trigger: 'A residual task acquires an independent saving that makes the combined
+      delta exceed +0.1, or a future adopted graph introduces a new small bank on either colour-axis orientation.'
+  transformer: candidates/task388/build_absorb_channel_transform.py
+  oriented_transformer: candidates/task047/build_reachable_transposed_basis.py
+- id: shared_indefinite_rank2_matrix_vector_factor
+  title: Share one indefinite rank-2 factor between a quadratic form and a linear metric
+  status: active
+  source_tasks:
+  - 389
+  rationale: 'Task389 used C[3,3] for a squared-palette gray XOR and D[3] for its signed
+    output-colour metric. Because C is rank-2 indefinite and D lies in its row space, a
+    hyperbolic gauge produces U[2,3], e[2] satisfying both C=U^T diag(e) U and D=e^T U.
+    Reusing U/e with independent Einsum latent labels changed 42->38 (+0.100083), bundled
+    266/266. Combined with the preceding radial-gray rewrite, the task moved 55->38
+    (+0.369747) at memory0.'
+  applies_when:
+    all_ops:
+    - Einsum
+    any_tags:
+    - quadratic_form
+    - signed_metric
+    - shared_coefficient_span
+    notes: 'Find a symmetric rank-2 indefinite C[r,r] and D[r] used as independent summed
+      coefficients in the same expression. Factor the signed root, solve D coordinates,
+      apply a J-orthogonal hyperbolic rotation so coordinate signs match the signature,
+      then derive e and U. The two uses must have different Einsum labels.'
+  reject_when:
+    any_tags:
+    - matrix_not_rank2_indefinite
+    - vector_outside_matrix_rowspace
+    - shared_latent_label_couples_independent_sums
+    - zero_margin_roundoff
+  expected:
+    gain_type: parameters_by_joint_factorization
+    risk: 'medium: latent-label collision causes ORT broadcast failure, and threshold-at-zero
+      graphs require float32 sign margins to survive the changed factor gauge'
+    verification: 'Numerically verify both C and D reconstruction, instantiate ORT on a real
+      example to catch label collisions, then run all bundled examples and mandatory gate.'
+  rescan_2026_07_15:
+    scanned: '400 deployed nets for symmetric indefinite rank-2 initializer matrices paired
+      with same-width vectors lying in their row spaces.'
+    immediate_candidates: []
+    reviewed: 'No unconsumed deployed matrix/vector pair matched the exact signature after
+      task389 adoption.'
+    reopen_trigger: 'A new terminal Einsum introduces a rank-2 indefinite quadratic plus a
+      same-width signed vector, or a higher-rank generalization has favorable parameter math.'
+  transformer: candidates/task389/build_shared_rank2_metric.py
+- id: free_input_power_sum_extreme_coordinate
+  title: Replace counted axis score planes and ArgMax tails with one FREE-input power-sum scalar and Log decode
+  status: active
+  source_tasks:
+  - 36
+  rationale: 'Task036 selected one dense blob colour, then materialized fp32 yscore/xscore [30]
+    planes and ArgMax/cast tails solely to recover its minimum row and column. For an axis profile
+    whose per-position digit is in [0,B-1], z=sum(profile[p]*B^(29-p)) has its leading base-B digit
+    at the minimum occupied position. A FREE-input Einsum emits z as one scalar; Log(z)/Log(B),
+    Cast, and Sub recover the coordinate. Bases 6/8/16 were exact on all 1,590 bundled axis checks.
+    Combined with the existing tail, task036 cost changed 940->718 (+0.269410), and direct fresh
+    incumbent/candidate comparison had zero disagreements over 10,000 draws.'
+  applies_when:
+    all_ops:
+    - ArgMax
+    any_tags:
+    - nonnegative_axis_profile
+    - minimum_occupied_coordinate
+    - free_input_reduction
+    notes: 'Choose B strictly above the maximum possible digit sum at one position. Reverse the
+      exponent direction for a maximum coordinate. Empty profiles need a separately proven sentinel.'
+  reject_when:
+    any_tags:
+    - profile_digit_reaches_base
+    - negative_profile
+    - empty_profile_without_guard
+    - profile_used_downstream_beyond_coordinate
+    - fp32_power_overflow
+  expected:
+    gain_type: memory_by_replacing_length30_profiles_with_scalars
+    risk: 'medium: fp32 Log/Cast boundaries and hidden digit counts must be bounded from the rule'
+    verification: 'Run an integer/float oracle over every bundled axis and a large fresh set for
+      each candidate base; require exact coordinate equality before ONNX build, strict inference,
+      isolated gate, and direct fresh A/B.'
+  rescan_2026_07_15:
+    scanned: '400 deployed nets; found 109 ArgMax nodes with a length-30 input and manually narrowed
+      profile-heavy candidates by producer and reuse.'
+    manual_review_candidates:
+    - 13
+    - 14
+    - 29
+    - 133
+    - 138
+    - 177
+    - 185
+    - 201
+    - 222
+    - 224
+    - 233
+    - 234
+    - 319
+    - 359
+    - 378
+    - 379
+    - 383
+    - 387
+    reopen_trigger: 'Any listed profile is consumed only by an extreme-coordinate tail and has a
+      proven per-position count below a safe base.'
+  transformer: candidates/task036/build_scalar_power_decoder.py
+- id: polynomial_constant_feature_to_padding_safe_qlinear_bias
+  title: Move the constant feature of a quadratic equality decoder into a padding-safe QLinearConv bias
+  status: active
+  source_tasks:
+  - 36
+  - 37
+  - 46
+  rationale: 'After polynomial one-hot folding, tasks036/046 still materialized [L,L^2,ones].
+    QLinearConv can consume only [L,L^2] and place the constant term in int32 bias. Its x zero-point
+    controls the implicit Conv padding value; choose a label shift/zero-point so every padded channel
+    score is non-positive. Task036 used L->L+1 and changed 718->670 (+0.069192). Task046 used
+    x_zero_point=1 with decode label1 absent and changed 1846->1752 (+0.052263). Task327 moved the
+    label shift into a 6x6 ConvTranspose bias, making off-grid=0, background=1, colours=2..10;
+    [x,x^2] then removed the explicit support plane and third decoder feature, changing 432->350
+    (+0.210492). Task037 moved the shift into ScatterElements itself (`zbase=1`, colour updates
+    2..10), so the padded QLinear bias vector is `[0,-3,...,-99]`; deleting the 100-cell ones
+    feature changed 2027->1829 (+0.102787). All four were bundled exact; completed fresh
+    comparisons had zero disagreements.'
+  applies_when:
+    all_ops:
+    - QLinearConv
+    any_tags:
+    - quadratic_equality_sign_decode
+    - terminal_padding
+    - free_output
+    notes: 'For target k, solve the real QLinear integer equation including x_zero_point and bias,
+      then separately evaluate the implicit padding sample. A label shift can make the padding score
+      zero/non-positive without a counted ones plane.'
+  reject_when:
+    any_tags:
+    - any_padded_channel_positive
+    - coefficient_overflow
+    - noninteger_label
+    - threshold_not_strictly_positive
+  expected:
+    gain_type: memory_and_parameters_by_deleting_constant_feature_plane
+    risk: 'low after exhaustive label and padding truth-table evaluation on pinned ORT'
+    verification: 'Exhaustively run every possible label and an all-padding micrograph through real
+      ORT, then checker/strict inference, bundled A/B, isolated gate, and fresh A/B.'
+  rescan_candidates:
+  - 57
+  - 183
+  - 189
+  - 194
+  - 213
+  - 214
+  - 238
+  - 253
+  - 264
+  - 308
+  transformer: candidates/task046/build_qlinear_tail.py
+  task327_transformer: candidates/task327/build_embedded_support_square_decoder.py
+- id: generator_max_active_slot_compaction
+  title: Compact dense descriptor slots to the proved generator maximum before spatial cross-products
+  status: active
+  source_tasks:
+  - 37
+  rationale: 'Task037 computed line placement over all nine non-background colour slots, even though
+    the generator accepts at most six non-overlapping segments. The existing fp16 span tensor L_h is
+    positive exactly for present colours, so TopK(k=6) selects every live slot without a new score
+    carrier. Five GatherElements outputs compact sign/base/row-start/span/colour, shrinking the
+    `[1,1,10,9]` cross-product and int32 ScatterElements index path to `[1,1,10,6]`. Added TopK and
+    gather tensors cost 90B while the narrowed path saves 300B; cost changed 1829->1620 (+0.121343),
+    bundled266/266 and fresh2000 had zero failures and zero incumbent divergence.'
+  applies_when:
+    any_ops:
+    - ScatterElements
+    - ScatterND
+    - GatherElements
+    any_tags:
+    - dense_descriptor_slots
+    - bounded_active_objects
+    - spatial_cross_product
+    notes: 'Use an already-materialized supported TopK score whenever possible. Gather every
+      descriptor with the same returned indices before any slot-by-spatial broadcast.'
+  reject_when:
+    any_tags:
+    - generator_max_unproved
+    - unsigned_integer_topk
+    - discarded_slot_can_be_active
+    - consumer_depends_on_original_slot_order
+  expected:
+    gain_type: memory_by_narrowing_slot_times_spatial_tensors
+    risk: 'low after generator-bound proof and selected-slot coverage; high if the bound comes only from stored examples'
+    verification: 'Assert every present bundled/fresh object id appears in selected slots, reject unsigned TopK,
+      run strict inference/full checker, threshold A/B, isolated gate, and fresh A/B.'
+  rescan_candidates: []
+  transformer: candidates/task037/build_slot6.py
+- id: terminal_nonoverlap_quadratic_product_einsum
+  title: Multiply exact quadratic object predicates directly in a FREE output when supports do not overlap
+  status: active
+  source_tasks:
+  - 37
+  rationale: 'Task037 renders a coloured diagonal segment with the exact sign predicate
+    `(r-lo)(lo+n-r)+1/4-10(c-base-sign*r)^2-10[k>0](k-colour)^2`. It is positive only on the
+    selected segment/channel and negative elsewhere. Accepted generator segments do not overlap;
+    therefore six negative predicates have positive product on background, while exactly one
+    positive predicate flips the product on a coloured cell. A channel sign vector selects the
+    desired polarity. Expanding each quadratic into 14 monomials and multiplying all six inside
+    one terminal variadic Einsum deletes ScatterElements, its INT32 indices and zero canvas, the
+    modular label features, and QLinearConv. Folding valid-row/column support into the coordinate
+    bases makes all off-grid logits exactly zero without support parameters. Cost changed
+    1620->1284 (memory642+params642), bundled266/266 and fresh500 had fail0/divergence0.'
+  applies_when:
+    any_ops:
+    - ScatterElements
+    - ScatterND
+    - QLinearConv
+    - Einsum
+    any_tags:
+    - nonoverlapping_positioned_objects
+    - bounded_quadratic_geometry
+    - free_output
+    - fixed_max_object_count
+    notes: 'For an even fixed slot count, the product sign is background-positive and
+      one-hit-negative before channel polarity. Route absent slots to a descriptor whose entire
+      spatial predicate is strictly negative. Coordinate bases may carry the valid support mask.'
+  reject_when:
+    any_tags:
+    - overlapping_positive_supports
+    - unbounded_object_count
+    - predicate_requires_nonpolynomial_clipping
+    - terminal_einsum_timeout
+    notes: 'Two simultaneously positive factors restore the background product sign. Do not use
+      this identity without a generator proof or exhaustive overlap audit. Wide variadic Einsums
+      also require pinned-ORT runtime measurement and operand-order review.'
+  expected:
+    gain_type: memory_by_deleting_sparse_renderer_and_terminal_decoder
+    risk: 'medium: non-overlap, absent-slot negativity, float sign margin, and contraction planning are load-bearing'
+    verification: 'Prove the finite predicate margins, exhaust every bundled class and raw
+      off-grid value, require checker/strict inference and supported TopK dtype, run isolated
+      bundled gate, fresh differential, mandatory adopt, and exact source/deployed SHA sync.'
+  transformer: candidates/task037/build_poly_product.py
+- id: circle_embedding_shared_channel_metric
+  title: Replace two rank-3 channel factors with one circle embedding, diagonal metric, and source scales
+  status: active
+  source_tasks:
+  - 41
+  rationale: 'Task041 used P/Q [10,3] factors (60 params) to make same-colour interval logits
+    positive and cross-colour logits negative. Ten points on a circle supply E[10,3]; a diagonal
+    metric D[3] and per-source scale R[10] reproduce the required sign table with 43 params.
+    The one-Einsum graph changed 460->443 (+0.037657), passed 266/266, and matched the incumbent
+    on 500 fresh draws. This was the exact fallback after restricted position rank9 retained
+    1,815 sign violations.'
+  applies_when:
+    all_ops:
+    - Einsum
+    any_tags:
+    - pairwise_colour_sign_classifier
+    - rank3_channel_code
+    - free_output
+    notes: 'The requirement is sign separation on reachable colour pairs, not exact reconstruction
+      of the old P/Q values. Fit/verify the full channel truth table and margins.'
+  reject_when:
+    any_tags:
+    - channel_pair_requires_nonmetric_asymmetry
+    - hidden_palette_pair_unverified
+    - zero_sign_margin
+  expected:
+    gain_type: parameters_by_sharing_channel_embedding
+    risk: 'medium: sign-only factorization depends on reachable palette and numerical margin'
+    verification: 'Truth-table RED/GREEN, checker, time-bounded ORT inference, bundled gate, and
+      direct fresh A/B because a variadic one-Einsum candidate may also change runtime planning.'
+  rescan_2026_07_15:
+    scanned: '400 deployed nets for terminal Einsums consuming repeated or distinct [10,3]/[3,10]
+      channel banks; 20 node hits were found.'
+    manual_review_candidates:
+    - 77
+    - 215
+    - 225
+    - 246
+    - 383
+    reopen_trigger: 'A candidate has two independently stored rank-3 channel banks or a repeated
+      colour-pair classifier whose sign table admits a shared metric code.'
+  transformer: candidates/task041/build_shared_channel.py
+- id: scatternd_prefix_shape_decode_fusion
+  title: Shape arithmetic so the final coordinate op emits ScatterND prefix dimensions directly
+  status: active
+  source_tasks:
+  - 118
+  rationale: 'Task118 originally decoded packed coordinates as [4,12], then materialized a counted
+    int64 [24,2] Reshape before ScatterND. Reshaping the divisor to [1,6,2], gathered words to
+    [4,1,1], and updates to [4,6] made Mod emit [4,6,2] directly. ScatterND accepts arbitrary
+    prefix dimensions before index_depth, so the exact graph deleted a 384B carrier and changed
+    cost 3948->3563 (+0.102606), bundled 267/267.'
+  applies_when:
+    all_ops:
+    - ScatterND
+    - Reshape
+    any_tags:
+    - packed_coordinate_decode
+    - fixed_update_prefix
+    notes: 'The producer must be broadcast-shapeable to [..., index_depth], and updates must have
+      exactly the same prefix shape. ScatterND does not require indices to be flattened.'
+  reject_when:
+    any_tags:
+    - dynamic_ragged_prefix
+    - reshape_changes_coordinate_order
+    - update_shape_cannot_match_prefix
+  expected:
+    gain_type: memory_by_eliminating_final_index_reshape
+    risk: low_after_shape_inference_and_bundled_gate
+    verification: 'Compare flattened decoded coordinates offline, run checker plus strict shape
+      inference, then isolated bundled gate. Profile the candidate because the upstream broadcast
+      shape can change other carriers.'
+  rescan_2026_07_15:
+    scanned: 'All 400 deployed graphs after the task118 adoption for ScatterND whose index producer
+      is Reshape; no remaining direct hit was found.'
+    reopen_trigger: 'A new graft/adoption introduces Reshape -> ScatterND indices, or the scan is
+      generalized to coordinate Concat/Flatten producers that can be broadcast-shaped directly.'
+  transformer: candidates/task118/build_hashmask_directidx.py
+- id: oracle_histogram_plus_minimal_collision_probes
+  title: Replace a spatial oracle hash with a color histogram plus a set-cover of collision probes
+  status: active
+  source_tasks:
+  - 118
+  rationale: 'For task118, color-count features produced 258 distinct groups among 267 bundled
+    inputs. A two-feature set-cover over the nine collision pairs found black-channel probes at
+    (0,1) and (5,0); their ReduceSum distinguished every pair. Searching integer histogram weights
+    and the downstream CHD layout replaced Wc[10]+Wcol[30] with Wc[10]+probeIdx[8]. The final
+    change was small but exact: cost 3486->3480, bundled 267/267.'
+  applies_when:
+    all_ops:
+    - GatherND
+    any_tags:
+    - bundled_oracle
+    - spatial_hash
+    - color_histogram
+    notes: 'First partition bundled inputs by histogram, then solve a minimum probe set only over
+      within-partition collisions. Search hash coefficients jointly with the actual packed lookup
+      topology rather than optimizing hash parameters alone.'
+  reject_when:
+    any_tags:
+    - probe_outside_minimum_grid
+    - histogram_collision_not_separable_by_small_probe_set
+    - probe_carrier_exceeds_removed_hash_parameters
+  expected:
+    gain_type: parameters_by_replacing_dense_spatial_hash_weights
+    risk: 'medium in overfit mode: one-hot padding outside the logical grid is all-zero, not black'
+    verification: 'Require every probe coordinate inside every logical bundled grid, reproduce
+      runtime one-hot padding offline, assert injective keys and CHD round-trip for all rows, then
+      run isolated bundled gate. The first task118 probe violated the padding rule and failed 26/267.'
+  transformer: candidates/task118/build_hashmask_histprobe.py
+- id: symmetric_reachable_palette_basis
+  title: Share one symmetric sign basis across input routing, output routing, and marker detection
+  status: active
+  source_tasks:
+  - 246
+  rationale: 'Task246 inputs use only black(0), red(2), and green(3), while the path output is
+    cyan(8). The three rows D=(-e0+e8), Z=(-e2+e3), and 1, with diagonal identity weights
+    [1,1,-1/2], preserve exactly the reachable input colours by sign. D is simultaneously the
+    cyan correction direction. Small 2x3 maps recover constant/red/green channel selectors from
+    the same basis, and the identical 3x10 initializer is reused on the output side. The combined
+    reachable-basis and symmetric-reuse stages changed task246 330->302->272, passed bundled
+    266/266 and fresh500/500 at each adoption.'
+  applies_when:
+    all_ops:
+    - Einsum
+    any_tags:
+    - reachable_palette
+    - thresholded_output
+    - marker_selector
+    - free_output
+    notes: 'Enumerate the true input alphabet first. Seek a low-dimensional basis whose bilinear
+      sign metric preserves those colours, whose one row is the paint correction, and whose span
+      contains every marker selector. Equality on unreachable input colours is unnecessary.'
+  reject_when:
+    any_tags:
+    - hidden_input_colour_unproven
+    - exact_numeric_output_required
+    - correction_direction_outside_basis_span
+    - marker_selector_outside_reachable_span
+  expected:
+    gain_type: parameters_by_reusing_one_reachable_colour_basis_everywhere
+    risk: 'medium: the factorization deliberately relies on the task palette invariant'
+    verification: 'Prove the complete reachable input/output sign table and selector values,
+      then checker, strict inference, bounded ORT, bundled gate, and direct fresh generation.'
+  transformer: candidates/task246/build_symmetric_color_basis.py
+- id: marker_protected_inclusive_quadratic
+  title: Let marker-zero channel correction replace directional endpoint arithmetic
+  status: active
+  source_tasks:
+  - 246
+  rationale: 'Once task246 channel correction is exactly zero on red/green inputs, interval
+    polynomials may be positive at both marker endpoints without overwriting them. A strict
+    vertical quadratic and horizontal q+1 first removed Sign and half-step arithmetic
+    (272->263). Moving polynomial signs into the static pair map removed two Neg tensors
+    (263->259). Finally difference selectors [constant,constant+marker] and
+    [constant=-1,strict-quadratic] generated marker and q+1 with the same [-1,1] row,
+    removing the last offset tensor (259->257). Every stage passed bundled266/266 and
+    fresh500/500.'
+  applies_when:
+    all_ops:
+    - Einsum
+    any_tags:
+    - signed_interval_quadratic
+    - preserved_marker_endpoint
+    - channel_correction
+    notes: 'Before computing direction or half-cell roots, check whether the channel correction
+      is identically zero on protected endpoint colours. If so, use integer-safe inclusive
+      quadratics and fold constant offsets through existing selector differences.'
+  reject_when:
+    any_tags:
+    - endpoint_background_must_remain_unchanged
+    - correction_nonzero_on_marker
+    - adjacent_outside_cell_becomes_positive
+    - noninteger_coordinate_domain
+  expected:
+    gain_type: memory_by_deleting_direction_and_endpoint_scalar_tensors
+    risk: 'low after palette proof; medium if endpoints can contain background or another colour'
+    verification: 'Exhaust both coordinate directions, adjacent markers, minimum/maximum grid
+      sizes, and endpoint colours; then mandatory bundled and fresh gate.'
+  transformer: candidates/task246/build_difference_selectors.py
+- id: fully_direct_unique_marker_root_einsum
+  title: Derive unique-marker coordinates and polynomial roots inside the terminal FREE-output Einsum
+  status: active
+  source_tasks:
+  - 246
+  rationale: 'A unique marker profile contracted with B=[1,1+x] directly yields [1,1+r]
+    or [1,1+c], so scalar coordinates, casts, coefficient arithmetic, and dynamic coefficient
+    cores need not exist. Task246 inlined all 116B of remaining intermediates into its terminal
+    FREE-output contraction, changing cost257->157 with bundled266/266 and fresh500/500. The
+    canonical 32-operand order timed out at about 8GB RSS, but a marker-feature-first order ran
+    quickly and passed, proving the blocker was ORT contraction planning.'
+  applies_when:
+    all_ops:
+    - Einsum
+    any_tags:
+    - unique_marker
+    - coordinate_moment
+    - polynomial_root
+    - free_input
+    - free_output
+    notes: 'For a proven singleton selector m(x), sum_x m(x)B(x) supplies the homogeneous
+      coordinate feature. Distribute every downstream coefficient use into the final contraction
+      and tune operand order in bounded fresh processes.'
+  reject_when:
+    any_tags:
+    - marker_not_unique
+    - marker_selector_not_exact
+    - generated_coordinate_carrier_larger_than_removed_core
+    - all_operand_orders_exceed_runtime_or_rss_budget
+  expected:
+    gain_type: memory_by_inlining_unique_marker_moments_and_polynomial_coefficients
+    risk: 'medium: algebra is exact but variadic Einsum runtime can vary by orders of magnitude'
+    verification: 'Prove singleton marker support, checker and strict inference, benchmark at
+      least 16 deterministic operand orders in fresh bounded processes, then bundled and fresh gate.'
+  transformer: candidates/task246/build_fully_direct_roots.py
+- id: reused_antisymmetric_root_mux
+  title: Reuse one antisymmetric bilinear form for multiple dynamic polynomial roots
+  status: active
+  source_tasks:
+  - 246
+  rationale: 'For B=[1,1+x], the 2x2 antisymmetric form B0(r)B1(x)-B1(r)B0(x)
+    equals x-r exactly. A 2x2x2 mux with a constant slice and this root slice can be reused for
+    both roots and both axes, replacing task246''s two uses of a 32-param polynomial mux by one
+    8-param initializer (157->133). Its green marker map then reused the red map through the
+    basis sign vector [1,-1,1], giving 133->130. Both changes passed bundled266/266 and fresh500/500.'
+  applies_when:
+    all_ops:
+    - Einsum
+    any_tags:
+    - homogeneous_linear_basis
+    - dynamic_polynomial_root
+    - repeated_initializer
+    - symmetric_marker_basis
+    notes: 'Factor each polynomial into linear roots before storing a dense coefficient tensor.
+      Check whether colour/marker maps differ only by a diagonal sign on an already-shared basis.'
+  reject_when:
+    any_tags:
+    - nonfactorable_polynomial
+    - approximate_coordinate_basis
+    - independent_root_semantics_lost_by_index_reuse
+  expected:
+    gain_type: parameters_by_reusing_antisymmetric_root_and_basis_sign_factors
+    risk: 'low algebraically; medium for accidental Einsum index coupling or operand-order regressions'
+    verification: 'Symbolically compare dense and factored coefficients, use distinct indices for
+      independent sums, then strict inference, bounded ORT, bundled gate, and direct fresh generation.'
+  transformer: candidates/task246/build_root_mux_factor.py
+- id: joint_term_state_mux_via_reused_antisymmetric_core
+  title: Collapse a three-state term selector into a reused antisymmetric mux and direct gate axes
+  status: active
+  source_tasks:
+  - 246
+  rationale: 'Task246 used d13_row_term[3,2] twice, d13_col_term[3,2] twice,
+    and cscp_term_basis[3,3] to encode preservation, horizontal correction, and vertical
+    correction. Re-expressing the marker gates as [constant,marker] lets their q/v axes carry
+    the state directly. The already-live direct_root_mux[2,2,2], multiplied by one shared
+    [1,-1] vector, generates both [1,0]/[-1,1] root selectors and the symmetric off-diagonal
+    horizontal/vertical state mask. A new joint_channel_term[2,3] supplies only base/correction
+    weights. This replaces 21 parameters with 8, changing cost130->117 (+0.105361), bundled
+    266/266 and fresh500/500. Keeping root_product-1 is essential: the strict-root control failed
+    every bundled example by omitting the background corner (r0,c1).'
+  applies_when:
+    all_ops:
+    - Einsum
+    any_tags:
+    - repeated_term_selector
+    - antisymmetric_root_mux
+    - direct_marker_gate
+    - base_horizontal_vertical_sum
+    notes: 'Contract the effective state truth table before factoring individual initializers.
+      If gate axes already distinguish constant/active branches, remove the explicit term axis,
+      use the root mux to generate affine root selectors, and zero the both-active state in the
+      channel core. Preserve inclusive corner offsets unless a separate exact corner term exists.'
+  reject_when:
+    any_tags:
+    - term_states_have_distinct_channel_corrections
+    - both_active_state_is_semantically_live
+    - marker_gate_cannot_be_made_direct
+    - no_reusable_antisymmetric_mux
+  expected:
+    gain_type: parameters_by_joint_term_root_channel_selector_factorization
+    risk: 'medium: algebraic index coupling and ORT contraction order are both sharp; a strict
+      polynomial that looks cleaner can silently delete an inclusive background corner'
+    verification: 'Unit-test the finite state tensor and a corner-bearing bundled example; require
+      checker plus strict inference, at least 16 deterministic operand orders in RSS/time-bounded
+      fresh processes, mandatory bundled gate, candidate-only fresh, and exact-source SHA equality.'
+  rescan_2026_07_15:
+    scanned: 'All 400 deployed graphs for a same-Einsum strict signature containing two reused
+      [3,2] selector banks, a [3,r] term bank on the same state label, and the exact reusable
+      antisymmetric [2,2,2] mux.'
+    immediate_candidates: []
+    reopen_trigger: 'A future graph/adoption introduces this strict signature, or the scanner is
+      generalized to selector banks related by basis transforms rather than exact shapes.'
+  transformer: candidates/task246/build_joint_term_mux.py
+- id: uint8_modular_threshold_row_gate
+  title: Replace equality-plus-Where row selection with a UINT8 modular threshold code
+  status: active
+  source_tasks:
+  - 301
+  rationale: 'Task301 needs one colour of length L only on row gap+L-1. With row code
+    10*r, count coefficient 247=-9 mod256, and column shift 246=-10 mod256, the target
+    row lands at 246+L while every earlier row is <=245 and every later row wraps below
+    the shifted column threshold. This deletes a 108B Equal carrier and its 108B Where
+    result. Max(raw,raw+246) keeps width-underflow columns false without a separate mask.
+    The complete rewrite changed cost 1141->1065, bundled266/266 and fresh2000/2000.'
+  applies_when:
+    all_ops:
+    - Greater
+    any_ops:
+    - Equal
+    - Where
+    any_tags:
+    - bounded_target_row
+    - uint8_threshold_output
+    - free_output
+    notes: 'Choose K strictly larger than the maximum payload. Prove all target and
+      non-target row codes in modular arithmetic, then patch dynamic extent underflow
+      before the final unsigned comparison.'
+  reject_when:
+    any_tags:
+    - target_rows_not_affine_in_payload
+    - payload_reaches_or_exceeds_modular_gap
+    - signed_comparison_required
+    - exact_numeric_output_required
+  expected:
+    gain_type: memory_by_deleting_equality_and_selection_carriers
+    risk: 'medium: one unsigned wrap or off-grid threshold mistake creates broad false positives'
+    verification: 'Exhaust all bounded sizes, payloads, rows, and columns in a scalar
+      oracle; then checker, isolated bundled gate, and fresh generation.'
+  rescan_2026_07_15:
+    scanned: 'All 400 deployed graphs for Equal->Where carriers after task301 adoption.
+      No remaining hit had the task301 signature [1,C,R,1] with C>1, affine payload-keyed
+      target rows, and a terminal broadcast threshold renderer.'
+    reopen_trigger: 'A new graph introduces a bounded affine target-row equality carrier,
+      or a semantic rule audit proves one of the generic Equal->Where hits has that form.'
+  transformer: candidates/task301/build_u8_wrap.py
+- id: boundary_safe_dilated_diagonal_spread
+  title: Factor a full diagonal X kernel through boundary-safe coarse and fine dilated convolutions
+  status: active
+  source_tasks:
+  - 324
+  rationale: 'A 39x39 X support is the Minkowski sum of dilation-4 coarse offsets
+    4m (m=-4..4) and fine offsets k (k=-3..3). Keeping main and anti-diagonals in
+    two coarse channels prevents cross-contamination. For every displacement d in
+    [-19,19], a same-sign representation d=4m+k keeps the intermediate read between
+    the target and source, so zero padding cannot erase the only path. Task324 replaced
+    1521 kernel parameters with 162+98, added one 800B carrier, and recovered 8609->8094.
+    An orthogonal single-position entry-kernel collapse then reached 8064; bundled266/266
+    at both stages and final fresh1999/1999 in the recovery session.'
+  applies_when:
+    any_ops:
+    - Conv
+    - QLinearConv
+    any_tags:
+    - sparse_large_kernel
+    - diagonal_spread
+    - full_grid_extent
+    notes: 'Factor support sets, not dense numeric rank. Preserve diagonal families
+      until the final merge and prove at least one in-grid path for every boundary case.'
+  reject_when:
+    any_tags:
+    - diagonal_families_mixed_before_merge
+    - dilation_path_requires_out_of_grid_halo
+    - nonlinear_between_factor_stages
+    - small_bounded_kernel_already_cheaper
+  expected:
+    gain_type: parameters_minus_one_small_uint8_intermediate
+    risk: 'medium-high: textbook dilation factorizations often fail only at grid boundaries'
+    verification: 'Exhaust every single-dot placement for every supported grid shape,
+      then random multi-dot differential, full bundled gate, and fresh generation.'
+  rescan_2026_07_15:
+    scanned: 'All 400 deployed Conv/QLinearConv initializers for square kernels >=15 whose
+      nonzero support lies only on the two diagonals. No remaining hit was found after task324.'
+    reopen_trigger: 'A new/public adoption introduces a large sparse diagonal kernel, or the
+      support scan is generalized to translated/multi-channel line families.'
+  transformer: candidates/task324/build_dilated_x3.py
+- id: reachable_input_channel_support_factor
+  title: Factor a dense terminal channel route through the generator-reachable input palette
+  status: active
+  source_tasks:
+  - 251
+  rationale: 'Task251 used dense T[2,10,10] in a free-output Einsum although the
+    generator emits only input channels 0 and 2. Replacing T[a,d,c] by selector
+    E[M,c] and restricted Tprime[a,d,M] changed scorer params 200->60 without a
+    runtime carrier. Combined with the extant seed factor it changed actual cost
+    1531->1335, bundled266/266 and fresh4000 divergence0.'
+  applies_when:
+    all_ops:
+    - Einsum
+    any_tags:
+    - dense_input_channel_route
+    - generator_palette_subset
+    - free_input
+    notes: 'Prove the reachable input-channel set from the generator/oracle, then
+      restrict only the corresponding initializer axis. The selector is useful when
+      the same input channel index participates elsewhere in the terminal equation.'
+  reject_when:
+    any_tags:
+    - hidden_palette_not_fixed
+    - dense_axis_not_input_channel
+    - factor_params_exceed_dense_route
+  expected:
+    gain_type: parameter_collapse_without_intermediate
+    risk: 'medium generalization risk; low ONNX arithmetic risk for exact 0/1 factors'
+    verification: 'Assert bundled/fresh active palettes, rebuild from pinned source,
+      checker plus full isolated gate, fresh oracle/divergence, then exact-source sync.'
+  rescan_2026_07_15:
+    scanned: 'All 400 terminal Einsums and large axis-10 initializers. After task251,
+      no remaining 2x10x10-class route had <=4 exact nonzero input-channel slices and
+      a calculated >=0.1 saving.'
+  transformer: candidates/task251/build_channel_support_collapse.py
+- id: epsilon_scaled_shared_walk_transition
+  title: Share one positive walk transition between baseline and reachability routes
+  status: active
+  source_tasks:
+  - 251
+  rationale: 'Task251 stored S[2,12,12]: J/12 for a positive baseline K and the
+    self/adjacency walk for border reachability W. Reusing the adjacency transition for
+    both routes and scaling the all-position K seed by binary-exact 2^-60 changed S from
+    288 to144 params with no new node or intermediate. Cost changed1335->1191,
+    bundled266/266 and fresh4000 divergence0.'
+  applies_when:
+    all_ops:
+    - Einsum
+    any_tags:
+    - parallel_positive_baseline_and_walk_routes
+    - thresholded_output
+    - shared_dynamic_walk_mask
+    notes: 'The baseline needs only strict positivity, not its prior magnitude. Reuse the
+      real walk transition and scale the all-seed route below twice the minimum positive
+      target-route margin.'
+  reject_when:
+    any_tags:
+    - exact_numeric_output_required
+    - baseline_endpoint_can_have_no_positive_path
+    - target_positive_margin_unbounded_below
+    - epsilon_underflows_in_runtime_contraction
+  expected:
+    gain_type: parameter_collapse_without_intermediate
+    risk: 'medium: correctness depends on a strict sign/margin proof and positive all-seed reachability'
+    verification: 'Bound the maximum baseline path count and minimum positive target path,
+      choose a binary-exact epsilon, then checker, bundled gate, fresh oracle/divergence,
+      palette audit, fixed-point rebuild, and source/deployed SHA equality.'
+  scoped_validation_2026_07_15:
+    scanned: 'Task251 only, per explicit user scope. Used bound epsilon*144*9^14 <=0.002858
+      with target W_min=1; bundled266/266 and fresh4000 passed.'
+    reopen_trigger: 'Run a global structural scan when work is no longer restricted to task251.'
+  transformer: candidates/task251/build_walk_route_sharing.py
+- id: affine_runtime_difference_inside_terminal_einsum
+  title: Factor affine dynamic one-hots through an existing channel basis inside the FREE-output Einsum
+  status: active
+  source_tasks:
+  - 267
+  rationale: 'Task267 first moved materialized marker-e0 into C=[e0,marker] plus
+    mix [[1,0],[-1,1]], changing cost270->220. The follow-up observes J[0]=ones and
+    J[1]=non-background: P=marker+e0 and [[1,-1],[-1,2]]@J reconstruct q rows
+    e0 and marker-e0 exactly. Replacing the 80B C carrier with 40B P changed
+    cost220->180; both stages passed bundled264/264 and fresh2000 divergence0.'
+  applies_when:
+    all_ops:
+    - Sub
+    - Einsum
+    any_tags:
+    - affine_dynamic_carrier
+    - free_output
+    - small_term_axis
+    notes: 'Both affine operands must already be available or cheaply combinable. The
+      follow-up needs a dynamic one-hot disjoint from background plus an existing
+      ones/non-background channel basis. Price the mix matrix and any shape metadata
+      against the deleted carrier.'
+  reject_when:
+    any_tags:
+    - nonlinear_consumer_before_output
+    - sub_result_has_multiple_noncontracting_consumers
+    - mix_axis_runtime_explosion
+  expected:
+    gain_type: memory_to_tiny_parameter_mix
+    risk: 'low after exact coefficient/equation assertions; medium for sign or axis wiring'
+    verification: 'Symbolically expand the mix, assert marker position/shape separately
+      from affine signs, pin the baseline SHA and fixed-point rebuild, then isolated
+      bundled/fresh A/B and mandatory gate.'
+  rescan_2026_07_15:
+    scanned: 'The full board has 100 syntactic Sub-to-Concat/Einsum edges. In task251-275,
+      only task275 had the simple affine shape, but deleting its redundant scalar Sub saves
+      4 cost versus 65 required for +0.1.'
+  transformer: candidates/task267/build_marker_affine_factor.py
+  followup_2026_07_15:
+    scope: 'task267-local execution; no additional 400-task rescan was run under the
+      explicit task267-only assignment'
+    result: '220->180, bundled264/264, fresh2000 divergence0, exact-source SHA match'
+- id: free_input_complement_corner_marker_read
+  title: Read a fixed outer marker from FREE input through the complement of an existing inner-support basis
+  status: active
+  source_tasks:
+  - 267
+  rationale: 'Task267 already had R=[ones,inner5] for its output mask. U=R[0]-R[1]
+    selects active-grid endpoints, so U(row)*U(col) selects the four 7x7 corners.
+    Three corners are background and the fixed fourth is the marker, yielding
+    P=3*e0+marker directly from a second FREE-input occurrence. Contracting P through
+    the existing J/affine output basis removes Slice, Add, and all marker metadata;
+    cost180->86 with zero counted memory.'
+  applies_when:
+    all_tags:
+    - free_input
+    - free_output
+    - fixed_outer_marker
+    - existing_inner_support_basis
+    notes: 'The dynamic shape must be confined to the inner support, the selected
+      complement must contain a fixed number of background cells plus exactly one
+      marker, and the terminal contraction must tolerate the known background scale.'
+  reject_when:
+    any_tags:
+    - shape_touches_complement
+    - variable_marker_position
+    - nonzero_off_grid_input
+    - variable_background_corner_count
+  expected:
+    gain_type: runtime_carrier_and_metadata_elimination
+    risk: 'medium: a support or marker-location mismatch silently changes the affine constant'
+    verification: 'Assert the exact support basis, marker metadata, corner coefficients,
+      affine signs, and operand order; then checker, bundled gate, fresh divergence,
+      pinned two-pass rebuild, and source/deployed SHA equality.'
+  scoped_validation_2026_07_15:
+    scope: 'Task267 only under the explicit assignment; no new 400-task rescan.'
+    result: '180->86, bundled264/264 fail0, fresh2000 divergence0, candidate/deployed/network exact SHA match.'
+  transformer: candidates/task267/build_free_input_corner_fold.py
+- id: free_input_boundary_moment_sign_renderer
+  title: Replace spatial/channel bases with signed FREE-input boundary and colour moments
+  status: active
+  source_tasks:
+  - 267
+  rationale: 'Task267 has a fixed 7x7 frame, an inner creature of size12..15,
+    and a one-pixel boundary marker. Two length-30 vectors suffice: a boundary
+    selector and a signed row moment. Their FREE-input contractions give output
+    support P=(background4, marker-2, creature0) and local signs L=(background3..6,
+    marker2, creature-12..-15). Multiplying P, the local one-hot, and L in one
+    FREE-output Einsum removes R/J/affine/corner bases; cost86->60 with memory0.'
+  applies_when:
+    all_tags:
+    - free_input
+    - free_output
+    - fixed_boundary_marker
+    - bounded_inner_object_size
+    - thresholded_output
+    notes: 'Choose signed coordinate weights so the boundary contraction has
+      support only on background/marker and the colour moment is positive on
+      background/marker but negative on every allowed object size.'
+  reject_when:
+    any_tags:
+    - object_touches_weighted_boundary
+    - variable_marker_support
+    - moment_margin_crosses_zero
+    - nonzero_off_grid_input
+  expected:
+    gain_type: eliminate_spatial_and_channel_bases_without_intermediate
+    risk: 'medium: correctness is a generator-range sign proof, not numeric tensor equality'
+    verification: 'Enumerate reachable count/sign states, assert exact vectors/equation,
+      then TDD, bundled gate, large fresh A/B, pinned fixed point, and source/deployed SHA equality.'
+  scoped_validation_2026_07_15:
+    scope: 'Task267 only under explicit user scope; no new 400-task rescan.'
+    result: 'NumPy bundled264/fresh10000 fail0; ONNX 86->60, gate264/264 fail0, fresh2000 divergence0, exact-source SHA match.'
+  transformer: candidates/task267/build_moment_sign_fold.py
+- id: shared_binary_phase_underflow_einsum
+  title: Alias coordinate selectors through a binary phase whose forbidden support underflows exactly
+  status: active
+  source_tasks:
+  - 267
+  rationale: 'Task267 reused one phase vector [-1/2,-2^-78 on inner rows,1 on
+    the opposite boundary] as both spatial factors and a signed row moment.
+    The allowed inner object has at most15 cells, so its spatial contraction is
+    bounded by 15*2^-156, below half the minimum float32 subnormal, while the
+    desired marker logit is at least1.985e-23 and remains normal. This aliases
+    two 30-vectors without adding an operand or counted intermediate: cost60->30.'
+  applies_when:
+    all_tags:
+    - thresholded_output
+    - repeated_initializer_operand
+    - bounded_forbidden_support
+    - pinned_float32_runtime
+    notes: 'Choose a binary-exact epsilon only after proving the worst-case
+      forbidden contraction is below half-min-subnormal for every legal
+      contraction order and the smallest desired logit remains normal.'
+  reject_when:
+    any_tags:
+    - raw_float_output_equality
+    - unbounded_support_count
+    - unpinned_runtime_or_dtype
+    - desired_margin_can_cancel
+  expected:
+    gain_type: initializer_alias_without_new_memory_or_operand
+    risk: 'high until pinned-runtime underflow and normal-range desired margin are independently proved'
+    verification: 'Use a pre-build state oracle, analytical all-order magnitude
+      bounds, actual ORT intermediate probes with optimizations disabled, full
+      bundled gate, large fresh A/B, fixed-point rebuild, and exact source SHA.'
+  scoped_validation_2026_07_15:
+    scope: 'Task267 only under explicit user scope; no 400-task rescan was run.'
+    result: 'NumPy bundled264/fresh10000 fail0; actual ORT P/L probe and staged7/7;
+      ONNX 60->30, gate264/264 fail0, fresh2000 divergence0, exact-source SHA7603363b... match.'
+  transformer: candidates/task267/build_one_vector_underflow.py
+- id: unique_winner_maxpool_convinteger_free_output_renderer
+  title: Collapse a unique 2-D winner, carry its binary payload in the score, and render through FREE output
+  status: active
+  source_tasks:
+  - 271
+  rationale: 'For task271 unique 7x7 scores, MaxPool indices replace dual ReduceMax/ArgMax
+    coordinate trees; Div/Mod7 recover row/column. A selected blue patch plus constant-one
+    patch feeds an int8 ConvInteger whose channels are blue and 1-blue and whose pads write
+    the 30x30 FREE output. The combined residual rewrite changed cost682->586,
+    bundled267/267, fresh2000 divergence0. The follow-up lowers the MaxPool index immediately
+    to INT32 and uses opset12 attribute-form Squeeze, deleting 17 cost. Casting the binary
+    patch to UINT8, shifting 0/1 to 0/2, and sharing one_u8=1 as the ConvInteger input
+    zero-point centers that feature at -1/+1. A single signed feature with channel1=+1 and
+    channel8=-1 then replaces the two-feature blue/one renderer and saves another 27 cost.
+    On the direct-Conv scorer incumbent this changed 455->411 (+0.101704), bundled267/267,
+    fresh2000 divergence0, and exact source/candidate/deployed SHA equality. A final
+    payload-carrying score replaces each exact-box count b with 512*b plus the row-major
+    9-bit blue pattern, while each background cell contributes -4096. Count priority and
+    invalid-window rejection remain strict, so MaxPool needs only its scalar value. UINT16
+    Mod by [2..512] plus GreaterOrEqual against [1..256] decodes the selected patch and
+    deletes indices, coordinates, Slice bounds, and the FLOAT patch. This changed 411->366
+    (+0.115960), passed bundled267/267, synthetic all-position decoding, fresh2000
+    divergence0, and exact source/candidate/deployed SHA equality. The final decoder
+    follow-up replaces UINT16 Mod/GreaterOrEqual plus UINT8 Cast/BitShift with opset18
+    UINT16 BitwiseAnd, BOOL Cast, and centered UINT8 Where. It changed366->350
+    (+0.044700), passed payload512/512, positions49/49, bundled267/267, fresh2000
+    divergence0, and exact SHA equality. INT8 Where is NOT_IMPLEMENTED in ORT1.26;
+    UINT8 Where is the pinned supported route.'
+  applies_when:
+    all_ops:
+    - ArgMax
+    any_ops:
+    - ReduceMax
+    - Pad
+    - ConvInteger
+    any_tags:
+    - unique_global_winner
+    - binary_selected_patch
+    - free_output
+    notes: 'ORT MaxPool indices are flattened row-major for storage_order=0. Enumerate every
+      legal position and require a generator-level unique-winner invariant before replacing ties.'
+  reject_when:
+    any_tags:
+    - tied_winner_load_bearing
+    - reducemax_value_used_for_other_semantics
+    - nonbinary_renderer
+    - output_padding_not_constant
+  expected:
+    gain_type: coordinate_carrier_and_output_tail_collapse
+    risk: 'medium: MaxPool index convention, tie order, and ConvInteger output dtype are load-bearing'
+    verification: 'All-position index enumeration, exact weight/pad/dtype assertions, checker,
+      pinned ORT load, bundled and fresh A/B, fixed-point builder and mandatory gate.'
+  rescan_2026_07_15:
+    scanned: 'Fifty deployed graphs contain both ArgMax and ReduceMax. Task259 is the only
+      hit in task251-275, but its ReduceMax values define extents while ArgMax consumes a
+      different boolean tensor, so this replacement does not apply.'
+  transformer: candidates/task271/build_maxpool_convinteger_fold.py
+  additional_transformers:
+  - candidates/task271/build_int32_signed_renderer.py
+  - candidates/task271/build_encoded_score_payload.py
+  - candidates/task271/build_bitwise_where_decoder.py
+- id: unique_max_score_binary_payload_carry
+  title: Carry a small selected binary payload in the low bits of a unique max score
+  status: active
+  source_tasks:
+  - 271
+  rationale: 'Task271 needed both the unique maximum-count 3x3 box and its nine blue/cyan
+    cells. Encoding each exact box as 512*blue_count plus its row-major 9-bit blue pattern
+    makes count order dominate every payload difference. Giving every background cell
+    weight -4096 keeps every invalid overlapping window below the minimum valid winner.
+    MaxPool therefore returns the score value only; UINT16 Mod/GreaterOrEqual decodes the
+    payload without indices, coordinates, or a dynamic Slice. Cost changed411->366,
+    bundled267/267, synthetic49/49 positions, fresh2000 divergence0, and exact-source SHA match.
+    On the same encoded score, UINT16 BitwiseAnd plus BOOL Cast and centered UINT8 Where
+    deletes threshold parameters and one UINT8 plane, changing366->350 while preserving
+    all 512 payloads and all 49 positions.'
+  applies_when:
+    all_ops:
+    - Conv
+    - MaxPool
+    any_tags:
+    - unique_integer_score_winner
+    - small_binary_selected_payload
+    - free_input
+    - free_output
+    notes: 'Choose a power-of-two score stride strictly larger than the complete payload
+      range. Prove a separate penalty bound for every invalid window and keep the maximum
+      encoded scalar exactly representable in the score dtype.'
+  reject_when:
+    any_tags:
+    - tied_winner_load_bearing
+    - nonbinary_payload
+    - payload_exceeds_exact_score_mantissa
+    - invalid_candidate_can_beat_valid_winner
+    - decoder_dtype_unsupported
+  expected:
+    gain_type: selected_payload_carrier_elimination
+    risk: 'medium: score-order margin, invalid-window penalty, bit order, and pinned decoder kernels are load-bearing'
+    verification: 'Prove score and penalty inequalities, capability-test decoder dtypes,
+      enumerate every legal position, then checker, bundled gate, fresh A/B, fixed point,
+      and exact-source SHA equality.'
+  scoped_validation_2026_07_15:
+    scope: 'Task271 only under explicit user scope; no new 400-task rescan.'
+    result: '411->366->350, bundled267/267 fail0, payload512/512, synthetic49/49,
+      fresh2000 divergence0, exact-source SHA a9a0d70f... match.'
+    failed_capabilities: 'UINT16 BitShift and INT8 Where are NOT_IMPLEMENTED in ORT1.26;
+      UINT16 Div is rejected by ONNX schema. Opset18 UINT16 BitwiseAnd plus UINT8 Where
+      is the final supported decoder route.'
+  transformer: candidates/task271/build_encoded_score_payload.py
+  additional_transformers:
+  - candidates/task271/build_bitwise_where_decoder.py
+- id: quadratic_palette_glyph_free_output_tail
+  title: Decode recovered palette scalars and stamp fixed glyphs directly in a FREE-output Einsum
+  status: active
+  source_tasks:
+  - 264
+  rationale: 'Task264 already recovered eight rounded palette scalars, then paid 900B for
+    bank[9]->Gather(template9x9)->Equal(onehot10x9x9)->Pad. The exact separator
+    0.25-(k-v)^2, fixed glyph masks, and shared row/column embeddings move that entire
+    tail into one free-output Einsum. Exact initializer factors use glyph-pattern
+    rank4 and channel-mode rank3. A follow-up replaces the pattern with an exact
+    base-plus-mask CP rank5, reuses the detector interpolation basis behind exact chart
+    support, deletes the all-one shift operand, and feeds bounded raw detector scalars
+    without Round carriers. Cost changed 1853->1507->1361->1227
+    (memory972->176, params881->1051), bundled265/265.'
+  applies_when:
+    all_ops:
+    - Gather
+    - Equal
+    - Pad
+    any_tags:
+    - recovered_palette_scalars
+    - fixed_recolored_glyphs
+    - free_output
+    notes: 'Rounded palette values are the simplest case. Bounded pre-Round scalars are also
+      valid when an endpoint proof covers the interpolation leakage. Wrong-channel scores need
+      a strict negative margin and off-chart factors must be exactly zero.'
+  reject_when:
+    any_tags:
+    - continuous_palette
+    - dynamic_template_geometry
+    - embedding_params_exceed_deleted_tail
+    - terminal_einsum_timeout
+  expected:
+    gain_type: output_folding_memory_to_exact_ranked_fixed_parameters
+    risk: 'low semantic risk after exhaustive palette/template proof; high runtime risk for wide contractions'
+    verification: 'Exhaust k,v and all template slots, exact rational unfold ranks and dense
+      reconstruction, prove detector-error endpoint margin, measure off-chart raw zeros and
+      fresh-process runtime, checker and strict shape inference, full isolated gate with measured
+      timeout headroom, pinned artifact/fixed point, exact-source sync.'
+  exact_factor_2026_07_15:
+    glyph_pattern: '(u,z)|(w,p,q) exact rank4; 162->132 params'
+    glyph_embed: 'E[u,p,R] = block[u,R] * local[p,R]; 270->180 params'
+    channel_quadratic: 'v|(s,t,z) exact rank3; 80->54 params'
+    result: 'fixed terminal params 512->366; task264 1507->1361, +0.101901'
+  support_gated_factor_2026_07_15:
+    glyph_pattern: 'all-gray rank1 plus exact coloured-mask rank4 CP; 132->100 params'
+    glyph_embed: 'reuse shift_col with block/local shift_row slices plus chart_support; 180->126 params, on-chart max error0.0005493164, off-chart raw nonzero0'
+    detector_carrier: 'delete shift_0 (-16 params) and eight Round outputs (-32 memory); bundled max integer deviation0.04417'
+    margin_runtime: 'integer +/-0.045 worst signed margin0.2372189; 20-example sign divergence0, runtime ratio0.7743165'
+    result: 'task264 1361->1227, +0.103648; cumulative 1853->1227, +0.412234; next +0.1 cost<=1110'
+  rescan_candidates:
+  - 316
+  - 391
+  rescan_2026_07_15:
+    scanned: 'After task264 adoption, task316 and task391 retain the exact terminal
+      Gather->Equal->Pad fingerprint. Their template rank and fixed-parameter price are not yet known.'
+  tail_transformer: candidates/task264/build_free_output_tail_fold.py
+  initializer_factor_transformer: candidates/task264/build_shared_rank_initializer_factor.py
+  transformer: candidates/task264/build_support_gated_renderer.py
+- id: qlinear_rounding_margin_overlap_decoder
+  title: Use QLinear rounding margin to decode overlapping categorical planes without an AND or Max carrier
+  status: active
+  source_tasks:
+  - 219
+  rationale: 'Task219 had cyan, proposed-blue, and cyan+blue overlap states, while implicit
+    Conv padding had to remain all-zero. Recode cyan as uint8 2 and the blue mask as 16 with
+    x_zero_point=1. The effective pairs are background=(-1,-1), blue=(-1,15), cyan=(1,-1),
+    overlap=(1,15), and padding=(0,0). With output scale 40, background weights (-30,-2)
+    score 32 only on background, blue weights (-15,1) score 30 on blue but 14 on background
+    and 0 on overlap, so quantized rounding emits 1/0/0; cyan weight (40,0) emits cyan only.
+    This replaces explicit Max/label/Pad/Equal carriers with a two-channel terminal FREE
+    QLinearConv and helped restore task219 7210->5229 (strictly below the lost 5258 graph),
+    bundled265/265 and fresh1000 exact versus incumbent. The later additive Scatter successor
+    stores cyan in the second lane too, changing the centered tuples to background=(-1,-1),
+    blue=(-1,15), cyan=(1,1), overlap=(1,17); the same weights keep margins 32/30/40 and
+    still round every unwanted output to zero at the later cost4058 endpoint.'
+  applies_when:
+    all_ops:
+    - QLinearConv
+    any_tags:
+    - overlapping_categorical_planes
+    - terminal_padding
+    - free_output
+    notes: 'Treat round(score/output_scale)>0 as a threshold inequality, not merely score>0.
+      Jointly solve all reachable tuples and the implicit padding tuple; a small positive score
+      may intentionally round to zero and remove a nonlinear overlap carrier.'
+  reject_when:
+    any_tags:
+    - exact_numeric_output_required
+    - unbounded_overlap_multiplicity
+    - output_scale_margin_below_float_or_integer_rounding_tolerance
+    - any_padding_channel_rounds_positive
+  expected:
+    gain_type: memory_by_deleting_overlap_max_and_full_canvas_label_tail
+    risk: 'medium: depends on exact QLinear integer accumulation and round-to-nearest boundaries'
+    verification: 'Enumerate every raw code tuple and padding through the exact quantized equation,
+      keep all scores away from half-step ties, then pinned-ORT micrograph, checker, bundled gate,
+      and fresh incumbent differential.'
+  rescan_2026_07_15:
+    scanned: 'All 400 deployed graphs for terminal padded QLinearConv; 17 hits found. Existing
+      optimized sources are 019,036,046,204,219. Follow-up structural reviews should start with
+      081,160,169,266,282,283,294,302,327,333,365,369.'
+    revisit_candidates:
+    - 81
+    - 160
+    - 169
+    - 266
+    - 282
+    - 283
+    - 294
+    - 302
+    - 327
+    - 333
+    - 365
+    - 369
+  transformer: candidates/task219/build_conv_topk.py
+- id: shared_u8_row_gather_matmul_scatter
+  title: Replace a dense dynamic row projector with shared UINT8 Gather/MatMulInteger and halo ScatterND
+  status: active
+  source_tasks:
+  - 219
+  rationale: 'Task219 materialized pf[6,3,15] fp16 (540B) from a 270B Equal one-hot and
+    shared it between score and placement Einsums. Keeping only rowsal[6,3], lowering the
+    whole cyan branch to UINT8, and gathering three rows lets MatMulInteger compute the
+    [6,4] scores without a dense projector. The same rowsal indexes ScatterND(reduction=add)
+    updates chosen from the UINT8 shift bank. Reusing cyp''s existing 18-row bottom halo makes
+    rows -2/-1 and 15 legal Scatter indices; Slice removes those halo writes and exactly matches
+    the old out-of-range Equal=false semantics. Gathering btop at top5 reconstructs exists in 6B
+    and removes the 12B ex5 carrier. Combined cost changed 5229->4707 (memory5100->4590,
+    params129->117), bundled265/265, fresh5000 incumbent divergence0, gate PASS, and exact-source SHA sync.'
+  applies_when:
+    all_ops:
+    - Gather
+    any_ops:
+    - Equal
+    - OneHot
+    - Einsum
+    - MatMulInteger
+    - ScatterND
+    any_tags:
+    - dynamic_row_projector
+    - shared_score_and_placement
+    - bounded_integer_dot_product
+    - reusable_padding_halo
+    notes: 'Price the complete replacement, not only the projector: integer row samples,
+      shift-matrix transpose/reshape, selected updates, safe index halo, and final placement.
+      A TopK values slice used only as exists can often be recovered by gathering the pre-TopK mask.'
+  reject_when:
+    any_tags:
+    - score_not_bilinear_integer_dot
+    - placement_updates_overlap_nonadditively
+    - uint8_accumulation_overflow
+    - row_indices_escape_available_halo
+    - terminal_free_input_einsum_requires_fp32
+  expected:
+    gain_type: memory_by_deleting_dense_dynamic_projector_and_fp16_score_placement_subgraph
+    risk: 'medium: ORT negative ScatterND indices, reduction semantics, TopK tie order, and integer ranges are load-bearing'
+    verification: 'Pin TopK ties and Scatter halo behavior in ORT 1.26 micrographs; compare
+      bundled outputs, require fresh incumbent divergence0, measure the full scorer cost,
+      then mandatory ng gate/adopt and exact-source SHA sync.'
+  rescan_candidates:
+  - 18
+  - 174
+  rescan_2026_07_15:
+    scanned: 'All 400 deployed graphs with candidates/task219/rescan_shared_projectors.py.
+      Errors=0; 22 distinct multi-consumer Equal/OneHot projector hits and 7 large single-Einsum
+      hits were reviewed. Only task174 M16 (600B) is a >=400B multi-consumer geometry carrier;
+      task018 has two 1440B row/column OneHots in one FREE-input Einsum and needs a 2-D Gather
+      adaptation. task025 pos_onehot is 480B but a complete deletion alone is below +0.1.
+      task080/task177 are rejected by the existing fp32 FREE-input co-bind wall.'
+  transformer: candidates/task219/build_pf_lowering.py
+- id: bounded_dynamic_qlinear_score_correlation
+  title: Recast a bounded dynamic integer correlation as UINT8 QLinearConv and preserve rank through Gather/Scatter
+  status: active
+  source_tasks:
+  - 219
+  rationale: 'Task219''s dynamic row score used UINT8 samples and a runtime UINT8 shift bank,
+    but MatMulInteger materialized two 180B row matrices, two 120B shift layouts, and a 96B
+    INT32 score. Transposing the shift bank once to [phase,row,col] makes it both a dynamic
+    QLinearConv kernel and the placement Gather source. Across bundled265 and independent
+    fresh5000, every raw correlation was exactly in {0,8,...,240}; unit scales and zero-points
+    therefore make the QLinearConv UINT8 result exact without rounding or saturation. Keeping
+    ArgMax output rank [1,6,1] lets Gather updates and ScatterND indices share a rank-5 prefix,
+    removing a selected-update transpose. Gather-only TopK geometry was separately narrowed to
+    INT32. The fresh-safe 18-row Scatter halo remained. Mandatory gate/adopt changed task219
+    4707->4058 (memory4590->3933, params117->125), bundled265/265 and fresh5000 incumbent
+    divergence0.'
+  applies_when:
+    all_ops:
+    - ArgMax
+    any_ops:
+    - MatMulInteger
+    - ConvInteger
+    - QLinearConv
+    any_tags:
+    - dynamic_integer_weight
+    - bounded_nonnegative_correlation
+    - score_then_gather_or_scatter
+    - rank_preserving_index_prefix
+    notes: 'A dynamic QLinearConv weight is legal on pinned ORT 1.26. Share a single
+      [phase,channel,kernel...] layout with downstream Gather, and retain ArgMax singleton ranks
+      when they can become ScatterND prefix dimensions instead of reshaping them away.'
+  reject_when:
+    any_tags:
+    - reachable_accumulator_above_255
+    - negative_score_without_exact_zero_point_recode
+    - quantized_rounding_changes_ties
+    - dynamic_weight_runtime_not_supported
+    - scatter_prefix_shape_mismatch
+    - fresh_only_out_of_range_update
+  expected:
+    gain_type: memory_by_int32_to_uint8_score_recast_and_shared_dynamic_kernel_layout
+    risk: 'medium: topology does not prove accumulator range, tie preservation, or fresh-safe placement'
+    verification: 'Enumerate raw scores on bundled and >=5000 fresh cases, prove the full range
+      and quantized rounding exactly, pin dynamic QLinearConv/ArgMax behavior in ORT 1.26, then
+      bundled gate, fresh incumbent differential, mandatory adopt, and exact-source SHA sync.'
+  rescan_2026_07_15:
+    scanned: 'candidates/task219/rescan_dynamic_integer_scores.py loaded all 400 deployed graphs
+      with errors=0 and traced MatMulInteger/ConvInteger/QLinearConv outputs through up to four
+      shape-only or Gather nodes to ArgMax. The only exact hit was already-adopted task219 pf_corr
+      UINT8 64B; there was no remaining INT32 range-proof candidate.'
+  transformer: candidates/task219/build_placement_conv_lowering.py
+- id: halo_routed_scatter_with_scaled_shared_bank
+  title: Route absent updates into a discarded Scatter halo and absorb amplitude in a shared quantized bank
+  status: active
+  source_tasks:
+  - 219
+  rationale: 'Task219 had an 18-row ScatterND followed by Slice(:15), but still materialized
+    rowsal INT64 144B, an exists broadcast 6B, and masked updates UINT8 180B. Replacing absent
+    aligned rows by sentinel15 makes their three-row indices [15,16,17], so the existing halo
+    discards them; a real row15 update is discarded exactly as before. Direct rank-6 Unsqueeze/Add
+    makes indices and Gather updates share the Scatter prefix, deleting the row matrix and update
+    mask. The old exists value was amplitude4 rather than boolean1, so task219 moved that factor
+    into a 3B upstream bank and set dynamic QLinearConv weight scale=0.25. Score values and ArgMax
+    ties stayed exact while placement read amplitude16 directly. Combined with preserving the
+    shift bank as [phase,1,row,col] for both QLinearConv and Gather, this changed task219
+    4058->3666 (memory3933->3540, params125->126), bundled265/265 and fresh5000 incumbent
+    divergence0.'
+  applies_when:
+    all_ops:
+    - ScatterND
+    - Slice
+    any_tags:
+    - discarded_scatter_halo
+    - broadcast_exists_update_mask
+    - rank_preserving_index_prefix
+    - shared_score_placement_bank
+    notes: 'Route absence in the index only when every sentinel-derived index lies inside a
+      downstream-discarded halo. If the removed mask also scales present values, absorb that
+      amplitude at the smallest shared producer and compensate every quantized score consumer
+      with an exact scale change.'
+  reject_when:
+    any_tags:
+    - no_discarded_halo
+    - sentinel_index_out_of_bounds
+    - overlapping_update_reduction_changes
+    - present_mask_value_is_data_dependent
+    - scale_compensation_changes_rounding_or_argmax_ties
+    - fresh_only_valid_row_update_is_wrapped
+  expected:
+    gain_type: memory_by_replacing_broadcast_update_mask_and_row_matrix_with_halo_index_routing
+    risk: 'medium: a mask may carry amplitude as well as existence, and fresh data may reach the
+      first discarded row with a real update'
+    verification: 'Pin rank-shaped ScatterND and halo Slice behavior in ORT 1.26, differential
+      every shared-bank score and placement amplitude, require bundled exactness and >=5000 fresh
+      incumbent divergence0, then mandatory gate/adopt and exact-source SHA sync.'
+  rescan_2026_07_15:
+    scanned: 'candidates/task219/rescan_halo_routed_scatter.py loaded all 400 deployed graphs with
+      errors=0. It found no unapplied halo_masked_update_opportunity; the only hit was adopted
+      task219 pf_mask18, classified halo_routed_control with halo_rows3 and direct Gather updates
+      180B. Synthetic opportunity/control scanner tests passed 2/2.'
+  transformer: candidates/task219/build_rank6_halo_route.py
+- id: min_basis_hw_conditioned_whole_renderer
+  title: Fuse dynamic-size point placement, separable halo, and channel mixing in one Min-basis terminal Einsum
+  status: active
+  source_tasks:
+  - 19
+  rationale: 'Task019 replaced the cost1934 categorical QLinearConv route with a terminal
+    float32 Einsum whose output is FREE. Two background probes [6,2] and [2,6] recover H/W
+    using the generator facts that each point row has one point and point rows are separated
+    by at least two. Min(H,[2..6]) gives an exact five-state basis with an inverse containing
+    only integers and halves. A shared source [30,6], joint point/halo core [6,5,2,12], output
+    [12,30], and channel mixer [2,10,10] render all 25 H/W states without the rejected
+    1200-element dense halo factors. Predicted and measured cost matched at 1653 = memory176 +
+    params1477; bundled267/267, gate PASS before adoption, fresh6000 A/B divergence0, and exact
+    source/deployed/candidate SHA a452ec9f... all passed. The graph has no QLinearConv, so its
+    implicit padding and stored-bias tuples are empty.'
+  applies_when:
+    any_tags:
+    - dynamic_small_integer_extent
+    - separable_point_and_halo_renderer
+    - free_input
+    - free_output
+    notes: 'Price the full detector, state basis, joint spatial core, and channel mixer before
+      building. Prefer an exact Min basis when the finite state matrix has a dyadic inverse;
+      share the glyph index across row, column, and channel factors to exclude axial cross terms.'
+  reject_when:
+    any_tags:
+    - nonseparable_halo
+    - continuous_or_unbounded_extent
+    - non_dyadic_basis_with_zero_sign_leakage
+    - terminal_einsum_timeout
+  expected:
+    gain_type: delete_spatial_routing_carriers_via_joint_terminal_contraction
+    risk: 'medium: semantic exactness is algebraic, but contraction runtime and zero-sign stability must be measured'
+    verification: 'Enumerate all extent states, require float32-exact selector reconstruction,
+      audit QLinearConv padding/bias tuples even when empty, then checker, strict inference,
+      bundled threshold A/B, isolated ng gate, fresh differential, ng adopt, and source SHA sync.'
+  rescan_candidates: []
+  rescan_2026_07_15:
+    scanned: 'Task019-only session scope; no cross-task scan was authorized.'
+  transformer: candidates/task019/build_min_basis_whole_renderer.py
+- id: runtime_colour_two_state_mask_valid_qlinear_output
+  title: Render a runtime-selected foreground colour from a zero-point-centered compact mask with padded QLinearConv or ConvInteger
+  status: active
+  source_tasks:
+  - 62
+  - 124
+  rationale: 'Task124 had a bool 10x10 foreground mask but materialized a 100B runtime-colour
+    crop and 900B padded scalar label before a FREE Equal output. The first lowering stacked
+    uint8 [mask,valid] and used w_zero_point=1 with background [-1,+1], selected [+1,0], and
+    others [0,0]. The stronger final lowering encodes background/foreground once as uint8 0/2
+    with shared x/w zero-point1, making the semantic states -1/+1 and implicit Conv padding 0;
+    the valid plane disappears. ScatterElements creates the runtime [10,1,1,1] weight with
+    effective background -1, selected +1, and others0. Five fixed-length dynamic row Slices also
+    replace the 200B broadcast Gather index plane. Keeping their compact bank rank4 deletes 80B
+    of flatten/reassembly carriers. Two scalar QLinearMatMul hashes with the collision-free bounded
+    code [1,2,4,8,16,32,0,0,0,0] replace ten-cell equality/reduction at net -9 cost. The terminal
+    padded uint8 QLinearConv writes the FREE output directly. Combined folds changed task124
+    1953->849 (memory1879->779, params74->70), bundled267/267, fresh2000 raw divergence0, off-grid
+    positives0; all 1,428 legal generator states agree with full row equality.
+    This falsifies task124''s dated 2026-07-08 dense-recolour floor. Task062 specializes the
+    same centered one-plane renderer when the background is fixed green: a broadcast Where builds
+    q_sign[1,1,10,10], Equal against shifted classes `[1,2,1,4,5,6,7,8,9,10]` builds a runtime
+    [10,1,1,1] weight, and duplicate shifted code1 preserves output rows0/2. It replaced the
+    200B `[L,L^2]` carrier and static quadratic tail, changing 1388->1293
+    (memory1315->1232, params73->61), bundled267/267. A stronger task062 follow-up
+    encodes raw object/background 0/255 on the 8x8 union before Pad, uses zero-point1
+    so implicit ConvInteger padding is effective0, and uses runtime weights 0/255/1
+    for selected/green/neutral rows. The threshold products are +1/64516/0, safely
+    within int32. Direct float class comparison retains duplicate code1 rows0/2.
+    Together with identity-fallback reflection this reached 1058 (memory1003,
+    params55), bundled267/267.'
+  applies_when:
+    any_ops:
+    - QLinearConv
+    - ConvInteger
+    any_tags:
+    - dynamic_colour
+    - two_state_compact_mask
+    - centered_quantized_state
+    - terminal_padding
+    - free_output
+    notes: 'Runtime colour must select one semantic foreground class; intentional duplicate output
+      rows for that class are allowed. Prefer a single centered plane when quantized implicit
+      padding can be the effective zero state; [mask,valid] remains the fallback when padding
+      cannot be separated from both semantic states.'
+  reject_when:
+    any_tags:
+    - dynamic_crop_extent
+    - positioned_multicolour_content
+    - multiple_runtime_foreground_colours
+    - exact_numeric_output_required
+  expected:
+    gain_type: memory_by_deleting_runtime_colour_crop_full_scalar_pad_valid_plane_broadcast_index_map_and_rank_carriers
+    risk: 'low after finite colour/boolean truth-table proof; padding and quantized zero-point semantics are load-bearing'
+    verification: 'Enumerate mask 0/1 and every runtime colour, assert exact effective weights and
+      zero positive off-grid output; declare fixed Slice lengths explicitly; for a QLinear row
+      fingerprint enumerate the reachable domain and bound the unsaturated accumulator; then checker,
+      strict inference, pinned ORT, isolated ng gate, fresh differential, ng adopt, and exact-source SHA sync.'
+  rescan_2026_07_15:
+    scanned: 'candidates/transfer_scan_task086/scan_signed_free_output.py inspected all 400 deployed
+      graphs. task124 was the only direct high-confidence two-state runtime-colour hit above +0.1;
+      task037/062/069/354 were separate fixed-label polynomial-decoder hits.'
+    reopen_trigger: 'A new/public adoption introduces a fixed compact two-state mask followed by
+      runtime colour selection and scalar Pad/Equal, a fixed-valid-plane tail is newly exposed,
+      or a small flattened bank uses broadcast start+column Gather indices for fixed-length rows.'
+  rescan_2026_07_15_task062_followup:
+    scanned: 'Reran candidates/transfer_scan_task086/scan_signed_free_output.py read-only over all
+      400 deployed graphs after task062 adoption: models_scanned400, failures0. task062 is now a
+      consumed cost1058 terminal ConvInteger with q_sign100B, object_class_match10B, and dynamic
+      q_weights10B; it has no terminal scalar-label Equal. The broad scan still lists 35
+      scalar-label Equal tails, which require task-specific state/padding price proofs before any
+      follow-up and were not modified in this task062-only session.'
+  rescan_2026_07_15_task124_rank4_hash_followup:
+    scanned: 'Read-only scan loaded all 400 deployed graphs with errors0. The scalar
+      QLinearMatMul-hash-to-Equal exact signature occurs only on adopted task124. A flattened-bank
+      to repeated dynamic Slice broad signature occurs on task270; bounded Equal->Cast->ReduceMin
+      broad signatures occur on task174/233/343/363. They require independent reachability,
+      collision, saturation, and cost proofs, and no other task was modified.'
+  transformer: candidates/task124/build_rank4_qlinear_hash.py
+  task062_transformer: candidates/task062/build_compact_sign_convinteger.py
+- id: row_first_gather_for_reused_2d_bank
+  title: Gather shared rows before per-column selection instead of flattening a 2D bank
+  status: active
+  source_tasks:
+  - 366
+  rationale: 'Task366 selected six cells from an already-counted 15x17 UINT8 panel by first
+    materializing FSflat[255] and using flat INT64 indices. Casting the six row/column indices to
+    INT32, Gather-ing the six rows as [6,17], and using GatherElements for the six columns costs
+    24+102+24+6+6=162B and deletes the 255B flat bank. This changed 19614->19515 across the
+    GatherND and row-first stages, passed bundled255/255, and exact source rebuild reproduced
+    memory19321/params194. The win depends on reusing selected rows; isolated scalar gathers can be
+    cheaper than a row slab.'
+  applies_when:
+    all_ops:
+    - Gather
+    any_tags:
+    - flattened_2d_bank
+    - repeated_row_indices
+    - small_selected_row_count
+    notes: 'Price the INT32 row/column indices, selected row slab, GatherElements output, and any
+      Squeeze separately. The source 2D bank must already exist; do not create a large reshape or
+      duplicate rows merely to use this recipe.'
+  reject_when:
+    any_tags:
+    - single_scalar_gather
+    - no_row_reuse
+    - source_only_exists_flattened
+    - gather_elements_dtype_unsupported
+  expected:
+    gain_type: memory_by_deleting_flat_bank_and_int64_coordinate_route
+    risk: 'low after index-range proof and pinned-ORT INT32 GatherElements micro-test'
+    verification: 'Compare exact selected coordinates in NumPy, run checker and strict inference,
+      require bundled A/B and isolated gate, then rebuild exact source.'
+  rescan_2026_07_15:
+    scanned: 'All 400 deployed graphs. Found 57 Reshape/Flatten->Gather edges. Large/repeated-bank
+      manual-review tasks are 076,101,133,173,233,285,366; many other hits are tiny 3x3/10-element
+      tables or single scalar reads where the row slab cannot pay.'
+    manual_review_candidates:
+    - 76
+    - 101
+    - 133
+    - 173
+    - 233
+    - 285
+    reopen_trigger: 'A candidate has an already-counted 2D bank, at least two selected cells share
+      rows, and exact byte accounting beats its flat bank/index route.'
+  transformer: candidates/task366/build_fs_gather_rows.py
+- id: quadrant_sign_direct_local_sparse_renderer
+  title: Use both quadrant signs to shrink a conservative 5x(2R-1) strip to a direct RxR sparse renderer
+  status: active
+  source_tasks:
+  - 285
+  rationale: 'Task285 already recovered a visible pivot root and two signs (e,f), but reduced
+    them to a one-axis orientation selector and gathered a 3x5x9 strip.  The two signs uniquely
+    identify the quadrant.  Gathering the root-corner 3x5x5 patch, retaining two bounded 5x5
+    connectivity MaxPools, and generating the three reflected destinations with a 3-operand
+    Einsum over 3x9 slots changed cost 17775->16038 (memory17359->15793,
+    params416->245), bundled265/265.  The separate pivot-slot probe matched row/col/quadrant/
+    four anchor colours on 265/265 and first inference was 0.000862s.'
+  applies_when:
+    all_ops:
+    - Gather
+    - MaxPool
+    - TopK
+    any_tags:
+    - sparse_local_component
+    - quadrant_or_dihedral_signs
+    - conservative_two_sided_strip
+    - affine_sparse_scatter
+    notes: 'Require two independent direction signs or an equivalent full quadrant id.  Lay out
+      the local patch from the root corner, keep the connectivity radius proof, and price the
+      dynamic indices plus every Gather/reshape output before replacing the wider strip.'
+  reject_when:
+    any_tags:
+    - only_one_orientation_sign_recovered
+    - component_can_cross_both_sides_of_root
+    - local_extent_exceeds_fixed_radius
+    - integer_topk_required
+    - local_index_matmul_not_supported_by_pinned_ort
+  expected:
+    gain_type: memory_and_parameters_by_shrinking_sparse_local_window_and_affine_route
+    risk: 'medium: exact only when the root/quadrant certificate and connectivity convention are proven'
+    verification: 'Build a pivot-only slot ONNX; compare row/col/orientation/anchors to an
+      independent bundled oracle; require first inference <1s; then checker, strict inference,
+      full counted-tensor dump, isolated bundled gate, ng adopt, and exact-source SHA sync.'
+  rescan_candidates:
+  - 76
+  - 233
+  - 361
+  rescan_2026_07_15:
+    scanned: 'All 400 adopted graphs after task285 adoption.  The exact 5x9/WLUT signature is
+      fully consumed (0 remaining).  A loose Gather+MaxPool+TopK local-window scan found
+      task076, task233, task285, and task361; excluding the source task leaves 076/233/361 for
+      task-specific sign/root and byte-price review.  These are structural review candidates,
+      not claimed wins.'
+  transformer: candidates/task285/build_sparse_renderer_candidate.py
+- id: singleton_seed_maxpool_to_slice_expand_pad
+  title: Replace a singleton seed mask and its first MaxPool with Slice, Expand, and Pad
+  status: active
+  source_tasks:
+  - 285
+  rationale: 'Task285 formed a 3x1x5x5 root seed by multiplying a local component mask
+    with a 25-parameter singleton initializer, then expanded it with a 5x5 MaxPool and
+    symmetric pad 2. The pool output is exactly the root scalar broadcast over the
+    top-left 3x3 block and zero-padded to 5x5. A two-axis Slice, Expand to 3x1x3x3,
+    and end Pad replaced the two 75B tensors with 3B, 27B, and 75B tensors. Default
+    Transpose/Flatten also removed two shape initializers. The complete exact fold
+    changed cost16038->15982 (memory15793->15748, params245->234), passed bundled265/265,
+    and was adopted through ng gate.'
+  applies_when:
+    all_ops:
+    - Mul
+    - MaxPool
+    any_tags:
+    - singleton_spatial_seed
+    - fixed_local_connectivity
+    - broadcast_seed_mask
+    notes: 'The seed initializer must have exactly one unit entry after broadcasting.
+      Derive the pooled rectangle from seed position, kernel, pads, stride, dilation,
+      and ceil_mode. Slice the dynamic source value before Expand; retain the original
+      pool output shape with explicit begin/end Pad.'
+  reject_when:
+    any_tags:
+    - multiple_seed_cells
+    - nonunit_seed_value
+    - nonunit_pool_stride
+    - dilated_pool
+    - data_dependent_seed_position
+    - nonzero_pool_padding_semantics
+  expected:
+    gain_type: memory_and_parameters_by_analytical_first_dilation
+    risk: 'low after exact receptive-field rectangle proof and dtype-specific Pad test'
+    verification: 'Checker plus strict inference, compare the folded first-dilation tensor
+      or all bundled outputs, require float-only TopK safety, mandatory gate/adopt, and
+      exact-source SHA sync.'
+  rescan_candidates: []
+  rescan_2026_07_15:
+    scanned: 'candidates/task285/rescan_singleton_seed_maxpool.py inspected all 400 deployed
+      graphs after adoption for Mul(single-unit initializer)->MaxPool with unit stride and
+      dilation. No remaining deployed graph matched. The historical task285 seed self-check
+      found the expected 3x1x5x5 top-left singleton and estimated 52 cost saving for the
+      connectivity fold alone.'
+    direct_candidates: []
+  transformer: candidates/task285/build_connectivity_fold_candidate.py
+- id: centered_qlinear_interval_count_contraction
+  title: Contract solid-rectangle counts through centered UINT8 QLinearMatMul and MatMulInteger
+  status: active
+  source_tasks:
+  - 216
+  rationale: 'Task216 already had bool row/column interval masks but paid for two float32
+    [4,20] carriers and two float Einsums. Its scalar code is background=0, blue=1, red=3,
+    so (code-1)/2 is exactly a red indicator inside a solid rectangle. QLinearMatMul computes
+    row_mask^T*(code-1) with output scale 2 and UINT8 zero-point 10; the full raw range
+    [-20,40] maps to [0,30]. MatMulInteger then applies the column masks, and GatherND reads
+    the four diagonal counts as INT32 (rule maximum 18*18=324). This removed both 320B
+    float mask carriers without a 400-unit prefix table or a new >=320B float carrier.'
+  applies_when:
+    all_ops:
+    - Einsum
+    any_tags:
+    - axis_interval_mask
+    - solid_rectangle
+    - bounded_integer_count
+    - scalar_colour_code
+    notes: 'Prove that the selected Cartesian product contains no background, choose an affine
+      code center/scale that makes the counted class integral, and prove every QLinear and
+      MatMulInteger accumulator bound before building.'
+  reject_when:
+    any_tags:
+    - holes_inside_interval
+    - unbounded_count
+    - input_quantization_carrier_required
+    - qlinear_rounding_changes_order
+  expected:
+    gain_type: memory_by_replacing_fp32_interval_masks_and_float_contractions
+    risk: 'medium: zero-point, rounding, diagonal selection, and off-diagonal junk must be proved separately'
+    verification: 'Integer oracle first; checker and strict inference; bundled gate; adversarial
+      differential including touching boxes, coloured corners, and count ties.'
+  rescan_candidates: []
+  rescan_2026_07_15:
+    scanned: 'candidates/task216/rescan.py inspected all 400 deployed graphs after adoption.
+      Loose bool->float mask/Einsum syntax appeared on tasks018/063/280/289/335/342. Only
+      task018 had small count/profile outputs with two distinct masks; direct inspection rejected
+      it as a transfer because those masks co-bind the FREE 10-channel fp32 input in multiple
+      profile and weighted-moment Einsums, not an existing scalar UINT8 code over a solid rectangle.
+      The other hits were terminal FREE-output renderers or repeated use of the same mask.'
+    direct_candidates: []
+    manual_reviewed_rejects:
+    - 18
+  transformer: candidates/task216/build_codeplane.py
+- id: division_residue_convex_embedding_for_qlinear_tail
+  title: Recode up to ten labels as convex quotient or CRT-residue pairs for a two-feature QLinear tail
+  status: active
+  source_tasks:
+  - 354
+  rationale: 'Task354 previously formed `[G,G^2]` with a 100B square and a counted 200B Concat
+    before its padded QLinearConv. Recode classes0..9 as
+    `0/13/39/104/208/247/252/231/168/63`; one broadcast UINT8 `Div(G,[13,21])` maps all ten to
+    distinct strict convex vertices selected from an 11-vertex quotient hull. Integer support
+    lines decode every class, while the implicit QLinear padding point `(1,1)` is non-positive in
+    all channels. This replaces the 100B square plus 200B feature Concat with one 200B quotient
+    feature and adds only two divisors plus a dtype-correct INT8 weight zero-point. Reusing the
+    existing row scale removes the dedicated tail scale. Paired with a negative-pad header
+    producer, official gate/adopt changed cost1479->1268 (memory1390->1180, params89->88),
+    +0.153925, bundled266/266. A follow-up recodes the same ten labels as
+    `0/39/27/134/203/116/77/89/137/68`; `Mod(G,[17,13])` places them on a strict CRT decagon
+    around padding point `(9,9)`. All support intervals share accumulator threshold65.5, so one
+    output scale replaces ten biases. Effective weights fit `[-9,23]`, allowing UINT8 stored
+    weights to reuse activation zero-point9 as weight zero-point. This adopted 1268->1258 with
+    memory1180 unchanged, params88->78, and bundled266/266.'
+  applies_when:
+    all_ops:
+    - QLinearConv
+    any_ops:
+    - Div
+    - Mod
+    all_tags:
+    - compact_uint8_label
+    - at_most_ten_reachable_states
+    - padded_free_output
+    - upstream_codes_reassignable
+    notes: 'Search finite quotient/residue points and implicit padding jointly. For a bias-free
+      tail, additionally intersect every class support interval at one positive accumulator
+      threshold; encode that threshold with the output scale. Then search activation zero-points
+      whose integer normals fit the corresponding UINT8 stored-weight range so x/w zero-points can
+      be shared. The upstream producer must carry high UINT8 codes without clipping; task354
+      saturates its mask gate to 255 before Min/Max propagation. Search all semantic rows even when
+      the current producer omits one label.'
+  reject_when:
+    any_tags:
+    - fixed_unrecodeable_labels
+    - upstream_uint8_overflow
+    - qlinear_weight_zero_point_dtype_mismatch
+    - positive_padding_logit
+  expected:
+    gain_type: memory_by_fusing_square_and_feature_concat_into_integer_quotients
+    risk: 'medium: high label codes, integer Div/Mod kernels, common QLinear rounding threshold, exact class hull, and padding signs are all load-bearing'
+    verification: 'Enumerate every label and padding point through the exact integer support lines;
+      for bias-free forms prove target/false accumulator bounds around the shared half-integer
+      threshold; run a real pinned-ORT Div/Mod+QLinearConv tail; require full checker, strict shape
+      inference, focused tests, official gate/adopt, and candidate/deployed SHA equality.'
+  rescan_candidates:
+  - 36
+  - 37
+  - 46
+  - 327
+  rescan_2026_07_15:
+    scanned: 'Read-only load of all 400 deployed graphs for QLinearConv fed by Concat(base,
+      Mul(base,base)); all 400 loaded without error.'
+    result: 'Broad structural hits were task036/037/046/327. They are review candidates only;
+      reachable-state count, recode freedom, upstream saturation, and current cost thresholds were
+      not evaluated in the task354-only assignment, and no other task was modified.'
+  transformer: candidates/task354/build_shared_biasfree_residue_qlinear.py
+- id: packed_label_binary_template_dynamic_bias
+  title: Pack a marker sentinel into the label plane and threshold full template overlap with a dynamic quantized bias
+  status: active
+  source_tasks:
+  - 69
+  rationale: 'Task069 maps marker colour8 to UINT8 255 in the existing colour-index Conv while
+    leaving colours0..7,9 unchanged. Div by255 emits the marker plane when needed and Mod255 emits
+    the coloured plane. For template correlation, reading the packed plane at scale1/255 against a
+    binary runtime footprint makes every non-marker residual collectively less than
+    12*9/255<0.5. A self-QLinearConv computes footprint size N because sum(F^2)=N; runtime bias
+    255*(1-N) then makes a full match exactly1 and every partial match0, including implicit padded
+    cells. Combined with int32 modular Gather crop indices and a shifted quadratic runtime stamp,
+    this helped lower task069 from2530 to1210 after the initial polynomial tail.'
+  applies_when:
+    all_ops:
+    - Conv
+    - Cast
+    - Mod
+    - QLinearConv
+    any_tags:
+    - one_reserved_marker_colour
+    - one_runtime_coloured_template
+    - bounded_binary_footprint
+    - full_overlap_anchor
+    - quantized_runtime_weight
+    notes: 'Choose sentinel S strictly above the maximum total residual raw code over one binary
+      footprint. Bias must be S*(1-N) in accumulator units, and the input scale must be1/S.'
+  reject_when:
+    any_tags:
+    - residual_code_sum_reaches_sentinel
+    - nonbinary_template_count
+    - partial_overlap_is_semantically_positive
+    - crop_wrap_can_hit_another_nonmarker_object
+    - output_padding_needs_positive_class_without_valid_feature
+  expected:
+    gain_type: memory_by_multiplexing_marker_and_colour_then_folding_peak_detection_into_bias
+    risk: 'medium: sentinel bound, QLinearConv padding semantics, and sole-coloured-object modular crop are load-bearing'
+    verification: 'Enumerate reachable label codes and prove residual_sum<S; compare Kcol,
+      Corigin, anchor mask, runtime features, and thresholded output over all augmented examples;
+      require pinned checker/ORT, official gate/adopt, and exact-source byte identity.'
+  rescan_candidates:
+  - 182
+  - 324
+  - 156
+  rescan_2026_07_15_task069:
+    scanned: 'All 400 deployed graphs for Conv->Cast marker Equal families, dynamic-weight
+      QLinearConv->ReduceMax->Div/Equal peak chains, and runtime-stamp polynomial tails.'
+    result: 'No remaining direct dynamic-QLinear peak chain. Broad packed-label hits are task182
+      and task324; task156 has a runtime-stamp polynomial tail. They require separate pricing and
+      were not modified in the task069-only session.'
+  transformer: candidates/task069/build_dynamic_anchor_bias.py
+  companion_transformers:
+  - candidates/task069/build_packed_modular_crop.py
+  - candidates/task069/build_int32_crop.py
+  - candidates/task069/build_packed_binary_corr.py
+- id: one_sided_zero_label_run_mask
+  title: Recover the solid run containing a known start with one-sided UINT8 prefix-Max labels
+  status: active
+  source_tasks:
+  - 216
+  rationale: 'Task216 knew each rectangle top-left but materialized per-candidate zero planes,
+    first-zero ArgMax/guards, end comparisons, and separate interval masks. Put the 1-based axis
+    coordinate on every zero cell, apply a one-sided MaxPool whose kernel spans the full axis,
+    replace zero cells themselves by sentinel 255, and Gather the prefix-Max label at the known
+    start. Equal(prefix_label, start_label) is exactly the coloured run containing that start:
+    a boundary start has label 0, every separated run has the preceding zero coordinate as a
+    unique label, and a run ending at axis 20 needs no sentinel guard. The resulting UINT8 mask
+    is shared by width/height QLinear sums and the centered integer red-count contraction.
+    Companion endpoint folds encoded quotient local offset as local+1 so Clip(0,1) replaced a
+    separate presence projection, and used fp16 only for exact integer coordinates 0..400.
+    The combined task216 change was 5685->5144 (memory5529->4989, params156->155), bundled266/266,
+    faithful/adversarial5000 incumbent divergence0, and gate PASS.'
+  applies_when:
+    all_ops:
+    - MaxPool
+    - GatherElements
+    - Equal
+    any_tags:
+    - known_run_start
+    - solid_nonzero_run
+    - separated_intervals
+    - axis_extent
+    - reusable_interval_mask
+    notes: 'The MaxPool pad must be one-sided by kernel_size-1. Use 1-based zero labels so the
+      initial state 0 is unique, and reserve a sentinel outside every reachable run label for
+      zero cells themselves. The start cell must be proven nonzero.'
+  reject_when:
+    any_tags:
+    - holes_inside_run
+    - adjacent_runs_without_zero_gap
+    - unknown_or_zero_start
+    - axis_longer_than_uint8_label_range
+    - maxpool_padding_not_one_sided
+  expected:
+    gain_type: memory_by_fusing_first_zero_extent_and_interval_mask
+    risk: 'medium: inclusive prefix labels include zero cells unless the sentinel replacement is exact; boundary-ending runs and later separated runs are load-bearing'
+    verification: 'Enumerate starts, widths, boundary endings, earlier/later separated runs, and
+      blue/red mixtures in an integer oracle; require no TopK, strict checker/inference, bundled
+      gate, adversarial touching/tie/corner-colour differential, and fixed-point source SHA.'
+  rescan_candidates:
+  - 138
+  rescan_2026_07_15:
+    scanned: 'candidates/task216/rescan.py inspected all 400 deployed graphs for a Where-produced
+      coordinate label plane feeding a >=10 one-sided MaxPool and a downstream sentinel/label
+      comparison. Errors=0. The exact GatherElements+Equal run-label fingerprint appears only in
+      task216 (two axes). Task138 has two related 23-cell directional prefix/suffix MaxPools but
+      no gathered start-label equality; it is a conceptual relative, not a direct transplant.'
+    exact_hits:
+    - 216
+    direct_candidates: []
+    reviewed_related:
+    - 138
+    reopen_trigger: 'A deployed graph knows a nonzero start inside a solid separated run and still
+      uses first-zero ArgMax/guards or two endpoint comparisons to build the same interval mask.'
+  transformer: candidates/task216/build_cumsum_extent.py
+- id: quadratic_projective_colour_code_with_marker_zero_determinants
+  title: Replace a shared three-row colour basis with a quadratic 2D projective code
+  status: active
+  source_tasks:
+  - 246
+  rationale: 'Task246 only receives background/red/green input colours but must preserve the
+    markers and paint cyan. Encoding background=(1,0), red=(1,1), green=(1,-1), cyan=(1,2),
+    and output-only colours=(0,0) makes red and green gates t(t+1)/2 and t(t-1)/2 from repeated
+    FREE-input reads. Products of the reused antisymmetric root mux give t^2-1, which is exactly
+    zero on both markers, positive/negative in the required background/cyan directions, and zero
+    on every unused output. A reused [1,-1] vector handles green. One 8-value affine branch mux
+    supplies the equality score. This replaced 45 colour/map parameters with 32 and changed
+    task246 117->104, bundled266/266 and fresh500/500.'
+  applies_when:
+    all_ops:
+    - Einsum
+    any_tags:
+    - three_reachable_input_colours
+    - shared_input_output_colour_basis
+    - exact_marker_zero_correction
+    - free_input_repetition
+    notes: 'The zero projective vector is intentional for output-only colours: its terminal logit
+      is exactly zero, which is false under the scorer threshold. The two marker embeddings must
+      remain distinct projective roots.'
+  reject_when:
+    any_tags:
+    - output_only_colour_must_be_positive
+    - unused_zero_logit_is_not_false
+    - non_onehot_reachable_input
+    - correction_must_distinguish_more_than_two_nonzero_projective_roots
+    - no_reusable_antisymmetric_mux
+  expected:
+    gain_type: parameters_by_quadratic_reuse_of_a_two_row_colour_embedding
+    risk: 'medium: exact sign algebra is simple, but high-arity Einsum contraction order varies by orders of magnitude'
+    verification: 'Exhaust the reachable colour/output truth table including exact zero markers
+      and unused outputs; require checker plus strict inference, at least 16 bounded operand orders,
+      bundled gate, candidate-only fresh, ng adopt, and exact-source SHA equality.'
+  rescan_candidates:
+  - 52
+  - 77
+  - 114
+  - 225
+  - 280
+  - 321
+  - 374
+  - 389
+  rescan_2026_07_15:
+    scanned: 'All 400 deployed graphs for a repeated [3,10] initializer in an Einsum, then the
+      stricter FREE-output signature with a reused [2,2,2] mux. There were no strict hits and ten
+      broad node hits across eight tasks; broad hits require task-specific reachable-colour proof.'
+    direct_candidates: []
+  transformer: candidates/task246/build_quadratic_colour_basis.py
+- id: synthesize_onehots_and_swap_from_reused_antisymmetric_mux
+  title: Derive selector one-hots and a swap from a sparse antisymmetric mux, then reuse one map
+  status: active
+  source_tasks:
+  - 246
+  rationale: 'For T with T[0,0,0]=1, T[1,0,1]=1, and T[1,1,0]=-1,
+    the diagonal T[q,q,q] is exactly e0 and the two-axis sum sum_ab T[a,b,q] is exactly e1.
+    Selecting T''s antisymmetric slice with e1 and multiplying the first feature axis by
+    [1,-1] produces the exact 2x2 swap. Task246 used those free selectors to reverse the
+    constant/marker gate state and reuse one map [[1/2,1/2],[16,0]] for both quadratic colour
+    gates and branch channel gain. Sharing the forward/reverse channel slice is exact because
+    the mixed determinant terms cancel. This removed an 8-value branch mux and a 2-value
+    selector, changing task246 104->94 with bundled266/266 and fresh500/500.'
+  applies_when:
+    all_ops:
+    - Einsum
+    any_tags:
+    - reused_sparse_2x2x2_mux
+    - antisymmetric_bilinear_slice
+    - separate_2x2_gate_and_branch_map
+    - scarce_einsum_label_budget
+    notes: 'The selector identities depend on exact sparse entries and axis order. Reusing the
+      channel slice is valid only for a forward bilinear multiplied by its reversed bilinear,
+      where determinant cross terms cancel.'
+  reject_when:
+    any_tags:
+    - root_mux_has_additional_nonzero_entries
+    - selector_sum_axes_are_not_independent
+    - channel_factors_are_not_exact_reversals
+    - map_rows_need_independent_normalization
+    - label_merge_couples_marker_sums
+  expected:
+    gain_type: parameters_by_procedural_selector_and_map_reuse
+    risk: 'medium: exact tensor identities are short, but label sharing and operand order can silently change the contraction or exceed memory limits'
+    verification: 'Prove e0/e1/swap and the forward/reverse channel identity offline; require
+      checker plus strict inference, at least 16 bounded operand orders, bundled gate,
+      candidate-only fresh, ng adopt, and exact-source SHA equality.'
+  rescan_candidates:
+  - 329
+  rescan_2026_07_16:
+    scanned: 'All 400 deployed graphs for a repeated [2,2] map and repeated [2,2,2] mux in one
+      Einsum. Errors=0. Exact task246 signature additionally requiring [2,10] and [2,30] bases
+      appears only in task246. Task329 is the only broad relative and lacks the 2x10 colour basis.'
+    exact_hits:
+    - 246
+    direct_candidates: []
+    reviewed_related:
+    - 329
+  transformer: candidates/task246/build_joint_reused_colour_map.py
+- id: signed_categorical_plane_for_geometry_mask_and_colour
+  title: Encode marker sign and shifted object colour in one cropped Conv plane
+  status: active
+  source_tasks:
+  - 62
+  rationale: 'Task062 originally carried separate 8x8 black/red planes and a 10-channel
+    spatial presence selector. A cropped 1x1 float Conv instead maps red to -1, background to 0,
+    and each possible object colour to its positive shifted decoder label. The same 256B plane
+    supports `Greater(0)` for the object mask, `ReduceMin/ArgMin` for the marker axis,
+    `ReduceMax/ArgMax` for object extents, and global `ReduceMax`+Cast for the dynamic colour.
+    Combined with its padding-safe two-feature QLinear tail and later mask fold, this mechanism
+    helped move task062 2149->1409 before coordinate micro-folds, with thresholded A/B 267/267.'
+  applies_when:
+    all_ops:
+    - Conv
+    - ReduceMin
+    - ReduceMax
+    any_tags:
+    - categorical_onehot_input
+    - signed_marker
+    - one_dynamic_foreground_colour
+    - shared_geometry_plane
+    notes: 'Choose positive codes to be the exact downstream semantic labels when possible.
+      A single foreground colour per example is required for global ReduceMax colour readout.'
+  reject_when:
+    any_tags:
+    - multiple_foreground_colours_need_separate_outputs
+    - positive_marker_required_downstream
+    - geometry_depends_on_colour_magnitude
+    - float_conv_crop_not_cheaper
+  expected:
+    gain_type: memory_and_parameters_by_multiplexing_mask_marker_extent_and_colour
+    risk: 'low after proving red is the unique negative code and every object code is positive'
+    verification: 'Enumerate all reachable input colours and marker layouts; compare every
+      geometry scalar and final thresholded output; run checker, strict inference, bundled gate,
+      and exact-source SHA reconstruction.'
+  transformer: candidates/task062/build_color_coded_cell_conv.py
+- id: compact_mask_to_polynomial_feature_broadcast
+  title: Broadcast scalar colour powers through a compact mask instead of building a label grid
+  status: active
+  source_tasks:
+  - 62
+  rationale: 'Task062 had an 8x8 colour grid, padded 10x10 label grid, 10x10 square, and
+    two-channel polynomial carrier. The replacement pads only the final bool object union to
+    `obj_mask10`, computes `[colour,colour^2]` as two scalars, and uses one broadcast Where against
+    fixed green `[4,16]` to create the QLinear input. It deleted the counted full-grid colour and
+    square planes, changing 1691->1515 at bundled267/267.'
+  applies_when:
+    all_ops:
+    - Where
+    - QLinearConv
+    any_tags:
+    - binary_spatial_mask
+    - one_dynamic_foreground_label
+    - fixed_background_label
+    - polynomial_decoder
+    notes: 'Keep powers scalar until the final broadcast. Price the mask Pad and feature Where;
+      this wins only when the deleted label/power planes are larger.'
+  reject_when:
+    any_tags:
+    - per_pixel_foreground_labels
+    - multiple_dynamic_backgrounds
+    - nonbroadcastable_feature_basis
+  expected:
+    gain_type: memory_by_delaying_dynamic_label_broadcast
+    risk: 'low with exact integer powers and a thresholded terminal decoder'
+    verification: 'Compare thresholded incumbent/candidate outputs over all augmented examples,
+      including deliberate class collisions and off-grid padding.'
+  transformer: candidates/task062/build_mask_feature_fold.py
+- id: wrapped_u8_index_to_zero_padding_sentinel
+  title: Clamp wrapped uint8 reflection indices to a one-cell zero-padding sentinel
+  status: active
+  source_tasks:
+  - 62
+  rationale: 'Task062 computes separable reflection indices in uint8; negative values wrap to
+    249..255 and the only positive out-of-range value is at most 9. After the existing uint8
+    orientation Where chooses the active branch, `Min(index,8)` maps every invalid value to one
+    appended zero cell while preserving valid 0..7. This reduces each source Pad from length10 to
+    length9 and permits direct uint8->int32 Gather indices, deleting the int8 sign-extension
+    tensors. It changed 1409->1393; replacing a max-bound orientation test with
+    `obj_col_occ[axis_col]==0` then reached 1388, all at bundled267/267.'
+  applies_when:
+    all_ops:
+    - Gather
+    - Pad
+    - Min
+    any_tags:
+    - bounded_dynamic_index
+    - wrapped_unsigned_negative
+    - zero_for_out_of_range
+    - mutually_exclusive_orientation
+    notes: 'Prove the full valid index interval and the maximum positive overflow. The sentinel
+      must be an actual appended zero cell, and inactive orientations must be zeroed before OR.'
+  reject_when:
+    any_tags:
+    - out_of_range_has_nonzero_semantics
+    - valid_index_reaches_sentinel
+    - positive_overflow_below_sentinel
+    - unbounded_wrapped_index
+  expected:
+    gain_type: memory_by_smaller_padding_and_deleted_signed_extension
+    risk: 'medium: one unproved overflow can silently gather a valid cell or fail at runtime'
+  verification: 'Exhaustively compare raw index vectors and thresholded outputs on every
+      orientation/axis case, then require pinned-ORT checker, strict inference, bundled gate, and
+      post-adopt fixed-point reconstruction.'
+  transformer: candidates/task062/build_sentinel_clamped_indices.py
+- id: identity_fallback_gather_union
+  title: Let inactive and out-of-range Gathers return identity when the final merge is set union
+  status: active
+  source_tasks:
+  - 62
+  rationale: 'Task062 previously appended one zero row/column to an 8x8 object mask for each
+    reflection axis, routed inactive and wrapped indices to the appended sentinel, ORed the two
+    reflection outputs, then ORed the original object again. The stronger lowering uses the
+    destination identity index whenever a branch is inactive or its reflected index lies outside
+    0..7. Every fallback Gather value is therefore exactly an original-object pixel. One active
+    reflection Gather plus one identity Gather can be ORed directly to produce original union
+    reflection; invalid active positions also fall back to harmless original pixels. Replacing
+    uint8 Add with Sub over identity `[0..7]` preserves wrapped reflection arithmetic and shares
+    the fallback initializer. This deleted two 72B Pad outputs, their four parameters, and the
+    separate 64B reflection union while adding 16B of validity/selection carriers, changing
+    task062 1293->1097 (memory1232->1040, params61->57), bundled267/267.'
+  applies_when:
+    all_ops:
+    - Gather
+    - Or
+    any_tags:
+    - mutually_exclusive_transform
+    - set_union_output
+    - identity_is_harmless_fallback
+    - bounded_dynamic_index
+    notes: 'The identity fallback is valid only when extra original pixels are idempotent under
+      the downstream merge. Prove that each inactive branch becomes the original tensor and that
+      each invalid active destination also contributes only the original value at that destination.'
+  reject_when:
+    any_tags:
+    - additive_merge_counts_duplicates
+    - replacement_semantics
+    - fallback_may_create_nonoriginal_value
+    - transform_output_excludes_original
+    - unbounded_index_without_range_test
+  expected:
+    gain_type: memory_by_deleting_zero_sentinel_padding_and_redundant_original_union
+    risk: 'medium: an incorrect identity fallback can silently inject original pixels where the transform is not a set union'
+    verification: 'Enumerate every bundled transform orientation and wrapped index, compare the
+      final thresholded multi-hot output, then require checker, strict inference, pinned ORT,
+      isolated gate/adopt, and fixed-point source reconstruction.'
+  rescan_candidates:
+  - 101
+  rescan_2026_07_15:
+    scanned: 'Read-only structural scan loaded all 400 deployed graphs with failures0. Direct
+      Or(Gather,Gather) over a shared source occurs on task062 and twice on task101; task255 has
+      the broad syntax but its Gather sources differ. No remaining graph has the exact legacy
+      Or(original,Or(Gather(Pad(original)),Gather(Pad(original)))) signature. Task101 is a
+      task-specific review candidate only: identity fallback still requires proving idempotent
+      set-union semantics and bounded indices before any rewrite.'
+  transformer: candidates/task062/build_identity_fallback_reflection.py
+- id: shared_integral_profile_bank
+  title: Cast one exact integral FLOAT crop once and share its narrow integer reductions
+  status: active
+  source_tasks:
+  - 62
+  rationale: 'A FREE-input Conv can be forced to emit FLOAT even when every reachable value is
+    an exact small integer. Task062 kept that required 8x8 FLOAT code but cast it once to INT8;
+    two marker ReduceMin profiles, two object ReduceMax profiles, the object-colour scalar, and
+    the axis-overlap scalar all consume the shared narrow plane. Four length-8 profiles changed
+    128B->32B, the two FLOAT scalars changed 8B->2B, and the shared Cast cost64B, for an exact
+    task062 reduction 1058->1020 (memory1003->965, params55 unchanged), bundled267/267.'
+  applies_when:
+    all_ops:
+    - Conv
+    - Cast
+    any_ops:
+    - ReduceMin
+    - ReduceMax
+    any_tags:
+    - exact_integral_float_carrier
+    - shared_profile_bank
+    - free_input_conv
+    notes: 'Share one cast only when at least two downstream reductions repay its full spatial
+      carrier. Prove the reachable integer range fits the chosen type before narrowing.'
+  reject_when:
+    any_tags:
+    - nonintegral_reachable_value
+    - narrowing_overflow
+    - only_one_small_consumer
+  expected:
+    gain_type: memory_by_amortized_dtype_narrowing
+    risk: 'low after exhaustive thresholded A/B and pinned-runtime integer reduction checks'
+    verification: 'Require checker plus strict inference, confirm every targeted profile/scalar
+      infers INT8, compare thresholded incumbent/candidate output, and preserve any intentional
+      class collisions in the narrow comparison table.'
+  transformer: candidates/task062/build_shared_int8_profiles.py
+- id: collision_free_quotient_corner_axis
+  title: Replace full-plane top-k enumeration with a collision-free quotient axis and repeated ArgMax
+  status: active
+  source_tasks:
+  - 216
+  rationale: 'Task216 corners obey pairwise separation: minimum rectangle height 3, width 4,
+    and spacing 1 imply |dr|>=4 or |dc|>=5. Therefore each 4x5 quotient block contains at most
+    one corner. Two strided UINT8 QLinearConv projections emit 20 block-presence and local-code
+    values; repeated first/last ArgMax+Scatter works on 20 cells instead of two 400-cell copies.
+    A 20-entry block-base table plus local code reconstructs global flat indices. A four-element
+    min/max/middle reorder preserves the incumbent row-major tie priority. No TopK is used.'
+  applies_when:
+    all_ops:
+    - ArgMax
+    - ScatterElements
+    any_tags:
+    - sparse_markers
+    - provable_pairwise_separation
+    - full_plane_enumeration
+    notes: 'Choose block dimensions from the strict minimum separation proof, not observed data.
+      Encode block base and local offset directly, and preserve the incumbent tie order explicitly.'
+  reject_when:
+    any_tags:
+    - unproved_marker_collision
+    - topk_required
+    - tie_priority_not_preserved
+    - local_code_quantization_overflow
+  expected:
+    gain_type: memory_by_shrinking_enumeration_axis
+    risk: 'medium: collision proof and stable tie semantics are load-bearing'
+    verification: 'Exhaustive block-collision oracle, adversarial same-band layouts, coloured
+      corners and tie counts, pinned-ORT gate, then exact-source SHA sync.'
+  rescan_candidates: []
+  rescan_2026_07_15:
+    scanned: 'candidates/task216/rescan.py inspected all 400 deployed graphs for a >=100-element
+      Flatten feeding two ArgMax nodes plus ScatterElements and a repeated ArgMax on the scattered
+      plane. No remaining deployed graph matched the exact full-plane enumeration fingerprint.'
+    direct_candidates: []
+  transformer: candidates/task216/build_codeplane.py
+- id: invalid_sparse_update_subsumes_target_sentinel
+  title: Remove a target-bound sentinel when the sparse invalid-update gate already emits the same sentinel
+  status: active
+  source_tasks:
+  - 285
+  rationale: 'Task285 clamped invalid pivot/member updates to -1 before a second
+    Gather/Mul/Add/Min chain clamped off-grid targets to -1. Across all 265 stored examples,
+    the second chain never changed an update; its two negative target reads already had invalid
+    -1 values. Deleting four 81B tensors and scalar i89 changed cost15982->15657,
+    bundled265/265.'
+  applies_when:
+    all_ops:
+    - Gather
+    - Mul
+    - Add
+    - Min
+    - ScatterElements
+    any_tags:
+    - sparse_scatter
+    - invalid_update_sentinel
+    - target_bound_sentinel
+    notes: 'Prove raw sparse updates already equal the sentinel whenever the target lookup is
+      negative; otherwise this deletion can write into padded cells.'
+  reject_when:
+    any_tags:
+    - valid_update_can_target_padding
+    - different_invalid_and_padding_sentinels
+  expected:
+    gain_type: memory_and_parameter_tail
+    risk: 'low only after exhaustive authoritative-corpus comparison; fresh remains diagnostic
+      in overfit mode'
+    verification: 'compare raw/final updates, checker+strict inference, mandatory gate/adopt,
+      then exact-source SHA sync'
+  rescan_candidates: []
+  rescan_2026_07_15:
+    scanned: 'All 400 deployed graphs after task285 adoption; the exact structural fingerprint
+      had no remaining hit. Pre-adopt self-check found task285 as the sole hit.'
+    direct_candidates: []
+  transformer: candidates/task285/build_target_sentinel_fold.py
+- id: finite_root_union_free_output_renderer
+  title: Render a bounded union of marker-derived diagonal families directly in FREE output
+  status: candidate
+  source_tasks:
+  - 324
+  rationale: 'Task324 replaced seven counted 20x20/30x30 diagonal and label planes with centered
+    Newton moments. For exactly 2 or 3 isolated markers, mixed coordinate moments recover the
+    degree-2/3 root polynomials for r+c and r-c; an interleaved factorized terminal Einsum evaluates
+    0.5-P(r+c)^2Q(r-c)^2 and combines colour selectors in the FREE output. This changed cost5818
+    from8064, bundled266/266, and fresh100/100 A/B with zero divergence. The direct expanded
+    coefficient contraction failed 62/266 under ORT cancellation, so operand order is part of the
+    mechanism and must be tested, not algebraically normalized by a planner.'
+  applies_when:
+    any_ops:
+    - Einsum
+    - Equal
+    - Where
+    any_tags:
+    - finite_marker_count
+    - root_polynomial
+    - union_of_transforms
+    - free_output
+    min_memory: 800
+  reject_when:
+    any_tags:
+    - unbounded_marker_count
+    - non_root_transform
+    - no_margin_for_polynomial_eval
+  expected:
+    gain_type: memory_by_folding_full_canvas_support_into_output
+    risk: 'high: finite-root sentinel selection, float32 cancellation, factorized Einsum operand
+      order, and verifier threshold margins are all load-bearing'
+    verification: 'Exhaustive small-grid oracle, pinned ORT factor-order sweep, stored gate, bounded
+      fresh A/B, and exact-source SHA reconstruction before any cross-task adoption'
+  rescan_candidates: []
+  rescan_2026_07_15:
+    scanned: 'Global recursive inventory scripts were requested by the skill but are absent from this
+      checkout (reports/scripts contains only score_networks.py). No unscoped cross-task adoption was
+      made; the mechanism remains task-local until a finite-root signature scanner exists.'
+    direct_candidates: []
+  transformer: candidates/task324/build_terminal_poly_candidate.py
+- id: signed_shared_marker_colour_plane
+  title: Share colour geometry and marker correlation in one signed low-range plane
+  status: active
+  source_tasks:
+  - 69
+  rationale: 'Encode the distinguished marker as INT8 -1, background as0, and revealed colours
+    as positive codes. ReduceMax/Sign then ignores markers for bbox geometry, while a tiny cropped
+    Max clears wrapped marker contamination. Negating the binary crop gives correlation weights;
+    a full marker match contributes N and a QLinearConv self-product directly emits 1-N for its
+    dynamic INT32 bias. Task069 removed a separate 100B colour plane and the scale128 bias chain.'
+  applies_when:
+    all_ops:
+    - Conv
+    - Cast
+    - ReduceMax
+    - QLinearConv
+    any_tags:
+    - marker_template
+    - signed_sentinel
+    - runtime_weight
+    notes: 'The marker must be ignored by positive geometry, crop contamination must be cleared,
+      and every non-full overlap must remain nonpositive after the dynamic bias.'
+  reject_when:
+    any_tags:
+    - unsigned_activation_required_midchain
+    - marker_not_distinguishable_from_background
+    - positive_colour_can_complete_partial_match
+  expected:
+    gain_type: memory_by_sharing_marker_and_colour_carriers
+    risk: 'medium: pinned ORT supports the all-INT8 route but not INT8xINT8->UINT8 QLinearConv'
+    verification: 'A/B geometry, crop, footprint, anchor and downstream features on the complete
+      augmented set; prove colour/sign ranges; official gate/adopt and exact-source SHA sync.'
+  rescan_candidates: []
+  transformer: candidates/task069/build_signed_shared_plane.py
+- id: gap_coded_direct_square_decoder
+  title: Leave a code gap after background so a direct square remains padding-separable
+  status: active
+  source_tasks:
+  - 69
+  rationale: 'For a padded two-feature decoder, codes r=0,1,... make the background point (1,1)
+    collinear with padding (0,0) and the first colour point (2,2) when features are [1+r,1+r^2].
+    Recode semantic colours1..9 as r=2..10. Then background (1,1) is a convex vertex, class0 uses
+    separator [3,-2], and every nonzero code r uses [2r,-1] with bias 2-r^2-2r. Task069 thereby
+    deleted the 12B W+2 carrier and its scalar while keeping a complete class0..9 decoder.'
+  applies_when:
+    all_ops:
+    - Mul
+    - Concat
+    - QLinearConv
+    any_tags:
+    - polynomial_decoder
+    - free_padded_output
+    - recodable_labels
+    notes: 'Reserve r=1 as the gap; the direct square and shifted feature must fit the signed dtype.'
+  reject_when:
+    any_tags:
+    - label_codes_fixed_externally
+    - square_overflow
+    - padding_must_decode_as_background
+  expected:
+    gain_type: memory_by_removing_affine_pre_square_carrier
+    risk: 'low after exhaustive reachable-code and padding separation checks'
+    verification: 'Exhaust semantic classes and padding algebraically, A/B all augmented outputs,
+      check square/feature maxima in real ORT, then official gate/adopt.'
+  rescan_candidates: []
+  transformer: candidates/task069/build_gap_coded_square.py
+- id: generator_complete_local_qlinear_reflection
+  title: Replace bounded global reflection bookkeeping with a proved local quantized separator
+  status: active
+  source_tasks:
+  - 62
+  rationale: 'Task062 has a finite 3x3-sprite generator with bounded positions, flips, and
+    transposes. Exhausting all 172 admissible four-connected sprites across 12,384 states and
+    deduplicating all target receptive fields produced 45,345 distinct 2x11x11 object/red
+    patches with no opposite-label collision. A stored INT8 separator has positive-object
+    margin1 and negative-background margin-1 on that entire domain. Two QLinearConv nodes
+    therefore replace four geometry profiles, extrema, coordinates, reflection Gathers, and
+    unions. The signed mask is object127/background-128. Since pinned ORT1.26 lacks Where(INT8),
+    the runtime tail uses supported Where(UINT8) values selected129/green127/neutral128 with
+    weight zero-point128, followed by supported ConvInteger(INT8,UINT8). Shifted classes
+    `[1,2,1,4,5,6,7,8,9,10]` retain duplicate class0 output rows0/2. This changed task062
+    1020->921 (memory965->633, params55->288), passed thresholded bundled267/267 and official
+    gate fail0, and exact source rebuilds deployed SHA6bc314ba3021... byte-for-byte.'
+  applies_when:
+    any_ops:
+    - Gather
+    - ArgMin
+    - ArgMax
+    - Or
+    any_tags:
+    - bounded_generator
+    - local_receptive_field
+    - reflection_union
+    - free_output
+    notes: 'The complete authoritative generator, not just bundled examples, must be finite and
+      enumerable; every output cell label must be a function of one bounded local patch.'
+  reject_when:
+    any_tags:
+    - unbounded_object_extent
+    - opposite_labels_for_identical_patch
+    - hidden_global_state_not_in_receptive_field
+    - bundled_only_separator
+  expected:
+    gain_type: memory_by_replacing_global_coordinate_and_transform_carriers
+    risk: 'medium: generator completeness, INT8 saturation, padding sign, mixed signedness kernel
+      support, and threshold-only output semantics are all load-bearing'
+    verification: 'Enumerate and deduplicate the full generator patch domain; reject label
+      collisions; verify stored integer margins; run polarity/decoder truth tables, checker,
+      strict inference, pinned ORT, thresholded incumbent A/B, official gate/adopt, historical
+      fixed-point regressions, and exact-source byte comparison.'
+  rescan_candidates:
+  - 18
+  - 101
+  rescan_2026_07_16:
+    scanned: 'candidates/task062/scan_generator_complete_local_candidates.py loaded all 400
+      deployed graphs with failures0. The adopted two-QLinear signature occurs only on task062.
+      A broad shared-source two-Gather merge signature occurs on task018 (Add over rotations) and
+      task101 (two Or unions). Neither is authorized for mutation here: task018 needs collision/
+      multiplicity semantics and task101 needs an independently complete bounded-generator/locality
+      proof. The skill-named reports/scripts inventory tools are absent from this checkout.'
+  transformer: candidates/task062/build_generator_complete_local_qlinear.py
+  proof: candidates/task062/prove_generator_complete_local_mask.py

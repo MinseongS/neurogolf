@@ -7,8 +7,8 @@ def build_parser() -> argparse.ArgumentParser:
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("status")
     s = sub.add_parser("score"); s.add_argument("tasks", nargs="+", type=int)
-    s = sub.add_parser("gate"); s.add_argument("onnx", type=Path); s.add_argument("--task", type=int, required=True); s.add_argument("--repair-invalid", action="store_true")
-    s = sub.add_parser("adopt"); s.add_argument("onnx", type=Path); s.add_argument("--task", type=int, required=True); s.add_argument("--note", default=""); s.add_argument("--repair-invalid", action="store_true")
+    s = sub.add_parser("gate"); s.add_argument("onnx", type=Path); s.add_argument("--task", type=int, required=True); s.add_argument("--repair-invalid", action="store_true"); s.add_argument("--repair-public-zero", type=int)
+    s = sub.add_parser("adopt"); s.add_argument("onnx", type=Path); s.add_argument("--task", type=int, required=True); s.add_argument("--note", default=""); s.add_argument("--repair-invalid", action="store_true"); s.add_argument("--repair-public-zero", type=int)
     sub.add_parser("pack")
     s = sub.add_parser("submit"); s.add_argument("-m", "--message", required=True)
     s = sub.add_parser("scan"); s.add_argument("lever"); s.add_argument("--tasks", nargs="*", type=int)
@@ -35,12 +35,23 @@ def main() -> None:
             print(t, json.dumps(eval_isolated(paths.OVERFIT_NETS / f"task{t:03d}.onnx", t)))
     elif args.cmd == "gate":
         from neurogolf.gate import gate
-        r = gate(args.onnx, args.task, repair_invalid=args.repair_invalid)
+        r = gate(
+            args.onnx,
+            args.task,
+            repair_invalid=args.repair_invalid,
+            public_zero_ref=args.repair_public_zero,
+        )
         print(("PASS" if r.ok else "REJECT"), r.reasons or "", json.dumps(r.candidate))
         sys.exit(0 if r.ok else 1)
     elif args.cmd == "adopt":
         from neurogolf.adoption import adopt
-        print(json.dumps(adopt(args.onnx, args.task, args.note, repair_invalid=args.repair_invalid)))
+        print(json.dumps(adopt(
+            args.onnx,
+            args.task,
+            args.note,
+            repair_invalid=args.repair_invalid,
+            public_zero_ref=args.repair_public_zero,
+        )))
     elif args.cmd == "pack":
         from neurogolf.pack import pack
         print("packed:", pack())

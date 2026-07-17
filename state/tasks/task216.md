@@ -181,3 +181,18 @@ generalization NO-TRANSFER (~9046B) held; 2026-07-13 conv_fp32_arsenal re-attack
 - cost: 8386 -> 6445 (points 16.2289)
 - source: candidates/task216/codeplane.onnx
 - note: FALSIFIES the 2026-06-16 'confirmed-infeasible / public net at real floor' verdict AND the 4x-confirmed 4000B entry-bridge floor (now 2000B). Negative-crop prologue replaces Slice(input)->c12_f32[1,2,20,20] (3200B) with Conv(input, w[1,10,1,1], pads=[0,0,-10,-10]) -> ONE code plane [1,1,20,20] (1600B; blue->1 red->3), halving the u8 cast too. Two things made the single plane viable where prior attempts stalled: (a) the 2x2 corner stencil uses eff weights [[0,-3],[-3,1]] with y_scale=1/256 so every TL response saturates to a uniform 255 regardless of whether the corner cell is blue or red — what the ArgMax/Scatter top-4 enumeration requires; (b) the epilogue keeps its channel-resolved source via a signed zero-point: QLinearConv(crop, x_zero_point=2) maps blue->-1/red->+1 in dequantized space so eff weights [-1,+1] split the 1-ch crop into 2 u8 planes with NO bias (nothing to fire over the pad region), and Pad still writes the free output. The count Einsum keeps free-riding the counted code_f32 so masks stay [4,20] — exactly what the 2026-07-09/07-13 c12-free reformulations lost when they forced 30-wide input-welded selectors to ~9046B. cost 8386->6445, 79 nodes, params unchanged 76. Deliberately avoided TopK (ref54716353 Kaggle ERROR). Differential vs deployed: 0 disagreements over 4000 faithful + 7446 adversarial band-partition + 4000 tie-heavy; coverage incl. 586 touching-box pairs and 5778 red-at-winner-corner cases; the 33 rule-fails are tie-only and identical to the incumbent's.
+
+## ADOPTED 20260715T122759Z
+- cost: 8386 -> 6364 (points 16.2416)
+- source: candidates/task216/codeplane_area_einsum.onnx
+- note: single code-plane restoration; row-mask transpose folded into Einsum; unused initializer removed
+
+## ADOPTED 20260715T134156Z
+- cost: 6364 -> 5685 (points 16.3544)
+- source: candidates/task216/codeplane_qcount.onnx
+- note: uint8 QLinearMatMul red-count contraction plus 4x5 quotient-code corner enumeration; no TopK
+
+## ADOPTED 20260715T143125Z
+- cost: 5685 -> 5144 (points 16.4544)
+- source: candidates/task216/cumsum_extent.onnx
+- note: one-sided u8 prefix-max run masks; fused quotient presence/local; fp16 tie reorder; cost 5144

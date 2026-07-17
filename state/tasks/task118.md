@@ -188,3 +188,60 @@ falsification history: "parallel detectors top out ~85%" (attempt #1) — falsif
 - cost: 12282 -> 8699 (points 15.9290)
 - source: dumps/archive_extract/submission7300+/task118.onnx
 - note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite
+
+## ADOPTED 20260715T110407Z
+- cost: 8699 -> 7733 (points 16.0467)
+- source: candidates/task118/hashscatter_flat.onnx
+- note: parameter_collapse: variable-length packed edit table replaces fixed 11-word rows; reproducible builder restored; bundled 267/267
+
+## ADOPTED 20260715T111443Z
+- cost: 7733 -> 6784 (points 16.1777)
+- source: candidates/task118/hashscatter_chd.onnx
+- note: CHD displacement hash (74+273 int32 tables) replaces 267-way Equal/ArgMax lookup; packed metaT replaces base/nclear/ktot tables; bundled 267/267 exact, cost 7733->6784
+
+## ADOPTED 20260715T112046Z
+- cost: 6784 -> 4682 (points 16.5485)
+- source: candidates/task118/hashmask_chd.onnx
+- note: output_folding+parameter_collapse: task edits are fixed 5->8, so store six 10-bit spatial positions per int64; ScatterND a 30x30 bool mask and final free-output Where; bundled 267/267 exact, cost 6784->4682
+
+## ADOPTED 20260715T113632Z
+- cost: 4682 -> 4211 (points 16.6545)
+- source: candidates/task118/hashmask_packed.onnx
+- note: parameter_collapse+dtype_lowering: compose slotRow/metaT into packed 18-bit slot records, pack seven 9-bit CHD displacements per int64, keep decoded metadata int32; bundled 267/267, cost 4682->4211
+
+## ADOPTED 20260715T114649Z
+- cost: 4211 -> 3948 (points 16.7190)
+- source: candidates/task118/hashmask_compact.onnx
+- note: graph_surgery+parameter_collapse: two-factor Wc/Wcol hash removes Wr[30]; pack row/col as twelve 5-bit digits; duplicate real edits in padding to remove count/validity path; bundled 267/267, cost 4211->3948
+
+## ADOPTED 20260715T115201Z
+- cost: 3948 -> 3563 (points 16.8216)
+- source: candidates/task118/hashmask_directidx.onnx
+- note: graph_surgery: reshape divisor/update tensors so Mod emits ScatterND indices [4,6,2] directly; remove counted 384B coordinate Reshape; bundled 267/267, cost 3948->3563
+
+## ADOPTED 20260715T115841Z
+- cost: 3563 -> 3503 (points 16.8386)
+- source: candidates/task118/hashmask_directselect.onnx
+- note: direct safe-index word selection removes Gather/Where/Reshape carriers; 3563->3503
+
+## ADOPTED 20260715T120103Z
+- cost: 3503 -> 3490 (points 16.8423)
+- source: candidates/task118/hashmask_slotlast.onnx
+- note: 12-bit base+last-lane slot records pack 5/int64; 3503->3490
+
+## ADOPTED 20260715T121444Z
+- cost: 3490 -> 3486 (points 16.8435)
+- source: candidates/task118/hashmask_notail.onnx
+- note: remove four obsolete speculative Erc tail words after safe-index selection; 3490->3486
+
+## ADOPTED 20260715T121944Z
+- cost: 3486 -> 3480 (points 16.8452)
+- source: candidates/task118/hashmask_histprobe.onnx
+- note: histogram plus two in-grid pixel probes replaces Wcol[30]; 3486->3480
+
+## REPAIRED 20260715T160907Z
+- cost: 3480 -> 8699 (points 15.9290)
+- source: submission/.backups/task118_20260715T110407Z.onnx
+- note: repair Kaggle-zero ref54732112: restore Kaggle-positive semantic archive graft from ref54610908
+- public-zero-ref: 54732112
+- isolated-repair-verification: ref54733024 = 15.92 (single-file ZIP)

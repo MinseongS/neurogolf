@@ -224,3 +224,8 @@ falsification history: first fresh-tail diagnosis of task187. SHARPENS the 2026-
 - cost: 4911 -> 4777 (points 16.5284)
 - source: candidates/task187/factor_seeds.onnx
 - note: exact shared rank-2 G/H seed routing; spend one geodesic-margin walk step to free Einsum letters W/X
+
+## ADOPTED 20260715T180053Z
+- cost: 4911 -> 4777 (points 16.5284)
+- source: candidates/task187/exact_factor_seed_recovery.onnx
+- note: recover exact factorized seed routing; params 2411->2277, t2 unchanged

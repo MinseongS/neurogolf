@@ -39,3 +39,8 @@ Dominant intermediate is the [1,10,9,9] bool one-hot pre-pad = 810B (the 10-chan
 - cost: 862 -> 172 (points 19.8525)
 - source: candidates/task047/ryosuke7281.onnx
 - note: isolated LB probe on confirmed 7422.34 base; Ryosuke7281 one-op separable crosshair Einsum, local +1.6118
+
+## ADOPTED 20260715T130849Z
+- cost: 172 -> 154 (points 19.9630)
+- source: candidates/task047/reachable_transposed_basis.onnx
+- note: reachable transposed channel-basis reuse from task388

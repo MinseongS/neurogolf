@@ -212,3 +212,23 @@ Bundled gate after adoption: fail=0, cost `3464 -> 3462`
 - cost: 2465 -> 2414 (points 17.2110)
 - source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task037.onnx
 - note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
+
+## ADOPTED 20260715T132351Z
+- cost: 2414 -> 2027 (points 17.3857)
+- source: candidates/task037/poly_convinteger.onnx
+- note: output_folding: fold cm10->Pad(cm30)->Equal(chvec) into exact integer-polynomial padded ConvInteger; labels0..9/off-grid-zero augmented clean; opset20
+
+## ADOPTED 20260715T133939Z
+- cost: 2027 -> 1829 (points 17.4885)
+- source: candidates/task037/shifted_qlinear.onnx
+- note: output_folding: shift Scatter labels 0..9->1..10 and replace 3-feature ConvInteger with padding-safe 2-feature QLinearConv; labels1..10/off-grid-zero augmented clean; fresh2000 exact; opset20
+
+## ADOPTED 20260715T134214Z
+- cost: 1829 -> 1620 (points 17.6098)
+- source: candidates/task037/slot6.onnx
+- note: descriptor_compaction: TopK existing fp16 span tensor to generator max6 colours and GatherElements scalar descriptors, shrinking 9-slot cross-product/index path to 6; augmented/fresh2000 exact; opset20
+
+## ADOPTED 20260715T151403Z
+- cost: 1620 -> 1284 (points 17.8423)
+- source: candidates/task037/poly_product.onnx
+- note: stretch: delete ScatterElements/CRT/QLinear tail; multiply six exact quadratic non-overlap line predicates in one FREE-output Einsum; classes0..9/off-grid-zero augmented clean; fresh500 exact; opset20

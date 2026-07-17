@@ -11,6 +11,7 @@ eval_isolated runs scoring in an isolated subprocess because ORT
 weight-aliasing means only isolated per-task processes give true scores.
 """
 
+import hashlib
 import json
 import os
 import subprocess
@@ -47,13 +48,17 @@ def eval_isolated(model_path: Path, task_num: int) -> dict:
     return json.loads(proc.stdout.strip().splitlines()[-1])
 
 def deployed_cost(task_num: int) -> int | None:
+    incumbent = OVERFIT_NETS / f"task{task_num:03d}.onnx"
+    if incumbent.exists():
+        res = eval_isolated(incumbent, task_num)
+        if res.get("cost") is not None:
+            return int(res["cost"])
     mpath = STATE / "manifest.json"
     if mpath.exists():
         row = json.load(open(mpath)).get(f"{task_num:03d}")
         if row and row.get("cost") is not None:
             return int(row["cost"])
-    res = eval_isolated(OVERFIT_NETS / f"task{task_num:03d}.onnx", task_num)
-    return res.get("cost")
+    return None
 
 @dataclass
 class GateResult:
@@ -62,8 +67,40 @@ class GateResult:
     candidate: dict = field(default_factory=dict)
     incumbent_cost: int | None = None
     repairing_invalid_topk: bool = False
+    repairing_public_zero: bool = False
 
-def gate(candidate: Path, task_num: int, *, repair_invalid: bool = False) -> GateResult:
+def _sha256(path: Path) -> str | None:
+    return hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
+
+
+def _matches_public_zero_evidence(
+    candidate: Path,
+    incumbent: Path,
+    task_num: int,
+    submission_ref: int,
+) -> bool:
+    evidence_path = STATE / "public_zero_repairs.json"
+    if not evidence_path.exists():
+        return False
+    try:
+        entry = json.loads(evidence_path.read_text()).get(str(submission_ref), {})
+    except (OSError, ValueError):
+        return False
+    return bool(
+        entry.get("task") == task_num
+        and entry.get("score") == 0.0
+        and entry.get("incumbent_sha256") == _sha256(incumbent)
+        and entry.get("candidate_sha256") == _sha256(candidate)
+    )
+
+
+def gate(
+    candidate: Path,
+    task_num: int,
+    *,
+    repair_invalid: bool = False,
+    public_zero_ref: int | None = None,
+) -> GateResult:
     reasons: list[str] = []
     cand = eval_isolated(Path(candidate), task_num)
     if not cand.get("ok") or cand.get("fail") != 0:
@@ -79,10 +116,24 @@ def gate(candidate: Path, task_num: int, *, repair_invalid: bool = False) -> Gat
     repairing_invalid_topk = bool(
         repair_invalid and incumbent_offenders and not offenders
     )
+    repairing_public_zero = bool(
+        public_zero_ref is not None
+        and _matches_public_zero_evidence(
+            Path(candidate), incumbent_path, task_num, public_zero_ref
+        )
+    )
+    if public_zero_ref is not None and not repairing_public_zero:
+        reasons.append(
+            f"public-zero evidence mismatch (task={task_num}, ref={public_zero_ref})"
+        )
     if (
         cand.get("cost") is None
         or inc is None
-        or (cand["cost"] >= inc and not repairing_invalid_topk)
+        or (
+            cand["cost"] >= inc
+            and not repairing_invalid_topk
+            and not repairing_public_zero
+        )
     ):
         reasons.append(f"not strictly cheaper (cand={cand.get('cost')}, deployed={inc})")
     if offenders:
@@ -95,4 +146,5 @@ def gate(candidate: Path, task_num: int, *, repair_invalid: bool = False) -> Gat
         candidate=cand,
         incumbent_cost=inc,
         repairing_invalid_topk=repairing_invalid_topk,
+        repairing_public_zero=repairing_public_zero,
     )

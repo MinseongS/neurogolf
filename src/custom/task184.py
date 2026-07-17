@@ -5,43 +5,38 @@ This owns the live ONNX graph in Python source; it is a control baseline,
 not a semantic optimization.
 """
 from onnx import TensorProto, helper
-from ._exact import arr_b64, model, tensor
+from ._exact import arr_b64, model, node, tensor
 
 
 def build(task):
     inits = [
         tensor('channel_mask', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/')),
-        tensor('ones30', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDMwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AACAPwAAgD8=')),
-        tensor('row_diff_q', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDIsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAr/AQ==')),
-        tensor('col_diff_q', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEsIDIpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAr/AQ==')),
-        tensor('row_prefix_q', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDMwLCAxKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=')),
-        tensor('col_prefix_q', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEsIDMwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=')),
-        tensor('q_scale', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA/')),
-        tensor('x_zero', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
-        tensor('w_zero', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfGkxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoA')),
-        tensor('group_ids', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDEsIDMpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAgM=')),
-        tensor('group_ids_col', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDEsIDEsIDMsIDEpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAgM=')),
-        tensor('pad18_pads_15_12', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDQsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAAAAAAAAAAAAGwAAAAAAAAAbAAAAAAAAAA==')),
-        tensor('pad18_axes_15_13', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAAMAAAAAAAAA')),
+        tensor('occ_scale', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAIA7')),
+        tensor('occ_zp', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAr/')),
+        tensor('basis_zp', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoB')),
+        tensor('axis_prefix_q', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnfHUxJywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsIDEsIDI0KSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
+        tensor('target_basis', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsIDMwKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAADAAABAwAAAgL8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA/AACAPwAAgD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=')),
+        tensor('selector_cycle', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsIDIpLCB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAKDAAABQwQAAQEAAAOBA')),
     ]
     nodes = [
-        helper.make_node('Einsum', ['input', 'channel_mask', 'ones30'], ['row_count'], equation='nchw,ac,bw->nahb'),
-        helper.make_node('Einsum', ['input', 'channel_mask', 'ones30'], ['col_count'], equation='nchw,ac,bh->nabw'),
-        helper.make_node('Cast', ['row_count'], ['row_count_ci'], to=2),
-        helper.make_node('Cast', ['col_count'], ['col_count_ci'], to=2),
-        helper.make_node('Sign', ['row_count_ci'], ['row_nonempty']),
-        helper.make_node('QLinearConv', ['row_nonempty', 'q_scale', 'x_zero', 'row_diff_q', 'q_scale', 'w_zero', 'q_scale', 'x_zero'], ['row_start'], kernel_shape=[2, 1], pads=[1, 0, 0, 0]),
-        helper.make_node('QLinearConv', ['row_start', 'q_scale', 'x_zero', 'row_prefix_q', 'q_scale', 'x_zero', 'q_scale', 'x_zero'], ['row_group'], kernel_shape=[30, 1], pads=[29, 0, 0, 0]),
-        helper.make_node('Sign', ['col_count_ci'], ['col_nonempty']),
-        helper.make_node('QLinearConv', ['col_nonempty', 'q_scale', 'x_zero', 'col_diff_q', 'q_scale', 'w_zero', 'q_scale', 'x_zero'], ['col_start'], kernel_shape=[1, 2], pads=[0, 1, 0, 0]),
-        helper.make_node('QLinearConv', ['col_start', 'q_scale', 'x_zero', 'col_prefix_q', 'q_scale', 'x_zero', 'q_scale', 'x_zero'], ['col_group'], kernel_shape=[1, 30], pads=[0, 29, 0, 0]),
-        helper.make_node('Equal', ['col_group', 'group_ids_col'], ['col_onehot_bool']),
-        helper.make_node('Cast', ['col_onehot_bool'], ['col_onehot'], to=1),
-        helper.make_node('Equal', ['row_group', 'group_ids'], ['row_onehot_bool']),
-        helper.make_node('Cast', ['row_onehot_bool'], ['row_onehot'], to=1),
-        helper.make_node('Einsum', ['input', 'channel_mask', 'row_onehot', 'col_onehot'], ['counts_row_col'], equation='nchw,ac,nahr,nakw->ncrk'),
-        helper.make_node('Pad', ['counts_row_col', 'pad18_pads_15_12', '', 'pad18_axes_15_13'], ['output']),
+        node('Einsum', ['input', 'channel_mask'], ['row_count'], attrs=[('equation', 'nchw,ac->nah')]),
+        node('QuantizeLinear', ['row_count', 'occ_scale'], ['row_u8']),
+        node('QLinearConv', ['row_u8', 'occ_scale', 'occ_zp', 'axis_prefix_q', 'occ_scale', 'basis_zp', 'occ_scale', 'basis_zp'], ['row_basis_u8'], attrs=[('kernel_shape', [24]), ('pads', [23, 0])]),
+        node('Einsum', ['input', 'channel_mask'], ['col_count'], attrs=[('equation', 'nchw,ac->naw')]),
+        node('QuantizeLinear', ['col_count', 'occ_scale'], ['col_u8']),
+        node('QLinearConv', ['col_u8', 'occ_scale', 'occ_zp', 'axis_prefix_q', 'occ_scale', 'basis_zp', 'occ_scale', 'basis_zp'], ['col_basis_u8'], attrs=[('kernel_shape', [24]), ('pads', [23, 0])]),
+        node('Cast', ['col_basis_u8'], ['col_basis'], attrs=[('to', 1)]),
+        node('Cast', ['row_basis_u8'], ['row_basis'], attrs=[('to', 1)]),
+        node('Einsum', ['input', 'channel_mask', 'row_basis', 'row_basis', 'col_basis', 'col_basis', 'target_basis', 'selector_cycle', 'target_basis', 'target_basis', 'selector_cycle', 'target_basis'], ['output'], attrs=[('equation', 'nchw,qc,nrh,nsh,nkw,nlw,rf,st,tf,kz,lu,uz->ncfz')]),
     ]
     value_infos = [
+        helper.make_tensor_value_info('row_count', 1, [1, 1, 30]),
+        helper.make_tensor_value_info('col_count', 1, [1, 1, 30]),
+        helper.make_tensor_value_info('row_u8', 2, [1, 1, 30]),
+        helper.make_tensor_value_info('col_u8', 2, [1, 1, 30]),
+        helper.make_tensor_value_info('row_basis_u8', 2, [1, 2, 30]),
+        helper.make_tensor_value_info('col_basis_u8', 2, [1, 2, 30]),
+        helper.make_tensor_value_info('row_basis', 1, [1, 2, 30]),
+        helper.make_tensor_value_info('col_basis', 1, [1, 2, 30]),
     ]
-    return model('task184_live_exact', nodes, inits, output_dtype=1, opset=18, value_infos=value_infos)
+    return model('task184', nodes, inits, output_dtype=1, opset=18, value_infos=value_infos, ir_version=10)

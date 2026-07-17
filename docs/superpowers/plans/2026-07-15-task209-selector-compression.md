@@ -183,7 +183,7 @@
       )
       box_rows = bm.max(axis=2)
       box_cols = bm.max(axis=1)
-      sprite_rows = np.pad(lm.max(axis=2), ((0, 0), (2, 0)))
+      sprite_rows = np.pad(lm.max(axis=2), ((0, 0), (0, 2)))
       sprite_cols = lm.max(axis=1)
       return (
           axis_scores(box_rows, sprite_rows, score_scale),

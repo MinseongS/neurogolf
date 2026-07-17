@@ -39,7 +39,6 @@ def build(task):
         tensor('DEPTH10_NEW', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoKAAAAAAAAAA==')),
         tensor('OH_VALUES_NEW', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGY0JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDIsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAACAPw==')),
         tensor('IDX0_NEW', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAAAAAAAAAAA==')),
-        tensor('IDX1_NEW', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoBAAAAAAAAAA==')),
         tensor('IDX2_NEW', arr_b64('k05VTVBZAQB2AHsnZGVzY3InOiAnPGk4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoCAAAAAAAAAA==')),
     ]
     nodes = [
@@ -69,8 +68,8 @@ def build(task):
         helper.make_node('Einsum', ['input', 'selected_colors'], ['selected_cols'], equation='bqhw,kq->kw'),
         helper.make_node('Gather', ['selected_rows', 'IDX0_NEW'], ['safe_name_43'], axis=0),
         helper.make_node('Gather', ['selected_cols', 'IDX0_NEW'], ['safe_name_44'], axis=0),
-        helper.make_node('Gather', ['selected_rows', 'IDX1_NEW'], ['safe_name_45'], axis=0),
-        helper.make_node('Gather', ['selected_cols', 'IDX1_NEW'], ['safe_name_46'], axis=0),
+        helper.make_node('Gather', ['selected_rows', 'safe_name_11'], ['safe_name_45'], axis=0),
+        helper.make_node('Gather', ['selected_cols', 'safe_name_11'], ['safe_name_46'], axis=0),
         helper.make_node('Gather', ['selected_rows', 'IDX2_NEW'], ['safe_name_47'], axis=0),
         helper.make_node('Gather', ['selected_cols', 'IDX2_NEW'], ['safe_name_48'], axis=0),
         helper.make_node('Cast', ['safe_name_43'], ['safe_name_49'], name='safe_name_49', to=9),

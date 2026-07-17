@@ -65,3 +65,8 @@ before the colour Conv, then Pad the colour-index plane up — quarters the entr
 - cost: 522 -> 432 (points 18.9316)
 - source: candidates/task327/negative_pad_crop.onnx
 - note: negative-pad 1x1 Conv folds fixed top-left crop; bundled 265/265; fresh 1500/1500 exact; 522->432
+
+## ADOPTED 20260715T131923Z
+- cost: 432 -> 350 (points 19.1421)
+- source: candidates/task327/embedded_support_square_decoder.onnx
+- note: joint support+decoder factor: ConvTranspose bias embeds 6x6 support; square-feature exact decoder

@@ -1,6 +1,6 @@
 ---
-deployed_cost: 2355
-logged_costs_match: stale-likely
+deployed_cost: 1127
+logged_costs_match: true
 migrated: 2026-07-09
 ---
 
@@ -12,8 +12,8 @@ cell out from the matching box corner (d0 up-left (row−1,col−1); d1 up-right
 (row−1,col+2); d3 down-left (row+2,col−1); d2 down-right (row+2,col+2)). The INPUT
 shows box + present seeds (one cell each); the OUTPUT extends each present seed into a
 full 45° ray out to the grid edge, box preserved.
-**Current:** 16.69 pts, custom:task190 (closed-form scalar recovery + Equal output), mem 3981, params 85.
-Prior 16.26 (custom conv-ray version).
+**Current:** 17.972685 pts, custom:task190 (closed-form scalar recovery + FREE-output threshold-sign polynomial), mem 620, params 507.
+Session start 17.587840 at cost1656; current session gain +0.384846.
 **Target tier:** B (colour-index label-map + final Equal). Not S/A: rays are data-dependent
 45° diagonals (r−c==Dmain / r+c==Aanti) clipped to a half-plane — not a fixed per-cell
 permutation (S) and a single diagonal is not a row⊗col separable rectangle (A).
@@ -29,23 +29,20 @@ permutation (S) and a single diagonal is not a row⊗col separable rectangle (A)
 | 6 | ondiag/onanti via [1,1,1,10] target vector (drop dval/aval) | B | **3981** | **85** | **16.69** | **200/200** | WIN +0.43 |
 
 ## Best achieved
-**16.69 @ mem 3981 params 85 — fresh 200/200.** Beats prior 16.26 by **+0.43**. Adopted? **N** (build-only).
+**17.972685 @ mem620 params507, cost1127 — bundled266/266.** Adopted through `ng adopt` and exact-source synchronized.
 
-## Irreducible-floor analysis
-mem 3981 dominated by: the 900B uint8 [1,1,30,30] padded label `L30` feeding the FREE Equal
-(must write all 30×30 — the cheapest 10-ch output route); the 400B fp32 ch0 slice (Slice
-preserves the f32 input dtype → 100 elems × 4B, the cheapest single-plane occupancy source);
-three fp16 10×10 planes occf/od/oa (600B; od/oa are occupancy∩diagonal, irreducibly 2-D
-because a 45° diagonal is not separable); L16 (200B); the two 9×9 box-conv planes bc/btl
-(324B). Everything else is scalars / tiny 1-D vectors.
+## Current floor analysis
+The old 900B padded label and all three 100B ray/mask planes are gone. Current memory620 is led by
+`bg_f`144B and symmetric target features150B plus small coordinate tensors. Params507 are led by
+`poly_row_project[10,30]`300 and `poly_spatial_features[3,30]`90. A further +0.1 requires
+cost<=1019; the only priced detector rewrite saves about65, so no current byte-proven +0.1 remains.
 
 ## OPEN ANGLES (re-attack backlog)
-- ch0 400B: occupancy is fp32 only because Slice keeps the input dtype; no cheaper single-plane
-  source found (channel-1..9 slice is 3600B; colour conv is 3600B).
-- od/oa 400B: the per-row diagonal extract odrow[r]=occ(r, r−Dmain) is a Gather (data-dependent
-  index → symbolic-dim trap risk); the Where+ReduceMax full plane is the safe form.
-- L30 900B is the Equal-route floor; an And-broadcast output (ch0=ingrid&¬fill, chk=fill) needs
-  a [1,10,30,30] bg one-hot intermediate (9000B) — strictly worse.
+- Coordinate detector: replace `bg_f`/`bg_u8`/`blockmax` only after proving a u8/boolean lowering
+  with total cost<=1019 and no new full-plane carrier.
+- Row routing: factor `poly_row_project[10,30]` only under threshold semantics and only if the
+  finite-state proof preserves every input/background channel sign.
+- Do not restore staged 10x10/30x30 masks, exact CP identity routes, or the slow original operand order.
 
 ## INSIGHT (transferable)
 ⭐ **A "seed → grow ray to edge" task is closed-form, not a flood/connectivity wall:** the full
@@ -65,3 +62,33 @@ ReduceSum to recover (row,col) scalars without two full product planes.
 - cost: 2355 -> 1656 (points 17.5878)
 - source: /Users/minseong/project/neurogolf/dumps/archive_extract/submission7300+/task190.onnx
 - note: archive.zip submission7300+ net; fresh 2000/0 fail; mechanism-graft
+
+## ADOPTED 20260715T115101Z
+- cost: 1656 -> 1419 (points 17.7423)
+- source: candidates/task190/archive_fast_backbone.onnx
+- note: runtime-safe output-fold: precontract constant polynomial coefficient/column banks; backbone-ordered 17->13 Einsum operands; remove unused C_u8; 1656->1419 (the adopt CLI note said 12, corrected here after recounting inputs)
+
+## ADOPTED 20260715T120438Z
+- cost: 1419 -> 1367 (points 17.7796)
+- source: candidates/task190/archive_reordered_backbone.onnx
+- note: parameter-cheap runtime fold: retain factorized constant banks, backbone-reorder 17-operand terminal Einsum, remove unused C_u8; 1419->1367
+
+## ADOPTED 20260715T122244Z
+- cost: 1367 -> 1215 (points 17.8975)
+- source: candidates/task190/route_sign_factor.onnx
+- note: threshold route factor: replace dense identity/all-ones route[2,10,10] with shared [1,x,x^2] features and 2x3x3 sign core; 1367->1215
+
+## ADOPTED 20260715T123004Z
+- cost: 1215 -> 1163 (points 17.9412)
+- source: candidates/task190/color_sign_factor.onnx
+- note: threshold color fold: ArgMax/Gather shared quadratic features replace exact one-hot color Concat with epsilon-scaled sign branch; 1215->1163
+
+## ADOPTED 20260715T123721Z
+- cost: 1163 -> 1149 (points 17.9534)
+- source: candidates/task190/shared_branch_core.onnx
+- note: parameter collapse: share E00/quadratic branch core across route and color paths, move epsilon into term coefficients; 1163->1149
+
+## ADOPTED 20260715T124839Z
+- cost: 1149 -> 1127 (points 17.9727)
+- source: candidates/task190/symmetric_ray_factor.onnx
+- note: symmetric ray polynomial: replace repeated `(w-d)^2(w-a)^2` target Cast/Pow factors with u8 `[1,d+a,da]`, shared fp32 `[1,w,w^2]`, and a 2x3x3 core; cap10 preserves all roots on w0..9

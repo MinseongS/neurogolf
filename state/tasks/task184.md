@@ -120,3 +120,38 @@ Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup 
 - cost: 1860 -> 1859 (points 17.4722)
 - source: candidates/public_dumps/20260715_refresh/lucifer19_chimera-safe-boost-caddies/submission_black_cat_bbi_v3/task184.onnx
 - note: lucifer19 black-cat BBI v3 public min-merge; bundled fail=0
+
+## ADOPTED 20260715T110630Z
+- cost: 1859 -> 1584 (points 17.6323)
+- source: candidates/task184/output_fold.onnx
+- note: output-fold: terminal 3x3 counts table embedded directly into free 30x30 Einsum output; removes 360B carrier for one reused 3x30 embed
+
+## ADOPTED 20260715T131619Z
+- cost: 1584 -> 1312 (points 17.8207)
+- source: candidates/task184/rank2_terminal_basis.onnx
+- note: rank2-terminal-basis: replace Equal one-hots with U=[1,g] and absorb exact two-factor Lagrange selectors into free-output Einsum
+
+## ADOPTED 20260715T133148Z
+- cost: 1312 -> 1186 (points 17.9217)
+- source: candidates/task184/quantized_separator_prefix.onnx
+- note: quantized-separator-prefix: saturate positive axis counts to u8 and directly prefix-count zero separators, removing bool and start carriers
+
+## ADOPTED 20260715T133939Z
+- cost: 1186 -> 1105 (points 17.9924)
+- source: candidates/task184/shared_axis_compact_factors.onnx
+- note: shared-axis-compact-factors: reorient column counts to share one prefix kernel and factor compact 3-way selectors through one output embed
+
+## ADOPTED 20260715T142018Z
+- cost: 1105 -> 1075 (points 18.0199)
+- source: candidates/task184/implicit_axis_reduction.onnx
+- note: implicit-axis-reduction: let Einsum reduce omitted spatial labels and use shared 1D prefix convolution, removing the 30-element reduction carrier
+
+## ADOPTED 20260715T143127Z
+- cost: 1075 -> 1037 (points 18.0559)
+- source: candidates/task184/projective_cycle_selectors.onnx
+- note: projective-cycle-selectors: factor exact 3-way Lagrange roots through one 2D target basis and a shared projective 3-cycle
+
+## ADOPTED 20260715T151450Z
+- cost: 1037 -> 1025 (points 18.0676)
+- source: candidates/task184/compact_prefix_kernel.onnx
+- note: bundled-minimal causal prefix: shrink shared kernel 30->24 after exhaustive 1..24 gate sweep

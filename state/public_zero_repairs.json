@@ -1,0 +1,25 @@
+{
+  "54732112": {
+    "task": 118,
+    "score": 0.0,
+    "incumbent_sha256": "7c4afc9cda73b9027b0576dad0dc89e573df19738d679b64a264272dd0b40ca9",
+    "candidate_sha256": "f3b7cfd77d55353ff522b7d172b7dd38a46ac5f3df585dcc1a837c8e96c37247",
+    "reason": "fixed hash/edit lookup scored zero; restore Kaggle-positive semantic archive graft"
+  },
+  "54732114": {
+    "task": 131,
+    "score": 0.0,
+    "incumbent_sha256": "f07341f0d75d91f78be2d07e3073fdead3c54888cf524a47d4e101acdd2d2f0d",
+    "candidate_sha256": "79ff05f1116e16a8f7198a96b75fb7b9e84664a2e376311b852f51f20c5da67f",
+    "reason": "119-position bundled support prune scored zero; restore full 155-position support"
+  },
+  "54732161": {
+    "task": 209,
+    "score": 0.0,
+    "incumbent_sha256": "eae4bcd1fb864d2b22acaad721f48e6c4f04d13a29fa3a24ddc02021bd3c9a0d",
+    "candidate_sha256": "2c669b08e72bc60cf3c45aedc3e9b5ce5a65ffabdfd83339ef44e955641b808d",
+    "reason": "quotient-pool plus terminal spatial output fold scored zero; restore exact task209 artifact from Kaggle record 54719275",
+    "repair_confirmation_ref": 54732708,
+    "repair_public_score": 16.17
+  }
+}

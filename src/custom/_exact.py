@@ -29,6 +29,14 @@ def tensor(name: str, arr: np.ndarray):
     return numpy_helper.from_array(arr, name)
 
 
+def tensor_b64(payload: str) -> TensorProto:
+    """Decode a serialized TensorProto without changing its storage fields."""
+
+    result = TensorProto()
+    result.ParseFromString(base64.b64decode(payload))
+    return result
+
+
 def node(op_type, inputs, outputs, *, name="", domain="", attrs=()):
     """Build a node while preserving the source artifact's attribute order."""
 

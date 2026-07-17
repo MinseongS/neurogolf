@@ -109,3 +109,8 @@ to task124's 10x10 background-bearing label route, not the whole mechanism famil
 - cost: 939 -> 849 (points 18.2559)
 - source: candidates/task124/rank4_qlinear_hash.onnx
 - note: rank-4 row bank plus exact uint8 QLinear row hash
+
+## ADOPTED 20260715T155205Z
+- cost: 849 -> 692 (points 18.4604)
+- source: candidates/task124/cost692_primary.onnx
+- note: inverse quantized mask, signed modulo routing, six-tap direct QLinear row hash

@@ -66,3 +66,8 @@ instead of a 10-channel slice.
 - cost: 633 -> 617 (points 18.5751)
 - source: candidates/task320/joint_basis_min.onnx
 - note: absorb identity column-power coefficient into shared polynomial basis
+
+## ADOPTED 20260715T113824Z
+- cost: 617 -> 573 (points 18.6491)
+- source: candidates/task320/basis_recovery_tail.onnx
+- note: rank-3 sign routing plus exact rank-2 coordinate polynomial factors

@@ -190,3 +190,9 @@ reopen: external (public/archive) net with measured fresh-fail <2.3% & cheaper (
 - cost: 6817 -> 6089 (points 16.2858)
 - source: candidates/task209/output_fold.onnx
 - note: quotient-pooled exact selector plus 2D parabolic codebook and terminal 3x3 QLinearConv corner/output fold; fresh5000 divergence=0
+
+## REPAIRED 20260715T161202Z
+- cost: 6089 -> 6821 (points 16.1722)
+- source: candidates/isolation_ref54719275_exact_tmp/task209.onnx
+- note: repair Kaggle-zero eae4bcd1 output-fold artifact; restore exact task209 model from record ref54719275
+- public-zero-ref: 54732161

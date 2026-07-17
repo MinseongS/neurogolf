@@ -164,3 +164,8 @@ Reopen (falsification-ledger):
 - cost: 1814 -> 558 (points 18.6756)
 - source: candidates/task074/factor_f_shared.onnx
 - note: LB-proven shared symmetric rank-17 factorization of D4 branch router inside FREE-output Einsum; 1814->558
+
+## ADOPTED 20260715T113226Z
+- cost: 1814 -> 558 (points 18.6756)
+- source: candidates/task074/factor_f_shared.onnx
+- note: restore LB-proven shared symmetric rank-17 D4 branch factorization after deployed/source slot divergence; gate 267/267 cost 558

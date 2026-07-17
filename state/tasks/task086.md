@@ -235,3 +235,8 @@ space. For task086, `11x11` is the minimum tested single-threshold local window.
 - reopen: scipy/OR-tools 정확 LP/MILP feasibility로 K≤15 분리성 판정 시 / 2-channel·i16-accum 분류기.
   추가 성공 가치는 +0.037~0.07뿐 (본 채택 대비).
 - falsification history: 첫 시도. 단 부모 "086 floor"(batch6)는 본 채택(+0.14)으로 반증됨.
+
+## ADOPTED 20260715T112537Z
+- cost: 2633 -> 2330 (points 17.2464)
+- source: candidates/task086/signed_fold.onnx
+- note: signed multiplicative free-output fold: remove label/Pad/Equal carrier

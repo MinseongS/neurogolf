@@ -151,3 +151,8 @@ min-merge net for duplicated detector branches before trusting the byte-adoption
 - cost: 2234 -> 2224 (points 17.2929)
 - source: candidates/public_dumps/20260713_7281/extracted/task085.onnx
 - note: Kaggle-isolated safe: group delta +2.05 exactly (sub 54651291 minus 54651270); task047 excluded
+
+## ADOPTED 20260715T112507Z
+- cost: 2224 -> 1986 (points 17.4061)
+- source: candidates/task085/guarded_gather.onnx
+- note: guarded neighbor-pair Gather: exact middle-row detector and empty-row code compression

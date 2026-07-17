@@ -145,3 +145,8 @@ distinguish off-grid `G=0` from line pixels without a counted full plane.
   cheaper task198 net. Falsification history: none yet for this specific fp32-co-bind claim.
 - **Evidence:** `candidates/task198/build_regime.py` (FACT A/B reproducible); base-only
   `regime.onnx` gates fail=266 cost=100. NOT adopted (deployed 7922 unchanged).
+
+## ADOPTED 20260715T180737Z
+- cost: 7922 -> 7915 (points 16.0235)
+- source: candidates/task198/missingfreeops_shared_threshold.onnx
+- note: shared threshold: rescale rm32 families and reuse cthr=15

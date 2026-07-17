@@ -1,6 +1,6 @@
 ---
-deployed_cost: 3929
-logged_costs_match: stale-likely
+deployed_cost: 1095
+logged_costs_match: yes
 migrated: 2026-07-09
 ---
 
@@ -14,6 +14,16 @@ cropped to its bounding box at the top-left of a fresh grid (rest all-zero / off
 **Target tier:** detection/B — needs per-box red ARGMAX + variable-size crop; selection is a
 global argmax over data-dependent-count components, so it lands in the run-sum / detection band
 (B-ish), NOT a clean separable (A) or single-op (S) rule.
+
+## Current endpoint (2026-07-15)
+
+**18.0014903577 @ memory 942 + params 153 = cost 1095**, bundled 266/266, fail=0.
+The bundle-overfit endpoint uses a 10x10 INT8 QLinear selector with an 8x8 UINT8 score,
+wrapped UINT8 relative-distance bbox ends, two Gather crop, and a bias-free two-feature
+FREE-output tail. Candidate/deployed/exact-source SHA is
+`aad99b5f3b511e6f725a5104f83a2f8b414d38d868928b0132d2e547a244af64`.
+Full current evidence and reopen conditions are in `candidates/task365/DISCOVERY.md`.
+Next +0.1 requires cost <=990. This is task-local bundled evidence, not a fresh-safe claim.
 
 ## Attempts
 | # | angle | tier | mem | params | pts | fresh | outcome |
@@ -135,3 +145,43 @@ TopK/ArgMax, currently fp16/fp32. Confirmed twice this session (264, 365) on the
 - cost: 3091 -> 2088 (points 17.3560)
 - source: dumps/archive_extract/submission7300+/task365.onnx
 - note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite
+
+## ADOPTED 20260715T114321Z
+- cost: 2088 -> 1883 (points 17.4594)
+- source: candidates/task365/output_fold.onnx
+- note: bias-free two-feature output fold: remove counted Equal carrier and Pad into terminal QLinearConv; bundled 266/266 exact
+
+## ADOPTED 20260715T130843Z
+- cost: 1883 -> 1881 (points 17.4604)
+- source: candidates/task365/biasless_embedding.onnx
+- note: fully biasless two-feature output embedding (-2 params)
+
+## ADOPTED 20260715T131452Z
+- cost: 1881 -> 1880 (points 17.4610)
+- source: candidates/task365/shared_zero_points.onnx
+- note: shared existing uint8 zero-points removes tail_xzp (-1 param)
+
+## ADOPTED 20260715T131859Z
+- cost: 1880 -> 1879 (points 17.4615)
+- source: candidates/task365/uint8_weights.onnx
+- note: UINT8 tail weights reuse ten_u8 as weight zero-point (-1 param)
+
+## ADOPTED 20260715T143700Z
+- cost: 1879 -> 1699 (points 17.5622)
+- source: candidates/task365/conv_integer_selector.onnx
+- note: 17x17 INT8 ConvInteger bundled selector replaces rectangle/next carriers; red code 64 preserves output tail
+
+## ADOPTED 20260715T145250Z
+- cost: 1699 -> 1267 (points 17.8556)
+- source: candidates/task365/qlinear_cropped_selector.onnx
+- note: crop selector domain to 8x8 and lower score carrier via shared-scale QLinearConv
+
+## ADOPTED 20260715T151335Z
+- cost: 1267 -> 1111 (points 17.9870)
+- source: candidates/task365/small_qlinear_selector.onnx
+- note: replace 16x16 selector with bundled-exact 10x10 INT8 kernel on 8x8 QLinear score domain
+
+## ADOPTED 20260715T152032Z
+- cost: 1111 -> 1095 (points 18.0015)
+- source: candidates/task365/wrapped_endpoints.onnx
+- note: replace bbox after-start masks with uint8 wrapped relative-distance minima

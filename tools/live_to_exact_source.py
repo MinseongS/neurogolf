@@ -15,13 +15,11 @@ from __future__ import annotations
 
 import argparse
 import base64
-import io
 from pathlib import Path
 from typing import Any
 
-import numpy as np
 import onnx
-from onnx import TensorProto, numpy_helper
+from onnx import TensorProto
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,10 +29,8 @@ CUSTOM = ROOT / "src" / "custom"
 NET_DIR = DEPLOYED  # overridden by --net-dir
 
 
-def npy_b64(arr: np.ndarray) -> str:
-    buf = io.BytesIO()
-    np.save(buf, np.asarray(arr), allow_pickle=False)
-    return base64.b64encode(buf.getvalue()).decode("ascii")
+def tensor_b64(tensor: onnx.TensorProto) -> str:
+    return base64.b64encode(tensor.SerializeToString()).decode("ascii")
 
 
 def attr_value(attr: onnx.AttributeProto) -> Any:
@@ -46,17 +42,22 @@ def attr_value(attr: onnx.AttributeProto) -> Any:
     return value
 
 
-def format_attrs(node: onnx.NodeProto) -> str:
+def format_node_kwargs(node: onnx.NodeProto) -> str:
     pieces = []
+    if node.name:
+        pieces.append(f"name={node.name!r}")
     if node.domain:
         pieces.append(f"domain={node.domain!r}")
+    attrs = []
     for attr in node.attribute:
         value = attr_value(attr)
         if isinstance(value, onnx.TensorProto):
             raise ValueError(f"tensor attribute is not supported yet: {node.name or node.op_type}.{attr.name}")
         if isinstance(value, onnx.GraphProto):
             raise ValueError(f"graph attribute is not supported yet: {node.name or node.op_type}.{attr.name}")
-        pieces.append(f"{attr.name}={value!r}")
+        attrs.append((attr.name, value))
+    if attrs:
+        pieces.append(f"attrs={attrs!r}")
     return (", " + ", ".join(pieces)) if pieces else ""
 
 
@@ -72,6 +73,15 @@ def default_opset(model: onnx.ModelProto) -> int:
         if opset.domain in ("", "ai.onnx"):
             return int(opset.version)
     return 11
+
+
+def model_kwargs(model: onnx.ModelProto) -> str:
+    """Preserve populated model-level fields supported by ``src.custom._exact``."""
+
+    pieces = [f"ir_version={int(model.ir_version)}"]
+    if model.producer_name:
+        pieces.append(f"producer_name={model.producer_name!r}")
+    return ", ".join(pieces)
 
 
 def vi_expr(vi: onnx.ValueInfoProto) -> str | None:
@@ -92,7 +102,7 @@ def vi_expr(vi: onnx.ValueInfoProto) -> str | None:
 
 def generate(task_num: int, *, package_relative: bool) -> str:
     model = onnx.load(NET_DIR / f"task{task_num:03d}.onnx")
-    exact_import = "from ._exact import arr_b64, model, tensor" if package_relative else "from src.custom._exact import arr_b64, model, tensor"
+    exact_import = "from ._exact import model, node, tensor_b64" if package_relative else "from src.custom._exact import model, node, tensor_b64"
     lines: list[str] = [
         f'"""Task {task_num:03d} — exact source reconstruction of current live graph.',
         "",
@@ -108,14 +118,12 @@ def generate(task_num: int, *, package_relative: bool) -> str:
         "    inits = [",
     ]
     for init in model.graph.initializer:
-        arr = numpy_helper.to_array(init)
-        lines.append(f"        tensor({init.name!r}, arr_b64({npy_b64(arr)!r})),")
+        lines.append(f"        tensor_b64({tensor_b64(init)!r}),")
     lines.extend(["    ]", "    nodes = ["])
-    for node in model.graph.node:
-        attrs = format_attrs(node)
-        name_kw = f", name={node.name!r}" if node.name else ""
+    for graph_node in model.graph.node:
+        kwargs = format_node_kwargs(graph_node)
         lines.append(
-            f"        helper.make_node({node.op_type!r}, {list(node.input)!r}, {list(node.output)!r}{name_kw}{attrs}),"
+            f"        node({graph_node.op_type!r}, {list(graph_node.input)!r}, {list(graph_node.output)!r}{kwargs}),"
         )
     lines.extend(["    ]", "    value_infos = ["])
     for vi in model.graph.value_info:
@@ -125,7 +133,7 @@ def generate(task_num: int, *, package_relative: bool) -> str:
     lines.extend(
         [
             "    ]",
-            f"    return model('task{task_num:03d}_live_exact', nodes, inits, output_dtype={output_dtype(model)}, opset={default_opset(model)}, value_infos=value_infos)",
+            f"    return model({model.graph.name!r}, nodes, inits, output_dtype={output_dtype(model)}, opset={default_opset(model)}, value_infos=value_infos, {model_kwargs(model)})",
             "",
         ]
     )

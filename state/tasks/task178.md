@@ -68,3 +68,23 @@ three uint8 `[1,10,5,5]` blocks (250B each: two candidates + the orientation Whe
   does NOT. Mixing CumSum (opset 11) forces opset 11 anyway, so the uint8 Pad path
   is free. fp16 Pad/MatMul/Conv/Where/Equal/ReduceSum all OK; fp16 CumSum CRASHES
   (keep the tiny cumsum plane fp32).
+
+## ADOPTED 20260715T112611Z
+- cost: 762 -> 564 (points 18.6649)
+- source: candidates/task178/crop_conv.onnx
+- note: graph-surgery: crop first-row/first-column 1x1 Conv outputs to generator max 13 using negative end padding; removes two post-Cast Slice carriers
+
+## ADOPTED 20260715T114655Z
+- cost: 564 -> 561 (points 18.6703)
+- source: candidates/task178/minmax_orientation.onnx
+- note: replace orientation count chain with first-inclusive uint8 min/max; 564->561
+
+## ADOPTED 20260715T131632Z
+- cost: 561 -> 503 (points 18.7794)
+- source: candidates/task178/qprefix_scatter.onnx
+- note: TopK-free run compaction: uint8 causal QLinearConv slot prefix + max ScatterElements; dynamic Unsqueeze orientation
+
+## ADOPTED 20260715T132512Z
+- cost: 503 -> 444 (points 18.9042)
+- source: candidates/task178/convint_oriented_decode.onnx
+- note: fuse quantized prefix to ConvInteger and decode labels after orientation

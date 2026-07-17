@@ -184,3 +184,33 @@ Mechanism: Einsum + value_info Slice. Gate fresh_verify 1500: inc=0/cand=0 (CLEA
 - cost: 2064 -> 1677 (points 17.5752)
 - source: candidates/task354/poly_convinteger.onnx
 - note: polynomial ConvInteger tail: [G,G^2,ones] with weights [2k,-1,1-k^2] writes padded FREE output
+
+## ADOPTED 20260715T134021Z
+- cost: 1677 -> 1480 (points 17.7002)
+- source: candidates/task354/categorical_qlinear.onnx
+- note: shift nonzero labels to codes 2..10; code1 padding + two-feature bias QLinearConv removes ones channel
+
+## ADOPTED 20260715T134215Z
+- cost: 1480 -> 1479 (points 17.7009)
+- source: candidates/task354/shared_weight_zero_point.onnx
+- note: reuse activation zero-point 1 as UINT8 terminal weight zero-point
+
+## ADOPTED 20260715T143201Z
+- cost: 1479 -> 1469 (points 17.7077)
+- source: candidates/task354/biasfree_modular_tail.onnx
+- note: bias-free modular QLinear tail: shared threshold over 10 semantic codes, exhaustive labels/padding
+
+## ADOPTED 20260715T143214Z
+- cost: 1469 -> 1269 (points 17.8540)
+- source: candidates/task354/division_qlinear.onnx
+- note: negative-pad header Conv + division convex-code QLinear renderer
+
+## ADOPTED 20260715T143712Z
+- cost: 1269 -> 1268 (points 17.8548)
+- source: candidates/task354/complete_division_qlinear.onnx
+- note: complete 10-label division QLinear tail; reuse row scale; exhaustive labels 0..9 and padding logits zero
+
+## ADOPTED 20260715T152828Z
+- cost: 1268 -> 1258 (points 17.8627)
+- source: candidates/task354/shared_biasfree_residue_qlinear.onnx
+- note: bias-free CRT residue tail: Mod[17,13] decagon, shared threshold, shared UINT8 activation/weight zero-point

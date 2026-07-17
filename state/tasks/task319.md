@@ -174,3 +174,8 @@ DISPOSITION: HEDGE bundle (EV +0.21 at k=1 raw hidden draw, negative if fully cu
 - cost: 5832 -> 4330 (points 16.6267)
 - source: candidates/task319/selected_profiles.onnx
 - note: FREE input x three selected-color OneHot direct row/col profiles; removes two full 10x30 profiles
+
+## ADOPTED 20260715T112949Z
+- cost: 4330 -> 4329 (points 16.6269)
+- source: candidates/task319/selected_profiles_tail.onnx
+- note: selected-color FREE-input profiles plus duplicate scalar-index dedup

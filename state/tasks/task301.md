@@ -1,6 +1,6 @@
 ---
-deployed_cost: 1141
-logged_costs_match: stale-likely
+deployed_cost: 1065
+logged_costs_match: match
 migrated: 2026-07-09
 ---
 
@@ -66,3 +66,8 @@ reopen: (1) mixed-dtype/fp16 ORT Einsum support (sign-decode revives at 2B/el); 
 drops to +0.05 (1065 wrap variant ready).
 falsification history: first regime-enumeration pass on this task; prior "900B label carrier floor"
 claim was superseded (deployed is NOT label-carrier — it is already the cheaper outer-threshold form).
+
+## ADOPTED 20260715T122904Z
+- cost: 1141 -> 1065 (points 18.0293)
+- source: candidates/task301/u8_wrap.onnx
+- note: UINT8 modular row gating K=10/S=246; Max-patched shifted column threshold; removes Equal+Where row carrier

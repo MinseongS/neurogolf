@@ -71,3 +71,8 @@ is one mem-0 op whose param count equals the irreducible rule dimension, BAIL.
 - cost: 345 -> 208 (points 19.6625)
 - source: dumps/archive_extract/submission7300+/task095.onnx
 - note: all-in archive graft; Kaggle-CONFIRMED in record 7410.67 (54610908); bundle fail=0, fresh-gate rejected but passed real hidden suite
+
+## ADOPTED 20260715T181028Z
+- cost: 208 -> 178 (points 19.8182)
+- source: candidates/task095/rank5_trained.onnx
+- note: rank-5 learned spatial code; bundled-overfit 265/265, fresh diagnostic 89/5000 vs incumbent 23/5000

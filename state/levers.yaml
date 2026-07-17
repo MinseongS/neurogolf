@@ -62,6 +62,19 @@ levers:
           weight is >=200 params (re-run the scan after every graft — the foreign nets are
           gradient-fitted and never param-golfed, which is exactly how task302 arrived), or the
           collapse generalises past Concat to another multi-channel final-conv feeder."
+      - date: 2026-07-15
+        ran: "task151~175 constant-lane follow-up: built task169 bias_fold.onnx and algebraically
+          removed the all-one [1,1,10,10] Concat lane by moving its [10,1,1,1] kernel slice into
+          QLinearConv int32 bias; inspected the homologous task160 and task204 finals."
+        verdict: "Not found by this lowering on these nets: task169 reached predicted cost1470 but
+          failed 266/266. The final QLinearConv uses pads=[0,0,20,20], so the constant lane contributes
+          only on the original top-left 10x10 support whereas bias contributes over the entire 30x30
+          output. task160 has the identical spatial asymmetry and task204 an analogous padded final;
+          adding an explicit support mask costs more than the removed 200B. This does not invalidate
+          multi-channel value collapse, only constant-channel-to-bias folding across spatial padding."
+        reopen: "A final Conv with no spatial padding (or a constant lane already covering the full
+          padded output), an existing cheap output-support mask that can gate the bias contribution,
+          or an ONNX lowering that encodes spatially restricted bias without a counted plane."
 
   - name: free-output-einsum-regime-crack
     status: live
@@ -72,9 +85,262 @@ levers:
     expected_yield: "+0.2~0.9/task, 잔여 ~45태스크 (16/18 crack 실적)"
     ledger:
       - date: 2026-07-15
+        ran: "task184-only continuation from cost1037: solved bundled separator lookback exactly,
+          built a parameterized causal-prefix shrinker, exhaustively evaluated kernel lengths1..24,
+          gate/adopted the unique passing length24 candidate, and measured memory-zero same-colour
+          linear, structured additive rank3, general CP rank4, and quadratic rank4/5 readouts."
+        verdict: "WIN 1037->1025 (memory900+params125), bundled169/169 and candidate/deployed/network/
+          exact-source SHA 7a0de85e...; kernel23 was165/169 and kernel24 was169/169. The attempted
+          memory-zero families produced no gate candidate in this dated bounded search (additive
+          best405 sign errors; quadratic best872; same-colour linear infeasible per-slot). This is
+          not an absolute representation floor."
+        reopen: "A geometry-conditioned tensor network with a proven <=5-rank bundled separator,
+          a cheaper way to form affine [1,g] from the existing row_u8/col_u8 carriers, a selector
+          that tolerates forgotten first separators with total cost<1025, or any new teacher below1025.
+          Do not repeat the identical kernel1..24 uniform-weight sweep."
+      - date: 2026-07-16
+        ran: "task037 standalone stretch: early FP16 TopK, QLinearMatMul coordinate fold, CRT convex codebook, TopK5 falsification, sparse-initializer type probe, and a terminal six-factor quadratic-product FREE-output Einsum; checker/strict shape, all bundled classes and pre-deletion Scatter codes, raw off-grid audit, fresh500, official gate/adopt, source SHA sync, and post-adopt kernel/dtype/mask/public scans."
+        verdict: "WIN 1620->1284 (memory642+params642), +0.232446, bundled266/266 fail0, fresh500 fail0/divergence0/off-grid0. TopK5 reached1325 but failed four six-line arc-gen cases; sparse initializer was rejected as a sparse_tensor Scatter input. Kernel/mask scans are empty and public-autopsy recognizes the win. The 150B dtype headline is not an independent legal recast: terminal Einsum inputs share one dtype and reachable six-factor products exceed fp16 range."
+        reopen: "task037 next +0.1 is cost<=1161: delete or factor the 144B descriptor Concat and dense descriptor/coordinate selector banks, or find an equivalent lower-operand product contraction. Reopen cross-task only for fixed even object count, strict non-overlap, bounded polynomial geometry, FREE output, and measured ORT headroom; do not repeat global TopK5, sparse-as-dense Scatter, or isolated descriptor fp16 recast."
+      - date: 2026-07-15
+        ran: "task184-only pinned ORT1.26 follow-up: built and gate/adopted quantized separator
+          prefix, shared 1D axis reduction, compact factor sharing, and a 2D projective 3-cycle
+          terminal selector; deduplicated/evaluated 9 local public task184 SHA families; statically
+          priced sparse initializer, Constant/sparse, single-channel basis, compact-table Pad, and
+          zero-point sharing variants. Focused artifacts and proofs are in candidates/task184/."
+        verdict: "WIN 1312->1186->1105->1075->1037 (memory900+params137), bundled169/169 at every
+          adopted endpoint; user-visible continuation 1105->1037 is +0.063513 and the prompt's
+          cost1584 start is +0.423621. This dated run found no gate-capable cost<=938 candidate in
+          the enumerated residual families: sparse initializers fail the current scorer's
+          SparseTensorProto.name access, QLinearConv w_zero_point cannot be omitted, and the 9
+          public SHA families bottom out at cost1859. This is not a task184 floor."
+        reopen: "An exact task184 lowering that deletes at least99 counted bytes at current
+          params137 or reduces params to<=38 without new counted memory; a scorer fix that makes
+          sparse initializers measurable; a new public teacher below1037; or an approved ORT pin
+          change after mandated 400/400 revalidation. Do not repeat uint8 OneHot(11), int64
+          Cast-OneHot, fp16 selector Cast-back, or empty w_zero_point."
+      - date: 2026-07-15
+        ran: "task246 cost117 단독 후속: H1 affine spatial basis의 곱셈-rank 제약을 재평가하고,
+          H2 reachable colour {0,2,3}에 projective 2D embedding을 구성했다. FREE input 반복으로
+          red/green quadratic gate를 만들고 reused antisymmetric mux의 determinant 네 개로 marker-zero
+          correction을 구성했다. cost104 graph를 checker/strict, 16개 3s/2GiB operand order,
+          bundled gate, fresh500, ng adopt, exact-source fixed point, 400-graph rescan까지 실행했다."
+        verdict: "WIN: shared 3x10 colour basis+2x3 map+3-sign+2x3 term의 45 params를
+          2x10 embedding+2x2 gate+2x2x2 branch mux의 32 params로 교체해 117->104
+          (memory0+params104, +0.117783), bundled266/266, fresh500/500으로 채택했다. 16 bounded
+          order 중 7개가 완료됐고 perm12는 profile50 6.667s/105840KiB였다. deployed/source/builder
+          SHA는 3fca97d6bb38...로 byte-identical이다. 400 rescan errors0, strict hit0이며 broad
+          [3,10] reuse는 8 tasks/10 nodes지만 동일 reused-mux signature는 없었다."
+        reopen: "task246 next +0.1은 cost<=94. power_linear_basis[2,30]의 constant lane을 FREE
+          support/root state와 합성해 >=10 params를 지우거나, current channel_branch_mux8와
+          quadratic_gate_map4를 동일 existing operand로 joint factor해 총>=10을 절감할 때만 재개.
+          Range/Cast length30, sparse initializer, ungated 2D projection, unused-output nonzero
+          approximation은 반복하지 않는다."
+      - date: 2026-07-16
+        ran: "task246 cost104 단독 후속: direct_root_mux에서 e0[q]=T[q,q,q]와
+          e1[q]=sum_ab T[a,b,q]를 합성하고 antisymmetric slice+joint_axis_sign으로 exact swap을
+          만들었다. quadratic gate와 channel branch를 joint_reused_colour_map[2,2] 하나로 공유하고,
+          forward/reverse channel slice와 algebraically equivalent tail feature labels를 결합했다.
+          TDD, checker/strict, 16개 3s/2GiB operand order, bundled gate, fresh500, ng adopt,
+          exact-source byte fixed point, 400-graph signature rescan을 실행했다."
+        verdict: "WIN: gate4+branch_mux8+coord_selector2의 14 params를 joint map4와 FREE root/sign
+          contractions로 교체해 task246 104->94(memory0+params94, +0.101096), bundled266/266,
+          fresh500/500으로 채택했다. 16 bounded order 중 5개가 완료됐고 canonical perm00은
+          one-example 0.163s/116192KiB, profile50 10.531s/114192KiB였다. deployed/candidate/
+          exact-source SHA d534803d4f10...는 byte-identical이다. 400 rescan errors0, exact task246만,
+          broad relative task329 하나이며 2x10 colour basis가 없어 즉시 이식 대상은 아니다."
+        reopen: "task246 next +0.1은 cost<=85. remaining power_linear_basis60 또는
+          quadratic_colour_basis20에서 >=9 params를 exact FREE-input/existing-operand 합성으로 지우거나,
+          root mux8+joint map4+sign2를 총<=5 params의 새 joint factor로 바꿀 때만 재개한다.
+          Range/Cast length30 carrier, sparse initializer, ungated 2D projection, branch mux/coord selector
+          재도입, 독립 합을 coupling하는 label merge는 반복하지 않는다."
+      - date: 2026-07-15
+        ran: "task124-only TDD chain under pinned ONNX1.21/ORT1.26: replaced Where(color_crop)->Pad(color_full)->Equal with padded uint8 QLinearConv; removed the valid plane with centered 0/2 states; replaced colour Cast/Equal/Where with ScatterElements; replaced the 200B broadcast INT32 Gather map with five fixed-length dynamic Slices; shared three initializers; ran checker/strict inference, focused regressions, every official ng gate/adopt, fresh2000 A/B, off-grid checks, source fixed-point SHA, and post-adoption scans. Artifacts: candidates/task124/{DISCOVERY.md,build_shared_initializers.py,test_shared_initializers.py}."
+        verdict: "WIN: task124 1953->1409->1078->1057->945->939(memory878+params61), score17.422878->18.155185 (+0.732306), bundled267/267 at every adopted stage, fresh2000 divergence0, off-grid positives0. Final candidate/deployed/source SHA49ececad3443... matches. This directly falsifies the 2026-07-08/09 claim that task124's dense-recolour 900B label plane was a floor: quantized padding can be a third zero-effective state, and fixed-length dynamic row Slice avoids the per-cell Gather map."
+        reopen: "Current task124 next +0.1 requires cost<=849. Reopen for an exact QLinear-preserving deletion/fusion of at least90 cost, especially a direct FREE-input channel0 crop+predicate producer below the current 200B float Slice, or a new public teacher. Do not reopen merely for ConvInteger's measured one-parameter saving because direct uint8 QLinearConv output is the task's explicit invariant."
+      - date: 2026-07-15
+        ran: "task124-only approved NEXT_TIER_DESIGN/NEXT_TIER_PLAN under pinned ONNX1.21/ORT1.26: wrote the cost849 regression first and observed the missing-builder RED; implemented a rank-4 source-row bank plus two scalar uint8 QLinearMatMul row fingerprints; exhaustively enumerated 1,428 legal generator states; ran checker/strict inference, focused14/14, official ng gate, ng adopt, source/candidate/deployed fixed-point SHA, fresh2000 raw A/B and off-grid diagnostics, and a read-only 400-graph signature rescan."
+        verdict: "WIN: task124 939->849(memory779+params70), score18.155185->18.255941 (+0.100756), bundled267/267 fail0. The rank-preserving bank removed 80B memory and one shape parameter; exact row hashes replaced 22B cellwise equality/reduction with 3B scalar outputs plus ten code parameters. Fresh2000 had incumbent_fail0, candidate_fail0, raw/sign divergence0, off-grid positives0. Candidate/deployed/source SHA4e4bafbb3d65... matches; pack/submit were not run."
+        reopen: "Current task124 next +0.1 requires cost<=768. Reopen for an exact deletion/fusion of at least81 cost while retaining direct padded uint8 QLinearConv, especially a <=119B exact FREE-input channel0 crop+predicate producer replacing the 200B float Slice, or a jointly priced detector/carrier fold. Broad rescan hits task270 and task174/233/343/363 require their own reachability, saturation, and cost proofs."
+        falsification_history: "This win falsifies the immediately preceding dated statement that no exact QLinear-preserving >=90 residual fold had been found: two individually below-threshold folds (rank preservation -81 and bounded row hash -9) composed exactly to the price gate. It does not establish collision-free QLinear fingerprints for arbitrary rows; task124 relies on the enumerated generator domain and accumulator bound. Project floor/exhaustion verdicts have repeatedly been falsified, so cost<=768 is only the next price gate, not a floor."
+      - date: 2026-07-15
+        ran: "task219 current4707의 세 번째 placement 공격을 TDD로 실행했다. bundled 전체에서
+          out-of-range Scatter update=0을 확인한 뒤 15-row Mod Scatter cost4256 후보를 만들고
+          bundled265/265와 fresh5000 A/B를 수행했다. fresh 반례를 원인분리한 뒤 18-row halo는
+          복구하고, dynamic shift를 공유 UINT8 QLinearConv score kernel과 rank-shaped
+          Gather/Scatter prefix로 재구성해 gate/adopt/source-sync/400-graph rescan을 완료했다."
+        verdict: "부분 NO + WIN: Mod(rowsal,15) direct Scatter는 cost4256/bundled exact였지만
+          fresh5000에서 row15 nonzero update 21건을 row0으로 되돌려 incumbent divergence21이라
+          기각했다. validity mask는 66B 절감보다 비싸다. pivot은 reachable raw score가 bundled와
+          fresh 모두 {0,8,...,240}임을 증명해 INT32 correlation을 exact UINT8 QLinearConv로 내렸고,
+          fresh-safe halo를 유지한 채 4707->4058(memory3933+params125, +0.148361), bundled265/265,
+          fresh5000 divergence0, gate/adopt PASS로 채택했다. 400 rescan errors0이며 exact hit는
+          task219 control 하나뿐이었다."
+        reopen: "task219 다음 +0.1은 cost<=3671. direct 15-row Scatter는 row15 validity를
+          counted replacement<=66으로 fuse하고 fresh>=5000에서 nonzero off-grid update를 정확히
+          버리는 op가 있을 때만 재개한다. 다음 주공격은 cy4 fp32 600B의 FREE-input producer/
+          terminal fusion 또는 epi_stack+placement 300~720B 묶음의 validity-aware projector다."
+        falsification_history: "bundled265의 out-of-range update 101개가 모두 zero였다는 사실은
+          fresh 일반화 불변식이 아니었고 fresh5000의 21개 row15 update가 이를 반증했다. 반대로
+          dynamic quantized weight가 runtime/rounding 위험으로 쓸 수 없다는 우려는 pinned ORT1.26
+          micro-test와 bounded score 전수 관측으로 반증됐다. 이는 task219 현 generator/score 범위의
+          dated 증거이며 QLinear recast의 보편적 saturation 안전성을 뜻하지 않는다."
+      - date: 2026-07-15
+        ran: "task219 current4058의 다음 +0.1을 TDD로 실행했다. cy4 fp32 600B FREE-input
+          fusion은 full-input quantization 9000B 및 세 pixelwise consumer의 decode 재생성 비용으로
+          현 lowering에서 탈락시켰다. 이어 ORT1.26 rank-6 halo Scatter를 micro-test로 고정하고,
+          exists를 update Mul 대신 row15 sentinel로 라우팅했으며 B0/shift bank rank를 보존해
+          score QLinearConv와 placement Gather가 [4,1,3,10] bank를 공유하게 했다. bundled
+          intermediate differential, fresh5000, gate/adopt, exact-source sync, 두 400-graph scan을
+          완료했다."
+        verdict: "부분 NO + WIN: 별도 fused crop-quantize/joint terminal op가 없는 cy4
+          row-code/bool projector는 current cy4+cyu+cyp 930B를 이기지 못해 build 전 pivot했다.
+          rank-6 halo route는 rowsal144B, exists broadcast6B, updates180B와 weight reshape120B를
+          제거했다. 첫 후보는 exists가 boolean1이 아니라 amplitude4임을 놓쳐 bundled265/265
+          실패했지만 scalarx4 diagnostic으로 root cause를 확인했다. 3B v0 producer에서 bank를
+          4배하고 QLinear weight scale0.25로 score를 보정한 최종 후보는 4058->3666
+          (memory3540+params126, +0.101589), bundled265/265, fresh5000 양쪽 fail2195/divergence0,
+          gate/adopt PASS다. deployed/source/candidate SHA1b3d55df...가 일치한다. 400 scans
+          errors0이며 새 halo signature와 bounded-score signature 모두 task219 control만 hit했다."
+        reopen: "task219 다음 +0.1은 cost<=3317. cy4는 full-input quantization 없이 score,
+          placement base, terminal decode 세 consumer를 동시에 FREE input/output에 fuse하는 새
+          lowering이 있을 때만 재개한다. 다음 유효 공격은 pf_selected/pf_mask18/pf_cyp2 각
+          180B와 epi_stack300B 중 최소 두 carrier를 함께 없애는 direct FREE-output Scatter 또는
+          작은 quantized projector다. 다른 task 전이는 discarded halo 뒤 Slice와 update Mul이
+          함께 있는 새 scan hit가 생길 때만 재개한다."
+        falsification_history: "exists carrier를 bool로만 해석하면 된다는 가정은 첫 후보의
+          present placement 진폭16->4와 bundled265/265 실패로 반증됐다. 반대로 rank-6
+          ScatterND prefix와 absent [15,16,17]/real row15 halo discard는 독립 ORT1.26 micro-test,
+          bundled265, fresh5000 divergence0로 현 graph에서 지지됐다. cy4 부정 판정은 fused
+          crop-quantize 또는 joint terminal rewrite가 없는 현재 op/lowering 집합에 한정된다."
+      - date: 2026-07-16
+        ran: "task219 cost3666 score-max continuation: ORT1.26 repeated-input/signed-route micro-test,
+          typed self-Einsum depth1~4 beam256 full-bundled search(505.163s), and bundled row-code
+          descriptor cardinality analysis over current-row/first-band/offset/span."
+        verdict: "Not found by this generic typed self-Einsum grammar at depth<=4 versus the
+          cost3666 incumbent: every retained depth had fail265/wrong_cells9422, with no cell-level
+          improvement across three consecutive expansions. The row-LUT fallback was also not found
+          within the cost3317 gate because its smallest measured exact descriptor had 1143 states
+          (11,430 output-table params). This is a bounded grammar/table verdict, not a task219 floor;
+          the live pivot is a six-anchor dynamic UINT8 QLinearConv placement projector."
+        reopen: "Reopen generic terminal search only with a task219-specific atom that couples
+          first-band C witnesses to lower-band output coordinates, or a search evaluator that makes
+          depth>4 materially cheaper; reopen row LUT only with an exact descriptor <=250 states or
+          a packed decoder whose total counted carriers plus params is <=3317."
+      - date: 2026-07-15
+        ran: "task267 current60의 outer/moment 두 벡터를 하나의 binary-exact phase로 alias하는
+          float32-underflow 식을 pre-build bundled264/fresh10000 oracle, TDD RED/GREEN, actual ORT
+          역할별 P/L probe, 공식 gate, fresh2000 A/B, ng adopt, source fixed-point rebuild로 task-local 실행"
+        verdict: "WIN: phase[0]=-0.5, phase[1:6]=-2^-78, phase[6]=1을 row/column/moment에
+          재사용했다. 최대 shape 항 15*2^-156은 half-min-subnormal보다 작고 최소 desired logit
+          1.985e-23은 normal이라 outer30/moment30을 phase30 하나로 줄여 cost60->30
+          (memory0+params30, +0.693147), bundled264/264 fail0, fresh2000 divergence0으로 채택했다.
+          candidate/deployed/network/source SHA7603363b...가 일치한다."
+        reopen: "task267 current30의 다음 +0.1선 cost<=27. phase30을 FREE-input support나 legal
+          shorter coordinate code로 >=3 params 줄이는 식, 또는 binary epsilon의 underflow upper
+          bound와 desired normal-margin lower bound를 모두 유지하는 새 public/source teacher가 생길 때"
+      - date: 2026-07-15
+        ran: "task267 current86에서 generator의 creature size12..15와 fixed boundary marker를 이용한
+          two-vector moment-sign 대수를 bundled264/fresh10000 NumPy oracle, TDD, 공식 gate, ORT fresh2000,
+          ng adopt, exact-source fixed-point rebuild로 task-local 실행"
+        verdict: "WIN: outer30/moment30의 boundary support와 signed colour moment로 R60/J20/affine4/
+          corner2를 모두 제거해 cost86->60(memory0+params60, +0.360003), bundled264/264 fail0,
+          fresh2000 divergence0으로 채택했다. 직전 'R/J factor에서 >=9를 못 찾음'은 factor가 아니라
+          representation 전체를 버리는 식으로 반증됐으므로 이번에도 absolute floor 신뢰는 낮다."
+        reopen: "task267 current60의 다음 +0.1선 cost<=54. outer/moment 두 30-vector를 shared coordinate
+          basis나 FREE-input operand로 >=6 params 줄이는 exact 식, 또는 새 public/source teacher가 생길 때"
+      - date: 2026-07-15
+        ran: "task267 current180에서 FREE input corner complement exact algebra를 TDD, bundled gate,
+          fresh2000, ng adopt, source fixed-point rebuild로 실행; 채택 후 affine rank-1 microfold와
+          R/J 잔여 exact-factor 비용을 task-local로 재평가"
+        verdict: "WIN: U=R[0]-R[1]의 four-corner 합으로 3*background+marker를 직접 읽어
+          Slice/Add/marker metadata를 제거했고 cost180->86(memory0+params86, +0.738610), bundled264/264,
+          fresh divergence0으로 채택했다. 잔여 rank-1 affine은 86->84만 가능해 다음 +0.1선 77에
+          못 미쳤고, 이번 bounded R/J 분석에서 >=9-param 식은 찾지 못했다. 이는 floor가 아니다."
+        reopen: "R[2,30] 또는 J[2,10]을 동일 reachable-state sign으로 >=9 params 줄이는 exact basis,
+          cost<=77인 terminal operand reuse, 또는 새 public/source teacher가 생길 때 task267만 재개"
+      - date: 2026-07-15
+        ran: "task354 deployed G[1,1,10,10]->Pad->Equal tail을 task036의 [x,x^2,ones]
+          polynomial ConvInteger로 교체; labels0..9와 20픽셀 우/하 padding logits를 실제 ORT tail로
+          전수 검사하고 bundled test, 공식 ng gate, ng adopt, post-adopt mask_dominance --tasks 354 실행"
+        verdict: "WIN: cost2064->1677(memory1490+params187, +0.207639), bundled266/266 fail0으로
+          채택했다. 과거 'task354 SameRun/data-dependent coupling 때문에 900B label plane이 최저' 판정은
+          terminal producer와 renderer를 혼동해 반증됐다. SameRun은 기존 compact G를 계속 만들고,
+          FREE-output ConvInteger가 1-(x-k)^2 sign decode와 zero-logit padding을 동시에 수행한다."
+        reopen: "task354 current cost1677에서 다음 +0.1은 cost<=1517. task036식 shifted two-feature
+          QLinear tail을 upstream carrier 절감과 결합해 <=1517을 실측하거나, G producer의 MaxPool/Min
+          chain을 더 작은 exact SameRun primitive로 바꾸는 구체식이 생길 때 재개."
+      - date: 2026-07-15
+        ran: "task354 nonzero semantic labels를 codes2..10으로 재부호화해 code1을 implicit padding 전용으로 만들고 [G,G^2] two-feature bias QLinearConv를 TDD/실제 ORT truth-table/공식 gate/adopt로 실행; 이어 activation zero-point1을 UINT8 weight zero-point로 공유하는 parameter fold를 별도 gate/adopt"
+        verdict: "WIN: task354 1677->1480->1479(memory1390+params89), discovery 시작2064->1479 누적 +0.333280, bundled266/266으로 채택했다. 100B feature channel과 100-element ones initializer가 제거됐고 candidate/deployed SHA b2b1b80b990e...가 일치한다. 과거 'two-feature tail은 padding 때문에 안 됨'은 codes0/1을 고정한 잘못된 전제였고 missing-code recode로 반증됐다."
+        reopen: "task354 current1479에서 다음 +0.1은 cost<=1338. FREE FLOAT input의 Sraw[8,10] Slice와 UINT8 Cast를 counted<=179B 한 op로 fuse하거나, Mfull_f120B와 tail_features200B를 함께 제거하는 legal producer/renderer fusion이 실물 비용식과 함께 생길 때"
+        falsification_history: "동일 codes0/1 + scalar x_zero_point 탐색은 padding point가 class point와 겹치거나 같은 ray가 되어 실패하므로 반복하지 않는다. 첫 INT8-weight/UINT8-zero-point checker 실패는 dtype 구현 오류였고 UINT8 stored weights+shared zp로 해결됐다. full-input FLOAT->UINT8 Cast는 9000B라 동일 경로를 반복하지 않는다."
+      - date: 2026-07-15
+        ran: "task354 단독 H3/H4 실행: Slice/GatherND/Cast/QuantizeLinear/DynamicQuantizeLinear/Greater/IsNaN single-primitive micro-model 7개를 checker+strict inference+ORT1.26으로 실측; scalar direct spatial QLinearConv representative geometry 1x1/3x3/5x5/3x9/9x3/4x10/10x4 exact LP; negative-pad header Conv와 quotient Div convex-code QLinear tail을 RED-green focused tests, official gate/adopt, post-adopt score/SHA/mask_dominance로 실행"
+        verdict: "WIN: task354 1479->1269(memory1180+params89, +0.153137), discovery 시작2064->1269 누적 +0.486417, bundled266/266으로 채택했다. header path는 Mfull_f120+Mfull30+M10=160B에서 M_crop_f40+M10=50B로, old G_sq100+tail_features200은 division_features200으로 줄었다. candidate/deployed SHA c46c8096de40...가 일치한다. 첫 공격은 selection이 FLOAT320B, low-dtype conversion이 full-plane9000B(동적9005B)라 dated negative였고, scalar direct renderer는 실제 색 class가 LP-infeasible이었다."
+        reopen: "task354 current1269에서 다음 +0.1은 cost<=1148. Sraw320+S8 80을 counted replacement<=279B로 직접 내는 새 fused FLOAT-crop/low-dtype primitive, division_features200을 없애는 multi-input padded integer output op, 또는 SameRun 30B chain을 합계>=121 줄이는 exact joint factor가 생길 때"
+        falsification_history: "이전 entry의 'legal fused producer가 없으므로 current1479에서 구체 +0.1 후보가 없다'는 dated 판단은 negative-pad Conv가 producer crop을 흡수하고 Div quotient pair가 9 reachable classes를 convex embedding한다는 두 새 사실로 반증됐다. 반면 Slice/Gather FLOAT320B, full-input conversion9000B, dtype-mismatched QLinear zero-point, 새 feature 없는 scalar affine spatial tail은 이번 실측 grammar에서 반복하지 않는다; 이는 task 절대 floor가 아니다."
+      - date: 2026-07-15
+        ran: "task354 current1269 division tail의 unreachable-class 예외를 원래 augmented gate와 대조하고, divisor pair를 전수 스캔해 [13,21]의 11-vertex hull에서 padding point(1,1)를 제외한 10 semantic vertices를 선택; INT8 separants와 기존 row scale 재사용을 TDD, labels0..9+padding 실제 ORT 전수검사, 공식 gate/adopt, exact-source rebuild로 실행"
+        verdict: "WIN: class5를 제외하던 9-code tail을 complete 10-code tail로 보정하면서 tail_scale 1 param을 제거해 cost1269->1268(memory1180+params88, +0.000788), bundled266/266 fail0으로 채택했다. discovery 시작2064->1268 누적 +0.487205이며 candidate/deployed SHA 4d381cf1ccc8...가 일치하고 source rebuild도 cost1268/fail0이다."
+        reopen: "task354 current1268의 다음 +0.1은 cost<=1147. Sraw320B FLOAT crop을 UINT8 support와 함께 counted<=199B로 fuse하거나, division_features200B를 materialize하지 않는 multi-input padded integer output op, 또는 240B masked-dilation chain을 gap-safe primitive로 >=121 줄일 때"
+      - date: 2026-07-15
+        ran: "task354 current1268 후속: CRT residue decagon과 공통 QLinear accumulator threshold를 정수 탐색하고 bias-free Mod[17,13] tail 및 shared UINT8 x/w zero-point를 RED/GREEN 4 tests, labels0..9+padding real ORT, sparse negative 포함 19-test focused suite, official ng gate/adopt로 실행; direct 2x2~4x4/열교대 residue/packed-notch width1..19 LP, stride3 support A/B, scorer Loop/Scan 규칙, sparse QLinearMatMul strict inference도 task354 범위에서 실측"
+        verdict: "WIN: bias10을 common threshold scale1로, dedicated weight-zp1을 activation-zp9 공유로 바꿔 cost1268->1258(memory1180+params78, +0.007918), bundled266/266 fail0으로 채택했다. candidate/deployed SHA b2dd07a7770d...가 일치한다. 같은 실행에서 direct/packed affine tail은 실제 색 class가 infeasible, stride3는 S8가 지우던 7,645 support 셀을 복원하지 못함, Loop/Scan은 scorer 명시 제외, sparse gmask는 `inputs are expected to have tensor type` strict error였다. 이는 각 dated grammar의 결과이지 task floor가 아니며, 과거 quotient에 bias가 필요하다는 전제는 residue 공통-threshold로 다시 반증됐다."
+        reopen: "current1258에서 residue_features200B를 materialize하지 않는 legal multi-input/padded integer output op, Sraw320+S8 80을 직접 low-dtype crop으로 내는 pinned-runtime primitive, SameRun 반복상태를 graph control-flow 없이 gap-safe하게 줄이는 새 algebra, 또는 sparse initializer를 일반 QLinear tensor로 typing하는 grader 변화가 생길 때 재개; +0.1 주장은 cost<=1138일 때만 한다."
+      - date: 2026-07-15
+        ran: "task301/324 promoted-tail execution: task301 K=10/S=246 UINT8 modular row gate oracle+builder+isolated gate+fresh2000+adopt; task324 boundary-safe dilation-4 X rebuild+gate+fresh2000+adopt; 400 deployed Equal->Where affine-row and large diagonal-only kernel structural rescans; post-adoption mask_dominance on 301/324"
+        verdict: "두 below-bar tail을 모두 채택했다. task301 1141->1065(+0.068930), bundled266/266, fresh2000/2000. task324는 이 단계에서 8609->8094(+0.061685), bundled266/266, fresh2000/2000. full-400 구조 스캔에는 task301과 같은 [1,C,R,1] affine target-row signature 및 >=15 diagonal-only kernel의 추가 exact hit가 없었고, 최종 301/324 mask_dominance worklist도 비었다. 이는 이 정확 서명/도구의 dated result이지 표현 floor가 아니다."
+        reopen: "bounded affine target-row Equal->Where carrier를 가진 새 graph/public teacher, translated/multi-channel line support까지 확장한 scanner, 또는 task324 line_coarse 800B/task301 a|b_threshold 300B를 직접 FREE output에 흡수하는 새 lowering"
+        falsification_history: "task301의 과거 1065 no-build는 +0.1 ROI 결정일 뿐이었고 이번에 정확 채택됐다. task324의 O(side^2) parameter floor는 dilation-4 분해로 이미 반증됐으므로 broader no-hit 신뢰도는 낮게 유지한다."
+      - date: 2026-07-15
+        ran: "task026~050 전수 discovery의 유망 6개 후속 구현: task032 CP-rank10 sign factor, task035 FP16 TopK10 + exact joint-axis basis, task036 scalar power-sum extreme coordinate + shifted QLinear tail, task041 circle-embedding shared channel, task046 padding-safe QLinear tail, task048 direct-tail/rank1/uint8-row bounded search; 전 후보 checker/strict inference/isolated gate, 채택 후보 fresh 진단 및 exact source 재생성"
+        verdict: "5개 태스크를 정상 gate/adopt로 개선했다: task032 588->518(+0.126752), task035 실제1891->1659(+0.130891), task036 940->670(+0.338602), task041 460->443(+0.037657), task046 1846->1752(+0.052263), 합 +0.686165. task048은 direct tail이 75 fail, red-mask controls가 47/12 fail, 제한 grammar 전수검사에서 기존 horizontal kernel이 최소라 이번 문법에서는 무승이었다. task035 TopK10은 bundled 266/266이지만 old K14 대비 fresh2000에서 14 divergence가 있어 제출 전 격리 판단이 필요하다."
+        reopen: "task048은 dynamic/factorized Conv, output alias/in-place 또는 새 single-op grammar가 12개 잔여 red-mask 오류를 제거할 때; task041은 positive-margin exact rank<=8 solver가 생길 때; task046은 prefix index를 <=16-bit로 내리거나 index-free scan으로 1666 이하가 될 때; task035는 fresh-safe count>=10 exact selector를 FP16/정수 carrier 증가 없이 만들 때; 전체는 등록한 power-sum/circle/QLinear 메커니즘의 rescan hit를 후속 검증할 때"
+      - date: 2026-07-15
+        ran: "task376~400 discovery 후속 구현: task389 C/D shared-indefinite-rank2 동시 factor TDD+gate+adopt; task388 reachable-channel basis reuse와 constant precontract 두 단계 TDD+full gate+adopt; 두 source SHA 동기화; 새 서명으로 400 deployed graph rescan"
+        verdict: "두 잔여 점수 작업을 정상 gate로 완료했다. task389 42->38 (+0.100083, 266/266), discovery 시작점 55->38 누적 +0.369747. task388은 manifest994/실제1102 drift를 우회하지 않고 rule_b 공유로 1102->978 (+0.119372), transform precontract로 978->974 (+0.004098), 둘 다 266/266 채택했다. 이전 entry의 'task388 drift로 gate 차단'과 'task389 42->38 미검증' 상태는 이 실행으로 반증/해소됐다. rank-11 raw CP의 266/266 실패는 그대로이며 같은 ALS는 반복하지 않는다. 400 rescan의 task050/139/246/254/356/374 span-reuse hits는 각각 +0.0227~0.0661로 현재 단독 +0.1 문턱 미달이다."
+        reopen: "task388은 raw tensor ALS가 아닌 bundled-margin rank-11 factor 또는 tile(s,a,d) 논리식 exact lowering이 cost<=881을 만들 때; task389은 P의 homogeneous constant row를 counted intermediate 없이 제거하는 <=34-param one-Einsum 식이 나올 때; 전역 span hits는 다른 독립 절감과 합쳐 +0.1을 넘거나 current cost가 바뀔 때"
+      - date: 2026-07-15
+        ran: "task351~375 deployed ledger/graph/tensor/parameter 전수 감사 + mask_dominance/kernel_collapse/public queue; task354 stale renderer-floor 재평가와 polynomial/missing-code QLinear tail, task365 bias-free two-feature output fold, task366 streamed exact-cover/bounded-witness/safe-clip/broadcast/split-crop 구현·gate·adopt; task369 5x5 direct-linear separability와 task375 shared rank-4 sign-factor bounded search"
+        verdict: "최종 구체적 +0.1 실승은 task354 2064->1479(+0.333280, 266/266), task365 2088->1879(+0.105467, 266/266), task366 21729->19515(+0.107464, 255/255) 세 개다. task369 direct 5x5 Conv는 balanced class-1 patch에서 1000 epoch 최저 2653 errors였고, task375 rank-4는 40 restart x 12000 step 최선 margin -0.0859/208 sign errors라 이 시점의 단독 후보 근거가 사라졌다. 나머지 20개는 INVENTORY.md에 기록한 현재 carrier/parameter 경제학에서 계산 가능한 >=+0.1 lowering을 찾지 못했으며 절대 한계 판정이 아니다."
+        reopen: "task354는 Sraw producer fusion 등 cost<=1338 실측 후보, task365는 legal fused label producer로 cost<=1700, task366은 decode producer 포함 cost<=17657 후보가 생길 때; task369는 generator-complete nonlinear 1-op lowering, task375는 양의-margin rank-4 증명/후보가 생길 때; 범위 전체는 새 ORT kernel/public artifact 유입 시 재스캔"
+        falsification_history: "task365의 counted Equal/Pad가 사실상 필요하다는 전제와 task366의 large exact-cover carriers를 한 번에만 줄일 수 있다는 전제는 각각 terminal QLinearConv와 streamed/bounded decode로 이미 반증됐다. 반면 task369/375의 이번 부정 결과는 제한된 선형·rank-4 문법의 dated search일 뿐 표현 floor로 승격하지 않는다."
+      - date: 2026-07-15
+        ran: "task365 후속 bias 제거/기존 zero-point 재사용/UINT8 weight collapse TDD와 task366 rank-1 histogram, scalar background, broadcast/rank folds, GatherND->INT32 row Gather+GatherElements TDD를 각각 isolated test, 공식 gate, adopt로 실행; task365 FLOAT-input QLinearConv/FP16 Conv/crop-index lowering과 task366 terminal convex-code, UINT8 Pow, vector input-zero-point lowering을 pinned checker/ORT 및 finite hull search로 검증"
+        verdict: "추가 정상 채택으로 task365는 1883->1879(최초2088->1879, +0.105467, 266/266), task366은 19656->19515(최초21729->19515, +0.107464, 255/255)가 됐다. task365의 과거 'bias/zero-point 4B는 사실상 고정' 전제와 task366의 '255B flattened feature bank가 필요' 전제는 반증됐다. 반면 task365 FLOAT-input QLinearConv는 schema invalid이고 FP16 Conv는 18000B input cast가 필요하며, task366 simple unary terminal family는 class0..9가 모두 convex vertex가 되는 경우가 0개이고 UINT8 Pow/vector x_zero_point는 ORT가 거절한다. 현재 lowering만으로 또 +0.1은 계산되지 않지만 절대 floor는 아니다."
+        reopen: "task365 current1879에서 cost<=1700을 만드는 legal FLOAT->UINT8 producer fusion 또는 counted >=179B 추가 carrier 삭제가 실물 후보로 나올 때; task366 current19515에서 decode D1/D2 producer를 포함해 >=1858B를 지우는 exact lowering, ORT-supported UINT8 quadratic primitive, 또는 새 public teacher가 생길 때; task369/375 및 나머지 범위는 기존 INVENTORY.md reopen 조건 유지"
+        falsification_history: "이번 후속은 작은 parameter/carrier 절감이 없다는 이전의 낙관적이지 못한 추정을 365에서 4B, 366에서 141B 실승으로 반증했다. 동시에 task365의 headline dtype scan 86B와 task366 terminal padded900B는 producer/runtime 제약을 포함하면 +0.1 근거가 아님을 실측했으므로 동일한 FP16 cast, invalid QLinearConv dtype, UINT8 Pow, vector x_zero_point, 단일 unary hull search를 반복하지 않는다."
+      - date: 2026-07-15
+        ran: "task365-only residual TDD under pinned ONNX1.21/ORT1.26: physically scored current Conv->Cast producer at cost510, confirmed FLOAT-input QLinearConv tensor(float) rejection and legal full-input QuantizeLinear->QLinearConv cost9116, then tested a checker-legal cost1674 UINT8 rank-2 Einsum rectangle deletion which ORT rejected with NOT_IMPLEMENTED. Pivoted to a bundled top-left selector: solved 26334 ranking inequalities, integer-repaired a red-code64 17x17 INT8 kernel to raw margin75, built ConvInteger INT32 score plus 1-D first-zero bbox recovery, ran the 19-test scoped suite, official gate/adopt, isolated score, and exact-source SHA rebuild."
+        verdict: "WIN: task365 1879->1699 (memory1358+params341), score17.461505->17.562205 (+0.100700), bundled266/266 fail0. All 266 raw outputs are byte-identical to the incumbent; candidate/deployed/source SHA agree at 542af040cedf.... The selector deletes both rectangle/next planes and all three-box weighted-count/winner carriers. It is explicitly task-local bundled-overfit evidence, not a reusable semantic rectangle theorem."
+        reopen: "Current task365 next +0.1 requires cost<=1537. Reopen for a bundled-exact <=11x11 INT8 selector, an ORT-supported normalized UINT8 selector whose score margin survives 8-bit output, a legal fused FLOAT->UINT8 label producer, or another independent >=162-cost deletion. Do not repeat FLOAT QLinearConv, full-input quantization, UINT8 Einsum on ORT1.26, or the 15x15 rounded selector (32 violated inequalities) without a changed runtime/solver fact."
+        falsification_history: "The immediately preceding current1879 verdict said reopening required a concrete >=179 carrier deletion; this run supplied one and falsified the practical carrier-floor assumption. Earlier task365 output-carrier and zero-point floors were also falsified, so this new cost1699 state is not promoted to a floor."
+      - date: 2026-07-15
+        ran: "task365-only continuation from cost1699: proved bundled top-left coordinates lie in 0..7, cropped the 17x17 score support to 16x16/8x8, measured raw score/quantization intervals, reused tail_s1 in a UINT8 QLinearConv score, re-solved 16758 restricted ranking inequalities to a quantized-exact 10x10 INT8 kernel, and replaced bbox after-start masks with UINT8 wrapped relative-distance minima. Each of three stages used RED/GREEN tests, real ORT1.26, official gate/adopt, and exact-source SHA rebuild; final focused suite 28/28. Also bounded independent row/column selectors, all 49 9x9 alignments, direct 6x6 crop, and index0 end padding."
+        verdict: "WIN: task365 1699->1267->1111->1095 (memory942+params153), score17.562205->18.001490 (+0.439285), bundled266/266 fail0. Discovery start2088->1095 is +0.645452. Candidate/deployed/networks/exact-source SHA agree at aad99b5f3b51.... The 8x8 UINT8 score deletes 400 cost, the 10x10 kernel deletes156 params, and wrapped endpoints delete16B. This is bundled-overfit task-local evidence, not a semantic/fresh-safe selector claim."
+        reopen: "Current task365 next +0.1 requires cost<=990. Reopen with a legal counted-free FLOAT-input->UINT8 label producer, a quantization-aware/exact-integer 9x9 selector that removes the remaining two bundled ties, an index-free crop primitive that jointly deletes >=105 cost, or a non-affine output lookup fusion including the 72B tail carrier. Do not repeat FLOAT-input QLinearConv, full-input quantization/FP16 Cast, ORT1.26 UINT8 Einsum, consumer-only dtype lowering, or unmasked direct 6x6 crop."
+        falsification_history: "The cost1699 handoff treated <=11x11 and normalized UINT8 selectors as separate speculative reopen paths; restricting the candidate domain to 8x8 made both composable and falsified that practical floor, yielding cost1111 before the endpoint fold. Conversely row/column linear separation is infeasible for tested kernels1..19, direct crop fails189/266, index0 end padding has 15 counterexamples per axis, and current 9x9 repair retains two ties; these are dated bounded negatives rather than an absolute floor."
+      - date: 2026-07-15
+        ran: "task366-only residual decode audit: fs_gather_rows SHA 5dd9cf58 기준 D1/D2부터 canonical A/Bp까지 strict tensor-byte inventory, standard-domain opset<=16 FLOAT-input output-type schema enumeration, physical/direct-canonical lower-bound 수식, sparse W01 RED->builder->strict-inference probe, focused 24-test와 exact-source 동률 gate control을 pinned onnx1.21/ORT1.26에서 실행"
+        verdict: "이 실행은 cost<19515 candidate를 만들지 못했다. complete route는 5505B memory+W01 10 params이고 physical-crop 독립 하한 4035B라 최대 절감1480(<1858)이다. ideal packed canonical route는 alignment 예산597을 남기지만 runtime H/W select와 FLOAT colour contraction을 fuse하는 허용 op가 없다. W01 dense10->sparse9 fallback은 strict inference가 Conv weight의 sparse_tensor(float)를 거절했고, Constant densify는 +39 cost다. 따라서 gate/adopt는 실행하지 않았고 live는 19515/255 pass/SHA5dd9cf58 그대로다. 과거 task366 carrier floor 인상은 streamed exact-cover와 row-gather로 반증됐으므로 이 판정도 절대 floor가 아니라 이 byte 경계·도구·날짜에 한정한다."
+        reopen: "runtime H/W selection+FLOAT channel contraction을 added<=597 cost로 fuse하는 permitted lowering, physical route에서 독립 >=378B 추가 삭제, dense Conv가 sparse tensor weight를 직접 받는 schema/runtime, 또는 측정 cost<19515 새 public teacher가 생길 때"
+      - date: 2026-07-15
         ran: "task151~175 deployed artifact 25개 전수 score/graph/tensor/parameter 감사 후 task153 dtype+initializer lowering, task173 shifted-sentinel+complete-noop-stamp tail shrink, task174 ArgMax bbox/fp16 geometry/unique-selector Gather 복원·개선; 두 신규 메커니즘 full-400 syntax rescan"
         verdict: "3승 채택: task153 685->618 (+0.102930), task173 actual live11320->10233 (+0.100953), task174 actual live3348->2786 (+0.183756), 합 +0.387640, 모두 bundled fail0. task174 fresh4000 divergence0; task173 fresh4000은 incumbent fail12/candidate fail13으로 one-tail risk가 있으나 기본 8000-overfit gate를 통과했다. 나머지22개와 full-400 재스캔 hit는 이 실행에서 계산 가능한 +0.1 lowering이 없었다. 이는 절대 floor 판정이 아니다."
         reopen: "task173은 7개 이상 incomplete-copy tail을 추가 carrier 없이 exact하게 처리하는 score bound 또는 4900급 relational compiler가 생길 때; task174은 scalar selector/bbox 이후 남은 600B M16을 int8/무료-output 수식으로 제거할 때; 나머지 범위는 REVIEW.md의 태스크별 지배 carrier를 지우는 새 public teacher/ONNX lowering이 생길 때"
+      - date: 2026-07-15
+        ran: "task376~400 실제 deployed ONNX 25개 전수 cost/tensor/parameter inventory + kernel_collapse/mask_dominance/fold/dtype_overpay/public_autopsy/canvas_crop 스캔; task388 selector 공유 복원과 rank-11 tile CP gate; task389 radial-gray quadratic rewrite 빌드·gate·adopt"
+        verdict: "구체적 +0.1 후보는 2개였다. task389는 P palette의 단위원 radial defect로 gray-XOR F/E를 제거해 55->42 (+0.2697), bundled 266/266으로 채택했다. task388은 실제 파일 1102의 180-param in_sel을 72-param bridge로 대체한 exact 994 후보가 266/266이지만 manifest가 이미 994를 가리키는 SHA drift 때문에 정상 gate에서 동률 거절됐다; rank-11 tile CP는 비용 887(+0.1139)을 맞췄으나 266/266 실패했다. task390은 900B Pad 제거식도 순절감 250, +0.0972라 문턱 직하였고, 나머지 22개는 이 도구/시점에 계산 가능한 +0.1 lowering이 없었다. 이는 태스크 절대 floor 판정이 아니다."
+        reopen: "task388은 공유 상태가 안정된 뒤 manifest/file SHA drift를 gate 우회 없이 복구하고 exact 994 selector 후보를 채택하거나, raw ALS가 아닌 bundled-margin rank-11 factor를 찾을 때; task389는 D 제거와 rank-2 quadratic factor를 결합한 42->38 단일-Einsum을 검증할 때; 나머지 범위는 새 public teacher, mixed-dtype/bool Einsum, 또는 SCREENING.md의 각 지배 carrier를 더 싼 FREE-output lowering으로 지우는 구체식이 생길 때"
+      - date: 2026-07-15
+        ran: "task226~250 전수 deployed graph/tensor 감사 + mask_dominance/kernel_collapse/fold/dtype_overpay/public_autopsy/canvas_crop/qlinear 스캔; task234 signed-row quadratic 실물 빌드·gate; task238 Equal->Pad tail와 xor+ConvInteger byte accounting; task246 FREE-input gate-fold 3개 lowering 빌드·isolated gate"
+        verdict: "이번 도구/시점의 +0.1 실승은 task246 하나: Q/R2/G3 600B carrier 제거 + [1,x,x^2] basis collapse, 1126->1003 (+0.1157) 채택. task234 probe는 예측 cost 2474를 맞췄지만 quadratic 내부값이 one-hot이 아니어서 266/266 fail; threshold를 복구하면 절감이 사라진다. task238은 oh 490B를 지우려 Equal을 final로 옮기면 padded route 900B가 생기고, xor carrier도 동일 490B라 현 lowering은 +0.1이 아니다. 나머지는 이 전수 패스에서 계산된 +0.1 lowering을 찾지 못했으며 태스크 절대 floor 판정은 아니다."
+        reopen: "task234는 exact discrete interval polynomial을 추가 plane 없이 FREE output에서 0/1로 내는 op/lowering; task238은 code decode와 30x30 placement를 같은 FREE op로 수행하면서 counted carrier<322B인 구체 설계; 범위 전체는 새 public teacher 또는 mixed-dtype/bool Einsum 커널 유입 시 재스캔"
+      - date: 2026-07-15
+        ran: "task246 후속 점수 실행: direct13/15 및 fully-direct operand-order 격리 벤치, sparse-initializer strict/live 재검증, FREE-input axis 제거, reachable-colour basis 공유, rank2 coefficient/power/marker lowering, 모든 coordinate와 coefficient core의 terminal Einsum inline, 32-param polynomial mux의 reused 8-param root-difference factor, green marker map의 red-map+3-sign 재사용을 단계별 gate·fresh500·adopt"
+        verdict: "task246을 세션 시작 1128에서 최종 130(memory0+params130, score20.132466)으로 낮춰 누적 +2.160667을 실현했다. 모든 채택 단계가 bundled266/266 및 candidate-only fresh500/500였다. direct planner wall과 fully-direct canonical-order timeout은 operand permutation으로 반증됐고, 257의 남은 116B counted coordinate/core도 전부 제거했다. sparse initializer는 strict Einsum rank0 오류 및 기존 official ERROR와 일치해 현 scorer에서는 닫혔다. final Python exact source와 deployed ONNX SHA는 일치한다."
+        reopen: "현재 cost130에서 +0.1은 <=117, 즉 counted intermediate 없이 >=13 params 절감이 필요하다. power_linear_basis 일부를 FREE-input/기존 operand로 exact 생성하거나, marker-zero를 유지하는 2D reachable-colour basis+map, 또는 현재 27-param term/root/channel/selector subsystem을 <=14로 joint factor할 때 재개. Range/Cast length30 carrier, sparse initializer, ungated 2D D/Z projection은 반복 금지."
       - date: 2026-07-08
         ran: "batch6 8태스크 (opus)"
         verdict: "7/8 floor — positioned-content mask는 크랙 불가, 1 broken(071)"
@@ -132,6 +398,35 @@ levers:
           (4) 2nd free-named output tensor."
         falsification_history: "First direct attempt on 268. Class prior: 168/381/034 floored on the
           identical economics (batch6 2026-07-08); independently re-derived here on a static-pad variant."
+      - date: 2026-07-15
+        ran: "task325 post-output-fold shift-parameter probe: built the exact generator-bound
+          ch8 16x16 Slice + S16 self-Einsum control, ran pytest/evaluate on all 266 bundled examples,
+          and ran ng gate against deployed cost1197."
+        verdict: "This run found no cheaper S replacement: the exact crop control passed 266/266 but
+          cost1575 (memory1253, params322), because the 1024B fp32 Slice costs more than shrinking
+          dense S from 900 to 256 params. This is scoped to the current ORT/scorer and current
+          free-input graph; earlier broad task325 floor claims were already falsified by the 1483->1234
+          output fold, so it is not a permanent representation claim."
+        reopen: "An offset-aware contraction/Conv primitive that consumes the FREE fp32 input and
+          reduces directly to scalars without a counted spatial output; sparse initializer support for
+          the 29-nonzero shift; or a second FREE carrier that can hold the shift without creating a cycle."
+      - date: 2026-07-16
+        ran: "task062-only recursive attack from cost1020: exhaustively enumerated 172 admissible
+          sprites over 12,384 finite generator states and 45,345 distinct local patches; proved a
+          strict-margin INT8 11x11 separator; implemented two signed QLinearConv stages plus a
+          supported UINT8 zero-point dynamic ConvInteger tail; compared thresholded multi-hot output
+          on all 267 bundled examples; ran mandatory gate/adopt, exact-source rebuild, all twelve
+          historical task062 regressions, and a read-only 400-model structural rescan."
+        verdict: "WIN and dated floor falsification: task062 1020->921, memory965->633,
+          params55->288, points18.072442->18.174540, official fail0. The earlier task062
+          carrier/fold floor did not survive a generator-complete local classifier; the intentional
+          class vector [0,1,0,3,4,5,6,7,8,9] still maps class0 to both rows0/2. The scan loaded
+          400/400 and found only task018/101 as broad shared-source Gather-merge review candidates."
+        reopen: "For task062, a statically priced graph below cost832 with the same complete-domain
+          proof, or a stronger exact factorization/compression of the 242-weight local separator.
+          For transfer, reopen task018/101 only after independently proving a finite authoritative
+          generator, local-patch label consistency, merge multiplicity semantics, and a cheaper
+          pinned-runtime graph; bundled-only fitting is insufficient."
     # --- folded in from reports/regime_vein_worklist.md (2026-07-09), which is deleted later ---
     # Lever: fold a 900B [30,30] output-routing mask into a free-output Einsum
     # (output>0 sign-decode; input/output free any dtype). Gate: bundled fail=0 +
@@ -144,15 +439,15 @@ levers:
       b4: [287, 94, 63, 199, 273, 224]
       b5: [246, 190]
       fp16_adoptions: [251, 268, 205, 222]
-    floor_tasks: [112, 163, 99, 102, 62, 12, 348, 124, 354]  # 9 confirmed floors — 재공격 금지
+    floor_tasks: [112, 163, 99, 102, 12, 348]  # task062/task124/task354 falsified 2026-07-15~16
     # boundary rule: mask = (arbitrary motif CONTENT) ⊛ (data-dependent 2-D POSITION),
     # OR a data-dependent run/coupling (task354 SameRun) → 900B u8 index-plane is cheapest;
     # every Einsum factorization prices higher.
-    batch6_floored: [354, 90, 390, 154, 34, 168, 381]  # also do-NOT-re-attempt (batch6 DRY)
+    batch6_floored: [90, 390, 154, 34, 168, 381]  # task354 was falsified 2026-07-15
     pending_unconfirmed: [71]  # 71 = build broken/likely floor, NOT confirmed — 재공격 허용
     crack_condition:  # sharpened 3-property test (batch6) — cracks ONLY if ALL hold, else FLOOR
       - "1. GLOBAL-STATE routing (predicate from ≤~16 scalars: offset/size/color/count), NOT content at a data-dependent position, NOT a data-dependent run/coupling."
-      - "2. The 900B plane is a Where ROUTING mask, NOT an Equal DECODE discriminator (label30→Equal→10ch = dense-recolor floor: 124/354/390)."
+      - "2. The 900B plane is a Where ROUTING mask, NOT an Equal DECODE discriminator. Historical dense-recolor examples 124/354 were falsified by quantized free-output renderers; task390 remains only a dated unresolved example, not a class floor."
       - "3. Mask FRACTION high (≥~45%); low-fraction (~30%, e.g. 090) loses to non-mask compute. AND the fold's fp32 operands (co-bound to the free input) must stay < the 900B bool mask — needs genuinely low-rank/static routing, not per-cell placement matrices (this fp32-co-bind economics is why 168/381/034 floor even though structured)."
     next_targets:
       structured_untried: []  # EMPTIED 2026-07-11: 86 already cracked 07-09 (residual decode floor); 268 floored on fraction+fp32-co-bind — see ledger
@@ -192,6 +487,16 @@ levers:
     agent_class: opus
     expected_yield: "+0.553 LB/배치 실적; params 레인 (memory-sweep과 직교), bit-identical"
     ledger:
+      - date: 2026-07-15
+        ran: "task204-only wall-parity/kernel-collapse/fusion pass against deployed cost7703: added an exhaustive NumPy bracket-wall oracle for every size3..10 placement plus every legal same-column two-box placement; lowered nearest top/bottom wall-coordinate parity to ONNX and evaluated all 268 bundled examples; enumerated detector-feasible two-channel quotient codes with values0..3 (61 code maps, 36 nested-fill-separable pairs) and tested each pair against 5000 legal multi-anchor layouts by HiGHS convolution inequalities; finally tested full-width single-Conv GF(2)/linear fusion and trained a one-hidden-plane 2-stage fused Conv on 12000 legal grids. Pinned onnx1.21.0/ORT1.26 throughout."
+        verdict: "No cost<=6969 candidate was found by these dated families. The direct wall-coordinate formula is exact (268/268) but costs8955=memory8820+params135 because nearest-wall codes/MaxPools/bitwise carriers exceed the removed even bank. Every small two-channel quotient pair failed the multi-anchor fill inequality although single-anchor nested subsets were separable. A direct fused Conv is linearly infeasible even with a full 19x19 single-box receptive field, and the one-hidden-plane float search plateaued near 0.92M cell errors by step2400. No gate/adopt was run. This is not a task floor."
+        reopen: "A legal reset/nearest-wall primitive or packed bidirectional coordinate lowering that removes at least1986 cost from the exact8955 graph; a two-channel detector code outside values0..3 with a multi-anchor-safe nonlinear fill whose measured total is<=6969; an exact fused detector/fill synthesis with one <=400B hidden plane and <=234 replacement parameters; or a new public/source teacher below cost7703."
+        falsification_history: "task204 floor-style claims were repeatedly falsified by the uint8 anchor/output route and then by wall-prefix parity plus compact top-wall detection (10232->7838->7703). Therefore this entry rejects only the explicitly run nearest-coordinate, small quotient-code, and tested one-plane fusion families; kernel-collapse remains live."
+      - date: 2026-07-15
+        ran: "task301/324 post-adoption `uv run ng scan kernel_collapse --tasks 301 324`; generated task324 2x2 single-position colour-entry Conv -> 1x1 negative-pad candidate, isolated gate/adopt, final scanner rerun"
+        verdict: "task324 candidate passed bundled266/266 at memory7769/params295/cost8064 and was adopted 8094->8064(+0.003713). Final task301/324 kernel_collapse worklist is empty."
+        reopen: "새 Conv/QLinearConv adoption, source rebuild that reintroduces multi-position-zero kernels, or scanner generalization through Cast/Reshape producer chains"
+        falsification_history: "이 lever는 과거 다수 승리 후에도 새 graph 유입 때 재개되어 다시 승리했다; empty worklist를 global exhaustion으로 해석하지 않는다."
       - date: 2026-07-08
         ran: "kernel_collapse.py — 배포 Conv 넷 전수 스윕"
         verdict: "+0.553 LB, 18승 (single-position Conv kernel → 1×1+pad, bit-identical)"
@@ -297,6 +602,46 @@ levers:
         ran: "task326-350 score-execution follow-up: rebuilt/gated/fresh-checked all recovery targets; task327 FREE-input fixed selector -> negative-pad Conv; task329 exact rank5 recovery -> convex colour route -> full-state sign-rank4/rank3 fitting plus rank2 falsification search; task343 shared coordinate basis + singleton-q fold; task350 composed R0sel and exact R2 rank2 reductions; task333 directional sum oracle and ORT dtype probe."
         verdict: "4 additional adopted wins, all normal ng gate->adopt: task327 522->432 (+0.189242); task329 actual468->232 (manifest418->232, +0.701731 actual) through 308/270/232; task343 actual756->683 (manifest684->683, +0.101547 actual); task350 actual428->400 (manifest410->400, +0.067659 actual). All final candidates passed bundled and 1500/1500 fresh with zero divergence; exact sources reproduce final costs. task329 rank2 target194 was not feasible in 16x8000-step full-state searches. task333 clamped sums were semantically exact on 265 bundled +1500 fresh, but uint8 CumSum is ORT-invalid and the fp16 core prices 2000B vs current600B; six unique public graphs were all cost>=2401."
         reopen: "task329 only with a new rank2 construction/stronger solver proving full-state margins (do not repeat the same Adam search); task333 only with uint8 CumSum or fused prefix/suffix-min, or another <=1616 byte-proven lowering; task327 only with a <=390 support+kernel joint factor; task343 only with a <=618 joint predicate/visibility collapse; otherwise rerun the reusable negative-pad/sign-route mechanisms after new public/adopted graphs enter the board."
+      - date: 2026-07-15
+        ran: "task343-only exact rewrite: ran the requested stale joint-basis builder/gate, diagnosed its already-transformed incumbent assert, built cost455 negative-pad controls, exhaustively tested column-signature predicates, gated exact cost255/252 candidates, ran deployed-vs-candidate fresh1500 under ORT_DISABLE_ALL, adopted through ng gate->ng adopt, regenerated exact source, and inventoried every remaining tensor/initializer."
+        verdict: "WIN: task343 683->252 (+0.997066), memory184/params68, bundled266/266, fresh1500/1500 with incumbent_fail=0 candidate_fail=0 divergence=0. The paying combination is exact fp32 base-10 three-row signatures from shared negative-pad Conv probes, scalar bool/uint8 period selection, and one int32 final_cols carrier produced by Mod(fmod=1) over [0..14,-1x15]. The post-adoption inventory found no already-priced next +0.1 candidate at cost<=228; this is a dated representation inventory, not a task floor."
+        reopen: "A terminal routing primitive or legal Gather index dtype that cuts the 120B final_cols carrier; a materialization-free factor of the 30-param 3x10 signature kernel; a float-input op producing exact <=16-bit signatures without retaining fp32 Conv outputs; or a new public/source teacher with a concrete cost<=228 graph."
+        falsification_history: "This win falsifies the immediately preceding task343 reopen premise that only a <=618 predicate/visibility collapse was visible: combining coordinate removal with negative fmod indexing reached252. Project floor/exhaustion claims have repeatedly been falsified, so the <=228 condition is only the current +0.1 price gate."
+      - date: 2026-07-15
+        ran: "task343-only cost228 follow-up under pinned ONNX1.21/ORT1.26: built and gated the exact cost248 predicate-fold control; measured the bottom-row cost228 candidate at bundled261/266; exhaustively simulated row/equality alternatives; rejected sparse Conv/Mod initializers with minimal full-shape-inference probes; derived and TDD-built a joint low-period predicate; ran generator simulation10000, official bundled gates, fresh1500 deployed A/B, ng adopt, and byte-identical exact-source reconstruction."
+        verdict: "WIN: task343 252->224 (+0.117783), memory160/params64, bundled266/266 fail0, fresh1500/1500 with incumbent_fail0 candidate_fail0 divergence0 and generator timeout/error0. Sharing p4's col4==col0 with col5==col1 removes the entire 31B p3 comparison subsystem; bool Cast visibility and attribute-axes ReduceMax remove four more parameters. Candidate/deployed/source SHA48f92513614d... matches."
+        reopen: "Current task343 next +0.1 requires cost<=202. Reopen for a concrete joint deletion of at least22 cost: a legal narrower/direct terminal routing primitive, a materialization-free signature factor coupled to predicate deletion, fewer than six exact scalar probes, or a new public/source teacher. Do not repeat bottom-row-only signatures, sparse Conv/Mod operands under current pins, wider runtime bases, cost684 recovery, or manual manifest edits."
+        falsification_history: "This result falsifies the preceding dated inventory claim that no already-priced route reached<=228: the missing lever was to share an existing p4 equality with a second low-period equality and reason over generator-equivalent collapsed patterns. The sparse subroute and one-row shortcut were genuinely falsified, but the new <=202 threshold remains a price gate rather than a floor."
+      - date: 2026-07-15
+        ran: "task327-only follow-up: repaired the 432 baseline builder to use its immutable 522 stage; pre-priced a support+decoder joint factor at cost350; implemented ConvTranspose bias-1 embedded support plus uint8 [x,x^2] QLinear decoder under candidates/task327; ran bundled scorer, fresh_check n=1500 A/B, ng gate, ng adopt, and exact-source SHA reconstruction."
+        verdict: "WIN via mandatory gate/adopt: task327 432->350 (+0.210492), memory270/params80, bundled265/265, fresh1500/1500 with incumbent/candidate fail0 and divergence0. Explicit support6[36], its 36B feature lane, and 10 decoder weights were replaced by one fp16 painter bias while preserving off-grid=0/background=1/colours=2..10; the previous support+kernel-only restriction was too narrow."
+        reopen: "task327 next +0.1 only with a pre-priced cost<=316 joint reduction, such as diag_w factorization coupled to a counted carrier/decoder reduction; do not repeat 10-channel 3x3 Slice, Equal/Pad restoration, or a decoder without a proved off-grid/background state."
+        falsification_history: "This result falsifies the immediately preceding task327 hypothesis class ('only <=390 support+kernel joint factor'): support+decoder was sufficient because spatial support can be encoded by the bounded ConvTranspose bias. Prior project floor/exhaustion verdict types have also been falsified repeatedly, so the new <=316 condition is a dated price gate, not a floor claim."
+      - date: 2026-07-15
+        ran: "task329-only exact-construction follow-up: reproduced cost232 rank3 gate; rejected a fixed-route shared-bilinear LP under current/parabola/circle bases; then derived F(x)=[1,x,x^2], E(k,c)=0.25-(k-c)^2, D(s,w)=(w-(s+1))^2, P(c)=400*(0.25-c^2); proved all 12000 logical states before build; ran official gate, fresh_check n=1500 A/B, ng adopt, and byte-identical exact-source regression."
+        verdict: "WIN via mandatory gate/adopt: task329 232->190 (+0.199713), memory24/params166, bundled266/266, fresh1500/1500 with fail0/divergence0, desired>=0.25 and wrong<=-0.75. Sharing the same 3-feature parabola on input/output replaced colour_features[10,3]+route_w[2,3,10] (90 params) with F[10,3]+A[2,3,3] (48). The rank2 Adam lane was not repeated; a 4x4 equality sign submatrix gives spatial sign-rank >=3 for that family."
+        reopen: "task329 next +0.1 only with a pre-priced cost<=171 exact tensor sharing or a different op lowering; do not repeat rank2 spatial factor search, Adam/hinge fitting, or separate input/output 3-feature storage."
+        falsification_history: "The earlier statement was only optimizer-scoped and is not contradicted; this win bypasses rank2 by preserving exact spatial rank3 and shrinking colour storage. It does falsify the narrower assumption that the 90-parameter colour factor was already minimal. Project floor verdict types have repeatedly been falsified, so cost171 is a dated score gate, not an absolute floor."
+      - date: 2026-07-15
+        ran: "task329-only repeated-root follow-up: pre-priced [1,w,w^2] spatial storage at 114 params versus a repeated linear root at 76; added a proof-first test; proved root=[-middle,1] and basis=[1,w] repeated twice reproduce [1,(w-middle)^2] bit-exact in float32 and preserve all 12000 logical signs; then built, official-gated, fresh-checked n=1500 A/B, adopted, and synchronized byte-identical source."
+        verdict: "WIN via mandatory gate/adopt: task329 190->152 (+0.223144), memory24/params128, bundled266/266, fresh1500/1500 with fail0/divergence0, desired>=0.25 and wrong<=-0.75. Reusing root_l[4,2,2] and route_r[2,30] twice inside FREE-output Einsum replaces route_l[4,2,3]+route_r[3,30], saving 38 params without a counted intermediate."
+        reopen: "task329 next +0.1 only with a pre-priced cost<=137 exact tensor sharing or different op lowering; do not restore [1,w,w^2], add counted Mul/MatMul, or repeat rank2/Adam routes."
+        falsification_history: "This win falsifies the dated assumption that exact spatial sign-rank3 requires storing three width features; multilinear reuse represents the same quadratic with a 2-feature root. Prior project floor verdict types have repeatedly failed, so cost137 is a score gate, not an absolute floor."
+      - date: 2026-07-15
+        ran: "task329-only dynamic-state-code follow-up: pre-priced removal of Equal/Cast/sel_f/counts4_f/root_l using legal cell counts 9/25/49/81 as width codes; added a proof-first test; exhaustively proved the zero/nonzero partition and all 12000 float32 classifier states before building; then official-gated, fresh-checked n=1500 A/B, adopted, and synchronized byte-identical exact source plus three-generation builder regressions."
+        verdict: "WIN via mandatory gate/adopt: task329 152->134 (+0.126041), memory16/params118, bundled266/266, fresh1500/1500 with fail0/divergence0, desired>=0.25 and wrong<=-0.75. state_vec=[cell_count,1] and root_core produce [1,column_code-cell_count], reused twice inside FREE-output Einsum; this removes the 4-way selector and state-specific root table."
+        reopen: "task329 next +0.1 only with a pre-priced cost<=121 exact construction, global solver, different feature dimension, or different op lowering; do not restore the 4-way selector/root table, counted quadratic staging, or repeat rank2 Adam/hinge search."
+        falsification_history: "This win falsifies the dated assumption that the four square sizes require an explicit selector or one root per state: their already-computed cell counts can serve directly as collision-free spatial codes. Cost121 is a dated score gate, not an absolute floor."
+      - date: 2026-07-15
+        ran: "task329-only repeated-colour-root follow-up: designed and pre-priced cost117; observed proof-first missing-builder RED; proved E=(0.5-k+c)(0.5+k-c), P=(10-20c)(10+20c), the dynamic spatial partition, and all 12000 float32 signs before ONNX build; removed Unsqueeze via keepdims ReduceSum; then official-gated, fresh-checked n=1500 A/B, adopted, and synchronized byte-identical exact source plus four-generation regressions."
+        verdict: "WIN via mandatory gate/adopt: task329 134->117 (+0.135666), memory12/params105, bundled266/266, fresh1500/1500 with fail0/divergence0, desired>=0.25 and wrong<=-0.75. Shared [1,x] plus two 2x2x2 affine cores replaces shared [1,x,x^2]+bilinear core, while keepdims removes count_vec/axes0."
+        reopen: "task329 next +0.1 only with a pre-priced cost<=105 exact construction, global solver, different feature dimension, or different op lowering; do not restore quadratic colour/spatial bases, the explicit selector/state table, or repeat rank2 Adam/hinge search."
+        falsification_history: "This win falsifies the dated assumption that the exact quadratic colour forms require storing a quadratic feature: multilinear root reuse represents them with [1,x]. Prior project floor verdicts have repeatedly failed, so cost105 is a dated score gate, not an absolute floor."
+      - date: 2026-07-15
+        ran: "task329-only shared-core exact construction under pinned ONNX1.21/ORT1.26: wrote the approved design and implementation plan; observed missing-builder RED; proved F(x)J=F(-x), bit-exact 4E/4P products, target/non-target spatial roots, finiteness, and all 12000 float32 classifier states before writing ONNX; measured isolated cost; ran official ng gate, fresh_check n=1500 A/B, ng adopt, byte-identical exact-source reconstruction, and five-generation focused regressions."
+        verdict: "WIN via mandatory gate/adopt: task329 117->105 (+0.108214), memory12/params93, bundled266/266, fresh1500/1500 with incumbent/candidate fail0 and divergence0, desired>=0.12499994, wrong<=-0.37499982, margin0.12499994, focused tests15/15. One shared 2x2x2 core replaces both colour cores plus the spatial core, and one swap matrix supplies sign reflection and branch exchange."
+        reopen: "task329 next +0.1 only with a pre-priced cost<=95 exact construction, global solver, different feature dimension, or different op lowering; do not split the shared core/swap, restore explicit selectors or stored quadratic bases, or repeat rank2 Adam/hinge search."
+        falsification_history: "This win falsifies the dated assumption that the separate repeated-colour and spatial affine cores at cost117 were independently necessary: a rational basis makes them identical up to one reusable swap. Prior project floor/exhaustion verdicts have repeatedly failed, so cost95 is a dated score gate, not an absolute floor."
 
   - name: reducesum-spatial-einsum
     status: dormant
@@ -334,6 +679,21 @@ levers:
     agent_class: opus
     expected_yield: "재정식화 후에만; 현재 top4 floor"
     ledger:
+      - date: 2026-07-15
+        ran: "task209 cost6089 selector compression: SHA-pinned teacher oracle, 266 bundled + 20,000 seeded discovery corpus, exact ORT-style rounding/tie simulation, 179,550 lowering-aware rank-1/rank-2 uint8 mask plans, modular scalar classifier fallback, existing two-plane terminal-codebook sharing probe, and 266 bundled + 5,000 fresh crop/clamp boundary audit; task209 focused regression 30/30."
+        verdict: "No qualifying cost<=5509 candidate in these concrete families. The rank-1/rank-2 search had no bundled-exact plan; scalar features collide across different scale labels; row/column crop clamps are active on 243/266 and 178/266 bundled examples (max 9), so Slice/unclamped Gather is not exact. No full candidate was constructed, gated, or adopted; deployed task209 remains cost6089, bundled266/266, sha eae4bcd1fb864d2b22acaad721f48e6c4f04d13a29fa3a24ddc02021bd3c9a0d."
+        reopen: "A new compact set-union primitive for four-colour row/column profiles, a selector-free positioning formula, an independent exact low-rank factor oracle, or a fused crop/correlation op whose pre-priced total is <=5509; do not repeat full-input uint8 recast, sparse rank-0 initialization, QA/QS split, or the searched mask/scalar families."
+        falsification_history: "This is dated family-local evidence, not a permanent floor: task209 itself previously falsified its output-plane floor through quotient pooling plus a terminal parabolic decoder, and other NeuroGolf scanner no-hits have been overturned by new mathematical lowerings."
+      - date: 2026-07-15
+        ran: "task301 UINT8 row-gate 및 task324 dilated-X/kernel-collapse 최종 배포본에 `uv run ng scan fold --tasks 301 324` 재실행"
+        verdict: "최종 두 graph에서 fold worklist 0. task301의 300B a/b threshold와 task324의 800B line_coarse/900B label Pad를 제거하는 현 scanner lowering은 없었다. 이 결과는 두 현재 graph와 2026-07-15 fold scanner에 한정된다."
+        reopen: "task301 terminal unsigned-threshold compiler, task324 coarse-channel streaming 또는 label-map 없는 FREE-output renderer, 새 public teacher/ORT op lowering"
+        falsification_history: "task324의 이전 structural floor가 dilation으로 반증된 전력이 있어 이 0-hit은 낮은 신뢰도의 dated scanner verdict로만 보존한다."
+      - date: 2026-07-15
+        ran: "task324 oracle-first terminal renderer: 5x5 2/3-dot exhaustive NumPy+ORT toy (2,600 masks), full candidate isolated evaluation, `uv run ng gate --task 324`, `uv run ng adopt --task 324`, exact-source regeneration, and fresh_check n=100 A/B"
+        verdict: "WIN: a centered Newton-moment root renderer folds the diagonal support and colour assignment into the FREE output. task324 changed 8064 -> 5818 (memory7769/params295 -> memory5294/params524), bundled266/266 fail0, fresh100/100 candidate fail0 and divergence0. The prior fold scanner no-hit was falsified by a new mathematical rewrite, not by an equal-sized replacement carrier."
+        reopen: "Only reopen for a finite-root/set-union task with bounded 2-3 markers and a proved ORT-safe factorized terminal contraction, or a new fused operation that removes the remaining 1,600B color_f32 plus >=294B scalar/selector memory without materializing a replacement full canvas; require a pinned exact toy before integration."
+        falsification_history: "The immediately preceding task324 fold verdict (no lowering for line_coarse/label Pad) was falsified the same day by output folding through centered Newton moments. Earlier O(side^2) diagonal-spread and polynomial direct-contraction premises were also falsified: the former by dilation-4 decomposition and the latter by load-bearing operand-order factoring. The 2,000-draw fresh run was duration-bounded after the generator stayed in rare-placement sampling; the dated positive evidence is the completed fresh100 run, not an unbounded fresh claim."
       - date: 2026-07-08
         ran: "fold 스캐너 — top4 후보"
         verdict: "top4 4/4 floor (현 넷 기준)"
@@ -364,6 +724,210 @@ levers:
     agent_class: fable
     expected_yield: "deepfold 상위: 187(+≤0.71)/243(+0.17~0.56)/286(walk 3평면)/025(row+col 0.17)"
     ledger:
+      - date: 2026-07-15
+        ran: "task285 post-microfold static reprice: final cost15648; next +0.1 threshold14158;
+          existing bounded FREE-output control cost14415; retained prior margin and fresh-process
+          runtime evidence"
+        verdict: "This dated control remains non-buildable: it is 257 cost above the new threshold,
+          its sign baseline produced 1078 rather than 900 positives, and first inference was
+          2.503682s. The two exact sparse microfolds were adopted separately; this is not a task
+          floor, and earlier task285 floor claims were repeatedly falsified."
+        reopen: "A different margin-correct colour basis and bounded contraction with static
+          cost<=14158, strict wrong-class negative margin, FLOAT-only TopK, and first inference<1s;
+          or another exact sparse fold that is independently strictly cheaper."
+      - date: 2026-07-15
+        ran: "task285 bounded FREE-output suffix를 TDD로 구현했다. exact sparse pivot/orientation
+          prefix 뒤에 12-operand source-shape Einsum(300B)과 19-operand terminal Einsum을
+          붙이고 checker/strict shape, TopK dtype, tensor inventory, NumPy greedy contraction
+          estimate를 검증했다. ORT1.26 OneHot indices INT8/INT32/INT64 micrograph를 각각 실행한
+          뒤 INT64 보정 candidate를 새 ORT_DISABLE_ALL process/10초 timeout에서 train[0]으로
+          한 번 실행했다."
+        verdict: "Not found by this topology at this time: static cost14415와 largest estimate
+          9000 elements는 next +0.1 ceiling14511 안이지만 first inference2.503682s가 1초 stop
+          rule을 넘었고, sign identity baseline(+1/-1)에 polynomial delta h(2z-h)를 더한 colour
+          basis가 900 target positives 대신1078 positives를 냈다. 같은 graph는 재실행/rotation하지
+          않았다. 별도 micrograph에서 OneHot은 INT8/INT32 모두 NOT_IMPLEMENTED, INT64만 실행되어
+          900-cell label fallback은 7200B Cast 때문에 cost-worse다. 이는 FREE-output family 전체의
+          floor가 아니라 이 margin/runtime plan의 dated rejection이다."
+        reopen: "현재 cost15982의 next +0.1 ceiling14461 이하로 가격이 먼저 증명되고, sign
+          baseline과 exact one-hot replacement에 strict negative wrong-class margin을 주는 colour
+          basis, first inference<1s인 bounded contraction path, 또는 INT8 label plane을 full INT64
+          Cast 없이 직접 FREE output으로 decode하는 pinned-ORT legal operator가 생길 때 재개한다."
+      - date: 2026-07-15
+        ran: "task002 n²-edge/shared-adjacency bounded toy를 TDD로 구축했다. input total=n²의
+          square comparison으로 bottom edge를 만들고, horizontal/vertical exterior와 all-black
+          reachability가 단일 S[20,20]을 공유하게 해 path label을 삭제했다. 외부 branch만
+          C=[64,64,1]을 두 번 곱해 suppression 4,194,304를 만들었다. checker/strict shape와
+          contract test 후 incumbent/toy를 각각 새 ORT_DISABLE_ALL process, train[0] 한 예제,
+          20초 timeout으로 세 번 측정하고 수정 없는 working-reference/profile 비교를 했다."
+        verdict: "Not found by this topology at this time: core는 memory2724+params481=3205이고
+          train[0] threshold reconstruction은 매번 exact였지만 fresh toy runtime은
+          0.0569245410/0.0348084578/0.0105729168s로 모두 absolute 0.00704s gate를 실패했다
+          (paired ratio 19.294/1.196/2.981x; 최선도 한계의1.5018x). profiler Einsum kernel은
+          3.381ms로 terminal-fold 3.345ms와 비슷했지만 working-reference fresh toy는4.728ms로
+          통과해 shared topology의 first-run 경로가 불안정한 것으로 국소화했다. 또한
+          optimistic two-fp16-feature affine tail은4825지만 green과 internal empty가 동일
+          (0,0)이므로 별도 one-byte support가 필요한 family의 정확한 lower bound는
+          3205+1600+20+400=5225, target보다332 높다. stop rule에 따라 268/full/gate/adopt/source
+          regeneration은 실행하지 않았다. 이는 task002 절대 floor가 아닌 scoped NO_BUILD다."
+        reopen: "(1) shared-adjacency fresh first-run을 안정적으로 <0.00704s/<2x로 만드는 새
+          contraction/lowering; (2) 별도 support family core<=2873(최소332 절감); (3) support를
+          기존 두 FREE feature에 충돌 없이 encode하거나 FREE input과 final output에 counted
+          support 없이 fuse하는 total<=4893 terminal; (4) fresh gate를 통과하는 native
+          uint8/int8 walk+support+renderer total<=4893. selector/operand/C-scale sweep만으로는 재개하지 않음."
+      - date: 2026-07-15
+        ran: "task054 continuation: collected all 266 bundled row/column relation banks after exact detector-adjacency pruning; measured 2660 vectors/63 unique/exact span rank27; built rank10/8/7 relation-subspace, staged shared-CP rank33/14, and bounded operand-order variants; ran full-rank first-example diagnostics; then built exact kind-bank/scalar-alias/constant-selector collapse, official 10-case probe, 266-case ng gate, and ng adopt with extended isolated timeout."
+        verdict: "One real win was adopted: task054 12034->11755 (+0.023457), bundled266/266, memory6772/params4983, exact source SHA synchronized. The requested +0.1 factor family did not deploy: even full-rank relation-subspace (max error7.63e-6) and full rank33 shared CP (max error1.19e-7) produced 900 extra positive cells on the first example because the signed renderer has zero cancellation margin; unchanged float eig/SVD variants must not be repeated. A concrete exact +0.1 route remains: adjacency900 + two single-output 960B distinct-transform banks + exact OUT_SELECTOR rank7 prices about10588 versus current11755, but any auxiliary carrier above48B exhausts the margin."
+        reopen: "Implement an exact integer/0-1 transform DAG whose total new counted outputs are <=1968B and final cost<=10636; or first prove a no-new-carrier coefficient change gives strict sign margin for the full-rank CP on all266 examples, then only test rank<=14."
+        falsification_history: "This run falsifies the assumption that 1e-7 spatial reconstruction is accuracy-safe for task054: zero-margin signed cancellation amplifies it into whole-channel sign errors. It also partially falsifies the broad 'task054 already optimal' ledger language by adopting an exact 279-unit parameter collapse. The new cost/budget statements are dated family bounds, not an absolute task floor."
+      - date: 2026-07-15
+        ran: "task054 exact-bank preflight and mandated CP pivot: enumerated all 16 OUT_SELECTOR entries and 8+8 axis transforms; proved exact integer selector rank7 (497 params); traced a relation-only candidate operand-by-operand; priced the source-coordinate-preserving bank before build; collected 11 isolated full-rank branch tensors over all266 bundled cases; solved 2,394,000 raw-sign inequalities with SciPy HiGHS."
+        verdict: "Scoped NO-BUILD. The 1920B relation-only bank is not exact because SPATIAL's h/w source coordinate is also contracted with input; exact row+column [8,30,30] materialization is 57,600B, and even the rank7 saving gives optimistic cost66268>10636. The full-rank branch LP is infeasible and the graph has496214 truth-sign divergences, so rank14 was not built. Focused tests7/7; deployed task054 remains cost11755/SHA e9d1fa4b21f5; no gate/adopt/source rewrite."
+        reopen: "Keep the lever dormant. Reopen only for a source-coordinate-preserving exact algebraic topology that avoids materializing [lane,source,target] and is statically priced <=10636, or a non-CP/non-float-factor public mechanism. Do not repeat the 8x30 relation-only bank, the existing 11-coefficient LP, or rank14 CP."
+      - date: 2026-07-15
+        ran: "task002 terminal-W-fold toy를 TDD로 구축했다. selected scalar
+          t[1,1,20,20]만 46회 반복하고 mode3/path2/output-feature2 label은 작은
+          G/H/PATH/S/F에 한정해 terminal Einsum이 W와 t-W를 FREE output으로 직접 냈다.
+          checker/strict shape를 통과한 뒤 incumbent/toy를 각각 새 ORT_DISABLE_ALL
+          process, train[0] 한 예제, 20초 timeout으로 두 번 paired 측정했다. full ONNX를
+          만들기 전에 exact pointwise affine padded renderer의 representation 하한을 계산했다."
+        verdict: "runtime은 통과했다. 두 run의 incumbent/toy는
+          0.0029262090/0.0039400421s(1.346466x),
+          0.0029820420/0.0035727089s(1.198075x)였고 Python threshold reconstruction은
+          모두 exact다. core는 memory2910+params868=cost3778이다. 그러나 padding/green/
+          yellow/background 중 세 one-hot semantic class는 scalar affine code로 동시에
+          one-vs-rest 분리할 수 없어 최소 2-feature fp16 carrier1600B와 10x2 weights20이
+          필요하다. feature construction/bias를 공짜 처리한 scoped lower bound도
+          3778+1600+20=5398로 target4893보다505 높다. 지시된 stop rule에 따라 full
+          output/bundled/isolated/A-B/gate/adopt/source regeneration은 실행하지 않았다."
+        reopen: "(1) 같은 fp16 affine family의 core<=3273(현재보다505 절감); (2) fp16과
+          Cast carrier 없이 native uint8/int8 two-feature walk+renderer total<=4893; (3) 단일
+          compact feature와 FREE green input을 tail cost<=1115로 융합하는 non-affine/fused
+          terminal; (4) counted compact carrier 없이 20->30 embedding과 green preservation을
+          terminal contraction 내부에서 처리하며 cost<=4893/runtime<0.00704s를 증명할 때."
+        falsification_history: "첫 precontract toy의 staged W+bool routing lower bound5386은
+          W를 terminal feature로 흡수해 core4086->3778로 낮추며 부분 반증했다. 동시에
+          runtime은 1.20~1.35x로 재확인돼 repeated full-input selector label이 병목이라는
+          진단이 강화됐다. 5398은 모든 topology의 floor가 아니라 fp16 terminal walk 뒤
+          pointwise affine padded renderer family에만 한정하고 lever는 live로 유지한다."
+      - date: 2026-07-15
+        ran: "task002 selector-precontracted scalar-walk toy를 TDD로 구축했다. FREE input의
+          black channel을 한 번 `[1,1,20,20]` fp32로 선택하고 fp16 scalar gate로 바꾼 뒤,
+          size-4 branch/size-10 channel/size-2 path label 없이 G/H/t/S 46-gate walk를 실행했다.
+          `benchmark_precontract_walk_toy.py`로 incumbent와 toy를 각각 새 ORT_DISABLE_ALL
+          process/20초 timeout에서 train[0] 한 예제로 두 번 paired 측정했고, static tensor inventory로
+          unbuilt exact routed tail의 representation lower bound를 계산했다."
+        verdict: "runtime hypothesis는 통과했다: 첫 run은 incumbent/toy
+          0.0050100831/0.0045990420s(0.917957x), completion rerun은
+          0.0035330411/0.0058544171s(1.657048x)였고 모두 threshold exact다. 보수적인 toy도
+          0.00704s 및 2x 미만이다. 그러나
+          measured core는 memory3630+params456=cost4086이고, staged scalar family의 최소
+          20x20 one-byte decision 400B + 30x30 one-byte placement 900B를 parameter 0으로
+          처리해도 full lower bound 5386으로 target4893보다 493 높다. 지원되는 bool
+          Pad/Where tail은 cost5404다. 지시된 stop rule에 따라 full output/bundled/gate/adopt는
+          실행하지 않았다. 이는 task002 절대 floor가 아니라 이 staged family의 NO_BUILD다."
+        reopen: "(1) precontracted core<=3593(현재보다 최소493 절감), supported Pad/Where면
+          core<=3575를 증명; (2) ORT1.26 legal terminal op가 W/t와 FREE input을 직접 소비해
+          counted 20x20 decision 또는 30x30 placement carrier 하나를 제거; (3) size-4/10/2
+          selector를 repeated chain 밖에서 소거하면서 selected 20x20 plane도 materialize하지
+          않는 direct FREE-output topology가 동일 harness에서 runtime<0.00704s와 cost<=4893을
+          함께 증명할 때."
+        falsification_history: "이전 G46/G31 결과만 보면 selector 제거 후에도 walk가 느릴 수
+          있었지만 이번 0.918x toy가 이를 반증해 runtime 원인을 repeated large-input labels로
+          국소화했다. 반대로 mask/placement가 영구 floor라는 넓은 주장은 cost3306 G46이 이미
+          반증했다. 따라서 5386은 counted preselection+staged walk+one-byte routed tail에만
+          한정하고 runtime-timeout-spend lever는 live로 유지한다."
+      - date: 2026-07-15
+        ran: "task025 deployed SHA bab08ebb/cost8604와 immutable K3 base SHA ce691030/cost7662를
+          pinned onnx1.21.0/ORT1.26에서 static shape/tensor inventory로 대조했다. 추가 +0.1 ceiling은
+          floor(8604/e^0.1)=7785, 필요 절감819, K3 repair budget123이다. fused index-to-output의
+          prescribed position route(60+2+8+120+4=194), one-hot을 없앤 낙관적 spatial 하한
+          (residual line fp16[1,30] 60 + independent signed-adjacency fp16[1,30] 60 +
+          Scatter zero updates params3 + 2-tap dilated shift params2 =125), 그리고 exact
+          diagonal-rank carrier inventory를 수식으로 가격 산정했다. 후보 ONNX/build/gate는 실행하지 않았다."
+        verdict: "이 dated/scoped 표현 두 개에서는 total<=7785 식이 없다. fused spatial 하한만
+          7662+125=7787로 ceiling을 2 초과하며, 이 값은 colour/signed-side/orientation/routing 및
+          Conv rank-adaptation 비용 전이다. row/col exact rank-3은 background+slot별 3항으로
+          fp16 13 planes/axis, 즉 2*13*30*2=1560B counted carrier가 필요하다. orientation별
+          rank-2 mux도 move Where 2*4*30*2=480B + packed carriers 2*9*30*2=1080B로 합계1560,
+          절감0이다. 이는 task 절대 floor가 아니라 현재 op/표현/비용 기준 NO_BUILD다."
+        reopen: "(1) int64 residual index를 받아 기존 FREE output에 base-output materialization 없이
+          직접 누적하는 허용 op, 또는 position+colour+signed-side+adjacency+route 전체 repair<=123의
+          새 fused primitive; (2) separate rank terms를 counted row_feat/col_feat나 10x30x30 canvas
+          없이 단일 FREE output으로 합산하는 op/lowering; (3) immutable K3 base의 독립 추가 절감으로
+          전체 residual을 다시 가격 냈을 때 total<=7785가 되는 구체식; (4) grader ORT/scorer 변경으로
+          int8/uint8 Einsum이 합법화되고 400/400 재검증이 끝난 경우."
+        falsification_history: "task025의 S8/S17 floor 유형은 이후 public K 축소와 9817->8663->8604
+          exact carrier wins로 반복 반증됐다. 따라서 이번 판정도 194 route와 125 optimistic spatial
+          bound 및 1560 carrier accounting에만 한정하며 lever는 live로 유지한다."
+      - date: 2026-07-15
+        ran: "task285/295 exact-source SHA 회귀 29개와 `ng verify --hash`, Kaggle submission
+          log/SHA 대조, 실행 중인 ng 프로세스 조사. task054 live SHA a90259a9가 isolated
+          submission 54689861(15.60) 및 이후 full-board 54719275(7431.10)보다 먼저 채택됐음을
+          확인했다. 동시에 다른 세션의 task054 gate와 task264 adopt가 NG_EVAL_TIMEOUT_SECONDS=1800로
+          실행 중이었고, manifest는 7440.7909->7441.6008로 이동했다."
+        verdict: "task054 timeout은 모델 정확성/채점 호환성 실패가 아니다. 동일 SHA는 Kaggle-valid다.
+          그러나 current full board는 hash check 불일치가 남고 live adopt/gate/scans 아래에서 snapshot이
+          계속 변하므로 새 pack/submit은 어떤 조합의 runtime을 검증했는지 귀속할 수 없어 보류한다.
+          package aggregate runtime은 54710494의 약 -17.5점 사례 때문에 여전히 실제 위험이다."
+        reopen: "모든 외부 adopt/gate/verify/score/대형 scan이 종료되고 manifest와 400 ONNX mtime이
+          안정된 뒤 공식 `uv run ng verify --update`가 400/400으로 완료되고 `uv run ng verify --hash`가
+          HASH-OK이면, 최신 Kaggle pending 제출이 없는 것을 재확인하고 `ng pack` -> `ng submit`한다."
+        falsification_history: "'task054의 로컬 timeout 자체가 Kaggle-invalid를 뜻한다'는 해석은
+          54689861/54719275로 반증됐다. 반대로 '개별 모델이 Kaggle-valid면 full package runtime도
+          안전하다'는 해석은 54710494 aggregate-timeout 손실로 이미 반증됐다."
+      - date: 2026-07-15
+        ran: "task002 FREE-input/FREE-output flood fold: exact 46-gate terminal Einsum의 bundled direct A/B와 gate를 완료한 뒤, 채택 전에 G31 및 selector operand-order 3개를 fresh ORT_DISABLE_ALL process로 screening"
+        verdict: "Static/accuracy win은 실재(5408->3306, +0.492140, bundled268/268, gate PASS)하지만 G46은 example당 incumbent 105.9x, 최선 G31도 74.2x이고 bundled A/B가 338.23s였다. Aggregate-timeout 근거상 unchanged adoption은 negative-value라 candidate만 보존하고 미채택. Runtime-light residual task019/025는 1952->1934 및 8663->8604로 채택."
+        reopen: "selector permutation이 아닌 새 contraction topology가 repeated 30x30 FREE-input chain의 branch/channel/path label을 제거하고, 동일 fresh-process harness에서 incumbent 2x 미만(<약 0.00704s/example)이면서 cost<=4893을 증명할 때"
+      - date: 2026-07-15
+        ran: "21:18 KST에 외부 ng/pytest 프로세스가 없는 창에서 공식 `uv run ng verify`를
+          default 8 workers/default isolated timeout 600s로 실행. 400태스크를 전부 dispatch했고
+          task285/295 구간도 통과했으나 최종 결과 수집 중 task054 subprocess가 600s를 넘김."
+        verdict: "CLI가 task054 `subprocess.TimeoutExpired`를 catch하지 않아 n_ok/total JSON 없이
+          exit1했다. 따라서 task285(cost17775, 265/265)와 task295(cost343, 268/268)의 scoped 채택은
+          유효하지만, 7440점대 전체 보드는 제출 가능한 400/400 runtime snapshot이 아니며 pack/submit을
+          보류했다. 이는 두 태스크의 정확성 실패가 아니라 package-runtime/verify-robustness blocker다."
+        reopen: "task054의 terminal contraction을 fresh-process 600s 아래로 낮춘 모델이 채택되거나,
+          eval_isolated/full_verify가 TimeoutExpired를 결과 row로 보존하도록 개선된 뒤, artifact/manifest가
+          변하지 않는 quiescent window에서 공식 400/400 verify를 다시 실행."
+        falsification_history: "2026-07-10의 runtime 200x slack 주장은 07-15 aggregate timeout 분석으로
+          이미 반증됐다. 이전 task047/task054 timeout은 heavy contention 탓일 수 있었지만 이번 실행은
+          외부 평가 부하가 없는 시점에 시작해 task054가 다시 600s를 넘었다. 다만 실행 중 manifest가
+          다른 빠른 채택으로 이동했으므로 이것도 영구 floor가 아니라 현재 package snapshot의 dated blocker다."
+      - date: 2026-07-15
+        ran: "task190 archive polynomial: precontracted constant diff_coeff×col_features, emitted dynamic/paired/backbone 13-operand orders, benchmarked each in three fresh bounded processes, gated/adopted the fastest, then restored the smaller factorized banks in a backbone-ordered 17-operand graph and repeated bounded benchmark/gate/adopt"
+        verdict: "Runtime blocker was removed by operand order: precontracted medians were ~1.52s/~0.62s/~0.089s and cost1419 passed 266/266; the parameter-cheaper factorized backbone then measured ~0.389s, passed 266/266, and reached final cost1367. Total change 1656->1367 (+0.191786). The old 8.8-29.2s/example order was not a representation limit. A 400-net rescan found 626 Einsum nodes across 244 tasks, but did not itself prove another byte-positive contraction."
+        reopen: "Apply only where an initializer-only contracted axis and target-cost calculation are explicit; immediate runtime-blocked review pool is task054/246/285/295, each requiring a fresh-process timeout and algebraic sign proof before gate."
+      - date: 2026-07-15
+        ran: "task190 residual score work after cost1367: exhaustively proved and implemented dense route sign factorization, epsilon-scaled dynamic colour sign routing, shared quadratic core, and symmetric ray-root polynomial; every stage received bounded fresh-process scoring, full 266-example gate, ng adopt, and exact-source rebuild"
+        verdict: "All four residuals landed: 1367->1215->1163->1149->1127, total task190 session change 1656->1127 (+0.384846), final memory620/params507 and fresh one-example median about0.312s. Exact-value CP and 16-term Pow premises were unnecessarily restrictive; threshold signs and root symmetry were the paying representations. No remaining scoped task190 lowering has a concrete cost<=1019 (+0.1) proof."
+        reopen: "Reopen task190 only with a static counted-cost proof <=1019, preferably a u8/boolean box-coordinate detector that removes bg_f/bg_u8/blockmax without a new full-plane carrier, or a proven sign factor for poly_row_project; require one-example median<0.5s before gate."
+      - date: 2026-07-15
+        ran: "task190-only detector/row-factor audit against live cost1127: enumerated all 25 local 2x2 patches on bundled266, exhaustively tested every 1/2/3/4-corner conjunction and sampled-cell union, then extracted the terminal Einsum as exact linear constraints in poly_row_project and used SciPy HiGHS LP to maximize normalized sign margin for quadratic/cubic coordinate factors; additionally ran 12 deterministic arbitrary-rank4 smooth searches."
+        verdict: "No candidate was built by these dated methods. The detector lane removes205 cost but has replacement budget97; every exact local predicate needs at least three corners whose 25-position union is35 FREE-fp32 cells=140B before any cast/predicate/parameter, giving optimistic cost1062>1019. The row lane is byte-positive (quadratic-reuse cost836; cubic cost1003), but both LP optima have sign margin0 versus identity margin0.00390625; the rank4 searches also stayed negative (best normalized margin -0.09819). Pivot rules therefore stopped ONNX build/gate/adopt. This is not a task floor: earlier exact-CP/Pow negatives on task190 were falsified by sign/symmetry rewrites, so the verdict is limited to local-corner materialization and the tested degree<=3/rank4 searches."
+        reopen: "A fused legal op that samples/casts the 35-cell local union for total replacement cost<=97, a non-local box-coordinate statistic with a complete bundled truth proof and no full-plane carrier, or a poly_row_project construction outside the tested polynomial/optimizer families with statically proven cost<=1019 and strictly positive finite-state margin; require fresh one-example median<0.5s before gate."
+      - date: 2026-07-15
+        ran: "task246 direct FREE-input fold: 15-operand exact graph과 small-core 13-operand exact graph을 각각 checker/strict-shape 후 isolated gate; 이어 row_factor 360B만 stage해 final을 11 operands로 낮추고 repeated [1,x] basis를 결합한 hybrid를 gate·fresh50·adopt"
+        verdict: "11-operand hybrid는 266/266, fresh 50/50, cost 1126->1003 (+0.1157)로 채택. 정확한 direct13 seed는 static cost734(+0.312)지만 isolated scorer가 JSON 없이 종료되어 현재 차단기는 정확성이 아니라 ORT 1.26 contraction planning/RSS다; unchanged direct13 재실행은 금지."
+        reopen: "candidates/task246/direct13_gatefold.onnx의 operand-order permutation 중 one-example 20초 내 정상 종료 variant, 또는 sparse selector/F initializer로 terminal operands<=11을 유지하고 cost<=907을 만드는 official-sanitizer-compatible lowering"
+      - date: 2026-07-15
+        ran: "task246 direct13/15와 후속 16~22 operand FREE-output Einsum을 fresh process로 profile50하고 16개 deterministic order를 비교; fastest finishing orders만 full gate하고 이후 수학 rewrite마다 bounded runtime/fresh500 확인"
+        verdict: "기존 direct13은 실제 load0.26s/one-run0.098s였고 perm11은 profile50 약0.449s, direct15 perm13은 약0.513s로 모두 정상 gate됐다. fully-direct canonical order는 one-run timeout/약8GB RSS였지만 marker-feature-first perm02는 측정 예제 약0.00145s로 bundled266/266를 통과했다. 따라서 이전 JSON 없는 종료나 canonical timeout은 고정 planner 한계가 아니며, operand-order 복구 후 counted memory를 0B까지 제거해 cost1003->130을 달성했다."
+        reopen: "새 variadic graph는 표현 실패로 판정하기 전 독립 process에서 최소 16개 order를 6초 profile50로 비교. task246 다음 수학 목표는 memory0을 유지하며 params<=117인 exact factor이고, sparse operand는 scorer 변경 전 제외."
+      - date: 2026-07-15
+        ran: "task051~075 scoped audit: built candidates/task054/spatial_joint_rank33.onnx by
+          replacing SPATIAL[4,30,30] (3600 params) with the shared eigensystem of identity/path
+          adjacency plus rank-1/rank-2 tails (2112 params); rewrote all six consuming Einsums and
+          attempted an isolated one-example scorer run under pinned ORT 1.26."
+        verdict: "This run found a theoretical +0.132 parameter win (cost 12034 -> 10546,
+          reconstruction max-abs error 1.19e-7), but the 21-operand final contraction did not finish
+          one example within 120 seconds and drove high process memory, so it was stopped before gate.
+          This is a contraction-lowering/runtime negative, not an accuracy or representation-limit
+          verdict; the exact same graph must not be re-gated unchanged."
+        reopen: "A contraction plan that contracts the rank-33 latent on <=600B relation banks before
+          output coordinates, an OUT_SELECTOR rank-7 plus distinct-transform implementation with
+          predicted cost <=10899, or a public/source teacher demonstrating a fast equivalent factor."
       - date: 2026-07-15
         ran: "Reconstructed full ref54710494 exactly (ZIP 356845B, local 7426.5630), Kaggle-probed
           all 16 changed models (11 isolated plus tasks050/084/141/217/356 aggregate ref54712865),
@@ -455,6 +1019,42 @@ levers:
           미래 rebuild/덤프; (4) 기존 fp16 평면 경유 fp16 LSTM X(X 1800B로 반감 — 새 fp16 채택 후 재검)."
         falsification_history: "이 op 패밀리 첫 프로브(무전과). 능력 사실(합법성/fp16 LSTM 커널/Y_h-only
           카운팅)은 DURABLE — 오늘 0승과 무관하게 유효."
+      - date: 2026-07-15
+        ran: "task251 cost1159 follow-up에서 current final Einsum equation의 operand/label inventory를
+          직접 계산하고, S[12,12]의 signed quadratic rank-3 표현(36-coordinate basis+9 core,
+          이론 save99) 및 two-bank transition factor를 14-step x/y의 28개 S occurrence에 대입할 때
+          필요한 독립 contraction label 수와 initializer cost를 산정했다. 동시에 11-state crop의
+          memory/S/P/seed savings147과 stored/fresh 경계 고립 오류의 direct-preserve budget36을 계산했다."
+        verdict: "이 dated one-op equation family에서는 +0.1 후보를 만들지 않았다. 현재 equation은
+          42/52 labels를 사용해 10개만 남지만, S를 two-operand factor로 바꾸어 initializer를 제거하려면
+          28개 occurrence마다 독립 latent label 1개씩이 필요하다. rank-3 shared-core 표현은 더 많은
+          label을 요구한다. 11-state는 이론 save147이지만 누락된 row/col11 input-preserve branch를
+          기존 walk product와 합산하는 legal factor가 budget36 안에서 계산되지 않았다. 이는 task251
+          floor가 아니라 현재 single-Einsum S-factor/state11-frame 표현의 NO_BUILD다. 대신 label을
+          추가하지 않는 diagonal channel metric은 1159->1155로 별도 채택됐다."
+        reopen: "(1) >52-index Einsum 또는 independent latent를 추가하지 않는 Toeplitz/band primitive;
+          (2) S occurrence를 합친 joint transition whose total initializer+counted carrier saves>=110;
+          (3) state11 walk와 FREE input row/col11 preserve를 added cost<=37로 더하는 구체 equation;
+          (4) current endpoint를 바꾸어 next +0.1 byte budget을 다시 계산하게 하는 새 채택."
+        falsification_history: "task251은 과거 ray/template/factor-seed 근접-floor 뒤에도 epsilon-J,
+          support collapse, shared walk, shared/diagonal channel code로 반복 개선됐다. 따라서 이번 판정은
+          42-label current equation과 조사한 S-factor/state11-frame family에만 한정하며 lever는 live다."
+      - date: 2026-07-16
+        ran: "task251 cost1147/SHA09e6f6a9 endpoint에서 state 12->11의 memory/S/P/seed_route
+          절감147을 가격화하고, guarded cost1000 builder/TDD, bundled isolated evaluation, cell-error
+          classifier, route-support variants, generator contained-vs-clipped collision pair를
+          ONNX1.21/ORT1.26으로 실행했다."
+        verdict: "NO_BUILD for this 11x11-crop family: cost1000 graph is structurally valid but
+          218/266, fail48; 386 non-boundary BLUE->BLACK errors plus one boundary difference를 보였다.
+          동일한 11x11 crop과 local FREE input인데 required output이 BLUE/BLACK으로 갈리는 generator
+          pair가 있어, 이 architecture 안의 S/P/seed refit으로는 복구할 수 없다. Deployed task251은
+          cost1147/fail0으로 유지했다."
+        reopen: "remote row/col11 정보를 보존하면서 current +0.1 budget인 cost<=1037을 만족하는
+          representation, 또는 measured rank<=6이고 held-out generator divergence0인 sign-equivalent
+          P/S joint factor."
+        falsification_history: "과거 task251 floor/near-floor 판정은 epsilon-J, support collapse,
+          shared walk/channel, diagonal metric, seed precontraction으로 반복 반증됐다. 따라서 이는
+          11x11 global-crop plus local-FREE-input family의 dated rejection일 뿐 task floor가 아니다."
 
   - name: dtype-overpay
     status: dormant
@@ -464,6 +1064,33 @@ levers:
     agent_class: opus
     expected_yield: "이식 후 재판정 필요 (배포본 재조준 시)"
     ledger:
+      - date: 2026-07-15
+        ran: "task178-only <=455 follow-up: statically priced QLinearConv+Cast -> ConvInteger and
+          orientation-before-colour-decode at memory388/params56/cost444; capability-probed both
+          shapes under pinned ORT, then wrote the candidate test-first and ran isolated scoring,
+          ng gate, ng adopt, and exact-source SHA rebuild."
+        verdict: "WIN: task178 changed 503->444 (+0.124766), bundled 268/268. Removing the 13B
+          quantized convolution output and 1 scale parameter plus moving orientation ahead of the
+          50B Equal carrier saved 59 cost total. The final graph contains no TopK or GRAPH attribute."
+        reopen: "For task178, only a new subgraph-free static lowering with counted proof cost<=401.
+          Integer TopK and GRAPH-attribute routes remain policy-illegal; do not repeat them without
+          a policy change. This task178-only follow-up did not run a 400-task propagation scan."
+      - date: 2026-07-15
+        ran: "task178-only static lowering pass: measured the incumbent tensor inventory, proved a
+          memory446/params57 cost503 design, capability-tested u8 causal QLinearConv and int32-index
+          uint8 max ScatterElements under pinned ORT, then wrote the candidate test-first and ran
+          isolated evaluation, ng gate, ng adopt, and exact-source SHA rebuild."
+        verdict: "WIN: the prior non-TopK reopen trigger fired. Zero-based u8 transition prefix plus
+          max-scatter removed the FP16 TopK/Gather/mask lane, while dynamic Unsqueeze removed the
+          int64 line-shape carrier. task178 changed 561->503 (+0.109131), bundled 268/268, with no
+          integer TopK or GRAPH attribute. The integer-TopK policy rejection itself remains valid."
+        reopen: "For task178, a new subgraph-free static lowering with a counted proof cost<=455;
+          for this mechanism, another task-local bounded 1-D run compactor explicitly assigned for
+          review. This task178-only session did not run a 400-task propagation scan."
+      - date: 2026-07-15
+        ran: "task178 integer-score lane: rebuilt desc_weights/zero/Where/TopK values as uint8, ran local ORT and full isolated bundled evaluation, then invoked the package ng gate"
+        verdict: "The graph was exact 268/268 at cost546 versus cost564, but ng gate rejected `unsupported integer TopK: elem_type=2`. This is a package legality rejection, not an accuracy or local-kernel failure; the candidate was not adopted."
+        reopen: "Official/package integer TopK policy changes, or a non-TopK static-op ordering lowering that preserves all five run starts and predicts cost<=507 without GRAPH attributes."
       - date: 2026-07-08
         ran: "dtype_overpay_scan.py (networks/ 겨냥)"
         verdict: "networks/ 스캔이 배포본과 diverge — 오판 이력, 배포본 재조준 필요 (배포본 fp16은 deployed-fp16-recast가 흡수)"
@@ -610,6 +1237,60 @@ levers:
     agent_class: opus
     expected_yield: "0 on current board (below); reopen triggers only"
     ledger:
+      - date: 2026-07-15
+        ran: "task069-only opset uplift: built an opset14 no-structure-change control and an
+          `[outplane,outplane^2,ones] -> ConvInteger` terminal polynomial; compared both existing
+          QLinearConv protobufs and 29 upstream outputs over all 264 augmented examples, proved the
+          uint8 square on class labels 0..9, ran official ng gate/adopt, and rescanned all 400
+          deployed graphs for the terminal Pad/Equal signature."
+        verdict: "WIN: the new uint8-Mul reopen trigger paid. task069 changed 2919->2530
+          (+0.143022), memory2364/params166, bundled264/264 fail0, with opset13 incumbent and
+          opset14 control/candidate upstream-exact. Adopted SHA 3faf1001dc87... and exact source
+          rebuild are byte-identical. The rescan found 63 broad signatures but did not price or
+          modify another task in this single-task session."
+        reopen: "A specifically assigned opset<14 compact-integer label tail whose reachable
+          square is uint8-safe and whose measured `[x,x^2,1]` carrier prices below its incumbent;
+          rerun after public/adopted graphs introduce a new low-range label renderer."
+      - date: 2026-07-15
+        ran: "task069-only recursive continuation from deployed cost2530: wrote RED/GREEN scoped
+          acceptance tests, composed seven further exact candidates, compared changed semantic
+          tensors and final thresholds on all 264 augmented examples, ran official ng gate/adopt
+          for every win, regenerated exact source after each adoption, and rescanned all 400
+          deployed graphs for packed-label, runtime-template peak, and quadratic-stamp signatures."
+        verdict: "WIN: task069 reached 1210=memory1147+params63 from the session-start 2919
+          (+0.880621; 264/264 fail0). The chain used occupancy Sign profiles, shifted two-feature
+          runtime stamping, marker255 Div/Mod packing, int32 modular crop indices, packed 1/255
+          binary correlation, footprint self-count with bias255*(1-N), and direct 4D bias. Three
+          narrower families were rejected only by measured evidence: post-crop dynamic Slice was
+          scorer-unmeasurable and caused static/runtime shape reuse mismatch; biasless saturation
+          emitted edge false anchors; 9x9 anchor shrink failed bundled example36 at anchor(9,7).
+          This is not an independent floor claim."
+        reopen: "A source-owned fused anchor-detect+stamp or FREE-input entry lowering with proved
+          cost<=1094; a static-shape crop primitive that zero-extends without the current modular
+          index carriers; a new public task069 artifact below1210; or a new decoder representation
+          that distinguishes padding plus classes0..9 with less than the current 200B two-feature
+          carrier."
+        falsification_history: "The apparent cost2530 endpoint from the first task069 pass was
+          immediately falsified by seven additional gate-passing adoptions. Task069 also previously
+          falsified its propagation-floor/open-angle assumptions via public correlation+stamp, so
+          confidence in any residual floor-style verdict remains deliberately low."
+      - date: 2026-07-15
+        ran: "task069-only recursive continuation from cost1210: pinned five RED/GREEN stage
+          contracts; tested ORT signed QLinearConv combinations; built signed shared-plane,
+          unit-marker bias, UINT8 crop-index, Slice-initializer alias, and gap-coded square
+          candidates; A/B compared semantic carriers on all264 augmented examples; ran official
+          gate/adopt for every win, fresh4000, exact-source regeneration, and an 80-path public scan"
+        verdict: "WIN: task069 1210->1089 (memory1031+params58), score17.901624->18.006985
+          (+0.105361), bundled264/264 fail0 and fresh4000/4000. The final decoder exhaustively
+          separates classes0..9; square max100 and shifted INT8 feature max101. Five public unique
+          graphs bottomed at2949. INT8xINT8->UINT8 QLinearConv was runtime-rejected, while the
+          all-INT8 -128/-127 zero-point encoding passed. Final SHA a35558c52e1a... matches source."
+        reopen: "Current1089 next +0.1 requires cost<=985. Reopen for a source-owned fused
+          anchor-detect+stamp that removes M100 without a dense replacement, a FREE-input/output
+          lowering that preserves central class0 support with added cost below the removed 200B
+          q_features, or a legal sub-float projection replacing idx_f400. Do not repeat direct
+          padded stamp+decoder without an explicit support carrier budget, length-1 Slice steps,
+          or INT8xINT8->UINT8 QLinearConv on pinned ORT1.26."
       - date: 2026-07-11
         ran: "dual-ort (1.26.0 + server 1.24.4 venv) u8 capability matrix at opset 17 (24 ops, ALL
           verdicts identical across versions; u8 fails only Conv/CumSum/ReduceSum); 397-net census:
@@ -767,6 +1448,38 @@ levers:
         reopen: "A different cost<=1 operator with nontrivial spatial AND channel semantics; dynamic
           scalar derived from input while remaining uncounted; a disclosed hidden-25 task ID/rule that
           points to one of these families with a missing mode; scorer/operator-set change."
+      - date: 2026-07-16
+        ran: "Full-board hidden-25 continuation under ONNX1.21/ORT1.26: ranked all 400 tasks from
+          every bundled example plus deployed topology; tested 73 channel/row/column partial-prefix
+          ReverseSequence configurations, all 8 Hardmax axes, 38 previously omitted FREE-input/
+          optional-output/legacy-op patterns, all channelwise legacy ImageScaler bias support maps,
+          331168 high-order relational-walk candidates, and disconnected self-Einsum components
+          depth<=3 over partitions k|rc/r|kc/c|kr/k|r|c. The 20-task semantic queue was then checked
+          with simultaneous-coordinate/color automorphisms and machine-verified cross-example
+          homomorphism witnesses; task045/task293/task305 received explicit standalone witnesses."
+        tool: "semantic_rank.py, reverse_sequence_prefix_sweep.py, hardmax_axes_sweep.py,
+          missing_free_ops/probe_missing_free_ops.py, image_scaler_bias_sweep.py,
+          relational_walk_sweep.py, einsum_expansion/search_factorized_queries.py,
+          automorphism_filter.py and homomorphism witness scripts; 2026-07-16"
+        verdict: "0 new 25-point tasks in this dated scope. The ordinary registry remains 25142
+          legal cost0/1 configurations with only task179/241 Transpose controls; the expanded
+          searches rederive only known 067/179/241. The ranked self-Einsum candidates are not merely
+          beam misses: ten have direct input-automorphism obstructions, and 045/293/017/298/267/024/
+          312/163/329/305 have CQ-preserving homomorphism witnesses. ImageScaler's uncounted bias[10]
+          attribute supports every legal per-channel empty/identity/all or empty/complement/all map,
+          but none matches a task. This is a bounded operator/CQ result, not proof that the six
+          undisclosed scored 25s do not exist. No deployment, adopt, pack, or submit ran."
+        reopen: "A scored disclosure naming one hidden task or equation; a legal standard-domain
+          operator with a data-bearing uncounted attribute outside the enumerated schemas; a
+          nonnegative-input one-node mechanism not preserved by CQ homomorphisms; or a scorer/runtime
+          change. Do not repeat deeper positive self-Einsum beams on the witnessed tasks or identity-
+          only ImageScaler; their failures are structural, not search-depth failures."
+        falsification_history: "Project floor/exhaustion verdicts have repeatedly been falsified,
+          and the independently scored nine-25 histogram proves the present grammar is incomplete.
+          Therefore this entry closes only the named 2026-07-16 families and keeps the lever dormant,
+          never dead. It also corrects the earlier broad phrase 'any pure-input einsum join' by
+          replacing it with explicit witnesses for the newly ranked candidates and exact bounded
+          scopes for the remaining enumerations."
 
   - name: variadic-self-einsum-contraction-order
     status: dormant
@@ -776,6 +1489,27 @@ levers:
     agent_class: opus
     expected_yield: "task110 +2.09, task061 +1.59 if a fast hidden-valid contraction exists"
     ledger:
+      - date: 2026-07-15
+        ran: "task061-only bounded proof pass under onnx1.21.0/ORT1.26.0: extracted the 18-operand equation hypergraph from build_selfeinsum.py; exhaustively collapsed every binary tree by leaf subset and ran exact nonnegative-cost DP at the 445B cap; then exhaustively decided the 108x180 mod-independent equality-code relation over all 1,944 true cells. Proof scripts: candidates/task061/prove_selfeinsum_contractions.py and search_equality_codes.py; focused tests 2/2. Finally inspected local ai.onnx schemas for a one-final-op finite-field lowering."
+        verdict: "No cost<=575 candidate exists in the tested lanes. At 445B the self-Einsum DP has 18 leaf states, exactly 10 feasible two-leaf states (the 400B outer products of pairs among the five length-10 masks), and zero feasible states of arity>=3, so no binary contraction tree reaches the free output. Equality coding is UNSAT for every scalar/vector dimension: 5,504 row pairs have overlapping distinct neighborhoods; witness (mod,row)=(4,0)/(4,1) shares (channel,col)=(1,0) but respectively requires (1,1)/(2,1). The pinned ai.onnx operators expose Mul, Mod, and Equal only as separate elementwise steps; no concrete operator folds product, modular reduction, and zero-test into one final output. No ONNX was built, and no gate/adopt/submission ran. This is not a global task061 floor."
+        reopen: "A different source-owned self-Einsum equation/factorization whose shape proof has total non-final outputs<=445B and isolated one-example runtime<=2s; a relation code strictly richer than exact equality with a concrete one-final-op ONNX lowering and static total cost<=575; or a pinned-grader operator/schema change that genuinely fuses product, modular reduction, and zero-test. Do not repeat the existing 18-operand tree, pure Equal/A-B zero-test at any dimension, flattened biclique/34-signature merge, or sequential full-plane Mul/Mod/Sub."
+      - date: 2026-07-15
+        ran: "task061 continuation: encoded the exact three-mask truth tensor; enumerated 373 maximal M(mod)xR(row)xC(channel,column) tri-rectangles; solved the 1944-cell/373-column sparse set cover exactly with scipy1.18 HiGHS MILP; exhaustively verified the optimal cover; inspected the 18-input self-Einsum for staged alternatives. Script: candidates/task061/search_tri_rectangles.py."
+        verdict: "The current bitset topology has exact optimum39 rectangles, so a <=32-bit uint32 representation is impossible in this three-mask DNF family. The earlier 39->34 column-signature claim was a flattened-biclique error: residue-zero states have different row sets across moduli and cannot share a physical bit. No task061 artifact changed. The self-Einsum remains structurally valid but runtime-invalid; no staged <=445B contraction was constructed in this run."
+        reopen: "A shape-enumerated contraction tree for the existing self-Einsum with total non-final outputs<=445B and one-example runtime<=2s; or a non-DNF equality/CNF/finite-field final operator pricing cost<=575. Do not reopen for another flattened biclique/signature merge."
+        falsification_history: "This entry explicitly falsifies this lever's immediately preceding <=32-biclique reopen premise and its 34-signature evidence. It does not prove cost636 is a global floor because equality/finite-field representations are outside the tri-rectangle family."
+      - date: 2026-07-15
+        ran: "Rechecked candidates/task061/selfeinsum.onnx in the official isolated ng gate during
+          the task051~075 audit; inspected the 18-input equation/checker result; decoded the deployed
+          uint64 bitset and measured 39 residue bits collapsing to 34 distinct column signatures."
+        verdict: "No deployable win by this run: ng gate returned fail=None/error=no output/cost=None,
+          reproducing Kaggle submission 54683163 ERROR. The candidate is structurally valid but its
+          implicit contraction is not executable in budget. Direct signature dedupe reaches 34, two
+          bits above uint32, so the cheap dtype pivot is not yet constructed. This repeats the known
+          runtime failure and does not prove the multiplication relation needs cost 636."
+        reopen: "An exact <=32-biclique factorization of the (mod,r) x (channel,col) truth relation
+          (predicted uint32 cost 512, +0.217), or a staged self-Einsum contraction with total counted
+          intermediates <=445B and prompt isolated output."
       - date: 2026-07-14
         ran: "Built five algebra-preserving task110 operand/equation permutations; structural-tested
           all five; isolated 10s-benchmarked them; locally gated the fastest; submitted the two
@@ -797,3 +1531,36 @@ levers:
           remains 264/266 and is not a deploy candidate."
         reopen: "An exact cheaper encoding of the identity fallback itself, or an isolated candidate
           that retains all fixed fallback behavior while changing only the proven period branches."
+
+  - name: task319-direct-oracle-probe-carrier
+    status: dormant
+    scanner: null
+    scanner_archive: null
+    recipe: null
+    agent_class: fable
+    expected_yield: "task319 fresh-risk reduction at cost<=3917"
+    ledger:
+      - date: 2026-07-15
+        ran: "task319-only oracle-first audit: deterministic fresh6000 + bundled267 failure
+          classification; exact hitting-set over legal clipped-2x profile probes; static dependency
+          cut of the live 4329 graph; direct FREE-input GatherND prototype with batched bbox/profile
+          collapse; official-style bundled evaluation under onnx1.21/ORT1.26. Tools/artifacts:
+          candidates/task319/oracle_probe_analysis.py, oracle_probe_report.json, PROBE_COST.md,
+          build_probe_matcher.py. No full exact/dense selector/full crop rebuild was run."
+        verdict: "This dated lowering found no adoptable task319 matcher at cost<=3917. Fresh
+          failures classified as 406 signature/alignment collisions + 28 incumbent-failing oracle
+          profile collisions + 0 postprocess errors (seed23, n=6000). Minimum current-failure cover
+          is 8 probes = 2 shape + 6 cells; the no-sample-regression cover is 13 = 2+11. Pinned
+          GatherND requires INT64 indices: the six-cell direct carrier alone is 1128 cost, making
+          the independent pre-logic lower bound 3921 with the 2793 fixed remainder. The measured
+          prototype was bundled258/267, cost4886; its batch collapse worsened fixed remainder by67.
+          This is a carrier rejection for this direct-probe representation, not a task floor."
+        reopen: "A grader-legal fused/direct gather with <=4-byte coordinate indices; an independently
+          measured task319 fixed-remainder collapse large enough to absorb the executable probe logic
+          (the current prototype needs 969 cost); or a new oracle feature family separating the same
+          pairs with fewer than six cell probes while preserving bundled267. Any ORT/ONNX pin change
+          still requires the mandated 400/400 revalidation."
+        falsification_history: "task319's earlier profile-crop/floor framing was falsified by the
+          selected-colour FREE-input contraction that reached cost4329, so this conclusion is
+          deliberately scoped to the exact 2026-07-15 set-cover and INT64 GatherND lowering. Do not
+          generalize it to all future task319 representations."

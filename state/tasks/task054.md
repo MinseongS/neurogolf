@@ -1,5 +1,5 @@
 ---
-deployed_cost: 12034
+deployed_cost: 11755
 logged_costs_match: exact
 migrated: 2026-07-09
 ---
@@ -8,13 +8,13 @@ migrated: 2026-07-09
 
 ## Current live exact
 
-`memory=6772`, `params=5262`, `cost=12034`, `points=15.604509`.
+`memory=6772`, `params=4983`, `cost=11755`, `points=15.627966`.
 
-The deployed graph is the 2026-07-14 bounded relational renderer. It detects the
-reference motif and box/seed relations, renders all required lines and motif stamps in
-one signed relation, preserves arbitrary source pixels, and resolves the fixed three-box
-case by exact cancellation. Isolated Kaggle submission 54689861 scored 15.60 before
-adoption; the official gate then passed 266/266 with fail=0.
+The deployed graph is the 2026-07-14 bounded relational renderer plus the 2026-07-15
+exact kind-bank/scalar-alias/selector collapse. It detects the reference motif and
+box/seed relations, renders all required lines and motif stamps in one signed relation,
+preserves arbitrary source pixels, and resolves the fixed three-box case by exact
+cancellation. The current artifact passed official bundled 266/266 with fail=0.
 
 ## Dominant memory
 
@@ -128,3 +128,23 @@ params 282 -> 280).
 - note: LB probe 54689861 confirmed 15.60; relational renderer bundled 266/266; replaces cost20131 with cost12034
 - sha256: a90259a9050599856df3bd714f3eff8758aa0ad1061af973379e857ca439956f
 - validation: official bundled 266/266, fresh 40/40, pinned ORT execution complete
+
+## ADOPTED 20260715T135516Z
+- cost: 12034 -> 11755 (points 15.6280)
+- source: candidates/task054/rank7_orders/random1.onnx
+- note: exact row/column kind-bank sharing, scalar aliasing, and constant selector fold
+
+## 2026-07-15 — exact distinct-transform / full-rank sign-LP continuation
+
+- `OUT_SELECTOR`의 16 nonzero가 요구하는 row/column `(k,transform)`은 각 8개이고,
+  `[55,16]` selector는 pivot `[0,1,2,4,5,8,12]`의 exact integer rank-7이다.
+  Factor 크기는 385+112=497로 원본 880에서 383을 절감한다.
+- 제안된 1,920B bank는 `[lane,target]` relation-only 값이라 source input과 공유되는
+  `h/w` 좌표를 잃는다. 정확한 materialization은 두 축 합계 `[16,30,30]` fp32,
+  57,600B가 필요하다. rank-7 절감까지 포함한 낙관적 cost lower bound 66,268이
+  target 10,636을 넘으므로 ONNX build 전에 reject했다.
+- 지시된 pivot으로 11개 기존 branch coefficient의 full-rank raw response를 bundled
+  266개/2,394,000셀에서 수집했다. Full-rank sign divergence는 496,214이고 HiGHS LP는
+  infeasible이었다. 따라서 rank14를 만들지 않았고 CP lane을 닫았다.
+- focused tests 7/7. 새 gate/adopt/source regeneration 없음. deployed cost/SHA는
+  11,755 / `e9d1fa4b21f50a0c8e29af50a53ce941410598f9c7bdfd51e47c5970fc12f0dd`로 유지된다.

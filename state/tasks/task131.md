@@ -66,3 +66,15 @@ Cost drop (dead-init/redundant-node), private-LB safe. Manifest updated. Backup 
 - cost: 3976 -> 3874 (points 16.7380)
 - source: candidates/public_dumps/20260709/neurogolf-merged91-workbench/nets/task131.onnx
 - note: min-merge from nets
+
+## ADOPTED 20260715T115906Z
+- cost: 3874 -> 3741 (points 16.7729)
+- source: networks/task131.onnx
+- note: bundle-overfit K10 probe table prune: cost 3874->3741; fresh diagnostic 76/1500 fails recorded
+
+## REPAIRED 20260715T160908Z
+- cost: 3741 -> 3874 (points 16.7380)
+- source: submission/.backups/task131_20260715T115906Z.onnx
+- note: repair Kaggle-zero ref54732114: restore full 155-position support with fresh1500 fail0
+- public-zero-ref: 54732114
+- isolated-repair-verification: ref54733036 = 16.73 (single-file ZIP)
